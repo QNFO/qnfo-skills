@@ -113,7 +113,7 @@ pdf-builder (skill) → ZENODO-PUBLISH → CLOUDFLARE-DEPLOYMENT → SOCIAL-ORCH
 
 ---
 
-*template-catalog skill v1.0 — Load on-demand via skill_view() for template discovery*
+*template-catalog v1.1 — QNFO custom skill. Load on-demand via skill_view() for template discovery*
 
 ---
 

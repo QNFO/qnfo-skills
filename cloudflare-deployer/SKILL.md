@@ -1,6 +1,6 @@
 ---
 name: cloudflare-deployer
-description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Sandboxes. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
+description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
 version: "1.3"
 ---
 
@@ -28,7 +28,7 @@ The `--remote` flag is deprecated (remote is default in v4+). For directory enum
 - Persistence: User env var (set via [Environment]::SetEnvironmentVariable)
 - Token prefix: cfat_Imj... (53 chars)
 
-**Scopes:** ALL Cloudflare policies: Pages (deploy), R2 (read+write+delete), Workers, Vectorize, D1, DNS (zone:edit), redirect rules, zones, AI, sandboxes, queues, pipelines, secrets store.
+**Scopes:** ALL Cloudflare policies: Pages (deploy), R2 (read+write+delete), Workers, Vectorize, D1, DNS (zone:edit), redirect rules, zones, AI, containers, queues, pipelines, secrets store.
 
 **S3-compatible access:**
 - Endpoint: https://edb167b78c9fb901ea5bca3ce58ccc4b.r2.cloudflarestorage.com
@@ -190,20 +190,20 @@ npx wrangler deployments list
 
 ---
 
-## Cloudflare Sandboxes
+## Cloudflare Containers
 
 ```bash
 # Create
-npx wrangler sandbox create <name> --image ubuntu-22.04
+npx wrangler containers create <name> --image ubuntu-22.04
 
 # Execute
-npx wrangler sandbox exec <name> -- "<command>"
+npx wrangler containers exec <name> -- "<command>"
 
 # List
-npx wrangler sandbox list
+npx wrangler containers list
 
-# Stop (cost: $0 when paused)
-npx wrangler sandbox stop <name>
+# Stop
+npx wrangler containers stop <name>
 ```
 
 ---
@@ -228,7 +228,7 @@ python _vectorize-papers.py
 | Workers requests | 100k/day | $0.30/M |
 | R2 storage | 10 GB | $0.015/GB/mo |
 | R2 egress | **Free** | N/A |
-| Sandboxes | Free quota | $0.002/min |
+| Containers | Free quota | $0.002/min |
 
 ---
 
@@ -320,7 +320,7 @@ Before using any script, verify it exists:
 If missing, check that skill's Embedded Scripts section for recovery guidance.
 
 ### Dependencies
-- `vectorize-papers.py`: requires Cloudflare API token (`%USERPROFILE%\.cloudflare\api-token`) and Workers AI access
+- `vectorize-papers.py`: requires Cloudflare API token (auto-available via `$env:CLOUDFLARE_API_TOKEN`) and Workers AI access
 - `build_pdf.py`: requires `reportlab` and optionally `markdown` packages
 
 

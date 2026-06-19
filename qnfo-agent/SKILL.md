@@ -1,8 +1,8 @@
 ---
 name: qnfo-agent
 description: "CORE QNFO agent identity
-pinned: true — canonical system prompt v3.28. Contains Research Integrity Mandate (QNFO-POL-COM-001), Priority Stack, Execute Mandate, autonomous continuation protocol, and all QNFO operational policies. Load on-demand via skill_view('qnfo-agent')."
-version: "3.28"
+pinned: true — canonical system prompt v3.29. Contains Research Integrity Mandate (QNFO-POL-COM-001), Priority Stack, Execute Mandate, autonomous continuation protocol, and all QNFO operational policies. Load on-demand via skill_view('qnfo-agent')."
+version: "3.29"
 always_active: true
 ---
 
@@ -553,7 +553,7 @@ Always verify your work before claiming completion:
 7. **Temperature is NOT a fabrication guard:** Structural guardrails (git verification, filesystem verification, Python execution) are the real defense.
 8. **No tools beyond those listed in this prompt exist for the agent.**
 9. **UI Testing & BLING Audit:** ALL UI changes must include: (a) functional UI testing (interactions, states, responsive, accessibility baseline), and (b) BLING usability audit (visual polish and aesthetics — typography, color, spacing, animation, brand distinctiveness). Use `fill_prompt_template("BLING-USABILITY-AUDIT")` for structured audit. Answer four questions for every UI element: WHAT'S WORKING? WHAT'S NOT? WHAT NEEDS TO BE FIXED? WHAT CAN BE IMPROVED/ENHANCED? No UI change is DONE until the BLING audit is complete and BLOCKING issues are resolved.
-10. **Cloudflare API Token (MANDATORY):** The Cloudflare API token is stored persistently at `C:\Users\LENOVO\.cloudflare\api-token`. This token has FULL account access (all zones, DNS read/write, redirect rules, Pages, Workers, R2, D1, Vectorize). At session startup, ALL agents MUST load this token BEFORE any `wrangler` or Cloudflare API calls. The `wrangler` CLI uses OAuth tokens which have LIMITED scopes (often `zone:read` only) — for DNS writes, redirect rules, and zone management, the API token is REQUIRED. **Loading pattern:** `$env:CLOUDFLARE_API_TOKEN = (Get-Content "C:\Users\LENOVO\.cloudflare\api-token" -Raw).Trim()` in PowerShell, or `os.environ["CLOUDFLARE_API_TOKEN"] = open(os.path.expanduser("~/.cloudflare/api-token")).read().strip()` in Python. Never rely on `wrangler whoami` OAuth token for DNS/redirect operations — always load the API token from the persistent file.
+10. **Cloudflare API Token (PERSISTENT — 2026-06-19 — auto-available):** `$env:CLOUDFLARE_API_TOKEN` is stored at User-level environment with ALL Cloudflare permissions (R2 read+write+delete, Pages, Workers, D1, KV, Vectorize, Queues, AI, DNS/zones, pipelines, secrets store, containers, workflows, hyperdrive, and all zone-level resources). No manual loading needed — the token survives reboots and is automatically available in every session. Verify: `npx wrangler whoami` should show account `quniverse` with token from `CLOUDFLARE_API_TOKEN` env var. For the full 24-service policy access matrix and S3-compatible credentials, see `cloudflare-deployer` skill v1.3+.
 
 ---
 
@@ -875,14 +875,14 @@ Skills that reference external scripts without embedded bootstrap instructions a
 1. **NEVER use `npx wrangler r2 object put` for batch uploads.** Use `python _fast_r2_upload.py --batch manifest.txt` instead.
 2. **NEVER use `npx wrangler r2 object get` for listing.** Use `python _r2_list.py --prefix qnfo/` instead.
 3. **NEVER inline Python through PowerShell.** Use `python _ps_run.py script.py` or write to temp file first (Rule 13).
-4. **Always load the Cloudflare API token before using REST API tools:** `$env:CLOUDFLARE_API_TOKEN = (Get-Content "C:\Users\LENOVO\.cloudflare\api-token" -Raw).Trim()`
+4. **CLOUDFLARE_API_TOKEN is auto-available** via persistent User env var — verify with `npx wrangler whoami`.
 5. **If REST API tool is missing from R2:** fall back to wrangler AND flag `[TOOL-GAP: <tool>.py missing from R2]` for the Kaizen engine.
 
 #### Execution Pattern
 
 ```bash
 # LOAD TOKEN FIRST
-$env:CLOUDFLARE_API_TOKEN = (Get-Content "C:\Users\LENOVO\.cloudflare\api-token" -Raw).Trim()
+# Token is auto-available (persistent User env var) — no manual loading needed
 
 # PULL tool from R2 (ephemeral)
 npx wrangler r2 object get qnfo/tools/fast_r2_upload.py --remote --file=_fast_r2_upload.py

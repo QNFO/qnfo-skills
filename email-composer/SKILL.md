@@ -120,8 +120,8 @@ If MISSING: these are project-level scripts. Check the `email-agent` project in 
 
 ---
 
-*email-composer skill v2.0 — Load on-demand via skill_view(). Email scripts moved to projects/email-agent/.*
+*email-composer skill v2.1 — Load on-demand via skill_view(). Email scripts moved to projects/email-agent/.*
 
 ---
 
-*email-composer v1.0 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/email-composer\\SKILL.md'). Not accessible via skill_view().*
+*email-composer v2.1 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/email-composer\\SKILL.md'). Not accessible via skill_view().*
