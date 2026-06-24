@@ -1,18 +1,18 @@
 ---
 name: infrastructure-audit
-description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues). Reports orphaned/duplicate resources, state mismatches, and health issues. Use when checking infrastructure health, pre-execution validation, or session startup due diligence.
-version: "1.0"
+description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
+version: "1.1"
 ---
 
-# INFRASTRUCTURE AUDIT SKILL — v1.0
+# INFRASTRUCTURE AUDIT SKILL — v1.1
 
-> **On-demand skill.** Load via `skill_view('infrastructure-audit')` for comprehensive Cloudflare infrastructure health checks.
+> **LIFECYCLE-AWARE.** This release adds lifecycle pipeline health checks, archival path verification, and ultrametric taxonomy validation.
 
 ---
 
 ## Purpose
 
-The #1 cause of duplicate work in QNFO is agents executing tasks without checking live infrastructure state. This skill automates the Infrastructure State Verification Gate (qnfo-agent §3.2 step 1.6) by querying all Cloudflare resources and comparing against handoff/Discovery Index claims.
+The #1 cause of duplicate work in QNFO is agents executing tasks without checking live infrastructure state. This skill automates the Infrastructure State Verification Gate (qnfo-agent §3.2 step 1.6) by querying all Cloudflare resources including the automated lifecycle pipeline and comparing against handoff/Discovery Index claims.
 
 ## When to Use
 
@@ -23,12 +23,11 @@ The #1 cause of duplicate work in QNFO is agents executing tasks without checkin
 | "Audit Cloudflare resources" | Full audit with recommendations |
 | Before any upload/deploy/data task | Quick pre-execution check |
 | "What's orphaned/duplicate?" | Orphan detection only |
+| "Check lifecycle pipeline" | Worker + queue health verification |
 
 ## Workflow
 
 ### Phase 1: Full Infrastructure Audit
-
-Run the audit script to query all Cloudflare services:
 
 ```python
 import urllib.request, json, os
@@ -52,15 +51,106 @@ queues = cf('queues')
 
 print(f'D1: {len(d1.get("result",[]))} | KV: {len(kv.get("result",[]))} | Vectorize: {len(vec.get("result",[]))}')
 print(f'Pages: {len(pages.get("result",[]))} | Workers: {len(workers.get("result",[]))} | Queues: {len(queues.get("result",[]))}')
+# Expected: D1: 4 | KV: 2 | Vectorize: 1 | Pages: 35 | Workers: 20 | Queues: 5
+```
+
+### Phase 1.5: Lifecycle Pipeline Health (NEW)
+
+```python
+# Check Lifecycle Worker
+r = urllib.request.Request("https://qnfo-lifecycle.q08.workers.dev/health",
+    headers={"User-Agent": "Mozilla/5.0"})
+lifecycle_health = json.loads(urllib.request.urlopen(r, timeout=10).read())
+print(f"Lifecycle Worker: {lifecycle_health.get('status','?')}")
+
+# Check Archive Worker
+r2 = urllib.request.Request("https://qnfo-archive-worker.q08.workers.dev/health",
+    headers={"User-Agent": "Mozilla/5.0"})
+archive_health = json.loads(urllib.request.urlopen(r2, timeout=10).read())
+print(f"Archive Worker: {archive_health.get('status','?')}")
+
+# Check lifecycle status
+r3 = urllib.request.Request("https://qnfo-lifecycle.q08.workers.dev/status",
+    headers={"User-Agent": "Mozilla/5.0"})
+status = json.loads(urllib.request.urlopen(r3, timeout=15).read())
+print(f"Lifecycle Scan: {status.get('totalProjects', 0)} projects, distribution: {status.get('statusDistribution', {})}")
+
+# Check Knowledge Graph
+r4 = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
+    headers={"User-Agent": "Mozilla/5.0"})
+kg = json.loads(urllib.request.urlopen(r4, timeout=10).read())
+print(f"Knowledge Graph: {kg.get('totalNodes',0)} nodes, {kg.get('totalEdges',0)} edges")
+# Expected: 238 nodes, 382 edges
 ```
 
 ### Phase 2: Orphan Detection
 
 Compare live resources against Discovery Index to find unregistered or stale entries.
 
-### Phase 3: Health Recommendations
+```python
+# Check for projects in DI with no R2 path
+# Check for workers/queues not in DI
+# Check for R2 paths that no longer have backing data
+```
 
-Based on audit findings, report orphaned resources, stale entries, and cleanup recommendations.
+### Phase 3: Archival Integrity (NEW)
+
+```python
+import json, urllib.request
+
+# Pull Discovery Index
+r = urllib.request.Request(f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/r2/buckets/qnfo/objects/qnfo/discovery/index.json',
+    headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "Mozilla/5.0"})
+di = json.loads(urllib.request.urlopen(r, timeout=15).read())
+projects = di.get("projects", {})
+
+# Check archived projects have archive paths
+archived = [(n, p.get("r2_path","")) for n, p in projects.items() if "ARCHIVED" in (p.get("status","")).upper()]
+for name, path in archived:
+    has_archive = "/archive/" in path
+    print(f"  {name}: {'CORRECT' if has_archive else 'MISMATCH — still at projects/'} - {path}")
+
+# Check project paths exist on R2
+no_path = [n for n, p in projects.items() if not p.get("r2_path")]
+if no_path:
+    print(f"  [WARN] No R2 path: {no_path}")
+
+# Verify ultrametric taxonomy
+r = urllib.request.Request("https://graph-api.q08.workers.dev/nodes?label=Concept",
+    headers={"User-Agent": "Mozilla/5.0"})
+concepts = json.loads(urllib.request.urlopen(r, timeout=10).read())
+domain_nodes = [c for c in concepts.get("nodes", []) if c.get("properties", {}).get("level") == 1]
+program_nodes = [c for c in concepts.get("nodes", []) if c.get("properties", {}).get("level") == 2]
+print(f"Ultrametric Taxonomy: {len(domain_nodes)} domains, {len(program_nodes)} programs")
+```
+
+### Phase 4: Health Recommendations
+
+Based on audit findings, report orphaned resources, stale entries, archival mismatches, and cleanup recommendations.
+
+## Infrastructure Resource Inventory
+
+| Resource | Expected Count | Current |
+|:---------|:-----:|:------:|
+| D1 Databases | 4 | qnfo-graph, qnfo-audit, living-paper, portfolio-state |
+| KV Namespaces | 2 | equation-cache, git-on-cloudflare-routes |
+| Vectorize Indexes | 1 | qwav-research (768-dim) |
+| Pages Projects | 35 | qwav, prompts-wiki, qnfo-archive, +32 more |
+| Workers | 20 | graph-api, qnfo-lifecycle, qnfo-archive-worker, +17 more |
+| Queues | 5 | qnfo-lifecycle-queue, git-on-cloudflare-repo-maint, emailqueue, paper-ingestion-queue, pipeline-dedup |
+| Knowledge Graph | 238 nodes, 382 edges | 4-domain ultrametric taxonomy, 74 project nodes |
+| R2 Bucket | 1 (qnfo) | discovery, archive, projects, releases, tools |
+
+## Lifecycle Pipeline Health Checks
+
+| Component | Check | Endpoint |
+|-----------|-------|----------|
+| Lifecycle Worker | HTTP 200, status=ok | `GET /health` on `qnfo-lifecycle.q08.workers.dev` |
+| Lifecycle Scan | Projects scanned, transitions | `GET /status` |
+| Archive Worker | HTTP 200, status=ok | `GET /health` on `qnfo-archive-worker.q08.workers.dev` |
+| Lifecycle Queue | Exists, producers + consumers configured | `wrangler queues list` |
+| Discovery Index | 38 projects, archived paths correct | R2 `qnfo/discovery/index.json` |
+| Knowledge Graph | Ultrametric taxonomy intact | `/nodes?label=Concept`, domain/program counts |
 
 ## Output Format
 
@@ -74,12 +164,21 @@ Based on audit findings, report orphaned resources, stale entries, and cleanup r
 | D1 Databases | 4 | OK |
 | KV Namespaces | 2 | OK |
 | Vectorize Indexes | 1 | OK |
-| Pages Projects | 10 | OK |
-| Workers | 18 | OK |
-| Queues | 4 | OK |
+| Pages Projects | 35 | OK |
+| Workers | 20 | OK |
+| Queues | 5 | OK |
+| Knowledge Graph | 238n/382e | OK |
+| Lifecycle Worker | Running | OK |
+| Archive Worker | Running | OK |
 
 ## Issues Found
 None — all resources accounted for.
+
+## Lifecycle Pipeline
+- Daily scan active (06:00 UTC)
+- 0 projects currently stale
+- 17 ARCHIVED with correct archive paths
+- Ultrametric taxonomy: 4 domains, 12 programs
 
 ## Recommendations
 No action needed.
@@ -90,7 +189,8 @@ No action needed.
 - Runs automatically at session start (qnfo-agent §3.2 step 1.6)
 - Pre-execution gate: before any upload/deploy task
 - Feeds into Discovery Index updates
+- Validates lifecycle pipeline health before archival operations
 
 ---
 
-*infrastructure-audit v1.0 — Comprehensive Cloudflare infrastructure health checks. Pre-execution validation gate.*
+*infrastructure-audit v1.1 — Lifecycle-aware. Pipeline health checks, archival integrity, ultrametric taxonomy validation.*

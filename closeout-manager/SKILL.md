@@ -1,10 +1,12 @@
 ---
 name: closeout-manager
-description: Session close-out procedures — autonomous trigger detection, task execution verification, project handoff initialization, audit trail export, R2 state upload, archive operations, draft artifact cleanup, and handoff documentation. Auto-executes at session end without user prompting.
-version: "2.3"
+description: Session close-out procedures — autonomous trigger detection, task execution verification, project handoff initialization, audit trail export, R2 state upload, lifecycle timestamp update, archive operations, draft artifact cleanup, and handoff documentation. Auto-executes at session end without user prompting.
+version: "2.4"
 ---
-# CLOSEOUT MANAGER SKILL — v2.3
 
+# CLOSEOUT MANAGER SKILL — v2.4
+
+> **LIFECYCLE-AWARE.** This release integrates with the automated lifecycle pipeline — `last_active` timestamps are reset on closeout to prevent premature staleness. Archive paths follow the ultrametric `qnfo/archive/projects/<name>/` convention.
 > **AUTONOMOUS skill.** Do NOT wait for user to say "TERMINATE." Detect completion and auto-initiate closeout.
 > Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill
 
@@ -76,7 +78,7 @@ If ratio < 0.3 → closeout BLOCKED. The session did not execute enough. Fix bef
 
 ### 3. Project Handoff Initialization (MANDATORY — Projects Directory)
 
-Verify and update handoff documents in `qnfo/projects/`:
+Verify and update handoff documents in `qnfo/projects/` [ephemeral cache; R2 canonical: `qnfo/projects/`]:
 
 a. **Scan all projects:**
 ```bash
@@ -136,6 +138,7 @@ npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_
 #    - Publications generated this session  
 #    - Projects archived this session
 #    - State changes (active -> complete, etc.)
+#    - last_active timestamps set to now (ISO 8601) ← LIFECYCLE CRITICAL
 
 # 3. Upload updated index
 npx wrangler r2 object put qnfo/discovery/index.json --file=_updated_index.json --remote
@@ -144,6 +147,39 @@ npx wrangler r2 object put qnfo/discovery/index.json --file=_updated_index.json 
 **If index is missing or corrupt:** Rebuild from R2 enumeration + local filesystem + GitHub repo listing. Upload fresh. Flag session as `[DISCOVERY-REBUILT]`.
 
 **Verify:** `npx wrangler r2 object get qnfo/discovery/index.json --remote` must succeed.
+
+### 5.1 Lifecycle Timestamp Update (v2.4 — LIFE-AND-DEATH HARD GATE)
+
+**CRITICAL:** The automated lifecycle pipeline scans `last_active` timestamps daily at 06:00 UTC. If a project's `last_active` is not updated on closeout, it will be marked STALE after 90 days and AUTO-ARCHIVED after 180 days — potentially nuking the project's R2 files without human intervention.
+
+**MANDATORY:** On EVERY session closeout, whether or not the DI is modified:
+
+1. **Set `last_active` to `now` in ISO 8601** for the CURRENT session's project:
+```python
+from datetime import datetime, timezone
+now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+di["projects"]["<project-name>"]["last_active"] = now
+```
+
+2. **Set `last_active` for any project modified this session** (even indirectly via dependency):
+```python
+for project in projects_modified_this_session:
+    di["projects"][project]["last_active"] = now
+```
+
+3. **Upload updated DI** with new timestamps:
+```bash
+npx wrangler r2 object put qnfo/discovery/index.json --file=<updated> --remote
+```
+
+**LIFECYCLE TIMELINE:**
+| Days Inactive | Status | Action |
+|:-------------:|--------|--------|
+| 0–90 | ACTIVE | Normal operation |
+| 90–180 | STALE | Flagged by Lifecycle Worker. Project still intact. |
+| 180+ | ARCHIVED | R2 files auto-migrated to `qnfo/archive/projects/<name>/`. Worker queued. |
+
+**GATE:** If `last_active` is NOT updated → the lifecycle pipeline will auto-archive the project. This is the #1 cause of "my project disappeared."
 
 ### 6. Update Decision Log
 
@@ -165,11 +201,17 @@ npx wrangler r2 object put qnfo/audit/decisions/DECISION-LOG.md --file=<temp>
 npx wrangler r2 object put qnfo/audit/state/<project>.json --file=<local-state-file>
 ```
 
-### 8. Archive to Local Storage
+### 8. Archive to Local Storage (Ultrametric Path Convention)
 
 ```bash
+# Move completed project to local archive
 Move-Item -Path "<project>" -Destination "qnfo/archive/projects\YYYY\MM\<name>\"
 ```
+
+**R2 archive path convention** (for projects marked ARCHIVED):
+- Old: `qnfo/projects/<name>/`
+- New: `qnfo/archive/projects/<name>/`
+- Future (ultrametric): `qnfo/archived/<domain>/<program>/<name>/`
 
 ### 9. Clean Up Temporary Files — AGGRESSIVE JIT ENFORCEMENT
 
@@ -232,8 +274,7 @@ if (Test-Path $appSettings) {
     $json = Get-Content $appSettings -Raw | ConvertFrom-Json
     $count = $json.promptTemplates.Count
     if ($count -lt 27) {
-        Write-Output "WARNING: Only $count prompt templates in app-settings.json (expected 27). Run: python _deploy.py --prompts-only after restart."
-        Write-Output "PROMPT-PERSISTENCE: Run 'npx wrangler r2 object get qnfo/tools/deploy.py --remote --file=_deploy.py; python _deploy.py --prompts-only; Remove-Item _deploy.py' after DeepChat restart."
+        Write-Output "WARNING: Only $count prompt templates in app-settings.json (expected 27)."
     } else {
         Write-Output "PROMPTS OK: $count templates in app-settings.json"
     }
@@ -263,7 +304,8 @@ Use `fill_prompt_template("CLOSEOUT-CHECKLIST")` for the full verification check
 - [ ] Step 2: ALL planned tasks executed (Task Execution Verification)
 - [ ] Step 3: ALL projects have HANDOFF.md updated (Project Handoff Init)
 - [ ] Step 4: Audit trail exported to R2
-- [ ] Step 5: Discovery Index updated (qnfo/discovery/index.json)
+- [ ] Step 5: Discovery Index updated (qnfo/discovery/index.json) **including last_active timestamps**
+- [ ] Step 5.1: **Lifecycle timestamps reset** — `last_active` set to now for all projects touched this session
 - [ ] Step 6: Decision log updated
 - [ ] Step 7: Project state updated
 - [ ] Step 8: Archive completed
@@ -280,6 +322,15 @@ fill_prompt_template("HANDOFF", {type: "Program->Project", scope: "...", ...})
 ```
 
 ---
+
+## Lifecycle Pipeline Awareness (v2.4)
+
+The automated lifecycle pipeline runs daily at 06:00 UTC (`qnfo-lifecycle` Worker) scanning `last_active` timestamps in the Discovery Index. The closeout procedure is the ONLY mechanism that resets these timestamps. Without it, projects auto-archive.
+
+| Worker | Purpose | Cron |
+|--------|---------|------|
+| `qnfo-lifecycle` | Scans `last_active`, transitions ACTIVE→STALE→ARCHIVED | Daily 06:00 UTC |
+| `qnfo-archive-worker` | Consumes `qnfo-lifecycle-queue`, migrates R2 files | On queue trigger |
 
 ## Reference Files
 
@@ -299,11 +350,8 @@ fill_prompt_template("HANDOFF", {type: "Program->Project", scope: "...", ...})
 | Skipping project handoff scan | Next agent has stale/absent HANDOFF.md | Scan ALL projects, create/update HANDOFF.md |
 | Claiming tasks done without verification | Phantom claims (Rule 14 violation) | Test-Path + Get-Content + git log audit |
 | Asking "shall I close out?" | Unnecessary user intervention | Just close out and present summary |
+| **Skipping `last_active` update** | Project auto-archives after 180 days | **Reset timestamp EVERY closeout** |
 
 ---
 
-*closeout-manager skill v2.0 — AUTONOMOUS. Detects completion and auto-initiates. Never waits for "TERMINATE."*
-
----
-
-*closeout-manager v2.3 — AUTONOMOUS. Detects completion and auto-initiates. Execution ratio audit gate at closeout.*
+*closeout-manager skill v2.4 — LIFECYCLE-AWARE. Resets last_active timestamps to prevent premature auto-archival. R2 archive paths follow ultrametric convention.*

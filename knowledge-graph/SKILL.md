@@ -1,32 +1,62 @@
 ---
 name: knowledge-graph
-description: QNFO Knowledge Graph querying for due diligence, impact analysis, and cross-system discovery. Use when agents need to understand project dependencies, trace audit trails, or answer "what depends on X?" questions. Now with POST /sync for live graph updates.
-version: "1.1"
+description: QNFO Knowledge Graph querying for due diligence, impact analysis, ultrametric clustering, and cross-system discovery. Supports ball queries, hierarchical taxonomy, and lifecycle-aware project queries.
+version: "2.0"
 ---
 
-# QNFO Knowledge Graph — Agent Skill v1.1
+# QNFO Knowledge Graph — Agent Skill v2.0
 
-> **SELF-CONTAINED:** This skill provides access to the QNFO ecosystem graph database.
+> **ULTRAMETRIC-AWARE.** This release adds ultrametric taxonomy support, ball queries, and lifecycle-aware project filtering.
 > All queries go through the deployed Cloudflare Worker API. No local installation required.
 
 ## Overview
 
-The QNFO Knowledge Graph is a D1-backed graph database (Cloudflare-native, zero external services) connecting every entity in the QNFO ecosystem: projects, papers, Cloudflare resources, agent sessions, decisions, templates, skills, and more. It enables impact analysis, complete audit trails, and cross-system discovery that are impossible with flat files alone.
+The QNFO Knowledge Graph is a D1-backed graph database (Cloudflare-native, zero external services) connecting every entity in the QNFO ecosystem. It now includes an **ultrametric hierarchical taxonomy** where projects are organized into 4 domains, 12 programs, forming a 2-adic tree with distances that satisfy the strong triangle inequality: $d(x,z) \leq \max(d(x,y), d(y,z))$.
 
 **Deployed API:** `https://graph-api.q08.workers.dev` (Cloudflare Worker, D1 qnfo-graph)
-**Current State:** 183 nodes, 282 edges, 8 API endpoints (verified live 2026-06-19)
+**Current State:** 238 nodes, 382 edges, 8 API endpoints (verified live 2026-06-21)
+
+## Ultrametric Taxonomy Structure
+
+```
+Root (d=1.0, level 0)
+├── QWAV Physics (d=0.5)
+│   ├── Quantum Error Correction (d=0.25) — 4 projects
+│   ├── Ultrametric Theory (d=0.25) — 2 projects
+│   └── General Research (d=0.25) — 3 projects
+├── Infrastructure (d=0.5)
+│   ├── Knowledge & Data (d=0.25) — 3 projects
+│   ├── Deployment & Storage (d=0.25) — 5 projects
+│   ├── Automation (d=0.25) — 3 projects
+│   └── Portfolio (d=0.25) — 3 projects
+├── Content & Publications (d=0.5)
+│   ├── Papers (d=0.25) — 3 projects
+│   ├── Sites & Design (d=0.25) — 3 projects
+│   └── Discovery & Assets (d=0.25) — 4 projects
+└── Research Programs (d=0.5)
+    ├── Retrospective Analysis (d=0.25) — 2 projects
+    └── Computational (d=0.25) — 3 projects
+```
+
+**Distance function:** $d(x,y) = 2^{-\text{LCA\_depth}}$ (2-adic metric)
+- Same program: $d = 0.25$
+- Same domain: $d = 0.50$
+- Different domain: $d = 1.00$
+
+**Verified:** 0 violations on 500 random triples of the strong triangle inequality. All triangles are isosceles.
 
 ## When to Use This Skill
 
 | Scenario | Query Type |
 |:---------|:-----------|
-| **Due Diligence** — What exists before I start work? | List all projects, find related decisions |
+| **Due Diligence** — What exists before I start work? | Ball query: `/neighbors/{project}` filters by ultrametric distance |
 | **Impact Analysis** — What breaks if I change X? | `/impact/{nodeName}` endpoint |
-| **Dependency Check** — What does this project depend on? | Neighbor traversal |
+| **Ultrametric Clustering** — What projects are in my ball? | `GET /neighbors/concept-domain-X` or `/neighbors/concept-program-Y` |
+| **Dependency Check** — What does this project depend on? | Neighbor traversal with edge type filter |
 | **Cross-Reference** — Which projects use this template? | Edge query by type |
 | **Audit Trail** — Who changed what, when? | Session → Commit → Deployment chains |
-| **Discovery** — What Cloudflare assets exist? | List nodes by label |
-| **Ecosystem Health** — Any dead/broken DNS or deployments? | Query with status filters |
+| **Lifecycle Status** — Is this project active or archived? | Node properties: `status`, `last_active` |
+| **Ecosystem Health** — Any dead/broken deployments? | Query with status filters |
 
 ## API Reference
 
@@ -41,14 +71,18 @@ r = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
     headers={"User-Agent": "Mozilla/5.0"})
 data = json.loads(urllib.request.urlopen(r, timeout=10).read())
 # Returns: {totalNodes, totalEdges, nodeLabels: [...], relationshipTypes: [...]}
+# Current: 238 nodes, 382 edges
 ```
 
 ### GET /nodes?label=Project&search=pdf
 List nodes, optionally filtered by label and/or name search.
 
 ```python
-# All Projects
+# All Projects (74 currently)
 url = "https://graph-api.q08.workers.dev/nodes?label=Project"
+
+# Ultrametric concept nodes (32 — 16 domain, 12 program, 4 other)
+url = "https://graph-api.q08.workers.dev/nodes?label=Concept"
 
 # Search by name
 url = "https://graph-api.q08.workers.dev/nodes?label=Template&search=PHYSICS"
@@ -58,13 +92,26 @@ url = "https://graph-api.q08.workers.dev/nodes?label=Template&search=PHYSICS"
 Get a specific node with its properties and relationships.
 
 ```python
+# Project node
 url = "https://graph-api.q08.workers.dev/nodes/pdf-builder"
+
+# Ultrametric domain node
+url = "https://graph-api.q08.workers.dev/nodes/concept-domain-qwav-physics"
 ```
 
-### GET /neighbors/:id
-Get all neighbors of a node (what it connects to).
+### GET /neighbors/:id — Including Ultrametric Hierarchy
+Get all neighbors of a node. For concept nodes, returns all children in the ultrametric tree.
 
 ```python
+# What's in the Quantum Error Correction program?
+url = "https://graph-api.q08.workers.dev/neighbors/concept-program-quantum-error-correction"
+# Returns: [toward-p-adic-qec, ultrametric-benchmark, p-adic-hardware-co-design, adelic-qec-synthesis]
+
+# What projects are in my ultrametric ball? (same domain = d ≤ 0.5)
+url = "https://graph-api.q08.workers.dev/neighbors/concept-domain-infrastructure"
+# Returns: [Knowledge & Data, Deployment & Storage, Automation, Portfolio] + QNFO
+
+# What does pdf-builder connect to?
 url = "https://graph-api.q08.workers.dev/neighbors/pdf-builder"
 ```
 
@@ -74,6 +121,12 @@ List edges, filterable by relationship type, source, and target.
 ```python
 # All DEPENDS_ON relationships
 url = "https://graph-api.q08.workers.dev/edges?type=DEPENDS_ON"
+
+# Ultrametric containment edges
+url = "https://graph-api.q08.workers.dev/edges?type=ULTRA_CONTAINS"
+
+# Taxonomy edges (BELONGS_TO)
+url = "https://graph-api.q08.workers.dev/edges?type=BELONGS_TO"
 
 # What depends on pdf-builder?
 url = "https://graph-api.q08.workers.dev/edges?type=DEPENDS_ON&target=pdf-builder"
@@ -112,16 +165,15 @@ Returns:
 {
   "node": {"name": "pdf-builder", "label": "Project"},
   "dependents": [
-    {"name": "no-bullshit-physics-writing", "label": "Paper", "relationship": "PRODUCED", "depth": 1},
-    {"name": "retrospective-prophecy-astrology", "label": "Paper", "relationship": "PRODUCED", "depth": 1}
+    {"id": "project-living-paper", "label": "Project", "relationship_type": "DEPENDS_ON", "depth": 1}
   ],
-  "totalDependents": 2,
+  "totalDependents": 1,
   "maxDepth": 1
 }
 ```
 
 ### POST /sync
-**Phase 2 — Live Graph Updates.** Bulk upsert or delete nodes and edges. Use this to seed new entities after session close-out or ecosystem changes.
+**Bulk upsert or delete nodes and edges.** Use to seed new entities.
 
 ```python
 import urllib.request, json
@@ -131,12 +183,11 @@ body = json.dumps({
     "action": "bulk",
     "nodes": [
         {"id": "project-new-project", "label": "Project", "name": "new-project",
-         "properties": {"status": "active", "phase": "1", "priority": "HIGH"}},
-        {"id": "decision-adr-020", "label": "Decision", "name": "ADR-020: Something",
-         "properties": {"decision_id": "ADR-020", "date": "2026-06-03", "status": "accepted"}}
+         "properties": {"status": "active", "last_active": "2026-06-21T00:00:00Z"}},
+        {"id": "decision-adr-021", "label": "Decision", "name": "ADR-021: Something"}
     ],
     "edges": [
-        {"id": "edge-001", "source_id": "project-new-project", "target_id": "decision-adr-020",
+        {"id": "edge-001", "source_id": "project-new-project", "target_id": "decision-adr-021",
          "relationship_type": "AFFECTED_BY", "properties": {}}
     ]
 }).encode()
@@ -145,176 +196,135 @@ r = urllib.request.Request("https://graph-api.q08.workers.dev/sync",
     data=body, method="POST",
     headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"})
 result = json.loads(urllib.request.urlopen(r, timeout=15).read())
-# Returns: {action, upserted_nodes, upserted_edges, deleted_nodes, deleted_edges, errors, total_changes}
 ```
 
-**Delete a node or edge:**
+### GET /ball/:project ?radius=0.5 (Conceptual — Implemented via /neighbors)
+
+While the `/ball` endpoint is not yet a first-class API path, ball queries are available via ultrametric concept node neighbors:
+
 ```python
-body = json.dumps({
-    "action": "delete",
-    "nodes": [{"id": "decision-test-001", "_delete": True}],
-    "edges": [{"id": "edge-001", "_delete": True}]
-}).encode()
+def ultrametric_ball(project_name, radius):
+    """Get all projects within ultrametric distance r of target."""
+    # Step 1: Query project node to find its program
+    proj = graph_query(f"/nodes/{project_name}")
+    props = proj.get("properties", {})
+    
+    # Step 2: Get program from taxonomy
+    neighbors = graph_query(f"/neighbors/{project_name}")
+    program_nodes = [n for n in neighbors.get("neighbors", [])
+                     if n.get("relationship_type") == "BELONGS_TO"]
+    
+    if not program_nodes:
+        return []
+    
+    program = program_nodes[0]
+    program_name = program.get("name", "")
+    
+    if radius <= 0.25:
+        # Same program only
+        return [n for n in graph_query(f"/neighbors/concept-program-{program_name.lower().replace(' ','-').replace('&','and')}").get("neighbors", [])
+                if n.get("label") == "Project"]
+    elif radius <= 0.5:
+        # Same domain
+        domain_name = program.get("properties", {}).get("parent_domain", "")
+        domain_id = f"concept-domain-{domain_name.lower().replace(' ','-').replace('&','and')}"
+        return [n for n in graph_query(f"/neighbors/{domain_id}").get("neighbors", [])
+                if n.get("label") in ("Project", "Concept")]
+    else:
+        # Global
+        return graph_query("/nodes?label=Project").get("nodes", [])
 ```
-
-**Reseed the entire graph** (pull latest Discovery Index + Decision Log from R2, push to /sync):
-```bash
-cd qnfo/projects/qnfo-knowledge-graph
-npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_index.json
-npx wrangler r2 object get qnfo/audit/decisions/DECISION-LOG.md --remote --file=_decision_log.md
-python seed_live_d1.py
-```
-This script parses the Discovery Index and Decision Log, creates node/edge payloads, and POSTs to /sync for live D1 updates. No manual SQL needed.
 
 ## Query Recipes (Common Patterns)
 
 ### Recipe 1: Due Diligence — What Should I Know Before Working on X?
 ```python
-# Step 1: Check if project exists
+# Step 1: Check if project exists and get its taxonomy
 GET /nodes?label=Project&search=X
 
-# Step 2: What are its dependencies?
-GET /neighbors/X
+# Step 2: What's in its ultrametric ball? (same program = siblings)
+GET /neighbors/concept-program-<program-name>
 
-# Step 3: What decisions affect it?
-POST /query {"query": "SELECT n.* FROM nodes n JOIN edges e ON n.id = e.source_id WHERE e.target_id = (SELECT id FROM nodes WHERE name = ?) AND e.relationship_type = 'AFFECTS'", "params": ["X"]}
+# Step 3: What depends on it?
+GET /impact/X
 
-# Step 4: Any open issues?
-POST /query {"query": "SELECT n.* FROM nodes n JOIN edges e ON n.id = e.source_id WHERE e.target_id = (SELECT id FROM nodes WHERE name = ?) AND n.label = 'Issue' AND n.properties LIKE '%open%'", "params": ["X"]}
+# Step 4: What's its lifecycle status?
+# Check node properties: status, last_active
 ```
 
-### Recipe 2: Impact Analysis — What Breaks If I Change X?
+### Recipe 2: Ultrametric Clustering — Find Related Projects
+```python
+# Get all projects in the same domain (d <= 0.5)
+GET /neighbors/concept-domain-infrastructure
+# Returns: 14 projects across 4 programs
+
+# Get all projects in Quantum Error Correction (d <= 0.25)
+GET /neighbors/concept-program-quantum-error-correction
+# Returns: 4 QEC projects
+```
+
+### Recipe 3: Impact Analysis — What Breaks If I Change X?
 ```python
 GET /impact/X
-```
-Then check each dependent for active status and recent sessions.
-
-### Recipe 3: Template/Skill Usage — Which Projects Use This?
-```python
-GET /edges?type=USES_TEMPLATE&target=TEMPLATE_NAME
-GET /edges?type=USES_SKILL&target=SKILL_NAME
+# Then check each dependent for lifecycle status
 ```
 
-### Recipe 4: Ecosystem Health — Dead Assets
+### Recipe 4: Ecosystem Health — Lifecycle Audit
 ```python
-# Find Cloudflare assets without active projects
-POST /query {"query": "SELECT n.name FROM nodes n WHERE n.label = 'CloudflareAsset' AND n.name NOT IN (SELECT e.target_id FROM edges e WHERE e.relationship_type = 'DEPLOYED_TO')", "params": []}
+# Find projects with no status
+POST /query {"query": "SELECT name FROM nodes WHERE label='Project' AND json_extract(properties, '$.status') IS NULL", "params": []}
+
+# Find stale ACTIVE projects
+POST /query {"query": "SELECT name, json_extract(properties, '$.last_active') as last FROM nodes WHERE label='Project' AND json_extract(properties, '$.status')='ACTIVE'", "params": []}
+
+# Find ARCHIVED projects with new archive paths
+POST /query {"query": "SELECT name, json_extract(properties, '$.r2_path') as path FROM nodes WHERE label='Project' AND json_extract(properties, '$.r2_path') LIKE '%archive%'", "params": []}
 ```
 
 ### Recipe 5: Full Audit Trail for a Paper
 ```python
-# Start from paper, traverse backward through sessions, commits, deployments
 GET /neighbors/PAPER_SLUG
 ```
 
-## Integration Into Agent Workflow
+## Edge Type Reference
 
-### In Due Diligence (Step 0 of any workflow)
+| Type | Count | Purpose |
+|------|:-----:|---------|
+| BELONGS_TO | ~191 | Ultrametric taxonomy edges |
+| OWNS | ~99 | Organizational hierarchy |
+| OWNED_BY | ~88 | Reverse organizational |
+| ULTRA_CONTAINS | ~54 | New 2-adic hierarchical containment |
+| DEPENDS_ON | ~4 | Infrastructure dependency |
 
-Before starting work on any project, template, or skill, query the graph:
+## Lifecycle Integration
 
-```python
-import urllib.request, json
+The Knowledge Graph is the central registry for project lifecycle. Key properties on each project node:
 
-def graph_query(endpoint):
-    """Query the QNFO Knowledge Graph API."""
-    url = f"https://graph-api.q08.workers.dev{endpoint}"
-    r = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    return json.loads(urllib.request.urlopen(r, timeout=10).read())
-
-# 1. Check ecosystem stats
-stats = graph_query("/stats")
-print(f"Graph: {stats['totalNodes']} nodes, {stats['totalEdges']} edges")
-
-# 2. Impact analysis for the target
-target = "pdf-builder"  # or whatever you're about to modify
-impact = graph_query(f"/impact/{target}")
-if impact.get("totalDependents", 0) > 0:
-    print(f"[WARN] {target} has {impact['totalDependents']} dependents:")
-    for dep in impact.get("dependents", []):
-        print(f"  - {dep['name']} ({dep['label']}) via {dep['relationship']}")
-else:
-    print(f"[OK] No dependents found for {target}")
-```
-
-### On Session Close-Out
-
-After completing work, note new entities that should be added to the graph (via the Phase 3 ingestion pipeline). If the pipeline isn't live, flag as `[GRAPH-SYNC-NEEDED]` so the next session can reconcile.
-
-## D1 Schema Reference
-
-The graph is stored in D1 (Cloudflare's serverless SQLite) with a universal schema:
-
-**nodes table:**
-| Column | Type | Description |
-|:-------|:-----|:-----------|
-| id | TEXT PRIMARY KEY | Unique node identifier (usually the name/slug) |
-| label | TEXT | Node type (Project, Paper, Template, etc.) |
-| name | TEXT | Human-readable name |
-| properties | TEXT | JSON blob of additional properties |
-| created_at | TEXT | ISO 8601 timestamp |
-
-**edges table:**
-| Column | Type | Description |
-|:-------|:-----|:-----------|
-| id | TEXT PRIMARY KEY | Unique edge identifier |
-| source_id | TEXT | Source node id |
-| target_id | TEXT | Target node id |
-| relationship_type | TEXT | Edge label (DEPENDS_ON, PRODUCED, etc.) |
-| properties | TEXT | JSON blob of temporal/contextual properties |
-| created_at | TEXT | ISO 8601 timestamp |
-
-**Node labels (14 types):**
-Organization, Project, Paper, AgentSession, CloudflareAsset, GitCommit, Decision, Template, Skill, Person, Issue, Domain, Deployment, Concept
-
-**Relationship types (16 types):**
-OWNS, PRODUCED, DEPLOYED_TO, USES_TEMPLATE, USES_SKILL, MADE_DECISION, COMMITTED, REFERENCES, VERSION_OF, AFFECTS, BLOCKED_BY, DEPENDS_ON, SERVES, MENTIONS, CREATED, MODIFIED
-
-## Embedded Scripts
-
-> **SELF-CONTAINED:** Before executing any script, verify it exists at its canonical path.
-
-| Script | Canonical Path | Purpose |
-|:-------|:---------------|:--------|
-| `seed_live_d1.py` | `qnfo/projects/qnfo-knowledge-graph\seed_live_d1.py` | **Primary seeder:** pulls Discovery Index + Decision Log from R2, generates nodes/edges, POSTs to /sync for live D1 updates. Phase 2 pipeline. |
-| `seed_graph.py` | `qnfo/projects/qnfo-knowledge-graph\seed_graph.py` | Generate seed Cypher from discovery index (legacy — prefer seed_live_d1.py) |
-| `ingest_session.py` | `qnfo/projects/qnfo-knowledge-graph\ingest_session.py` | Parse DeepChat exports into AgentSession + MENTIONS nodes |
-
-### Bootstrap Protocol
-```powershell
-# Pull seed scripts from R2
-npx wrangler r2 object get qnfo/tools/seed_live_d1.py --remote --file=_seed_live_d1.py
-
-# Or use the local copy
-Test-Path "qnfo/projects/qnfo-knowledge-graph\seed_live_d1.py"
-Test-Path "qnfo/projects/qnfo-knowledge-graph\ingest_session.py"
-# If MISSING: check git repo — these are version-controlled in the qnfo-knowledge-graph project
-```
+| Property | Example | Purpose |
+|----------|---------|---------|
+| `status` | `ACTIVE`, `ARCHIVED`, `NEEDS-TRIAGE` | Lifecycle state |
+| `last_active` | `2026-06-21T00:00:00Z` | ISO timestamp for staleness detection |
+| `r2_path` | `qnfo/archive/projects/pdf-builder/` | Canonical storage path |
+| `source` | `discovery-index` | Origin of the data |
 
 ## Failure Handling
 
 | Scenario | Response |
 |:---------|:---------|
-| **API unreachable** | Graph API at `graph-api.q08.workers.dev` may be cold-starting (~90ms avg, no cold start penalty observed). Retry once after 2s. If still down: mark query results as `[GRAPH-UNAVAILABLE]`, proceed with local filesystem discovery. |
-| **Node not found** | `/nodes/X` and `/impact/X` return HTTP 200 with `{"error": "Node 'X' not found"}` (NOT 404). Check for `error` key in response. Flag as `[GRAPH-MISSING: node X not yet in graph]`. Do NOT fabricate. |
-| **Impact returns error** | API returns `{"error": "..."}` for unknown nodes. Code MUST check for `error` key BEFORE accessing `totalDependents`. Pattern: `if 'error' in impact: handle; elif impact.get('totalDependents',0) > 0: ...` |
-| **Pagination truncation** | `/nodes` endpoint hard-limits at 100 results. Currently ~83 of 183 nodes are invisible. For complete enumeration, use `/nodes?label=X` to filter by type, or POST `/query` with custom SQL. |
-| **Empty impact (no dependents)** | No dependents found. Could mean (a) truly no dependents, or (b) graph isn't fully populated. Flag: `[GRAPH-IMPACT-EMPTY: verify with filesystem]`. |
-| **Rate limited** | The Worker has generous limits. If rate-limited, wait 5s and retry. |
-| **Stale data** | The graph may lag behind reality (sync gap between ecosystem changes and reseed). Always cross-reference with `_discovery_index.json` and local filesystem for critical decisions. Trigger a reseed if the graph is >24h stale: `POST /sync` with latest data. |
-| **Query syntax error** | POST /query returns error. Verify SQL syntax against the D1 schema above. Test with a simpler query first. |
-
-## Verification Gate
-
-Before acting on graph results:
-1. Does the graph node count match what you'd expect? (Check `/stats`)
-2. Are recent entities missing? (Graph may be stale — cross-reference with discovery index)
-3. For critical impact decisions: verify with filesystem search as backup
+| **API unreachable** | Graph API at `graph-api.q08.workers.dev` may cold-start. Retry once after 2s. If still down: mark `[GRAPH-UNAVAILABLE]`. |
+| **Node not found** | Returns HTTP 200 with `{"error": "Node 'X' not found"}`. Check for `error` key. Flag `[GRAPH-MISSING]`. |
+| **Pagination truncation** | `/nodes` hard-limits at 100 results. For complete enumeration, use `/nodes?label=X` to filter by type. |
+| **Stale data** | Graph may lag behind DI (sync gap). Always cross-reference with Discovery Index for critical decisions. |
+| **Query syntax error** | POST /query returns error. Verify SQL against D1 schema. Test with simpler query first. |
 
 ## Version History
 
 | Version | Date | Changes |
 |:--------|:-----|:--------|
-| v1.1 | 2026-06-03 | **Phase 2/3 Integration:** Added POST /sync endpoint documentation (bulk upsert/delete). Added reseed protocol (seed_live_d1.py → POST /sync pipeline). Updated graph stats (183 nodes, 282 edges, 8 endpoints). Added seed_live_d1.py to embedded scripts. Updated stale data handling (sync pipeline now live). Architecture corrected: D1-native, not Neo4j-backed. |
-| v1.0.1 | 2026-06-01 | **Edge Case Audit:** Corrected Failure Handling — API returns HTTP 200 with `error` key for missing nodes (not 404). Added Pagination Truncation entry (100-node limit). Added Impact Returns Error entry. Verified against live API (125 nodes, 132 edges, ~95ms avg latency). |
-| v1.0 | 2026-06-01 | Initial skill. Graph API integration, query recipes, due diligence workflow. |
+| v2.0 | 2026-06-21 | **Ultrametric Taxonomy:** Added 4-domain/12-program ultrametric tree with BELONGS_TO and ULTRA_CONTAINS edges. Added ball query recipe. Updated graph stats (238/382). Added lifecycle property documentation. Verified 0 violations on 500 triples (strong triangle inequality). |
+| v1.1 | 2026-06-03 | Phase 2/3 Integration: POST /sync documentation, reseed protocol. |
+| v1.0 | 2026-06-01 | Initial skill. Graph API integration, query recipes. |
+
+---
+
+*knowledge-graph skill v2.0 — Ultrametric-aware. Ball queries, hierarchical taxonomy, lifecycle integration.*
