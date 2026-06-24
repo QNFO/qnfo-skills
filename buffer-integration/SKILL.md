@@ -3,15 +3,15 @@ name: buffer-integration
 description: Buffer API integration for social media posting on QNFO/QWAV channels. Create, schedule, and manage social media posts across Twitter/X, LinkedIn, and Bluesky via Buffer. Use when user says "post this to social media," "schedule a tweet," "publish to LinkedIn," or when Phase 5 of LRAP requires social dissemination of a new publication.
 ---
 
-# BUFFER INTEGRATION SKILL — v1.0
+# BUFFER INTEGRATION SKILL — v2.0
 
-> **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer API.
+> **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
 
 ---
 
 ## Purpose
 
-Integrate with the Buffer API to create, schedule, and manage social media posts across all configured QNFO/QWAV channels (Twitter/X, LinkedIn, Bluesky). Eliminates manual social media posting and enables scheduled, staggered dissemination of research publications.
+Integrate with the Buffer GraphQL API (api.buffer.com) to create, schedule, and manage social media posts across all configured QNFO/QWAV channels (Twitter/X, LinkedIn, Bluesky). Eliminates manual social media posting and enables scheduled, staggered dissemination of research publications.
 
 ## When to Use
 
@@ -25,26 +25,41 @@ Integrate with the Buffer API to create, schedule, and manage social media posts
 
 ## Prerequisites
 
-1. **Buffer Access Token** stored at `%USERPROFILE%\.buffer_token`
+1. **Buffer Access Token** stored at `%USERPROFILE%\.buffer_token` (utf-8, no BOM)
 2. **Buffer profiles configured** — Twitter/X, LinkedIn, Bluesky connected to your Buffer account
+3. **Organization ID** — auto-discovered via GraphQL; requires at least one Buffer organization
 
 ### Token Setup
 
 ```bash
 # Store Buffer token (one-time setup)
-# Get token from: https://bufferapp.com/developers/apps
+# Get token from: https://buffer.com/developers
+# IMPORTANT: Save as UTF-8 without BOM
 python -c "
-import json
 token = input('Buffer Access Token: ').strip()
-with open(r'%USERPROFILE%\.buffer_token', 'w') as f:
+with open(r'%USERPROFILE%\\.buffer_token', 'w', encoding='utf-8') as f:
     f.write(token)
 print('[OK] Buffer token stored')
 "
 ```
 
+### Token Troubleshooting
+
+If you see `UnicodeEncodeError: 'latin-1' codec can't encode character '\ufeff'`:
+```bash
+python -c "
+import os
+p = os.path.expandvars(r'%USERPROFILE%\\.buffer_token')
+raw = open(p, 'rb').read()
+if raw[:3] == b'\xef\xbb\xbf':
+    open(p, 'wb').write(raw[3:])
+    print('[OK] BOM removed from token file')
+"
+```
+
 ## Workflow — 4 Stages
 
-### Stage 1: Load Configuration
+### Stage 1: Load Configuration (GraphQL)
 
 ```python
 import os
@@ -54,95 +69,117 @@ def load_buffer_token():
     if not os.path.exists(token_path):
         raise FileNotFoundError(
             "[BLOCKED] Buffer token not found. Get token from "
-            "https://bufferapp.com/developers/apps and store at %USERPROFILE%\\.buffer_token"
+            "https://buffer.com/developers and store at %USERPROFILE%\\.buffer_token"
         )
-    with open(token_path, 'r') as f:
+    with open(token_path, 'r', encoding='utf-8-sig') as f:
         return f.read().strip()
 ```
 
-### Stage 2: List Profiles
+### Stage 2: List Channels (GraphQL)
 
-Discover which social media profiles are available for posting:
+Discover social media channels via GraphQL:
 
 ```python
-def list_profiles(token: str) -> list[dict]:
-    """Get all Buffer profiles for the authenticated account."""
+def list_channels(token: str) -> list[dict]:
+    """Get all Buffer channels via GraphQL API."""
     import urllib.request, json
     
-    url = "https://api.bufferapp.com/1/profiles.json"
-    req = urllib.request.Request(url)
-    req.add_header("Authorization", f"Bearer {token}")
-    req.add_header("User-Agent", "QNFO-BufferIntegration/1.0")
+    def gql(query, variables=None):
+        body = {"query": query}
+        if variables:
+            body["variables"] = variables
+        data = json.dumps(body).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.buffer.com/1/graphql.json", data=data, method="POST"
+        )
+        req.add_header("Authorization", f"Bearer {token}")
+        req.add_header("Content-Type", "application/json")
+        resp = urllib.request.urlopen(req, timeout=15)
+        return json.loads(resp.read().decode("utf-8"))
     
-    response = urllib.request.urlopen(req, timeout=15)
-    profiles = json.loads(response.read().decode("utf-8"))
+    # Get organization ID
+    acct = gql("{ account { organizations { id } } }")
+    org_id = acct["data"]["account"]["organizations"][0]["id"]
     
-    return [
-        {
-            "id": p["id"],
-            "service": p["service"],       # twitter, linkedin, bluesky
-            "name": p.get("formatted_username", p.get("service", "unknown")),
-            "avatar": p.get("avatar_https", ""),
-            "timezone": p.get("timezone", "UTC"),
-        }
-        for p in profiles
-    ]
+    # Get channels
+    result = gql(
+        '{ channels(input: { organizationId: "%s" }) { id service name displayName isDisconnected } }' % org_id
+    )
+    return result["data"]["channels"]
 ```
 
-### Stage 3: Create Posts
+### Stage 3: Create Posts (GraphQL Mutation)
 
-Create and schedule posts for specific profiles:
+Create posts via the `createPost` mutation:
 
 ```python
-def create_post(token: str, profile_id: str, text: str, 
-                link_url: str = None, schedule_at: str = None, 
-                now: bool = False) -> dict:
-    """Create a Buffer post for a specific social profile.
+def create_post(token: str, channel_id: str, text: str,
+                link_url: str = None, schedule_at: str = None,
+                now: bool = False, service: str = "") -> dict:
+    """Create a Buffer post via GraphQL API.
     
     Args:
         token: Buffer access token
-        profile_id: Buffer profile ID
-        text: Post text (respects platform character limits)
-        link_url: URL to attach (paper DOI, publication page)
-        schedule_at: ISO 8601 datetime for scheduling (None = add to queue)
-        now: If True, post immediately instead of scheduling
-    
-    Returns:
-        Buffer update response with post ID and status
+        channel_id: Buffer channel ID (from list_channels)
+        text: Post text
+        link_url: URL to attach
+        schedule_at: ISO 8601 datetime for custom scheduling
+        now: Post immediately (shareNow mode)
+        service: Channel service name for metadata (twitter/linkedin/bluesky)
     """
-    import urllib.request, urllib.parse, json
-    
-    params = {
-        "profile_ids[]": profile_id,
-        "text": text,
-    }
-    
-    if link_url:
-        params["media[link]"] = link_url
+    import urllib.request, json
     
     if now:
-        params["now"] = "true"
+        mode = "shareNow"
     elif schedule_at:
-        params["scheduled_at"] = schedule_at
+        mode = "customScheduled"
+    else:
+        mode = "addToQueue"
     
-    data = urllib.parse.urlencode(params).encode("utf-8")
-    
-    url = "https://api.bufferapp.com/1/updates/create.json"
-    req = urllib.request.Request(url, data=data, method="POST")
-    req.add_header("Authorization", f"Bearer {token}")
-    req.add_header("Content-Type", "application/x-www-form-urlencoded")
-    req.add_header("User-Agent", "QNFO-BufferIntegration/1.0")
-    
-    response = urllib.request.urlopen(req, timeout=15)
-    result = json.loads(response.read().decode("utf-8"))
-    
-    return {
-        "post_id": result.get("id"),
-        "status": result.get("status", "unknown"),  # buffer, sent, service
-        "text": result.get("text", ""),
-        "created_at": result.get("created_at"),
-        "scheduled_at": result.get("scheduled_at"),
+    post_input = {
+        "channelId": channel_id,
+        "text": text,
+        "schedulingType": "automatic",  # Required: only "automatic" works for all channels
+        "mode": mode,
+        "assets": [],
     }
+    
+    if schedule_at:
+        post_input["dueAt"] = schedule_at
+    
+    if link_url and service:
+        post_input["metadata"] = {
+            service: {"linkAttachment": {"url": link_url}}
+        }
+    
+    mutation = """
+    mutation($input: CreatePostInput!) {
+      createPost(input: $input) {
+        ... on PostActionSuccess {
+          post { id status text dueAt }
+        }
+        ... on InvalidInputError { message }
+        ... on LimitReachedError { message }
+      }
+    }
+    """
+    
+    body = json.dumps({"query": mutation, "variables": {"input": post_input}}).encode()
+    req = urllib.request.Request(
+        "https://api.buffer.com/1/graphql.json", data=body, method="POST"
+    )
+    req.add_header("Authorization", f"Bearer {token}")
+    req.add_header("Content-Type", "application/json")
+    
+    resp = urllib.request.urlopen(req, timeout=15)
+    result = json.loads(resp.read().decode("utf-8"))
+    post_result = result["data"]["createPost"]
+    
+    if "post" in post_result:
+        return {"success": True, "post_id": post_result["post"]["id"],
+                "status": post_result["post"]["status"],
+                "due_at": post_result["post"].get("dueAt")}
+    return {"success": False, "error": post_result.get("message", "Unknown")}
 ```
 
 ### Stage 4: Channel-Specific Formatting
@@ -497,12 +534,17 @@ python buffer_post.py --title "..." --finding "..." --schedule-for "2026-06-25T0
 
 | Scenario | Response |
 |:---------|:---------|
-| Buffer token missing | `[BLOCKED: no token]` — guide user to get token from bufferapp.com |
-| Profile not found for channel | `[NO-PROFILE: twitter]` — list available profiles, suggest connecting |
-| Buffer API rate limit | Retry after 60s. If still limited: `[BUFFER-RATE-LIMITED]` |
-| Post text exceeds platform limit | Truncate with warning `[TRUNCATED: 312 → 280 chars]` |
-| Network error | `[NETWORK-ERROR]` — retry with exponential backoff (max 3) |
+| Buffer token missing | `[BLOCKED: no token]` — guide user to get token from buffer.com/developers |
+| Token file has BOM | Auto-handled via `encoding='utf-8-sig'` in load_token() |
+| Profile not found for channel | `[NO-PROFILE: twitter]` — list available channels, suggest connecting |
+| Organization not found | `[BLOCKED] No Buffer organization` — create one at buffer.com |
+| Post text exceeds platform limit | Truncated automatically (280 for Twitter, 300 for Bluesky) |
+| Channel disconnected | `[WARN] Channel {service} is disconnected — skipping.` |
+| HTTP 401 Unauthorized | Token expired — regenerate at buffer.com/developers |
+| Network error / timeout | Auto-retry via urllib (graceful error message shown) |
+| Bluesky/Twitter/LinkedIn notification mode | Not supported — script always uses `automatic` schedulingType |
+| Rate limit (100 req/15min) | Buffer API enforces; back off and retry |
 
 ---
 
-*buffer-integration v1.0 — Phase 5 of LRAP. Buffer API integration for automated social media dissemination.*
+*buffer-integration v2.0 — Phase 5 of LRAP. Buffer GraphQL API integration for automated social media dissemination.*
