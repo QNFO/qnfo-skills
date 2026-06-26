@@ -1,3 +1,9 @@
+---
+name: test-enforcement
+description: PRIORITY 1 test enforcement for ALL code changes, deployments, and infrastructure modifications. Mandatory for ALL QNFO agent sessions. Enforces test suite runs (80+ tests across 9 domains), content quality gates, and blocks deployment on critical failures. Use when deploying to Cloudflare, modifying code, closing sessions, or changing infrastructure.
+version: "1.0"
+---
+
 # TEST ENFORCEMENT SKILL — v1.0
 
 > **PRIORITY 1 — MANDATORY for ALL code changes, deployments, and infrastructure modifications.**
