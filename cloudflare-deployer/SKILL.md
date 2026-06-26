@@ -1,10 +1,10 @@
 ---
 name: cloudflare-deployer
 description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
-version: "1.4"
+version: "1.5"
 ---
 
-# CLOUDFLARE DEPLOYER SKILL — v1.4
+# CLOUDFLARE DEPLOYER SKILL — v1.5
 
 > **On-demand skill.** Load via `skill_view('cloudflare-deployer')` for all Cloudflare operations.
 > Source: `templates/CLOUDFLARE-DEPLOYMENT.md` v2.1 + QWAV-DEFAULT.md §0.6.5-0.6.7
@@ -90,16 +90,13 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 **Vectorize Indexes (1):**
 - `qwav-research` — 768-dim cosine, QWAV research corpus semantic search
 
-**Queues (5):**
+**Queues (2):**
 - `qnfo-lifecycle-queue` — Lifecycle pipeline (archival jobs, auto-transitions)
-- `emailqueue` (81cffc48) — Email processing
 - `git-on-cloudflare-repo-maint` (296cceec) — Git repository maintenance
-- `paper-ingestion-queue` (6754f550) — Paper ingestion pipeline
-- `pipeline-dedup` (a20a038f) — Pipeline deduplication
 
 **Pages Projects (10):** qwav, prompts-wiki, qnfo-archive, quantum-laws-of-form, qlof-primer, rwnq8, +4 more
 
-**Workers (20 scripts):** Deployed — key workers include `graph-api` (Knowledge Graph), `qnfo-lifecycle` (automated project lifecycle, cron: daily 06:00 UTC), `qnfo-archive-worker` (queue consumer for R2 archival migration). Query via `wrangler deployments` with specific worker names.
+**Workers (26 scripts):** Deployed — key workers include `graph-api` (Knowledge Graph), `qnfo-lifecycle` (automated project lifecycle, cron: daily 06:00 UTC), `living-papers-api` (Living Papers with D1 + IPFS), `qnfo-archive-worker` (queue consumer for R2 archival migration), `qnfo-archive-verify` (archive verification), `umbrella-router` (traffic routing). Query via `wrangler deployments` with specific worker names.
 
 -
 
@@ -325,8 +322,8 @@ If missing, check that skill's Embedded Scripts section for recovery guidance.
 - `build_pdf.py`: requires `reportlab` and optionally `markdown` packages
 
 
-*cloudflare-deployer skill v1.3 — Load on-demand via skill_view(). Compatible with wrangler v4.95+*
+*cloudflare-deployer skill v1.5 — Load on-demand via skill_view(). Compatible with wrangler v4.95+*
 
 ---
 
-*cloudflare-deployer v1.3 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/cloudflare-deployer\\SKILL.md'). Not accessible via skill_view().*
+*cloudflare-deployer v1.5 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/cloudflare-deployer\\SKILL.md'). Not accessible via skill_view().*

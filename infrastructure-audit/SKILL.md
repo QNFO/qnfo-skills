@@ -1,10 +1,10 @@
 ---
 name: infrastructure-audit
 description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
-version: "1.1"
+version: "1.2"
 ---
 
-# INFRASTRUCTURE AUDIT SKILL — v1.1
+# INFRASTRUCTURE AUDIT SKILL — v1.2
 
 > **LIFECYCLE-AWARE.** This release adds lifecycle pipeline health checks, archival path verification, and ultrametric taxonomy validation.
 
@@ -51,7 +51,7 @@ queues = cf('queues')
 
 print(f'D1: {len(d1.get("result",[]))} | KV: {len(kv.get("result",[]))} | Vectorize: {len(vec.get("result",[]))}')
 print(f'Pages: {len(pages.get("result",[]))} | Workers: {len(workers.get("result",[]))} | Queues: {len(queues.get("result",[]))}')
-# Expected: D1: 4 | KV: 2 | Vectorize: 1 | Pages: 35 | Workers: 20 | Queues: 5
+# Expected: D1: 4 | KV: 2 | Vectorize: 1 | Pages: 10 | Workers: 26 | Queues: 2
 ```
 
 ### Phase 1.5: Lifecycle Pipeline Health (NEW)
@@ -80,7 +80,7 @@ r4 = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
     headers={"User-Agent": "Mozilla/5.0"})
 kg = json.loads(urllib.request.urlopen(r4, timeout=10).read())
 print(f"Knowledge Graph: {kg.get('totalNodes',0)} nodes, {kg.get('totalEdges',0)} edges")
-# Expected: 238 nodes, 382 edges
+# Expected: 223 nodes, 340 edges
 ```
 
 ### Phase 2: Orphan Detection
@@ -135,10 +135,10 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | D1 Databases | 4 | qnfo-graph, qnfo-audit, living-paper, portfolio-state |
 | KV Namespaces | 2 | equation-cache, git-on-cloudflare-routes |
 | Vectorize Indexes | 1 | qwav-research (768-dim) |
-| Pages Projects | 35 | qwav, prompts-wiki, qnfo-archive, +32 more |
-| Workers | 20 | graph-api, qnfo-lifecycle, qnfo-archive-worker, +17 more |
-| Queues | 5 | qnfo-lifecycle-queue, git-on-cloudflare-repo-maint, emailqueue, paper-ingestion-queue, pipeline-dedup |
-| Knowledge Graph | 238 nodes, 382 edges | 4-domain ultrametric taxonomy, 74 project nodes |
+| Pages Projects | 10 | qwav, prompts-wiki, qnfo-archive, quantum-laws-of-form, qlof-primer, rwnq8, +4 more |
+| Workers | 26 | graph-api, qnfo-lifecycle, living-papers-api, qnfo-archive-worker, qnfo-archive-verify, umbrella-router, +20 more |
+| Queues | 2 | qnfo-lifecycle-queue, git-on-cloudflare-repo-maint |
+| Knowledge Graph | 223 nodes, 340 edges | 4-domain ultrametric taxonomy, 57 project nodes |
 | R2 Bucket | 1 (qnfo) | discovery, archive, projects, releases, tools |
 
 ## Lifecycle Pipeline Health Checks
@@ -164,10 +164,10 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | D1 Databases | 4 | OK |
 | KV Namespaces | 2 | OK |
 | Vectorize Indexes | 1 | OK |
-| Pages Projects | 35 | OK |
-| Workers | 20 | OK |
-| Queues | 5 | OK |
-| Knowledge Graph | 238n/382e | OK |
+| Pages Projects | 10 | OK |
+| Workers | 26 | OK |
+| Queues | 2 | OK |
+| Knowledge Graph | 223n/340e | OK |
 | Lifecycle Worker | Running | OK |
 | Archive Worker | Running | OK |
 
@@ -193,4 +193,4 @@ No action needed.
 
 ---
 
-*infrastructure-audit v1.1 — Lifecycle-aware. Pipeline health checks, archival integrity, ultrametric taxonomy validation.*
+*infrastructure-audit v1.2 — Lifecycle-aware. Pipeline health checks, archival integrity, ultrametric taxonomy validation.*

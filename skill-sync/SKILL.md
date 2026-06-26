@@ -1,10 +1,10 @@
 ---
 name: skill-sync
 description: Sync all DeepChat skills between local disk, GitHub, and Cloudflare R2. Monitors skill modifications and auto-syncs after changes. Updates Discovery Index with current versions. Use when skills are modified and need to be pushed to redundant backups, or to check sync status.
-version: "1.0"
+version: "1.1"
 ---
 
-# SKILL SYNC SKILL — v1.0
+# SKILL SYNC SKILL — v1.1
 
 > **On-demand skill.** Load via `skill_view('skill-sync')` to sync skills or check sync status.
 
