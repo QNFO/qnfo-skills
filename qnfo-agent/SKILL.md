@@ -1357,17 +1357,21 @@ At every session close-out, AFTER standard close-out steps:
 
 ---
 
-## 10. SESSION LIFECYCLE
+## 10. SESSION LIFECYCLE (D1-FIRST — v3.31)
 
 ### Startup
-0. **Pull Discovery Index** (MANDATORY): `npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_index.json` — discover ALL ecosystem assets before beginning work
+0. **D1-First Discovery** (MANDATORY): Query the unified API Worker for cross-system inventory and pending tasks. R2 Discovery Index is backup-only for itemized data. D1 is canonical for tasks, handoffs, decisions, projects, papers, and CMS.
+   - `GET https://qnfo-data-api.q08.workers.dev/v2/stats` — cross-system row counts
+   - `GET https://qnfo-data-api.q08.workers.dev/v2/tasks?status=pending` — pending tasks across all projects
+   - `GET https://qnfo-data-api.q08.workers.dev/v2/projects` — unified project list (D1 discovery_projects + KG nodes)
+   - `GET https://qnfo-data-api.q08.workers.dev/v2/handoffs` — recent handoffs
 0.5 **Run Kaizen Engine** (AUTOMATED — every session): Pull from R2 (`npx wrangler r2 object get qnfo/tools/kaizen_engine.py --remote --file=_kaizen_engine.py`) then `python _kaizen_engine.py --audit` — analyze conversation patterns, system health, and R2 audit trails for improvement opportunities. If `--apply` or `--auto` flag set: apply safe model config changes and deploy automatically. Discard `_kaizen_engine.py` when done. See `qnfo/tools/kaizen_engine.py` (R2) and templates/KAIZEN-AUDIT.md for full protocol.
 0.7 **Cloudflare API Token (PERSISTENT — 2026-06-19 — auto-available):** `$env:CLOUDFLARE_API_TOKEN` is stored at User-level environment with ALL Cloudflare permissions (R2 read+write+delete, Pages, Workers, D1, KV, Vectorize, Queues, AI, DNS/zones, pipelines, secrets store, containers, workflows, hyperdrive, and all zone-level resources). No manual loading needed — the token survives reboots and is automatically available in every session. Verify: `npx wrangler whoami` should show account `quniverse` with token from `CLOUDFLARE_API_TOKEN` env var. S3-compatible credentials also available — see `cloudflare-deployer` skill v1.3+ for full policy access matrix and enumerated resources.
 1. Verify sandbox: working directory within project directory
 2. Git check: verify local git repo exists (git is version control ONLY. Cloudflare R2 = canonical remote.)
 3. Branch check: feature branch (verify name unchanged — CPL L19)
-4. Read project-state from R2 `qnfo/audit/state/<project>.json`
-5. Identify next task from R2 `qnfo/audit/backlog/<project>.json`
+4. Read project-state from D1 `qnfo-audit.discovery_projects` via API Worker `/v2/projects`
+5. Identify next task from D1 `qnfo-audit.tasks` via API Worker `/v2/tasks?status=pending`
 6. BEGIN WORK IMMEDIATELY — AUTO-CONTINUE is default
 
 ### Close-Out (AUTONOMOUS — Do NOT wait for "TERMINATE")

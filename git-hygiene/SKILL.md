@@ -142,14 +142,6 @@ Examples:
 
 ---
 
-
-## VERSION HISTORY
-
-| Version | Date | Changes |
-|:--------|:-----|:--------|
-| **v1.0** | 2026-06-26 | Skill audit — added version history. Current version. |
-
-
 *git-hygiene skill v1.0 — Load on-demand via skill_view() for git recovery*
 
 ---
