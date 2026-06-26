@@ -71,6 +71,24 @@ BANNED from ANY response unless ALL plan items [COMPLETED] with evidence:
 
 **VIOLATION:** Delete banned word → replace with `[IN-PROGRESS: N/M tasks]` → execute next task.
 
+## 2.5 TEST ENFORCEMENT INTEGRATION (v1.1)
+
+**MANDATORY for ALL code changes, deployments, and infrastructure modifications.**
+
+Before claiming ANY deploy, write, or infrastructure action as [EXECUTED]:
+1. Run the canonical test suite: `python _test_suite.py --quick` (smoke test)
+2. For Cloudflare deploys: `python _test_suite.py --cms --pages`
+3. For content changes: verify content quality gate (no stubs, non-empty bodies)
+4. For skills changes: `python bootstrap_skills.py --verify && python _deploy.py --verify`
+5. For session closeout: `python _test_suite.py` (full 80+ test run)
+
+**GATE:** If ANY critical test fails → action is NOT complete. Fix before claiming [EXECUTED].
+**GATE:** If content quality gate fails (stubs, empty bodies) → page is NOT production-ready.
+
+Test suite canonical: `qnfo/tools/test_suite.py` on R2. Pull: `npx wrangler r2 object get qnfo/tools/test_suite.py --remote --file=_test_suite.py`
+
+See also: `test-enforcement` skill (Priority 1, pinned).
+
 ---
 
 ## 3. CONTINUATION SIGNAL (MANDATORY)

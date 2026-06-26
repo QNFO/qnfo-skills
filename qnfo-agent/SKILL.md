@@ -933,6 +933,7 @@ EXPECTED OUTPUT: [format, structure, scope]
 | Migrate local files to R2 (scan, classify, upload, index, clean up) | `read('%APPDATA%\DeepChat\skills\local-to-r2-migration\SKILL.md')` |
 | Audit system prompts, skills, templates (self-assessment) | `read('%APPDATA%\DeepChat\skills\prompt-audit\SKILL.md')` |
 | **Enforce execution fidelity (Priority 0 — enforced by master prompt)** | `read('%APPDATA%\DeepChat\skills\execution-guard\SKILL.md')` |
+| **Enforce test protocols for ALL code/actions (Priority 1)** | `read('%APPDATA%\DeepChat\skills\test-enforcement\SKILL.md')` |
 
 **Loading protocol:**
 1. **Verify file exists:** `Test-Path "%APPDATA%\DeepChat\skills\<name>\SKILL.md"`
@@ -1385,9 +1386,11 @@ At every session close-out, AFTER standard close-out steps:
    b. For every file claimed as written: `Test-Path <file>` + `Get-Content <file> -First 3`
    c. For every commit claimed: `git log --oneline` must contain the hash
    d. For every Python script claimed as run: re-execute and verify output matches
-   e. Any unexecuted item → either execute NOW or document as `[DEFERRED: reason]` in handoff
+   e. **RUN TEST SUITE:** Pull _test_suite.py from R2 and execute all domains. 0 critical failures required.
+   f. Any unexecuted item → either execute NOW or document as `[DEFERRED: reason]` in handoff
    f. **GATE:** If ANY planned task has no execution evidence → closeout BLOCKED
-   g. **GATE:** If user demanded execution and executable tasks remain → closeout BLOCKED (see EXECUTE GATE above)
+   h. **GATE:** If test suite has critical failures → closeout BLOCKED. Fix failures first.
+   i. **GATE:** If user demanded execution and executable tasks remain → closeout BLOCKED (see EXECUTE GATE above)
 
 1. All commits verified: git log -1 --oneline
 2. Load closeout-manager skill: `read('%APPDATA%\DeepChat\skills\closeout-manager\SKILL.md')`
@@ -1571,11 +1574,11 @@ A task is NOT complete until ALL applicable criteria are met. DoD is verified by
 - [ ] **PYTHON VERIFIED:** All quantitative results re-executed and produce same output.
 - [ ] **NO CHECKBOX THEATER:** Every `[x]` traces to evidence on disk. If evidence doesn't exist, checkbox stays `[ ]`.
 
-**Code tasks:** File passes Unicode scan (Rule 12), executes without errors, output verified, no `python -c` used (Rule 13), committed with proper format.
+**Code tasks:** File passes Unicode scan (Rule 12), executes without errors, output verified, no `python -c` used (Rule 13), committed with proper format. **TEST VERIFIED:** Test suite run — 0 critical failures.
 
 **Document tasks:** Publication Language Gate passed (zero internal language), curly quotes confirmed, YAML frontmatter valid, reader testing completed, file committed.
 
-**Publication tasks:** Publication Language Gate passed, standalone (zero project refs), reader testing 2+ rounds, DOI replaced, PDF verified on R2, human review completed.
+**Publication tasks:** Publication Language Gate passed, standalone (zero project refs), reader testing 2+ rounds, DOI replaced, PDF verified on R2, human review completed. **TEST VERIFIED:** Content quality gate passed (no stubs, bodies non-empty, DOIs present).
 
 ### 9.11.4 ANTI-HYPERBOLE GATE (v1.0 — HARD BLOCK on premature completion claims)
 

@@ -122,6 +122,28 @@ npx wrangler pages deployment rollback --project-name <name>
 **Active Projects:** qwav (deep.qwav.tech), prompts-wiki, qnfo-archive (archive.qnfo.org),
 quantum-laws-of-form (laws.qnfo.org), qlof-primer (primer.qwav.tech), +11 more.
 
+### Post-Deploy Verification (MANDATORY for ALL deploys — v1.6)
+
+After deploying ANY content to Cloudflare Pages or Workers, verify with the canonical test suite:
+
+```bash
+# Pull test suite from R2 (ephemeral)
+npx wrangler r2 object get qnfo/tools/test_suite.py --remote --file=_test_suite.py
+
+# Run deploy verification (Pages + CMS + KG)
+python _test_suite.py --cms --pages --kg
+
+# Content quality gate — MUST PASS
+python _test_suite.py --content
+
+# Discard
+Remove-Item _test_suite.py
+```
+
+**GATE:** If ANY test marked `CRIT` fails → deployment is NOT complete. Fix before claiming [EXECUTED].
+**GATE:** If ANY page shows `stub=True` → deployment is REJECTED. Content must be professional.
+**GATE:** If ANY publication shows `EMPTY body` → content is NOT ready.
+
 ### Post-Deploy MathJax Verification (MANDATORY for Publication Pages)
 
 After deploying ANY publication page to Cloudflare Pages, verify MathJax is correctly configured:
