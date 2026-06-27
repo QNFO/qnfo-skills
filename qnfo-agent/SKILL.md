@@ -921,7 +921,11 @@ EXPECTED OUTPUT: [format, structure, scope]
 |:--------------------|:----------------|
 | Send email | `read('%APPDATA%\DeepChat\skills\email-composer\SKILL.md')` |
 | Deploy to Cloudflare (all ops: Workers, R2, Vectorize, DNS, redirects) | `read('%APPDATA%\DeepChat\skills\cloudflare-deployer\SKILL.md')` |
+| **Conduct scholarly literature search (arXiv, Semantic Scholar, QNFO Vectorize)** | `read('%APPDATA%\DeepChat\skills\literature-search\SKILL.md')` |
+| **Manage citations, verify bibliography, generate BibTeX from DOIs** | `read('%APPDATA%\DeepChat\skills\citation-manager\SKILL.md')` |
+| **Build publication-quality PDFs from Markdown** | `read('%APPDATA%\DeepChat\skills\pdf-builder\SKILL.md')` |
 | Publish a document | `read('%APPDATA%\DeepChat\skills\publication-publisher\SKILL.md')` |
+| **Optimize SEO discoverability for Cloudflare Pages sites** | `read('%APPDATA%\DeepChat\skills\seo-discoverability\SKILL.md')` |
 | Close out a project | `read('%APPDATA%\DeepChat\skills\closeout-manager\SKILL.md')` |
 | Recover from git errors | `read('%APPDATA%\DeepChat\skills\git-hygiene\SKILL.md')` |
 | Manage GitHub Issues/PRs/Wiki (DEPRECATED — GitHub fully deprecated per ADR-001) | `read('%APPDATA%\DeepChat\skills\github-manager\SKILL.md')` |
@@ -934,6 +938,8 @@ EXPECTED OUTPUT: [format, structure, scope]
 | Audit system prompts, skills, templates (self-assessment) | `read('%APPDATA%\DeepChat\skills\prompt-audit\SKILL.md')` |
 | **Enforce execution fidelity (Priority 0 — enforced by master prompt)** | `read('%APPDATA%\DeepChat\skills\execution-guard\SKILL.md')` |
 | **Enforce test protocols for ALL code/actions (Priority 1)** | `read('%APPDATA%\DeepChat\skills\test-enforcement\SKILL.md')` |
+
+**Research pipeline trigger:** When developing scholarly theses, papers, or publications, load the full LRAP pipeline: literature-search → citation-manager → pdf-builder → publication-publisher → seo-discoverability. These skills form the research document production chain and should be loaded together.
 
 **Loading protocol:**
 1. **Verify file exists:** `Test-Path "%APPDATA%\DeepChat\skills\<name>\SKILL.md"`
@@ -1724,6 +1730,7 @@ When the user says "WHAT'S NEXT?", "PROCEED", "EXECUTE NEXT PROJECT", or similar
 
 | Version | Date | Changes |
 |:--------|:-----|:--------|
+| **v3.31** | 2026-06-27 | **Research Pipeline Skills Integration:** Added literature-search, citation-manager, pdf-builder, and seo-discoverability to §6 Skill Invocation Protocol table. Added explicit research pipeline trigger note for scholarly thesis/paper/publication development. Fixes oversight where agents developing scholarly documents failed to load the LRAP pipeline skills (literature-search → citation-manager → pdf-builder → publication-publisher → seo-discoverability). |
 | **v3.30** | 2026-06-26 | **Strategic Fit Analysis:** Added §0.1 Strategic Fit Analysis — auto-detect triggers for "how does X fit into QNFO/QWAV?" queries. Structured 6-section methodology (Architecture Baseline, Integration Point Mapping, Pillar Alignment, Research Trajectory, Risks/Limitations, Verdict) with mandatory certainty calibration, anti-hype enforcement, and architecture compliance gate. Validated against data-over-sound (DoS) analysis. Distinction from §0 Research Intake documented. |
 | **v3.27** | 2026-06-05 | **MathJax Canonical Configuration:** Added §7.2 HTML & MathJax Configuration — mandatory config-before-script ordering, canonical Markdown→HTML generation via `HTML-PUBLICATION-PAGE` template, pre-deploy and post-deploy MathJax verification gates. Created `MATHJAX-CONFIG.md` template (canonical MathJax 3.x config with QNFO standard macros). Created `HTML-PUBLICATION-PAGE.md` template (Markdown→HTML pipeline with proper MathJax embedding). Updated Pre-Publication Checklist with MathJax verification items. Updated `publication-publisher` skill v1.4→v1.5 with MathJax verification step. Updated `cloudflare-deployer` skill v1.1→v1.2 with post-deploy MathJax check. Root cause fix: `window.MathJax` config was placed AFTER `<script id="MathJax-script">` tag — MathJax 3 initializes on script load, missing config = no rendering. |
 | **v3.26** | 2026-06-05 | **Tool Heuristics + Context Management:** Added §6.2 Tool Selection Heuristics — "REST API first, wrangler last" with priority table and 5 hard rules. Added §0.9.3 Context Window Management — compaction at 70% threshold, anti-loop detection (3x same failure → STUCK). Created and uploaded working `fast_r2_upload.py` (10KB, retry+backoff), `r2_list.py` (5KB), `ps_run.py` (2KB) to R2 `qnfo/tools/`. Previous session had 0-byte stubs — phantom DONE claim. Direct fix for 19 EXECUTE demands with zero tool invocations in failure test case. |
