@@ -4,9 +4,9 @@ description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pag
 version: "1.2"
 ---
 
-# INFRASTRUCTURE AUDIT SKILL — v1.2
+# INFRASTRUCTURE AUDIT SKILL — v1.3
 
-> **LIFECYCLE-AWARE.** This release adds lifecycle pipeline health checks, archival path verification, and ultrametric taxonomy validation.
+> **LIFECYCLE-AWARE. GAP-AUDIT INTEGRATION.** This release adds lifecycle pipeline health checks, archival path verification, ultrametric taxonomy validation, and §0.5 GAP AUDIT INTEGRATION — Phase 4 health recommendations now output gap-audit-compatible report format.
 
 ---
 
@@ -172,7 +172,10 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | Archive Worker | Running | OK |
 
 ## Issues Found
-None — all resources accounted for.
+**Auto-populated from gap audit (closeout-manager §2.6):**
+| Gap ID | Category | Severity | Description |
+|:-------|:---------|:---------|:------------|
+| — | — | — | (List from gap audit output) |
 
 ## Lifecycle Pipeline
 - Daily scan active (06:00 UTC)
@@ -184,6 +187,13 @@ None — all resources accounted for.
 No action needed.
 ```
 
+### 0.5 GAP AUDIT INTEGRATION (v1.3)
+
+When the infrastructure audit runs (session start or on-demand), it automatically:
+1. Feeds findings into the POST-PHASE GAP AUDIT (closeout-manager §2.6)
+2. Maps infrastructure health to gap severity: health FAIL → BLOCKING/HIGH, orphan resources → MEDIUM, warnings → LOW
+3. Outputs gap-audit-compatible report format with Gap ID, Category, Severity, Description columns
+
 ## Integration
 
 - Runs automatically at session start (qnfo-agent §3.2 step 1.6)
@@ -193,4 +203,4 @@ No action needed.
 
 ---
 
-*infrastructure-audit v1.2 — Lifecycle-aware. Pipeline health checks, archival integrity, ultrametric taxonomy validation.*
+*infrastructure-audit v1.3 — Lifecycle-aware. Gap-audit integration (§0.5). Pipeline health checks, archival integrity, ultrametric taxonomy validation.*

@@ -4,35 +4,36 @@ description: Sync all DeepChat skills between local disk, GitHub, and Cloudflare
 version: "1.1"
 ---
 
-# SKILL SYNC SKILL — v1.1
+# SKILL SYNC SKILL — v1.3
 
-> **On-demand skill.** Load via `skill_view('skill-sync')` to sync skills or check sync status.
+> **On-demand skill. AUTO-GAP-AUDIT INTEGRATION.** Load via `skill_view('skill-sync')` to sync skills or check sync status. Automatically triggers gap audit (closeout-manager §2.6) after sync completion.
 
 ---
 
 ## Purpose
 
-Skills are modified locally but must be pushed to GitHub and R2 for redundancy. This skill automates the three-way sync and updates the Discovery Index with current versions.
+Skills are modified locally but must be pushed to GitHub and R2 for redundancy. This skill automates the three-way sync, updates the Discovery Index with current versions, and **triggers the POST-PHASE GAP AUDIT** to verify no desync or drift remains.
 
 ## When to Use
 
 | Trigger | Action |
 |:--------|:-------|
-| After any skill modification | "SYNC SKILLS" or use bootstrap_skills.py |
-| "Are skills in sync?" | Check sync status report |
-| "Push skills to GitHub/R2" | Selective sync |
-| Before session closeout | Auto-sync check |
+| After any skill modification | "SYNC SKILLS" or use bootstrap_skills.py → auto-triggers gap audit |
+| "Are skills in sync?" | Check sync status report → auto-triggers gap audit if desync found |
+| "Push skills to GitHub/R2" | Selective sync → auto-verifies R2 + DI |
+| Before session closeout | Auto-sync check → feeds into closeout gap audit |
 
 ## Quick Sync (One Command)
 
 ```bash
-python "%APPDATA%\.deepchat\skills\bootstrap_skills.py" --sync
+python "%APPDATA%\DeepChat\skills\bootstrap_skills.py" --sync
 ```
 
 This:
 1. Commits and pushes all skill changes to GitHub (`rwnq8/qnfo-skills`)
 2. Uploads all skills to R2 (`qnfo/prompts/skills/<name>/SKILL.md`)
 3. Reports sync status
+4. **AUTO-TRIGGERS gap audit** (closeout-manager §2.6) — verifies R2, GitHub, and DI consistency
 
 ## Sync Status Check
 
@@ -41,7 +42,7 @@ import os, urllib.request
 
 TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
 ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
-SKILLS_DIR = os.path.expandvars(r'%USERPROFILE%\.deepchat\skills')
+SKILLS_DIR = os.path.expandvars(r'%APPDATA%\DeepChat\skills')
 
 local_skills = []
 for d in sorted(os.listdir(SKILLS_DIR)):
@@ -91,4 +92,4 @@ This kills all old DeepChat processes and launches a fresh instance. Execute thi
 
 ---
 
-*skill-sync v1.1 — Monitors and syncs skills between local, GitHub, and R2. Keeps backups current. Includes mandatory post-sync restart.*
+*skill-sync v1.3 — Monitors and syncs skills between local, GitHub, and R2. Auto-gap-audit integration. Paths corrected (%APPDATA%\DeepChat\skills). Includes mandatory post-sync restart.*
