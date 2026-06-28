@@ -1,5 +1,5 @@
 /**
- * QNFO Ask QWAV v2.3 + SEED endpoint
+ * QNFO Ask QWAV v2.4 + SEED + CLEANUP endpoint
  * /api/seed — batch-seeds Vectorize with paper embeddings
  */
 export default {
@@ -11,7 +11,7 @@ export default {
 
     try {
       if (p === '/' || p === '/api') {
-        return J({ service: 'QNFO Ask QWAV v2.3', models: { embedding: '@cf/baai/bge-m3 (1024-dim)', textgen: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b' }, endpoints: ['/health','/api/search?q=X','/api/papers','/api/ask?q=X','/api/stats','/api/seed'] }, 200, h);
+        return J({ service: 'QNFO Ask QWAV v2.4', models: { embedding: '@cf/baai/bge-m3 (1024-dim)', textgen: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b' }, endpoints: ['/health','/api/search?q=X','/api/papers','/api/ask?q=X','/api/stats','/api/seed','/api/cleanup'] }, 200, h);
       }
 
       if (p === '/health' || p === '/api/health') {
@@ -19,7 +19,7 @@ export default {
         try { const r = await env.PAPERS_DB.prepare('SELECT count(*) as c FROM papers').all(); n = r.results?.[0]?.c || 0; } catch(e) {}
         try { const idx = await env.VECTORIZE_INDEX.describe(); vs = 'dim='+(idx.dimensions||'?')+' vectors='+(idx.vectorCount||'?'); } catch(e) {}
         try { const emb = await env.AI.run('@cf/baai/bge-m3', { text: ['test'] }); aiOk = emb?.data ? 'ok' : 'no-data'; embTest = emb?.data ? `shape=[${emb.data.length},${emb.data[0]?.length||'?'}]` : 'no-embedding'; } catch(e) { aiOk = 'error'; embTest = e.message.substring(0,80); }
-        return J({ status: 'ok', version: '2.3', papers: n, vectorize: vs, ai: aiOk, embedding_test: embTest }, 200, h);
+        return J({ status: 'ok', version: '2.4', papers: n, vectorize: vs, ai: aiOk, embedding_test: embTest }, 200, h);
       }
 
       if (p === '/api/papers') {
@@ -133,6 +133,20 @@ export default {
         const { results: d } = await env.PAPERS_DB.prepare("SELECT count(*) as c FROM papers WHERE doi IS NOT NULL AND doi != ''").all();
         const { results: c } = await env.PAPERS_DB.prepare("SELECT count(*) as c FROM papers WHERE ipfs_cid IS NOT NULL AND ipfs_cid != ''").all();
         return J({ success: true, stats: { total_papers: t[0]?.c||0, with_doi: d[0]?.c||0, with_ipfs: c[0]?.c||0 } }, 200, h);
+      }
+
+      if (p === '/api/cleanup' && request.method === 'POST') {
+        const body = await request.json();
+        const ids = body.ids || [];
+        if (!ids.length) return J({ success: false, error: 'Missing ids array' }, 400, h);
+        let deleted = 0, errors = [];
+        for (const id of ids) {
+          try {
+            await env.PAPERS_DB.prepare('DELETE FROM papers WHERE id = ?').bind(id).run();
+            deleted++;
+          } catch(e) { errors.push(`${id}: ${e.message?.substring(0,50)}`); }
+        }
+        return J({ success: true, deleted, total: ids.length, errors: errors.slice(0,10) }, 200, h);
       }
 
       return J({ error: 'Not found', path: p }, 404, h);
