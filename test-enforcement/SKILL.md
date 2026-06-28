@@ -1,6 +1,6 @@
-# TEST ENFORCEMENT SKILL — v1.0
+# TEST ENFORCEMENT SKILL — v1.1
 
-> **PRIORITY 1 — MANDATORY for ALL code changes, deployments, and infrastructure modifications.**
+> **PRIORITY 1 — MANDATORY for ALL code changes, deployments, and infrastructure modifications. GAP-AUDIT BRIDGE (§2.5).**
 > **PINNED.** This skill must be loaded for ALL QNFO agent sessions.
 
 ---
@@ -19,7 +19,7 @@ QNFO/QWAV production sites were stub content. No test suite existed. This skill 
 | Content change | Content quality: bodies non-empty, DOIs present | BLOCKING |
 | Skills edit | `bootstrap_skills.py --verify && _deploy.py --verify` | BLOCKING |
 | ANY Cloudflare deploy | `_test_suite.py` full run within 30s | BLOCKING |
-| Session closeout | `_test_suite.py` full run | MANDATORY |
+| Session closeout | `_test_suite.py` full run + gap audit (closeout-manager §2.6) | MANDATORY |
 
 ## 2. CONTENT QUALITY GATE
 
@@ -29,6 +29,15 @@ QNFO/QWAV production sites were stub content. No test suite existed. This skill 
 | Page has `<title>`, `<h1>`, body > 500B | **YES** |
 | CMS publication has body (> 100 chars) | **YES** |
 | CMS publication has DOI | WARNING |
+
+## 2.5 GAP AUDIT BRIDGE (v1.1)
+
+Test failures discovered by this skill automatically feed into the POST-PHASE GAP AUDIT (closeout-manager §2.6):
+- Critical test failures → BLOCKING gaps (prevent completion claims)
+- Warning-level failures → HIGH gaps (should fix this session)
+- Missing tests → MEDIUM gap (document for next session)
+
+**If test suite has ANY critical failure → the gap audit MUST show BLOCKING severity.**
 
 ## 3. CANONICAL TEST SUITE
 
@@ -57,13 +66,14 @@ CMS (8) | Pages (55) | KG (6) | D1 (8) | Vectorize (3) | R2 (4) | Skills (8) | C
 
 - **execution-guard:** DoD adds "Test verified: N/N pass"
 - **cloudflare-deployer:** Post-deploy test required
-- **closeout-manager:** Full test suite run before closeout
+- **closeout-manager:** Full test suite run → gap audit integration (§2.6)
 - **qnfo-agent:** §9.11.3 DoD adds test verification criterion
 
 ## 7. VERSION HISTORY
 
+| v1.1 | 2026-06-27 | Gap audit bridge (§2.5) — test failures auto-populate closeout-manager gap audit.
 | v1.0 | 2026-06-26 | Initial release. 80+ tests, mandatory gates, content quality enforcement. |
 
 ---
 
-*test-enforcement v1.0 — PRIORITY 1. Pinned. Mandatory for ALL actions.*
+*test-enforcement v1.1 — PRIORITY 1. Gap-audit bridge (§2.5). Pinned. Mandatory for ALL actions.*
