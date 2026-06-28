@@ -1,0 +1,57 @@
+{
+  "publication_title": "The Ultrametric Foundation: A Unified Thesis on Number, Time, Knowledge, and Computation",
+  "version": "1.0.0",
+  "semantic_versioning": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0,
+    "version_change_notes": "Initial publication — 21-note synthesis across 5 parts and 15 chapters"
+  },
+  "artifacts": [
+    {
+      "path": "index.html",
+      "category": "web_page",
+      "size_bytes": 64379,
+      "sha256": "46e1583260466776d5783e960d9d41c13f8d24977b92775d6a2361827f24ab9f"
+    },
+    {
+      "path": "llms.txt",
+      "category": "supplementary",
+      "size_bytes": 1042,
+      "sha256": "3c75df64b02ab260a1bc86df83a23e868d83a30bc6e584fdd86920d32d0c8632"
+    },
+    {
+      "path": "paper.md",
+      "category": "source_document",
+      "size_bytes": 56625,
+      "sha256": "cfa8f9c3dedae33d24bd3e9985bee2f102a2e67f9373a9b3038119e54c456189"
+    },
+    {
+      "path": "PROJECT-STATE.json",
+      "category": "data",
+      "size_bytes": 1454,
+      "sha256": "2e5a7157d90b2499b8e31fd24b5d397f6d41f6fbf0b5bc6d329efec67b9ffdc5"
+    },
+    {
+      "path": "robots.txt",
+      "category": "supplementary",
+      "size_bytes": 100,
+      "sha256": "a3f7ed22e2956d186f7b7dfe643959b32b600cba7305baa9734ec5c05f568b92"
+    },
+    {
+      "path": "ULTRAMETRIC-FOUNDATION-THESIS-v1.0-draft.pdf",
+      "category": "primary_output",
+      "size_bytes": 209876,
+      "sha256": "a30e7f35f9d1207cc14e35786c1d53ac73fae71080e840010f3800b6936e82cf"
+    }
+  ],
+  "generated_at": "2026-06-28T01:48:26.619682+00:00",
+  "total_files": 6,
+  "categories_count": {
+    "web_page": 1,
+    "supplementary": 2,
+    "source_document": 1,
+    "data": 1,
+    "primary_output": 1
+  }
+}
