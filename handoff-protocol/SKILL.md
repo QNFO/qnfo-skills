@@ -1,14 +1,14 @@
 ---
 name: handoff-protocol
-version: 1.0.0
-description: QACP-HANDOFF protocol for structured agent-to-agent session handoffs. Defines message schema, task registers, infrastructure snapshots, gap identification, and cross-system verification. Use when terminating a session, handing off to another agent, or reading a previous agent's handoff.
+version: "1.1.0"
+description: QACP-HANDOFF protocol for structured agent-to-agent session handoffs. Defines message schema, task registers, infrastructure snapshots, gap identification (with auto-detection and red-team testing), and cross-system verification. Use when terminating a session, handing off to another agent, or reading a previous agent's handoff.
 category: protocol
 pinned: true
 ---
 
-# HANDOFF PROTOCOL SKILL — v1.0.0
+# HANDOFF PROTOCOL SKILL — v1.1.0
 
-> **QACP-HANDOFF v1.0.** Structured agent-to-agent handoff protocol built on QACP message types. Replaces ad-hoc handoff summaries with a verifiable, machine-parseable state transfer between independent agent sessions.
+> **QACP-HANDOFF v1.1.** Structured agent-to-agent handoff protocol with auto-gap detection and red-team verification.
 > **PINNED.** This skill should be loaded for ALL QNFO agent sessions to ensure consistent handoffs.
 
 ---
@@ -241,6 +241,78 @@ QACP-ENVELOPE:
 
 **infrastructure_snapshot** — Query LIVE systems at handoff time, not from memory. Every count in the snapshot should be verifiable by re-running the query.
 
+### 1.5 AUTO-GAP DETECTION TRIGGERS (v1.1 — RED-TEAM BEST PRACTICES)
+
+The `gaps` array in the handoff payload is REQUIRED, but filling it has historically been ad-hoc — agents listed obvious blockers and missed subtle gaps. This section defines structured triggers that auto-populate the gaps list.
+
+#### 1.5.1 Automatic Gap Detection (Run at Handoff Time)
+
+Before writing the handoff, query these patterns and auto-populate gaps:
+
+**A. CROSS-SYSTEM DESYNC DETECTION**
+| Check | If this fails... | Gap ID | Severity |
+|:------|:-----------------|:--------|:---------|
+| GitHub HEAD == local HEAD | Commit not pushed | GAP-SYNC-001 | CRITICAL |
+| R2 file count == expected count | R2 sync incomplete | GAP-SYNC-002 | HIGH |
+| DI timestamp >= session start | DI not updated | GAP-SYNC-003 | HIGH |
+| Bootstrap tools exist on R2 | No recovery path | GAP-SYNC-004 | HIGH |
+
+**B. PATH DRIFT DETECTION**
+- Scan ALL local scripts for references to wrong paths (e.g., `.deepchat\skills` instead of `DeepChat\skills`)
+- If any found → GAP-DRIFT-001 (HIGH)
+- Compare SKILL.md code examples against actual paths — mismatches → GAP-DRIFT-002 (MEDIUM)
+
+**C. ORPHAN RESOURCE DETECTION**
+- Orphaned `_*` files in working directory → GAP-ORPHAN-001 (LOW)
+- `__pycache__` directories → GAP-ORPHAN-002 (LOW)
+- Background processes still running → GAP-ORPHAN-003 (MEDIUM)
+
+**D. RED-TEAM VERIFICATION PATTERNS (v1.1 — Actively try to break claims)**
+
+Before writing the handoff, actively attempt to INVALIDATE the following claims:
+
+| Claim | Red-Team Test | Gap if Fails |
+|:------|:-------------|:-------------|
+| "R2 sync is complete" | Pick 3 random files, GET them from R2 | GAP-RT-001 |
+| "GitHub is pushed" | `git ls-remote origin` — verify hash | GAP-RT-002 |
+| "Token is valid" | Run an actual PUT to R2 (not just whoami) | GAP-RT-003 |
+| "All tasks executed" | For each [COMPLETED] task, verify evidence still exists | GAP-RT-004 |
+| "No phantom claims" | Scan response history for "I will" / "Let me" without tool evidence | GAP-RT-005 |
+
+**RED-TEAM RULE:** If ANY red-team test fails → the handoff is PREMATURE. Fix the gap BEFORE writing the handoff.
+
+#### 1.5.2 Gap Auto-Population Protocol
+
+When producing a handoff:
+
+1. **Run the gap audit from closeout-manager §2.6** — this populates categories A-F
+2. **Convert each finding to a gap entry** in the handoff's `gaps` array
+3. **Run red-team tests** (§1.5.1 D) — convert each failure to a gap entry
+4. **Classify severity** per closeout-manager §2.6.3
+5. **If any CRITICAL gap exists** → BLOCK the handoff. Fix the gap first.
+
+#### 1.5.3 Gap Entry Template
+
+```json
+{
+  "id": "GAP-<CATEGORY>-<NNN>",
+  "category": "sync|drift|orphan|red-team|infrastructure|test",
+  "description": "<concrete, verifiable description of what's wrong>",
+  "severity": "critical|high|medium|low",
+  "impact": "<what breaks because of this gap>",
+  "detection_method": "auto|red-team|user-reported",
+  "suggested_approach": "<how a future agent could address this>",
+  "blocked_by": ["<gap-id or external-dependency>"],
+  "detected_at": "<ISO 8601>"
+}
+```
+
+**New fields (v1.1):**
+- `detection_method` — was this found automatically, via red-team testing, or because the user had to ask?
+- `detected_at` — timestamp when the gap was identified
+
+**USER-REPORTED gaps are a FAILURE of the auto-detection system.** If `detection_method` is `"user-reported"` → the gap audit protocol failed. Flag for Kaizen improvement.
+
 ---
 
 ## 2. STORAGE & DISTRIBUTION
@@ -463,4 +535,4 @@ This protocol registers with QACP:
 
 ---
 
-*handoff-protocol skill v1.0.0 — QACP-HANDOFF v1.0. Pinned. Load for all QNFO agent sessions.*
+*handoff-protocol skill v1.1.0 — QACP-HANDOFF v1.1. Auto-gap detection, red-team verification. Pinned. Load for all QNFO agent sessions.*

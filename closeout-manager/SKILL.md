@@ -1,15 +1,15 @@
 ---
 name: closeout-manager
 description: Session close-out procedures — autonomous trigger detection, task execution verification, project handoff initialization, audit trail export, R2 state upload, lifecycle timestamp update, archive operations, draft artifact cleanup, and handoff documentation. Auto-executes at session end without user prompting.
-version: "2.4"
+version: "3.1"
 ---
 
-# CLOSEOUT MANAGER SKILL — v3.0
+# CLOSEOUT MANAGER SKILL — v3.1
 
-> **D1-FIRST.** Handoffs, audits, and itemized data now write to Cloudflare D1 as canonical storage. R2 is backup-only for itemized data. See `qnfo-agent` §10 for D1 lifecycle integration.
+> **D1-FIRST. POST-PHASE GAP AUDIT (§2.6).** Handoffs, audits, and itemized data now write to Cloudflare D1 as canonical storage. R2 is backup-only for itemized data. See `qnfo-agent` §10 for D1 lifecycle integration.
 > **LIFECYCLE-AWARE.** This release integrates with the automated lifecycle pipeline — `last_active` timestamps are reset on closeout to prevent premature staleness. Archive paths follow the ultrametric `qnfo/archive/projects/<name>/` convention.
-> **AUTONOMOUS skill.** Do NOT wait for user to say "TERMINATE." Detect completion and auto-initiate closeout.
-> Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill
+> **AUTONOMOUS skill.** Do NOT wait for user to say "TERMINATE." Detect completion and auto-initiate closeout. Includes POST-PHASE GAP AUDIT — user should NEVER have to ask "WHAT ELSE?"
+> Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill + handoff-protocol skill
 
 ---
 
@@ -76,6 +76,117 @@ e. **Unfinished items:** Any planned-but-unexecuted item is a BLOCKER. Either ex
 
 #### GATE
 If ratio < 0.3 → closeout BLOCKED. The session did not execute enough. Fix before closing.
+
+### 2.6 POST-PHASE GAP AUDIT (v3.1 — AUTONOMOUS WHAT-ELSE DETECTION)
+
+**The #2 undetected failure mode: the user having to ask "WHAT ELSE? WHAT'S NEXT? WHAT REMAINS?" because the agent didn't auto-detect gaps.** This protocol ELIMINATES that pattern. After EVERY major task/phase (not just closeout), the agent MUST run this audit autonomously — the user should NEVER have to ask.
+
+#### 2.6.0 Core Principle
+
+**The default is COMPREHENSIVE COMPLETION, not "task list done."** Finishing the last item on the task list does NOT mean the work is complete. The gap audit is the mechanism that transforms a task-completion claim into a work-completion claim.
+
+#### 2.6.1 Trigger Rules
+
+| Condition | Action |
+|:----------|:--------|
+| Any task marked [COMPLETED] in update_plan | Run gap audit BEFORE claiming "done" |
+| User says "WHAT ELSE?" / "WHAT'S NEXT?" / "WHAT REMAINS?" / "GAPS?" | Run gap audit IMMEDIATELY — this is a RED FLAG that the agent failed to auto-detect |
+| Last item in update_plan marked complete | Run FULL gap audit — this is the most dangerous moment for phantom completion |
+| Session closeout triggered | Run gap audit as closeout Step 2.5 (before handoff) |
+| Any system touched (R2, GitHub, DI, D1) | Run RECOVERY CHECK for that system |
+
+**ANTI-PATTERN:** If the user EVER asks "what else?" and the agent responds without running a gap audit → the gap-detection protocol has FAILED. The user should NEVER need to ask.
+
+#### 2.6.2 Gap Audit Categories (Run ALL — Mandatory)
+
+Execute these checks programmatically. Do NOT rely on memory or assumptions:
+
+**A. TASK REGISTER AUDIT**
+```bash
+# For EVERY item in update_plan:
+# - [COMPLETED] → verify evidence still exists (file exists, commit in log, deploy accessible)
+# - [PENDING] → is it genuinely unexecutable, or did we just skip it?
+# - [FAILED] → has the failure reason been documented with specific error?
+```
+
+**B. CROSS-SYSTEM SYNC VERIFICATION (RED-TEAM: actively try to find desync)**
+| Check | Command | Gate |
+|:------|:--------|:-----|
+| GitHub pushed? | `git log origin/master -1 --oneline` vs local latest | Must match |
+| R2 synced? | Pick 3 random files, verify they exist on R2 | All 3 must succeed |
+| DI updated? | `npx wrangler r2 object get qnfo/discovery/index.json --remote` | Must include this session's changes |
+| Bootstrap tools on R2? | Verify `qnfo/tools/bootstrap_skills.py` exists on R2 | Must exist |
+
+**C. RECOVERY & REPAIR PATH CHECK**
+- Are all bootstrap/repair tools available on R2? (`qnfo/tools/`)
+- Are canonical paths correct in scripts? (e.g., SKILLS_DIR pointing to right location)
+- If a tool is missing from R2: upload it NOW — do not defer
+
+**D. CONFIGURATION DRIFT DETECTION**
+- Do any scripts reference wrong paths? (e.g., `.deepchat\skills` vs `DeepChat\skills`)
+- Do any SKILL.md files reference outdated versions or paths in code examples?
+- Are there orphaned files from prior sessions? (Run orphan scan)
+
+**E. INFRASTRUCTURE HEALTH WARNINGS**
+- `npx wrangler whoami` — token valid?
+- Any repeated warnings? (rtk hook, encoding issues)
+- Any background sessions still running? `process list`
+
+**F. TEST SUITE (if available)**
+```bash
+python _test_suite.py --quick  # Smoke test
+```
+If test suite fails → block [ALL TASKS COMPLETE] claim.
+
+#### 2.6.3 Gap Severity Classification
+
+| Severity | Definition | Action Required |
+|:---------|:-----------|:----------------|
+| **BLOCKING** | Prevents claiming work is complete | Fix NOW, do not proceed |
+| **HIGH** | Functional gap — works but fragile | Fix this session if possible |
+| **MEDIUM** | Nice-to-have — documentation, cleanup | Document for next session |
+| **LOW** | Cosmetic — warnings, formatting | Note in audit trail |
+
+**GATE:** If ANY BLOCKING gap exists → the agent MUST NOT claim [ALL TASKS EXECUTED]. Fix the gap or escalate.
+
+#### 2.6.4 Red-Team Self-Testing (MANDATORY)
+
+Before claiming any work complete, actively try to BREAK your own work:
+
+1. **Negative verification:** "I claim X is on R2" → try to GET it and verify it's NOT there (expecting 404 means the claim is wrong)
+2. **Path inversion:** "I fixed path from A to B" → search code for remaining references to A
+3. **Empty return test:** "I synced all skills" → list R2 prefix and count, compare against local
+4. **Commit hash verification:** "I pushed commit HASH" → `git log origin/master` must contain HASH
+5. **Token exhaustion:** "Token is working" → run a PUT and verify it succeeds, not just `whoami`
+
+**RED-TEAM RULE:** If you can't break your own claim, it's probably true. If you CAN break it, the gap audit caught a phantom claim before the user did.
+
+#### 2.6.5 Gap Report Format (REQUIRED in every response that claims completion)
+
+```
+## GAP AUDIT
+| Category | Check | Status | Detail |
+|:---------|:------|:------:|:-------|
+| Task Register | All items verified | PASS/FAIL | N/M items |
+| GitHub | Commit pushed | PASS/FAIL | hash |
+| R2 | Files synced | PASS/FAIL | N/M synced |
+| DI | Updated | PASS/FAIL | timestamp |
+| Recovery | Tools on R2 | PASS/FAIL | bootstrap_skills.py |
+| Drift | Path check | PASS/FAIL | |
+| Health | Warnings | PASS/FAIL | |
+| Red-Team | Self-test | PASS/FAIL | |
+
+**Gap Severity:** NONE / LOW / MEDIUM / HIGH / BLOCKING
+```
+
+#### 2.6.6 Integration with Other Skills
+
+- **execution-guard**: The WHAT-ELSE hook (§1.4) fires this gap audit before allowing any [ALL TASKS EXECUTED] claim
+- **handoff-protocol**: The gaps section pulls from this audit's output
+- **kaizen-autonomous-update**: Phase 0 audit includes this gap audit as a checklist item
+- **infrastructure-audit**: Phase 4 Health Recommendations feed into the infrastructure health check
+
+---
 
 ### 3. Project Handoff Initialization (MANDATORY — Projects Directory)
 
@@ -387,4 +498,4 @@ The automated lifecycle pipeline runs daily at 06:00 UTC (`qnfo-lifecycle` Worke
 
 ---
 
-*closeout-manager skill v3.0 — D1-FIRST. Handoffs write to portfolio-state D1. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*
+*closeout-manager skill v3.1 — D1-FIRST. POST-PHASE GAP AUDIT (§2.6) with red-team self-testing. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*

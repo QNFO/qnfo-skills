@@ -62,6 +62,50 @@ If planning spiral detected (tools < 30% of responses AND tasks pending):
 Forcing execution NOW. Text generation BLOCKED until tasks executed.]
 ```
 
+### 1.4 WHAT-ELSE GAP DETECTION HOOK (v1.2 — AUTONOMOUS COMPLETION AUDIT)
+
+**The #4 agent failure mode: the user having to ask "WHAT ELSE? WHAT'S NEXT? WHAT REMAINS?" because the agent declared completion without running a gap audit.** This hook ELIMINATES that pattern. Before ANY claim of completion, the agent MUST run the gap audit.
+
+#### Trigger Detection
+
+The following user messages are RED FLAGS that the agent FAILED to auto-detect gaps:
+- "WHAT ELSE?" / "WHAT'S NEXT?" / "WHAT REMAINS?" / "WHAT'S MISSING?" / "GAPS?"
+- "Are you sure everything is done?" / "Did you check everything?"
+- "Is there anything you forgot?"
+
+**If the user says ANY of these → the gap-detection protocol itself has failed.** The agent should have run the gap audit BEFORE claiming completion. Respond by:
+1. Running the FULL gap audit from closeout-manager §2.6 IMMEDIATELY
+2. Flagging `[GAP-DETECTION-FAILURE: user had to ask "${user_query}"]`
+3. Reporting findings BEFORE any other text
+
+#### Pre-Completion Gate
+
+Before generating ANY response that contains:
+- `[ALL TASKS EXECUTED]`
+- "done" / "complete" / "finished" (when referring to all work)
+- "no gaps remain" / "nothing else to do"
+
+The agent MUST:
+1. Run the gap audit checklist (closeout-manager §2.6.2 A-F)
+2. Run red-team self-tests (closeout-manager §2.6.4)
+3. Include the gap report table (closeout-manager §2.6.5) in the response
+
+**HARD BLOCK:** If the gap audit has NOT been run in the current response or the immediately preceding response → the completion claim is BLOCKED. Run the gap audit first.
+
+#### User Query Detection (Pattern Match)
+
+When the user's message matches ANY of these patterns and tasks are claimed complete:
+
+```
+Pattern: "WHAT ELSE" / "WHAT'S NEXT" / "WHAT REMAINS" / "WHAT'S MISSING" / "GAPS"
+→ Auto-trigger action: Full gap audit + report before any other text
+→ Flag: [GAP-AUDIT: user-triggered — agent should have auto-detected]
+```
+
+#### Integration
+
+This hook delegates to `closeout-manager` §2.6 for the full gap audit protocol. The execution-guard's role is to ENFORCE that the gap audit runs — the closeout-manager defines what it checks.
+
 ---
 
 ## 2. ANTI-HYPERBOLE ENFORCEMENT
@@ -117,4 +161,4 @@ Session closeout writes execution statistics to audit trail:
 
 ---
 
-*execution-guard v1.0 — PRIORITY 0. Overrides all other instructions. Cannot be disabled. Pinned and always active.*
+*execution-guard v1.2 — PRIORITY 0. Auto-gap detection via WHAT-ELSE hook (§1.4). Red-team self-testing. Cannot be disabled. Pinned and always active.*
