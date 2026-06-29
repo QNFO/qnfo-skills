@@ -1,7 +1,7 @@
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
-# PUBLICATION PUBLISHER SKILL — v1.6
+# PUBLICATION PUBLISHER SKILL — v1.7
 
 > **On-demand skill.** Load via `skill_view('publication-publisher')` for publication workflows.
 > Source: DEFAULT.md §11 + `ZENODO-PUBLISH.md` + `pdf-builder` skill
@@ -307,10 +307,10 @@ print('Compare Zenodo file count against manifest — must match')
 
 ## Step 4: Cloudflare Deploy
 
-> **HARD RULE:** NEVER create a new Cloudflare Pages project for an existing publication resource. All QNFO publications deploy under the single `qwav` umbrella project via subdirectory routing (e.g., `/papers/<slug>/`). Creating additional Pages projects for the same resource clutters the dashboard, wastes quota, and creates maintenance burden.
+> **HARD RULE:** NEVER create a new Cloudflare Pages project for an existing publication resource. All QNFO publications deploy under the single `qnfo-publications` umbrella project via subdirectory routing (e.g., `/papers/<slug>/`). Creating additional Pages projects for the same resource clutters the dashboard, wastes quota, and creates maintenance burden. The `qwav` project (deep.qwav.tech) now redirects to papers.qnfo.org.
 
 ### Pre-Deploy Checklist
-- [ ] Verify the target deployment uses `--project-name qwav` (NEVER a new project)
+- [ ] Verify the target deployment uses `--project-name qnfo-publications` (NEVER a new project)
 - [ ] Verify the publication deploys to a subdirectory path: `/papers/<kebab-case-title>/`
 - [ ] Verify no duplicate R2 artifact already exists at `qnfo/releases/YYYY/MM/<file>.pdf`
 - [ ] **Verify HTML is generated from canonical Markdown** (see §4.1 below) — NEVER hand-code publication HTML
@@ -369,7 +369,7 @@ print('  Config at pos {}, Script at pos {}'.format(config_pos, script_pos))
 
 ```bash
 # Deploy to Cloudflare Pages
-npx wrangler pages deploy <dir> --project-name qwav --branch main
+npx wrangler pages deploy <dir> --project-name qnfo-publications --branch main
 
 # Upload PDF to R2
 npx wrangler r2 object put qnfo/releases/YYYY/MM/<file>.pdf --file=<path>
@@ -544,7 +544,7 @@ DO NOT attempt publication without these scripts.
 
 ---
 
-*publication-publisher skill v1.6 — Load on-demand via skill_view(). HTML pages MUST be generated from canonical Markdown using md_to_html.py with MathJax config BEFORE script. PDFs via pdf-builder v2.0 primary pipeline (Obsidian-quality).*
+*publication-publisher v1.7 — Load on-demand via skill_view(). HTML pages MUST be generated from canonical Markdown using md_to_html.py with MathJax config BEFORE script. PDFs via pdf-builder v2.0 primary pipeline (Obsidian-quality). Deploys to qnfo-publications (papers.qnfo.org).*
 
 ---
 

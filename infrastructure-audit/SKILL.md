@@ -1,14 +1,14 @@
 ---
 name: infrastructure-audit
 description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
-version: "1.2"
+version: "1.5"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
-# INFRASTRUCTURE AUDIT SKILL — v1.4
+# INFRASTRUCTURE AUDIT SKILL — v1.5
 
-> **LIFECYCLE-AWARE. GAP-AUDIT INTEGRATION. RED-TEAM-DOD INTEGRATION.** This release adds the RED-TEAM → DoD → ITERATE → REFINE cycle to infrastructure audits. See `skill_view('red-team-dod')`. Also includes lifecycle pipeline health checks, archival path verification, ultrametric taxonomy validation, and §0.5 GAP AUDIT INTEGRATION — Phase 4 health recommendations now output gap-audit-compatible report format.
+> **LIFECYCLE-AWARE. GAP-AUDIT INTEGRATION. RED-TEAM-DOD INTEGRATION. UPDATED 2026-06-28.** This release adds the RED-TEAM → DoD → ITERATE → REFINE cycle to infrastructure audits. See `skill_view('red-team-dod')`. Also includes lifecycle pipeline health checks, archival path verification, ultrametric taxonomy validation, and §0.5 GAP AUDIT INTEGRATION — Phase 4 health recommendations now output gap-audit-compatible report format.
 
 ---
 
@@ -53,7 +53,7 @@ queues = cf('queues')
 
 print(f'D1: {len(d1.get("result",[]))} | KV: {len(kv.get("result",[]))} | Vectorize: {len(vec.get("result",[]))}')
 print(f'Pages: {len(pages.get("result",[]))} | Workers: {len(workers.get("result",[]))} | Queues: {len(queues.get("result",[]))}')
-# Expected: D1: 4 | KV: 2 | Vectorize: 1 | Pages: 10 | Workers: 26 | Queues: 2
+# Expected: D1: 5 | KV: 1 | Vectorize: 3 | Pages: 10 (3 essential, 4 redirecting) | Workers: 30 | Queues: 2
 ```
 
 ### Phase 1.5: Lifecycle Pipeline Health (NEW)
@@ -82,7 +82,7 @@ r4 = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
     headers={"User-Agent": "Mozilla/5.0"})
 kg = json.loads(urllib.request.urlopen(r4, timeout=10).read())
 print(f"Knowledge Graph: {kg.get('totalNodes',0)} nodes, {kg.get('totalEdges',0)} edges")
-# Expected: 223 nodes, 340 edges
+# Expected: 261 nodes, 401 edges
 ```
 
 ### Phase 2: Orphan Detection
@@ -134,14 +134,14 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 
 | Resource | Expected Count | Current |
 |:---------|:-----:|:------:|
-| D1 Databases | 4 | qnfo-graph, qnfo-audit, living-paper, portfolio-state |
-| KV Namespaces | 2 | equation-cache, git-on-cloudflare-routes |
-| Vectorize Indexes | 1 | qwav-research (768-dim) |
-| Pages Projects | 10 | qwav, prompts-wiki, qnfo-archive, quantum-laws-of-form, qlof-primer, rwnq8, +4 more |
-| Workers | 26 | graph-api, qnfo-lifecycle, living-papers-api, qnfo-archive-worker, qnfo-archive-verify, umbrella-router, +20 more |
-| Queues | 2 | qnfo-lifecycle-queue, git-on-cloudflare-repo-maint |
-| Knowledge Graph | 223 nodes, 340 edges | 4-domain ultrametric taxonomy, 57 project nodes |
-| R2 Bucket | 1 (qnfo) | discovery, archive, projects, releases, tools |
+| D1 Databases | 5 | qnfo-cms, qnfo-graph, qnfo-audit, living-paper, portfolio-state |
+| KV Namespaces | 1 | equation-cache (git-on-cloudflare-routes deleted) |
+| Vectorize Indexes | 3 | qwav-research-v2 (1024-dim, active), qnfo-handoffs, qnfo-tasks |
+| Pages Projects | 10 (3 essential, 4 redirecting) | qnfo-hub, qnfo-publications, qnfo-legal, qwav(→papers), adelic-qft(→papers), qlof-primer(→papers), qnfo-archive(→papers), quantum-laws-of-form(→papers), qnfo-ipfs-archive, qnfo-design-system |
+| Workers | 30 | ask-qwav v2.4, api-gateway v2.2, graph-api, qnfo-data-api, cms-api, qnfo-lifecycle, qnfo-archive-worker, qnfo-archive-verify, ultrametric-tree-api, +21 more |
+| Queues | 2 | qnfo-lifecycle-queue (essential), git-on-cloudflare-repo-maint (deprecated) |
+| Knowledge Graph | 261 nodes, 401 edges | Infrastructure graph (OWNS 205 edges), needs REFERENCES edges for research |
+| R2 Bucket | 1 (qnfo) | papers, discovery, archive, projects, releases, tools |
 
 ## Lifecycle Pipeline Health Checks
 
@@ -163,13 +163,13 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 ## Resource Inventory
 | Resource | Count | Status |
 |:---------|:-----:|:------:|
-| D1 Databases | 4 | OK |
-| KV Namespaces | 2 | OK |
-| Vectorize Indexes | 1 | OK |
-| Pages Projects | 10 | OK |
-| Workers | 26 | OK |
-| Queues | 2 | OK |
-| Knowledge Graph | 223n/340e | OK |
+| D1 Databases | 5 | OK |
+| KV Namespaces | 2→1 | OK (git-on-cloudflare-routes deprecated) |
+| Vectorize Indexes | 3 | OK (qwav-research-v2 active, 2 obsolete deleted) |
+| Pages Projects | 10 | OK (3 essential, 4 redirecting, 3 support) |
+| Workers | 30 | OK |
+| Queues | 2 | OK (git-on-cloudflare-repo-maint deprecated) |
+| Knowledge Graph | 261n/401e | ACTIVE (needs paper REFERENCES edges) |
 | Lifecycle Worker | Running | OK |
 | Archive Worker | Running | OK |
 

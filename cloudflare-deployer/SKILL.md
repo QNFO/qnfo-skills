@@ -1,12 +1,12 @@
 ---
 name: cloudflare-deployer
 description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
-version: "1.5"
+version: "1.6"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
-# CLOUDFLARE DEPLOYER SKILL — v1.5
+# CLOUDFLARE DEPLOYER SKILL — v1.6
 
 > **On-demand skill.** Load via `skill_view('cloudflare-deployer')` for all Cloudflare operations.
 > Source: `templates/CLOUDFLARE-DEPLOYMENT.md` v2.1 + QWAV-DEFAULT.md §0.6.5-0.6.7
@@ -51,12 +51,12 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 | Service | Access | Count | API Endpoint | Wrangler Command |
 |:--------|:------:|:------|:-------------|:-----------------|
 | **R2** | ✅ Read+Write+Delete | 1 bucket (qnfo) | `/accounts/:id/r2/buckets` | `wrangler r2 object {get,put,delete}` |
-| **Pages** | ✅ Full | 35 projects | `/accounts/:id/pages/projects` | `wrangler pages project list` |
-| **Workers** | ✅ Full | 18 scripts | `/accounts/:id/workers/scripts` | `wrangler deploy` |
-| **D1** | ✅ Full | 4 databases | `/accounts/:id/d1/database` | `wrangler d1 list` |
+| **Pages** | ✅ Full | 10 projects (3 essential, 4 redirecting) | `/accounts/:id/pages/projects` | `wrangler pages project list` |
+| **Workers** | ✅ Full | 30 scripts | `/accounts/:id/workers/scripts` | `wrangler deploy` |
+| **D1** | ✅ Full | 5 databases | `/accounts/:id/d1/database` | `wrangler d1 list` |
 | **KV** | ✅ Full | 2 namespaces | `/accounts/:id/storage/kv/namespaces` | `wrangler kv namespace list` |
-| **Vectorize** | ✅ Full | 1 index (qwav-research) | `/accounts/:id/vectorize/indexes` | `wrangler vectorize list` |
-| **Queues** | ✅ Full | 1 queue | `/accounts/:id/queues` | `wrangler queues list` |
+| **Vectorize** | ✅ Full | 3 indexes (qwav-research-v2, qnfo-handoffs, qnfo-tasks) | `/accounts/:id/vectorize/indexes` | `wrangler vectorize list` |
+| **Queues** | ✅ Full | 2 queues | `/accounts/:id/queues` | `wrangler queues list` |
 | **AI (Workers AI)** | ✅ Full | Models available | `/accounts/:id/ai/models/search` | `wrangler ai models list` |
 | **Pipelines** | ✅ Full | Configured | `/accounts/:id/pipelines` | `wrangler pipelines` |
 | **Hyperdrive** | ✅ Full | Configured | `/accounts/:id/hyperdrive/configs` | `wrangler hyperdrive` |
@@ -79,24 +79,29 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 
 **R2 Buckets:** `qnfo` (primary) — audit trails, releases, deployments, tools, projects, discovery index
 
-**D1 Databases (4):**
+**D1 Databases (5):**
+- `qnfo-cms` (0458a344) — CMS content management (34 entries, 5 types)
 - `qnfo-graph` (a1954b92-d681-4d02-b1f6-f9a2eb4c265d) — Knowledge graph storage
 - `qnfo-audit` (35e2e573-92f3-46ac-83c6-22f6429fc5e5) — Audit trail storage
-- `living-paper` (70a58cb3-b2cd-498d-877f-ecca86859a22) — Living paper data
+- `living-paper` (70a58cb3-b2cd-498d-877f-ecca86859a22) — Living paper data (170 papers, 23 columns)
 - `portfolio-state` (d80fdf2a-0a60-45a3-968b-2907ce806dcd) — Portfolio state
 
-**KV Namespaces (2):**
+**KV Namespaces (1):**
 - `equation-cache` (2fbbb9fa2d774a6e80d3a3d2547f8b5f) — Equation rendering cache
-- `git-on-cloudflare-routes` (3e80529348004360b768e3efea7192a7) — Git proxy routing
+- ~~`git-on-cloudflare-routes`~~ — DEPRECATED (GitHub fully deprecated per ADR-001)
 
-**Vectorize Indexes (1):**
-- `qwav-research` — 768-dim cosine, QWAV research corpus semantic search
+**Vectorize Indexes (3):**
+- `qwav-research-v2` — 1024-dim cosine, active (bge-m3 compatible). Used by ask-qwav Worker.
+- `qnfo-handoffs` — 768-dim cosine, handoffs semantic search
+- `qnfo-tasks` — 768-dim cosine, tasks semantic search
+- ~~`qwav-research` (768-dim)~~ — DELETED (replaced by v2)
+- ~~`paper-similarity` (1024-dim)~~ — DELETED (empty, redundant)
 
 **Queues (2):**
 - `qnfo-lifecycle-queue` — Lifecycle pipeline (archival jobs, auto-transitions)
-- `git-on-cloudflare-repo-maint` (296cceec) — Git repository maintenance
+- `git-on-cloudflare-repo-maint` (296cceec) — Git repository maintenance (DEPRECATED — GitHub deprecated per ADR-001)
 
-**Pages Projects (10):** qwav, prompts-wiki, qnfo-archive, quantum-laws-of-form, qlof-primer, rwnq8, +4 more
+**Pages Projects (10):** qnfo-hub (hub.qnfo.org), qnfo-publications (papers.qnfo.org + 5 topics), qnfo-legal (legal.qnfo.org), quantum-laws-of-form (laws.qnfo.org → 301), qwav (deep.qwav.tech → 301), qnfo-archive (archive.qnfo.org → 301), adelic-qft (adelic.qnfo.org → 301), qlof-primer (primer.qwav.tech → 301), qnfo-ipfs-archive, qnfo-design-system
 
 **Workers (26 scripts):** Deployed — key workers include `graph-api` (Knowledge Graph), `qnfo-lifecycle` (automated project lifecycle, cron: daily 06:00 UTC), `living-papers-api` (Living Papers with D1 + IPFS), `qnfo-archive-worker` (queue consumer for R2 archival migration), `qnfo-archive-verify` (archive verification), `umbrella-router` (traffic routing). Query via `wrangler deployments` with specific worker names.
 

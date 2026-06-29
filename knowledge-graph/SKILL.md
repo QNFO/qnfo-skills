@@ -1,12 +1,12 @@
 ---
 name: knowledge-graph
 description: QNFO Knowledge Graph querying for due diligence, impact analysis, ultrametric clustering, and cross-system discovery. Supports ball queries, hierarchical taxonomy, and lifecycle-aware project queries.
-version: "2.1"
+version: "2.2"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
-# QNFO Knowledge Graph — Agent Skill v2.1
+# QNFO Knowledge Graph — Agent Skill v2.2
 
 > **ULTRAMETRIC-AWARE.** This release adds ultrametric taxonomy support, ball queries, and lifecycle-aware project filtering.
 > All queries go through the deployed Cloudflare Worker API. No local installation required.
@@ -16,7 +16,7 @@ version: "2.1"
 The QNFO Knowledge Graph is a D1-backed graph database (Cloudflare-native, zero external services) connecting every entity in the QNFO ecosystem. It now includes an **ultrametric hierarchical taxonomy** where projects are organized into 4 domains, 12 programs, forming a 2-adic tree with distances that satisfy the strong triangle inequality: $d(x,z) \leq \max(d(x,y), d(y,z))$.
 
 **Deployed API:** `https://graph-api.q08.workers.dev` (Cloudflare Worker, D1 qnfo-graph)
-**Current State:** 223 nodes, 340 edges, 8 API endpoints (verified live 2026-06-24)
+**Current State:** 261 nodes, 401 edges, 8 API endpoints (verified live 2026-06-28)
 
 ## Ultrametric Taxonomy Structure
 
@@ -73,7 +73,7 @@ r = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
     headers={"User-Agent": "Mozilla/5.0"})
 data = json.loads(urllib.request.urlopen(r, timeout=10).read())
 # Returns: {totalNodes, totalEdges, nodeLabels: [...], relationshipTypes: [...]}
-# Current: 223 nodes, 340 edges
+# Current: 261 nodes, 401 edges
 ```
 
 ### GET /nodes?label=Project&search=pdf
@@ -292,11 +292,11 @@ GET /neighbors/PAPER_SLUG
 
 | Type | Count | Purpose |
 |------|:-----:|---------|
-| BELONGS_TO | ~191 | Ultrametric taxonomy edges |
-| OWNS | ~99 | Organizational hierarchy |
+| BELONGS_TO | ~57 | Ultrametric taxonomy edges |
+| OWNS | ~205 | Organizational hierarchy |
 | OWNED_BY | ~88 | Reverse organizational |
-| ULTRA_CONTAINS | ~54 | New 2-adic hierarchical containment |
-| DEPENDS_ON | ~4 | Infrastructure dependency |
+| ULTRA_CONTAINS | ~57 | New 2-adic hierarchical containment |
+| DEPENDS_ON | ~36 | Infrastructure dependency |
 
 ## Lifecycle Integration
 
@@ -323,7 +323,7 @@ The Knowledge Graph is the central registry for project lifecycle. Key propertie
 
 | Version | Date | Changes |
 |:--------|:-----|:--------|
-| v2.1 | 2026-06-24 | **Count refresh:** Verified live — 223 nodes, 340 edges (from 238/382). 57 project nodes (from 74). Relationship counts updated. |
+| v2.2 | 2026-06-28 | **Count refresh:** Verified live — 261 nodes, 401 edges. OWNS now dominant edge (205 vs 99). Needs paper REFERENCES edges (currently 0 paper connections). |
 | v2.0 | 2026-06-21 | **Ultrametric Taxonomy:** Added 4-domain/12-program ultrametric tree with BELONGS_TO and ULTRA_CONTAINS edges. Added ball query recipe. Updated graph stats (238/382). Added lifecycle property documentation. Verified 0 violations on 500 triples (strong triangle inequality). |
 | v1.1 | 2026-06-03 | Phase 2/3 Integration: POST /sync documentation, reseed protocol. |
 | v1.0 | 2026-06-01 | Initial skill. Graph API integration, query recipes. |
