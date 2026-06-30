@@ -11,6 +11,33 @@ description: Automated multi-source academic literature search and paper triage 
 
 ---
 
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Generate optimized search queries per source", "status": "pending"},
+  {"step": "Execute arXiv API search", "status": "pending"},
+  {"step": "Execute Semantic Scholar search", "status": "pending"},
+  {"step": "Execute QNFO Vectorize search", "status": "pending"},
+  {"step": "Execute web search", "status": "pending"},
+  {"step": "Deduplicate merged results", "status": "pending"},
+  {"step": "Classify papers into core/supporting/background", "status": "pending"},
+  {"step": "Generate literature brief (Markdown)", "status": "pending"},
+])
+
+---
+
 ## Purpose
 
 Execute comprehensive literature search across 4+ academic sources, deduplicate results, classify papers by relevance tier, and produce a structured literature brief ready for deep reading. Eliminates the manual cycle of re-writing arXiv API queries, Semantic Scholar calls, and web searches for every research project.
@@ -533,6 +560,27 @@ python literature_search.py --query "topological quantum computing surface codes
 | `research-orchestrator` | Calls this skill as Phase 1, passes brief to Phase 2 |
 | `knowledge-graph` | Seeds new paper nodes with metadata |
 | `fabrication-audit` | Cross-references claims against identified papers |
+
+
+
+---
+
+## QNFO Design System Compliance (v2.0 - 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+
+**DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations
 
 ## Failure Handling
 

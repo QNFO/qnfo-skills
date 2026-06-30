@@ -708,7 +708,7 @@ if (Test-Path "__pycache__") { Remove-Item -Recurse -Force "__pycache__"; Write-
 If orphaned files are found, note: `[ORPHAN-CLEANUP: N files removed]`. Do NOT use `-ErrorAction SilentlyContinue` — verify every deletion with `Test-Path`. See §8.5.1 JIT Protocol for full enforcement rules.
 
 **Index Integrity Gate (MANDATORY):** After pulling the index, validate it before use:
-1. Count projects: `python -c "import json; d=json.load(open('_discovery_index.json','r',encoding='utf-8')); print(f'Projects: {len(d.get(\"projects\",{}))}')"` via script file
+1. Count projects via script file: write `_count_projects.py`, execute `python _count_projects.py`, verify output, then `Remove-Item _count_projects.py` (script imports json and reads _discovery_index.json)
 2. If project count < 5: index is CORRUPTED. Rebuild from filesystem enumeration + R2 and upload. Flag session as `[DISCOVERY-CORRUPTED-REBUILT]`.
 3. If `\ufffd` (replacement character) found anywhere in the index: index is CORRUPTED. Same rebuild protocol.
 4. Never write to the Discovery Index without first pulling the latest version AND creating a timestamped backup: `wrangler r2 object put qnfo/discovery/index-backup-YYYY-MM-DD.json --file=_discovery_index.json --remote`
@@ -1083,7 +1083,7 @@ Execute a Python scan for ALL of the following categories. ANY hit = BLOCKING. D
 **PDF RENDERING VERIFICATION (MANDATORY for publication PDFs):**
 - After building PDF, extract text and scan for Unicode replacement characters (`\ufffd`) — ANY hit is BLOCKING
 - Verify em dashes (`—`, U+2014), curly quotes (`""`, U+201C/D), and all special characters render correctly
-- Use: `python -c "import fitz; doc=fitz.open('output.pdf'); [print(p.get_text()) for p in doc]"` via script file
+- Use: write `_check_pdf.py`, execute `python _check_pdf.py`, verify output, then `Remove-Item _check_pdf.py` (script imports fitz, opens output.pdf, extracts text from all pages)
 - If any character renders as `□`, `?`, or `\ufffd`: PDF is NOT publication-ready. Fix font encoding BEFORE proceeding.
 
 **PHYSICS WRITING STANDARDS (v1.0 — "No Bullshit" Physics Style):**
@@ -1146,8 +1146,9 @@ These rules ensure your writing reads like a careful colleague, not a TEDx talk.
 4. Publication header/footer with author block, DOI, license
 
 **Pre-Deploy Verification:** Before deploying to Cloudflare Pages, verify MathJax config ordering:
-```bash
-python -c "
+Write `_verify_mathjax.py`, execute `python _verify_mathjax.py`, then `Remove-Item _verify_mathjax.py`.
+```python
+# _verify_mathjax.py — ephemeral, delete after execution
 import sys
 with open('index.html', 'r', encoding='utf-8') as f:
     html = f.read()
@@ -1161,7 +1162,6 @@ if config_pos > script_pos:
     print('  FIX: Move MathJax config <script> block BEFORE MathJax-script <script> tag')
     sys.exit(1)
 print(f'[OK] MathJax config before script: config@{config_pos}, script@{script_pos}')
-" (via script file)
 ```
 
 **GATE:** If config is after script → `[BLOCKED: MathJax order]`. Fix BEFORE deploying. This verification is now part of the publication-publisher skill (v1.5) and cloudflare-deployer skill (v1.2).

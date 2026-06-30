@@ -14,7 +14,37 @@ Deploy a complete ultrametric discovery engine on Cloudflare Workers. This skill
 ## When to Use
 
 | Trigger | Action |
-|:--------|:-------|
+|:---
+
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Clone reference implementation (ask-qwav)", "status": "pending"},
+  {"step": "Verify wrangler auth and bindings", "status": "pending"},
+  {"step": "Deploy Worker with D1/R2/Vectorize bindings", "status": "pending"},
+  {"step": "Verify /health endpoint", "status": "pending"},
+  {"step": "Verify /did-you-mean endpoint", "status": "pending"},
+  {"step": "Verify /ultrametric-tree endpoint", "status": "pending"},
+  {"step": "Verify /spectral-analysis endpoint", "status": "pending"},
+  {"step": "Verify tree persists across cold starts (R2)", "status": "pending"},
+  {"step": "Deploy Pages dendrogram visualization", "status": "pending"},
+])
+
+---
+
+-----|:-------|
 | "Build an ultrametric search engine" | Full deployment workflow |
 | "Add p-adic ranking to my paper corpus" | Principles 1-8 focused deployment |
 | "Deploy a hierarchical discovery system" | Use the 3-phase engine pattern |
@@ -127,3 +157,23 @@ Before claiming this skill complete, autonomously run:
 ANTI-PATTERN: User should NEVER ask about quality.
 Refer to RED-TEAM-PROTOCOL.md for full protocol.
 
+
+
+---
+
+## QNFO Design System Compliance (v2.0 - 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+
+**DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations

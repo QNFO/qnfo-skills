@@ -11,6 +11,35 @@ version: "1.1"
 
 ---
 
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Phase 0: Pull Discovery Index + run Kaizen audit", "status": "pending"},
+  {"step": "Phase 1: Update system prompts", "status": "pending"},
+  {"step": "Phase 2: Audit and clean templates", "status": "pending"},
+  {"step": "Phase 3: Update skill version headers", "status": "pending"},
+  {"step": "Phase 4: Update agent configs", "status": "pending"},
+  {"step": "Phase 5: Update subagent prompts", "status": "pending"},
+  {"step": "Phase 6: Dry-run deploy + git commit", "status": "pending"},
+  {"step": "Phase 7: Upload Kaizen report to R2", "status": "pending"},
+  {"step": "Phase 8: Verify hooks and scheduled tasks", "status": "pending"},
+  {"step": "Phase 9: Restart DeepChat (mandatory)", "status": "pending"},
+])
+
+---
+
 ## Purpose
 
 Autonomous system-wide Kaizen continuous improvement protocol. Executes comprehensive audit of ALL DeepChat settings — prompts, templates, skills, agents, subagents — applies improvements, deploys changes, and commits with full audit trail.

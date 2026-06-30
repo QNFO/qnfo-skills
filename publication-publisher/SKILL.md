@@ -472,7 +472,7 @@ Test-Path _<script>.py
 
 ---
 
-## Design System Integration (v2.0 — 2026-06-30)
+## QNFO Design System Compliance (v2.0 — 2026-06-30)
 
 All QNFO/QWAV publications use the **Silent Radix Light Theme** design system:
 

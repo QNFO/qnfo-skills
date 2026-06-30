@@ -11,6 +11,30 @@ description: Buffer API integration for social media posting on QNFO/QWAV channe
 
 ---
 
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Load Buffer access token", "status": "pending"},
+  {"step": "List configured social profiles", "status": "pending"},
+  {"step": "Generate channel-optimized post text", "status": "pending"},
+  {"step": "Create posts with staggered schedule", "status": "pending"},
+  {"step": "Verify posts in Buffer queue", "status": "pending"},
+])
+
+---
+
 ## Purpose
 
 Integrate with the Buffer GraphQL API (api.buffer.com) to create, schedule, and manage social media posts across all configured QNFO/QWAV channels (Twitter/X, LinkedIn, Bluesky). Eliminates manual social media posting and enables scheduled, staggered dissemination of research publications.
@@ -37,26 +61,20 @@ Integrate with the Buffer GraphQL API (api.buffer.com) to create, schedule, and 
 # Store Buffer token (one-time setup)
 # Get token from: https://buffer.com/developers
 # IMPORTANT: Save as UTF-8 without BOM
-python -c "
-token = input('Buffer Access Token: ').strip()
-with open(r'%USERPROFILE%\\.buffer_token', 'w', encoding='utf-8') as f:
-    f.write(token)
-print('[OK] Buffer token stored')
-"
+# Write setup script to file, execute, discard
+echo "import os; token = input('Buffer Access Token: ').strip(); path = os.path.expandvars(r'%USERPROFILE%\\.buffer_token'); open(path, 'w', encoding='utf-8').write(token); print('[OK] Buffer token stored')" > _setup_buffer_token.py
+python _setup_buffer_token.py
+Remove-Item _setup_buffer_token.py
 ```
 
 ### Token Troubleshooting
 
 If you see `UnicodeEncodeError: 'latin-1' codec can't encode character '\ufeff'`:
 ```bash
-python -c "
-import os
-p = os.path.expandvars(r'%USERPROFILE%\\.buffer_token')
-raw = open(p, 'rb').read()
-if raw[:3] == b'\xef\xbb\xbf':
-    open(p, 'wb').write(raw[3:])
-    print('[OK] BOM removed from token file')
-"
+# Write BOM removal script to file, execute, discard
+echo "import os; p = os.path.expandvars(r'%USERPROFILE%\\.buffer_token'); raw = open(p, 'rb').read(); open(p, 'wb').write(raw[3:]) if raw[:3] == b'\xef\xbb\xbf' else None; print('[OK] BOM removed from token file')" > _fix_bom.py
+python _fix_bom.py
+Remove-Item _fix_bom.py
 ```
 
 ## Workflow — 4 Stages
@@ -247,6 +265,8 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
 ```
 
 ---
+
+> **⚠️ DEPRECATED REST API (v1.0):** The embedded `buffer_post.py` script below uses the REST API at `api.bufferapp.com`, which is **deprecated** and returns HTTP 401 Unauthorized. Use the **GraphQL API** workflow (Section "Workflow — 4 Stages" above) instead. The REST API script is retained for reference only.
 
 ## Embedded Script
 

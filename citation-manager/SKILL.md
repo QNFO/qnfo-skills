@@ -461,6 +461,27 @@ python citation_manager.py --paper paper.md --fix
 | `fabrication-audit` | Verified citations → cross-reference claims against sources |
 | `publication-publisher` | Clean bibliography → artifact-ready paper |
 
+
+
+---
+
+## QNFO Design System Compliance (v2.0 - 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+
+**DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations
+
 ## Failure Handling
 
 | Scenario | Response |

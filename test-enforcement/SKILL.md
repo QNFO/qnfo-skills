@@ -1,13 +1,8 @@
 ---
-
-## 0. WHY THIS EXISTS
-
-QNFO/QWAV production sites were stub content. No test suite existed. This skill mandates testing for every action.
-
-## 1. TEST GATES
-
-| Action | Required Test | Severity |
-|:---
+name: test-enforcement
+description: MANDATORY test enforcement for ALL code changes, deployments, and infrastructure modifications. Runs canonical test suite before claiming any action as EXECUTED. Priority 1 — pinned and always active.
+version: "1.0"
+---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 ----|:-------------|:---------|
 | Pages deploy | `_test_suite.py --pages` — no stubs, all load | BLOCKING |

@@ -1,6 +1,6 @@
 ---
 name: handoff-protocol
-version: "1.1.0"
+version: "1.2.0"
 description: QACP-HANDOFF protocol for structured agent-to-agent session handoffs. Defines message schema, task registers, infrastructure snapshots, gap identification (with auto-detection and red-team testing), and cross-system verification. Use when terminating a session, handing off to another agent, or reading a previous agent's handoff.
 category: protocol
 pinned: true
@@ -330,8 +330,9 @@ Before writing the handoff, actively attempt to INVALIDATE the following claims:
 | "Token is valid" | Run an actual PUT to R2 (not just whoami) | GAP-RT-003 |
 | "All tasks executed" | For each [COMPLETED] task, verify evidence still exists | GAP-RT-004 |
 | "No phantom claims" | Scan response history for "I will" / "Let me" without tool evidence | GAP-RT-005 |
+| "HTTP redirects deployed" | For every claimed redirect, curl source URL and verify HTTP 301/302 + correct Location header | GAP-RT-006 |
 
-**RED-TEAM RULE:** If ANY red-team test fails → the handoff is PREMATURE. Fix the gap BEFORE writing the handoff.
+**RED-TEAM RULE (HARD BLOCK):** If ANY red-team test fails → handoff PRODUCTION BLOCKED. Fix the gap BEFORE writing the handoff. Run `python _dod_enforce.py` and verify exit 0 before uploading handoff to R2.
 
 #### 1.5.2 Gap Auto-Population Protocol
 
@@ -572,7 +573,7 @@ Store a SHA-256 checksum of the normalized JSON payload in `verification.checksu
 | **CMS** | Handoffs can be registered as CMS entries (type: "handoff") for discovery |
 | **Knowledge Graph** | Each handoff creates a `Handoff` node linked to touched Projects/Assets |
 | **Lifecycle Pipeline** | Handoffs include `last_active` timestamp — prevents premature archival |
-| **Discovery Index** | `qnfo/discovery/index.json` entries for each handoff |
+| **Discovery** | D1 `portfolio-state.handoffs` + `qnfo-audit.discovery_projects`. R2 discovery index is DEPRECATED — D1 is canonical. |
 | **Vectorize** | Handoff summaries can be embedded for semantic search across sessions |
 
 ---

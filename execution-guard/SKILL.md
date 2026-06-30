@@ -1,7 +1,7 @@
 ---
 name: execution-guard
 description: "PRIORITY 0 execution enforcement guard. Always active. Prevents planning spirals and phantom completion claims by checking task register before every response. Use when: ANY agent is operating — this skill must be loaded for all QNFO agent sessions. Triggers: session start, before any response, when tasks are pending."
-version: "1.1"
+version: "1.4"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
@@ -113,7 +113,7 @@ This hook delegates to `closeout-manager` §2.6 for the full gap audit protocol.
 ## 2. ANTI-HYPERBOLE ENFORCEMENT
 
 BANNED from ANY response unless ALL plan items [COMPLETED] with evidence:
-"done", "complete", "completed", "finished", "all tasks", "everything is", "successfully", "I'll" + action, "Let me" + action
+"done", "complete", "completed", "finished", "all tasks", "everything is", "successfully", "deployed", "verified", "confirmed", "I'll" + action, "Let me" + action
 
 **VIOLATION:** Delete banned word → replace with `[IN-PROGRESS: N/M tasks]` → execute next task.
 

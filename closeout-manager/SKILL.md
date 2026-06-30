@@ -1,17 +1,46 @@
 ---
 name: closeout-manager
 description: Session close-out procedures — autonomous trigger detection, task execution verification, project handoff initialization, audit trail export, R2 state upload, lifecycle timestamp update, archive operations, draft artifact cleanup, and handoff documentation. Auto-executes at session end without user prompting.
-version: "3.1"
+version: "3.2"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
 # CLOSEOUT MANAGER SKILL — v3.1
 
-> **D1-FIRST. POST-PHASE GAP AUDIT (§2.6).** Handoffs, audits, and itemized data now write to Cloudflare D1 as canonical storage. R2 is backup-only for itemized data. See `qnfo-agent` §10 for D1 lifecycle integration.
+> **D1-FIRST. R2 DEPRECATED FOR STRUCTURED DATA (§2.6).** Handoffs, audits, decisions, state files, and the discovery index now live EXCLUSIVELY in D1. R2 is for file artifacts ONLY (PDFs, scripts, templates). R2 flat files (index.json, handoff .md, state .json) are DEPRECATED — never read from R2, never write to R2 for structured records. See `qnfo-agent` §10 for D1 lifecycle integration.
 > **LIFECYCLE-AWARE.** This release integrates with the automated lifecycle pipeline — `last_active` timestamps are reset on closeout to prevent premature staleness. Archive paths follow the ultrametric `qnfo/archive/projects/<name>/` convention.
 > **AUTONOMOUS skill.** Do NOT wait for user to say "TERMINATE." Detect completion and auto-initiate closeout. Includes POST-PHASE GAP AUDIT — user should NEVER have to ask "WHAT ELSE?"
 > Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill + handoff-protocol skill
+
+---
+
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Step 0: Verify autonomous trigger (all tasks complete)", "status": "pending"},
+  {"step": "Step 1: Verify all git commits", "status": "pending"},
+  {"step": "Step 2: Task Execution Verification audit", "status": "pending"},
+  {"step": "Step 2.6: POST-PHASE GAP AUDIT (all categories A-F)", "status": "pending"},
+  {"step": "Step 3: Project Handoff Initialization", "status": "pending"},
+  {"step": "Step 3.5: D1 Handoff Insertion", "status": "pending"},
+  {"step": "Step 4: Audit Trail Export to D1 + R2", "status": "pending"},
+  {"step": "Step 5: Update D1 tables + lifecycle timestamps", "status": "pending"},
+  {"step": "Step 9: Clean up temporary files (JIT enforcement)", "status": "pending"},
+  {"step": "Step 10: Final CLOSEOUT-CHECKLIST verification", "status": "pending"},
+])
 
 ---
 
@@ -118,8 +147,9 @@ Execute these checks programmatically. Do NOT rely on memory or assumptions:
 |:------|:--------|:-----|
 | GitHub pushed? | `git log origin/master -1 --oneline` vs local latest | Must match |
 | R2 synced? | Pick 3 random files, verify they exist on R2 | All 3 must succeed |
-| DI updated? | `npx wrangler r2 object get qnfo/discovery/index.json --remote` | Must include this session's changes |
+| DI updated? | D1 canonical — query `portfolio-state` and `qnfo-audit` tables | D1 is single source of truth; R2 index DEPRECATED |
 | Bootstrap tools on R2? | Verify `qnfo/tools/bootstrap_skills.py` exists on R2 | Must exist |
+| HTTP redirects? | For every claimed redirect in HANDOFF, curl source URL and verify 301/302 + correct Location | All must redirect |
 
 **C. RECOVERY & REPAIR PATH CHECK**
 - Are all bootstrap/repair tools available on R2? (`qnfo/tools/`)
@@ -268,7 +298,7 @@ npx wrangler r2 object put qnfo/audit/conversations/<file>.md --file=<path>
 
 Verify upload:
 ```bash
-npx wrangler r2 object get qnfo/audit/conversations/<file>.md
+# D1-FIRST: Verify audit in D1 instead of R2: npx wrangler d1 execute qnfo-audit --remote --command "SELECT * FROM chat_sessions ORDER BY created_at DESC LIMIT 1" -y
 ```
 
 ### 5. Update Discovery Index (MANDATORY — Every Session Close-Out)
@@ -277,7 +307,12 @@ Every session close-out MUST update the unified Discovery Index on Cloudflare R2
 
 ```bash
 # 1. Pull current index
-npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_index.json
+# D1-FIRST: Query D1 directly for discovery instead of pulling R2 index
+# Projects: npx wrangler d1 execute qnfo-audit --remote --command "SELECT * FROM discovery_projects" -y
+# Resources: npx wrangler d1 execute portfolio-state --remote --command "SELECT * FROM resources" -y
+# Handoffs: npx wrangler d1 execute portfolio-state --remote --command "SELECT * FROM handoffs ORDER BY created_at DESC" -y
+# Decisions: npx wrangler d1 execute portfolio-state --remote --command "SELECT * FROM decisions ORDER BY logged_at DESC" -y
+# R2 qnfo/discovery/index.json is DEPRECATED — D1 is canonical for all structured records.
 
 # 2. Add/update entries for:
 #    - New projects created this session
@@ -287,12 +322,14 @@ npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_
 #    - last_active timestamps set to now (ISO 8601) ← LIFECYCLE CRITICAL
 
 # 3. Upload updated index
-npx wrangler r2 object put qnfo/discovery/index.json --file=_updated_index.json --remote
+# D1-FIRST: Update D1 tables directly instead of pushing R2 index
+# npx wrangler d1 execute portfolio-state --remote --command "UPDATE resources SET ..." -y
+# R2 discovery index is DEPRECATED — D1 is canonical.
 ```
 
 **If index is missing or corrupt:** Rebuild from R2 enumeration + local filesystem + GitHub repo listing. Upload fresh. Flag session as `[DISCOVERY-REBUILT]`.
 
-**Verify:** `npx wrangler r2 object get qnfo/discovery/index.json --remote` must succeed.
+**Verify:** D1 queries must return current data. R2 discovery index is DEPRECATED — do not verify against it.
 
 ### 5.1 Lifecycle Timestamp Update (v2.4 — LIFE-AND-DEATH HARD GATE)
 
@@ -332,7 +369,7 @@ npx wrangler r2 object put qnfo/discovery/index.json --file=<updated> --remote
 If new decisions were made:
 ```bash
 # Download current log
-npx wrangler r2 object get qnfo/audit/decisions/DECISION-LOG.md --file=<temp>
+# D1-FIRST: Query decisions from D1 instead of R2: npx wrangler d1 execute portfolio-state --remote --command "SELECT * FROM decisions ORDER BY logged_at DESC" -y
 
 # Append new decisions to temp file
 
@@ -450,7 +487,7 @@ Use `fill_prompt_template("CLOSEOUT-CHECKLIST")` for the full verification check
 - [ ] Step 2: ALL planned tasks executed (Task Execution Verification)
 - [ ] Step 3: ALL projects have HANDOFF.md updated (Project Handoff Init)
 - [ ] Step 4: Audit trail exported to R2
-- [ ] Step 5: Discovery Index updated (qnfo/discovery/index.json) **including last_active timestamps**
+- [ ] Step 5: D1 tables updated (portfolio-state.resources, qnfo-audit.discovery_projects) **including last_active timestamps**. R2 discovery index is DEPRECATED.
 - [ ] Step 5.1: **Lifecycle timestamps reset** — `last_active` set to now for all projects touched this session
 - [ ] Step 6: Decision log updated
 - [ ] Step 7: Project state updated

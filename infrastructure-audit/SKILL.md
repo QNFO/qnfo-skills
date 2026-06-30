@@ -1,7 +1,7 @@
 ---
 name: infrastructure-audit
 description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
-version: "1.5"
+version: "1.6"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
@@ -9,6 +9,35 @@ version: "1.5"
 # INFRASTRUCTURE AUDIT SKILL — v1.5
 
 > **LIFECYCLE-AWARE. GAP-AUDIT INTEGRATION. RED-TEAM-DOD INTEGRATION. UPDATED 2026-06-28.** This release adds the RED-TEAM → DoD → ITERATE → REFINE cycle to infrastructure audits. See `skill_view('red-team-dod')`. Also includes lifecycle pipeline health checks, archival path verification, ultrametric taxonomy validation, and §0.5 GAP AUDIT INTEGRATION — Phase 4 health recommendations now output gap-audit-compatible report format.
+
+---
+
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Query D1 databases via API Worker", "status": "pending"},
+  {"step": "Query KV namespaces", "status": "pending"},
+  {"step": "Query Vectorize indexes", "status": "pending"},
+  {"step": "Query Pages projects", "status": "pending"},
+  {"step": "Query Workers deployments", "status": "pending"},
+  {"step": "Query Queues", "status": "pending"},
+  {"step": "Check Lifecycle Worker health", "status": "pending"},
+  {"step": "Check Archive Worker health", "status": "pending"},
+  {"step": "Run archival integrity checks", "status": "pending"},
+  {"step": "Generate health recommendations report", "status": "pending"},
+])
 
 ---
 
@@ -85,6 +114,31 @@ print(f"Knowledge Graph: {kg.get('totalNodes',0)} nodes, {kg.get('totalEdges',0)
 # Expected: 261 nodes, 401 edges
 ```
 
+### Phase 1.6: HTTP Behavior Verification (DEPRECATED — redirects deprecated per 2026-06-29)
+
+> **Redirect verification is now informational only.** The 4 historical redirect domains (deep.qwav.tech, archive.qnfo.org, adelic.qnfo.org, primer.qwav.tech) were decommissioned. Redirect checks are WARN (not BLOCKING) in dod_enforce.py.
+
+```python
+# Verify claimed HTTP redirects
+redirects = [
+    ('https://deep.qwav.tech', 'https://papers.qnfo.org', 'qwav'),
+    ('https://archive.qnfo.org', 'https://papers.qnfo.org/archive', 'qnfo-archive'),
+    ('https://adelic.qnfo.org', 'https://papers.qnfo.org', 'adelic-qft'),
+    ('https://primer.qwav.tech', 'https://papers.qnfo.org', 'qlof-primer'),
+]
+for url, expected, name in redirects:
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        resp = urllib.request.urlopen(req, timeout=10, context=ctx)
+        if resp.status in (301, 302, 307, 308):
+            loc = resp.headers.get('Location', '')
+            print(f'  {name}: {resp.status} -> {loc[:60]}')
+        else:
+            print(f'  [FAIL] {name}: returns {resp.status}, not redirecting')
+    except Exception as e:
+        print(f'  [FAIL] {name}: {e}')
+```
+
 ### Phase 2: Orphan Detection
 
 Compare live resources against Discovery Index to find unregistered or stale entries.
@@ -101,7 +155,9 @@ Compare live resources against Discovery Index to find unregistered or stale ent
 import json, urllib.request
 
 # Pull Discovery Index
-r = urllib.request.Request(f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/r2/buckets/qnfo/objects/qnfo/discovery/index.json',
+# D1-FIRST: Query D1 instead of R2 discovery index
+# Projects: npx wrangler d1 execute qnfo-audit --remote --command 'SELECT * FROM discovery_projects' -y
+# Resources: npx wrangler d1 execute portfolio-state --remote --command 'SELECT * FROM resources' -y
     headers={"Authorization": f"Bearer {TOKEN}", "User-Agent": "Mozilla/5.0"})
 di = json.loads(urllib.request.urlopen(r, timeout=15).read())
 projects = di.get("projects", {})
@@ -151,7 +207,7 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | Lifecycle Scan | Projects scanned, transitions | `GET /status` |
 | Archive Worker | HTTP 200, status=ok | `GET /health` on `qnfo-archive-worker.q08.workers.dev` |
 | Lifecycle Queue | Exists, producers + consumers configured | `wrangler queues list` |
-| Discovery Index | 38 projects, archived paths correct | R2 `qnfo/discovery/index.json` |
+| Discovery Index | 38 projects, archived paths correct | D1 `portfolio-state.resources` + `qnfo-audit.discovery_projects` (R2 index DEPRECATED) |
 | Knowledge Graph | Ultrametric taxonomy intact | `/nodes?label=Concept`, domain/program counts |
 
 ## Output Format
