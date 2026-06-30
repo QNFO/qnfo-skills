@@ -1,15 +1,43 @@
 ---
 name: cloudflare-deployer
 description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
-version: "1.6"
+version: "1.8"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
-# CLOUDFLARE DEPLOYER SKILL — v1.6
+# CLOUDFLARE DEPLOYER SKILL — v1.8
 
 > **On-demand skill.** Load via `skill_view('cloudflare-deployer')` for all Cloudflare operations.
 > Source: `templates/CLOUDFLARE-DEPLOYMENT.md` v2.1 + QWAV-DEFAULT.md §0.6.5-0.6.7
+
+---
+
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Verify wrangler auth", "status": "pending"},
+  {"step": "Pull test suite from R2", "status": "pending"},
+  {"step": "Pull build script from R2", "status": "pending"},
+  {"step": "Build publication artifacts", "status": "pending"},
+  {"step": "Deploy to Cloudflare Pages", "status": "pending"},
+  {"step": "Run post-deploy red-team verification", "status": "pending"},
+  {"step": "Verify MathJax config on deployed page", "status": "pending"},
+  {"step": "Upload artifacts to R2", "status": "pending"},
+  {"step": "Clean up ephemeral files", "status": "pending"},
+])
 
 ---
 
@@ -107,6 +135,23 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 
 -
 
+## Prerequisites
+
+1. **Cloudflare API Token** — auto-available via `$env:CLOUDFLARE_API_TOKEN` (User-level env var, survives reboots). Verify: `npx wrangler whoami` must show account `quniverse`.
+2. **Node.js 18+ / npm** — required for `npx wrangler`. Verify: `node --version`.
+3. **Python 3.8+** — required for build scripts and R2 utilities.
+4. **Network access** — `api.cloudflare.com` must be reachable.
+5. **Git workspace** — all operations must run from within a git-tracked project directory.
+
+**Pre-flight check:**
+```bash
+npx wrangler whoami              # Must show quniverse account
+node --version                    # Must be >= 18
+python --version                  # Must be >= 3.8
+```
+
+---
+
 ## Cloudflare Pages
 
 ```bash
@@ -153,30 +198,25 @@ Remove-Item _test_suite.py
 **GATE:** If ANY page shows `stub=True` → deployment is REJECTED. Content must be professional.
 **GATE:** If ANY publication shows `EMPTY body` → content is NOT ready.
 
+### Post-Deploy Redirect Verification (MANDATORY for Redirect Deployments)
+
+After deploying redirects, verify they actually work:
+
+```bash
+python _dod_enforce.py --preflight-only && python _test_suite.py --redirects
+```
+
+**GATE:** `_dod_enforce.py` must return exit 0 AND `_test_suite.py --redirects` must show all redirects as PASS.
+
 ### Post-Deploy MathJax Verification (MANDATORY for Publication Pages)
 
 After deploying ANY publication page to Cloudflare Pages, verify MathJax is correctly configured:
 
 ```bash
-python -c "
-import urllib.request, sys
-url = sys.argv[1]
-html = urllib.request.urlopen(url).read().decode('utf-8')
-config_pos = html.find('window.MathJax')
-script_pos = html.find('MathJax-script')
-if config_pos == -1:
-    print(f'[BLOCKED] No MathJax config found on {url}')
-    sys.exit(1)
-if script_pos == -1:
-    print(f'[BLOCKED] No MathJax script found on {url}')
-    sys.exit(1)
-if config_pos > script_pos:
-    print(f'[BLOCKED] MathJax config AFTER script on {url} — math WILL NOT render.')
-    print(f'  Config pos: {config_pos}, Script pos: {script_pos}')
-    sys.exit(1)
-print(f'[OK] MathJax correctly configured on {url}')
-print(f'  Config pos: {config_pos}, Script pos: {script_pos}')
-" (via script file) <deployed-url>
+# Post-deploy MathJax verification — write check script, execute, discard
+echo "import urllib.request, sys; url = sys.argv[1]; html = urllib.request.urlopen(url).read().decode('utf-8'); config_pos = html.find('window.MathJax'); script_pos = html.find('MathJax-script'); assert config_pos >= 0, f'MathJax config missing on {url}'; assert script_pos >= 0, f'MathJax script missing on {url}'; assert config_pos < script_pos, f'Config AFTER script on {url}'; print(f'[OK] MathJax correct: config@{config_pos}, script@{script_pos}')" > _verify_cf_mathjax.py
+python _verify_cf_mathjax.py <deployed-url>
+Remove-Item _verify_cf_mathjax.py
 ```
 
 **CRITICAL:** The `window.MathJax` configuration MUST come BEFORE the `<script id="MathJax-script">` tag. If config is after the script, MathJax initializes without macros and math will NOT render. This is the #1 cause of "MathJax isn't rendering."
@@ -287,9 +327,15 @@ This pushes to GitHub AND uploads to R2 in a single command.
 ## Common Patterns
 
 ### Deploy a Publication
+
+> **Design System v2.0 (2026-06-30):** All pages must use the Silent Radix Light Theme.
+> CSS: `https://qnfo.org/design-system/qnfo-light.css`
+> PDF Builder: `qnfo/design-system/build_pdf.py` (v2.0)
+> Template: `qnfo/design-system/publication-template.html`
+> 🚫 **DARK THEMES FORBIDDEN.**
 ```bash
 # 1. Build PDF
-# Pull from R2: npx wrangler r2 object get qnfo/tools/build_pdf.py --remote --file=_build_pdf.py
+# Pull from R2: npx wrangler r2 object get qnfo/design-system/build_pdf.py --remote --file=_build_pdf.py
 python _build_pdf.py
 # Discard: Remove-Item _build_pdf.py --input <file>
 
@@ -312,7 +358,36 @@ npx wrangler pages project list
 npx wrangler r2 object get qnfo/audit/state/qwav.json
 ```
 
+### Verify Design System
+```bash
+# Check if a page uses the light theme
+python -c "import urllib.request;h=urllib.request.urlopen('https://papers.qnfo.org/').read().decode();print('DARK' if '#0a0a0f' in h or '#0d1117' in h else 'LIGHT')"
+```
+
 ---
+## Failure Handling
+
+| Scenario | Response |
+|:---------|:---------|
+| `wrangler whoami` fails or shows wrong account | Token expired or wrong — run `npx wrangler login` or verify `$env:CLOUDFLARE_API_TOKEN` |
+| R2 upload returns HTTP 401 | Token has insufficient permissions — token must have R2 read+write+delete |
+| Pages deploy returns build error | Check build output directory exists and contains `index.html` |
+| Worker deploy returns "duplicate script" | Use `--force` flag or delete old version first |
+| `r2 object list` returns "command not found" | Feature removed in v4.95+ — use per-object `get` operations or REST API `_r2_list.py` |
+| DNS/redirect changes not propagating | Cloudflare DNS TTL is 300s minimum — wait and retry |
+| `skill_view('cloudflare-deployer')` returns error | Skill not indexed — run `bootstrap_skills.py --sync` and restart DeepChat |
+| MathJax not rendering after deploy | Config is AFTER script tag — fix ordering before redeploying |
+| Token not found in environment | Persist token: `[Environment]::SetEnvironmentVariable('CLOUDFLARE_API_TOKEN', '<token>', 'User')` |
+
+**Recovery tools on R2:**
+- `qnfo/tools/fast_r2_upload.py` — batch R2 upload (250x faster than wrangler)
+- `qnfo/tools/r2_list.py` — R2 object listing
+- `qnfo/tools/ps_run.py` — Safe Python execution bridge
+- `qnfo/design-system/build_pdf.py` — Markdown to PDF
+- `qnfo/tools/generate-seo.py` — SEO metadata generation
+- `qnfo/tools/bootstrap_skills.py` — Skill sync and recovery
+
+
 
 ## Reference Files
 

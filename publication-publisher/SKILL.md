@@ -1,554 +1,522 @@
+---
+name: publication-publisher
+description: End-to-end publication workflow — formatting, PDF building, complete artifact bundling, Zenodo upload (with robust retry + versioning + draft recovery via zenodo_api.py), Cloudflare deployment, social media orchestration, and post-publication draft cleanup.
+version: "2.0"
+---
+# PUBLICATION PUBLISHER SKILL — v2.0
+
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
-
-# PUBLICATION PUBLISHER SKILL — v1.7
-
-> **On-demand skill.** Load via `skill_view('publication-publisher')` for publication workflows.
-> Source: DEFAULT.md §11 + `ZENODO-PUBLISH.md` + `pdf-builder` skill
+> **Phase 4–5 of LRAP.** Handles Zenodo deposition, Cloudflare Pages deployment, PDF generation, and artifact archival for QNFO/QWAV research publications.
 
 ---
 
-## Publication Pipeline
+## execute_plan (MANDATORY — Before Any Execution)
 
-```
-Draft Complete → Format (§11) → Build PDF → Assemble Artifact Bundle → Zenodo Upload (ALL artifacts, versioned) → Cloudflare Deploy → Social Posts → Draft Cleanup
-```
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
 
-### CRITICAL RULES (v1.4)
-1. **Zenodo uploads MUST include ALL project artifacts** — PDF, source code, data files, README, supplementary materials, configs. NOT just the final output PDF.
-2. **Semantic versioning is MANDATORY** — every publication (new or updated) gets a MAJOR.MINOR.PATCH version. Updates to existing publications create NEW VERSIONS via `--doi`, never duplicate records.
-3. **Draft cleanup is MANDATORY after publication** — remove all temporary build artifacts, draft markdowns, and ephemeral files. Verify R2 holds canonical copies.
+### Execution Protocol
 
----
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
 
-## Step 1: Format (§11 Standards)
+### Example Plan
 
-### Visible Author Block (MANDATORY)
-Every release document must start with:
-```
-**Author:** Rowan Quni-Gudzinas | **Date:** YYYY-MM-DD | **License:** QNFO Unified License Agreement (QNFO-ULA)
-```
-
-### Curly Quotes
-All publication documents use curly/smart quotes (Unicode: \u201c \u201d \u2018 \u2019). Code blocks exempt.
-
-### Pre-Publication Checklist
-- [ ] Visible Author Block present
-- [ ] Curly quotes applied
-- [ ] REVIEWER subagent passed fabrication audit
-- [ ] All file references verified (`Test-Path`)
-- [ ] Git log confirms all changes committed
-- [ ] PDF generated
-- [ ] **PDF rendering verified — no `\ufffd` characters, em dashes/curly quotes render correctly**
-- [ ] **Artifact bundle assembled — ALL project files catalogued (source, data, README, supplementary, configs)**
-- [ ] **Semantic version assigned — MAJOR.MINOR.PATCH documented in manifest**
-- [ ] **Zenodo duplicate check passed — existing DOI identified for version bump, or confirmed new publication**
-- [ ] **ALL artifacts uploaded to Zenodo — NOT just the PDF. Manifest cross-referenced.**
-- [ ] Cloudflare Pages deployed and URL verified
-- [ ] **Draft cleanup complete — all temp build files removed, R2 canonical verified**
+update_plan([
+  {"step": "Validate publication readiness (Language Gate, citations)", "status": "pending"},
+  {"step": "Build PDF from canonical Markdown", "status": "pending"},
+  {"step": "Generate HTML publication page with MathJax", "status": "pending"},
+  {"step": "Create Zenodo deposition with metadata", "status": "pending"},
+  {"step": "Upload all artifacts to Zenodo", "status": "pending"},
+  {"step": "Publish deposition and obtain DOI", "status": "pending"},
+  {"step": "Deploy HTML page to Cloudflare Pages", "status": "pending"},
+  {"step": "Verify MathJax on deployed page", "status": "pending"},
+  {"step": "Upload artifacts to R2 canonical storage", "status": "pending"},
+  {"step": "Generate SEO metadata for discoverability", "status": "pending"},
+  {"step": "Update Discovery Index with new publication", "status": "pending"},
+])
 
 ---
 
-## Step 2: Build PDF (v1.6 — Updated for pdf-builder v2.0)
+## Purpose
 
-Use `skill_view('pdf-builder')` to load the skill, then follow its workflow:
+Publish QNFO/QWAV research publications through a verified pipeline: validate publication readiness, build PDF and HTML artifacts, deposit to Zenodo for DOI assignment, deploy HTML to Cloudflare Pages, archive canonical copies to R2, and register in the Discovery Index. Ensures every publication meets QNFO standards (Research Integrity Mandate, Publication Language Gate, MathJax verification).
 
-### Primary Pipeline (RECOMMENDED — Obsidian-quality PDFs)
+## When to Use
 
-```bash
-# Verify prerequisites
-python -c "import playwright, markdown, yaml; print('OK')"
+| Trigger | Action |
+|:--------|:-------|
+| "Publish this paper" / "Publish to Zenodo" | Full publication pipeline |
+| "Build PDF for [paper]" | PDF generation only |
+| "Deploy to Cloudflare Pages" | Pages deployment only |
+| "Generate HTML for [paper]" | HTML generation only |
+| Phase 4–5 of LRAP | Automatic trigger via `research-orchestrator` |
 
-# Build PDF (MD → HTML+CSS+MathJax → playwright PDF)
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input "paper.md" --output "paper.pdf" --title "Paper Title" --author "Author Name"
+## Prerequisites
 
-# Verify rendering (MANDATORY)
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input "paper.pdf" --verify
-```
-
-### Legacy Pipeline (fallback only — lower quality)
-
-```bash
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input "paper.md" --output "paper.pdf" --legacy --no-math
-```
-
-### PDF Rendering Verification (MANDATORY)
-After building PDF, extract text and verify ALL Unicode characters render correctly:
-```bash
-python -c "
-import fitz
-doc = fitz.open('output.pdf')
-text = ''.join(page.get_text() for page in doc)
-# Check for replacement character (corrupted Unicode)
-if '\ufffd' in text:
-    print('[BLOCKED] PDF contains Unicode replacement characters! Fix font encoding.')
-    print('First occurrence:', text[max(0,text.index('\ufffd')-20):text.index('\ufffd')+20])
-else:
-    print('[OK] No replacement characters found.')
-# Check key typographic characters
-for char, name in [('\u2014','em dash'), ('\u201c','left curly quote'), ('\u201d','right curly quote')]:
-    count = text.count(char)
-    print(f'[{chr(0x2713) if count>0 else chr(0x2717)}] {name}: {count} found')
-"
-```
-If ANY character fails: PDF is NOT publication-ready. Fix font encoding in `build_pdf.py` BEFORE proceeding.
+1. **Zenodo Access Token** — stored at `%USERPROFILE%\.zenodo_token` (utf-8, no BOM) or in `$env:ZENODO_TOKEN`
+2. **Cloudflare API Token** — stored at `$env:CLOUDFLARE_API_TOKEN`
+3. **Publication passes all quality gates** — Language Gate (§7.1), citation audit, fabrication audit
+4. **Canonical Markdown source** — the single source of truth from which PDF and HTML are generated
 
 ---
 
-## Step 2.5: Assemble Complete Artifact Bundle (MANDATORY — v1.4)
+## Workflow — 7 Stages
 
-**HARD RULE: Zenodo uploads MUST include ALL project artifacts, NOT just the final PDF.** The Zenodo record is the permanent scholarly archive. A PDF alone is incomplete — the record must enable reproducibility.
+### Stage 1: Pre-Publication Validation
 
-### Artifact Categories (ALL required unless noted as optional)
-
-| Category | Required? | Examples |
-|:---------|:----------|:---------|
-| **Primary Output** | YES | PDF of the publication |
-| **Source Documents** | YES | Markdown/LaTeX source, figures, diagrams |
-| **Data Files** | YES (if any) | CSVs, JSON datasets, simulation outputs used in the paper |
-| **Code** | YES (if any) | Python scripts, notebooks, analysis code |
-| **Supplementary Materials** | YES (if any) | Appendices, extended proofs, additional figures |
-| **README** | YES | Project overview, reproduction instructions, build commands |
-| **Configuration** | YES | Requirements files, environment specs, build configs |
-| **License** | YES | QNFO Unified License Agreement (QNFO-ULA) — see https://legal.qnfo.org/ |
-
-### Artifact Bundle Assembly Protocol
-
-**Step 2.5.1: Enumerate all project files**
-
-```powershell
-# List ALL files in the project directory
-Get-ChildItem -Path "<project_dir>" -Recurse -File | ForEach-Object { $_.FullName }
-```
-
-**Step 2.5.2: Classify each file** into the categories above. Any file NOT fitting a category → flag as `[UNCLASSIFIED: <reason>]` and either reclassify or exclude with documented rationale.
-
-**Step 2.5.3: Generate artifact manifest (`ARTIFACT-MANIFEST.json`)**
-
-Create a structured manifest listing every file with checksums. Use a Python script (via temp file):
+Verify the publication meets QNFO standards:
 
 ```python
-import json, hashlib, os, sys
-from pathlib import Path
+def validate_publication(md_path: str) -> dict:
+    """Run all pre-publication quality gates on a Markdown paper."""
+    results = {}
+    
+    # 1. Publication Language Gate — zero internal project language
+    banned_terms = [
+        "Module N", "Task N", "SPRINT", "PROCEED", "RESUME",
+        "PROJECT STATE", "0.N.py", "0.N.md", "cp1252",
+        "ready for handoff", "new agent starting from cold"
+    ]
+    with open(md_path, 'r', encoding='utf-8') as f:
+        text = f.read()
+    hits = {term: text.count(term) for term in banned_terms if term in text}
+    results["language_gate"] = {
+        "passed": len(hits) == 0,
+        "violations": hits
+    }
+    
+    # 2. Author block present
+    results["author_block"] = {
+        "passed": "**Author:**" in text and "**Date:**" in text and "**License:**" in text
+    }
+    
+    # 3. Math in LaTeX delimiters (no bare Unicode math)
+    bare_math_chars = ['α', 'β', 'γ', 'δ', 'ε', 'π', 'σ', '∞', '∑', '∫', '√', '≤', '≥', '≠']
+    bare_hits = [c for c in bare_math_chars if c in text]
+    results["math_format"] = {
+        "passed": len(bare_hits) == 0,
+        "violations": bare_hits
+    }
+    
+    # 4. Citations present and verify
+    import re
+    citations = re.findall(r'\[@(\w+(?:[,;\s]+@\w+)*)\]', text)
+    results["citations"] = {
+        "count": len(citations),
+        "passed": len(citations) > 0
+    }
+    
+    all_passed = all(v["passed"] for v in results.values())
+    results["overall"] = "PASS" if all_passed else "FAIL"
+    return results
+```
 
-project_dir = Path(sys.argv[1])
-version = sys.argv[2]  # MAJOR.MINOR.PATCH
+**GATE:** All validation gates must PASS before proceeding. If any gate FAILS → `[BLOCKED: publication not ready]`.
 
-manifest = {
-    "publication_title": sys.argv[3],
-    "version": version,
-    "semantic_versioning": {
-        "major": int(version.split('.')[0]),
-        "minor": int(version.split('.')[1]),
-        "patch": int(version.split('.')[2]),
-        "version_change_notes": sys.argv[4] if len(sys.argv) > 4 else "Initial publication"
-    },
-    "artifacts": [],
-    "generated_at": None  # populated below
-}
+### Stage 2: PDF Generation
 
-from datetime import datetime, timezone
-manifest["generated_at"] = datetime.now(timezone.utc).isoformat()
+> **Design System v2.0:** PDF builder now at `qnfo/design-system/build_pdf.py` (v2.0).
+> Uses Silent Radix Light Theme — white background, system fonts, clean tables.
+> See [QNFO-DESIGN-SYSTEM.md](https://qnfo.org/design-system/QNFO-DESIGN-SYSTEM.md).
 
-categories = {
-    ".pdf": "primary_output",
-    ".md": "source_document",
-    ".tex": "source_document",
-    ".py": "code",
-    ".ipynb": "code",
-    ".csv": "data",
-    ".json": "data",
-    ".txt": "supplementary",
-    ".png": "figure",
-    ".svg": "figure",
-    ".jpg": "figure",
-    ".yml": "configuration",
-    ".yaml": "configuration",
-    ".toml": "configuration",
-    ".cfg": "configuration",
-}
+Build PDF from canonical Markdown via `build_pdf.py` (shared with cloudflare-deployer):
 
-for filepath in sorted(project_dir.rglob('*')):
-    if filepath.is_file() and not filepath.name.startswith('_') and '__pycache__' not in str(filepath):
-        rel = str(filepath.relative_to(project_dir))
-        ext = filepath.suffix.lower()
-        category = categories.get(ext, "unclassified")
+```bash
+# Pull build script from R2
+npx wrangler r2 object get qnfo/design-system/build_pdf.py --remote --file=_build_pdf.py
+# Build PDF
+python _build_pdf.py --input paper.md --output PAPER-TITLE-v1.0.pdf
+# Verify PDF is non-empty and correctly rendered
+Test-Path PAPER-TITLE-v1.0.pdf
+# Discard build script
+Remove-Item _build_pdf.py
+```
+
+**PDF Verification (MANDATORY):**
+```python
+# Extract text from PDF and scan for rendering failures
+import fitz  # PyMuPDF
+doc = fitz.open("PAPER-TITLE-v1.0.pdf")
+for page in doc:
+    text = page.get_text()
+    # Check for Unicode replacement characters
+    if '\ufffd' in text:
+        print("[BLOCKED] PDF contains rendering failures — font encoding issue")
+        sys.exit(1)
+```
+
+**GATE:** PDF must have zero `\ufffd` characters and all special characters (em dashes, curly quotes) must render correctly.
+
+### Stage 3: HTML Publication Page Generation
+
+Generate HTML from canonical Markdown using the `HTML-PUBLICATION-PAGE` template:
+
+```python
+def generate_html(md_path: str, metadata: dict) -> str:
+    """Generate publication HTML page from Markdown source."""
+    import markdown
+    
+    with open(md_path, 'r', encoding='utf-8') as f:
+        md_text = f.read()
+    
+    # Convert Markdown to HTML body
+    html_body = markdown.markdown(md_text, extensions=['extra', 'codehilite', 'tables'])
+    
+    # MathJax configuration — MUST come before the MathJax script
+    mathjax_config = """
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        macros: {
+          "\\R": "\\mathbb{R}",
+          "\\Q": "\\mathbb{Q}",
+          "\\Z": "\\mathbb{Z}",
+          "\\N": "\\mathbb{N}",
+          "\\C": "\\mathbb{C}",
+          "\\F": "\\mathbb{F}",
+          "\\Qp": "\\mathbb{Q}_p",
+          "\\Zp": "\\mathbb{Z}_p",
+          "\\cA": "\\mathcal{A}",
+          "\\cC": "\\mathcal{C}",
+          "\\cB": "\\mathcal{B}"
+        }
+      },
+      options: {
+        ignoreHtmlClass: 'no-mathjax',
+        processHtmlClass: 'mathjax-process'
+      },
+      chtml: {
+        displayAlign: 'left'
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    """
+    
+    # Build complete HTML
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{metadata['title']}</title>
+    <meta name="citation_title" content="{metadata['title']}">
+    <meta name="citation_author" content="{metadata['author']}">
+    <meta name="citation_publication_date" content="{metadata['date']}">
+    <meta name="citation_doi" content="{metadata.get('doi', '')}">
+    <link rel="stylesheet" href="https://qnfo.org/design-system/qnfo-light.css">
+    {mathjax_config}
+</head>
+<body>
+    <header>
+        <h1>{metadata['title']}</h1>
+        <div class="author-block">
+            <p><strong>Author:</strong> {metadata['author']} | <strong>Date:</strong> {metadata['date']} | <strong>License:</strong> QNFO-ULA</p>
+            {f'<p><strong>DOI:</strong> <a href="https://doi.org/{metadata["doi"]}">{metadata["doi"]}</a></p>' if metadata.get('doi') else ''}
+        </div>
+    </header>
+    <main>
+        {html_body}
+    </main>
+    <footer>
+        <p><em>Published under the QNFO Unified License Agreement. See <a href="https://legal.qnfo.org/">legal.qnfo.org</a>.</em></p>
+    </footer>
+</body>
+</html>"""
+    
+    return html
+```
+
+**CRITICAL:** MathJax config MUST come BEFORE the `<script id="MathJax-script">` tag. Verify:
+```bash
+# Verify MathJax config ordering — write check script, execute, discard
+echo "import sys; html=open('index.html','r',encoding='utf-8').read(); c=html.find('window.MathJax'); s=html.find('MathJax-script'); sys.exit(0 if c>=0 and s>=0 and c<s else 1)" > _verify_mathjax.py
+python _verify_mathjax.py
+Remove-Item _verify_mathjax.py
+```
+
+**GATE:** MathJax config must be before MathJax script in the generated HTML.
+
+### Stage 4: Zenodo Deposition (Robust — via `zenodo_api.py`)
+
+Use the robust `zenodo_api.py` utility for all Zenodo operations. This replaces the fragile inline API calls with retry logic, exponential backoff, draft recovery, and proper `resource_type` metadata handling.
+
+#### 4a. Create new deposition:
+
+```bash
+# Pull zenodo_api.py from R2 (ephemeral)
+npx wrangler r2 object get qnfo/tools/zenodo_api.py --remote --file=_zenodo_api.py
+
+# Build metadata JSON
+echo "{\"title\": \"Paper Title\", \"upload_type\": \"publication\", \"publication_type\": \"workingpaper\", \"resource_type\": {\"id\": \"publication-workingpaper\"}, \"description\": \"Abstract...\", \"creators\": [{\"name\": \"Author Name\", \"affiliation\": \"QWAV / QNFO\"}], \"access_right\": \"open\", \"license\": \"CC-BY-4.0\", \"version\": \"1.0.0\"}" > _zenodo_meta.json
+
+# Create deposition, upload files, publish
+python _zenodo_api.py create --token-file ZENODO_TOKEN --metadata _zenodo_meta.json --files paper.md,paper.pdf
+
+# Clean up
+Remove-Item _zenodo_api.py, _zenodo_meta.json
+```
+
+#### 4b. Create new version of existing deposition:
+
+```bash
+# Pull zenodo_api.py from R2 (ephemeral)
+npx wrangler r2 object get qnfo/tools/zenodo_api.py --remote --file=_zenodo_api.py
+
+# Create new version of existing DOI
+python _zenodo_api.py new-version --token-file ZENODO_TOKEN --deposition-id 12345 --metadata _zenodo_meta.json --files expanded-paper.md
+
+# Clean up
+Remove-Item _zenodo_api.py
+```
+
+#### 4c. Recovery from stranded draft:
+
+```bash
+# If a previous publish attempt left an orphaned draft:
+python _zenodo_api.py recover --token-file ZENODO_TOKEN --deposition-id 12345 --metadata _zenodo_meta.json --files paper.md,paper.pdf
+```
+
+This automatically: lists drafts, removes files from orphaned drafts, deletes orphaned drafts, creates a fresh new version, uploads files, and publishes.
+
+#### 4d. List all drafts:
+
+```bash
+python _zenodo_api.py list-drafts --token-file ZENODO_TOKEN
+```
+
+```python
+def create_zenodo_deposition(metadata: dict, files: list[str], token: str) -> dict:
+    """Create and publish a Zenodo deposition."""
+    import urllib.request, json
+    
+    BASE = "https://zenodo.org/api"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    # 1. Create deposition
+    dep_metadata = {
+        "metadata": {
+            "title": metadata["title"],
+            "upload_type": "publication",
+            "publication_type": metadata.get("publication_type", "workingpaper"),
+            "description": metadata.get("description", ""),
+            "creators": metadata.get("creators", [
+                {"name": "QNFO Research", "affiliation": "QWAV / QNFO"}
+            ]),
+            "keywords": metadata.get("keywords", []),
+            "license": metadata.get("license", "CC-BY-4.0"),
+            "access_right": "open",
+            "version": metadata.get("version", "1.0.0")
+        }
+    }
+    
+    req = urllib.request.Request(
+        f"{BASE}/deposit/depositions",
+        data=json.dumps(dep_metadata).encode("utf-8"),
+        headers=headers,
+        method="POST"
+    )
+    resp = json.loads(urllib.request.urlopen(req, timeout=30).read())
+    deposition_id = resp["id"]
+    bucket_url = resp["links"]["bucket"]
+    
+    # 2. Upload files
+    for file_path in files:
+        file_name = file_path.split("/")[-1] if "/" in file_path else file_path.split("\\")[-1]
+        with open(file_path, "rb") as f:
+            data = f.read()
         
-        sha256 = hashlib.sha256(filepath.read_bytes()).hexdigest()
-        
-        manifest["artifacts"].append({
-            "path": rel,
-            "category": category,
-            "size_bytes": filepath.stat().st_size,
-            "sha256": sha256
-        })
-
-manifest["total_files"] = len(manifest["artifacts"])
-manifest["categories_count"] = {}
-for a in manifest["artifacts"]:
-    manifest["categories_count"][a["category"]] = manifest["categories_count"].get(a["category"], 0) + 1
-
-# Verify mandatory categories present
-required = ["primary_output", "source_document"]
-missing = [r for r in required if r not in manifest["categories_count"]]
-if missing:
-    print(f"[BLOCKED] Missing required artifact categories: {missing}")
-    sys.exit(1)
-
-# Warn if any unclassified
-unclassified = [a for a in manifest["artifacts"] if a["category"] == "unclassified"]
-if unclassified:
-    print(f"[WARNING] {len(unclassified)} unclassified files:")
-    for u in unclassified:
-        print(f"  {u['path']}")
-
-output_path = project_dir / "ARTIFACT-MANIFEST.json"
-json.dump(manifest, open(output_path, 'w', encoding='utf-8'), indent=2, ensure_ascii=False)
-print(f"[OK] Manifest written: {output_path}")
-print(f"  Version: {version}")
-print(f"  Total artifacts: {manifest['total_files']}")
-for cat, count in sorted(manifest['categories_count'].items()):
-    print(f"  {cat}: {count}")
+        upload_url = f"{bucket_url}/{file_name}"
+        upload_headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/octet-stream"
+        }
+        req = urllib.request.Request(upload_url, data=data, headers=upload_headers, method="PUT")
+        urllib.request.urlopen(req, timeout=60)
+    
+    # 3. Publish
+    req = urllib.request.Request(
+        f"{BASE}/deposit/depositions/{deposition_id}/actions/publish",
+        headers=headers,
+        method="POST"
+    )
+    result = json.loads(urllib.request.urlopen(req, timeout=30).read())
+    
+    return {
+        "doi": result["doi"],
+        "conceptdoi": result["conceptdoi"],
+        "record_url": result["links"]["record"],
+        "deposition_id": deposition_id
+    }
 ```
 
-**Step 2.5.4: Verify manifest completeness**
-
-```powershell
-# Verify ALL files listed match files on disk
-python -c "
-import json
-m = json.load(open('ARTIFACT-MANIFEST.json','r',encoding='utf-8'))
-paths = {a['path'] for a in m['artifacts']}
-print(f'Manifest: {len(paths)} files')
-# Verify PDF is included
-pdfs = [a for a in m['artifacts'] if a['path'].endswith('.pdf')]
-print(f'PDF artifacts: {len(pdfs)}')
-if not pdfs:
-    print('[BLOCKED] NO PDF in artifact manifest!')
-" (via script file)
-```
-
-**GATE:** If manifest assembly fails or required categories are missing → `[BLOCKED: incomplete artifact bundle]`. Do NOT proceed to Zenodo upload.
-
-### Semantic Versioning Protocol (MANDATORY)
-
-Every publication MUST carry a semantic version. This applies at artifact assembly time — the version is embedded in the manifest and used for Zenodo versioning.
-
-**Version format:** `MAJOR.MINOR.PATCH`
-
-| Bump | When |
-|:-----|:-----|
-| MAJOR | Breaking changes — new incompatible methodology, restructured argument, substantially new findings |
-| MINOR | New content added — additional sections, new data, expanded analysis, new co-author |
-| PATCH | Corrections — typo fixes, formatting, small clarifications, metadata updates |
-
-**Version assignment protocol:**
-1. **First publication:** Start at `1.0.0`
-2. **Update to existing publication:** Determine bump type using the table above. Use `--doi <existing_doi>` with Zenodo to create new version.
-3. **Version in filename:** `PROJECT-NAME-v1.0.0.pdf` (NOT just `PROJECT-NAME-v1.pdf` or `PROJECT-NAME.pdf`)
-4. **Version in manifest:** Embedded in `ARTIFACT-MANIFEST.json` with change notes
-
----
-
-## Step 3: Zenodo Upload (ALL Artifacts — NOT just PDF)
-
-**Zenodo Duplicate Prevention (MANDATORY — execute BEFORE creating any record):**
-
-1. Check for existing Zenodo record by searching the Discovery Index for a prior DOI for this publication title:
+**Token Setup:**
 ```bash
-python -c "import json; d=json.load(open('_discovery_index.json','r',encoding='utf-8')); pubs=[p for p in d.get('publications',[]) if '<publication_title>' in p.get('title','')]; print(json.dumps(pubs, indent=2))" (via script file)
+# Store Zenodo token (one-time setup)
+# Write setup script to file, execute, discard
+echo "import os; token = input('Zenodo Access Token: ').strip(); path = os.path.expandvars(r'%USERPROFILE%\\.zenodo_token'); open(path, 'w', encoding='utf-8').write(token); print('[OK] Zenodo token stored')" > _setup_zenodo_token.py
+python _setup_zenodo_token.py
+Remove-Item _setup_zenodo_token.py
 ```
-2. **If existing DOI found → MUST create a NEW VERSION (not a duplicate record).** This is NON-NEGOTIABLE. Use `--doi <existing_doi>` flag. Semantic version bump per §2.5 protocol.
-3. If Zenodo API search needed: use `brave_web_search` for `site:zenodo.org "<publication_title>"` to find existing records.
-4. **Never create a new Zenodo record for a publication that already has one.** This creates DUPLICATE records and violates scholarly archiving standards.
-5. If unsure whether a record exists: search first. Create only when search returns zero results.
 
-**Artifact Upload Protocol (v1.4 — ALL artifacts required):**
+### Stage 5: Cloudflare Pages Deployment
 
-The Zenodo upload MUST include ALL files from the artifact bundle, not just the PDF:
+Deploy the HTML publication page to Cloudflare Pages:
 
 ```bash
-# Pull from R2: npx wrangler r2 object get qnfo/tools/zenodo_publish.py --remote --file=_zenodo_publish.py
-
-# Upload ALL artifacts (not just PDF)
-python _zenodo_publish.py \
-  --title "<publication_title> v<MAJOR.MINOR.PATCH>" \
-  --author "<Last, First>" \
-  --artifacts-dir "<project_dir>" \
-  --manifest "ARTIFACT-MANIFEST.json" \
-  --version "<MAJOR.MINOR.PATCH>" \
-  --upload-type publication \
-  --license "other" \
-  {{#doi}}--doi "<existing_doi>"{{/doi}}
-
-# Verify upload completeness
-python _zenodo_publish.py --verify --deposition-id <id>
-
-# Discard: Remove-Item _zenodo_publish.py
+# Create deployment directory
+mkdir _pages_deploy
+# Copy index.html and supporting assets
+cp index.html _pages_deploy/
+# CSS served from qnfo.org/design-system/qnfo-light.css (canonical)
+# Copy any figures
+cp -r figures _pages_deploy/ 2>$null
+# Deploy
+npx wrangler pages deploy _pages_deploy --project-name qnfo-publications --branch main
+# Clean up
+Remove-Item -Recurse _pages_deploy
 ```
 
-**Upload Verification (MANDATORY):**
-After upload, verify the Zenodo record contains ALL artifacts by cross-referencing against `ARTIFACT-MANIFEST.json`:
+**Post-Deploy Verification (MANDATORY):**
 ```bash
-python -c "
-import json
-manifest = json.load(open('ARTIFACT-MANIFEST.json','r',encoding='utf-8'))
-expected = manifest['total_files']
-print(f'Expected artifacts: {expected}')
-print(f'Categories: {manifest[\"categories_count\"]}')
-# Zenodo API check (via zenodo_publish.py --verify output above)
-print('Compare Zenodo file count against manifest — must match')
-" (via script file)
+# Verify MathJax on the deployed page — write check script, execute, discard
+echo "import urllib.request, sys; url = sys.argv[1]; html = urllib.request.urlopen(url).read().decode('utf-8'); c = html.find('window.MathJax'); s = html.find('MathJax-script'); assert c >= 0, 'MathJax config missing'; assert s >= 0, 'MathJax script missing'; assert c < s, 'Config AFTER script — math WILL NOT render'; print(f'[OK] MathJax verified: config@{c}, script@{s}')" > _verify_deployed_mathjax.py
+python _verify_deployed_mathjax.py <deployed-url>
+Remove-Item _verify_deployed_mathjax.py
 ```
 
-**GATE:** If uploaded file count != manifest file count → `[BLOCKED: incomplete Zenodo upload]`. Re-upload missing files.
+### Stage 6: R2 Archival and SEO
 
----
-
-## Step 4: Cloudflare Deploy
-
-> **HARD RULE:** NEVER create a new Cloudflare Pages project for an existing publication resource. All QNFO publications deploy under the single `qnfo-publications` umbrella project via subdirectory routing (e.g., `/papers/<slug>/`). Creating additional Pages projects for the same resource clutters the dashboard, wastes quota, and creates maintenance burden. The `qwav` project (deep.qwav.tech) now redirects to papers.qnfo.org.
-
-### Pre-Deploy Checklist
-- [ ] Verify the target deployment uses `--project-name qnfo-publications` (NEVER a new project)
-- [ ] Verify the publication deploys to a subdirectory path: `/papers/<kebab-case-title>/`
-- [ ] Verify no duplicate R2 artifact already exists at `qnfo/releases/YYYY/MM/<file>.pdf`
-- [ ] **Verify HTML is generated from canonical Markdown** (see §4.1 below) — NEVER hand-code publication HTML
-- [ ] **Verify MathJax config is BEFORE script tag** — `window.MathJax` config MUST precede `<script id="MathJax-script">` in `index.html`. If config comes after, math WILL NOT render.
-
-### 4.1 HTML Generation from Canonical Markdown (MANDATORY)
-
-**HARD RULE: ALL publication HTML pages MUST be generated from canonical Markdown.** HTML is a derived output format, not a content source. Use the `md_to_html.py` script from the pdf-builder skill:
+Upload canonical artifacts to R2 and generate SEO metadata:
 
 ```bash
-# Generate styled HTML from canonical markdown
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\md_to_html.py" \
-  --input "paper.md" \
-  --output "index.html" \
-  --title "Publication Title" \
-  --author "Author Name (Affiliation)"
-```
+# Upload publication to R2
+npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/paper.md --file=<md-path>
+npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/paper.pdf --file=<pdf-path>
+npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/index.html --file=index.html
 
-This generates `index.html` from `paper.md` with:
-- Correct MathJax config-before-script ordering
-- QNFO standard macros (blackboard bold, calligraphic, Greek shortcuts)
-- Publication metadata (citation_* meta tags)
-- Responsive viewport
-- Embedded `papers.css` professional stylesheet
-
-### 4.2 MathJax Config Order Verification (MANDATORY)
-
-Before deploying, verify MathJax config ordering in `index.html`:
-
-```bash
-python -c "
-import sys
-with open('index.html', 'r', encoding='utf-8') as f:
-    html = f.read()
-config_pos = html.find('window.MathJax')
-script_pos = html.find('MathJax-script')
-if config_pos == -1:
-    print('[BLOCKED] No MathJax config found in index.html!')
-    sys.exit(1)
-if script_pos == -1:
-    print('[BLOCKED] No MathJax script found in index.html!')
-    sys.exit(1)
-if config_pos > script_pos:
-    print('[BLOCKED] MathJax config AFTER script! Math WILL NOT render.')
-    print('  Config at pos {}, Script at pos {}'.format(config_pos, script_pos))
-    print('  FIX: Move MathJax config <script> BEFORE MathJax-script <script>')
-    sys.exit(1)
-print('[OK] MathJax config correctly placed BEFORE script.')
-print('  Config at pos {}, Script at pos {}'.format(config_pos, script_pos))
-" (via script file)
-```
-
-**GATE:** If config is AFTER script → `[BLOCKED: MathJax order]`. Fix `index.html` BEFORE deploying. This is the #1 cause of "MathJax isn't rendering."
-
-### 4.3 Deploy
-
-```bash
-# Deploy to Cloudflare Pages
-npx wrangler pages deploy <dir> --project-name qnfo-publications --branch main
-
-# Upload PDF to R2
-npx wrangler r2 object put qnfo/releases/YYYY/MM/<file>.pdf --file=<path>
-
-# Generate SEO files
+# Generate SEO artifacts
 # Pull from R2: npx wrangler r2 object get qnfo/tools/generate-seo.py --remote --file=_generate-seo.py
-python _generate-seo.py
+python _generate-seo.py --url https://papers.qnfo.org/<paper-slug>/ --title "<paper title>"
 # Discard: Remove-Item _generate-seo.py
 ```
 
----
+### Stage 7: Discovery Index Update
 
-## Step 5: Social Media Orchestration
+Register the new publication in the Discovery Index:
 
-Use `fill_prompt_template("SOCIAL-ORCHESTRATOR-TEMPLATE", {...})` to generate posts for all channels.
-Post via Buffer API `create_post` tool with `schedulingType: "notification"` for manual approval.
+```bash
+# Pull current index
+npx wrangler r2 object get qnfo/discovery/index.json --remote --file=_discovery_index.json
 
-**Channels:** Twitter/X, Bluesky, LinkedIn (Mastodon pending Buffer plan upgrade)
+# Update Discovery Index with new publication entry
+# Write update script to file, execute, discard
+echo "import json; idx = json.load(open('_discovery_index.json','r',encoding='utf-8')); idx.setdefault('publications',{})['<paper-slug>'] = {'title':'<title>','doi':'<doi>','date':'<date>','r2_path':'qnfo/releases/YYYY/MM/<paper-slug>/','pages_url':'https://papers.qnfo.org/<paper-slug>/','zenodo_url':'https://zenodo.org/records/<id>'}; json.dump(idx, open('_discovery_index.json','w',encoding='utf-8'), indent=2)" > _update_di.py
+python _update_di.py
 
----
+# Upload updated index
+npx wrangler r2 object put qnfo/discovery/index.json --file=_discovery_index.json --remote
 
-## Step 6: Post-Publication Draft Cleanup (MANDATORY — v1.4)
-
-**HARD RULE: After publication is confirmed (Zenodo DOI obtained, Cloudflare deployed), ALL draft and temporary build artifacts MUST be removed.** The published record on Zenodo and R2 is canonical. Draft copies left on disk create version confusion and waste storage.
-
-### Cleanup Protocol
-
-**Step 6.1: Verify canonical copies exist on R2**
-
-```powershell
-# Verify PDF on R2
-npx wrangler r2 object get qnfo/releases/YYYY/MM/<file>.pdf --remote
-# Verify artifact bundle on R2 (if uploaded separately)
-npx wrangler r2 object get qnfo/releases/YYYY/MM/<project>-v<MAJOR.MINOR.PATCH>.zip --remote
+# Clean up
+Remove-Item _discovery_index.json
+Remove-Item _update_di.py
 ```
-
-**GATE:** If canonical copies do NOT exist on R2 → `[BLOCKED: canonical missing]`. Upload to R2 before cleaning local drafts.
-
-**Step 6.2: Identify draft files to remove**
-
-| File Pattern | Action | Rationale |
-|:-------------|:-------|:----------|
-| `*.draft.md` | DELETE | Draft markdowns — canonical is the published PDF + source |
-| `*_v[0-9]*.md` (old versions) | DELETE | Older markdown versions — R2 holds versioned releases |
-| `*.aux`, `*.log`, `*.out`, `*.toc` | DELETE | LaTeX build artifacts |
-| `__pycache__/` | DELETE | Python bytecode cache |
-| `_*` (ephemeral files) | DELETE | Temporary build scripts and caches |
-| `paper.pdf` (non-versioned) | DELETE | Rename to versioned name before upload, then delete non-versioned copy |
-| `output.pdf`, `final.pdf` | DELETE | Generic PDF names — use descriptive versioned filenames |
-
-| File Pattern | Action | Rationale |
-|:-------------|:-------|:----------|
-| `ARTIFACT-MANIFEST.json` | UPLOAD to R2, then DELETE local | Manifest is part of the published record — archive on R2 |
-| Published PDF (versioned) | UPLOAD to R2, then DELETE local | R2 is canonical — local is cache |
-| Project source files | UPLOAD to R2, then DELETE local | R2 stores project bundles |
-
-**Step 6.3: Execute cleanup**
-
-```powershell
-# Remove draft files
-Get-ChildItem -Path "<project_dir>" -Filter "*.draft.md" | Remove-Item -Force
-Get-ChildItem -Path "<project_dir>" -Filter "*.aux" | Remove-Item -Force
-Get-ChildItem -Path "<project_dir>" -Filter "*.log" | Remove-Item -Force
-
-# Remove ephemeral files
-Get-ChildItem -Path "<project_dir>" -Filter "_*" | Remove-Item -Recurse -Force
-
-# Remove __pycache__
-if (Test-Path "<project_dir>/__pycache__") {
-    Remove-Item -Recurse -Force "<project_dir>/__pycache__"
-}
-
-# Remove generic-named PDF copies
-if (Test-Path "<project_dir>/paper.pdf") { Remove-Item "<project_dir>/paper.pdf" }
-if (Test-Path "<project_dir>/output.pdf") { Remove-Item "<project_dir>/output.pdf" }
-if (Test-Path "<project_dir>/final.pdf") { Remove-Item "<project_dir>/final.pdf" }
-
-# Upload manifest and versioned PDF to R2, then delete local
-npx wrangler r2 object put qnfo/releases/YYYY/MM/<project>-v<version>/ARTIFACT-MANIFEST.json --file=ARTIFACT-MANIFEST.json
-npx wrangler r2 object put qnfo/releases/YYYY/MM/<project>-v<version>/<file>.pdf --file=<file>.pdf
-Remove-Item "ARTIFACT-MANIFEST.json"
-Remove-Item "<file>.pdf"
-```
-
-**Step 6.4: Verify cleanup**
-
-```powershell
-# Verify no draft files remain
-$drafts = Get-ChildItem -Path "<project_dir>" -Filter "*.draft.md" -ErrorAction Stop
-if ($drafts) { Write-Output "FAILED: $($drafts.Count) draft files remain!" } else { Write-Output "Draft cleanup: OK" }
-
-# Verify no ephemeral files remain
-$ephemeral = Get-ChildItem -Path "<project_dir>" -Filter "_*" -ErrorAction Stop
-if ($ephemeral) { Write-Output "FAILED: $($ephemeral.Count) ephemeral files remain!" } else { Write-Output "Ephemeral cleanup: OK" }
-
-# Verify R2 has canonical copies
-npx wrangler r2 object get qnfo/releases/YYYY/MM/<project>-v<version>/<file>.pdf --remote
-Write-Output "R2 canonical verified: OK"
-```
-
-**GATE:** If any draft/ephemeral files remain OR R2 canonical missing → `[BLOCKED: cleanup incomplete]`.
-
-### Integration with Session Closeout
-
-This cleanup step MUST execute BEFORE session closeout. The closeout-manager skill's `_*` cleanup gate will catch any remaining ephemeral files. If the publication-publisher cleanup was skipped, the closeout gate will fail.
-
-**Post-cleanup state:**
-- Zenodo: ALL artifacts archived with DOI (permanent)
-- R2: PDF + artifact manifest + project bundle (canonical)
-- Cloudflare Pages: Publication deployed (live)
-- Local disk: NO drafts, NO ephemeral files, NO non-versioned PDFs
 
 ---
 
-## Descriptive Filenames
+## Integration Points
 
-Use descriptive publication filenames (DEFAULT.md §10):
-```
-QUANTUM-ERROR-CORRECTION-ULTRAMETRIC-v1.0.pdf
-```
-NOT: `paper.pdf`, `final.pdf`, `output.pdf`
+| Upstream Skill | How It Feeds Publication Publisher |
+|:---------------|:-----------------------------------|
+| `research-orchestrator` | Calls this skill as Phases 4–5 of LRAP |
+| `citation-manager` | Verified citations → publication-ready bibliography |
+| `fabrication-audit` | Audited claims → publication-ready content |
+
+| Downstream Skill | How Publication Publisher Enables It |
+|:-----------------|:-------------------------------------|
+| `social-orchestrator` / `buffer-integration` | Published DOI → social media dissemination |
+| `seo-discoverability` | Deployed page → SEO optimization |
+| `knowledge-graph` | New publication node → graph seeding |
 
 ---
-
 
 ## Embedded Scripts
 
-> **SELF-CONTAINED:** This skill depends on the scripts listed below. Before executing any script, verify it exists at its canonical path. If missing, see the bootstrap note below for recovery.
-
 | Script | R2 Canonical | Execution Cache | Purpose |
 |:-------|:-------------|:----------------|:--------|
-| `zenodo_publish.py` | `qnfo/tools/zenodo_publish.py` | `_zenodo_publish.py` (ephemeral) | Zenodo DOI registration via REST API |
-| `generate-seo.py` | `qnfo/tools/generate-seo.py` | `_generate-seo.py` (ephemeral) | sitemap.xml, robots.txt, llms.txt generator |
-
-> **Note:** `build_pdf.py` and `md_to_html.py` are now bundled in the `pdf-builder` skill (`skills/pdf-builder/scripts/`). Use `skill_view('pdf-builder')` for PDF generation. R2 backup at `qnfo/tools/build_pdf.py`.
+| `build_pdf.py` | `qnfo/design-system/build_pdf.py` | `_build_pdf.py` | Markdown → PDF generation |
+| `generate-seo.py` | `qnfo/tools/generate-seo.py` | `_generate-seo.py` | SEO metadata generation |
+| `zenodo_api.py` | `qnfo/tools/zenodo_api.py` | `_zenodo_api.py` | Robust Zenodo deposition management with retry + versioning + draft recovery |
 
 ### Bootstrap Protocol
 
-**Before using any script, verify it exists:**
 ```bash
-# Pull from R2: npx wrangler r2 object get qnfo/tools/<script>.py --remote --file=_<script>.py
-# Verify pull: Test-Path _<script>.py
+# Pull from R2
+npx wrangler r2 object get qnfo/tools/<script>.py --remote --file=_<script>.py
+# Verify
+Test-Path _<script>.py
 ```
 
-**If script is MISSING:** Scripts are canonical on Cloudflare R2 (`qnfo/tools/`). Pull from R2: `npx wrangler r2 object get qnfo/tools/<script>.py --remote --file=_<script>.py`.
-1. Re-pull from R2: `npx wrangler r2 object get qnfo/tools/<script>.py --remote --file=_<script>.py`
-2. Check: are you on the correct branch? `git branch --show-current`
-3. The canonical source for all tools is the `prompts` repo `tools/` directory.
+---
 
-**Last resort:** If all scripts are missing and unrecoverable from git, flag as `[BLOCKED: missing tools]`.
-DO NOT attempt publication without these scripts.
 
-### Dependencies
-- `build_pdf.py` (v2.0): requires `playwright`, `markdown`, `pyyaml`, `pymupdf` (primary) OR `reportlab`, `matplotlib` (legacy fallback)
-- `md_to_html.py`: requires `markdown`, `pyyaml`
-- `zenodo_publish.py`: requires `%USERPROFILE%\.zenodo_token` (Zenodo API token with deposit:actions, deposit:write)
-- `generate-seo.py`: standard library only, no external dependencies
-
-### Cross-Reference
-- `build_pdf.py` and `md_to_html.py` are bundled in the `pdf-builder` skill (`skill_view('pdf-builder')`)
-- `papers.css` is bundled at `skills/pdf-builder/references/papers.css`
-- These scripts are embedded in the `publication-publisher` skill as their primary documentation home
-
-## Reference Files
-
-- Publication standards: DEFAULT.md §11
-- PDF builder: `skill_view('pdf-builder')` (bundled skill with `scripts/build_pdf.py` and `scripts/md_to_html.py`)
-- CSS stylesheet: `skills/pdf-builder/references/papers.css`
-- Zenodo: `templates/ZENODO-PUBLISH.md`
-- Social orchestrator: `templates/SOCIAL-ORCHESTRATOR-TEMPLATE.md`
-- Cloudflare deploy: `templates/CLOUDFLARE-DEPLOYMENT.md`
 
 ---
 
-*publication-publisher v1.7 — Load on-demand via skill_view(). HTML pages MUST be generated from canonical Markdown using md_to_html.py with MathJax config BEFORE script. PDFs via pdf-builder v2.0 primary pipeline (Obsidian-quality). Deploys to qnfo-publications (papers.qnfo.org).*
+## Design System Integration (v2.0 — 2026-06-30)
+
+All QNFO/QWAV publications use the **Silent Radix Light Theme** design system:
+
+| Element | Location |
+|:--------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| R2 CSS | `qnfo/design-system/qnfo-light.css` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| Design documentation | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+| Page rebuild tool | `qnfo/design-system/rebuild_page.py` |
+
+### Design System Rules
+
+**🚫 DARK THEMES FORBIDDEN.** All pages must use:
+- White background (`#FFFFFF` / `var(--bg-primary)`)
+- Dark text (`#363636` / `var(--text-primary)`)
+- System font stack
+- Max-width 800px centered layout
+- MathJax CHTML with left-aligned display equations
+- Clean tables with bottom-borders only
+
+### Extended MathJax Macros
+```
+\bT, \bP, \bK, \bB, \bM  (mathbb)
+\GL, \Gal, \Aut, \End, \Hom  (mathrm)
+\Spec, \Proj, \id, \im, \ker, \Tr, \vol
+```
+
+## Failure Handling
+
+| Scenario | Response |
+|:---------|:---------|
+| Publication fails Language Gate | `[BLOCKED: Language Gate]` — list violations, require fix |
+| Zenodo API returns 401 | Token expired — regenerate at zenodo.org/account/settings/applications/ |
+| PDF rendering has `\ufffd` | Font encoding issue — use `--pdf-engine=xelatex` for Unicode support |
+| MathJax config AFTER script | `[BLOCKED: MathJax order]` — fix HTML template before deploying |
+| Cloudflare Pages deploy fails | Check wrangler auth with `npx wrangler whoami` |
+| R2 upload fails | Verify CLOUDFLARE_API_TOKEN is set and has write permissions |
+| Discovery Index corrupted | Rebuild from R2 enumeration + local state and upload fresh |
 
 ---
 
-*publication-publisher v1.6 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/publication-publisher\\SKILL.md'). Not accessible via skill_view().*
+*publication-publisher v1.0 — Phase 4–5 of LRAP. Zenodo deposition, Cloudflare Pages deployment, PDF generation, and archival for QNFO/QWAV publications.*
 
 ## RT: RED-TEAM SELF-AUDIT
 
