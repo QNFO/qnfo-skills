@@ -14,6 +14,31 @@ version: 1.0
 
 ---
 
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Phase 1: Verify YoBrowser available + load audit template", "status": "pending"},
+  {"step": "Phase 2: Navigate all target pages/flows", "status": "pending"},
+  {"step": "Phase 3: Test all interactive elements (buttons, forms)", "status": "pending"},
+  {"step": "Phase 4: Capture screenshots at each page/state", "status": "pending"},
+  {"step": "Phase 5: Test responsive breakpoints", "status": "pending"},
+  {"step": "Phase 6: Auto-populate BLING-USABILITY-AUDIT template with evidence", "status": "pending"},
+])
+
+---
+
 ## WHAT THIS SKILL DOES
 
 Unlike the passive template, this skill **actively executes** a usability audit:
@@ -431,7 +456,51 @@ The final output is the filled `BLING-USABILITY-AUDIT` template with:
 
 *bling-usability-audit v1.0 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/bling-usability-audit\\SKILL.md'). Not accessible via skill_view().*
 
-## RT: RED-TEAM SELF-AUDIT
+
+
+---
+
+## QNFO Design System Compliance (v2.0 — 2026-06-30)
+
+### Dark Theme Detection — BLING Audit Enhancement
+
+When auditing QNFO/QWAV pages, **dark theme detection is now a FAIL criterion**:
+
+```python
+# Add to Phase 3 (Visual Polish Audit):
+cdp_send(method="Runtime.evaluate", params={
+    "expression":"""
+    JSON.stringify({
+        isDarkTheme: (function() {
+            var bg = getComputedStyle(document.body).backgroundColor;
+            var match = bg.match(/(\d+)/g);
+            if (!match) return false;
+            var r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]);
+            // If background is very dark (avg channel < 40), it is a dark theme
+            return (r + g + b) / 3 < 40;
+        })(),
+        hasDarkHex: (function() {
+            var html = document.documentElement.innerHTML;
+            return !!(html.match(/#0a0a0f|#0d1117|#12121a|#1a1a2e|#1e1e1e/));
+        })()
+    })
+    """
+})
+
+# If isDarkTheme or hasDarkHex → FAIL
+# All QNFO pages must use Silent Radix Light Theme:
+# - Canonical CSS: https://qnfo.org/design-system/qnfo-light.css
+# - White background (#FFFFFF), dark text (#363636)
+```
+
+### Visual Polish Checklist Addition
+
+| Check | Method | Gate |
+|:------|:-------|:-----|
+| Dark theme detection | Evaluate body background + scan HTML for dark hex | FAIL if detected |
+| Design system CSS present | Check for `qnfo-light` or `QNFO Design System v2` in HTML | WARN if missing |
+| MathJax config before script | Verify config position < script position | FAIL if reversed |
+ SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:
 

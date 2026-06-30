@@ -12,6 +12,32 @@ version: 1.0
 
 ---
 
+## execute_plan (MANDATORY — Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** — at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** — Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Audit current SEO state for target site", "status": "pending"},
+  {"step": "Phase 1: Build robots.txt, sitemap.xml, meta tags", "status": "pending"},
+  {"step": "Phase 1: Generate OG/Twitter cards and JSON-LD", "status": "pending"},
+  {"step": "Phase 2: Build llms.txt, llms-full.txt, ai.txt", "status": "pending"},
+  {"step": "Phase 2: Generate topic taxonomy", "status": "pending"},
+  {"step": "Deploy SEO artifacts to Cloudflare Pages", "status": "pending"},
+  {"step": "Verify deployed SEO artifacts are accessible", "status": "pending"},
+])
+
+---
+
 ## Purpose
 
 Ensures all QNFO/QWAV sites are maximally discoverable by both traditional search engines (Google, Bing) and AI crawlers (ChatGPT, Claude, Perplexity, Google AI). Automates the full SEO injection pipeline from audit through deployment.
@@ -90,7 +116,10 @@ Each site is mapped to its primary topics, and AI crawlers receive cross-discipl
 
 After deployment, Cloudflare Pages custom domains may take 5-15 minutes to propagate. The `.pages.dev` deployment URL updates immediately. Verify with:
 ```bash
-python -c "import urllib.request; r = urllib.request.urlopen('https://<domain>/llms.txt'); print(r.status)"
+# Check llms.txt exists and returns 200 — write check script, execute, discard
+echo "import urllib.request; r = urllib.request.urlopen('https://<domain>/llms.txt'); print(r.status)" > _check_llms.py
+python _check_llms.py
+Remove-Item _check_llms.py
 ```
 
 ## ✅ Fix Deployed: SEO Metadata Injector Worker (2026-06-21)
@@ -131,7 +160,37 @@ All build artifacts are stored at: `%TEMP%\qnfo-seo-build\<project-name>\`
 
 *seo-discoverability v1.1 — Automated SEO + AI crawler optimization for QNFO/QWAV*
 
-## RT: RED-TEAM SELF-AUDIT
+
+
+---
+
+## QNFO Design System Compliance (v2.0 — 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+| Page rebuild tool | `qnfo/design-system/rebuild_page.py` |
+
+### Mandatory Rules
+
+🚫 **DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations
+- No gradients, glass effects, dark backgrounds, or wonky tables
+
+### Verification
+```bash
+# Check any page for dark theme violations
+python -c "import urllib.request;h=urllib.request.urlopen('URL').read().decode();print('DARK' if '#0a0a0f' in h or '#0d1117' in h else 'LIGHT')"
+```
+ SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:
 

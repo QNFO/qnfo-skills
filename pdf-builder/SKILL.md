@@ -1,3 +1,8 @@
+---
+name: pdf-builder
+description: Build publication-quality PDFs from Markdown files with math rendering via matplotlib mathtext. Use when the agent needs to convert .md to .pdf for QNFO publications, papers, or reports.
+version: "2.0"
+---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
 
@@ -137,13 +142,13 @@ Obsidian renders Markdown → HTML with CSS → then prints to PDF via the brows
 
 ```bash
 # Primary pipeline prerequisites
-python -c "import playwright, markdown, yaml; print('Primary: OK')"
+echo "import playwright, markdown, yaml; print('Primary: OK')" > _check_deps.py && python _check_deps.py && Remove-Item _check_deps.py
 
 # Legacy pipeline prerequisites (optional)
-python -c "import reportlab, matplotlib; print('Legacy: OK')"
+echo "import reportlab, matplotlib; print('Legacy: OK')" > _check_legacy.py && python _check_legacy.py && Remove-Item _check_legacy.py
 
 # Verify playwright has chromium
-python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop(); print('Chromium: OK')"
+echo "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop(); print('Chromium: OK')" > _check_chromium.py && python _check_chromium.py && Remove-Item _check_chromium.py
 ```
 
 ### Step 2: Build PDF
@@ -161,19 +166,10 @@ python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input "pap
 Or directly:
 
 ```bash
-python -c "
-import fitz
-doc = fitz.open('paper.pdf')
-text = ''.join(page.get_text() for page in doc)
-if '\ufffd' in text:
-    print('[BLOCKED] PDF contains Unicode replacement characters')
-else:
-    print('[OK] No replacement characters')
-for char, name in [('\u2014','em dash'), ('\u201c','left curly quote'), ('\u201d','right curly quote')]:
-    count = text.count(char)
-    print(f'[{\"OK\" if count>0 else \"MISSING\"}] {name}: {count} found')
-doc.close()
-"
+# Write PDF verification script, execute, discard
+echo "import fitz; doc = fitz.open('paper.pdf'); text = ''.join(page.get_text() for page in doc); print('[BLOCKED] PDF contains Unicode replacement characters' if '\ufffd' in text else '[OK] No replacement characters'); [(print(f'[{\"OK\" if text.count(c)>0 else \"MISSING\"}] {n}: {text.count(c)} found')) for c,n in [('\u2014','em dash'),('\u201c','left curly quote'),('\u201d','right curly quote')]]; doc.close()" > _verify_pdf.py
+python _verify_pdf.py
+Remove-Item _verify_pdf.py
 ```
 
 ---
@@ -316,7 +312,37 @@ Always use PRIMARY pipeline (v2.0) ──→ Obsidian-quality output
 
 *pdf-builder v2.0 — Primary pipeline: MD → HTML+CSS+MathJax → playwright PDF. Obsidian-quality output with full LaTeX math, CSS-styled tables, and professional typography. Legacy reportlab pipeline kept as fallback. Tested 2026-06-28.*
 
-## RT: RED-TEAM SELF-AUDIT
+
+
+---
+
+## QNFO Design System Compliance (v2.0 — 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+| Page rebuild tool | `qnfo/design-system/rebuild_page.py` |
+
+### Mandatory Rules
+
+🚫 **DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations
+- No gradients, glass effects, dark backgrounds, or wonky tables
+
+### Verification
+```bash
+# Check any page for dark theme violations
+python -c "import urllib.request;h=urllib.request.urlopen('URL').read().decode();print('DARK' if '#0a0a0f' in h or '#0d1117' in h else 'LIGHT')"
+```
+ SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:
 

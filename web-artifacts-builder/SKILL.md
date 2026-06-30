@@ -79,7 +79,37 @@ To test/visualize the artifact, use available tools (including other Skills or b
 
 - **shadcn/ui components**: https://ui.shadcn.com/docs/components
 
-## RT: RED-TEAM SELF-AUDIT
+
+
+---
+
+## QNFO Design System Compliance (v2.0 — 2026-06-30)
+
+**ALL QNFO/QWAV publications, pages, PDFs, and web artifacts MUST use the Silent Radix Light Theme.**
+
+| Resource | Location |
+|:---------|:---------|
+| Canonical CSS | `https://qnfo.org/design-system/qnfo-light.css` |
+| PDF builder (v2.0) | `qnfo/design-system/build_pdf.py` |
+| HTML template | `qnfo/design-system/publication-template.html` |
+| Design doc | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
+| Page rebuild tool | `qnfo/design-system/rebuild_page.py` |
+
+### Mandatory Rules
+
+🚫 **DARK THEMES FORBIDDEN.** All output must use:
+- White background (#FFFFFF), dark text (#363636)
+- System font stack, max-width 800px centered layout
+- Clean tables with border-collapse: collapse
+- MathJax CHTML with left-aligned display equations
+- No gradients, glass effects, dark backgrounds, or wonky tables
+
+### Verification
+```bash
+# Check any page for dark theme violations
+python -c "import urllib.request;h=urllib.request.urlopen('URL').read().decode();print('DARK' if '#0a0a0f' in h or '#0d1117' in h else 'LIGHT')"
+```
+ SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:
 
