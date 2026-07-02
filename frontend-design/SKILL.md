@@ -101,3 +101,25 @@ Before delivering:
 ---
 
 *frontend-design v1.0 — Distinctive, production-grade interfaces that avoid generic AI aesthetics.*
+
+---
+
+## Complex Artifacts (React) — Merged from web-artifacts-builder
+
+For elaborate, multi-component artifacts requiring state management, routing, or shadcn/ui:
+
+**Stack:** React 18 + TypeScript + Vite + Parcel (bundling) + Tailwind CSS + shadcn/ui
+
+```bash
+# Initialize a React artifact project
+bash scripts/init-artifact.sh <project-name>
+cd <project-name>
+
+# Develop the artifact (edit generated files)
+
+# Bundle to single HTML file
+bash scripts/bundle-artifact.sh
+# → bundle.html (self-contained, all JS/CSS/inlined)
+```
+
+> **Platform Note:** Scripts use `bash`. Use Git Bash or WSL on Windows.
