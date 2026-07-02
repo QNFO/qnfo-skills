@@ -88,7 +88,7 @@ The Phase 0 comprehensive audit (`_kaizen_system_audit.py`) checks:
 |:------|:-----------|
 | `git-hygiene` | If git operations fail during update |
 | `closeout-manager` | After update completes, for session close-out |
-| `template-catalog` | To verify template entries after cleanup |
+| `fill_prompt_template` | To verify template entries after cleanup (template-catalog demoted to skill-autoloader/references/) |
 | `cloudflare-deployer` | If R2/wrangler operations fail |
 | `publication-publisher` | If the update report needs formal publication |
 

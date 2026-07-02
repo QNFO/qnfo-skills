@@ -959,13 +959,13 @@ EXPECTED OUTPUT: [format, structure, scope]
 | Close out a project | `read('%APPDATA%\DeepChat\skills\closeout-manager\SKILL.md')` |
 | Recover from git errors | `read('%APPDATA%\DeepChat\skills\git-hygiene\SKILL.md')` |
 | Manage GitHub Issues/PRs/Wiki (DEPRECATED — GitHub fully deprecated per ADR-001) | `read('%APPDATA%\DeepChat\skills\github-manager\SKILL.md')` |
-| Find the right template | `read('%APPDATA%\DeepChat\skills\template-catalog\SKILL.md')` |
+| Find the right template | `read('%APPDATA%\DeepChat\skills\skill-autoloader\references\template-catalog.md')` |
 | Execute ecosystem discovery (session start + post-phase) | `fill_prompt_template("DEEP-DIVE-DISCOVERY", {...})` |
 | Run BLING usability audit (UI testing) | `read('%APPDATA%\DeepChat\skills\bling-usability-audit\SKILL.md')` |
 | Run autonomous Kaizen system update | `read('%APPDATA%\DeepChat\skills\kaizen-autonomous-update\SKILL.md')` |
 | Query QNFO Knowledge Graph (due diligence, impact analysis) | `read('%APPDATA%\DeepChat\skills\knowledge-graph\SKILL.md')` |
-| Migrate local files to R2 (scan, classify, upload, index, clean up) | `read('%APPDATA%\DeepChat\skills\local-to-r2-migration\SKILL.md')` |
-| Audit system prompts, skills, templates (self-assessment) | `read('%APPDATA%\DeepChat\skills\prompt-audit\SKILL.md')` |
+| Migrate local files to R2 (scan, classify, upload, index, clean up) | `read('%APPDATA%\DeepChat\skills\cloudflare-deployer\SKILL.md')` |
+| Audit system prompts, skills, templates (self-assessment) | `read('%APPDATA%\DeepChat\skills\skill-creator\references\prompt-audit-checklist.md')` |
 | **Enforce execution fidelity (Priority 0 — enforced by master prompt)** | `read('%APPDATA%\DeepChat\skills\execution-guard\SKILL.md')` |
 | **Enforce test protocols for ALL code/actions (Priority 1)** | `read('%APPDATA%\DeepChat\skills\test-enforcement\SKILL.md')` |
 
@@ -1041,7 +1041,7 @@ Remove-Item _fast_r2_upload.py
 ### Template Invocation (Still Available)
 For structured output formats, use fill_prompt_template:
 - EMAIL-AGENT-TEMPLATE, CLOUDFLARE-DEPLOYMENT, ZENODO-PUBLISH, SOCIAL-ORCHESTRATOR-TEMPLATE
-- DEFINITION-OF-DONE, HANDOFF, PROJECT-CHARTER, PROJECT-INITIATION, CLOSEOUT-CHECKLIST, PDF-BUILDER-TEMPLATE, DISCOVERY-PROTOCOL, BLING-USABILITY-AUDIT
+- DEFINITION-OF-DONE, HANDOFF, PROJECT-CHARTER, PROJECT-INITIATION, CLOSEOUT-CHECKLIST, PDF-BUILDER-DEPRECATED, DISCOVERY-PROTOCOL, BLING-USABILITY-AUDIT
 - RESEARCH-LAUNCH, RESEARCH-PROTOCOL, KAIZEN-AUDIT, KAIZEN-AUTONOMOUS-UPDATE, CLOUDFLARE-AUDIT-EXPORT, EMAIL-AGENT, PHYSICS-STYLE
 
 **All available templates:** `qnfo/prompts/templates/` (20 active templates). Use `fill_prompt_template` skill or `get_prompt_template_parameters` to discover parameters.
@@ -1200,7 +1200,7 @@ print(f'[OK] MathJax config before script: config@{config_pos}, script@{script_p
 
 **Cross-Format Consistency:** The same `$...$` / `$$...$$` delimiters work in BOTH:
 - **HTML:** Rendered by MathJax 3 (tex-mml-chtml) in the browser
-- **PDF:** Rendered by matplotlib mathtext or LaTeX via `build_pdf.py` (pdf-builder skill)
+- **PDF:** Rendered by matplotlib mathtext or LaTeX via `build_pdf.py` (merged into publication-publisher)
 
 No separate math configuration is needed per format — the canonical Markdown source uses standard LaTeX math notation that both renderers understand.
 

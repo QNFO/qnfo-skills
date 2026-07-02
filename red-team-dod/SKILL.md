@@ -223,8 +223,8 @@ Post-deploy verification includes red-team: try to break the deployment. **Speci
 ### 7.4 Code-Review
 Self-applies: red-team findings must cite specific line numbers.
 
-### 7.5 Prompt-Audit
-Includes prompt injection red-team and autonomous trigger on any prompt modification.
+### 7.5 Prompt-Audit (demoted to skill-creator/references/)
+Includes prompt injection red-team and autonomous trigger on any prompt modification. See `skill-creator/references/prompt-audit-checklist.md`.
 
 ---
 

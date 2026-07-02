@@ -12,7 +12,7 @@ version: "3.3"
 > **D1-FIRST. R2 DEPRECATED FOR STRUCTURED DATA (§2.6).** Handoffs, audits, decisions, state files, and the discovery index now live EXCLUSIVELY in D1. R2 is for file artifacts ONLY (PDFs, scripts, templates). R2 flat files (index.json, handoff .md, state .json) are DEPRECATED — never read from R2, never write to R2 for structured records. See `qnfo-agent` §10 for D1 lifecycle integration.
 > **LIFECYCLE-AWARE.** This release integrates with the automated lifecycle pipeline — `last_active` timestamps are reset on closeout to prevent premature staleness. Archive paths follow the ultrametric `qnfo/archive/projects/<name>/` convention.
 > **AUTONOMOUS skill.** Do NOT wait for user to say "TERMINATE." Detect completion and auto-initiate closeout. Includes POST-PHASE GAP AUDIT — user should NEVER have to ask "WHAT ELSE?"
-> Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill + handoff-protocol skill
+> Source: `CLOSEOUT-CHECKLIST` template + execution-guard skill (handoff-protocol absorbed §3.6)
 
 ---
 ---
@@ -191,7 +191,7 @@ Before claiming any work complete, actively try to BREAK your own work:
 #### 2.6.6 Integration with Other Skills
 
 - **execution-guard**: The WHAT-ELSE hook (§1.4) fires this gap audit before allowing any [ALL TASKS EXECUTED] claim
-- **handoff-protocol**: The gaps section pulls from this audit's output
+- **handoff-protocol (absorbed into this skill §3.6)**: The gaps section pulls from this audit's output
 - **kaizen-autonomous-update**: Phase 0 audit includes this gap audit as a checklist item
 - **infrastructure-audit**: Phase 4 Health Recommendations feed into the infrastructure health check
 
