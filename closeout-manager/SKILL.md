@@ -175,6 +175,8 @@ Execute these checks programmatically. Do NOT rely on memory or assumptions:
 | R2 synced? | Pick 3 random files, verify they exist on R2 | All 3 must succeed |
 | DI updated? | D1 canonical — query `portfolio-state` and `qnfo-audit` tables | D1 is single source of truth; R2 index DEPRECATED |
 | Bootstrap tools on R2? | Verify `qnfo/tools/bootstrap_skills.py` exists on R2 | Must exist |
+| DNS resolution? | Test 13+ known active domains resolve HTTP 200 | All must resolve |
+| DI-KG synced? | Compare Discovery Index project count against Knowledge Graph project count | Counts must match (within 5%) |
 | HTTP redirects? | For every claimed redirect in HANDOFF, curl source URL and verify 301/302 + correct Location | All must redirect |
 
 **C. RECOVERY & REPAIR PATH CHECK**
@@ -608,7 +610,7 @@ The automated lifecycle pipeline runs daily at 06:00 UTC (`qnfo-lifecycle` Worke
 
 ---
 
-*closeout-manager skill v3.3 — D1-FIRST. RED-TEAM-DOD INTEGRATION (§2.6). POST-PHASE GAP AUDIT with red-team self-testing. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*
+*closeout-manager skill v3.4 — D1-FIRST. RED-TEAM-DOD INTEGRATION (§2.6). POST-PHASE GAP AUDIT with red-team self-testing + DNS resolution sweep + DI-KG sync verification. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*
 
 ## RT: RED-TEAM SELF-AUDIT
 

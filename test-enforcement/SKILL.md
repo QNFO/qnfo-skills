@@ -94,7 +94,7 @@ CMS (8) | Pages (55) | KG (6) | D1 (8) | Vectorize (3) | R2 (4) | Skills (8) | C
 
 ---
 
-*test-enforcement v1.1 — PRIORITY 1. Gap-audit bridge (§2.5). Pinned. Mandatory for ALL actions.*
+*test-enforcement v1.2 — PRIORITY 1. Gap-audit bridge (§2.5). Pinned. Mandatory for ALL actions. v1.2 adds DNS resolution + SEO artifact test domains.*
 
 ## RT: RED-TEAM SELF-AUDIT
 

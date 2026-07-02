@@ -38,7 +38,7 @@ the user with the specific failure reason.
 
 # HANDOFF PROTOCOL SKILL — v1.3.0
 
-> **QACP-HANDOFF v1.2.** Structured agent-to-agent handoff protocol with auto-gap detection, red-team verification, AND mandatory copy-paste continuation prompts.
+> **QACP-HANDOFF v1.3.** Structured agent-to-agent handoff protocol with auto-gap detection, red-team verification, AND mandatory copy-paste continuation prompts.
 > **PINNED.** This skill should be loaded for ALL QNFO agent sessions to ensure consistent handoffs.
 
 ---

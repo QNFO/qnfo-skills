@@ -1,7 +1,7 @@
 ---
 name: prompt-audit
 description: Self-audit skill — agents use this to evaluate their own system prompts, skills, and templates against 19 industry design patterns and anti-patterns. Checks Priority Stack, Decision Tree, Output Contract, Knowledge Boundary, Escalation Path, Persona Lock, Format Negotiation, Confidence Calibration, Context Management, Role+Constraints, Chain of Verification, Structured Output, Tool Selection, Error Recovery, Context Window, Guard Rails, Progressive Disclosure, Memory Integration, and Self-Evaluation Loop.
-version: 1.0
+version: "1.1"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
