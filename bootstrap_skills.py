@@ -2,6 +2,7 @@
 
 Usage:
   python bootstrap_skills.py              List local skills
+  python bootstrap_skills.py --push-only  Verify local skills; push only drifted/missing skills to R2
   python bootstrap_skills.py --sync       Upload all local skills to R2
   python bootstrap_skills.py --clean      Delete R2 skill objects not present on local disk (DRY RUN)
   python bootstrap_skills.py --clean --force   Actually delete orphaned R2 skill objects
@@ -286,12 +287,13 @@ def verify_skills():
         token = _token()
         ctx = ssl._create_unverified_context()
         url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/{endpoint}'
-        req = urllib.request.Request(url, method='HEAD')
+        req = urllib.request.Request(url, method='GET')
         req.add_header('Authorization', f'Bearer {token}')
         
         try:
             resp = urllib.request.urlopen(req, timeout=15, context=ctx)
-            r2_size = int(resp.headers.get('Content-Length', 0))
+            r2_body = resp.read()
+            r2_size = len(r2_body)
             if r2_size > 0:
                 ok += 1
                 status = 'OK' if r2_size == local_size else f'SIZE-MISMATCH (local={local_size}, r2={r2_size})'
@@ -317,6 +319,78 @@ def verify_skills():
     print(f'\nVerify: {ok}/{len(local_skills)} OK, {missing} missing, {size_mismatch} size mismatch')
     return ok, missing, size_mismatch
 
+def push_only():
+    """Verify local skills against R2 and push only those with size mismatch or missing.
+    Equivalent to --verify followed by selective --sync for drifted skills only."""
+    local_skills = sorted(get_local_skills())
+    print(f'[push-only] Checking {len(local_skills)} skills for drift...')
+    
+    drifted = []
+    missing = []
+    ok_count = 0
+    
+    for name in local_skills:
+        local_path = os.path.join(SKILLS_DIR, name, 'SKILL.md')
+        local_size = os.path.getsize(local_path)
+        
+        r2_path = f'{R2_SKILLS_PREFIX}{name}/SKILL.md'
+        encoded = urllib.request.quote(r2_path, safe='')
+        endpoint = f'r2/buckets/{BUCKET}/objects/{encoded}'
+        
+        token = _token()
+        ctx = ssl._create_unverified_context()
+        url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/{endpoint}'
+        req = urllib.request.Request(url, method='GET')
+        req.add_header('Authorization', f'Bearer {token}')
+        
+        try:
+            resp = urllib.request.urlopen(req, timeout=15, context=ctx)
+            r2_body = resp.read()
+            r2_size = len(r2_body)
+            if r2_size != local_size:
+                drifted.append((name, local_size, r2_size))
+                print(f'  [DRIFT] {name}: local={local_size} B, R2={r2_size} B')
+            else:
+                ok_count += 1
+                print(f'  [OK]   {name} ({local_size} B)')
+        except urllib.request.HTTPError as e:
+            if e.code == 404:
+                missing.append(name)
+                print(f'  [MISSING] {name}: not found on R2')
+            else:
+                missing.append(name)
+                print(f'  [FAIL] {name}: HTTP {e.code}')
+        except Exception as e:
+            missing.append(name)
+            print(f'  [FAIL] {name}: {e}')
+    
+    print(f'\n[push-only] Drift scan: {ok_count}/{len(local_skills)} OK, {len(drifted)} drifted, {len(missing)} missing')
+    
+    if not drifted and not missing:
+        print('[push-only] 0 drift detected — no push needed.')
+        return ok_count, 0, 0
+    
+    # Push drifted and missing skills
+    to_push = drifted + [(n, 0, 0) for n in missing]
+    print(f'\n[push-only] Pushing {len(to_push)} skills to R2...')
+    pushed = 0
+    failed = 0
+    
+    for name, _, _ in to_push:
+        local_path = os.path.join(SKILLS_DIR, name, 'SKILL.md')
+        with open(local_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        ok, status, msg = put_with_etag(name, content)
+        if ok:
+            pushed += 1
+            print(f'  PUSHED {name}')
+        else:
+            failed += 1
+            print(f'  FAILED {name}: {msg}')
+    
+    print(f'\n[push-only] Complete: {pushed} pushed, {failed} failed, {ok_count} already synced')
+    return ok_count, pushed, failed
+
 if __name__ == '__main__':
     import urllib.parse
     
@@ -325,6 +399,8 @@ if __name__ == '__main__':
         clean_r2(dry_run=dry_run)
     elif '--sync' in sys.argv:
         sync_skills()
+    elif '--push-only' in sys.argv:
+        push_only()
     elif '--verify' in sys.argv:
         verify_skills()
     else:
@@ -336,6 +412,7 @@ if __name__ == '__main__':
             size = os.path.getsize(p)
             print(f'  {s} ({size} B)')
         print(f'\nCommands:')
+        print(f'  --push-only  Verify local skills; push only drifted/missing to R2')
         print(f'  --sync     Upload all local skills to R2')
         print(f'  --clean    Dry-run: show R2 orphans not on local disk')
         print(f'  --clean --force  Delete orphaned R2 skill objects')
