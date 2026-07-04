@@ -1,7 +1,7 @@
 ---
 name: cloudflare-deployer
 description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
-version: "2.1"
+version: "2.2"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
@@ -32,7 +32,7 @@ the user with the specific failure reason.
 
 ---
 
-# CLOUDFLARE DEPLOYER SKILL — v1.3 — v2.1
+# CLOUDFLARE DEPLOYER SKILL — v1.3 — v2.2
 
 > **On-demand skill.** Load via `skill_view('cloudflare-deployer')` for all Cloudflare operations.
 > Source: `templates/CLOUDFLARE-DEPLOYMENT.md` v2.1 + QWAV-DEFAULT.md §0.6.5-0.6.7
@@ -123,7 +123,7 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 | **Workers** | ✅ Full | 30 scripts | `/accounts/:id/workers/scripts` | `wrangler deploy` |
 | **D1** | ✅ Full | 5 databases | `/accounts/:id/d1/database` | `wrangler d1 list` |
 | **KV** | ✅ Full | 2 namespaces | `/accounts/:id/storage/kv/namespaces` | `wrangler kv namespace list` |
-| **Vectorize** | ✅ Full | 3 indexes (qwav-research-v2, qnfo-handoffs, qnfo-tasks) | `/accounts/:id/vectorize/indexes` | `wrangler vectorize list` |
+| **Vectorize** | ✅ Full | 3 indexes (qwav-research-v2, qnfo-handoffs, qnfo-tasks) | `/accounts/:id/vectorize/v2/indexes` | `wrangler vectorize list` |
 | **Queues** | ✅ Full | 2 queues | `/accounts/:id/queues` | `wrangler queues list` |
 | **AI (Workers AI)** | ✅ Full | Models available | `/accounts/:id/ai/models/search` | `wrangler ai models list` |
 | **Pipelines** | ✅ Full | Configured | `/accounts/:id/pipelines` | `wrangler pipelines` |
@@ -142,6 +142,17 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 | **Web Search** | ✅ Granted | Configurable | API | `wrangler websearch` |
 | **Dispatch Namespaces** | ✅ Granted | Configurable | API | `wrangler dispatch-namespace` |
 | **Tunnels** | ✅ Granted | Configurable | API | `wrangler tunnel` |
+| **Secrets Store** | ✅ Full | 1 store (default_secrets_store), 10 secrets | `/accounts/:id/secrets_store` | `wrangler secrets-store` [open beta] |
+| **Flagship (Feature Flags)** | ✅ Granted | Configurable | API | `wrangler flagship` [open beta] |
+| **Versions (Gradual Rollout)** | ✅ Full | Available | API | `wrangler versions upload/deploy/list` |
+| **Triggers** | ✅ Full | Available | API | `wrangler triggers deploy` [experimental] |
+| **VPC** | ✅ Granted | Configurable | API | `wrangler vpc service` [open beta] |
+| **Web Search** | ✅ Granted | Configurable | API | `wrangler websearch search` [experimental] |
+| **Cert (Client mTLS)** | ✅ Granted | Configurable | API | `wrangler cert upload/list/delete` [open beta] |
+| **Artifacts** | ✅ Granted | Configurable | API | `wrangler artifacts` [private beta] |
+| **Dispatch Namespaces** | ✅ Full | Configurable | API | `wrangler dispatch-namespace` |
+| **Preview Deployments** | ✅ Full | Configurable | API | `wrangler preview` [private beta] |
+| **Email Sending** | ✅ Granted | Configurable | API | `wrangler email sending` [open beta] |
 
 ### Available Resources (Enumerated)
 
@@ -169,9 +180,9 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 - `qnfo-lifecycle-queue` — Lifecycle pipeline (archival jobs, auto-transitions)
 - `git-on-cloudflare-repo-maint` (296cceec) — Git repository maintenance (DEPRECATED — GitHub deprecated per ADR-001)
 
-**Pages Projects (5):** qnfo-hub (qnfo.org, www.qnfo.org), qnfo-publications (papers.qnfo.org), qnfo-legal (legal.qnfo.org), qwav (deep.qwav.tech), qnfo-design-system (design.qnfo.org)
+**Pages Projects (10):** 5 active — qnfo-hub (qnfo.org, www.qnfo.org), qnfo-publications (papers.qnfo.org), qnfo-legal (legal.qnfo.org), qwav (deep.qwav.tech), qnfo-design-system (design.qnfo.org); 5 dormant — cocyle, different-physics, qlof-primer, quantum-laws-of-form, prompts-wiki
 
-**Workers (26 scripts):** Deployed — key workers include `graph-api` (Knowledge Graph), `qnfo-lifecycle` (automated project lifecycle, cron: daily 06:00 UTC), `living-papers-api` (Living Papers with D1 + IPFS), `qnfo-archive-worker` (queue consumer for R2 archival migration), `qnfo-archive-verify` (archive verification), `umbrella-router` (traffic routing). Query via `wrangler deployments` with specific worker names.
+**Workers (30 scripts):** Deployed — including `qnfo-agent-session` (DO+SQLite, 2026-07-04), `qnfo-ai-worker` (Workers AI, 2026-07-04), `paper-catalog` (2026-07-04) Deployed — key workers include `graph-api` (Knowledge Graph), `qnfo-lifecycle` (automated project lifecycle, cron: daily 06:00 UTC), `living-papers-api` (Living Papers with D1 + IPFS), `qnfo-archive-worker` (queue consumer for R2 archival migration), `qnfo-archive-verify` (archive verification), `umbrella-router` (traffic routing). Query via `wrangler deployments` with specific worker names.
 
 -
 
@@ -688,7 +699,7 @@ If missing, check that skill's Embedded Scripts section for recovery guidance.
 - `build_pdf.py`: requires `reportlab` and optionally `markdown` packages
 
 
-*cloudflare-deployer skill v2.1 — DNS Hygiene + 522 Prevention + Domain Classification + Post-DNS Resolution Audit. Compatible with wrangler v4.95+*
+*cloudflare-deployer skill v2.2 — +Secrets Store +DO+SQLite +Workers AI +R2 Events +Flagship +Versions. All 28 wrangler commands documented for wrangler v4.107.0. 30 Workers deployed.*
 
 ---
 

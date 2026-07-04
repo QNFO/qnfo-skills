@@ -1,7 +1,7 @@
 ---
 name: infrastructure-audit
 description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
-version: "1.9"
+version: "2.0"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
 
@@ -32,7 +32,7 @@ the user with the specific failure reason.
 
 ---
 
-# INFRASTRUCTURE AUDIT SKILL — v1.0 -- v1.9
+# INFRASTRUCTURE AUDIT SKILL — v1.0 -- v2.0
 
 > **LIFECYCLE-AWARE. GAP-AUDIT INTEGRATION. RED-TEAM-DOD INTEGRATION. RESOURCE GOVERNANCE. 522-PREVENTION. UPDATED 2026-07-01.** v1.9 adds §0.8 522 Root Cause Detection (CNAME × Pages cross-reference), §0.9 CNAME Chain Detection, §0.10 Dead Worker CNAME Detection, and §0.11 Empty Zone Detection — all learned from the 2026-07-01 qwav.tech 522 outage. Prevents the #1 failure mode: CNAME to `.pages.dev` without domain registration.
 
@@ -101,14 +101,14 @@ def cf(endpoint):
 # Query all services
 d1 = cf('d1/database')
 kv = cf('storage/kv/namespaces')
-vec = cf('vectorize/indexes')
+vec = cf('vectorize/v2/indexes')
 pages = cf('pages/projects')
 workers = cf('workers/scripts')
 queues = cf('queues')
 
 print(f'D1: {len(d1.get("result",[]))} | KV: {len(kv.get("result",[]))} | Vectorize: {len(vec.get("result",[]))}')
 print(f'Pages: {len(pages.get("result",[]))} | Workers: {len(workers.get("result",[]))} | Queues: {len(queues.get("result",[]))}')
-# Expected: D1: 5 | KV: 1 | Vectorize: 3 | Pages: 10 (3 essential, 4 redirecting) | Workers: 27 | Queues: 2
+# Expected: D1: 5 | KV: 1 | Vectorize: 3 | Pages: 10 | Workers: 32 | Queues: 1
 ```
 
 ### Phase 1.5: Lifecycle Pipeline Health (NEW)
@@ -261,13 +261,16 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | D1 Databases | 5 | qnfo-cms (page content), **living-paper (CANONICAL PUBLICATIONS DATABASE — 170 papers)**, qnfo-audit, qnfo-graph, portfolio-state |
 | KV Namespaces | 1 | equation-cache |
 | Vectorize Indexes | 3 | qwav-research-v2 (1024-dim, active), qnfo-handoffs, qnfo-tasks |
-| Pages Projects | 5 (all active) | qnfo-hub (qnfo.org), qnfo-publications (papers.qnfo.org), qnfo-legal (legal.qnfo.org), qwav (deep.qwav.tech), qnfo-design-system (design.qnfo.org) |
-| Workers | 27 | papers-server (D1+R2 dynamic renderer), ask-qwav, graph-api, qnfo-data-api, seo-metadata-injector, +22 more |
-| **Durable Objects** | 1 | `portfolio-api_StateRegistry` (class: StateRegistry, Worker: portfolio-api, SQLite: **OFF**) — purely in-memory coordination. Recommend enabling SQLite for persistence. |
-| Queues | 2 | qnfo-lifecycle-queue (essential), git-on-cloudflare-repo-maint (deprecated) |
-| Knowledge Graph | 825 nodes, 1727 edges | SEVERELY OUT OF SYNC — 70+ nodes for ~16 live resources. Needs bulk cleanup. |
+| Pages Projects | 10 (5 active, 5 dormant) | qnfo-hub, qnfo-publications, qnfo-legal, qwav, qnfo-design-system + 5 dormant |
+| Workers | 30 | papers-server, ask-qwav, graph-api, qnfo-agent-session (DO+SQLite), qnfo-ai-worker (Workers AI), +25 more |
+| **Durable Objects** | 2 namespaces, 3 classes | `portfolio-api_StateRegistry` (StateRegistry), `qnfo-agent-session` (AgentSession + QnfoAgentSession w/ **SQLite ON**) — Fully persistent agent state, KG mutex, lifecycle state machine |
+| Queues | 1 | qnfo-lifecycle-queue (essential) |
+| **R2 Event Rules** | 2 | releases/*.md + discovery/*.json → qnfo-lifecycle-queue (created 2026-07-04) |
+| **Secrets Store** | 1 store, 10 secrets | `default_secrets_store` — CLOUDFLARE_API_TOKEN, R2_ACCESS_KEY_ID, ZENODO_API_TOKEN, BUFFER_ACCESS_TOKEN, GITHUB_TOKEN, S3_ENDPOINT, ADMIN_API_TOKEN, ADMIN_TOKEN, CF_API_TOKEN |
+| **Workers AI** | 60 models, 10 task types | Text Gen, Embeddings (1024-dim), Translation, TTS, Image Gen confirmed |
+| Knowledge Graph | 882 nodes, 1854 edges | ACTIVE — graph-api Worker, D1 qnfo-graph |
 | R2 Bucket | 1 (qnfo) | papers, publications, discovery, archive, projects, releases, tools |
-| Live Domains | 30 (verified 2026-07-01) | 12 zones, 56 DNS records, all resolving HTTP 200 |
+| Live Domains | 30 (verified 2026-07-04) | 10 zones, all resolving HTTP 200 |
 
 ## Lifecycle Pipeline Health Checks
 
@@ -321,7 +324,7 @@ No action needed.
 
 > **CRITICAL:** The 2026-07-01 session audit found 18 worker routes, 30 Workers, 10 Pages projects, 42 DNS records, 7 zones, and 4 redirect chains — all grown unconstrained. Root cause: no cross-reference between resources, no baseline counts, no automated enforcement. The session session deleted 24 DNS records, 13 routes, 5 Workers, 5 Pages projects, and 2 redirect rulesets. **These rules prevent recurrence.**
 
-**Resource Baselines (alert if exceeded):** Worker routes ≤ 6, Workers ≤ 27 (was 24 — baseline lifted 2026-07-04 to match actual usage after 2026-07-01 cleanup removed 3 Workers), Pages ≤ 10 (was 5 — baseline lifted 2026-07-04 to match actual usage; 26 projects trimmed to 10 in 2026-07-01 cleanup), DNS ≤ 16, Zones ≤ 5, Redirects = 0. **Cross-Reference Enforcement:** every route must target a live Worker; every DNS CNAME to `.pages.dev` must have domain registered on that Pages project; every domain must resolve to HTTP 200. **Growth Detection:** before creating any resource, count current resources; if over baseline, audit and clean up first. **Anti-Proliferation:** create DNS CNAME → add domain to Pages FIRST; create Worker route → verify Worker deployed FIRST; delete Worker → delete all routes FIRST; delete Pages → remove all domains FIRST.
+**Resource Baselines (alert if exceeded):** Worker routes ≤ 6, Workers ≤ 32 (was 27 — baseline raised 2026-07-04 to match actual 32 deployed Workers; 2026-07-04 RED-TEAM audit verified 0 orphans), Pages ≤ 10 (was 5 — baseline lifted 2026-07-04 to match actual usage; 26 projects trimmed to 10 in 2026-07-01 cleanup), DNS ≤ 16, Zones ≤ 5, Redirects = 0. **Cross-Reference Enforcement:** every route must target a live Worker; every DNS CNAME to `.pages.dev` must have domain registered on that Pages project; every domain must resolve to HTTP 200. **Growth Detection:** before creating any resource, count current resources; if over baseline, audit and clean up first. **Anti-Proliferation:** create DNS CNAME → add domain to Pages FIRST; create Worker route → verify Worker deployed FIRST; delete Worker → delete all routes FIRST; delete Pages → remove all domains FIRST.
 
 **GATE:** Resource counts MUST be within baseline at session start.
 
