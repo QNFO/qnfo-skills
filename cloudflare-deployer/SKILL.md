@@ -70,7 +70,7 @@ update_plan([
 ## ⚠️ WRANGLER v4.95+ COMPATIBILITY
 
 **`r2 object list` was REMOVED in wrangler v4.95+.** Only `get`, `put`, `delete` are available.
-The `--remote` flag is deprecated (remote is default in v4+). For directory enumeration, deploy a list-objects Worker or use per-object `get` operations.
+The `--remote` flag is **REQUIRED** for remote R2 access. Without it, wrangler defaults to local R2 simulator. Verified: wrangler v4.107.0 outputs "Resource location: local — Use --remote if you want to access the remote instance." For directory enumeration, deploy a list-objects Worker or use per-object `get` operations.
 
 ---
 

@@ -108,7 +108,7 @@ queues = cf('queues')
 
 print(f'D1: {len(d1.get("result",[]))} | KV: {len(kv.get("result",[]))} | Vectorize: {len(vec.get("result",[]))}')
 print(f'Pages: {len(pages.get("result",[]))} | Workers: {len(workers.get("result",[]))} | Queues: {len(queues.get("result",[]))}')
-# Expected: D1: 5 | KV: 1 | Vectorize: 3 | Pages: 10 (3 essential, 4 redirecting) | Workers: 30 | Queues: 2
+# Expected: D1: 5 | KV: 1 | Vectorize: 3 | Pages: 10 (3 essential, 4 redirecting) | Workers: 27 | Queues: 2
 ```
 
 ### Phase 1.5: Lifecycle Pipeline Health (NEW)
@@ -262,7 +262,8 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | KV Namespaces | 1 | equation-cache |
 | Vectorize Indexes | 3 | qwav-research-v2 (1024-dim, active), qnfo-handoffs, qnfo-tasks |
 | Pages Projects | 5 (all active) | qnfo-hub (qnfo.org), qnfo-publications (papers.qnfo.org), qnfo-legal (legal.qnfo.org), qwav (deep.qwav.tech), qnfo-design-system (design.qnfo.org) |
-| Workers | 30 | papers-server (D1+R2 dynamic renderer), ask-qwav, graph-api, qnfo-data-api, seo-metadata-injector, +25 more |
+| Workers | 27 | papers-server (D1+R2 dynamic renderer), ask-qwav, graph-api, qnfo-data-api, seo-metadata-injector, +22 more |
+| **Durable Objects** | 1 | `portfolio-api_StateRegistry` (class: StateRegistry, Worker: portfolio-api, SQLite: **OFF**) — purely in-memory coordination. Recommend enabling SQLite for persistence. |
 | Queues | 2 | qnfo-lifecycle-queue (essential), git-on-cloudflare-repo-maint (deprecated) |
 | Knowledge Graph | 825 nodes, 1727 edges | SEVERELY OUT OF SYNC — 70+ nodes for ~16 live resources. Needs bulk cleanup. |
 | R2 Bucket | 1 (qnfo) | papers, publications, discovery, archive, projects, releases, tools |
@@ -292,7 +293,7 @@ Based on audit findings, report orphaned resources, stale entries, archival mism
 | KV Namespaces | 2→1 | OK (git-on-cloudflare-routes deprecated) |
 | Vectorize Indexes | 3 | OK (qwav-research-v2 active, 2 obsolete deleted) |
 | Pages Projects | 10 | OK (3 essential, 4 redirecting, 3 support) |
-| Workers | 30 | OK |
+| Workers | 27 | OK |
 | Queues | 2 | OK (git-on-cloudflare-repo-maint deprecated) |
 | Knowledge Graph | 261n/401e | ACTIVE (needs paper REFERENCES edges) |
 | Lifecycle Worker | Running | OK |
