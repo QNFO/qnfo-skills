@@ -1,4 +1,4 @@
-# IPFS PINNING SKILL -- v1.0
+# IPFS PINNING SKILL -- v1.0 — v1.0
 
 > **Related:** cloudflare-deployer, publication-publisher, closeout-manager
 > **Auto-load triggers:** ipfs, pinata, cid, pinning, paper hash, content-addressing
@@ -193,7 +193,7 @@ If HANDOFF.md says `pinata_pinned: 139` but live Pinata shows 474:
 If `r2_key` doesn't exist in R2 but paper has content elsewhere:
 1. Check `living-paper` D1 for `content_md` column
 2. Check Pinata for existing pin (CID might exist)
-3. Check user's local Obsidian vault (`G:\My Drive\Obsidian\...`)
+3. Check user's local Obsidian vault (configured via `$env:OBSIDIAN_VAULT`)
 4. Flag as `[RECOVERABLE: source in Obsidian vault, not automated]`
 
 ### 4.3 Credential Rotation Handling
