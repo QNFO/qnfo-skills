@@ -72,6 +72,20 @@ update_plan([
 **`r2 object list` was REMOVED in wrangler v4.95+.** Only `get`, `put`, `delete` are available.
 The `--remote` flag is **REQUIRED** for remote R2 access. Without it, wrangler defaults to local R2 simulator. Verified: wrangler v4.107.0 outputs "Resource location: local — Use --remote if you want to access the remote instance." For directory enumeration, deploy a list-objects Worker or use per-object `get` operations.
 
+**R2 Object Listing via REST API (WORKAROUND for wrangler 4.x `r2 object list` removal):** The Cloudflare REST API supports R2 object enumeration even when the wrangler CLI does not:
+
+```python
+# List R2 objects via REST API
+import urllib.request, json
+url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/r2/buckets/{BUCKET}/objects?prefix={prefix}'
+req = urllib.request.Request(url, headers={'Authorization': f'Bearer {TOKEN}'})
+result = json.loads(urllib.request.urlopen(req).read())
+# NOTE: result is a flat LIST of objects, NOT a dict with "objects" key
+# Parse: for obj in result["result"]: print(obj["key"], obj["size"])
+```
+
+**CAUTION:** The response `result` is a FLAT LIST (not `{"objects": [...]}`). Code that does `result.get("objects", [])` will silently return empty — this was the root cause of false "0 objects" reports in multiple sessions (2026-07-04).
+
 ---
 
 ## Authentication

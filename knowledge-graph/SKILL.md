@@ -368,6 +368,15 @@ The Knowledge Graph is the central registry for project lifecycle. Key propertie
 
 *knowledge-graph skill v2.3 — Ultrametric-aware. Ball queries, hierarchical taxonomy, lifecycle integration.*
 
+## Known API Limitations
+
+| Issue | Detail | Workaround | Session Root Cause |
+|:------|:-------|:-----------|:-------------------|
+| **Pagination broken** | `/nodes?offset=N` returns same 100 results at every offset. The `/query` endpoint has a hard cap of 100 results. | Query by specific label + search term to reduce result set. For full inventory, use multiple targeted queries. | `dFIACfjsDq_MFfvRSA8ni`, `L5_a35Udjt-Ou3msEgYVG` (2026-07-04) |
+| **DELETE not supported** | `POST /sync` with `"action":"delete"` returns `deleted_nodes: 0`. `DELETE /nodes/:id` returns node data but does NOT delete. | Direct D1 SQL: `DELETE FROM nodes WHERE label='Paper' AND created_at < '2026-07-01'` on `qnfo-graph` D1 database. | `dFIACfjsDq_MFfvRSA8ni` — 169 orphaned obsidian nodes could not be deleted via API |
+| **STORED_AT references opaque** | R2Object node IDs are hashes (`r2-3f1a008e7ba4b96d`) — cannot resolve to human-readable R2 paths through the KG. | Store actual R2 path as a property on the R2Object node. | `L5_a35Udjt-Ou3msEgYVG` — blocked paper indexing pipeline |
+| **`/query` endpoint format** | Results returned in `rows` key, not `results`. `json_extract()` may not work on all queries. | Parse `rows` from the response JSON. Test queries individually. | `dFIACfjsDq_MFfvRSA8ni` |
+
 ## RT: RED-TEAM SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:

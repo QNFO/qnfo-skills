@@ -131,6 +131,33 @@ Execution BLOCKED until gaps are resolved.
 - **CLOUDFLARE_API_TOKEN not available:** Flag `[SKILL-HEALTH-UNAVAILABLE: no API token]`. Proceed without version enforcement. R2 pull will fail without the token.
 - **Network unreachable:** Flag `[SKILL-HEALTH-UNAVAILABLE: network]`. Proceed. Re-run health check when connectivity is restored.
 
+### 1.8 RUNTIME SAFETY-NET VERIFICATION (v1.8 — MANDATORY)
+
+**The #7 agent failure mode: safety-net skills exist on disk but cannot be loaded at runtime via `skill_view` due to DeepChat registration issues.** This check fires at session start after the disk-based health check at §1.7 to verify all 5 safety-net skills are actually loadable.
+
+#### Trigger: Session Start (after §1.7 disk check)
+
+The `_skill_health.py` check verifies SKILL.md files exist on disk. This check verifies the skills can actually be loaded at runtime:
+
+```text
+Attempt skill_view on all 5 safety-net skills:
+1. skill_view('execution-guard')
+2. skill_view('red-team-dod')
+3. skill_view('test-enforcement')
+4. skill_view('closeout-manager')
+5. skill_view('skill-autoloader')
+```
+
+#### Runtime Decision Matrix
+
+| Result | Action |
+|:-------|:-------|
+| All 5 load successfully | Proceed. Runtime ecosystem is intact. |
+| 1-2 fail but filesystem fallback works | DEGRADED. Log `[SKILL-VIEW-DEGRADED: <names>]`. Continue with filesystem-loaded versions. Flag for Kaizen. |
+| 3+ fail or filesystem fallback fails | CRITICAL. BLOCK EXECUTION. Safety-net cannot operate. Run `_deploy.py` to fix skill registration drift, then re-verify. |
+
+**HISTORICAL ROOT CAUSE:** In multiple sessions (2026-07-02 through 2026-07-04), `skill_view('closeout-manager')` and `skill_view('infrastructure-audit')` intermittently returned failure while the filesystem `read()` fallback worked. This was traced to DI version drift — the DeepChat runtime's skill registry was out of sync with deployed skill versions. Running `_deploy.py` fixes the issue.
+
 ## 0. WHY THIS EXISTS
 
 **19 out of 24 user messages (79%) in the 2026-06-04 session were EXECUTE/RESUME/PROCEED/HANDOFF demands.** Every response had ZERO tool invocations. The agent self-diagnosed: "I haven't actually executed anything yet. I've been stuck in a loop."

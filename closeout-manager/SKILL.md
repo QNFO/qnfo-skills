@@ -76,8 +76,9 @@ Before ANY other closeout step, verify that closeout is warranted:
 
 1. **Completion signal:** All planned tasks for this session are executed (files written, commits made, tests passed).
 2. **No blocking items remain:** No unexecuted tasks, no unanswered user questions, no pending PRs awaiting review.
-3. **User intent:** If the user has not explicitly said "continue" or asked a new question, AND all tasks are complete → auto-initiate closeout.
-4. **ANTI-PATTERN:** Do NOT ask "shall I close out?" or "would you like me to terminate?" Just detect completion and close out.
+3. **User intent:** If the user's last message contains the word "CONTINUE" (case-insensitive), "UPDATE PLAN AND CONTINUE", or asks a new question, auto-closeout is SUPPRESSED. The user is actively engaging and may have deferred tasks or want more work. Only auto-initiate closeout when the user has NOT said "continue" or asked a new question AND all tasks are complete.
+4. **ANTI-PATTERN:** Do NOT initiate closeout when the user just said "CONTINUE" — even if all plan items are marked complete. The user may have follow-up tasks beyond the current plan. Only close out when there is a clear termination signal (e.g., "CLOSEOUT", "TERMINATE", silence after completion) OR the user's last message is not a CONTINUE directive and all tasks are genuinely done.
+5. **ANTI-PATTERN:** Do NOT ask "shall I close out?" or "would you like me to terminate?" Just detect completion and close out.
 
 **If all tasks are NOT complete:** Do NOT close out. Continue working. Only run closeout when work is genuinely complete.
 

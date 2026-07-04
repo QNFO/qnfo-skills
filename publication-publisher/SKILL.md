@@ -135,6 +135,20 @@ def validate_publication(md_path: str) -> dict:
         "passed": len(citations) > 0
     }
     
+    # 5. Certainty labels present (≥5% of substantive paragraphs)
+    paragraphs = [p for p in text.split('\n\n') if len(p.strip()) > 100]
+    certainty_labels = ['[established]', '[speculative]', '[my conjecture]', '[debated]', 
+                        '[mainstream interpretation]', '[not yet falsifiable]', '[PHILOSOPHY]',
+                        '[LLM-INFERRED]']
+    labeled = sum(1 for p in paragraphs if any(lbl in p for lbl in certainty_labels))
+    label_ratio = labeled / max(len(paragraphs), 1)
+    results["certainty_labels"] = {
+        "count": labeled,
+        "total_paragraphs": len(paragraphs),
+        "ratio": round(label_ratio, 3),
+        "passed": label_ratio >= 0.05
+    }
+    
     all_passed = all(v["passed"] for v in results.values())
     results["overall"] = "PASS" if all_passed else "FAIL"
     return results

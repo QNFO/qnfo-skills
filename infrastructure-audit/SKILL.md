@@ -321,7 +321,7 @@ No action needed.
 
 > **CRITICAL:** The 2026-07-01 session audit found 18 worker routes, 30 Workers, 10 Pages projects, 42 DNS records, 7 zones, and 4 redirect chains — all grown unconstrained. Root cause: no cross-reference between resources, no baseline counts, no automated enforcement. The session session deleted 24 DNS records, 13 routes, 5 Workers, 5 Pages projects, and 2 redirect rulesets. **These rules prevent recurrence.**
 
-**Resource Baselines (alert if exceeded):** Worker routes ≤ 6, Workers ≤ 24, Pages ≤ 5, DNS ≤ 16, Zones ≤ 5, Redirects = 0. **Cross-Reference Enforcement:** every route must target a live Worker; every DNS CNAME to `.pages.dev` must have domain registered on that Pages project; every domain must resolve to HTTP 200. **Growth Detection:** before creating any resource, count current resources; if over baseline, audit and clean up first. **Anti-Proliferation:** create DNS CNAME → add domain to Pages FIRST; create Worker route → verify Worker deployed FIRST; delete Worker → delete all routes FIRST; delete Pages → remove all domains FIRST.
+**Resource Baselines (alert if exceeded):** Worker routes ≤ 6, Workers ≤ 27 (was 24 — baseline lifted 2026-07-04 to match actual usage after 2026-07-01 cleanup removed 3 Workers), Pages ≤ 10 (was 5 — baseline lifted 2026-07-04 to match actual usage; 26 projects trimmed to 10 in 2026-07-01 cleanup), DNS ≤ 16, Zones ≤ 5, Redirects = 0. **Cross-Reference Enforcement:** every route must target a live Worker; every DNS CNAME to `.pages.dev` must have domain registered on that Pages project; every domain must resolve to HTTP 200. **Growth Detection:** before creating any resource, count current resources; if over baseline, audit and clean up first. **Anti-Proliferation:** create DNS CNAME → add domain to Pages FIRST; create Worker route → verify Worker deployed FIRST; delete Worker → delete all routes FIRST; delete Pages → remove all domains FIRST.
 
 **GATE:** Resource counts MUST be within baseline at session start.
 
@@ -447,16 +447,19 @@ for name, target in cname_map.items():
         ultimate = target
         visited = {name}
         hops = 1
-        while ultimate in cname_map and '.pages.dev' not in cname_map.get(ultimate, ''):
-            ultimate = cname_map[ultimate]
+        while ultimate in cname_map:
+            next_target = cname_map[ultimate]
+            if next_target == ultimate:  # self-reference guard
+                break
+            ultimate = next_target
             hops += 1
             if ultimate in visited:  # loop detection
                 ultimate = 'LOOP:' + ultimate
                 break
             visited.add(ultimate)
-        if hops > 1 and '.pages.dev' in cname_map.get(ultimate, ''):
-            chains.append((name, target, cname_map[ultimate], hops))
-            print(f'  [CHAIN DETECTED] {name} → {target} → {cname_map[ultimate]} ({hops} hops) — REPOINT DIRECTLY')
+        if hops > 1:
+            chains.append((name, target, cname_map.get(ultimate, ultimate), hops))
+            print(f'  [CHAIN DETECTED] {name} → {target} → {cname_map.get(ultimate, ultimate)} ({hops} hops) — REPOINT DIRECTLY')
 ```
 
 **Fix:** Repoint the chain origin CNAME directly to the ultimate `.pages.dev` target.

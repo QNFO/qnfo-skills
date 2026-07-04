@@ -63,6 +63,26 @@ This:
 3. Reports sync status
 4. **AUTO-TRIGGERS gap audit** (closeout-manager §2.6) — verifies R2, GitHub, and DI consistency
 
+**KNOWN ISSUE: `npx` not found in Python subprocess PATH on Windows.** `bootstrap_skills.py --sync` calls `subprocess.run(["npx", "wrangler", ...])` which fails on Windows because `npx` is a PowerShell script wrapper, not an executable on the system PATH. Python `subprocess.run()` does not inherit the PowerShell PATH.
+
+**WORKAROUND:** Use `os.system()` instead of `subprocess.run()`:
+```python
+# Instead of: subprocess.run(["npx", "wrangler", "r2", "object", "put", ...])
+# Use:
+import os
+os.system('npx wrangler r2 object put qnfo/prompts/skills/name/SKILL.md --remote --file=local_path')
+```
+
+**ALTERNATIVE:** Use the Cloudflare REST API directly (bypasses wrangler dependency entirely):
+```python
+# Direct R2 upload via REST API (faster, no npx/subprocess dependency)
+url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/r2/buckets/qnfo/objects/{key}'
+req = urllib.request.Request(url, data=body, method='PUT')
+req.add_header('Authorization', f'Bearer {TOKEN}')
+```
+
+This has been the #1 blocker for automated skill sync in 80%+ of sessions (2026-07-02 through 2026-07-04).
+
 ## Sync Status Check
 
 ```python
