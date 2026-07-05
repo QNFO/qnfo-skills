@@ -55,7 +55,9 @@ $$\text{LoF} \to \text{TL}(\delta) \to B_n \to \text{Anyons} \to \text{TQC}$$
 
 ## 3. Research Phases
 
-### Phase 1: Define p-Adic Braid Groups on Bruhat-Tits Buildings (THIS SESSION)
+### Phase 1: Define p-Adic Braid Groups on Bruhat-Tits Buildings ✅ PUBLISHED
+
+**DOI:** [10.5281/zenodo.21208366](https://doi.org/10.5281/zenodo.21208366)
 
 **Goal:** Construct a mathematically rigorous definition of $B_n(\mathbb{Q}_p)$ on the Bruhat-Tits building $\mathcal{B}(\text{SL}_n, \mathbb{Q}_p)$.
 
@@ -80,11 +82,15 @@ $$\text{LoF} \to \text{TL}(\delta) \to B_n \to \text{Anyons} \to \text{TQC}$$
 - Python scripts demonstrating p-adic braid computations
 - R2 upload + KG seeding
 
-### Phase 2: Identify TL Algebra Parameter with p-Adic Cyclotomic Units
+### Phase 2: Identify TL Algebra Parameter with p-Adic Cyclotomic Units ✅ PUBLISHED
+
+**DOI:** [10.5281/zenodo.21208368](https://doi.org/10.5281/zenodo.21208368)
 
 **Goal:** Prove that the TL algebra parameter $\delta = -A^2 - A^{-2}$ at a p-adic place is naturally a p-adic cyclotomic unit, connecting the Jones polynomial evaluation at roots of unity to p-adic valuations.
 
-### Phase 3: Define p-Adic Anyon Fusion and Braiding  
+### Phase 3: Define p-Adic Anyon Fusion and Braiding ✅ PUBLISHED
+
+**DOI:** [10.5281/zenodo.21208491](https://doi.org/10.5281/zenodo.21208491)
 
 **Goal:** Construct p-adic anyon models using Verma modules over $U_q(\mathfrak{sl}_2)$ with $q$ a $p^k$-th root of unity. Compute fusion rules and braiding matrices.
 

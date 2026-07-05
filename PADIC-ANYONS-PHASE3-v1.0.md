@@ -3,6 +3,7 @@
 **Author:** Rowan Brad Quni-Gudzinas | **Date:** 2026-07-05 | **Version:** v1.0
 **License:** QNFO Unified License Agreement (QNFO-ULA): https://legal.qnfo.org/
 **Project:** QLoF Extension — Program D, Phase 3
+**DOI:** [10.5281/zenodo.21208491](https://doi.org/10.5281/zenodo.21208491)
 **Prerequisites:** Phase 1 — "p-Adic Braid Groups on Bruhat-Tits Buildings" (v1.0, DOI: 10.5281/zenodo.21208366) | Phase 2 — "The p-Adic Temperley-Lieb Parameter" (v1.0, DOI: 10.5281/zenodo.21208368)
 
 ---
@@ -464,4 +465,4 @@ The adelic product over all places yields the complete theory. Phase 4 will form
 
 *Published under the QNFO Unified License Agreement. See https://legal.qnfo.org/.*
 
-*Phase 1: 10.5281/zenodo.21208366 | Phase 2: 10.5281/zenodo.21208368 | Phase 3 DOI: pending Zenodo deposition.*
+*Phase 1: 10.5281/zenodo.21208366 | Phase 2: 10.5281/zenodo.21208368 | **DOI:** [10.5281/zenodo.21208491](https://doi.org/10.5281/zenodo.21208491)*
