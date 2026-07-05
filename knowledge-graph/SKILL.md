@@ -1,9 +1,11 @@
 ---
 name: knowledge-graph
 description: QNFO Knowledge Graph querying for due diligence, impact analysis, ultrametric clustering, and cross-system discovery. Supports ball queries, hierarchical taxonomy, and lifecycle-aware project queries.
-version: "2.3"
+version: "2.4"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** qnfo-agent, infrastructure-audit
 
 
 
@@ -32,7 +34,30 @@ the user with the specific failure reason.
 
 ---
 
-# QNFO Knowledge Graph — Agent Skill v2.3
+## execute_plan (MANDATORY -- Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** -- at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** -- Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Query graph-api /stats for ecosystem overview", "status": "pending"},
+  {"step": "Query /neighbors/{entity} for dependencies", "status": "pending"},
+  {"step": "Run impact analysis on target entity", "status": "pending"},
+  {"step": "Seed missing BELONGS_TO edges for orphaned entities", "status": "pending"},
+  {"step": "Verify connectivity with re-query", "status": "pending"}
+])
+
+
+# QNFO Knowledge Graph — Agent Skill v2.4
 
 > **ULTRAMETRIC-AWARE.** This release adds ultrametric taxonomy support, ball queries, and lifecycle-aware project filtering.
 > All queries go through the deployed Cloudflare Worker API. No local installation required.
@@ -42,7 +67,7 @@ the user with the specific failure reason.
 The QNFO Knowledge Graph is a D1-backed graph database (Cloudflare-native, zero external services) connecting every entity in the QNFO ecosystem. It now includes an **ultrametric hierarchical taxonomy** where projects are organized into 4 domains, 12 programs, forming a 2-adic tree with distances that satisfy the strong triangle inequality: $d(x,z) \leq \max(d(x,y), d(y,z))$.
 
 **Deployed API:** `https://graph-api.q08.workers.dev` (Cloudflare Worker, D1 qnfo-graph)
-**Current State:** 882 nodes, 1854 edges, 8 API endpoints (verified live 2026-07-02)
+**Current State:** 1680 nodes, 2927 edges, 8 API endpoints (verified live 2026-07-05)
 
 ## Ultrametric Taxonomy Structure
 
@@ -358,6 +383,7 @@ The Knowledge Graph is the central registry for project lifecycle. Key propertie
 
 | Version | Date | Changes |
 |:--------|:-----|:--------|
+| v2.4 | 2026-07-04 | **DO+SQLite + Workers AI Integration:** Added DO+SQLite Worker (qnfo-agent-session) for KG write coordination via `/kg-mutex/*` endpoints. Added R2 Event Notifications auto-trigger for graph re-indexing. Added Workers AI Worker (qnfo-ai-worker) for paper enrichment (classify, citations). Updated API endpoint table with 4 new DO endpoints. |
 | v2.3 | 2026-07-02 | **Count refresh:** 882 nodes (24 labels), 1854 edges (45 types). Added Paper (178), CloudflareAsset (148), ZenodoRecord (124), R2Object (115) labels. Edge type table expanded to 14 types. RELATES_TO now dominant (522). Verified live via KG API. |
 | v2.2 | 2026-06-28 | **Count refresh:** Verified live — 261 nodes, 401 edges. OWNS now dominant edge (205 vs 99). Needs paper REFERENCES edges (currently 0 paper connections). |
 | v2.0 | 2026-06-21 | **Ultrametric Taxonomy:** Added 4-domain/12-program ultrametric tree with BELONGS_TO and ULTRA_CONTAINS edges. Added ball query recipe. Updated graph stats (238/382). Added lifecycle property documentation. Verified 0 violations on 500 triples (strong triangle inequality). |

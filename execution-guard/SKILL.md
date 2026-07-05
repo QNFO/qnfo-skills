@@ -3,7 +3,7 @@ name: execution-guard
 description: "PRIORITY 0 execution enforcement guard. Always active. Prevents planning spirals and phantom completion claims by checking task register before every response. Use when: ANY agent is operating — this skill must be loaded for all QNFO agent sessions. Triggers: session start, before any response, when tasks are pending."
 version: "1.7"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification — negative verification, try to prove claims are FALSE. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — run _dod_enforce.py if exists. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
 
 
@@ -77,7 +77,198 @@ Before ANY work begins (including thin-client cleanup at §1.6), pull and run th
 
 ```bash
 # 1. Pull the canonical audit tool from R2
-npx wrangler r2 object get qnfo/tools/skill_health.py --remote --file=_skill_health.py
+
+### Embedded Script: skill_health.py (self-sufficient — no R2 pull needed)
+
+Write the following code to `_skill_health.py`, execute, then delete:
+
+```python
+#!/usr/bin/env python3
+"""skill_health.py — QNFO skill ecosystem health audit tool (v1.2).
+Checks: safety-net skill file existence, version drift, UTF-8 errors,
+duplicates, autoloader gaps, and deprecated/superseded skills.
+
+Canonical: qnfo/tools/skill_health.py (R2)
+Ephemeral: _skill_health.py (delete after use)
+"""
+import json, os, sys, re
+
+SKILLS_DIR = os.path.expandvars(r'%USERPROFILE%\.deepchat\skills')
+HEALTH_REPORT = os.path.join(os.getcwd(), '_skill_health.json')
+
+def read_yaml_frontmatter(path):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        with open(path, 'r', encoding='cp1252', errors='replace') as f:
+            content = f.read()
+        return {"_encoding_error": f"File not valid UTF-8: {path}"}, content
+    if not content.startswith('---'):
+        return {"_no_frontmatter": True}, content
+    end = content.find('---', 3)
+    if end == -1:
+        return {"_malformed_frontmatter": True}, content
+    fm = content[3:end].strip()
+    fields = {}
+    for line in fm.split('\n'):
+        if ':' in line:
+            key, _, val = line.partition(':')
+            key = key.strip()
+            val = val.strip().strip('"').strip("'")
+            if val.lower() == 'true':
+                val = True
+            elif val.lower() == 'false':
+                val = False
+            fields[key] = val
+    return fields, content
+
+def get_body_version(content):
+    """Extract version from first body heading (after YAML frontmatter)."""
+    body_start = 0
+    if content.startswith('---'):
+        end = content.find('---', 3)
+        if end != -1:
+            body_start = end + 3
+    body = content[body_start:]
+    patterns = [
+        r'^# .*?[—\-]\s*v?(\d+\.\d+)',    # # NAME — vX.Y
+        r'^# .*\(v(\d+\.\d+)\)',            # # NAME (vX.Y)
+        r'^# .*\sv(\d+\.\d+)',              # # NAME vX.Y
+        r'^\*skill\s+v?(\d+\.\d+)',         # *skill vX.Y
+    ]
+    for p in patterns:
+        m = re.search(p, body, re.MULTILINE)
+        if m:
+            return m.group(1)
+    return None
+
+def check_nested_duplicates():
+    nested = os.path.join(SKILLS_DIR, 'skills')
+    if os.path.isdir(nested):
+        return [d for d in os.listdir(nested) if os.path.isdir(os.path.join(nested, d))]
+    return []
+
+def main():
+    report = {
+        "timestamp": "2026-07-01",
+        "skills_dir": SKILLS_DIR,
+        "total_skills": 0,
+        "priority_claiming_skills": [],
+        "version_drifts": [],
+        "utf8_errors": [],
+        "nested_duplicates": [],
+        "missing_from_autoloader": [],
+        "deprecated_skills": [],
+        "deprecated_orphans": [],
+        "summary": {}
+    }
+
+    report["nested_duplicates"] = check_nested_duplicates()
+
+    skill_dirs = sorted([
+        d for d in os.listdir(SKILLS_DIR)
+        if os.path.isdir(os.path.join(SKILLS_DIR, d))
+        and not d.startswith('.')
+        and d != 'skills'
+        and os.path.exists(os.path.join(SKILLS_DIR, d, 'SKILL.md'))
+    ])
+
+    report["total_skills"] = len(skill_dirs)
+
+    for name in skill_dirs:
+        path = os.path.join(SKILLS_DIR, name, 'SKILL.md')
+        fm, content = read_yaml_frontmatter(path)
+
+        if "_encoding_error" in fm:
+            report["utf8_errors"].append({"skill": name, "error": fm["_encoding_error"]})
+            continue
+
+        # Version drift
+        yaml_ver = fm.get("version", "unknown")
+        body_ver = get_body_version(content)
+        if yaml_ver != "unknown" and body_ver and yaml_ver != body_ver:
+            report["version_drifts"].append({
+                "skill": name,
+                "yaml_version": yaml_ver,
+                "body_version": body_ver
+            })
+
+        # Deprecated skills
+        is_deprecated = fm.get("deprecated", False)
+        superseded_by = fm.get("superseded_by", None)
+        if is_deprecated:
+            entry = {"skill": name, "yaml_version": yaml_ver}
+            if superseded_by:
+                entry["superseded_by"] = superseded_by
+                spath = os.path.join(SKILLS_DIR, superseded_by, 'SKILL.md')
+                entry["superseder_exists"] = os.path.isfile(spath)
+                if not entry["superseder_exists"]:
+                    report["deprecated_orphans"].append({
+                        "skill": name,
+                        "superseded_by": superseded_by,
+                        "warning": f"Skill '{superseded_by}' not found locally"
+                    })
+            else:
+                entry["superseded_by"] = None
+                report["deprecated_orphans"].append({
+                    "skill": name,
+                    "warning": f"Deprecated but no superseded_by field"
+                })
+            report["deprecated_skills"].append(entry)
+
+        # Safety-net skill existence check
+        description = fm.get("description", "")
+        is_safety_net = any(phrase in description.lower() for phrase in [
+            "priority 0", "priority 1", "priority-0", "priority-1",
+            "always active", "pinned and always", "autonomous",
+            "auto-executes", "mandatory", "every agent"
+        ])
+        if is_safety_net:
+            entry = {
+                "skill": name,
+                "yaml_version": yaml_ver,
+                "description_preview": description[:120]
+            }
+            # Verify file is readable (not just exists — test full read)
+            try:
+                with open(path, 'r', encoding='utf-8') as test_f:
+                    test_content = test_f.read()
+                entry["file_readable"] = True
+                entry["file_size"] = len(test_content)
+            except Exception as e:
+                entry["file_readable"] = False
+                entry["file_error"] = str(e)
+            report["priority_claiming_skills"].append(entry)
+
+    report["summary"] = {
+        "total_skills": report["total_skills"],
+        "version_drift_count": len(report["version_drifts"]),
+        "utf8_error_count": len(report["utf8_errors"]),
+        "nested_duplicate_count": len(report["nested_duplicates"]),
+        "priority_claiming_skills_count": len(report["priority_claiming_skills"]),
+        "deprecated_count": len(report["deprecated_skills"]),
+        "deprecated_orphan_count": len(report["deprecated_orphans"]),
+        "healthy": (
+            len(report["utf8_errors"]) == 0
+            and len(report["deprecated_orphans"]) == 0
+            and all(s.get("file_readable", False) for s in report["priority_claiming_skills"])
+        )
+    }
+
+    with open(HEALTH_REPORT, 'w', encoding='utf-8') as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+
+    print(json.dumps(report["summary"]))
+    print(f"Report written to: {HEALTH_REPORT}")
+
+if __name__ == '__main__':
+    main()
+
+```
+
+**Execution:** `python _skill_health.py` → verify → `Remove-Item _skill_health.py`
+ --file=_skill_health.py
 
 # 2. Run health check
 python _skill_health.py
@@ -158,6 +349,108 @@ Attempt skill_view on all 5 safety-net skills:
 
 **HISTORICAL ROOT CAUSE:** In multiple sessions (2026-07-02 through 2026-07-04), `skill_view('closeout-manager')` and `skill_view('infrastructure-audit')` intermittently returned failure while the filesystem `read()` fallback worked. This was traced to DI version drift — the DeepChat runtime's skill registry was out of sync with deployed skill versions. Running `_deploy.py` fixes the issue.
 
+### 1.9 SKILL EXECUTION CHAINING ENFORCEMENT (v1.9 — MANDATORY)
+
+**The #10 agent failure mode: skills loaded in isolation — each skill executes its own workflow without awareness of dependencies on other skills' execution steps.** This check fires whenever a skill is loaded to enforce that ALL skills mandate `update_plan` tracking AND that subsidiary/secondary skills form a reliable execution chain.
+
+#### 1.9.1 Skill Plan Mandate (HARD GATE)
+
+**Every QNFO skill MUST include an `execute_plan` section.** This is NON-NEGOTIABLE. Before executing ANY workflow from a loaded skill:
+
+1. **Verify the skill has `execute_plan`:** Search the loaded skill content for the string `execute_plan`. If absent → `[SKILL-GAP: <skill-name> lacks execute_plan section]`. Proceed with best-effort but flag for Kaizen.
+
+2. **Populate update_plan from the skill's execute_plan:** Extract the example plan items and any workflow phases described in the skill. Push them as concrete, verifiable `update_plan` items.
+
+3. **DO NOT execute skill workflows without plan tracking.** If the skill provides no plan items and you cannot infer concrete steps, escalate: `[SKILL-UNPLANNABLE: <skill-name> — no execute_plan and workflow cannot be inferred]`.
+
+#### 1.9.2 Subsidiary Skill Chain Loading (HARD GATE)
+
+**When a primary skill references a subsidiary skill, the subsidiary skill MUST be loaded BEFORE the primary skill's execution begins.** The chain is:
+
+```
+Primary Skill loaded → Parse Related: header → Load ALL listed subsidiary skills → Merge subsidiary plans → Populate update_plan → Execute
+```
+
+**Trigger protocol:**
+
+1. **Parse `Related:` header:** After loading ANY skill, scan its content for a `Related:` line (format: `> **Related:** skill-a, skill-b, skill-c`).
+
+2. **Force-load ALL listed skills:** For each skill in the Related list, call `skill_view('<name>')`. If `skill_view` fails, use the retry protocol (read → R2 → fallback). Do NOT skip any listed skill.
+
+3. **Merge subsidiary plans:** For each subsidiary skill loaded, extract its `execute_plan` items. Merge them into the primary `update_plan` AT THE POINT where the subsidiary skill would be invoked during execution. Mark subsidiary-derived items with `[SUB: <skill-name>]` prefix.
+
+4. **Verification gate:** Before executing the primary workflow, verify: (a) ALL listed subsidiary skills were loaded, (b) ALL loaded skills have `execute_plan` sections (or the gap is flagged), (c) ALL subsidiary plan items are merged into `update_plan`.
+
+**Example chain:**
+
+```
+Primary: publication-publisher → Related: cloudflare-deployer, citation-manager, seo-discoverability
+  update_plan:
+    1. [PUB] Format paper.md
+    2. [PUB] Build PDF
+    3. [SUB: cloudflare-deployer] Verify wrangler auth
+    4. [SUB: cloudflare-deployer] Deploy to Cloudflare Pages
+    5. [SUB: cloudflare-deployer] Upload artifacts to R2
+    6. [SUB: citation-manager] Extract citations from paper.md
+    7. [SUB: citation-manager] Verify BibTeX entries
+    8. [SUB: seo-discoverability] Audit robots.txt + sitemap
+    9. [PUB] Final verification
+```
+
+#### 1.9.3 Execution Chain Integrity Check
+
+Before marking ANY `update_plan` item as `completed`, verify:
+
+1. **Parent chain:** The item's parent skill must be loaded and verified.
+2. **Dependency chain:** If this item depends on another skill's item (marked `[SUB: ...]`), verify that skill's item completed first.
+3. **Completion propagation:** When a subsidiary skill's LAST item completes, the parent skill's next item is automatically promoted to `in_progress`.
+
+**HARD GATE:** If ANY `[SUB: ...]` item is `pending` but the primary skill is claiming completion → `[CHAIN-BROKEN: subsidiary tasks not executed — primary skill completion BLOCKED]`.
+
+#### 1.9.4 Anti-Patterns
+
+| Anti-Pattern | Fix |
+|:-------------|:----|
+| Loading a skill without checking its `Related:` header | Parse Related header — auto-load all listed skills |
+| Executing a skill's workflow without `update_plan` populated | Populate from `execute_plan` before ANY execution |
+| Marking primary complete while subsidiary items pending | Subsidiary items inherit from primary — must complete first |
+| Loading subsidiary skills but not merging their plans | Merge ALL subsidiary `execute_plan` items into primary `update_plan` |
+| Skill references another skill but `Related:` header missing | Flag `[SKILL-GAP: <skill> missing Related header]` — fix in Kaizen |
+
+### 1.10 SELF-SUFFICIENCY ENFORCEMENT (v1.10 — HARD GATE)
+
+**The #11 agent failure mode: skills that depend on external files/references silently break when parallel LLM threads concurrently update the same shared files, R2 is unavailable, or thin-client cleanup deletes local dependencies.** This check fires whenever a skill is loaded to verify it is a self-sufficient standalone document.
+
+#### 1.10.1 Runtime Dependency Scan
+
+Before executing ANY skill workflow, scan the loaded skill content for these BANNED patterns:
+
+| Pattern | Violation | Fix |
+|:--------|:----------|:----|
+| `read('%APPDATA%\\DeepChat\\skills\\...')` in skill body | `[SELF-SUFFICIENCY-VIOLATION: external read]` | Content must be embedded inline |
+| `skill_view('...', 'references/...')` in skill body | `[SELF-SUFFICIENCY-VIOLATION: shared reference]` | Shared content must be embedded inline |
+| `npx wrangler r2 object get qnfo/tools/...` in skill body | `[SELF-SUFFICIENCY-VIOLATION: R2 pull]` | Script code must be embedded inline |
+| `read('templates/...')` in skill body | `[SELF-SUFFICIENCY-VIOLATION: template read]` | Template content must be embedded inline |
+| `See [PROTOCOL].md for full protocol` (demonstrative example of banned pattern) | `[SELF-SUFFICIENCY-VIOLATION: protocol pointer]` | Full protocol must be embedded inline — this row demonstrates what a violation looks like |
+
+#### 1.10.2 Enforcement Decision Matrix
+
+| Violation Count | Action |
+|:----------------|:-------|
+| **0 violations** | ✅ PASS — skill is self-sufficient. Proceed. |
+| **1-3 violations** | 🟠 DEGRADED — flag `[SELF-SUFFICIENCY-GAP: N violations]`. Proceed with best-effort. Log for Kaizen. |
+| **4+ violations** | 🔴 FAIL — flag `[SELF-SUFFICIENCY-CRITICAL: N violations]`. The skill is NOT self-sufficient. Parse the embedded content from the shared protocols and execute, but flag the skill for rewrite. |
+
+#### 1.10.3 Self-Sufficiency Audit Trail
+
+At session closeout, report self-sufficiency compliance:
+
+```
+[SELF-SUFFICIENCY-AUDIT: N/M skills self-sufficient, K violations across J skills]
+```
+
+**GATE:** Skills with 4+ violations are flagged for the Kaizen engine to embed their missing content. This gate does NOT block execution — it blocks the claim that the skill ecosystem is healthy.
+
 ## 0. WHY THIS EXISTS
 
 **19 out of 24 user messages (79%) in the 2026-06-04 session were EXECUTE/RESUME/PROCEED/HANDOFF demands.** Every response had ZERO tool invocations. The agent self-diagnosed: "I haven't actually executed anything yet. I've been stuck in a loop."
@@ -190,6 +483,18 @@ You may ONLY generate response text when ONE of these conditions is true:
 - The user asked a question that requires ONLY text (no execution needed)
 
 **HARD BLOCK: If NONE of the above are true, you MUST invoke a tool instead of generating text.**
+
+### 1.2.1 KG-FIRST COMPREHENSIVE DISCOVERY CHECK (v1.8 — MANDATORY)
+
+**The #8 agent failure mode: claiming "comprehensive" or "all" discovery without querying the Knowledge Graph API — the canonical ecosystem registry with 1,680+ nodes.**
+
+Before generating ANY response that claims comprehensive discovery ("all open questions," "all publications," "complete inventory," "full deep dive"), verify:
+
+1. **Was the Knowledge Graph `/stats` endpoint queried?** — If NO → BLOCK the response. Query the KG first.
+2. **Was the response based primarily on files read from disk?** — If YES and the KG was NOT queried → RED FLAG. Files on disk are an incomplete subset. The KG is the single source of truth.
+3. **Were project/paper/node counts verified against the KG?** — If the response claims "N publications" without KG evidence → BLOCK. Replace with `[NOT-VERIFIED: KG not queried]`.
+
+**GATE:** If this check fails → do NOT generate the response. Instead, query `https://graph-api.q08.workers.dev/stats` and the relevant endpoints, then rebuild the response with KG-verified data. The user should NEVER see a "comprehensive" claim that was built from file-system cherry-picking.
 
 ### 1.3 Self-Diagnostic (every 3 tool invocations)
 
@@ -307,7 +612,7 @@ Session closeout writes execution statistics to audit trail:
 
 ---
 
-*execution-guard v1.7 — PRIORITY 0. Auto-gap detection via WHAT-ELSE hook (§1.4). RED-TEAM-DOD integration via §1.5 hook. Red-team self-testing. Skill version enforcement via §1.7. Cannot be disabled. Pinned and always active.*
+*execution-guard v1.9 — PRIORITY 0. Auto-gap detection via WHAT-ELSE hook. RED-TEAM-DOD integration. Red-team self-testing. Skill version enforcement via §1.7. SKILL EXECUTION CHAINING ENFORCEMENT (§1.9) — mandates update_plan for all skills, subsidiary skill chain loading via Related: header parsing, cross-skill plan merging, chain integrity checks. Cannot be disabled. Pinned and always active.*
 
 ## RT: RED-TEAM SELF-AUDIT
 
@@ -320,5 +625,5 @@ Before claiming this skill complete, autonomously run:
 5. Iteration (retry on failure, max 3)
 
 ANTI-PATTERN: User should NEVER ask about quality.
-Refer to RED-TEAM-PROTOCOL.md for full protocol.
+**Skill-Specific Checks:** (add below as applicable) — Verify self-sufficiency (no external read/R2 deps). Verify chain integrity (no [SUB:] items pending). Verify update_plan populated with execution evidence.
 

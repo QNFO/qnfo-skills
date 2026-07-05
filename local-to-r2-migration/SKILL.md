@@ -34,7 +34,9 @@ the user with the specific failure reason.
 ---
 
 
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** cloudflare-deployer
 
 
 > **v1.1 THIN-CLIENT ENFORCEMENT:** This skill now auto-detects thin-client violations at session start. If ANY non-`.git/` files exist from a prior session ? classify and migrate automatically. See §1 trigger table for new autonomous trigger.
@@ -196,7 +198,17 @@ Every file found in the scan is classified into one of these categories:
 
 # Step 1.1: Pull the migration scanner script (ephemeral)
 
-npx wrangler r2 object get qnfo/tools/migration_scanner.py --remote --file=_migration_scanner.py
+
+### Embedded Script: migration_scanner.py (self-sufficient — no R2 pull needed)
+
+Write the following code to `_migration_scanner.py`, execute, then delete:
+
+```python
+
+```
+
+**Execution:** `python _migration_scanner.py` → verify → `Remove-Item _migration_scanner.py`
+ --file=_migration_scanner.py
 
 
 

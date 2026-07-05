@@ -38,15 +38,15 @@ the user with the specific failure reason.
 
 The LLM system automatically detects what skills are needed for any task and loads them without user prompting. The user should NEVER say "load the cloudflare-deployer skill" — the LLM detects the task and loads it.
 
-### Rule 0: Load Shared Protocols at Session Start (v3.0)
+### Rule 0: Embedded Shared Protocols (v4.0 — SELF-SUFFICIENT)
 
-Before any task detection, load the three shared reference files once. These replace the ~1,700 bytes of boilerplate that was duplicated across every QNFO skill:
+**The autoloader is self-sufficient.** All shared protocols are embedded inline in this document. No external `skill_view()` calls, no filesystem reads for protocol content. The shared reference files on disk are REDUNDANT BACKUPS — they are NOT loaded at runtime.
 
-1. `skill_view('skill-autoloader', 'references/loading-protocol.md')` — Programmatic Loading, Retry Protocol, execute_plan
-2. `skill_view('skill-autoloader', 'references/red-team-self-audit.md')` — Autonomous quality verification
-3. `skill_view('skill-autoloader', 'references/qnfo-design-system.md')` — QNFO Design System v3.0 compliance
+**Embedded Red-Team Protocol:** Before claiming any task complete, autonomously run: (1) Output Verification — negative verification, try to prove claims are FALSE. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — run _dod_enforce.py if exists. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
-These are cached for the session. No skill needs to include them in its own SKILL.md. Each skill references them with a one-line header.
+**Embedded Design System (LOCKED v3.0):** Design tokens: `--blue: #1a56db; --blue-dark: #1040a8; --blue-light: #dbeafe; --blue-subtle: #eff6ff; --blue-mid: #6094e8; --text: #1a1a2e; --text-muted: #6b7280; --bg: #ffffff; --border: #e5e7eb; --card-bg: #f9fafb; --max-w: 960px; --radius: 8px;` Fonts: Inter (headings/nav/meta), Source Serif 4 (body), JetBrains Mono (code). 🚫 Dark themes forbidden. Light theme only. Mandatory components: Sticky Top Nav (backdrop-blur), AI Query box, Related Papers section, Paper cards (hover shadow), Badges (DOI blue, Type purple, Category green, Tag gray, License orange).
+
+These inline embeddings are the canonical source. Skills that reference external shared files are operating from stale/at-risk copies.
 
 ## Core Rules
 
@@ -97,23 +97,85 @@ If `skill_view('name')` returns an error, try these fallbacks in order:
 
 NEVER ask the user to manually load a skill. NEVER silently continue without the skill's critical instructions.
 
-### Rule 3: Cross-Link Skills
+### Rule 3: Cross-Link Skills — Subsidiary Skill Chain Loading (v3.0)
 
-Every QNFO skill MUST reference related skills in its header:
+**HARD GATE: When a primary skill references a subsidiary skill via `Related:` header, the subsidiary skill MUST be loaded BEFORE the primary skill's workflow execution begins.**
+
+#### 3.1 Related: Header Format (MANDATORY)
+
+Every QNFO skill MUST reference related skills in its header using this exact format:
 ```
-> **Related:** execution-guard, closeout-manager, cloudflare-deployer
+> **Related:** skill-a, skill-b, skill-c
 ```
 
-When loading skill A, auto-load any skills it cross-references that are relevant to the current task.
+Skills with no dependencies use:
+```
+> **Related:** —
+```
 
-### Rule 4: Pre-Task Skill Check
+The autoloader parses this header to build the loading chain. Skills with missing or malformed `Related:` headers are flagged `[SKILL-GAP: <skill> missing Related header]`.
+
+#### 3.2 Subsidiary Loading Trigger Protocol
+
+When the autoloader loads a primary skill for execution:
+
+1. **PARSE:** Scan the loaded skill content for `> **Related:**` and extract the comma-separated skill names.
+2. **FORCE-LOAD:** For each listed subsidiary skill, call `skill_view('<name>')`. If `skill_view` fails, use the retry protocol (Rule 2). Do NOT skip any listed skill — even if it seems "not relevant."
+3. **VERIFY:** Confirm every subsidiary skill loaded successfully (content returned, no fallback errors). Flag any failures as `[SKILL-CHAIN-BROKEN: <parent> → <missing-subsidiary>]`.
+4. **MERGE PLANS:** For each subsidiary skill, extract its `execute_plan` items and merge them into the primary skill's `update_plan` with `[SUB: <skill-name>]` prefix (see execution-guard §1.9.2).
+5. **CACHE:** Mark all loaded skills as cached for the session (Rule 5).
+
+#### 3.3 Chain Integrity Check
+
+Before claiming ANY skill workflow complete, verify:
+- All subsidiary skills in the `Related:` chain were loaded
+- All subsidiary `[SUB: ...]` plan items are completed
+- No subsidiary item is `pending` while the primary claims completion
+
+**HARD GATE:** If ANY subsidiary item in the chain is `pending`, the primary workflow is NOT complete. Flag `[CHAIN-BROKEN: subsidiary tasks not executed]`.
+
+### Rule 4: Self-Sufficiency Verification (v3.0 — HARD GATE)
+
+**Before loading any skill for execution, verify it is a self-sufficient standalone document.** Skills that reference external files, scripts, or shared protocols at runtime are brittle — they break under parallel thread updates, R2 unavailability, and thin-client cleanup.
+
+#### 4.1 Self-Sufficiency Scan
+
+When loading a skill, scan its content for these BANNED patterns:
+
+| Pattern | Violation | Severity |
+|:--------|:----------|:---------|
+| `read('%APPDATA%\\DeepChat\\skills\\...')` | External read dependency | HIGH |
+| `skill_view('...', 'references/...')` | Shared reference dependency | HIGH |
+| `npx wrangler r2 object get qnfo/tools/...` | R2 script dependency | CRITICAL |
+| `read('templates/...')` or `read('agents/...')` | Template/agent file dependency | MEDIUM |
+| Reference to `.md` protocol file without inline content | Protocol pointer dependency | MEDIUM |
+
+#### 4.2 Decision Matrix
+
+| Scan Result | Action |
+|:------------|:-------|
+| **0 violations** | ✅ Load and execute normally |
+| **1-3 violations, content available** | 🟠 Load skill, extract the referenced content from shared files/R2 and embed inline for this session. Flag `[SELF-SUFFICIENCY-GAP]` for Kaizen. |
+| **4+ violations OR content unavailable** | 🔴 Flag `[SELF-SUFFICIENCY-CRITICAL: <skill>]`. Attempt best-effort execution with available content. The skill needs rewrite. |
+
+#### 4.3 Embedding Protocol
+
+When a loaded skill has external dependencies, resolve them by embedding:
+
+1. **Shared protocol references:** Read the shared file ONCE, embed the content into the skill's working copy for this session
+2. **R2 script dependencies:** Pull the script ONCE from R2, embed as inline code block, write to temp `_<name>.py`, execute, delete
+3. **Template dependencies:** Read the template ONCE, embed the content inline
+
+**The goal:** After loading, the skill's in-memory representation contains ALL needed content. No further external I/O for instructions or scripts.
+
+### Rule 5: Pre-Task Skill Check
 
 Before executing any task, check:
 1. What skills does this task require?
 2. Have they been loaded this session?
 3. If not: load them now (auto-detect + fallback)
 
-### Rule 5: Load Once, Use Many
+### Rule 6: Load Once, Use Many
 
 Once a skill is loaded, cache its content for the session. Don't re-load the same skill multiple times.
 
@@ -163,7 +225,11 @@ Once a skill is loaded, cache its content for the session. Don't re-load the sam
 | skill_view() fails, LLM silently continues | Run fallback chain: read() → R2 → report |
 | Skill loaded but not used | Only load skills relevant to current task |
 | Skills loaded multiple times | Cache: load once per session |
+| **Primary skill loaded WITHOUT checking `Related:` header** | Parse Related header — auto-load ALL listed subsidiary skills (Rule 3.2) |
+| **Subsidiary skills referenced but NOT loaded before execution** | Force-load chain BEFORE populating update_plan (Rule 3.2 step 2) |
+| **Skill claims completion while subsidiary `[SUB: ...]` items pending** | Chain Integrity Check (Rule 3.3) blocks completion claim |
+| **Skill references another skill but has NO `Related:` header** | Flag `[SKILL-GAP: <skill> missing Related header]` — fix in Kaizen |
 
 ---
 
-*skill-autoloader v2.0 — Priority 0. Auto-detects task patterns and loads skills. User never manually manages skills. Fallback recovery for load failures.*
+*skill-autoloader v3.0 — Priority 0. Auto-detects task patterns and loads skills. Subsidiary Skill Chain Loading (Rule 3) — parses Related: headers, force-loads all subsidiary skills, merges their execute_plan items into primary update_plan with [SUB:] prefix. Chain Integrity Check blocks completion while subsidiary items pending. User never manually manages skills. Fallback recovery for load failures.*

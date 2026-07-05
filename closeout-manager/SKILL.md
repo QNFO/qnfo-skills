@@ -1,9 +1,11 @@
 ---
 name: closeout-manager
 description: Session close-out procedures — autonomous trigger detection, task execution verification, project handoff initialization, audit trail export, R2 state upload, lifecycle timestamp update, archive operations, draft artifact cleanup, and handoff documentation. Auto-executes at session end without user prompting.
-version: "3.4"
+version: "3.5"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification — negative verification. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — run _dod_enforce.py if exists. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** execution-guard, cloudflare-deployer, knowledge-graph
 
 
 
@@ -32,7 +34,7 @@ the user with the specific failure reason.
 
 ---
 
-# CLOSEOUT MANAGER SKILL — v1.0 — v3.3
+# CLOSEOUT MANAGER SKILL — v1.0 — v3.5
 
 > **D1-FIRST. R2 DEPRECATED FOR STRUCTURED DATA (§2.6).** Handoffs, audits, decisions, state files, and the discovery index now live EXCLUSIVELY in D1. R2 is for file artifacts ONLY (PDFs, scripts, templates). R2 flat files (index.json, handoff .md, state .json) are DEPRECATED — never read from R2, never write to R2 for structured records. See `qnfo-agent` §10 for D1 lifecycle integration.
 > **LIFECYCLE-AWARE.** This release integrates with the automated lifecycle pipeline — `last_active` timestamps are reset on closeout to prevent premature staleness. Archive paths follow the ultrametric `qnfo/archive/projects/<name>/` convention.
@@ -125,7 +127,226 @@ e. **Unfinished items:** Any planned-but-unexecuted item is a BLOCKER. Either ex
    ```bash
    python _execution_audit.py --latest --json
    ```
-   (Pull from R2 first: `npx wrangler r2 object get qnfo/tools/execution_audit.py --remote --file=_execution_audit.py`)
+   (Pull from R2 first: `
+### Embedded Script: execution_audit.py (self-sufficient — no R2 pull needed)
+
+Write the following code to `_execution_audit.py`, execute, then delete:
+
+```python
+#!/usr/bin/env python3
+"""
+execution_audit.py — Post-Hoc Execution Fidelity Analyzer (v1.0)
+
+Analyzes exported DeepChat conversation files to compute plan:execution ratios.
+Detects sessions where agents produced text instead of invoking tools.
+
+Usage:
+    python execution_audit.py <conversation_export.md>
+    python execution_audit.py --dir <exports_directory>
+    python execution_audit.py --latest  # Analyze most recent export
+
+Output:
+    - EXECUTION RATIO: tool invocations / total responses
+    - PLANNING SPIRAL COUNT: sequences of 3+ text-only responses
+    - BANNED WORD COUNT: "done"/"complete"/"finished" without evidence
+    - CONTINUATION TAG COMPLIANCE: % of responses with [AUTO-CONTINUE]/[ALL TASKS EXECUTED]/[BLOCKED]
+    - SEVERITY: PASS / WARN / FAIL
+
+Signals for Kaizen engine:
+    - ratio < 0.4: HIGH severity — planning spiral
+    - ratio < 0.6: MEDIUM severity — borderline
+    - banned words > 5 in session: LOW/MEDIUM severity
+"""
+
+import re
+import os
+import sys
+import json
+import argparse
+from datetime import datetime
+
+# ── Analysis Patterns ─────────────────────────────────────────────
+TOOL_INVOCATION_PATTERN = re.compile(
+    r'<invoke name="[^"]+">|## (execute|write|edit|exec|process|subagent|deploy|git\b)',
+    re.IGNORECASE
+)
+
+USER_MESSAGE_PATTERN = re.compile(r'## \S+ (?:用户|User)\b')
+ASSISTANT_MESSAGE_PATTERN = re.compile(r'## \S+ (?:助手|Assistant)\b|### \S+ (?:思考|Thinking)')
+
+BANNED_WORDS = [
+    r'\b(done)\b(?!.*\[EXECUTED\])',
+    r'\b(complete[d]?)\b(?!.*\[EXECUTED\])', 
+    r'\b(finished)\b(?!.*\[EXECUTED\])',
+    r'\b(successfully)\b',
+    r"I'll\s+\w+",
+    r"Let me\s+\w+",
+]
+
+CONTINUATION_TAG_PATTERN = re.compile(
+    r'\[AUTO-CONTINUE|\[ALL TASKS EXECUTED|\[BLOCKED:'
+)
+
+EXECUTE_DEMAND_PATTERN = re.compile(
+    r'\b(EXECUTE|RESUME|PROCEED|HANDOFF|CONTINUE)\b',
+    re.IGNORECASE
+)
+
+
+def analyze_conversation(filepath):
+    """Analyze a single conversation export file."""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Find user and assistant turns
+    user_turns = []
+    assistant_turns = []
+    
+    # Split by common export formats
+    sections = re.split(r'(## 👤 用户|## 🤖 助手|## 👤 User|## 🤖 Assistant)', content)[1:]
+    
+    current_role = None
+    for i in range(0, len(sections), 2):
+        role_label = sections[i]
+        text = sections[i+1] if i+1 < len(sections) else ''
+        if '用户' in role_label or 'User' in role_label:
+            user_turns.append(text)
+        else:
+            assistant_turns.append(text)
+    
+    total_responses = len(assistant_turns)
+    total_user = len(user_turns)
+    
+    # Count tool invocations
+    tool_invocations = 0
+    tool_responses = 0
+    for text in assistant_turns:
+        tools = len(TOOL_INVOCATION_PATTERN.findall(text))
+        tool_invocations += tools
+        if tools > 0:
+            tool_responses += 1
+    
+    # Count banned words
+    banned_count = 0
+    for text in assistant_turns:
+        for pattern in BANNED_WORDS:
+            banned_count += len(re.findall(pattern, text, re.IGNORECASE))
+    
+    # Count continuation tags
+    tag_count = len(CONTINUATION_TAG_PATTERN.findall(content))
+    
+    # Detect planning spirals (3+ consecutive text-only responses)
+    planning_spirals = 0
+    consecutive_text_only = 0
+    for text in assistant_turns:
+        has_tools = bool(TOOL_INVOCATION_PATTERN.search(text))
+        if not has_tools:
+            consecutive_text_only += 1
+            if consecutive_text_only == 3:
+                planning_spirals += 1
+        else:
+            consecutive_text_only = 0
+    
+    # Count user EXECUTE demands
+    execute_demands = 0
+    for text in user_turns:
+        execute_demands += len(EXECUTE_DEMAND_PATTERN.findall(text[:300]))
+    
+    # Calculate metrics
+    tool_ratio = tool_responses / total_responses if total_responses > 0 else 0
+    tag_compliance = tag_count / total_responses if total_responses > 0 else 0
+    
+    # Determine severity
+    if tool_ratio < 0.3:
+        severity = "CRITICAL"
+    elif tool_ratio < 0.5:
+        severity = "HIGH"
+    elif tool_ratio < 0.7:
+        severity = "MEDIUM"
+    else:
+        severity = "OK"
+    
+    return {
+        "file": os.path.basename(filepath),
+        "total_user_messages": total_user,
+        "total_assistant_responses": total_responses,
+        "tool_invocations": tool_invocations,
+        "tool_responses": tool_responses,
+        "text_only_responses": total_responses - tool_responses,
+        "execution_ratio": round(tool_ratio, 3),
+        "planning_spirals": planning_spirals,
+        "banned_words": banned_count,
+        "continuation_tag_compliance": round(tag_compliance, 3),
+        "user_execute_demands": execute_demands,
+        "severity": severity,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Analyze DeepChat exports for execution fidelity")
+    parser.add_argument("file", nargs="?", help="Conversation export .md file")
+    parser.add_argument("--dir", help="Directory of export files")
+    parser.add_argument("--latest", action="store_true", help="Analyze most recent export")
+    parser.add_argument("--json", action="store_true", help="Output as JSON")
+    
+    args = parser.parse_args()
+    
+    files = []
+    if args.file:
+        files = [args.file]
+    elif args.dir:
+        files = [os.path.join(args.dir, f) for f in os.listdir(args.dir) 
+                 if f.endswith('.md') and 'export' in f.lower()]
+    elif args.latest:
+        downloads = os.path.expanduser(r"~\Downloads")
+        candidates = [os.path.join(downloads, f) for f in os.listdir(downloads) 
+                      if f.startswith('export_deepchat') and f.endswith('.md')]
+        if candidates:
+            files = [max(candidates, key=os.path.getmtime)]
+    
+    if not files:
+        print("[ERROR] No export files found. Specify --file, --dir, or --latest")
+        sys.exit(1)
+    
+    results = []
+    for f in files:
+        if os.path.exists(f):
+            try:
+                result = analyze_conversation(f)
+                results.append(result)
+            except Exception as e:
+                print(f"[ERROR] Failed to analyze {f}: {e}")
+    
+    if args.json:
+        print(json.dumps(results, indent=2))
+    else:
+        for r in results:
+            print(f"\n{'='*60}")
+            print(f"EXECUTION AUDIT: {r['file']}")
+            print(f"{'='*60}")
+            print(f"  User messages:         {r['total_user_messages']}")
+            print(f"  Assistant responses:   {r['total_assistant_responses']}")
+            print(f"  Tool invocations:      {r['tool_invocations']}")
+            print(f"  Text-only responses:   {r['text_only_responses']}")
+            print(f"  EXECUTION RATIO:       {r['execution_ratio']:.1%}  [{r['severity']}]")
+            print(f"  Planning spirals:      {r['planning_spirals']}")
+            print(f"  Banned words:          {r['banned_words']}")
+            print(f"  User EXECUTE demands:  {r['user_execute_demands']}")
+            print(f"  Tag compliance:        {r['continuation_tag_compliance']:.1%}")
+            
+            if r['severity'] in ('CRITICAL', 'HIGH'):
+                print(f"\n  ⚠️  {r['severity']}: {r['text_only_responses']} text-only responses with {r['tool_invocations']} tool invocations.")
+                print(f"  {r['user_execute_demands']} EXECUTE demands were met with {r['text_only_responses']}/{r['total_assistant_responses']} text-only responses.")
+            
+            print()
+
+if __name__ == "__main__":
+    main()
+
+```
+
+**Execution:** `python _execution_audit.py` → verify → `Remove-Item _execution_audit.py`
+ --file=_execution_audit.py`)
 
 4. **Report in audit trail:**
    ```
@@ -194,6 +415,22 @@ Execute these checks programmatically. Do NOT rely on memory or assumptions:
 - `npx wrangler whoami` — token valid?
 - Any repeated warnings? (rtk hook, encoding issues)
 - Any background sessions still running? `process list`
+
+**E2. PROVENANCE COMPLETENESS (v3.4 — MANDATORY for publication sessions)**
+> **GATE (2026-07-05):** If this session involved publication, verify that Zenodo-ready provenance artifacts are complete. This gate prevents publications from being deposited without full project records and conversation history.
+
+| Check | Command | Gate |
+|:------|:--------|:-----|
+| Conversation history exportable? | `get_conversation_history` tool available | Must succeed |
+| Project files present? | `Get-ChildItem` count > 0 (beyond .git/) | Must have files |
+| Git state captured? | `git log -1 --oneline` + `git status` accessible | Must succeed |
+| README.md generated? | `Test-Path README.md` | Must exist for publication sessions |
+| GitHub repo linked in Zenodo metadata? | Zenodo `related_identifiers` contains `isSupplementedBy` → GitHub URL | Must be present for publication sessions |
+| Related Zenodo records cross-referenced? | Zenodo `related_identifiers` includes `isNewVersionOf` (prior versions) and `cites` (related papers) with valid DOIs | Must be present for publication sessions |
+| Social URLs synced to KG? | `GET https://graph-api.q08.workers.dev/neighbors/paper-<slug>` shows `social_urls` with ≥1 URL (populated by `buffer-integration` Stage 3.5) | Check after social media posting |
+| PROVENANCE-BUNDLE.zip for publication sessions? | If publication occurred this session → verify bundle was created and uploaded to R2 alongside paper artifacts | Must exist on R2 |
+
+**RED-TEAM:** If publication occurred but no provenance bundle, README.md, Cloudflare mirror (D1 + KG), or KG location properties (social_urls, zenodo_url, github_url, pages_url) were created → `[BLOCKING: publication without provenance — violation of publication-publisher v3.1 Stage 3.5 + Stage 6.5 + Stage 6.6 gates]`. Fix before closeout: assemble provenance bundle + README, seed D1 + KG with ALL known locations, create new Zenodo version if necessary.
 
 **F. TEST SUITE (if available)**
 ```bash
@@ -359,6 +596,27 @@ Write session summary to temp file `YYYY-MM-DD-topic.md` containing:
 - Handoff notes for next session
 
 Use `fill_prompt_template("CLOUDFLARE-AUDIT-EXPORT", {...})` for consistent format.
+
+**4.1 Conversation History Preservation (v3.4 — MANDATORY for publication sessions)**
+
+If this session involved research or publication activity, export the full conversation history for provenance:
+
+```bash
+# The agent MUST call get_conversation_history for the current session
+# Write the output to a timestamped file
+# Upload alongside the audit trail to R2
+
+# Export conversation (pseudo-code — agent uses actual get_conversation_history tool):
+# history = get_conversation_history(conversationId="<current>", includeSystem=False)
+
+# Write to local file
+python _export_session.py --output qnfo/audit/conversations/<YYYY-MM-DD>-session-<slug>.md
+
+# Upload to R2
+npx wrangler r2 object put qnfo/audit/conversations/<YYYY-MM-DD>-session-<slug>.md --file=<path>
+```
+
+**GATE for publication sessions:** If conversation history cannot be exported → `[BLOCKING: provenance incomplete — conversation history unavailable]`. The session's publications cannot claim full reproducibility. Either: (a) fix conversation export and re-upload, or (b) document the gap explicitly in the publication's PROVENANCE.md as a known limitation.
 
 Upload to R2 (v4.95+ compatible):
 ```bash
@@ -611,7 +869,7 @@ The automated lifecycle pipeline runs daily at 06:00 UTC (`qnfo-lifecycle` Worke
 
 ---
 
-*closeout-manager skill v3.4 — D1-FIRST. RED-TEAM-DOD INTEGRATION (§2.6). POST-PHASE GAP AUDIT with red-team self-testing + DNS resolution sweep + DI-KG sync verification. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*
+*closeout-manager skill v3.5 — D1-FIRST. RED-TEAM-DOD INTEGRATION (§2.6). POST-PHASE GAP AUDIT with red-team self-testing + DNS resolution sweep + DI-KG sync verification + provenance/README completeness check. LIFECYCLE-AWARE. R2 archive paths follow ultrametric convention.*
 
 ## RT: RED-TEAM SELF-AUDIT
 
@@ -624,5 +882,5 @@ Before claiming this skill complete, autonomously run:
 5. Iteration (retry on failure, max 3)
 
 ANTI-PATTERN: User should NEVER ask about quality.
-Refer to RED-TEAM-PROTOCOL.md for full protocol.
+**Skill-Specific Checks:** Verify all handoffs written to D1. Verify lifecycle timestamps reset. Verify thin-client cleanup complete. Verify closeout checklist passed all phases.
 

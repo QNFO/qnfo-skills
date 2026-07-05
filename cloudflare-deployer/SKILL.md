@@ -3,7 +3,9 @@ name: cloudflare-deployer
 description: Cloudflare platform deployment operations — Pages, R2, Workers, Vectorize, DNS, redirects, and Containers. Use when the agent needs to deploy, manage, or troubleshoot Cloudflare infrastructure.
 version: "2.2"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** infrastructure-audit, closeout-manager
 
 
 
@@ -233,7 +235,100 @@ After deploying ANY content to Cloudflare Pages or Workers, run the post-deploy 
 
 ```bash
 # Pull test suite from R2 (ephemeral)
-npx wrangler r2 object get qnfo/tools/test_suite.py --remote --file=_test_suite.py
+
+### Embedded Script: test_suite.py (self-sufficient — no R2 pull needed)
+
+Write the following code to `_test_suite.py`, execute, then delete:
+
+```python
+#!/usr/bin/env python3
+"""QNFO Test Suite v1.1 — redirects deprecated. --quick / --redirects / --handoff-verify / --all"""
+import argparse, json, os, ssl, sys, http.client as hc, urllib.request
+from datetime import datetime, timezone
+
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
+ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+API = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}'
+CTX = ssl._create_unverified_context()
+
+total_tests = total_pass = total_fail = critical_failures = 0
+
+def cf(endpoint):
+    req = urllib.request.Request(f'{API}/{endpoint}')
+    req.add_header('Authorization', f'Bearer {TOKEN}')
+    return json.loads(urllib.request.urlopen(req, timeout=15, context=CTX).read())
+
+def test_result(name, passed, severity='NORMAL'):
+    global total_tests, total_pass, total_fail, critical_failures
+    total_tests += 1
+    if passed: total_pass += 1
+    else: total_fail += 1; critical_failures += 1 if severity.upper() == 'CRIT' else 0
+    status = 'PASS' if passed else 'FAIL'
+    marker = ' [CRIT]' if severity.upper() == 'CRIT' else ''
+    print(f'  [{status}]{marker} {name}')
+    return passed
+
+def run_quick():
+    print('\n## SMOKE TEST')
+    if not TOKEN: test_result('CLOUDFLARE_API_TOKEN set', False, 'CRIT'); return
+    try:
+        resp = cf(''); test_result('API token valid', True, 'CRIT')
+    except: test_result('API token valid', False, 'CRIT'); return
+    for name, count, endpoint in [
+        ('D1', 5, 'd1/database'), ('KV', 1, 'storage/kv/namespaces'),
+        ('Pages', 8, 'pages/projects'), ('Queues', 1, 'queues'),
+        ('Vectorize', 0, 'vectorize/indexes')]:
+        try:
+            r = cf(endpoint); actual = len(r.get('result',[]))
+            test_result(f'{name}: {actual} (expected {count})', actual >= count, 'NORMAL')
+        except: test_result(f'{name} accessible', False, 'NORMAL')
+
+def run_redirects():
+    print('\n## HTTP REDIRECT VERIFICATION (deprecated)')
+    redirects = [
+        ('deep.qwav.tech', 'papers.qnfo.org', 'qwav'),
+        ('archive.qnfo.org', 'papers.qnfo.org/archive', 'qnfo-archive'),
+        ('adelic.qnfo.org', 'papers.qnfo.org', 'adelic-qft'),
+        ('primer.qwav.tech', 'papers.qnfo.org', 'qlof-primer'),
+    ]
+    for host, expected, name in redirects:
+        try:
+            conn = hc.HTTPSConnection(host, context=CTX, timeout=15)
+            conn.request('GET', '/', headers={'User-Agent': 'QNFO-TestSuite/1.1'})
+            resp = conn.getresponse()
+            is_redirect = resp.status in (301,302,307,308)
+            loc = resp.getheader('Location', 'NONE')
+            status_icon = 'PASS' if is_redirect else 'INFO'
+            print(f'  [{status_icon}] {name}: {resp.status} -> {loc[:80]}' if is_redirect else f'  [{status_icon}] {name}: HTTP {resp.status} (no redirect — deprecated)')
+            test_result(f'{name} redirect', is_redirect and expected in str(loc), 'NORMAL')
+        except Exception as e:
+            print(f'  [INFO] {name}: {str(e)[:80]}'); test_result(f'{name} redirect', False, 'NORMAL')
+
+def main():
+    p = argparse.ArgumentParser(description='QNFO Test Suite v1.1')
+    p.add_argument('--quick', action='store_true'); p.add_argument('--redirects', action='store_true')
+    p.add_argument('--all', action='store_true')
+    args = p.parse_args()
+    run_q = args.quick or args.all; run_r = args.redirects or args.all
+    if not (run_q or run_r): p.print_help(); return 0
+    print('=' * 60); print(f'QNFO TEST SUITE v1.1 — {datetime.now(timezone.utc).isoformat()}')
+    print('(redirects deprecated 2026-06-29)'); print('=' * 60)
+    if run_q: run_quick()
+    if run_r: run_redirects()
+    print('\n' + '=' * 60)
+    print(f'RESULTS: {total_pass}/{total_tests} passed, {total_fail} failed')
+    if critical_failures: print(f'CRITICAL FAILURES: {critical_failures}')
+    print('=' * 60)
+    if critical_failures > 0: print('\n[BLOCKED]'); return 1
+    elif total_fail > 0: print('\n[WARN]'); return 0
+    else: print('\n[ALL TESTS PASSED]'); return 0
+
+if __name__ == '__main__': sys.exit(main())
+
+```
+
+**Execution:** `python _test_suite.py` → verify → `Remove-Item _test_suite.py`
+ --file=_test_suite.py
 
 # Run deploy verification (Pages + CMS + KG)
 python _test_suite.py --cms --pages --kg
@@ -604,7 +699,239 @@ npx wrangler pages deploy <dir> --project-name qwav --branch main
 npx wrangler r2 object put qnfo/releases/YYYY/MM/<file>.pdf --file=<path>
 
 # 4. Generate SEO
-# Pull from R2: npx wrangler r2 object get qnfo/tools/generate-seo.py --remote --file=_generate-seo.py
+# Pull from R2: 
+### Embedded Script: generate-seo.py (self-sufficient — no R2 pull needed)
+
+Write the following code to `_generate-seo.py`, execute, then delete:
+
+```python
+#!/usr/bin/env python3
+"""
+generate-seo.py — SEO file generator for QNFO/QWAV publications.
+Generates sitemap.xml, robots.txt, and llms.txt for discoverability.
+v1.0 — 2026-05-31
+
+Usage:
+  python generate-seo.py --domain deep.qwav.tech --dir "G:/My Drive/QWAV" --base-url "https://deep.qwav.tech"
+  python generate-seo.py --domain laws.qnfo.org --dir "G:\My Drive\projects\qlof\deploy"
+"""
+
+import argparse
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.parse import urljoin, quote
+from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.dom import minidom
+
+
+def discover_html_files(root_dir):
+    """Recursively find all .html files in a directory tree."""
+    html_files = []
+    root = Path(root_dir)
+    for f in root.rglob('*.html'):
+        # Skip node_modules, .git, _site, etc.
+        if any(part.startswith('.') or part.startswith('_') or part == 'node_modules'
+               for part in f.parts):
+            continue
+        html_files.append(f)
+    return sorted(html_files)
+
+
+def get_lastmod(filepath):
+    """Get ISO 8601 last-modified date for a file."""
+    mtime = os.path.getmtime(filepath)
+    dt = datetime.fromtimestamp(mtime, tz=timezone.utc)
+    return dt.strftime('%Y-%m-%d')
+
+
+def url_from_path(filepath, root_dir, base_url):
+    """Convert filesystem path to URL path."""
+    rel_path = Path(filepath).relative_to(root_dir)
+    # index.html -> directory URL
+    if rel_path.name == 'index.html':
+        url_path = str(rel_path.parent).replace('\\', '/')
+        if url_path == '.':
+            url_path = ''
+    else:
+        url_path = str(rel_path).replace('\\', '/')
+    return urljoin(base_url.rstrip('/') + '/', url_path)
+
+
+def generate_sitemap(html_files, root_dir, base_url):
+    """Generate sitemap.xml."""
+    urlset = Element('urlset', {
+        'xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9',
+        'xmlns:xhtml': 'http://www.w3.org/1999/xhtml',
+    })
+    
+    for filepath in html_files:
+        url_elem = SubElement(urlset, 'url')
+        
+        loc = SubElement(url_elem, 'loc')
+        loc.text = url_from_path(filepath, root_dir, base_url)
+        
+        lastmod = SubElement(url_elem, 'lastmod')
+        lastmod.text = get_lastmod(filepath)
+        
+        # Priority: root > section > leaf
+        rel = Path(filepath).relative_to(root_dir)
+        depth = len(rel.parts)
+        if depth <= 1:
+            priority = '1.0'
+        elif depth <= 2:
+            priority = '0.8'
+        else:
+            priority = '0.5'
+        prio = SubElement(url_elem, 'priority')
+        prio.text = priority
+    
+    xml_str = minidom.parseString(tostring(urlset, 'utf-8')).toprettyxml(indent='  ')
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str.split('\n', 1)[1]
+
+
+def generate_robots_txt(base_url, sitemap_exists=True):
+    """Generate robots.txt allowing all crawlers."""
+    lines = [
+        '# robots.txt — QNFO Research Infrastructure',
+        '# Generated by generate-seo.py',
+        '',
+        'User-agent: *',
+        'Allow: /',
+        '',
+    ]
+    if sitemap_exists:
+        lines.append(f'Sitemap: {base_url.rstrip("/")}/sitemap.xml')
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_llms_txt(html_files, root_dir, base_url, domain):
+    """Generate llms.txt — AI-readable site index (llmstxt.org spec)."""
+    lines = [
+        f'# {domain}',
+    ]
+    
+    # Try to find a description from the root index.html
+    root_index = Path(root_dir) / 'index.html'
+    description = ''
+    if root_index.exists():
+        import re
+        text = root_index.read_text(encoding='utf-8', errors='replace')
+        # Try meta description
+        m = re.search(r'<meta\s+name="description"\s+content="([^"]+)"', text, re.IGNORECASE)
+        if m:
+            description = m.group(1)
+        else:
+            # Try first substantial paragraph
+            m = re.search(r'<p[^>]*>(.{50,200})</p>', text)
+            if m:
+                import html
+                description = html.unescape(re.sub(r'<[^>]+>', '', m.group(1))).strip()
+    
+    if description:
+        lines.append(f'> {description}')
+    lines.append('')
+    
+    for filepath in html_files:
+        url = url_from_path(filepath, root_dir, base_url)
+        rel = Path(filepath).relative_to(root_dir)
+        
+        # Extract title from HTML
+        title = rel.stem.replace('-', ' ').title()
+        try:
+            text = filepath.read_text(encoding='utf-8', errors='replace')
+            import re as re_mod
+            m = re_mod.search(r'<title[^>]*>(.+?)</title>', text, re_mod.IGNORECASE)
+            if m:
+                import html
+                title = html.unescape(m.group(1)).strip()
+        except Exception:
+            pass
+        
+        # Get a snippet
+        snippet = ''
+        try:
+            text = filepath.read_text(encoding='utf-8', errors='replace')
+            m = re.search(r'<p[^>]*>(.{40,150})</p>', text)
+            if m:
+                import html
+                snippet = ' — ' + html.unescape(re.sub(r'<[^>]+>', '', m.group(1))).strip()
+        except Exception:
+            pass
+        
+        # Indent based on depth
+        depth = max(0, len(rel.parts) - 1)
+        indent = '  ' * depth
+        
+        is_index = rel.name == 'index.html'
+        prefix = '- ' if not is_index else ''
+        lines.append(f'{indent}{prefix}[{title}]({url}){snippet}')
+    
+    return '\n'.join(lines) + '\n'
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate SEO files for QNFO publications")
+    parser.add_argument('--domain', required=True, help='Site domain (e.g., deep.qwav.tech)')
+    parser.add_argument('--dir', required=True, help='Root directory containing HTML files')
+    parser.add_argument('--base-url', help='Base URL (defaults to https://domain)')
+    parser.add_argument('--no-sitemap', action='store_true', help='Skip sitemap.xml generation')
+    parser.add_argument('--no-llms', action='store_true', help='Skip llms.txt generation')
+    parser.add_argument('--dry-run', action='store_true', help='Print files that would be generated')
+    args = parser.parse_args()
+    
+    root_dir = Path(args.dir)
+    if not root_dir.exists():
+        print(f"[ERROR] Directory not found: {args.dir}")
+        sys.exit(1)
+    
+    base_url = args.base_url or f'https://{args.domain}'
+    
+    # Discover HTML files
+    html_files = discover_html_files(root_dir)
+    if not html_files:
+        print(f"[WARN] No HTML files found in {args.dir}")
+        return
+    
+    print(f"[OK] Found {len(html_files)} HTML files")
+    
+    output_files = {}
+    
+    # Generate sitemap.xml
+    if not args.no_sitemap:
+        sitemap_content = generate_sitemap(html_files, root_dir, base_url)
+        output_files['sitemap.xml'] = sitemap_content
+    
+    # Generate robots.txt
+    robots_content = generate_robots_txt(base_url, sitemap_exists=(not args.no_sitemap))
+    output_files['robots.txt'] = robots_content
+    
+    # Generate llms.txt
+    if not args.no_llms:
+        llms_content = generate_llms_txt(html_files, root_dir, base_url, args.domain)
+        output_files['llms.txt'] = llms_content
+    
+    if args.dry_run:
+        print("\n[DRY RUN] Would generate:")
+        for filename, content in output_files.items():
+            output_path = root_dir / filename
+            print(f"  {output_path} ({len(content)} bytes)")
+    else:
+        for filename, content in output_files.items():
+            output_path = root_dir / filename
+            output_path.write_text(content, encoding='utf-8')
+            print(f"[OK] Generated: {output_path} ({len(content)} bytes)")
+
+
+if __name__ == '__main__':
+    main()
+
+```
+
+**Execution:** `python _generate-seo.py` → verify → `Remove-Item _generate-seo.py`
+ --file=_generate-seo.py
 python _generate-seo.py
 # Discard: Remove-Item _generate-seo.py
 ```

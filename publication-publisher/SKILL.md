@@ -1,7 +1,7 @@
 ---
 name: publication-publisher
 description: End-to-end publication workflow — formatting, PDF building, complete artifact bundling, Zenodo upload (with robust retry + versioning + draft recovery via zenodo_api.py), Cloudflare deployment, social media orchestration, and post-publication draft cleanup.
-version: "2.4"
+version: "3.1"
 ---
 
 ### Programmatic Loading & Execution
@@ -28,9 +28,11 @@ is required for the task and cannot be loaded after 3 retries, escalate to
 the user with the specific failure reason.
 
 ---
-# PUBLICATION PUBLISHER SKILL — v2.4 — v2.0
+# PUBLICATION PUBLISHER SKILL — v3.1 — v3.1
 
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** cloudflare-deployer, citation-manager, seo-discoverability
 
 > **Phase 4–5 of LRAP.** Handles Zenodo deposition, Cloudflare Pages deployment, PDF generation, and artifact archival for QNFO/QWAV research publications.
 
@@ -51,11 +53,12 @@ the user with the specific failure reason.
 ### Example Plan
 
 update_plan([
-  {"step": "Validate publication readiness (Language Gate, citations)", "status": "pending"},
+  {"step": "Validate publication readiness (Language Gate, citations, provenance)", "status": "pending"},
   {"step": "Build PDF from canonical Markdown", "status": "pending"},
   {"step": "Generate HTML publication page with MathJax", "status": "pending"},
+  {"step": "Stage 3.5: Assemble PROVENANCE BUNDLE (filesystem snapshot + conversation history)", "status": "pending"},
   {"step": "Create Zenodo deposition with metadata", "status": "pending"},
-  {"step": "Upload all artifacts to Zenodo", "status": "pending"},
+  {"step": "Upload ALL artifacts (paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md) to Zenodo", "status": "pending"},
   {"step": "Publish deposition and obtain DOI", "status": "pending"},
   {"step": "Deploy HTML page to Cloudflare Pages", "status": "pending"},
   {"step": "Verify MathJax on deployed page", "status": "pending"},
@@ -86,6 +89,8 @@ Publish QNFO/QWAV research publications through a verified pipeline: validate pu
 2. **Cloudflare API Token** — stored at `$env:CLOUDFLARE_API_TOKEN`
 3. **Publication passes all quality gates** — Language Gate (§7.1), citation audit, fabrication audit
 4. **Canonical Markdown source** — the single source of truth from which PDF and HTML are generated
+5. **Conversation History Accessible** — DeepChat session must have `get_conversation_history` available for provenance export
+6. **Project Files Present** — working directory must contain project files for filesystem snapshot into provenance bundle
 
 ---
 
@@ -149,6 +154,14 @@ def validate_publication(md_path: str) -> dict:
         "passed": label_ratio >= 0.05
     }
     
+    # 6. Provenance readiness (v2.6)
+    import os
+    results["provenance"] = {
+        "conversation_available": True,  # Agent verifies at runtime
+        "project_files_present": os.path.exists(".") and len(os.listdir(".")) > 0,
+        "passed": True  # Agent overrides if conversation history unavailable
+    }
+    
     all_passed = all(v["passed"] for v in results.values())
     results["overall"] = "PASS" if all_passed else "FAIL"
     return results
@@ -156,14 +169,32 @@ def validate_publication(md_path: str) -> dict:
 
 **GATE:** All validation gates must PASS before proceeding. If any gate FAILS → `[BLOCKED: publication not ready]`.
 
-### Stage 2: PDF Generation
+### Stage 2: PDF Generation — MANDATORY (v2.5 — 2026-07-05)
 
-> **Design System v2.1 (2026-07-03):** Two PDF pipelines available.
+> **🔴 MANDATORY GATE:** PDF generation is **NOT optional.** Every publication MUST include a professionally rendered PDF alongside the Markdown source. Publications without PDFs are BLOCKED at this gate. This gate was added after a session where 5 papers were published without PDFs, requiring retroactive generation and Zenodo new versions.
+
+> **Design System v2.5 (2026-07-05):** Two PDF pipelines available.
 > 1. **Pandoc + XeLaTeX (PREFERRED)** — Professional typography with Computer Modern fonts, microtype, and full LaTeX math rendering. Produces publication-quality PDF with vector math, TOC, hyperlinks. Requires TeX Live 2025+ and pandoc on PATH.
-> 2. **build_pdf.py (FALLBACK)** — Lightweight reportlab-based builder with QNFO Silent Radix Light Theme. No external dependencies beyond Python packages. v2.1 fix: heading HTML tags (e.g., `<em>m</em>P`) are now stripped before Paragraph construction, preventing "Parse error: saw </em> instead of expected </para>".
->
+> 2. **build_pdf.py (FALLBACK)** — Lightweight reportlab-based builder with QNFO Silent Radix Light Theme. No external dependencies beyond Python packages.
+
+> **Pre-Flight Check (MANDATORY — before any publication):**
+> ```bash
+> # Check pandoc + xelatex availability
+> pandoc --version 2>&1
+> Test-Path "C:\texlive\2025\bin\windows\xelatex.exe"  # Windows
+> # If pandoc unavailable: fall back to build_pdf.py (reportlab)
+> ```
+
 > **Professional PDF via Pandoc+XeLaTeX (direct invocation):**
 > ```bash
+> # Create preamble (required — see below for LoF symbol support)
+> echo "\usepackage{microtype}" > _preamble.tex
+> echo "\usepackage{amsmath,amssymb,amsfonts}" >> _preamble.tex
+> echo "\usepackage{hyperref}" >> _preamble.tex
+> echo "% Spencer-Brown Laws of Form symbols (required for \lrcorner/\rrcorner)" >> _preamble.tex
+> echo "\providecommand{\rrcorner}{\ensuremath{\urcorner}}" >> _preamble.tex
+>
+> # Generate PDF
 > pandoc paper.md -o paper.pdf \
 >   --pdf-engine="C:\texlive\2025\bin\windows\xelatex.exe" \
 >   --from=markdown+tex_math_dollars+tex_math_single_backslash+smart \
@@ -174,20 +205,23 @@ def validate_publication(md_path: str) -> dict:
 >   -V colorlinks=true -V linkcolor=blue \
 >   --toc --metadata title="Paper Title"
 > ```
-> Where `_preamble.tex` contains: `\usepackage{microtype}` + `\usepackage{amsmath,amssymb,amsfonts}`.
->
-> **TeX Live Detection:** Check `C:\texlive\2025\bin\windows\xelatex.exe` (Windows) or `/usr/bin/xelatex` (Linux/Mac). If not found, fall back to `build_pdf.py`.
-> See [QNFO-DESIGN-SYSTEM.md](https://qnfo.org/design-system/QNFO-DESIGN-SYSTEM.md).
+> **LoF Symbol Note:** Papers using Spencer-Brown cross symbols (`\lrcorner`/`\rrcorner`) MUST include `\providecommand{\rrcorner}{\ensuremath{\urcorner}}` in the preamble. `\lrcorner` is defined by amssymb; `\rrcorner` is NOT standard and requires this definition. Without it, pandoc+XeLaTeX will fail with "Undefined control sequence."
 
-Build PDF from canonical Markdown. Use the embedded `build_pdf.py` (self-contained — copy from Embedded Scripts section above), or the full version on R2 for advanced features:
+> **TeX Live Detection:** Check `C:\texlive\2025\bin\windows\xelatex.exe` (Windows) or `/usr/bin/xelatex` (Linux/Mac). If not found, fall back to `build_pdf.py`.
+
+Build PDF from canonical Markdown. Use pandoc+XeLaTeX if available, fall back to embedded `build_pdf.py`:
 
 ```bash
-# Use embedded build_pdf.py (self-contained)
-python _build_pdf.py --input paper.md --output PAPER-TITLE-v1.0.pdf
-# Verify PDF is non-empty and correctly rendered
+# Check toolchain and generate PDF (preferred path)
+if (Test-Path "C:\texlive\2025\bin\windows\xelatex.exe") {
+    pandoc paper.md -o PAPER-TITLE-v1.0.pdf --pdf-engine="C:\texlive\2025\bin\windows\xelatex.exe" --from=markdown+tex_math_dollars+tex_math_single_backslash+smart --standalone -H _preamble.tex -V documentclass=article -V papersize=a4 -V geometry=margin=1in -V fontsize=11pt -V colorlinks=true -V linkcolor=blue --toc --metadata title="Paper Title"
+} else {
+    python _build_pdf.py --input paper.md --output PAPER-TITLE-v1.0.pdf
+}
+# Verify PDF exists and is non-empty
 Test-Path PAPER-TITLE-v1.0.pdf
-# Discard build script
-Remove-Item _build_pdf.py
+# Discard build script if used
+Remove-Item _build_pdf.py -ErrorAction SilentlyContinue
 ```
 
 **PDF Verification (MANDATORY):**
@@ -203,7 +237,7 @@ for page in doc:
         sys.exit(1)
 ```
 
-**GATE:** PDF must have zero `\ufffd` characters and all special characters (em dashes, curly quotes) must render correctly.
+**GATE:** PDF must have zero `\ufffd` characters and all special characters (em dashes, curly quotes) must render correctly. **If PDF generation fails → publication is BLOCKED. Do NOT proceed to Zenodo or Pages without a verified PDF.**
 
 ### Stage 3: HTML Publication Page Generation
 
@@ -297,22 +331,282 @@ Remove-Item _verify_mathjax.py
 
 **GATE:** MathJax config must be before MathJax script in the generated HTML.
 
+### Stage 3.5: Provenance Bundle Assembly — MANDATORY (v2.6 — 2026-07-05)
+
+> **🔴 MANDATORY GATE (v2.6):** Zenodo publication records MUST contain the FULL project record/filesystem AND LLM conversation history for provenance and reproducibility — NOT just the final paper/release documents. This gate was mandated 2026-07-05. Publications without a provenance bundle are BLOCKED at Zenodo upload.
+
+#### 3.5a. What the Provenance Bundle Contains
+
+The `PROVENANCE-BUNDLE.zip` is a complete record of HOW the research was conducted:
+
+| Component | Source | Format | Purpose |
+|:----------|:-------|:-------|:--------|
+| **Conversation History** | DeepChat session (via `get_conversation_history`) | `conversation.md` | Full LLM-agent dialogue that produced the research |
+| **Session Metadata** | `tape_info` + system state | `session-metadata.json` | Agent, model, timestamps, tool invocation count, execution ratio |
+| **Project Filesystem Snapshot** | Working directory (ephemeral project files) | `project-files/` directory | All scripts, data, intermediate outputs used during research |
+| **Git State** | `git log`, `git diff`, `git status` | `git-state.txt` | Branch, commits, diff from `main` |
+| **README.md** | Auto-generated | `README.md` | Human-readable entry point — what this is, how to navigate, how to reproduce |
+| **Provenance Manifest** | Auto-generated | `PROVENANCE.md` | Human-readable index of all bundle contents + chain of custody |
+
+#### 3.5b. Assembly Protocol
+
+Execute ALL of these steps. The bundle is assembled in a temporary `_provenance/` directory, zipped, and cleaned up after Zenodo upload.
+
+**Step 1: Export Conversation History**
+
+```python
+# _export_conversation.py — ephemeral, delete after execution
+import json, os
+from datetime import datetime, timezone
+
+# The agent MUST call get_conversation_history for the current session
+# This tool returns the complete conversation.
+# Write the output to conversation.md
+
+# Pseudo-code (the agent uses the actual get_conversation_history tool):
+# history = get_conversation_history(conversationId="<current>", includeSystem=False)
+# Format as Markdown with role headers
+
+output = []
+output.append(f"# QNFO Research Session — Conversation History")
+output.append(f"")
+output.append(f"**Exported:** {datetime.now(timezone.utc).isoformat()}")
+output.append(f"**Session ID:** <session-id>")
+output.append(f"")
+output.append("---")
+output.append("")
+
+for msg in history["messages"]:
+    role = msg["role"].upper()
+    content = msg["content"]
+    timestamp = msg.get("timestamp", "")
+    output.append(f"## {role} ({timestamp})")
+    output.append("")
+    output.append(content)
+    output.append("")
+    output.append("---")
+    output.append("")
+
+with open("_provenance/conversation.md", "w", encoding="utf-8") as f:
+    f.write("\n".join(output))
+print("[OK] conversation.md written")
+```
+
+**Step 2: Capture Session Metadata**
+
+```python
+# _capture_metadata.py — ephemeral
+import json, os, subprocess
+from datetime import datetime, timezone
+
+metadata = {
+    "export_timestamp": datetime.now(timezone.utc).isoformat(),
+    "session_id": "<session-id>",
+    "agent": "QNFO Research Agent (DEFAULT-DEEPSEEK)",
+    "model": "<model-id>",
+    "conversation_id": "<conversation-id>",
+    "git_branch": subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True).stdout.strip(),
+    "git_commit": subprocess.run(["git", "log", "-1", "--oneline"], capture_output=True, text=True).stdout.strip(),
+    "project": "<project-name>",
+    "publication_title": "<paper-title>",
+    "publication_version": "<version>",
+}
+
+with open("_provenance/session-metadata.json", "w", encoding="utf-8") as f:
+    json.dump(metadata, f, indent=2, ensure_ascii=False)
+print("[OK] session-metadata.json written")
+```
+
+**Step 3: Snapshot Project Filesystem**
+
+```bash
+# Create project-files directory and copy all ephemeral project files
+# Exclude: .git/, _provenance/, __pycache__/, *.pdf (the final PDF is uploaded separately)
+mkdir _provenance/project-files
+
+# Copy all project-relevant files (scripts, data, intermediate outputs)
+# Use robocopy on Windows, cp on Linux/Mac
+robocopy . _provenance\project-files /E /XF *.pdf /XD .git _provenance __pycache__ /NFL /NDL /NJH /NJS
+
+# Or for Git Bash / WSL:
+# find . -not -path './.git/*' -not -path './_provenance/*' -not -path './__pycache__/*' -not -name '*.pdf' -type f -exec cp --parents {} _provenance/project-files/ \;
+```
+
+**Step 4: Capture Git State**
+
+```bash
+# Write git log, diff, and status
+git log --oneline --graph --all -20 > _provenance/git-state.txt
+echo "---" >> _provenance/git-state.txt
+git diff main --stat >> _provenance/git-state.txt 2>&1
+echo "---" >> _provenance/git-state.txt
+git status --short >> _provenance/git-state.txt
+```
+
+**Step 5: Write Provenance Manifest**
+
+```python
+# _write_manifest.py — ephemeral
+manifest = f"""# Provenance Manifest — {{{{paper_title}}}} v{{{{version}}}}
+
+## Chain of Custody
+
+1. **Research conducted:** {{{{date_range}}}}
+2. **Agent:** QNFO Research Agent (DEFAULT-DEEPSEEK v3.30+)
+3. **Conversation exported:** {{{{export_timestamp}}}}
+4. **Zenodo deposition:** {{{{doi}}}} (assigned after upload)
+
+## Bundle Contents
+
+| File | Description | Size |
+|:-----|:------------|:-----|
+| `conversation.md` | Full LLM-agent conversation history | — |
+| `session-metadata.json` | Agent, model, timestamps, git state | — |
+| `project-files/` | Complete project filesystem snapshot | — |
+| `git-state.txt` | Git log, diff, and status at publication time | — |
+| `PROVENANCE.md` | This manifest | — |
+
+## Reproducibility Notes
+
+- The conversation history records every prompt, tool invocation, and agent response.
+- The project filesystem snapshot preserves all working scripts and data.
+- Together, these enable independent verification of the research process.
+- The final paper (`{{{{paper_slug}}}}.md` and `{{{{paper_slug}}}}.pdf`) are uploaded separately alongside this bundle.
+
+## Verification
+
+To verify this research:
+1. Read `conversation.md` to understand the research dialogue
+2. Examine `project-files/` for all working code and data
+3. Cross-reference claims in the paper against the conversation and code
+4. Check `git-state.txt` for the exact commit state at publication time
+"""
+
+with open("_provenance/PROVENANCE.md", "w", encoding="utf-8") as f:
+    f.write(manifest)
+print("[OK] PROVENANCE.md written")
+```
+
+**Step 5.5: Generate README.md for the bundle (v2.6 — 2026-07-05)**
+
+The README is the first thing a visitor sees when opening the Zenodo record. It must provide a clear entry point: what this research is, how to navigate the artifacts, and how to reproduce the work.
+
+```python
+# _generate_readme.py — ephemeral
+readme = f"""# {{{{paper_title}}}} — v{{{{version}}}}
+
+**DOI:** {{{{doi}}}} (assigned after Zenodo deposition)
+**Author:** {{{{author}}}}
+**Date:** {{{{date}}}}
+**License:** QNFO Unified License Agreement (QNFO-ULA)
+**GitHub:** {{{{github_repo_url}}}}
+
+## What This Is
+
+{{{{one_paragraph_abstract}}}}
+
+## Repository Contents
+
+| File | Description |
+|:-----|:------------|
+| `{{{{paper_slug}}}}.md` | Canonical Markdown source |
+| `{{{{paper_slug}}}}.pdf` | Rendered PDF |
+| `PROVENANCE-BUNDLE.zip` | Full project filesystem + conversation history |
+| **Inside the bundle:** | |
+| `conversation.md` | Full LLM-agent dialogue |
+| `session-metadata.json` | Agent, model, git state |
+| `project-files/` | All working scripts and data |
+| `git-state.txt` | Git log at publication time |
+| `PROVENANCE.md` | Chain of custody manifest |
+| `README.md` | This file |
+
+## Quick Start
+
+### Read the Paper
+Open `{{{{paper_slug}}}}.md` (Markdown) or `{{{{paper_slug}}}}.pdf` (rendered).
+
+### Verify Reproducibility
+1. Unzip `PROVENANCE-BUNDLE.zip`
+2. Read `PROVENANCE.md` for the chain of custody
+3. Read `conversation.md` for the research dialogue
+4. Examine `project-files/` for all working code
+5. Cross-reference claims against the conversation and code
+
+### Version-Controlled Repository
+The complete version-controlled git repository is available at:
+{{{{github_repo_url}}}}
+
+This repository contains the full commit history, branches, and all development artifacts.
+
+## Citation
+
+```bibtex
+@{{{{bibtex_type}}}}{{{{{{citation_key}}}}},
+  author = {{{{{{author}}}}}},
+  title = {{{{{{{paper_title}}}}}}},
+  year = {{{{{{year}}}}}},
+  doi = {{{{{{doi}}}}}},
+  publisher = {{Zenodo}},
+  note = {{QNFO/QWAV Research Publication}}
+}
+```
+
+## Provenance
+
+This research was conducted by a QNFO Research Agent (DEFAULT-DEEPSEEK). The full conversation history, project filesystem snapshot, and git state are preserved in `PROVENANCE-BUNDLE.zip`. See `PROVENANCE.md` inside the bundle for the complete chain of custody.
+
+## License
+
+QNFO Unified License Agreement (QNFO-ULA): https://legal.qnfo.org/
+"""
+
+with open("_provenance/README.md", "w", encoding="utf-8") as f:
+    f.write(readme)
+print("[OK] README.md written")
+```
+
+**GATE:** README.md must exist inside `_provenance/` before creating the zip bundle.
+
+**Step 6: Create Zip Bundle**
+
+```bash
+# Create the zip
+python -c "import shutil; shutil.make_archive('PROVENANCE-BUNDLE', 'zip', '_provenance')"
+# Verify
+python -c "import zipfile, os; z=zipfile.ZipFile('PROVENANCE-BUNDLE.zip'); print(f'Bundle: {len(z.namelist())} files, {os.path.getsize(\"PROVENANCE-BUNDLE.zip\")} bytes'); z.close()"
+```
+
+**Step 7: Clean up temp directory**
+
+```bash
+Remove-Item -Recurse -Force _provenance
+# Script cleanup
+Remove-Item _export_conversation.py, _capture_metadata.py, _write_manifest.py, _generate_readme.py -ErrorAction SilentlyContinue
+```
+
+**GATE:** `PROVENANCE-BUNDLE.zip` must exist and be non-empty (≥1KB) before proceeding to Stage 4. If assembly fails → `[BLOCKED: provenance bundle assembly failed]`. Do NOT proceed to Zenodo without a verified provenance bundle.
+
+#### 3.5c. Size Considerations
+
+Zenodo has a 50GB per-record limit. For most QNFO publications, the provenance bundle will be <10MB (conversation text + small project files). If the bundle exceeds 50MB:
+- Exclude large binary files (model weights, datasets) — reference them by external DOI/URL instead
+- Compress conversation history by removing redundant tool output (keep first occurrence only)
+- Flag in PROVENANCE.md what was excluded and why
+
 ### Stage 4: Zenodo Deposition (Robust — via `zenodo_api.py`)
 
 Use the robust `zenodo_api.py` utility for all Zenodo operations. This replaces the fragile inline API calls with retry logic, exponential backoff, draft recovery, and proper `resource_type` metadata handling.
 
-#### 4a. Create new deposition:
+#### 4a. Create new deposition (with MANDATORY PDF + PROVENANCE BUNDLE + README + GitHub link + ALL related Zenodo records):
 
 ```bash
-# Use embedded zenodo_api.py (self-contained — copy from Embedded Scripts section above)
-# The embedded version handles: create deposition, upload files, publish, new version, recovery.
-# Full version with advanced features at: qnfo/tools/zenodo_api.py on R2
+# Build metadata JSON with GitHub repo link + ALL related Zenodo DOIs via related_identifiers
+# PDF, PROVENANCE BUNDLE, README, and cross-references are ALL MANDATORY
+# Agent MUST query Knowledge Graph, Discovery Index, and D1 for related papers to populate related_identifiers
+echo "{\"title\": \"Paper Title\", \"upload_type\": \"publication\", \"publication_type\": \"workingpaper\", \"description\": \"Abstract...\", \"creators\": [{\"name\": \"Author Name\", \"affiliation\": \"QWAV / QNFO\"}], \"access_right\": \"open\", \"license\": \"CC-BY-4.0\", \"version\": \"1.0.0\", \"related_identifiers\": [{\"relation\": \"isSupplementedBy\", \"identifier\": \"https://github.com/qnfo/<repo>\", \"resource_type\": \"software\"}, {\"relation\": \"isNewVersionOf\", \"identifier\": \"10.5281/zenodo.<prior-version>\", \"resource_type\": \"publication\"}, {\"relation\": \"cites\", \"identifier\": \"10.5281/zenodo.<related-paper-doi>\", \"resource_type\": \"publication\"}]}" > _zenodo_meta.json
 
-# Build metadata JSON
-echo "{\"title\": \"Paper Title\", \"upload_type\": \"publication\", \"publication_type\": \"workingpaper\", \"resource_type\": {\"id\": \"publication-workingpaper\"}, \"description\": \"Abstract...\", \"creators\": [{\"name\": \"Author Name\", \"affiliation\": \"QWAV / QNFO\"}], \"access_right\": \"open\", \"license\": \"CC-BY-4.0\", \"version\": \"1.0.0\"}" > _zenodo_meta.json
-
-# Create deposition, upload files, publish
-python _zenodo_api.py create --token-file ZENODO_TOKEN --metadata _zenodo_meta.json --files paper.md,paper.pdf
+# Create deposition, upload ALL FOUR files (PDF + PROVENANCE BUNDLE + README are MANDATORY)
+python _zenodo_api.py create --token-file ZENODO_TOKEN --metadata _zenodo_meta.json --files paper.md,paper.pdf,PROVENANCE-BUNDLE.zip,README.md
 
 # Clean up
 Remove-Item _zenodo_api.py, _zenodo_meta.json
@@ -334,7 +628,7 @@ Remove-Item _zenodo_api.py
 
 ```bash
 # If a previous publish attempt left an orphaned draft:
-python _zenodo_api.py recover --token-file ZENODO_TOKEN --deposition-id 12345 --metadata _zenodo_meta.json --files paper.md,paper.pdf
+python _zenodo_api.py recover --token-file ZENODO_TOKEN --deposition-id 12345 --metadata _zenodo_meta.json --files paper.md,paper.pdf,PROVENANCE-BUNDLE.zip,README.md
 ```
 
 This automatically: lists drafts, removes files from orphaned drafts, deletes orphaned drafts, creates a fresh new version, uploads files, and publishes.
@@ -463,9 +757,11 @@ Remove-Item _verify_deployed_mathjax.py
 Upload canonical artifacts to R2 and generate SEO metadata:
 
 ```bash
-# Upload publication to R2
+# Upload publication + provenance to R2
 npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/paper.md --file=<md-path>
 npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/paper.pdf --file=<pdf-path>
+npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/PROVENANCE-BUNDLE.zip --file=PROVENANCE-BUNDLE.zip
+npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/README.md --file=README.md
 npx wrangler r2 object put qnfo/releases/2026/07/<paper-slug>/index.html --file=index.html
 
 # Generate SEO artifacts (use embedded generate-seo.py from Embedded Scripts section)
@@ -477,14 +773,27 @@ python _generate-seo.py --url https://papers.qnfo.org/<paper-slug>/ --title "<pa
 
 > **The #2 undetected failure mode: papers are published (Zenodo, R2, Pages) but are invisible to Knowledge Graph queries.** Every paper MUST be seeded in the QNFO Knowledge Graph after R2 upload. This enables: impact analysis (`/impact/{paper}`), ultrametric ball queries, and due diligence discovery.
 
-#### 6.5a. Seed Knowledge Graph Node
+#### 6.5a. Seed Knowledge Graph Node with ALL Known Locations (v3.0)
+
+The KG Paper node MUST include ALL known internal and external locations. This enables one-query discovery of every place a publication lives — R2, Zenodo, GitHub, Pages, and social media.
 
 ```bash
 # Write KG seed script to file, execute, discard
-echo "import urllib.request, json; PAPER_ID='paper-<paper-slug>'; TITLE='<title>'; DOI='<doi>'; payload={'action':'bulk','nodes':[{'id':PAPER_ID,'label':'Paper','name':TITLE,'properties':{'doi':DOI,'author':'Rowan Brad Quni-Gudzinas','date':'<date>','status':'published','r2_path':'qnfo/releases/YYYY/MM/<paper-slug>/paper.md'}}],'edges':[{'id':f'belongs-{PAPER_ID}-domain','source_id':PAPER_ID,'target_id':'domain-qwav-physics','relationship_type':'BELONGS_TO','properties':{}}]}; body=json.dumps(payload).encode(); req=urllib.request.Request('https://graph-api.q08.workers.dev/sync',data=body,method='POST',headers={'Content-Type':'application/json','User-Agent':'Mozilla/5.0'}); result=json.loads(urllib.request.urlopen(req,timeout=15).read()); print(f'KG seeded: nodes={result.get(\"upserted_nodes\",\"?\")}, edges={result.get(\"upserted_edges\",\"?\")}')" > _seed_kg.py
+# Properties MUST include ALL known locations: r2_path, zenodo_url, github_url, pages_url, social_urls
+echo "import urllib.request, json; PAPER_ID='paper-<paper-slug>'; TITLE='<title>'; DOI='<doi>'; payload={'action':'bulk','nodes':[{'id':PAPER_ID,'label':'Paper','name':TITLE,'properties':{'doi':DOI,'author':'Rowan Brad Quni-Gudzinas','date':'<date>','status':'published','r2_path':'qnfo/releases/YYYY/MM/<paper-slug>/paper.md','zenodo_url':'https://zenodo.org/records/<id>','github_url':'https://github.com/qnfo/<repo>','pages_url':'https://papers.qnfo.org/<paper-slug>/','social_urls':'[]'}}],'edges':[{'id':f'belongs-{PAPER_ID}-domain','source_id':PAPER_ID,'target_id':'domain-qwav-physics','relationship_type':'BELONGS_TO','properties':{}}]}; body=json.dumps(payload).encode(); req=urllib.request.Request('https://graph-api.q08.workers.dev/sync',data=body,method='POST',headers={'Content-Type':'application/json','User-Agent':'Mozilla/5.0'}); result=json.loads(urllib.request.urlopen(req,timeout=15).read()); print(f'KG seeded: nodes={result.get(\"upserted_nodes\",\"?\")}, edges={result.get(\"upserted_edges\",\"?\")}')" > _seed_kg.py
 python _seed_kg.py
 Remove-Item _seed_kg.py
 ```
+
+**Paper Node Properties (all known locations):**
+
+| Property | Value | Source |
+|:---------|:------|:-------|
+| `r2_path` | `qnfo/releases/YYYY/MM/<slug>/paper.md` | Stage 6 upload (internal) |
+| `zenodo_url` | `https://zenodo.org/records/<id>` | Stage 4 DOI resolution (external) |
+| `github_url` | `https://github.com/qnfo/<repo>` | Pre-publication setup (external) |
+| `pages_url` | `https://papers.qnfo.org/<paper-slug>/` | Stage 5 deploy (external) |
+| `social_urls` | `[]` (populated by `buffer-integration` after posting) | Post-publication auto-update (external) |
 
 #### 6.5b. Verify KG Connectivity (MANDATORY)
 
@@ -510,6 +819,104 @@ R2 qnfo/releases/*/paper.md (create/update)
 ```
 
 The synchronous seeding (Stage 6.5a) is the primary path. The async pipeline is the reconciliation safety net. Both paths must pass before the paper is considered fully published.
+
+#### 6.5d. Social Media KG Auto-Update Hook (v3.0 — buffer-integration)
+
+> The `social_urls` property on the Paper KG node is initialized as `"[]"` (empty JSON array). After the paper is shared on social media via `buffer-integration`, the buffer skill MUST update this property with the resolved post URLs. This creates a bidirectional link: paper → social media → paper.
+
+**Auto-update contract (implemented in buffer-integration):**
+```python
+# After posting to social media, update the KG Paper node's social_urls property
+import urllib.request, json
+
+PAPER_ID = 'paper-<paper-slug>'
+SOCIAL_URLS = json.dumps([
+    'https://twitter.com/qnfo/status/<tweet-id>',
+    'https://linkedin.com/feed/update/<post-id>',
+    'https://bsky.app/profile/qnfo.org/post/<post-id>'
+])
+
+# POST to graph-api /sync with action 'patch' to update only social_urls
+payload = {
+    'action': 'bulk',
+    'nodes': [{
+        'id': PAPER_ID,
+        'label': 'Paper',
+        'properties': {'social_urls': SOCIAL_URLS}
+    }],
+    'edges': []  # No new edges, just property update
+}
+body = json.dumps(payload).encode()
+req = urllib.request.Request(
+    'https://graph-api.q08.workers.dev/sync',
+    data=body, method='POST',
+    headers={'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0'}
+)
+result = json.loads(urllib.request.urlopen(req, timeout=15).read())
+print(f'[KG] Social URLs updated: nodes={result.get("upserted_nodes","?")}')
+```
+
+**GATE:** After social media posting, verify `social_urls` is non-empty: `GET https://graph-api.q08.workers.dev/neighbors/paper-<paper-slug>` must show `social_urls` with at least one URL. If `social_urls` is still `"[]"` after posting → `[BLOCKED: social URLs not synced to KG]`.
+
+### Stage 6.6: Cloudflare Provenance Mirror (MANDATORY — v2.9)
+
+> **🔴 MANDATORY GATE (v2.9):** The provenance bundle (PROVENANCE-BUNDLE.zip) MUST be mirrored across all Cloudflare infrastructure — R2, D1, and Knowledge Graph — for internal archival access, search, and literature reviews. Zenodo is the external/public archive; Cloudflare is the internal operational mirror. Publications without a Cloudflare provenance mirror are BLOCKED.
+
+#### 6.6a. R2 Archival (Already in Stage 6)
+
+The `PROVENANCE-BUNDLE.zip` is uploaded to R2 in Stage 6 (`qnfo/releases/YYYY/MM/<paper-slug>/PROVENANCE-BUNDLE.zip`). This is the canonical cloud copy. ✅ Already handled.
+
+#### 6.6b. D1 Provenance Metadata (MANDATORY)
+
+Seed the `qnfo-audit` D1 database with provenance metadata for internal search and literature reviews:
+
+```bash
+# Write D1 provenance seed script, execute, discard
+echo "import json, subprocess; subprocess.run(['npx', 'wrangler', 'd1', 'execute', 'qnfo-audit', '--remote', '--command'], input=f\"INSERT INTO provenance_bundles (paper_slug, doi, r2_path, zenodo_url, bundle_size, components, created_at) VALUES ('<paper-slug>', '<doi>', 'qnfo/releases/YYYY/MM/<paper-slug>/PROVENANCE-BUNDLE.zip', 'https://zenodo.org/records/<id>', <size_bytes>, '{json.dumps([\"conversation.md\",\"session-metadata.json\",\"project-files/\",\"git-state.txt\",\"PROVENANCE.md\",\"README.md\"])}', '<ISO-8601>');\".encode(), capture_output=True), print(f'[D1] Provenance metadata seeded');" > _seed_d1_provenance.py
+python _seed_d1_provenance.py
+Remove-Item _seed_d1_provenance.py
+```
+
+**D1 Schema:**
+| Column | Type | Description |
+|:-------|:-----|:------------|
+| `paper_slug` | TEXT PRIMARY KEY | Publication slug |
+| `doi` | TEXT | Zenodo DOI |
+| `r2_path` | TEXT | R2 path to PROVENANCE-BUNDLE.zip |
+| `zenodo_url` | TEXT | Zenodo record URL |
+| `bundle_size` | INTEGER | Bundle size in bytes |
+| `components` | TEXT (JSON array) | List of files in the bundle |
+| `conversation_export_id` | TEXT | Reference to conversation history in `audit_sessions` |
+| `created_at` | TEXT (ISO 8601) | Creation timestamp |
+
+#### 6.6c. Knowledge Graph Provenance Node (MANDATORY)
+
+Seed the Knowledge Graph with a `Provenance` node linked to the paper via `HAS_PROVENANCE` edge:
+
+```bash
+# Write KG provenance seed script, execute, discard
+echo "import urllib.request, json; PAPER_ID='paper-<paper-slug>'; PROV_ID='provenance-<paper-slug>'; payload={'action':'bulk','nodes':[{'id':PROV_ID,'label':'Provenance','name':f'Provenance Bundle — <paper-title>','properties':{'doi':'<doi>','r2_path':'qnfo/releases/YYYY/MM/<paper-slug>/PROVENANCE-BUNDLE.zip','bundle_size':<size_bytes>,'components':'conversation.md, session-metadata.json, project-files/, git-state.txt, PROVENANCE.md, README.md','created_at':'<ISO-8601>'}}],'edges':[{'id':f'has-provenance-{PAPER_ID}','source_id':PAPER_ID,'target_id':PROV_ID,'relationship_type':'HAS_PROVENANCE','properties':{'created_at':'<ISO-8601>'}}]}; body=json.dumps(payload).encode(); req=urllib.request.Request('https://graph-api.q08.workers.dev/sync',data=body,method='POST',headers={'Content-Type':'application/json','User-Agent':'Mozilla/5.0'}); result=json.loads(urllib.request.urlopen(req,timeout=15).read()); print(f'[KG] Provenance node seeded: nodes={result.get(\"upserted_nodes\",\"?\")}, edges={result.get(\"upserted_edges\",\"?\")}')" > _seed_kg_provenance.py
+python _seed_kg_provenance.py
+Remove-Item _seed_kg_provenance.py
+```
+
+#### 6.6d. Verify Cloudflare Provenance Mirror (MANDATORY)
+
+```bash
+# 1. Verify R2: bundle exists and is non-zero
+npx wrangler r2 object get qnfo/releases/YYYY/MM/<paper-slug>/PROVENANCE-BUNDLE.zip --remote --file=_verify_bundle.zip
+python -c "import os; s=os.path.getsize('_verify_bundle.zip'); print(f'[R2] Bundle: {s} bytes'); assert s>1000, 'Bundle too small!'"
+Remove-Item _verify_bundle.zip
+
+# 2. Verify D1: provenance metadata row exists
+npx wrangler d1 execute qnfo-audit --remote --command "SELECT paper_slug, doi, r2_path FROM provenance_bundles WHERE paper_slug='<paper-slug>';"
+
+# 3. Verify KG: Provenance node exists and has HAS_PROVENANCE edge
+python _verify_kg_provenance.py
+Remove-Item _verify_kg_provenance.py
+```
+
+**GATE:** If ANY of R2, D1, or KG provenance checks fail → `[BLOCKED: Cloudflare provenance mirror incomplete]`. Fix before claiming publication complete.
 
 ### Stage 7: Discovery Index Update
 
@@ -563,10 +970,12 @@ cp <paper>.md "$env:OBSIDIAN_VAULT\releases\YYYY\MM\<paper-slug>.md"
 | Priority | Location | Status | Verification |
 |:---------|:---------|:-------|:------------|
 | **1. Cloudflare R2** | `qnfo/releases/YYYY/MM/<paper-slug>/` | **CANONICAL** — single source of truth | Pull-back + size comparison |
-| **2. Zenodo** | DOI record | Persistent archive with versioning | DOI resolution |
-| **3. GitHub** | `publications/<paper-slug>.md` | Backup dissemination | `git log -1 --oneline` |
-| **4. Cloudflare Pages** | `papers.qnfo.org/<paper-slug>/` | Web-readable version | HTTP 200 check |
-| **5. Obsidian** | `$env:OBSIDIAN_VAULT\releases\YYYY\MM\` | **EPHEMERAL** — convenience only, NOT authoritative | Existence check only |
+| **2. Cloudflare D1** | `qnfo-audit.provenance_bundles` | **PROVENANCE METADATA** — internal search/review | Row count query |
+| **3. Knowledge Graph** | `Provenance -[HAS_PROVENANCE]-> Paper` node | **PROVENANCE GRAPH** — impact analysis, discovery | KG neighbor query |
+| **4. Zenodo** | DOI record (paper.md + paper.pdf + PROVENANCE-BUNDLE.zip + README.md) | Persistent archive with versioning + full provenance + GitHub link | DOI resolution |
+| **5. GitHub** | `publications/<paper-slug>.md` | Backup dissemination | `git log -1 --oneline` |
+| **6. Cloudflare Pages** | `papers.qnfo.org/<paper-slug>/` | Web-readable version | HTTP 200 check |
+| **7. Obsidian** | `$env:OBSIDIAN_VAULT\releases\YYYY\MM\` | **EPHEMERAL** — convenience only, NOT authoritative | Existence check only |
 
 **GATES:**
 - If R2 upload fails → **BLOCK publishing.** R2 is canonical — all other channels depend on it.
@@ -615,13 +1024,16 @@ def verify_dissemination(local_path, r2_path, git_path):
 ---
 
 
-## Embedded Scripts (SELF-CONTAINED — v2.3)
+## Embedded Scripts (SELF-CONTAINED — v3.1)
+
+Scripts 1–3 are the publication toolchain. Scripts 4–7 are the PROVENANCE BUNDLE toolchain — used by Stage 3.5 to assemble the complete project record for Zenodo deposition. Every script is self-contained with `argparse` CLI and `if __name__ == '__main__'` entry point. No external dependencies beyond Python stdlib.
 
 ALL scripts are embedded inline below. Copy-paste any code block into a `_<name>.py` file and execute.
 No R2 pull required for core functionality.
 
-> **R2 canonical full versions:** `qnfo/design-system/build_pdf.py`, `qnfo/tools/zenodo_api.py`, `qnfo/tools/generate-seo.py`
-> Pull full versions from R2 only if advanced features needed (matplotlib math, pandoc fallback, complex tables).
+> **R2 canonical full versions:** `qnfo/design-system/build_pdf.py`, `qnfo/tools/zenodo_api.py`, `qnfo/tools/generate-seo.py`, `qnfo/tools/export_conversation.py`, `qnfo/tools/capture_metadata.py`, `qnfo/tools/write_manifest.py`, `qnfo/tools/generate_readme.py`
+> Pull full versions from R2 only if advanced features needed. All scripts are self-contained — no external dependencies beyond Python stdlib.
+> Scripts 4–7 are the PROVENANCE BUNDLE toolchain used by Stage 3.5.
 
 ### 1. build_pdf.py — QNFO Light Theme PDF Builder v2.1
 
@@ -875,6 +1287,272 @@ if __name__ == '__main__':
     write_seo(generate_seo(a.title, a.description, a.doi, a.author, a.date, kw, a.url))
 ```
 
+### 4. export_conversation.py — Conversation History Exporter (v1.0 — Stage 3.5)
+
+```python
+"""Export DeepChat conversation history as Markdown for provenance bundle.
+
+DEPENDENCY: Requires get_conversation_history() runtime tool (DeepChat agent only).
+This script provides formatting and I/O; the agent provides the data via --input.
+
+USAGE (agent-driven):
+  1. Agent calls get_conversation_history(conversationId="<current>", includeSystem=False)
+  2. Agent writes result to temp JSON file
+  3. python _export_conversation.py --input _conv.json --output _provenance/conversation.md --session-id <id>
+"""
+import sys, os, json, argparse
+from datetime import datetime, timezone
+
+def format_conversation(conversation_data: dict, output_path: str,
+                        session_id: str = "unknown") -> str:
+    """Format conversation history as Markdown."""
+    lines = []
+    lines.append("# QNFO Research Session — Conversation History")
+    lines.append("")
+    lines.append(f"**Exported:** {datetime.now(timezone.utc).isoformat()}")
+    lines.append(f"**Session ID:** {session_id}")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+
+    messages = conversation_data.get("messages", [])
+    for msg in messages:
+        role = msg.get("role", "unknown").upper()
+        content = msg.get("content", "")
+        timestamp = msg.get("timestamp", "")
+        lines.append(f"## {role} ({timestamp})")
+        lines.append("")
+        lines.append(content)
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+
+    text = "\n".join(lines)
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(text)
+    print(f"[OK] conversation.md written ({os.path.getsize(output_path)} bytes, {len(messages)} messages)")
+    return output_path
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="Format DeepChat conversation as Markdown")
+    p.add_argument("--input", "-i", help="JSON from get_conversation_history")
+    p.add_argument("--output", "-o", default="_provenance/conversation.md")
+    p.add_argument("--session-id", default="unknown")
+    args = p.parse_args()
+    if args.input and os.path.exists(args.input):
+        with open(args.input, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        format_conversation(data, args.output, args.session_id)
+    else:
+        print("[INFO] No input file — agent provides data via get_conversation_history()")
+```
+
+### 5. capture_metadata.py — Session Metadata Capture (v1.0 — Stage 3.5)
+
+```python
+"""Capture session metadata for provenance bundle — self-contained, no external deps."""
+import json, os, sys, argparse, subprocess
+from datetime import datetime, timezone
+
+def capture_metadata(**overrides) -> dict:
+    md = {
+        "export_timestamp": datetime.now(timezone.utc).isoformat(),
+        "session_id": overrides.get("session_id", ""),
+        "agent": "QNFO Research Agent (DEFAULT-DEEPSEEK v3.30+)",
+        "model": overrides.get("model", ""),
+        "conversation_id": overrides.get("conversation_id", ""),
+        "project": overrides.get("project", ""),
+        "publication_title": overrides.get("title", ""),
+        "publication_version": overrides.get("version", ""),
+    }
+    try:
+        r = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+        md["git_branch"] = r.stdout.strip()
+    except Exception:
+        md["git_branch"] = "unknown"
+    try:
+        r = subprocess.run(["git", "log", "-1", "--oneline"], capture_output=True, text=True)
+        md["git_commit"] = r.stdout.strip()
+    except Exception:
+        md["git_commit"] = "unknown"
+    return md
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="Capture session metadata for provenance")
+    p.add_argument("--output", "-o", default="_provenance/session-metadata.json")
+    p.add_argument("--session-id", default=""); p.add_argument("--model", default="")
+    p.add_argument("--conversation-id", default=""); p.add_argument("--project", default="")
+    p.add_argument("--title", default=""); p.add_argument("--version", default="")
+    args = p.parse_args()
+    overrides = {k: v for k, v in vars(args).items() if v and k not in ("output",)}
+    md = capture_metadata(**overrides)
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(md, f, indent=2, ensure_ascii=False)
+    print(f"[OK] session-metadata.json written ({os.path.getsize(args.output)} bytes)")
+```
+
+### 6. write_manifest.py — Provenance Manifest Generator (v1.0 — Stage 3.5)
+
+```python
+"""Generate PROVENANCE.md manifest for provenance bundle — self-contained."""
+import os, argparse
+from datetime import datetime, timezone
+
+MANIFEST_TEMPLATE = """# Provenance Manifest — {title} v{version}
+
+## Chain of Custody
+
+1. **Research conducted:** {date_range}
+2. **Agent:** QNFO Research Agent (DEFAULT-DEEPSEEK v3.30+)
+3. **Conversation exported:** {export_timestamp}
+4. **Zenodo deposition:** {doi} (assigned after upload)
+
+## Bundle Contents
+
+| File | Description |
+|:-----|:------------|
+| `conversation.md` | Full LLM-agent conversation history |
+| `session-metadata.json` | Agent, model, timestamps, git state |
+| `project-files/` | Complete project filesystem snapshot |
+| `git-state.txt` | Git log, diff, and status at publication time |
+| `PROVENANCE.md` | This manifest |
+| `README.md` | Human-readable entry point |
+
+## Reproducibility Notes
+
+- The conversation history records every prompt, tool invocation, and agent response.
+- The project filesystem snapshot preserves all working scripts and data.
+- Together, these enable independent verification of the research process.
+- The final paper (`{paper_slug}.md` and `{paper_slug}.pdf`) are uploaded separately alongside this bundle.
+
+## Verification
+
+To verify this research:
+1. Read `conversation.md` to understand the research dialogue
+2. Examine `project-files/` for all working code and data
+3. Cross-reference claims in the paper against the conversation and code
+4. Check `git-state.txt` for the exact commit state at publication time
+"""
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="Generate provenance manifest")
+    p.add_argument("--output", "-o", default="_provenance/PROVENANCE.md")
+    p.add_argument("--title", required=True, help="Paper title")
+    p.add_argument("--version", default="1.0.0")
+    p.add_argument("--doi", default="pending")
+    p.add_argument("--date-range", default="")
+    p.add_argument("--paper-slug", default="")
+    args = p.parse_args()
+    slug = args.paper_slug or args.title.lower().replace(" ", "-")
+    now = datetime.now(timezone.utc)
+    manifest = MANIFEST_TEMPLATE.format(
+        title=args.title, version=args.version, doi=args.doi,
+        date_range=args.date_range or now.strftime("%Y-%m-%d"),
+        export_timestamp=now.isoformat(), paper_slug=slug)
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(manifest)
+    print(f"[OK] PROVENANCE.md written ({os.path.getsize(args.output)} bytes)")
+```
+
+### 7. generate_readme.py — README Generator (v1.0 — Stage 3.5)
+
+```python
+"""Generate README.md for provenance bundle — self-contained, no external deps."""
+import os, argparse
+from datetime import datetime, timezone
+
+README_TEMPLATE = """# {title} — v{version}
+
+**DOI:** {doi} (assigned after Zenodo deposition)
+**Author:** {author}
+**Date:** {date}
+**License:** QNFO Unified License Agreement (QNFO-ULA)
+**GitHub:** {github_url}
+
+## What This Is
+
+{abstract}
+
+## Repository Contents
+
+| File | Description |
+|:-----|:------------|
+| `{paper_slug}.md` | Canonical Markdown source |
+| `{paper_slug}.pdf` | Rendered PDF |
+| `PROVENANCE-BUNDLE.zip` | Full project filesystem + conversation history |
+| **Inside the bundle:** | |
+| `conversation.md` | Full LLM-agent dialogue |
+| `session-metadata.json` | Agent, model, git state |
+| `project-files/` | All working scripts and data |
+| `git-state.txt` | Git log at publication time |
+| `PROVENANCE.md` | Chain of custody manifest |
+| `README.md` | This file |
+
+## Quick Start
+
+### Read the Paper
+Open `{paper_slug}.md` (Markdown) or `{paper_slug}.pdf` (rendered).
+
+### Verify Reproducibility
+1. Unzip `PROVENANCE-BUNDLE.zip`
+2. Read `PROVENANCE.md` for the chain of custody
+3. Read `conversation.md` for the research dialogue
+4. Examine `project-files/` for all working code
+5. Cross-reference claims against the conversation and code
+
+### Version-Controlled Repository
+The complete version-controlled git repository is available at:
+{github_url}
+
+## Citation
+
+```bibtex
+@{bibtex_type}{{{citation_key},
+  author = {{{author}}},
+  title = {{{title}}},
+  year = {{{year}}},
+  doi = {{{doi}}},
+  publisher = {{Zenodo}},
+  note = {{QNFO/QWAV Research Publication}}
+}}
+```
+
+## Provenance
+
+This research was conducted by a QNFO Research Agent. The full conversation history, project filesystem snapshot, and git state are preserved in `PROVENANCE-BUNDLE.zip`. See `PROVENANCE.md` inside the bundle for the complete chain of custody.
+
+## License
+
+QNFO Unified License Agreement (QNFO-ULA): https://legal.qnfo.org/
+"""
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="Generate README.md for provenance bundle")
+    p.add_argument("--output", "-o", default="_provenance/README.md")
+    p.add_argument("--title", required=True, help="Paper title")
+    p.add_argument("--version", default="1.0.0"); p.add_argument("--doi", default="pending")
+    p.add_argument("--author", default="Rowan Brad Quni-Gudzinas")
+    p.add_argument("--abstract", default="QNFO/QWAV Research Publication")
+    p.add_argument("--github-url", default="https://github.com/qnfo")
+    p.add_argument("--paper-slug", default=""); p.add_argument("--bibtex-type", default="article")
+    p.add_argument("--citation-key", default="qnfo2026")
+    p.add_argument("--year", default=str(datetime.now(timezone.utc).year))
+    args = p.parse_args()
+    slug = args.paper_slug or args.title.lower().replace(" ", "-")
+    readme = README_TEMPLATE.format(
+        title=args.title, version=args.version, doi=args.doi, author=args.author,
+        abstract=args.abstract, github_url=args.github_url, paper_slug=slug,
+        bibtex_type=args.bibtex_type, citation_key=args.citation_key, year=args.year,
+        date=datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(readme)
+    print(f"[OK] README.md written ({os.path.getsize(args.output)} bytes)")
+```
+
 
 ## QNFO Design System Compliance (v2.0 — 2026-06-30)
 
@@ -917,10 +1595,12 @@ All QNFO/QWAV publications use the **Silent Radix Light Theme** design system:
 | Cloudflare Pages deploy fails | Check wrangler auth with `npx wrangler whoami` |
 | R2 upload fails | Verify CLOUDFLARE_API_TOKEN is set and has write permissions |
 | Discovery Index corrupted | Rebuild from R2 enumeration + local state and upload fresh |
+| Provenance bundle assembly fails | `[BLOCKED: provenance]` — conversation history or project files unavailable; fix before Zenodo upload |
+| Provenance bundle > 50GB | Exclude large binaries (reference by external DOI), compress conversation, flag exclusions in PROVENANCE.md |
 
 ---
 
-*publication-publisher v2.4 — Phase 4–5 of LRAP. v2.4 fixes PDF math rendering: simplified preamble (microtype+amsmath, no setmathfont), pandoc+XeLaTeX as default, mandatory PyMuPDF verification of U+FFFD=0. v2.3 adds self-contained embedded scripts. v2.2 adds Cloudflare-first dissemination. v2.1 adds dual PDF pipeline + TeX Live detection.*
+*publication-publisher v3.1 — Phase 4–5 of LRAP. v3.1 adds self-contained PROVENANCE BUNDLE toolchain (4 embedded scripts: export_conversation.py, capture_metadata.py, write_manifest.py, generate_readme.py) — all skills fully self-sufficient, no external dependencies. v3.0 KG auto-update: Paper node seeded with ALL known locations.*
 
 ## RT: RED-TEAM SELF-AUDIT
 

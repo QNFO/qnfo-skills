@@ -3,7 +3,9 @@ name: skill-sync
 description: Sync all DeepChat skills between local disk, GitHub, and Cloudflare R2. Monitors skill modifications and auto-syncs after changes. Updates Discovery Index with current versions. Use when skills are modified and need to be pushed to redundant backups, or to check sync status.
 version: "1.3"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** kaizen-autonomous-update
 
 
 
@@ -31,6 +33,29 @@ is required for the task and cannot be loaded after 3 retries, escalate to
 the user with the specific failure reason.
 
 ---
+
+## execute_plan (MANDATORY -- Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** -- at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** -- Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Check sync status: local vs GitHub vs R2", "status": "pending"},
+  {"step": "Push changes to GitHub (rwnq8/qnfo-skills)", "status": "pending"},
+  {"step": "Upload skills to R2 (qnfo/prompts/skills/)", "status": "pending"},
+  {"step": "Update Discovery Index with current versions", "status": "pending"},
+  {"step": "Verify three-way sync consistency", "status": "pending"}
+])
+
 
 # SKILL SYNC SKILL — v1.3 — v1.3
 

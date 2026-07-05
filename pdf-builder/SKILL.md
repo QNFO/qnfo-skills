@@ -3,7 +3,9 @@ name: pdf-builder
 description: Build publication-quality PDFs from Markdown files with math rendering via matplotlib mathtext. Use when the agent needs to convert .md to .pdf for QNFO publications, papers, or reports.
 version: "3.0"
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** publication-publisher
 
 
 
@@ -31,6 +33,29 @@ is required for the task and cannot be loaded after 3 retries, escalate to
 the user with the specific failure reason.
 
 ---
+
+## execute_plan (MANDATORY -- Before Any Execution)
+
+**This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
+
+### Execution Protocol
+
+1. **Populate update_plan** with workflow phases as concrete checklist items
+2. **Execute one item at a time** -- at most ONE in_progress
+3. **Mark items completed ONLY with tool evidence** (Test-Path, exec output, git log)
+4. **Never claim completion without execution evidence** -- Rule 14 enforcement
+5. **If blocked:** Flag as [BLOCKED: reason] and move to the next item
+
+### Example Plan
+
+update_plan([
+  {"step": "Read canonical Markdown source", "status": "pending"},
+  {"step": "Convert to PDF via matplotlib mathtext/LaTeX", "status": "pending"},
+  {"step": "Verify math rendering (no \ufffd characters)", "status": "pending"},
+  {"step": "Verify em dashes, curly quotes render correctly", "status": "pending"},
+  {"step": "Output publication-quality PDF", "status": "pending"}
+])
+
 
 # PDF BUILDER SKILL — v3.0
 
@@ -96,7 +121,7 @@ metadata. The frontmatter is NOT rendered in the PDF output.
 ```yaml
 ---
 title: "My Research Paper"
-author: "Rowan Quni-Gudzinas (QNFO/QWAV)"
+author: "Rowan Brad Quni-Gudzinas"
 date: "2026-06-28"
 license: "QNFO Unified License Agreement (QNFO-ULA)"
 abstract: >

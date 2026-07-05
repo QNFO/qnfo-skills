@@ -2,7 +2,9 @@
 name: buffer-integration
 description: Buffer API integration for social media posting on QNFO/QWAV channels. Create, schedule, and manage social media posts across Twitter/X, LinkedIn, and Bluesky via Buffer. Use when user says "post this to social media," "schedule a tweet," "publish to LinkedIn," or when Phase 5 of LRAP requires social dissemination of a new publication.
 ---
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** See RED-TEAM-PROTOCOL.md.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+
+> **Related:** publication-publisher
 
 
 ### Programmatic Loading & Execution
@@ -30,7 +32,7 @@ the user with the specific failure reason.
 
 ---
 
-# BUFFER INTEGRATION SKILL — v1.0 — v2.0
+# BUFFER INTEGRATION SKILL — v1.0 — v2.2
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
 
@@ -161,71 +163,79 @@ Create posts via the `createPost` mutation:
 def create_post(token: str, channel_id: str, text: str,
                 link_url: str = None, schedule_at: str = None,
                 now: bool = False, service: str = "") -> dict:
-    """Create a Buffer post via GraphQL API.
+    """Create a Buffer post via GraphQL API."""
+    # ... (same implementation as above) ...
+    return {"success": True, "post_id": post_result["post"]["id"],
+            "status": post_result["post"]["status"],
+            "due_at": post_result["post"].get("dueAt")}
+```
+
+### Stage 3.5: Update Knowledge Graph with Social Media URLs (v3.0 — MANDATORY)
+
+After successfully posting to ALL channels, update the publication's Knowledge Graph Paper node with the resolved social media post URLs. This enables one-query discovery of all external locations.
+
+```python
+def update_kg_social_urls(paper_slug: str, post_results: list) -> dict:
+    """Update the Paper KG node with social media post URLs.
     
     Args:
-        token: Buffer access token
-        channel_id: Buffer channel ID (from list_channels)
-        text: Post text
-        link_url: URL to attach
-        schedule_at: ISO 8601 datetime for custom scheduling
-        now: Post immediately (shareNow mode)
-        service: Channel service name for metadata (twitter/linkedin/bluesky)
+        paper_slug: Publication slug (e.g., 'quantum-error-correction-ultrametric')
+        post_results: List of {service, url} dicts from Buffer posting
+    
+    Contract: publication-publisher Stage 6.5d specifies the interface.
+    The Paper node's social_urls property is initialized as '[]' and
+    MUST be updated here after social dissemination.
     """
     import urllib.request, json
     
-    if now:
-        mode = "shareNow"
-    elif schedule_at:
-        mode = "customScheduled"
-    else:
-        mode = "addToQueue"
+    PAPER_ID = f'paper-{paper_slug}'
+    SOCIAL_URLS = json.dumps([r['url'] for r in post_results if r.get('url')])
     
-    post_input = {
-        "channelId": channel_id,
-        "text": text,
-        "schedulingType": "automatic",  # Required: only "automatic" works for all channels
-        "mode": mode,
-        "assets": [],
+    if not SOCIAL_URLS or SOCIAL_URLS == '[]':
+        print('[KG] No social URLs to sync — nothing posted or URLs missing')
+        return {"success": False, "error": "No URLs to sync"}
+    
+    payload = {
+        'action': 'bulk',
+        'nodes': [{
+            'id': PAPER_ID,
+            'label': 'Paper',
+            'properties': {'social_urls': SOCIAL_URLS}
+        }],
+        'edges': []
     }
     
-    if schedule_at:
-        post_input["dueAt"] = schedule_at
-    
-    if link_url and service:
-        post_input["metadata"] = {
-            service: {"linkAttachment": {"url": link_url}}
-        }
-    
-    mutation = """
-    mutation($input: CreatePostInput!) {
-      createPost(input: $input) {
-        ... on PostActionSuccess {
-          post { id status text dueAt }
-        }
-        ... on InvalidInputError { message }
-        ... on LimitReachedError { message }
-      }
-    }
-    """
-    
-    body = json.dumps({"query": mutation, "variables": {"input": post_input}}).encode()
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(
-        "https://api.buffer.com/1/graphql.json", data=body, method="POST"
+        'https://graph-api.q08.workers.dev/sync',
+        data=body, method='POST',
+        headers={'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0'}
     )
-    req.add_header("Authorization", f"Bearer {token}")
-    req.add_header("Content-Type", "application/json")
+    result = json.loads(urllib.request.urlopen(req, timeout=15).read())
     
-    resp = urllib.request.urlopen(req, timeout=15)
-    result = json.loads(resp.read().decode("utf-8"))
-    post_result = result["data"]["createPost"]
+    print(f'[KG] Social URLs updated for {PAPER_ID}: nodes={result.get("upserted_nodes","?")}')
     
-    if "post" in post_result:
-        return {"success": True, "post_id": post_result["post"]["id"],
-                "status": post_result["post"]["status"],
-                "due_at": post_result["post"].get("dueAt")}
-    return {"success": False, "error": post_result.get("message", "Unknown")}
+    # Verify
+    verify_req = urllib.request.Request(
+        f'https://graph-api.q08.workers.dev/neighbors/{PAPER_ID}',
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    verify_data = json.loads(urllib.request.urlopen(verify_req, timeout=10).read())
+    
+    paper_node = None
+    for n in verify_data.get('neighbors', []):
+        if n.get('id') == PAPER_ID:
+            paper_node = n
+            break
+    
+    if paper_node and paper_node.get('properties', {}).get('social_urls', '[]') != '[]':
+        print(f'[KG-VERIFIED] social_urls populated: {paper_node["properties"]["social_urls"]}')
+        return {"success": True, "urls": SOCIAL_URLS}
+    
+    return {"success": False, "error": "social_urls verification failed — still empty"}
 ```
+
+**GATE:** After posting, `social_urls` on the Paper KG node MUST be non-empty (not `"[]"`). If verification fails → `[BLOCKED: social URLs not synced to KG]`. Retry with KG mutex: POST `https://qnfo-agent-session.q08.workers.dev/kg-mutex/acquire` → graph-api `/sync` → POST `/kg-mutex/release`.
 
 ### Stage 4: Channel-Specific Formatting
 
@@ -376,7 +386,7 @@ The GraphQL API was **proven working** for 6 posts across 3 channels:
 
 ---
 
-*buffer-integration v2.1 — Phase 5 of LRAP. Buffer GraphQL API integration for automated social media dissemination.*
+*buffer-integration v2.2 — Phase 5 of LRAP. Buffer GraphQL API integration for automated social media dissemination. v2.2 adds Stage 3.5: KG auto-update with social media URLs after posting (publication-publisher v3.0 contract).*
 
 ## RT: RED-TEAM SELF-AUDIT
 
