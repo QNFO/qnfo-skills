@@ -3,7 +3,7 @@
 **Author:** Rowan Brad Quni-Gudzinas | **Date:** 2026-07-05 | **Version:** v1.1 (Research Plan — Reconstructed)
 **License:** QNFO Unified License Agreement (QNFO-ULA): https://legal.qnfo.org/
 **Project:** QLoF Extension — Program D (p-adic Anyons & Ultrametric Braid Groups)
-**DOI:** Pending
+**DOI:** [10.5281/zenodo.21208370](https://doi.org/10.5281/zenodo.21208370)
 
 **Note:** v1.0 was lost during thin-client cleanup (R2 upload failed). v1.1 reconstructs from tape evidence.
 
