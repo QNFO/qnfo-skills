@@ -98,7 +98,7 @@ Write the following code to `_test_suite.py`, execute, then delete:
 import argparse, json, os, ssl, sys, http.client as hc, urllib.request
 from datetime import datetime, timezone
 
-TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')  # Canonical: Secrets Store (store_id=8ef28060302e4311b064ba3529493e8b)
 ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
 API = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}'
 CTX = ssl._create_unverified_context()

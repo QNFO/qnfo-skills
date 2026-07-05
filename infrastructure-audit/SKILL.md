@@ -1,4 +1,4 @@
----
+﻿---
 name: infrastructure-audit
 description: Audit all Cloudflare infrastructure resources (D1, R2, Workers, Pages, Vectorize, Queues) including lifecycle pipeline. Reports orphaned/duplicate resources, state mismatches, lifecycle health, and archival integrity.
 version: "2.0"
@@ -93,6 +93,22 @@ import urllib.request, json, os
 
 TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
 ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+STORE_ID = '8ef28060302e4311b064ba3529493e8b'  # Cloudflare Secrets Store
+
+# Verify CLOUDFLARE_API_TOKEN exists in Secrets Store (canonical: default_secrets_store)
+# Note: Secret VALUES are not readable via REST API; env var provides the actual value.
+# Workers should use env.SECRET_NAME bindings instead.
+try:
+    ctx = ssl.create_default_context()
+    url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/secrets_store/stores/{STORE_ID}/secrets'
+    req = urllib.request.Request(url)
+    req.add_header('Authorization', f'Bearer {TOKEN}')
+    data = json.loads(urllib.request.urlopen(req, timeout=10, context=ctx).read())
+    secret_names = {s['name'] for s in data.get('result', [])}
+    if 'CLOUDFLARE_API_TOKEN' not in secret_names:
+        print('[WARN] CLOUDFLARE_API_TOKEN not in Secrets Store')
+except Exception as e:
+    print(f'[WARN] Secrets Store unreachable: {e}')
 
 def cf(endpoint):
     url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/{endpoint}'
@@ -299,15 +315,15 @@ except Exception as e:
 | KV Namespaces | 1 | equation-cache |
 | Vectorize Indexes | 3 | qwav-research-v2 (1024-dim, active), qnfo-handoffs, qnfo-tasks |
 | Pages Projects | 10 (5 active, 5 dormant) | qnfo-hub, qnfo-publications, qnfo-legal, qwav, qnfo-design-system + 5 dormant |
-| Workers | 30 | papers-server, ask-qwav, graph-api, qnfo-agent-session (DO+SQLite), qnfo-ai-worker (Workers AI), +25 more |
+| Workers | 25 | papers-server, ask-qwav, graph-api, qnfo-agent-session (DO+SQLite), qnfo-ai-worker (Workers AI), +25 more |
 | **Durable Objects** | 2 namespaces, 3 classes | `portfolio-api_StateRegistry` (StateRegistry), `qnfo-agent-session` (AgentSession + QnfoAgentSession w/ **SQLite ON**) — Fully persistent agent state, KG mutex, lifecycle state machine |
 | Queues | 1 | qnfo-lifecycle-queue (essential) |
 | **R2 Event Rules** | 2 | releases/*.md + discovery/*.json → qnfo-lifecycle-queue (created 2026-07-04) |
-| **Secrets Store** | 1 store, 10 secrets | `default_secrets_store` — CLOUDFLARE_API_TOKEN, R2_ACCESS_KEY_ID, ZENODO_API_TOKEN, BUFFER_ACCESS_TOKEN, GITHUB_TOKEN, S3_ENDPOINT, ADMIN_API_TOKEN, ADMIN_TOKEN, CF_API_TOKEN |
+| **Secrets Store** | 1 store, 20 secrets | `default_secrets_store` (8ef28060) — CLOUDFLARE_API_TOKEN, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, ZENODO_API_TOKEN, BUFFER_ACCESS_TOKEN, GITHUB_TOKEN, S3_ENDPOINT, ADMIN_API_TOKEN, ADMIN_TOKEN, CF_API_TOKEN, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, BUFFER_CLIENT_ID, BUFFER_CLIENT_SECRET, FILEBASE_ACCESS_KEY, FILEBASE_ENDPOINT, FILEBASE_SECRET_KEY, PINATA_API_KEY, PINATA_API_SECRET, PINATA_JWT. **READ via env var; canonical store is Secrets Store.** |
 | **Workers AI** | 60 models, 10 task types | Text Gen, Embeddings (1024-dim), Translation, TTS, Image Gen confirmed |
-| Knowledge Graph | 882 nodes, 1854 edges | ACTIVE — graph-api Worker, D1 qnfo-graph |
+| Knowledge Graph | 2721 nodes, 3993 edges | ACTIVE — graph-api Worker, D1 qnfo-graph |
 | R2 Bucket | 1 (qnfo) | papers, publications, discovery, archive, projects, releases, tools |
-| Live Domains | 30 (verified 2026-07-04) | 10 zones, all resolving HTTP 200 |
+| Live Domains | 26 (verified 2026-07-05) | 10 zones, all resolving HTTP 200 |
 
 ## Lifecycle Pipeline Health Checks
 
@@ -386,9 +402,10 @@ Result: 522 Connection timed out                           ← PAGES REJECTS TRA
 ```python
 import urllib.request, json, os, ssl
 
+ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+STORE_ID = '8ef28060302e4311b064ba3529493e8b'  # Cloudflare Secrets Store
 TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
 ctx = ssl.create_default_context()
-ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
 
 def cf(endpoint, timeout=15):
     url = 'https://api.cloudflare.com/client/v4/' + endpoint
@@ -559,6 +576,141 @@ for z in zones:
 *infrastructure-audit v1.9 — Resource Governance (§0.7) + 522 Prevention (§0.8-§0.11). Automated CNAME×Pages cross-reference, chain detection, dead worker detection, empty zone detection. 25-check audit with automated fix capability.*
 
 *v1.8 and earlier deprecated 2026-07-01. Replaced by v1.9 with automated 522 root cause detection, CNAME chain detection, dead worker detection, and empty zone detection.*
+
+
+---
+
+## Secrets Store Integration (v2.1 — 2026-07-05)
+
+> **READ PATTERN:** The Cloudflare Secrets Store REST API returns secret **METADATA** (name, comment, scopes, dates) but NOT secret **VALUES**. Python scripts use env vars for the actual value; Workers use env.SECRET_NAME bindings.
+
+### Read Pattern (Skill Python Scripts)
+
+`python
+import os, urllib.request, json, ssl
+
+ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+STORE_ID = '8ef28060302e4311b064ba3529493e8b'  # default_secrets_store
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')  # env var for actual value
+
+def verify_secret_exists(secret_name):
+    \"\"\"Verify a secret exists in Secrets Store (metadata only).\n    Returns True if secret is registered, False otherwise.\n    \"\"\"
+    try:
+        ctx = ssl.create_default_context()
+        url = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/secrets_store/stores/{STORE_ID}/secrets'
+        req = urllib.request.Request(url)
+        req.add_header('Authorization', f'Bearer {TOKEN}')
+        data = json.loads(urllib.request.urlopen(req, timeout=10, context=ctx).read())
+        secret_names = {s['name'] for s in data.get('result', [])}
+        return secret_name in secret_names
+    except Exception as e:
+        print(f'[WARN] Secrets Store unreachable: {e}')
+        return None
+
+def get_secret(secret_name, fallback_env=None):
+    \"\"\"Get a secret, verifying it exists in Secrets Store, falling back to env var.\"\"\"
+    env_name = fallback_env or secret_name
+    exists = verify_secret_exists(secret_name)
+    if exists is False:
+        print(f'[WARN] Secret \"{secret_name}\" not in Secrets Store. '
+              f'Store it: put_secret(\"{secret_name}\", value)')
+    value = os.environ.get(env_name, '')
+    if not value:
+        print(f'[WARN] Secret \"{secret_name}\" env var {env_name} not set.')
+    return value
+`
+
+### Write Pattern (Store a New Secret)
+
+`python
+import urllib.request, json, ssl
+
+def put_secret(name, value, comment='', scopes=None):
+    \"\"\"Store a secret in the Cloudflare Secrets Store.
+    
+    Args:
+        name: Secret name (e.g., 'MY_API_KEY')
+        value: The secret value to store
+        comment: Optional description
+        scopes: List of scopes (default: ['workers'])
+    
+    Returns:
+        API response dict
+    \"\"\"
+    if scopes is None:
+        scopes = ['workers']
+    
+    url = (f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}'
+           f'/secrets_store/stores/{STORE_ID}/secrets/{name}')
+    data = json.dumps({
+        'value': value,
+        'comment': comment,
+        'scopes': scopes
+    }).encode('utf-8')
+    
+    req = urllib.request.Request(url, method='PUT', data=data)
+    req.add_header('Authorization', f'Bearer {TOKEN}')
+    req.add_header('Content-Type', 'application/json')
+    
+    ctx = ssl.create_default_context()
+    result = json.loads(urllib.request.urlopen(req, timeout=15, context=ctx).read())
+    
+    if result.get('success'):
+        print(f'[OK] Secret \"{name}\" stored in Secrets Store.')
+    else:
+        print(f'[FAIL] Secret \"{name}\": {result.get(\"errors\", [])}')
+    
+    return result
+`
+
+### Current Secrets Inventory (default_secrets_store, id=8ef28060302e4311b064ba3529493e8b)
+
+| Secret Name | Purpose | Env Var |
+|:------------|:--------|:--------|
+| CLOUDFLARE_API_TOKEN | Full-access Cloudflare API token | CLOUDFLARE_API_TOKEN |
+| R2_ACCESS_KEY_ID | R2 S3-compatible access key | R2_ACCESS_KEY_ID |
+| R2_SECRET_ACCESS_KEY | R2 S3-compatible secret | R2_SECRET_ACCESS_KEY |
+| ZENODO_API_TOKEN | Zenodo deposit API token | ZENODO_API_TOKEN |
+| BUFFER_ACCESS_TOKEN | Buffer social media API token | BUFFER_ACCESS_TOKEN |
+| GITHUB_TOKEN | GitHub personal access token | GITHUB_TOKEN |
+| PINATA_API_KEY | IPFS Pinata API key | PINATA_API_KEY |
+| PINATA_API_SECRET | IPFS Pinata API secret | PINATA_API_SECRET |
+| PINATA_JWT | IPFS Pinata JWT | PINATA_JWT |
+| FILEBASE_ACCESS_KEY | Filebase access key | FILEBASE_ACCESS_KEY |
+| FILEBASE_SECRET_KEY | Filebase secret key | FILEBASE_SECRET_KEY |
+| *...and 9 more* | GOOGLE_OAUTH, BUFFER_CLIENT, etc. | Various |
+
+### Adding a New Secret
+
+`python
+# Store a new API key
+put_secret('MY_NEW_API_KEY', 'sk-abc123...', 'API key for new service X')
+
+# Verify it was stored
+assert verify_secret_exists('MY_NEW_API_KEY'), 'Failed to store secret!'
+`
+
+### Worker-Side: Using Secrets Store Bindings
+
+In wrangler.toml:
+`	oml
+[[secrets_store]]
+binding = "MY_SECRETS"
+store_id = "8ef28060302e4311b064ba3529493e8b"
+`
+
+In Worker code:
+`javascript
+// Access individual secrets via env binding
+export default {
+  async fetch(request, env) {
+    const token = env.MY_SECRETS.CLOUDFLARE_API_TOKEN;
+    // Use token for API calls...
+  }
+}
+`
+
+---
 
 ## RT: RED-TEAM SELF-AUDIT
 

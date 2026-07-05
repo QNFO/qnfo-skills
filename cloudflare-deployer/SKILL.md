@@ -144,7 +144,7 @@ All Cloudflare policies verified via both wrangler CLI and REST API direct calls
 | **Web Search** | ✅ Granted | Configurable | API | `wrangler websearch` |
 | **Dispatch Namespaces** | ✅ Granted | Configurable | API | `wrangler dispatch-namespace` |
 | **Tunnels** | ✅ Granted | Configurable | API | `wrangler tunnel` |
-| **Secrets Store** | ✅ Full | 1 store (default_secrets_store), 10 secrets | `/accounts/:id/secrets_store` | `wrangler secrets-store` [open beta] |
+| **Secrets Store** | ✅ Full | 1 store (default_secrets_store), 20 secrets | `/accounts/:id/secrets_store` | `wrangler secrets-store` [open beta] |
 | **Flagship (Feature Flags)** | ✅ Granted | Configurable | API | `wrangler flagship` [open beta] |
 | **Versions (Gradual Rollout)** | ✅ Full | Available | API | `wrangler versions upload/deploy/list` |
 | **Triggers** | ✅ Full | Available | API | `wrangler triggers deploy` [experimental] |
@@ -246,8 +246,9 @@ Write the following code to `_test_suite.py`, execute, then delete:
 import argparse, json, os, ssl, sys, http.client as hc, urllib.request
 from datetime import datetime, timezone
 
-TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
 ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+STORE_ID = '8ef28060302e4311b064ba3529493e8b'  # Cloudflare Secrets Store
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
 API = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}'
 CTX = ssl._create_unverified_context()
 
@@ -1020,7 +1021,7 @@ Full spec: `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` (R2)
 | DNS/redirect changes not propagating | Cloudflare DNS TTL is 300s minimum — wait and retry |
 | `skill_view('cloudflare-deployer')` returns error | Skill not indexed — run `bootstrap_skills.py --sync` and restart DeepChat |
 | MathJax not rendering after deploy | Config is AFTER script tag — fix ordering before redeploying |
-| Token not found in environment | Persist token: `[Environment]::SetEnvironmentVariable('CLOUDFLARE_API_TOKEN', '<token>', 'User')` |
+| Token not found in environment | Persist token via env var (User-level) AND store canonically in Secrets Store: `PUT /accounts/{ACCOUNT}/secrets_store/stores/8ef28060302e4311b064ba3529493e8b/secrets/CLOUDFLARE_API_TOKEN` |
 | **522 Connection timed out after DNS/CNAME change** | **ROOT CAUSE: CNAME→`.pages.dev` exists but domain NOT registered on Pages project.** Fix: Register domain on target Pages project (`POST /accounts/:id/pages/projects/:name/domains`). Then verify HTTP 200. See infrastructure-audit §0.8 for automated detection & fix. |
 
 **Recovery tools on R2:**
@@ -1068,7 +1069,7 @@ Before using any script, verify it exists:
 If missing, check that skill's Embedded Scripts section for recovery guidance.
 
 ### Dependencies
-- `vectorize-papers.py`: requires Cloudflare API token (auto-available via `$env:CLOUDFLARE_API_TOKEN`) and Workers AI access
+- `vectorize-papers.py`: requires Cloudflare API token (auto-available via `$env:CLOUDFLARE_API_TOKEN`; canonical: Secrets Store) and Workers AI access
 - `build_pdf.py`: requires `reportlab` and optionally `markdown` packages
 
 
@@ -1077,6 +1078,56 @@ If missing, check that skill's Embedded Scripts section for recovery guidance.
 ---
 
 *v2.0 and earlier deprecated 2026-07-01. Replaced by v2.1 with 522 root cause pattern, CNAME chain rule, and automated cross-reference verification.*
+
+
+
+---
+
+## Secrets Store Integration (v2.3 --- 2026-07-05)
+
+> **READ/WRITE:** Cloudflare Secrets Store (canonical: `default_secrets_store`, id=8ef28060302e4311b064ba3529493e8b). Secret VALUES are NOT readable via REST API --- Python scripts use env vars; Workers use `env.SECRET_NAME` bindings. See `infrastructure-audit` skill for full read/write patterns.
+
+### Current Secrets (20)
+
+| Name | Purpose | Workers Binding |
+|:-----|:--------|:----------------|
+| `CLOUDFLARE_API_TOKEN` | Full Cloudflare API access | `env.SECRETS.CLOUDFLARE_API_TOKEN` |
+| `R2_ACCESS_KEY_ID` | R2 S3 access key | `env.SECRETS.R2_ACCESS_KEY_ID` |
+| `R2_SECRET_ACCESS_KEY` | R2 S3 secret key | `env.SECRETS.R2_SECRET_ACCESS_KEY` |
+| `ZENODO_API_TOKEN` | Zenodo API | `env.SECRETS.ZENODO_API_TOKEN` |
+| `BUFFER_ACCESS_TOKEN` | Buffer social media | `env.SECRETS.BUFFER_ACCESS_TOKEN` |
+| `GITHUB_TOKEN` | GitHub PAT | `env.SECRETS.GITHUB_TOKEN` |
+| `PINATA_API_KEY` | IPFS Pinata key | `env.SECRETS.PINATA_API_KEY` |
+| `PINATA_API_SECRET` | IPFS Pinata secret | `env.SECRETS.PINATA_API_SECRET` |
+| `PINATA_JWT` | IPFS Pinata JWT | `env.SECRETS.PINATA_JWT` |
+| *+11 more* | FILEBASE_*, GOOGLE_OAUTH_*, BUFFER_CLIENT_*, etc. | Various |
+
+### Store a New Secret
+
+```bash
+# Via REST API:
+curl -X PUT "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/secrets_store/stores/8ef28060302e4311b064ba3529493e8b/secrets/<NAME>" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"value":"<secret>","comment":"Description","scopes":["workers"]}'
+```
+
+### Worker-Side: Bind Secrets Store
+
+In `wrangler.toml`:
+```toml
+[[secrets_store]]
+binding = "SECRETS"
+store_id = "8ef28060302e4311b064ba3529493e8b"
+```
+
+In Worker code:
+```javascript
+const token = env.SECRETS.CLOUDFLARE_API_TOKEN;
+const zenodoToken = env.SECRETS.ZENODO_API_TOKEN;
+```
+
+---
 
 ## RT: RED-TEAM SELF-AUDIT
 

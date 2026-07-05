@@ -113,8 +113,9 @@ This has been the #1 blocker for automated skill sync in 80%+ of sessions (2026-
 ```python
 import os, urllib.request
 
-TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN', '')  # Canonical: Secrets Store
 ACCOUNT = 'edb167b78c9fb901ea5bca3ce58ccc4b'
+STORE_ID = '8ef28060302e4311b064ba3529493e8b'
 SKILLS_DIR = os.path.expandvars(r'%USERPROFILE%\.deepchat\skills')
 
 local_skills = []

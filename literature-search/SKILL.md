@@ -331,7 +331,7 @@ def search_semantic_scholar(query: str, limit: int = 50) -> list[dict]:
 def search_qnfo_vectorize(query: str, top_k: int = 20, token: Optional[str] = None) -> list[dict]:
     """Search QNFO Vectorize index for semantically similar papers."""
     if not token:
-        token = os.environ.get("CLOUDFLARE_API_TOKEN", "")
+        token = os.environ.get("CLOUDFLARE_API_TOKEN", "")  # Canonical: Secrets Store (store_id=8ef28060302e4311b064ba3529493e8b)
     
     if not token:
         print("[WARN] No Cloudflare API token for Vectorize search", file=sys.stderr)

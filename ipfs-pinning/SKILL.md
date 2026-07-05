@@ -114,6 +114,8 @@ Before declaring [BLOCKED: no IPFS credentials], scan ALL of:
 PINATA_JWT = os.environ.get('PINATA_JWT')
 PINATA_API_KEY = os.environ.get('PINATA_API_KEY')
 PINATA_API_SECRET = os.environ.get('PINATA_API_SECRET')
+# Canonical: Cloudflare Secrets Store (store_id=8ef28060302e4311b064ba3529493e8b)
+# PUT /accounts/{ACCOUNT}/secrets_store/stores/8ef28060302e4311b064ba3529493e8b/secrets/PINATA_JWT
 
 # Priority 2: .env files in workspace
 # Priority 3: R2 secrets store (qnfo/secrets/pinata.json)
@@ -326,9 +328,9 @@ Usage: python _ipfs_sync.py [--upload]
 """
 import json, os, time, urllib.request, sys
 
-PINATA_KEY = os.environ.get('PINATA_API_KEY', '')
-PINATA_SECRET = os.environ.get('PINATA_API_SECRET', '')
-PINATA_JWT = os.environ.get('PINATA_JWT', '')
+PINATA_KEY = os.environ.get('PINATA_API_KEY', '')  # Canonical: Secrets Store
+PINATA_SECRET = os.environ.get('PINATA_API_SECRET', '')  # Canonical: Secrets Store
+PINATA_JWT = os.environ.get('PINATA_JWT', '')  # Canonical: Secrets Store
 
 def get_pinata_auth():
     """Try both auth methods, return working headers."""

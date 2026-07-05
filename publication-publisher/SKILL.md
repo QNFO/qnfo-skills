@@ -1205,7 +1205,7 @@ def _h(token): return {'Authorization':f'Bearer {token}','Content-Type':'applica
 def load_token(path=None):
     if path and os.path.exists(path):
         with open(path,'r',encoding='utf-8') as f: return f.read().strip()
-    if os.environ.get('ZENODO_TOKEN'): return os.environ['ZENODO_TOKEN'].strip()
+    if os.environ.get('ZENODO_TOKEN'): return os.environ['ZENODO_TOKEN'].strip()  # Canonical: Secrets Store (store_id=8ef28060302e4311b064ba3529493e8b)
     p = os.path.expandvars(r'%USERPROFILE%\.zenodo_token')
     if os.path.exists(p):
         with open(p,'r',encoding='utf-8') as f: return f.read().strip()
