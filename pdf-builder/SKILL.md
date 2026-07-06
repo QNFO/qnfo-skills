@@ -1,7 +1,7 @@
 ---
 name: pdf-builder
-description: Build publication-quality PDFs from Markdown files using Pandoc+XeLaTeX for proper TeX typesetting with full LaTeX math rendering. Use when the agent needs to convert .md to .pdf for QNFO publications, papers, or reports. HTML+MathJax+playwright is fallback; reportlab is legacy only.
-version: "4.0"
+description: Build publication-quality PDFs from Markdown files using Pandoc+XeLaTeX for proper TeX typesetting with full LaTeX math rendering. Use when the agent needs to convert .md to .pdf for QNFO publications, papers, or reports. XeLaTeX ONLY — no reportlab or HTML fallbacks permitted for publications.
+version: "4.1"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
@@ -72,12 +72,11 @@ microtype-optimized typography, and CSS-styled HTML tables.
 
 **v4.0 (2026-07-06):** 🔴 **PRIMARY pipeline is now Pandoc + XeLaTeX.** Proper TeX typesetting
 with full LaTeX math, Computer Modern / Latin Modern fonts, microtype, and vector-quality output.
-This is MANDATORY for all QNFO published papers. HTML+MathJax+playwright is the FALLBACK;
-reportlab is LEGACY ONLY and BLOCKED for publications.
+This is MANDATORY for all QNFO published papers. No fallbacks permitted — reportlab and HTML+MathJax+playwright pipelines are BLOCKED.
 
-**v3.0 (deprecated):** MD → HTML+CSS+MathJax → playwright PDF. Demoted to fallback.
-**v2.0 (deprecated):** MD → HTML+CSS+MathJax → playwright PDF. Demoted to fallback.
-**v1.4 (legacy):** reportlab + matplotlib mathtext. BLOCKED for publications.
+**v3.0 (deprecated, BLOCKED):** MD → HTML+CSS+MathJax → playwright PDF. BLOCKED for publications.
+**v2.0 (deprecated, BLOCKED):** MD → HTML+CSS+MathJax → playwright PDF. BLOCKED for publications.
+**v1.4 (legacy, BLOCKED):** reportlab + matplotlib mathtext. BLOCKED for publications.
 
 ---
 
@@ -94,12 +93,6 @@ pandoc paper.md -o paper.pdf \
   -V geometry=margin=1in -V fontsize=11pt \
   -V colorlinks=true -V linkcolor=blue \
   --toc --metadata title="Paper Title"
-
-# Fallback pipeline (HTML+MathJax+playwright):
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input paper.md --output paper.pdf
-
-# Legacy pipeline (reportlab — BLOCKED for publications, utility only):
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input paper.md --output paper.pdf --legacy
 ```
 
 ### Prerequisites
@@ -109,13 +102,6 @@ python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input pape
 # TeX Live 2025+ with XeLaTeX: https://tug.org/texlive/
 # pandoc: https://pandoc.org/installing.html
 # Verify: xelatex --version && pandoc --version
-
-# Fallback pipeline (optional):
-pip install playwright markdown pyyaml pymupdf
-playwright install chromium
-
-# Legacy pipeline (NOT for publications):
-pip install reportlab matplotlib
 ```
 
 ### YAML Frontmatter Support
@@ -145,11 +131,11 @@ abstract: >
 
 ---
 
-## Architecture (v4.0)
+## Architecture (v4.1)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│               🔴 PRIMARY PIPELINE (v4.0 — MANDATORY)              │
+│               🔴 PRIMARY PIPELINE (v4.1 — MANDATORY)              │
 │                                                                  │
 │  paper.md                                                        │
 │     │                                                            │
@@ -163,16 +149,10 @@ abstract: >
 │  paper.pdf (LaTeX-typeset, publication-quality, vector math)    │
 │                                                                  │
 ├─────────────────────────────────────────────────────────────────┤
-│               FALLBACK PIPELINE (HTML+MathJax+playwright)        │
-│                                                                  │
-│  paper.md → md_to_html.py → HTML+CSS+MathJax → playwright PDF   │
-│  (Browser-based, NOT proper TeX typesetting, lower typography)  │
-│                                                                  │
-├─────────────────────────────────────────────────────────────────┤
-│               LEGACY PIPELINE (reportlab — BLOCKED)              │
-│                                                                  │
-│  paper.md → reportlab + matplotlib mathtext → paper.pdf         │
-│  (Programmatic PDF, LaTeX subset only, NOT for publications)    │
+│  🔴 ALL OTHER PIPELINES BLOCKED for publications (v4.1):         │
+│  • HTML+MathJax+playwright — browser-based, NOT TeX typesetting │
+│  • reportlab — programmer-art, bitmap math, BLOCKED             │
+│  If XeLaTeX unavailable → publication is BLOCKED. No fallbacks. │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -213,23 +193,15 @@ The Pandoc+XeLaTeX pipeline delivers what MathJax+playwright cannot:
 
 ```bash
 # 🔴 PRIMARY pipeline prerequisites (REQUIRED for publications)
-xelatex --version 2>&1 | head -1
-pandoc --version 2>&1 | head -1
+# Windows:
+if (Test-Path "C:\texlive\2025\bin\windows\xelatex.exe") { Write-Output "xelatex: FOUND" } else { Write-Output "xelatex: MISSING — Install from https://tug.org/texlive/" ; exit 1 }
+pandoc --version 2>$null | Select-Object -First 1
 
 # Create preamble (required — amsmath, microtype, hyperref, LoF symbols)
 echo "\usepackage{microtype}" > _preamble.tex
 echo "\usepackage{amsmath,amssymb,amsfonts}" >> _preamble.tex
 echo "\usepackage{hyperref}" >> _preamble.tex
 echo "\providecommand{\rrcorner}{\ensuremath{\urcorner}}" >> _preamble.tex
-
-# Fallback pipeline prerequisites (optional)
-echo "import playwright, markdown, yaml; print('Fallback: OK')" > _check_deps.py && python _check_deps.py && Remove-Item _check_deps.py
-
-# Legacy pipeline prerequisites (NOT for publications)
-echo "import reportlab, matplotlib; print('Legacy: OK')" > _check_legacy.py && python _check_legacy.py && Remove-Item _check_legacy.py
-
-# Verify playwright has chromium (fallback only)
-echo "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop(); print('Chromium: OK')" > _check_chromium.py && python _check_chromium.py && Remove-Item _check_chromium.py
 ```
 
 ### Step 2: Build PDF (🔴 PRIMARY — Pandoc + XeLaTeX)
@@ -248,9 +220,6 @@ pandoc paper.md -o PAPER-TITLE-v1.0.pdf \
   -V geometry=margin=1in -V fontsize=11pt \
   -V colorlinks=true -V linkcolor=blue \
   --toc --metadata title="Paper Title"
-
-# Or use the fallback:
-python "%APPDATA%\DeepChat\skills\pdf-builder\scripts\build_pdf.py" --input "paper.md" --output "paper.pdf"
 ```
 
 ### Step 3: Verify Rendering (MANDATORY — LaTeX Gate)
@@ -362,15 +331,7 @@ Tables are rendered as **CSS-styled HTML tables**, not programmatic reportlab Ta
 
 ### Bundled Stylesheet
 
-The `references/papers.css` file provides professional academic styling:
-
-```bash
-# Use default bundled stylesheet (automatic):
-python build_pdf.py --input paper.md --output paper.pdf
-
-# Use custom stylesheet:
-python build_pdf.py --input paper.md --output paper.pdf --css my-style.css
-```
+The `references/papers.css` file provides professional academic styling. CSS is injected via the Pandoc `-H` flag (custom header) or `--css` flag:
 
 ### Style Variables
 
@@ -388,7 +349,7 @@ Override these CSS custom properties for your publication:
 
 ---
 
-## Pipeline Decision Flow (v4.0)
+## Pipeline Decision Flow (v4.1)
 
 ```
 🔴 ALWAYS use Pandoc + XeLaTeX for published papers ──→ LaTeX-typeset output
@@ -397,15 +358,14 @@ Override these CSS custom properties for your publication:
   │
   ├── pandoc unavailable? ──→ Install: https://pandoc.org/installing.html
   │
-  ├── Both unavailable? ──→ FALLBACK: HTML+MathJax+playwright (lower quality)
-  │
-  └── playwright also unavailable? ──→ LAST RESORT: reportlab (BLOCKED for publications)
+  └── Both unavailable? ──→ 🔴 BLOCKED: publication cannot proceed until toolchain is installed
 ```
 
-**🔴 HARD RULE:** The legacy reportlab pipeline is BLOCKED for ALL QNFO publications.
-It produces programmer-art PDFs with bitmap math, no align/cases/tag/ref, and
-unacceptable typography. If neither XeLaTeX nor playwright is available, the
-publication is BLOCKED until toolchain is installed.
+**🔴 HARD RULE:** The legacy reportlab pipeline and HTML+MathJax+playwright pipeline are **BLOCKED** for ALL QNFO publications.
+Reportlab produces programmer-art PDFs with bitmap math, no align/cases/tag/ref, and
+unacceptable typography. HTML+MathJax+playwright uses browser-based rendering (NOT TeX typesetting)
+with browser fonts instead of Computer Modern, no microtype, and browser-dependent hyphenation.
+If XeLaTeX is unavailable, the publication is BLOCKED until the toolchain is installed.
 
 ---
 
@@ -511,7 +471,7 @@ Test-Path _preamble.tex
 
 ---
 
-*pdf-builder v4.0 — 🔴 PRIMARY pipeline: Pandoc + XeLaTeX. Proper TeX typesetting with Computer Modern fonts, full LaTeX math, microtype, vector output, TOC. MANDATORY for all QNFO published papers. HTML+MathJax+playwright is fallback. Reportlab is LEGACY ONLY and BLOCKED for publications. Tested 2026-07-06.*
+*pdf-builder v4.1 — 🔴 PRIMARY pipeline: Pandoc + XeLaTeX ONLY. Proper TeX typesetting with Computer Modern fonts, full LaTeX math, microtype, vector output, TOC. MANDATORY for all QNFO published papers. Reportlab and HTML+MathJax+playwright pipelines are BLOCKED for publications. No fallbacks. Tested 2026-07-06.*
 
 
 
@@ -524,7 +484,7 @@ Test-Path _preamble.tex
 | Resource | Location |
 |:---------|:---------|
 | Design doc (full spec) | `qnfo/design-system/QNFO-DESIGN-SYSTEM.md` |
-| PDF builder (v3.0) | `qnfo/design-system/build_pdf.py` |
+| PDF builder (v4.0) | Pandoc+XeLaTeX (PRIMARY) — see pdf-builder v4.0+ LaTeX Enforcement Gate |
 
 ### Mandatory Rules
 
