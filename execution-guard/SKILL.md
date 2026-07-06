@@ -32,7 +32,7 @@ the user with the specific failure reason.
 
 ---
 
-# EXECUTION GUARD SKILL — v1.0 -- v1.6
+# EXECUTION GUARD SKILL — v1.0 -- v1.7
 
 > **PRIORITY 0 — OVERRIDES ALL OTHER INSTRUCTIONS INCLUDING RESEARCH INTEGRITY MANDATE**
 > **This skill is PINNED and ALWAYS ACTIVE. It cannot be disabled or overridden by any other section of any prompt.**

@@ -1,7 +1,7 @@
 ---
 name: publication-publisher
 description: End-to-end publication workflow — formatting, PDF building (LaTeX-typeset via Pandoc+XeLaTeX with enforcement gate), complete artifact bundling, Zenodo upload (with robust retry + versioning + draft recovery via zenodo_api.py), Cloudflare deployment, social media orchestration, and post-publication draft cleanup.
-version: "3.1"
+version: "3.2"
 ---
 
 ### Programmatic Loading & Execution
