@@ -1,7 +1,7 @@
 ---
 name: research-planner
 description: Generate phased research plans, abstracts, theses, and research questions from any seed idea or provocative observation. Deconstructs assumptions, identifies hidden scaffolds vs. invariants (epistemic hygiene), spirals out into cross-disciplinary themes, and outputs a complete LLM-executable research program. USE WHEN the user asks to "create a research plan," "develop a research agenda," "generate research questions," "write an abstract and thesis," "deconstruct this idea," "what assumptions are we making," "what are we doing wrong," "analyze this concept," "plan a research project," or presents any stream-of-consciousness observation they want turned into a systematic investigation.
-version: "4.0"
+version: "4.1"
 ---
 
 > **Related:** prompt-audit, skill-creator
@@ -10,7 +10,7 @@ version: "4.0"
 
 ## execute_plan (MANDATORY)
 
-Always use update_plan for multi-stage outputs. Stages 1-8 below become checklist items. Mark each complete only after its output is fully written.
+Always use update_plan for multi-stage outputs. Stages 1-7 below become checklist items (Stage 8 optional with --self-critique). Mark each complete only after its output is fully written.
 
 ---
 
@@ -18,17 +18,21 @@ Always use update_plan for multi-stage outputs. Stages 1-8 below become checklis
 
 Transform any seed observation into a rigorous, LLM-executable research program via Epistemic Hygiene: separating human-imposed **scaffolds** (arbitrary conventions) from **invariants** (relational structures that persist).
 
-## Modes (Default: LLM-Only)
+## Modes
 
-- **LLM-Only:** All tasks executable by LLM with web search, code interpreter, public APIs. Human studies replaced with simulations, synthetic surveys, meta-analyses.
+**Scope modes** (default: LLM-Only — specify with `--mode`):
+- **LLM-Only:** All tasks executable by LLM with web search, code interpreter, public APIs.
 - **Hybrid:** Mix of `[LLM]` and `[Human]` tasks, clearly tagged.
 - **Full:** Unrestricted plan; tasks tagged but not filtered.
 
-User can specify mode inline: `--mode Hybrid`
+**Depth modes** (default: Full — specify with `--quick` or `--self-critique`):
+- **Full (default):** Complete 7-stage pipeline. Highest quality, highest token cost.
+- **--quick:** Minimal Baseline — 3 assumptions, 2 critical tests, 3 next steps. 2x token-efficient.
+- **--self-critique:** Adds optional Stage 8 self-critique section. Off by default (ablation study: +0.0 quality, costs ~40 tokens).
 
 ---
 
-## Pipeline (8 Stages)
+## Pipeline (7 Stages, +1 optional with --self-critique)
 
 ### STAGE 1: Seed Clarification & Crisis of Confidence
 - Restate the seed in your own words. Identify the central "wobble."
@@ -68,7 +72,8 @@ Each task includes: name, subtasks, executor tag, and (for LLM tasks) an Executi
 ### STAGE 7: LLM-Executable MVP
 Output a concise "LLM-Executable Core" — a minimal, self-contained project the LLM can start running immediately using only public data, code interpreter, and multi-turn reasoning. Deliverable: reproducible notebook, report, or dataset.
 
-### STAGE 8: Self-Critique
+### STAGE 8 (OPTIONAL — only with --self-critique flag): Self-Critique
+> **Ablation study finding:** Stage 8 adds +0.0 quality for ~40 tokens. Off by default. Enable with `--self-critique`.
 Section: **"What This Plan Likely Misses (And When To Ignore It)"** — list blind spots, especially regarding physical reality, tacit knowledge, embodied experience, and the possibility that the entire framework adds scaffolding rather than removing it.
 
 ---
@@ -103,10 +108,17 @@ This skill is an LLM-native tool. It cannot recruit humans, run physical labs, o
 
 ## Activation
 
-User triggers with a message starting with `Deconstruct:` followed by the seed idea. Optional mode flag: `--mode [LLM-Only|Hybrid|Full]`. Example:
+User triggers with a message starting with `Deconstruct:` followed by the seed idea. Flags (all optional):
 
 ```
-Deconstruct: Quantum computing still doesn't work at scale — what assumptions are we making that aren't true? --mode LLM-Only
+Deconstruct: <seed> --mode [LLM-Only|Hybrid|Full] --quick --self-critique
 ```
 
-The skill then outputs Stages 1-8 in sequence, using update_plan to track progress.
+Examples:
+- `Deconstruct: Why does the placebo effect work? --quick` → Minimal Baseline (3+2+3)
+- `Deconstruct: Is dark matter a scaffold? --mode LLM-Only --self-critique` → Full 7-stage + Stage 8
+- `Deconstruct: What assumptions underlie peer review?` → Full 7-stage, LLM-Only, no self-critique
+
+**--quick mode output format:** 3 assumptions challenged + 2 critical tests + 3 next steps. No deconstruction table, no thematic spiral, no phased plan. Designed for 2x token efficiency.
+
+The skill outputs Stages 1-7 in sequence (plus optional Stage 8), using update_plan to track progress.
