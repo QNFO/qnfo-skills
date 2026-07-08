@@ -1,6 +1,6 @@
 ---
 name: kaizen-autonomous-update
-description: Autonomous system-wide Kaizen improvement protocol — triggers when user says "UPDATE ALL FROM KAIZEN" or when Kaizen engine detects 5+ unapplied improvements. Updates all prompts, templates, skills, agents/subagents, deploys, and commits.
+description: Autonomous system-wide Kaizen continuous improvement protocol. Updates all prompts, templates, skills, agents/subagents, deploys, and commits. Use when user says "UPDATE ALL FROM KAIZEN," "system update," "update all skills," "continuous improvement," "Kaizen update," "auto-update," "upgrade everything," "refresh all settings," or when Kaizen engine detects 5+ unapplied improvements.
 version: "1.1"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.

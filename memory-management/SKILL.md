@@ -1,6 +1,6 @@
 ---
 name: memory-management
-description: Guide the agent to recall, remember, and route durable learning into Memory, Skills, Scheduled Tasks, or Tape.
+description: Guide the agent to recall, remember, and route durable learning into Memory, Skills, Scheduled Tasks, or Tape. Use when user says "remember this," "recall previous work," "save this for later," "what do you know about," "continue where we left off," "memory," or when a task produces knowledge that should persist across sessions.
 version: "1.0"
 ---
 

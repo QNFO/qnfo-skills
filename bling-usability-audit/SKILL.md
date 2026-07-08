@@ -1,6 +1,6 @@
 ---
 name: bling-usability-audit
-description: Executable BLING usability audit — drives YoBrowser to navigate UI as a real user, tests all interactions, captures screenshots, evaluates visual polish, and fills out the BLING-USABILITY-AUDIT template. Combines BLIND functional testing with BLING visual polish review.
+description: Executable usability audit — drives YoBrowser to navigate UI as a real user, tests all interactions, captures screenshots, evaluates visual polish, and fills out the BLING-USABILITY-AUDIT template. Combines functional testing with visual polish review. Use when user says "test my app," "check my website," "run usability test," "UI audit," "screenshot test," "browser test," "accessibility check."
 version: 1.0
 ---
 
