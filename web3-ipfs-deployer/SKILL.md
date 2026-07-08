@@ -462,3 +462,5 @@ node scripts/publication-pipeline.js publish ./my-paper/
 ---
 
 *web3-ipfs-deployer v1.0 — POC/Experimental. Zero-dependency IPFS toolkit for QNFO research publication permanence.*
+
+> **Version:** (Kaizen-audited 2026-07-08)

@@ -201,3 +201,5 @@ Follow the **Conventional Commits** specification:
 ---
 
 *git-hygiene v1.0 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/git-hygiene\\SKILL.md'). Not accessible via skill_view().*
+
+> **Version:** (Kaizen-audited 2026-07-08)

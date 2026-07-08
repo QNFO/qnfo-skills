@@ -154,3 +154,5 @@ If MISSING: these are project-level scripts. Check the `email-agent` project in 
 ---
 
 *email-composer v2.1 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/email-composer\\SKILL.md'). Not accessible via skill_view().*
+
+> **Version:** (Kaizen-audited 2026-07-08)

@@ -1484,5 +1484,4 @@ ANTI-PATTERN: User should NEVER ask about quality.
 
 Refer to RED-TEAM-PROTOCOL.md for full protocol.
 
-
-
+> **Version:** (Kaizen-audited 2026-07-08)

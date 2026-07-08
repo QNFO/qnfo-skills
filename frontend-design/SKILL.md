@@ -149,3 +149,5 @@ bash scripts/bundle-artifact.sh
 ```
 
 > **Platform Note:** Scripts use `bash`. Use Git Bash or WSL on Windows.
+
+> **Version:** (Kaizen-audited 2026-07-08)

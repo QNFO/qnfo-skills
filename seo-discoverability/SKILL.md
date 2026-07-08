@@ -161,3 +161,5 @@ All build artifacts are stored at: `%TEMP%\qnfo-seo-build\<project-name>\`
 ---
 
 *seo-discoverability v1.0 — Automated SEO + AI crawler optimization for QNFO/QWAV*
+
+> **Version:** (Kaizen-audited 2026-07-08)

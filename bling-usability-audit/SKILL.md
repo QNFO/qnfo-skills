@@ -459,3 +459,5 @@ The final output is the filled `BLING-USABILITY-AUDIT` template with:
 ---
 
 *bling-usability-audit v1.0 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/bling-usability-audit\\SKILL.md'). Not accessible via skill_view().*
+
+> **Version:** (Kaizen-audited 2026-07-08)
