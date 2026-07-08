@@ -1,3 +1,9 @@
+---
+name: ipfs-pinning
+description: IPFS content pinning via Pinata — upload, pin, unpin, and manage IPFS content hashes. Use when publishing papers to IPFS, pinning content-addressed data, or managing decentralized storage.
+version: "1.0"
+---
+
 ## execute_plan (MANDATORY -- Before Any Execution)
 
 **This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.
