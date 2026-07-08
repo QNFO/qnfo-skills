@@ -1,4 +1,4 @@
-﻿---
+---
 name: knowledge-graph
 description: QNFO Knowledge Graph querying for due diligence, impact analysis, ultrametric clustering, and cross-system discovery. Supports ball queries, hierarchical taxonomy, and lifecycle-aware project queries.
 version: "2.4"

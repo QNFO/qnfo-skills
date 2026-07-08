@@ -2,6 +2,7 @@
 name: skill-autoloader
 description: AUTOMATICALLY loads relevant QNFO skills based on task detection. User NEVER manually loads skills. Cross-references all skills. Handles fallback when skill_view() fails.
 pinned: true
+version: "1.0"
 ---
 
 ### Programmatic Loading & Execution
@@ -47,7 +48,7 @@ The LLM system automatically detects what skills are needed for any task and loa
 
 **The autoloader is self-sufficient.** All shared protocols are embedded inline in this document. No external `skill_view()` calls, no filesystem reads for protocol content. The shared reference files on disk are REDUNDANT BACKUPS — they are NOT loaded at runtime.
 
-**Embedded Red-Team Protocol:** Before claiming any task complete, autonomously run: (1) Output Verification — negative verification, try to prove claims are FALSE. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — run _dod_enforce.py if exists. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+**Embedded Red-Team Protocol:** Before claiming any task complete, autonomously run: (1) Output Verification — negative verification, try to prove claims are FALSE. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — verify all criteria met with tool evidence. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
 **Embedded Design System (LOCKED v3.0):** Design tokens: `--blue: #1a56db; --blue-dark: #1040a8; --blue-light: #dbeafe; --blue-subtle: #eff6ff; --blue-mid: #6094e8; --text: #1a1a2e; --text-muted: #6b7280; --bg: #ffffff; --border: #e5e7eb; --card-bg: #f9fafb; --max-w: 960px; --radius: 8px;` Fonts: Inter (headings/nav/meta), Source Serif 4 (body), JetBrains Mono (code). 🚫 Dark themes forbidden. Light theme only. Mandatory components: Sticky Top Nav (backdrop-blur), AI Query box, Related Papers section, Paper cards (hover shadow), Badges (DOI blue, Type purple, Category green, Tag gray, License orange).
 

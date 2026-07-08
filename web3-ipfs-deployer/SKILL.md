@@ -1,9 +1,10 @@
 ---
 name: web3-ipfs-deployer
 description: Web3/IPFS development toolkit for research publication permanence — CID computation, DAG building, CAR archive creation, gateway verification, DID/ENS identity, multi-service pinning (Pinata, web3.storage, Lighthouse, Filecoin, Arweave), and end-to-end publication pipeline integration with QNFO infrastructure (Cloudflare R2, D1, Workers, Pages). Use when the user wants to: (1) compute IPFS CIDs or generate content-addressed manifests, (2) create CAR archives for publication preservation, (3) verify content availability across IPFS gateways, (4) generate DIDs and sign content attestations, (5) pin content to IPFS pinning services, (6) explore or deploy IPFS/Web3 permanence layers for research publications, (7) design or implement content-addressed storage architecture, or (8) run the full QNFO publication-to-IPFS pipeline.
+version: "1.0"
 ---
 
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
+> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- verify all criteria met with tool evidence. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
 > **Related:** cloudflare-deployer
 # WEB3/IPFS DEPLOYER SKILL — v1.0

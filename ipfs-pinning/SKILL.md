@@ -26,6 +26,7 @@ update_plan([
 > **Related:** cloudflare-deployer, publication-publisher, closeout-manager
 > **Auto-load triggers:** ipfs, pinata, cid, pinning, paper hash, content-addressing
 
+version: "1.0"
 ---
 
 ## 0. WHY THIS EXISTS
