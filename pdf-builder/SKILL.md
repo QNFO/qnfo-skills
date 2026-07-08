@@ -1,7 +1,7 @@
 ---
 name: pdf-builder
 description: Build publication-quality PDFs from Markdown files using Pandoc+XeLaTeX for proper TeX typesetting with full LaTeX math rendering. Use when the agent needs to convert .md to .pdf for QNFO publications, papers, or reports. XeLaTeX ONLY — no reportlab or HTML fallbacks permitted for publications.
-version: "4.1"
+version: "4.2"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 

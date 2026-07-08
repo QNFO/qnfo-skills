@@ -884,3 +884,4 @@ Before claiming this skill complete, autonomously run:
 ANTI-PATTERN: User should NEVER ask about quality.
 **Skill-Specific Checks:** Verify all handoffs written to D1. Verify lifecycle timestamps reset. Verify thin-client cleanup complete. Verify closeout checklist passed all phases.
 
+> **Version:** (Kaizen-audited 2026-07-08)

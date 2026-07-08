@@ -653,3 +653,4 @@ Before claiming this skill complete, autonomously run:
 ANTI-PATTERN: User should NEVER ask about quality.
 **Skill-Specific Checks:** (add below as applicable) — Verify self-sufficiency (no external read/R2 deps). Verify chain integrity (no [SUB:] items pending). Verify update_plan populated with execution evidence.
 
+> **Version:** (Kaizen-audited 2026-07-08)
