@@ -95,7 +95,7 @@ Integrate with the Buffer GraphQL API (api.buffer.com) to create, schedule, and 
 # Get token from: https://buffer.com/developers
 # IMPORTANT: Save as UTF-8 without BOM
 # Write setup script to file, execute, discard
-echo "import os; token = input('Buffer Access Token: ').strip(); path = os.path.expandvars(r'%USERPROFILE%\\.buffer_token'); open(path, 'w', encoding='utf-8').write(token); print('[OK] Buffer token stored')" > _setup_buffer_token.py
+echo "import os; token = input('Buffer Access Token: ').strip(); path = os.path.expandvars(r'%USERPROFILE%\\.buffer_token'); open(path, 'w', encoding='utf-8-sig').write(token); print('[OK] Buffer token stored')" > _setup_buffer_token.py
 python _setup_buffer_token.py
 Remove-Item _setup_buffer_token.py
 ```
@@ -118,7 +118,7 @@ Remove-Item _fix_bom.py
 import os
 
 def load_buffer_token():
-    token_path = os.path.expandvars(r'%USERPROFILE%\.buffer_token')
+    token_path = os.path.join(os.environ['USERPROFILE'], '.buffer_token')
     if not os.path.exists(token_path):
         raise FileNotFoundError(
             "[BLOCKED] Buffer token not found. Get token from "
