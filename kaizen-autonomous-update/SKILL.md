@@ -157,6 +157,21 @@ Tools execute locally (Python requires filesystem access) but do NOT persist:
 3. **Discard:** `Remove-Item _<name>.py`
 4. If R2 copy missing: flag `[SKILL-GAP: script <name>.py missing from R2, cannot bootstrap]`
 
+## Handoff Protocol (MANDATORY at Closeout)
+
+1. **Verify** ALL execute_plan items marked [EXECUTED] with tool evidence (Test-Path, exec output, git log)
+2. **Archive** session artifacts to R2 canonical storage: `npx wrangler r2 object put qnfo/audit/... --remote --file=<artifact>`
+3. **Generate** continuation prompt documenting pending work and current state for the next session
+4. **Clean up** ephemeral _* files and __pycache__ directories: `Remove-Item _* -Recurse -Force`
+
+### Continuation Prompt Template
+```
+TASK: [description of pending work from execute_plan]
+STATE: [current state — what's executed, what's blocked, why]
+NEXT: [first executable action for the next session]
+R2: [canonical path for session artifacts]
+```
+
 ## RT: RED-TEAM SELF-AUDIT
 
 Before claiming this skill complete, autonomously run:

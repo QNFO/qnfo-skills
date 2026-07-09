@@ -486,3 +486,28 @@ The final output is the filled `BLING-USABILITY-AUDIT` template with:
 *bling-usability-audit v1.0 — QNFO custom skill. Load via read('R2 `qnfo/prompts/skills/bling-usability-audit\\SKILL.md'). Not accessible via skill_view().*
 
 > **Version:** (Kaizen-audited 2026-07-08)
+## Handoff Protocol (MANDATORY at Closeout)
+
+1. **Verify** ALL execute_plan items marked [EXECUTED] with tool evidence (Test-Path, exec output, git log)
+2. **Archive** session artifacts to R2 canonical storage: `npx wrangler r2 object put qnfo/audit/... --remote --file=<artifact>`
+3. **Generate** continuation prompt documenting pending work and current state for the next session
+4. **Clean up** ephemeral _* files and __pycache__ directories: `Remove-Item _* -Recurse -Force`
+
+### Continuation Prompt Template
+```
+TASK: [description of pending work from execute_plan]
+STATE: [current state — what's executed, what's blocked, why]
+NEXT: [first executable action for the next session]
+R2: [canonical path for session artifacts]
+```
+
+
+## Closeout Protocol (MANDATORY)
+
+Before declaring this skill workflow complete:
+1. **Task Execution Verification:** Compare planned tasks ([PENDING] in execute_plan) vs executed tasks ([EXECUTED] with evidence)
+2. **Filesystem Verification:** `Test-Path <file>` for every file claimed as created/modified. Never claim from memory.
+3. **Git Verification:** `git log -1 --oneline` for every commit claimed. Verify commit hash exists.
+4. **R2 State Upload:** Upload session audit trail to `qnfo/audit/` — conversations, decisions, state files.
+5. **Discovery Index Update:** Update `qnfo/discovery/index.json` with any new resources created, projects modified, or publications generated.
+6. **Ephemeral Cleanup:** Delete ALL _* prefixed files and __pycache__ directories. Session is not complete until `Get-ChildItem -File -Name | Where-Object { $_ -match '^_' }` returns zero results.

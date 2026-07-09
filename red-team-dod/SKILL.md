@@ -272,3 +272,17 @@ Includes prompt injection red-team and autonomous trigger on any prompt modifica
 *red-team-dod v1.1 — Autonomous RED-TEAM to DoD to ITERATE to REFINE cycle. Priority 0 via execution-guard integration. v1.1 adds DNS cross-reference edge case + Infrastructure Audit DoD criteria.*
 
 > **Version:** (Kaizen-audited 2026-07-08)
+## Handoff Protocol (MANDATORY at Closeout)
+
+1. **Verify** ALL execute_plan items marked [EXECUTED] with tool evidence (Test-Path, exec output, git log)
+2. **Archive** session artifacts to R2 canonical storage: `npx wrangler r2 object put qnfo/audit/... --remote --file=<artifact>`
+3. **Generate** continuation prompt documenting pending work and current state for the next session
+4. **Clean up** ephemeral _* files and __pycache__ directories: `Remove-Item _* -Recurse -Force`
+
+### Continuation Prompt Template
+```
+TASK: [description of pending work from execute_plan]
+STATE: [current state — what's executed, what's blocked, why]
+NEXT: [first executable action for the next session]
+R2: [canonical path for session artifacts]
+```
