@@ -143,7 +143,7 @@ def list_channels(token: str) -> list[dict]:
             body["variables"] = variables
         data = json.dumps(body).encode("utf-8")
         req = urllib.request.Request(
-            "https://api.buffer.com/1/graphql.json", data=data, method="POST"
+            "https://api.buffer.com/graphql", data=data, method="POST"
         )
         req.add_header("Authorization", f"Bearer {token}")
         req.add_header("Content-Type", "application/json")
@@ -353,7 +353,7 @@ The GraphQL API was **proven working** for 6 posts across 3 channels:
 1. `schedulingType` and `mode` are **separate top-level fields** in CreatePostInput (not nested)
 2. `isQueuePaused` is the correct field name (not `isPaused`)
 3. ChannelId must be the **exact 24-char hex** from the channels query — never truncated
-4. GraphQL endpoint: `https://api.buffer.com/1/graphql.json` — REST API `api.bufferapp.com` is dead
+4. GraphQL endpoint: `https://api.buffer.com/graphql` — REST API `api.bufferapp.com` is dead
 
 
 
