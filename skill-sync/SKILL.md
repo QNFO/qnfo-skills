@@ -78,6 +78,59 @@ Skills are modified locally but must be pushed to GitHub and R2 for redundancy. 
 
 ## Quick Sync (One Command)
 
+### DEC-034 Concurrency-Safe Sync (v2.0 — 2026-07-10)
+
+**CRITICAL:** Multiple LLM sessions can modify the same skill simultaneously. Without concurrency protection, the last session to sync silently overwrites prior changes. This section documents the safe sync protocol.
+
+#### Safe Sync Protocol (ALWAYS use these steps)
+
+```python
+from infra_lock_client import LockClient
+client = LockClient()
+
+# 1. Acquire DO lock before touching the skill
+client.lock("r2", f"prompts/skills/{skill_name}/SKILL.md", ttl_seconds=300)
+
+# 2. Read current R2 ETag (detect drift)
+# etag = bootstrap_skills._r2_get_etag(key)
+
+# 3. Write to R2
+# Upload SKILL.md to qnfo/prompts/skills/<name>/SKILL.md
+
+# 4. Release lock
+client.unlock("r2", f"prompts/skills/{skill_name}/SKILL.md")
+```
+
+#### Concurrency Protection Matrix
+
+| Resource | Lock Key | TTL | Failure Mode |
+|:---------|:---------|:----|:-------------|
+| R2 skills | `r2:prompts/skills/<name>/SKILL.md` | 300s | 409 Conflict → retry with backoff |
+| GitHub push | git merge conflict | N/A | Automatic — git rejects push |
+| D1 sync record | `d1:resources:<id>` | 120s | Version check UPDATE |
+
+#### bootstrap_skills.py v2.0 (DEC-034 Integrated)
+
+The canonical sync tool now includes:
+- `_do_lock()` / `_do_unlock()` — InfraLockManager DO integration
+- `_safe_r2_put_with_lock()` — Lock→Upload→Unlock with retry
+- `_r2_get_etag()` — Drift detection via R2 ETags
+- `--dry-run` — Preview sync without uploading
+
+**Canonical location:** `R2: qnfo/tools/bootstrap_skills.py`
+**DO endpoint:** `https://infra-lock-manager.q08.workers.dev`
+
+#### Collision Detection Flow
+
+```
+Session-A syncs skill-sync  →  lock(r2, prompts/skills/skill-sync/SKILL.md)  →  ACQUIRED
+Session-B syncs skill-sync  →  lock(r2, prompts/skills/skill-sync/SKILL.md)  →  409 CONFLICT
+Session-B waits 2s, retries →  (still locked by A)
+Session-A uploads, unlocks  →  RELEASED
+Session-B retries            →  lock(r2, ...)  →  ACQUIRED  →  reads latest  →  uploads
+```
+
+
 ```bash
 python "%USERPROFILE%\.deepchat\skills\bootstrap_skills.py" --sync
 ```

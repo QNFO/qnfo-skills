@@ -447,6 +447,18 @@ Execute these checks programmatically. Do NOT rely on memory or assumptions:
 **RED-TEAM:** If publication occurred but no provenance bundle, README.md, Cloudflare mirror (D1 + KG), or KG location properties (social_urls, zenodo_url, github_url, pages_url) were created → `[BLOCKING: publication without provenance — violation of publication-publisher v3.1 Stage 3.5 + Stage 6.5 + Stage 6.6 gates]`. Fix before closeout: assemble provenance bundle + README, seed D1 + KG with ALL known locations, create new Zenodo version if necessary.
 
 **F. TEST SUITE (if available)**
+
+**F.2 CONCURRENCY VERIFICATION (DEC-034 — v3.6 — 2026-07-10)**
+
+| Check | Command | Gate |
+|:------|:--------|:-----|
+| DO healthy? | `curl -s https://infra-lock-manager.q08.workers.dev/health` | status=healthy |
+| Active locks? | `curl -s https://infra-lock-manager.q08.workers.dev/api/list` | Must be 0 (or only this session's locks) |
+| D1 version drift? | `SELECT id, _version FROM decisions` vs local state | Versions must match |
+| D1 table drift? | `SELECT name FROM pragma_table_info('<table>') WHERE name='_version'` | All mutable tables must have `_version` column |
+
+**GATE:** If any active locks from OTHER sessions → `[BLOCKING: concurrent session active — resources may be modified]`. Wait for locks to clear or escalate.
+
 ```bash
 python _test_suite.py --quick  # Smoke test
 ```

@@ -52,6 +52,46 @@ the user with the specific failure reason.
 
 ### Example Plan
 
+### DEC-034 Lock-Before-Edit Protocol (v1.3 — 2026-07-10)
+
+**CRITICAL:** Before modifying ANY skill file, acquire an InfraLockManager DO lock. This prevents multi-session write collisions where two sessions edit the same skill and one silently overwrites the other's changes.
+
+#### Protocol
+
+```python
+from infra_lock_client import LockClient, LockCollision
+
+client = LockClient()
+
+# 1. Lock before editing
+try:
+    client.lock("r2", f"prompts/skills/{skill_name}/SKILL.md", ttl_seconds=600)
+except LockCollision:
+    # Another session is editing this skill — wait and retry
+    time.sleep(3)
+    client.lock("r2", f"prompts/skills/{skill_name}/SKILL.md", ttl_seconds=600)
+
+# 2. Edit the skill
+
+# 3. Sync (bootstrap_skills.py handles R2 upload + unlock)
+# python bootstrap_skills.py --sync
+
+# 4. Unlock (bootstrap_skills.py does this automatically)
+```
+
+#### Resource Lock Matrix for Kaizen Updates
+
+| Phase | Resources Modified | Lock Required |
+|:------|:-------------------|:-------------|
+| Phase 1 (prompts) | Prompt templates | `r2:prompts/*` |
+| Phase 3 (skills) | Skill SKILL.md files | `r2:prompts/skills/*/SKILL.md` |
+| Phase 4 (agents) | Agent configs | `d1:agents:*` |
+| Phase 6 (deploy) | Workers, R2 | `worker:*` + `r2:*` |
+
+**DO endpoint:** `https://infra-lock-manager.q08.workers.dev`
+**Client:** `infra_lock_client.py` (in infra-lock-manager workspace)
+
+
 update_plan([
   {"step": "Phase 0: Pull Discovery Index + run Kaizen audit", "status": "pending"},
   {"step": "Phase 1: Update system prompts", "status": "pending"},
