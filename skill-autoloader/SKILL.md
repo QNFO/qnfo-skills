@@ -48,6 +48,13 @@ is required for the task and cannot be loaded after 3 retries, escalate to
 the user with the specific failure reason.
 ---
 
+### DEC-034 Concurrency-Safe Loading (v1.3 — 2026-07-10)
+
+CRITICAL: Before loading skills, check InfraLockManager DO for active locks. Locked skills load stale copies with [SKILL-LOCKED] flag.
+Variant dedup: canonical loads first, skip -claude-code/-agents unless no canonical exists.
+DO: https://infra-lock-manager.q08.workers.dev | Protocol: DEC-034
+
+
 ## execute_plan (MANDATORY -- Before Any Execution)
 
 **This skill involves execution-heavy workflows.** Before executing, use update_plan to populate a concrete, verifiable checklist. Every item must be short, specific, and testable with tool evidence.

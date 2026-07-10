@@ -45,6 +45,14 @@ the user with the specific failure reason.
 
 ---
 
+### DEC-034 Safe Push Protocol (v1.5 — 2026-07-10)
+
+CRITICAL: Acquire DO lock before git amend/force-push to prevent multi-session collisions.
+Lock required for: amend(300s), force-push(300s), tag-overwrite(120s), merge-conflict(600s).
+Normal fast-forward push: NO lock needed (git handles this).
+DO: https://infra-lock-manager.q08.workers.dev | Protocol: DEC-034
+
+
 > **Related:** closeout-manager
 
 ---

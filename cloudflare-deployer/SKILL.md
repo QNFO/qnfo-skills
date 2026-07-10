@@ -59,6 +59,13 @@ the user with the specific failure reason.
 
 ---
 
+### DEC-034 Safe Deploy Protocol (v1.5 — 2026-07-10)
+
+CRITICAL: Multiple LLM sessions can deploy Workers/Pages/DNS simultaneously. Use InfraLockManager DO.
+Lock matrix: worker:<name>(600s), pages:<project>(600s), dns:<zone>:<record>(300s), r2:<path>(300s), kv:<ns>:<key>(120s).
+DO: https://infra-lock-manager.q08.workers.dev | Protocol: DEC-034
+
+
 # CLOUDFLARE DEPLOYER SKILL — v1.3 — v2.2
 
 > **On-demand skill.** Load via `skill_view('cloudflare-deployer')` for all Cloudflare operations.
