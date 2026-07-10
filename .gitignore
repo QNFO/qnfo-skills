@@ -13,3 +13,8 @@ _*
 
 # Git internal
 .git/
+
+# Variant skill dirs (DeepChat v1.0.9 adopted from Claude Code / Agents SDK)
+# All have corresponding base skills — do NOT sync duplicates
+*-claude-code/
+*-agents/

@@ -1,5 +1,5 @@
 {
-  "total": 53,
+  "total": 55,
   "skills": [
     {
       "name": "agents-sdk",
@@ -57,7 +57,7 @@
     },
     {
       "name": "cloudflare-one",
-      "description": "Guides Cloudflare One Zero Trust and SASE work across Access, Gateway, WARP, Tunnel, Cloudflare WAN, DLP, CASB, device posture, and identity. Use when designing, configuring, troubleshooting, or reviewing Cloudflare One deployments. Retrieval-first: use current Cloudflare docs/API schemas instead of embedded product docs.",
+      "description": "Guides Cloudflare One Zero Trust and SASE work across Access, Gateway, WARP, Tunnel, Cloudflare WAN, DLP, CASB, device posture, and identity. Use when designing, configuring, troubleshooting, or reviewing Cloudflare One deployments. Retrieval-first— use current Cloudflare docs/API schemas instead of embedded product docs.",
       "version": "0.0.0",
       "path": "cloudflare-one/SKILL.md"
     },
@@ -87,7 +87,7 @@
     },
     {
       "name": "docx",
-      "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
+      "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for — (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks",
       "version": "2.0",
       "path": "docx/SKILL.md"
     },
@@ -105,7 +105,7 @@
     },
     {
       "name": "execution-guard",
-      "description": "PRIORITY 0 execution enforcement guard. Always active. Prevents planning spirals and phantom completion claims by checking task register before every response. Use when user says 'check my tasks,' 'whats pending,' 'track my work,' 'verify everything is done,' 'audit execution.' Triggers: session start, before any response, when tasks are pending.",
+      "description": "PRIORITY 0 execution enforcement guard. Always active. Prevents planning spirals and phantom completion claims by checking task register before every response. Use when user says 'check my tasks,' 'whats pending,' 'track my work,' 'verify everything is done,' 'audit execution.' Triggers— session start, before any response, when tasks are pending.",
       "version": "1.11",
       "path": "execution-guard/SKILL.md"
     },
@@ -128,6 +128,12 @@
       "path": "git-hygiene/SKILL.md"
     },
     {
+      "name": "github-manager",
+      "description": "DEPRECATED -- ARCHIVED (2026-06-01). GitHub fully deprecated per ADR-001. All PM is Cloudflare-native (R2, D1, Workers, Pages). This skill retained for historical reference only. Do NOT use for new operations.",
+      "version": "0.0.0",
+      "path": "github-manager/SKILL.md"
+    },
+    {
       "name": "infographic-syntax-creator",
       "description": "Generate AntV Infographic syntax outputs. Use when asked to turn user content into the Infographic DSL (template selection, data structuring, theme), or to output `infographic <template>` plain syntax.",
       "version": "1.1",
@@ -148,7 +154,7 @@
     {
       "name": "kaizen-autonomous-update",
       "description": "Autonomous system-wide Kaizen continuous improvement protocol. Updates all prompts, templates, skills, agents/subagents, deploys, and commits. Use when user says \"UPDATE ALL FROM KAIZEN,\" \"system update,\" \"update all skills,\" \"continuous improvement,\" \"Kaizen update,\" \"auto-update,\" \"upgrade everything,\" \"refresh all settings,\" or when Kaizen engine detects 5+ unapplied improvements.",
-      "version": "1.2",
+      "version": "1.3",
       "path": "kaizen-autonomous-update/SKILL.md"
     },
     {
@@ -195,7 +201,7 @@
     },
     {
       "name": "pptx",
-      "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+      "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for — (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
       "version": "2.0",
       "path": "pptx/SKILL.md"
     },
@@ -225,7 +231,7 @@
     },
     {
       "name": "research-planner",
-      "description": "Generates phased research plans, abstracts, theses, and research questions from a seed idea or provocative observation. Maps to standard research methodology: assumption analysis, hypothesis generation, literature gap identification, experimental design, and dissemination planning. Deconstructs assumptions to separate arbitrary conventions (scaffolds) from persistent relational structures (invariants), then spirals into cross-disciplinary themes. Outputs an LLM-executable research program in quick (3-stage) or full (7-stage) modes. USE WHEN the user asks to \"create a research plan,\" \"develop a research agenda,\" \"generate research questions,\" \"write an abstract and thesis,\" \"deconstruct this idea,\" \"what assumptions are we making,\" \"analyze this concept,\" \"plan a research project,\" says \"I have a weird thought about,\" \"I keep wondering whether,\" \"there's something off about,\" \"what if everything we think about,\" \"let's investigate,\" or presents a stream-of-consciousness observation they want turned into a systematic investigation. NOT for: literature-only searches, citation formatting, code debugging, factual QA, or tasks requiring physical lab access.",
+      "description": "Generates phased research plans, abstracts, theses, and research questions from a seed idea or provocative observation. Maps to standard research methodology— assumption analysis, hypothesis generation, literature gap identification, experimental design, and dissemination planning. Deconstructs assumptions to separate arbitrary conventions (scaffolds) from persistent relational structures (invariants), then spirals into cross-disciplinary themes. Outputs an LLM-executable research program in quick (3-stage) or full (7-stage) modes. USE WHEN the user asks to \"create a research plan,\" \"develop a research agenda,\" \"generate research questions,\" \"write an abstract and thesis,\" \"deconstruct this idea,\" \"what assumptions are we making,\" \"analyze this concept,\" \"plan a research project,\" says \"I have a weird thought about,\" \"I keep wondering whether,\" \"there's something off about,\" \"what if everything we think about,\" \"let's investigate,\" or presents a stream-of-consciousness observation they want turned into a systematic investigation. NOT for: literature-only searches, citation formatting, code debugging, factual QA, or tasks requiring physical lab access.",
       "version": "5.0",
       "path": "research-planner/SKILL.md"
     },
@@ -244,7 +250,7 @@
     {
       "name": "skill-autoloader",
       "description": "AUTOMATICALLY loads relevant skills based on task detection. User NEVER manually loads skills. Cross-references all skills and handles fallback chains. Use when skill loading is needed, task patterns must be detected, or skill_view() resolution fails and requires fallback recovery.",
-      "version": "1.1",
+      "version": "1.2",
       "path": "skill-autoloader/SKILL.md"
     },
     {
@@ -256,7 +262,7 @@
     {
       "name": "skill-sync",
       "description": "Sync all DeepChat skills between local disk, GitHub, and Cloudflare R2. Monitors skill modifications and auto-syncs after changes. Updates Discovery Index with current versions. Use when skills are modified and need to be pushed to redundant backups, or to check sync status.",
-      "version": "1.4",
+      "version": "1.5",
       "path": "skill-sync/SKILL.md"
     },
     {
@@ -270,6 +276,12 @@
       "description": "MANDATORY test enforcement for ALL code changes, deployments, and infrastructure modifications. Runs canonical test suite before claiming any action as EXECUTED. Priority 1 — pinned and always active.",
       "version": "1.3",
       "path": "test-enforcement/SKILL.md"
+    },
+    {
+      "name": "tufte-viz",
+      "description": "Ideate and critique data visualizations using Edward Tufte's principles from \"The Visual Display of Quantitative Information.\" Use this skill when:\n(1) Designing new data visualizations or charts\n(2) Critiquing or improving existing visualizations\n(3) Reviewing dashboards or reports for graphical integrity\n(4) Deciding between visualization approaches\n(5) Reducing chartjunk or improving data-ink ratio\n(6) Planning small multiples or high-density displays\nApplies principles: data-ink ratio, chartjunk elimination, graphical integrity, lie factor, small multiples, and data density.",
+      "version": "0.0.0",
+      "path": "tufte-viz/SKILL.md"
     },
     {
       "name": "turnstile-spin",
@@ -297,7 +309,7 @@
     },
     {
       "name": "web3-ipfs-deployer",
-      "description": "Web3/IPFS development toolkit for research publication permanence — CID computation, DAG building, CAR archive creation, gateway verification, DID/ENS identity, multi-service pinning (Pinata, web3.storage, Lighthouse, Filecoin, Arweave), and end-to-end publication pipeline integration with QNFO infrastructure (Cloudflare R2, D1, Workers, Pages). Use when the user wants to: (1) compute IPFS CIDs or generate content-addressed manifests, (2) create CAR archives for publication preservation, (3) verify content availability across IPFS gateways, (4) generate DIDs and sign content attestations, (5) pin content to IPFS pinning services, (6) explore or deploy IPFS/Web3 permanence layers for research publications, (7) design or implement content-addressed storage architecture, or (8) run the full QNFO publication-to-IPFS pipeline.",
+      "description": "Web3/IPFS development toolkit for research publication permanence — CID computation, DAG building, CAR archive creation, gateway verification, DID/ENS identity, multi-service pinning (Pinata, web3.storage, Lighthouse, Filecoin, Arweave), and end-to-end publication pipeline integration with QNFO infrastructure (Cloudflare R2, D1, Workers, Pages). Use when the user wants to — (1) compute IPFS CIDs or generate content-addressed manifests, (2) create CAR archives for publication preservation, (3) verify content availability across IPFS gateways, (4) generate DIDs and sign content attestations, (5) pin content to IPFS pinning services, (6) explore or deploy IPFS/Web3 permanence layers for research publications, (7) design or implement content-addressed storage architecture, or (8) run the full QNFO publication-to-IPFS pipeline.",
       "version": "1.1",
       "path": "web3-ipfs-deployer/SKILL.md"
     },
@@ -315,7 +327,7 @@
     },
     {
       "name": "xlsx",
-      "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+      "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for — (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
       "version": "2.0",
       "path": "xlsx/SKILL.md"
     }
