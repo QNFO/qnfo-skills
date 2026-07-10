@@ -1,7 +1,7 @@
 ---
 name: skill-sync
 description: Sync all DeepChat skills between local disk, GitHub, and Cloudflare R2. Monitors skill modifications and auto-syncs after changes. Updates Discovery Index with current versions. Use when skills are modified and need to be pushed to redundant backups, or to check sync status.
-version: "1.4"
+version: "1.5"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration -- run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
@@ -87,6 +87,24 @@ This:
 2. Uploads all skills to R2 (`qnfo/prompts/skills/<name>/SKILL.md`)
 3. Reports sync status
 4. **AUTO-TRIGGERS gap audit** (closeout-manager §2.6) — verifies R2, GitHub, and DI consistency
+
+### Variant Deduplication (v1.0 — DeepChat v1.0.9 Multi-Agent Adoption)
+
+DeepChat v1.0.9 adopted skills from Claude Code and Agents SDK. Conflicting skills were renamed with `-claude-code` or `-agents` suffixes. When syncing, the sync tool MUST deduplicate variants to prevent syncing redundant copies to GitHub/R2.
+
+**Dedup Strategy:**
+1. **Scan for variants:** Identify all skill directories whose name ends in `-claude-code` or `-agents`
+2. **Derive base name:** Strip the suffix to get the canonical skill name (e.g., `cloudflare-claude-code` → `cloudflare`)
+3. **Check for canonical:** If `%USERPROFILE%\.deepchat\skills\<base>\SKILL.md` exists, the suffixed copy is a variant import
+4. **Sync only canonical:** For conflicting variants, sync ONLY the base-named canonical skill. Do NOT sync `-claude-code` or `-agents` variants to GitHub/R2
+5. **Sync solo copies:** If a `-claude-code` or `-agents` skill exists WITHOUT a corresponding base-named skill (adopted without conflict), sync it as-is
+6. **Flag drift:** If a variant SKILL.md content differs from its canonical base, flag `[VARIANT-DRIFT: <name>-suffix diverged]` in sync report
+7. **Update DI:** The Discovery Index should list only canonical skills, with a `variants:` metadata field noting which suffixed copies exist locally
+
+**Current variant map (2026-07-10):**
+- `-claude-code` variants (40): agents-sdk, algorithmic-art, bling-usability-audit, closeout-manager, cloudflare, cloudflare-deployer, cloudflare-email-service, cloudflare-one, cloudflare-one-migrations, code-review, deepchat-settings, doc-coauthoring, docx, durable-objects, email-composer, execution-guard, frontend-design, git-commit, git-hygiene, infographic-syntax-creator, kaizen-autonomous-update, knowledge-graph, local-to-r2-migration, mcp-builder, pdf, pdf-builder, pptx, prompt-audit, publication-publisher, sandbox-sdk, skill-creator, template-catalog, turnstile-spin, web-artifacts-builder, web-perf, workers-best-practices, wrangler, xlsx
+- `-agents` variants (13): agents-sdk, cloudflare, cloudflare-email-service, cloudflare-one, cloudflare-one-migrations, durable-objects, sandbox-sdk, turnstile-spin, web-perf, workers-best-practices, wrangler
+- Skills adopted without conflict (no suffix): buffer-integration, citation-manager, github-manager, ipfs-pinning, literature-search, memory-management, qnfo-agent, red-team-dod, research-planner, seo-discoverability, skill-sync, test-enforcement, tufte-viz, ultrametric-engine, web3-ipfs-deployer
 
 **KNOWN ISSUE: `npx` not found in Python subprocess PATH on Windows.** `bootstrap_skills.py --sync` calls `subprocess.run(["npx", "wrangler", ...])` which fails on Windows because `npx` is a PowerShell script wrapper, not an executable on the system PATH. Python `subprocess.run()` does not inherit the PowerShell PATH.
 
