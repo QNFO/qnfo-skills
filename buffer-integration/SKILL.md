@@ -33,9 +33,9 @@ the user with the specific failure reason.
 
 ---
 
-# BUFFER INTEGRATION SKILL — v3.1
+# BUFFER INTEGRATION SKILL — v3.2
 
-> **Version:** v3.1 (Kaizen-audited 2026-07-11) — adds journal + indexing metadata to social media post templates
+> **Version:** v3.2 (Kaizen-audited 2026-07-11) — excludes journal_line per user: all QNFO/QWAV pubs are exclusively via Zenodo; posts now reference "Published on Zenodo" with indexing metadata only
 
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
@@ -415,8 +415,11 @@ Each social platform has different character limits, formatting rules, and audie
 ```python
 def format_for_channel(service: str, paper_title: str, paper_doi: str, 
                         key_finding: str = "", paper_url: str = "",
-                        journal: str = "", indexing: str = "") -> str:
-    """Generate channel-optimized post text including journal and indexing metadata.
+                        indexing: str = "") -> str:
+    """Generate channel-optimized post text including indexing metadata.
+    
+    All QNFO/QWAV publications are exclusively via Zenodo (not traditional journals).
+    Posts include Zenodo DOI and indexing services for scholarly discoverability.
     
     Args:
         service: 'twitter', 'linkedin', or 'bluesky'
@@ -424,12 +427,10 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
         paper_doi: Zenodo DOI (e.g., '10.5281/zenodo.XXXXXXX')
         key_finding: One-sentence research finding
         paper_url: Custom URL (defaults to doi.org/DOI)
-        journal: Journal/venue name (e.g., 'QNFO/QWAV Working Paper', 'Zenodo')
         indexing: Comma-separated indexing services (e.g., 'Zenodo, Google Scholar, Semantic Scholar')
     """
     
-    # Build metadata lines (compact for Twitter, full for LinkedIn)
-    journal_line = f"📰 {journal}" if journal else "📰 QNFO/QWAV Working Paper"
+    # Build indexing/metadata lines (compact for Twitter, full for LinkedIn)
     indexing_line = f"📚 Indexed: {indexing}" if indexing else "📚 Indexed: Zenodo, Google Scholar, Semantic Scholar"
     indexing_short = f"📚 {indexing}" if indexing else "📚 Zenodo, Google Scholar"
     
@@ -438,7 +439,7 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
             "max_chars": 280,
             "format": (
                 "🚀 {hook}\n"
-                "{journal_line}\n"
+                "📄 Published on Zenodo\n"
                 "🔑 {finding}\n"
                 "🔗 {link}\n"
                 "{indexing_short}\n"
@@ -451,10 +452,9 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
             "format": (
                 "📄 New Research Publication\n\n"
                 "**Title:** {title}\n\n"
-                "**Published in:** {journal_line}\n\n"
+                "📄 Published on Zenodo | DOI: {link}\n\n"
                 "{finding}\n\n"
                 "{indexing_line}\n\n"
-                "🔗 Read the full paper: {link}\n\n"
                 "{hashtags}"
             ),
             "hashtags": "#Research #AcademicPublishing #OpenScience #QNFO",
@@ -463,7 +463,7 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
             "max_chars": 300,
             "format": (
                 "📄 {title}\n\n"
-                "{journal_line}\n\n"
+                "📄 Published on Zenodo\n\n"
                 "{finding}\n\n"
                 "{indexing_short}\n\n"
                 "🔗 {link}"
@@ -491,7 +491,6 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
         finding=finding or "Published on QNFO/QWAV",
         link=link,
         hashtags=tmpl["hashtags"],
-        journal_line=journal_line,
         indexing_line=indexing_line,
         indexing_short=indexing_short,
     )
@@ -576,11 +575,11 @@ def verify_channel_ids(channels):
 
 | Platform | Max Length | Metadata Fields | Hashtag Strategy | Link Behavior | Best Time |
 |:---------|:----------|:----------------|:-----------------|:--------------|:----------|
-| **Twitter/X** | 280 chars | journal (short), indexing (compact) | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
-| **LinkedIn** | 3000 chars | journal (full), indexing (full) | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
-| **Bluesky** | 300 chars | journal (short), indexing (compact) | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
+| **Twitter/X** | 280 chars | indexing (compact) | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
+| **LinkedIn** | 3000 chars | indexing (full) | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
+| **Bluesky** | 300 chars | indexing (compact) | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
 
-> **v3.1**: All templates now include journal/venue name (e.g., "QNFO/QWAV Working Paper", "Zenodo") and indexing information (e.g., "Zenodo, Google Scholar, Semantic Scholar") so scholars can efficiently assess a publication's provenance and findability from the social media post itself.
+> **v3.2**: Removed `journal_line` — all QNFO/QWAV publications are exclusively via Zenodo (not traditional journals). Templates now reference "Published on Zenodo" with indexing metadata (e.g., "Indexed: Zenodo, Google Scholar, Semantic Scholar") for scholarly discoverability.
 
 ## Failure Handling
 
@@ -662,7 +661,7 @@ print(f"  {[v['name'] for v in vals]}")
 
 ---
 
-*buffer-integration v3.1 — Phase 5 of LRAP. v3.1 (2026-07-11): adds journal + indexing metadata fields to format_for_channel() templates so social media posts include venue name and indexing services for scholarly discoverability. v3.0: Schema-corrected for live Buffer GraphQL API (introspected 2026-07-10) — mode=ShareMode enum, actual union types, full create_post() + post_to_all_channels().*
+*buffer-integration v3.2 — Phase 5 of LRAP. v3.2 (2026-07-11): excludes journal_line per user feedback — all QNFO/QWAV publications are exclusively via Zenodo, not traditional journals. Templates now reference "Published on Zenodo" with indexing metadata only (indexing_line, indexing_short). v3.1: added journal + indexing metadata to format_for_channel() templates. v3.0: Schema-corrected for live Buffer GraphQL API.*
 
 ## Handoff Protocol (MANDATORY at Closeout)
 
