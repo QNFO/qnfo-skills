@@ -627,13 +627,13 @@ def verify_channel_ids(channels):
 
 ## Channel Format Reference
 
-| Platform | Max Length | Design | Hashtag Strategy | Link Behavior | Best Time |
-|:---------|:----------|:-------|:-----------------|:--------------|:----------|
-| **Twitter/X** | 280 chars | **Finding-first** (160 chars), title, DOI | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
-| **LinkedIn** | 3000 chars | **Finding-first** (2000 chars), title, DOI, indexing | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
-| **Bluesky** | 300 chars | **Finding-first** (200 chars), title, DOI | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
+| Platform | Max Length | Design | Schedule | Hashtags | Link Behavior |
+|:---------|:----------|:-------|:---------|:---------|:--------------|
+| **Twitter/X** | 280 chars | **Finding-first** (160 chars), title, DOI | T+0 (or immediate) | 3-5 specific hashtags | Auto-card from DOI |
+| **LinkedIn** | 3000 chars | **Finding-first** (2000 chars), title, DOI, indexing | T+60m (or immediate) | 3-5 professional hashtags | Rich preview |
+| **Bluesky** | 300 chars | **Finding-first** (200 chars), title, DOI | T+120m (or immediate) | Optional, no hashtags | Plain text link |
 
-> **v3.4 — Platform-Native Communication**: Different platforms = different audiences = different messaging. Twitter: bold, unfiltered claim + aggressive hashtags. LinkedIn: professional credibility with full title + indexing. Bluesky: clean, conversational, no hashtags. Consistent 📄 visual language across all platforms.
+> **v3.5 — Scheduling with Fallback**: Posts try `addToQueue` first (staggered: Twitter T+0, LinkedIn T+60m, Bluesky T+120m). If Buffer free plan 10-post limit is exceeded → `LimitReachedError` triggers automatic fallback to `shareNow` (immediate posting) per platform. Findings-first templates (v3.4) with platform-native communication: Twitter (bold claim), LinkedIn (credibility + full title), Bluesky (clean conversational).
 
 ## Failure Handling
 
@@ -715,7 +715,7 @@ print(f"  {[v['name'] for v in vals]}")
 
 ---
 
-*buffer-integration v3.4 — Phase 5 of LRAP. v3.4 (2026-07-11): platform-native communication — Twitter (bold unfiltered claim), LinkedIn (professional credibility + full title + indexing), Bluesky (clean conversational, no hashtags). Consistent 📄 visual language. v3.3: findings-first design. v3.2: removed journal_line. v3.1: added journal+indexing. v3.0: GraphQL schema corrected.*
+*buffer-integration v3.5 — Phase 5 of LRAP. v3.5 (2026-07-11): embedded scheduling logic — create_post() tries addToQueue, falls back to shareNow on LimitReachedError (Buffer free plan 10-post limit). post_to_all_channels() staggers: Twitter T+0, LinkedIn T+60, Bluesky T+120 with per-platform fallback. v3.4: platform-native communication. v3.3: findings-first design. v3.2: removed journal_line. v3.1: added journal+indexing. v3.0: GraphQL schema corrected.*
 
 ## Handoff Protocol (MANDATORY at Closeout)
 
