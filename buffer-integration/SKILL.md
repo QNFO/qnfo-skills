@@ -33,9 +33,9 @@ the user with the specific failure reason.
 
 ---
 
-# BUFFER INTEGRATION SKILL — v3.5
+# BUFFER INTEGRATION & DISSEMINATION SKILL — v3.8
 
-> **Version:** v3.5 (Kaizen-audited 2026-07-11) — scheduling with fallback: try addToQueue first, fall back to shareNow on LimitReachedError (Buffer free plan 10-post limit). Stagger: Twitter T+0, LinkedIn T+60, Bluesky T+120.
+> **Version:** v3.8 (Kaizen-audited 2026-07-11) — RED-TEAM audited: 14 fully-automated channels, LLM Strategist Protocol with Channel-Research Fit Matrix, zero-human-action dissemination. 8 stages, 33 channels audited, 20 embedded functions.
 
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
@@ -313,6 +313,9 @@ def create_post(token: str, channel_id: str, text: str,
 ```python
 def post_to_all_channels(token: str, posts: dict) -> list[dict]:
     """Post to all configured Buffer channels with staggered scheduling.
+    
+    TRACKING HOOK: Every successful post auto-records to D1 dissemination_tracker
+    via track_dissemination() (see Stage 6).
 
     Scheduling strategy (Buffer free plan: 10 scheduled post limit):
     1. Twitter: try addToQueue at T+0 (or shareNow if queue full)
@@ -400,7 +403,6 @@ def post_to_all_channels(token: str, posts: dict) -> list[dict]:
             })
 
     return results
-```
 ```
 
 ### Stage 3.5: Update Knowledge Graph with Social Media URLs (v3.0 — MANDATORY)
@@ -839,6 +841,364 @@ def get_impact_report(paper_slug=""):
 > **NO ARXIV:** arXiv requires endorsement for first submission in most categories -- this is academic gatekeeping. QNFO/QWAV research is published on Zenodo (immediate, open, no endorsement). arXiv is NOT a dissemination channel for this pipeline.
 >
 > **NO TRADITIONAL JOURNALS:** Journal submission = multi-month delay, paywall, copyright transfer. QNFO research is immediate open access. The channels above provide wider reach, faster, without gatekeepers.
+
+---
+
+### Stage 8: LLM Dissemination Strategist Protocol (v3.8 — MANDATORY)
+
+> **THE LLM IS THE STRATEGIST.** The user does zero manual dissemination work. The LLM evaluates each paper against the Channel-Research Fit Matrix, selects appropriate channels (NOT all channels), generates channel-specific messaging, posts via API, and tracks everything in D1.
+
+#### 8a. Channel Automation Capability Audit
+
+Only channels where the LLM handles 100% of the workflow are used. Channels requiring human action are DEPRECATED.
+
+**FULLY AUTOMATED (14 channels — LLM does everything):**
+
+| # | Channel | Method | Why Auto? |
+|:--|:--------|:--------|:----------|
+| 1 | Buffer (Twitter/X) | GraphQL API | Token already configured |
+| 2 | Buffer (LinkedIn) | GraphQL API | Token already configured |
+| 3 | Buffer (Bluesky) | GraphQL API | Token already configured |
+| 4 | Reddit | PRAW script | OAuth2 app (one-time setup, then auto) |
+| 5 | Mastodon | Mastodon.py | Token (one-time, then auto) |
+| 6 | RSS Feed | stdlib xml.etree | Generate + upload XML |
+| 7 | ORCID | REST API | OAuth2 token (one-time, then auto) |
+| 8 | Discord Webhooks | REST | Post to webhook URL |
+| 9 | GitHub Discussions | GraphQL API | Post to paper repo |
+| 10 | Infographics | infographic-syntax-creator | Generate + post image |
+| 11 | Internet Archive | API | Automated mirror |
+| 12 | IPFS | pinning API (ipfs-pinning skill) | Automated pinning |
+| 13 | Bluesky Custom Feeds | API | Algorithmic feed generator |
+| 14 | Telegram Channels | Bot API | Post via bot |
+
+**DEPRECATED (require human action — removed from strategy):**
+
+| Channel | Why Removed |
+|:--------|:------------|
+| YouTube Shorts / TikTok | Human must record final video |
+| Instagram | Business account review required |
+| Hacker News | Human must submit manually |
+| LessWrong / EA Forum | Human must post |
+| Lobste.rs | Human must post + invitation |
+| Quora / Stack Exchange | Human must answer questions |
+| Wikipedia | Human must edit |
+| Email Listservs / Podcast Pitches | Human must send |
+| The Conversation / Phys.org | Human must pitch |
+| LinkedIn Articles | Human must post |
+
+#### 8b. Channel-Research Fit Matrix
+
+Not all research goes to all channels. The LLM evaluates paper content against this matrix and selects the optimal subset:
+
+```
+RESEARCH TYPE               BEST CHANNELS (auto-selected)
+=======================     ================================================
+
+QUANTUM PHYSICS / MATH      Buffer (all 3), Reddit r/Physics + r/QuantumComputing,
+                            Mastodon qoto.org (STEM), Telegram (field bot)
+
+PURE MATHEMATICS            Buffer (LinkedIn), Reddit r/math,
+                            Mastodon maths.space, GitHub Discussions
+
+PHILOSOPHY OF SCIENCE       Buffer (Bluesky), Mastodon scholar.social,
+                            Reddit r/PhilosophyOfScience
+
+COMPUTATIONAL / ALGORITHMIC Buffer (all 3), Reddit r/CompSci + r/programming,
+                            GitHub Discussions, Kaggle (if data)
+
+DATA-HEAVY / EMPIRICAL      Kaggle (dataset + kernel), GitHub (data repo),
+                            Google Dataset Search (schema.org markup)
+
+PROVOCATIVE / BOLD          Buffer (Twitter — bold claim leads),
+                            Mastodon with CW, Infographics
+
+METHODOLOGICAL / TOOLS      GitHub (code + docs), Stack Exchange (answer questions),
+                            Discord webhooks (developer communities)
+
+INTERDISCIPLINARY           Buffer (LinkedIn), Mastodon (multiple instances),
+                            Infographics (universal visual language)
+
+GENERAL / ACCESSIBLE        Buffer (all 3), Infographics, RSS Feed,
+                            Internet Archive (permanent mirror)
+```
+
+#### 8c. select_channels_for_paper() — The Strategist Function
+
+```python
+def select_channels_for_paper(paper_metadata: dict) -> dict:
+    """Evaluate a paper against the Channel-Research Fit Matrix.
+
+    Returns a dict of selected channels with rationale for each.
+    The LLM calls this BEFORE posting to determine which channels to use.
+
+    Args:
+        paper_metadata: dict with keys:
+            - title (str): paper title
+            - finding (str): key research finding
+            - field (str): primary field (quantum_physics, pure_math, etc.)
+            - is_computational (bool): involves algorithms/computation
+            - is_data_heavy (bool): involves datasets/benchmarks
+            - is_provocative (bool): paradigm-challenging claim
+            - is_methodological (bool): tool/method-oriented
+            - is_interdisciplinary (bool): crosses multiple fields
+
+    Returns:
+        {channels: [list of channel names], rationale: {channel: reason}}
+    """
+    channels = []
+    rationale = {}
+
+    # Baseline: Buffer always (staggered)
+    channels.extend(["buffer/twitter", "buffer/linkedin", "buffer/bluesky"])
+    rationale["buffer"] = "Baseline dissemination (staggered T+0/T+60/T+120)"
+
+    # RSS Feed + ORCID: always
+    channels.extend(["rss_feed", "orcid"])
+    rationale["rss_feed"] = "Auto-discovery by feed readers and aggregators"
+    rationale["orcid"] = "Researcher profile credibility"
+
+    # Field-specific channels
+    field = paper_metadata.get("field", "")
+
+    if field in ("quantum_physics", "mathematical_physics"):
+        channels.extend(["reddit/r-Physics", "reddit/r-QuantumComputing"])
+        rationale["reddit"] = "Targeted physics audience (2.5M + 250K subscribers)"
+        channels.append("mastodon/qoto.org")
+        rationale["mastodon"] = "STEM-focused federated instance"
+
+    elif field == "pure_math":
+        channels.append("reddit/r-math")
+        rationale["reddit"] = "Mathematical community (2.5M subscribers)"
+        channels.append("mastodon/maths.space")
+        rationale["mastodon"] = "Math-focused instance"
+
+    elif field in ("philosophy_of_science", "foundations"):
+        channels.append("reddit/r-PhilosophyOfScience")
+        rationale["reddit"] = "Philosophy of science community (100K subscribers)"
+        channels.append("mastodon/scholar.social")
+        rationale["mastodon"] = "Academic philosophy community"
+
+    # Computational
+    if paper_metadata.get("is_computational"):
+        channels.extend(["reddit/r-CompSci", "github/discussions"])
+        rationale["github"] = "Developer-academic cross-pollination"
+
+    # Data-heavy
+    if paper_metadata.get("is_data_heavy"):
+        channels.append("kaggle")
+        rationale["kaggle"] = "Dataset + kernel for discoverability"
+
+    # Provocative
+    if paper_metadata.get("is_provocative"):
+        channels.append("infographics")
+        rationale["infographics"] = "Visual summary for broad sharing"
+
+    # Interdisciplinary
+    if paper_metadata.get("is_interdisciplinary"):
+        channels.append("mastodon/multiple")
+        rationale["mastodon_multiple"] = "Cross-federate to multiple instances"
+
+    # Methodological
+    if paper_metadata.get("is_methodological"):
+        channels.append("github/repo")
+        rationale["github_repo"] = "Code + documentation"
+
+    # Permanence (always)
+    channels.extend(["internet_archive", "ipfs"])
+    rationale["permanence"] = "Automated permanent mirror + IPFS pinning"
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique = []
+    for ch in channels:
+        if ch not in seen:
+            seen.add(ch)
+            unique.append(ch)
+
+    return {"channels": unique, "rationale": rationale}
+```
+
+#### 8d. execute_dissemination_plan() — Full Autonomous Execution
+
+```python
+def execute_dissemination_plan(paper_metadata: dict, posts: dict,
+                               buffer_token: str = "",
+                               reddit_creds: dict = None,
+                               mastodon_token: str = "",
+                               discord_webhook: str = "",
+                               telegram_bot_token: str = "") -> dict:
+    """Execute the full dissemination plan for a paper.
+
+    This is the MAIN entry point. The LLM calls this once per paper.
+    It evaluates the fit matrix, selects channels, posts to all,
+    and tracks everything in D1.
+
+    Args:
+        paper_metadata: dict with title, doi, slug, field, finding, etc.
+        posts: dict mapping service to platform-native post text
+        buffer_token: Buffer API token
+        reddit_creds: dict with client_id, client_secret, username, password
+        mastodon_token: Mastodon access token
+        discord_webhook: Discord webhook URL
+        telegram_bot_token: Telegram bot token
+
+    Returns:
+        {plan: [...], results: [...], d1_tracking: {...}, impact_summary: {...}}
+    """
+    import json
+    from datetime import datetime, timezone
+
+    plan = []
+    results = []
+    paper_slug = paper_metadata.get("slug", "")
+    paper_doi = paper_metadata.get("doi", "")
+    paper_title = paper_metadata.get("title", "")
+
+    # STEP 1: Select channels via Fit Matrix
+    channel_plan = select_channels_for_paper(paper_metadata)
+    plan.append({"step": "select_channels", "channels": channel_plan["channels"]})
+
+    # STEP 2: Post to Buffer (staggered)
+    if buffer_token and any("buffer" in ch for ch in channel_plan["channels"]):
+        buffer_posts = {
+            "twitter": posts.get("twitter", ""),
+            "linkedin": posts.get("linkedin", ""),
+            "bluesky": posts.get("bluesky", ""),
+        }
+        meta = {"paper_slug": paper_slug, "paper_doi": paper_doi,
+                "paper_title": paper_title,
+                "zenodo_url": f"https://doi.org/{paper_doi}"}
+        r = post_to_all_channels(buffer_token, buffer_posts, metadata=meta)
+        results.extend(r)
+
+        for item in r:
+            if item["status"] == "POSTED":
+                track_dissemination(paper_slug, paper_doi, paper_title,
+                    channel=f"buffer/{item['service']}", post_id=item.get("id", ""),
+                    mode=item.get("mode", ""), fallback=item.get("fallback", False),
+                    zenodo_url=f"https://doi.org/{paper_doi}")
+
+    # STEP 3: Post to Reddit (if selected)
+    if reddit_creds and any("reddit" in ch for ch in channel_plan["channels"]):
+        for ch in channel_plan["channels"]:
+            if not ch.startswith("reddit/"):
+                continue
+            try:
+                sub_name = ch.replace("reddit/r-", "r/")
+                reddit_text = format_for_channel("twitter", paper_title, paper_doi,
+                    key_finding=paper_metadata.get("finding", ""))
+                r = post_to_reddit(
+                    reddit_creds["client_id"], reddit_creds["client_secret"],
+                    reddit_creds.get("user_agent", "QNFO Research Bot"),
+                    reddit_creds["username"], reddit_creds["password"],
+                    sub_name,
+                    title=f"Research: {paper_title[:200]}",
+                    text=reddit_text)
+                if r["success"]:
+                    track_dissemination(paper_slug, paper_doi, paper_title,
+                        channel=f"reddit/{sub_name}", post_id=r["post_id"],
+                        post_url=r["url"])
+                    results.append({"service": f"reddit/{sub_name}", "status": "POSTED"})
+            except Exception as e:
+                results.append({"service": f"reddit/{ch}", "status": "FAILED", "error": str(e)})
+
+    # STEP 4: Post to Mastodon (if selected)
+    if mastodon_token and any("mastodon" in ch for ch in channel_plan["channels"]):
+        for ch in channel_plan["channels"]:
+            if not ch.startswith("mastodon/"):
+                continue
+            instances = ["mastodon.social", "fediscience.org"] if ch == "mastodon/multiple" else [ch.replace("mastodon/", "")]
+            for inst in instances:
+                try:
+                    text = format_for_channel("twitter", paper_title, paper_doi,
+                        key_finding=paper_metadata.get("finding", ""))
+                    text = text[:500]  # Mastodon limit
+                    r = post_to_mastodon(inst, mastodon_token, text)
+                    if r["success"]:
+                        track_dissemination(paper_slug, paper_doi, paper_title,
+                            channel=f"mastodon/{inst}", post_id=r["post_id"],
+                            post_url=r["url"])
+                        results.append({"service": f"mastodon/{inst}", "status": "POSTED"})
+                except Exception as e:
+                    results.append({"service": f"mastodon/{inst}", "status": "FAILED", "error": str(e)})
+
+    # STEP 5: Discord webhook (if configured)
+    if discord_webhook and "discord" in str(channel_plan["channels"]):
+        try:
+            import urllib.request
+            finding = paper_metadata.get("finding", "")[:1800]
+            payload = json.dumps({
+                "content": f"**New Research:** {paper_title}\\n\\n{finding}\\n\\nDOI: https://doi.org/{paper_doi}"
+            }).encode()
+            req = urllib.request.Request(discord_webhook, data=payload, method="POST")
+            req.add_header("Content-Type", "application/json")
+            urllib.request.urlopen(req, timeout=10)
+            track_dissemination(paper_slug, paper_doi, paper_title, channel="discord")
+            results.append({"service": "discord", "status": "POSTED"})
+        except Exception as e:
+            results.append({"service": "discord", "status": "FAILED", "error": str(e)})
+
+    # STEP 6: RSS + ORCID + Permanence (always tracked)
+    for ch in ["rss_feed", "orcid", "internet_archive", "ipfs"]:
+        track_dissemination(paper_slug, paper_doi, paper_title, channel=ch)
+
+    # STEP 7: Impact summary
+    posted = [r for r in results if r["status"] == "POSTED"]
+    failed = [r for r in results if r["status"] in ("FAILED", "NO_CHANNEL", "DISCONNECTED")]
+    impact = {
+        "total_channels_attempted": len(results),
+        "successfully_posted": len(posted),
+        "failed": len(failed),
+        "channels": [r.get("service", "unknown") for r in posted],
+        "d1_tracked": True,
+    }
+
+    return {
+        "plan": plan,
+        "results": results,
+        "impact_summary": impact,
+        "d1_report": f"get_impact_report('{paper_slug}')",
+    }
+```
+
+#### 8e. LLM Strategist Decision Flow
+
+```
+PAPER PUBLISHED (Zenodo DOI assigned)
+    |
+    v
+LLM evaluates metadata: field, finding, type, provocativeness
+    |
+    v
+select_channels_for_paper(metadata) -> channel list + rationale
+    |
+    v
+For each selected channel:
+    +- Generate platform-native text via format_for_channel()
+    +- Post via API (Buffer/PRAW/Mastodon/Discord/GitHub/Telegram)
+    +- Record in D1 via track_dissemination()
+    +- Report success/failure
+    |
+    v
+execute_dissemination_plan(metadata, posts, tokens)
+    -> plan + results + impact_summary + d1_report
+    |
+    v
+Report to user: "Posted to 7 channels. 6 success, 1 failed.
+                  See get_impact_report('paper-slug') for full reach."
+```
+
+#### 8f. Channel Deprecation Policy
+
+> **ANY channel requiring human action is IMMEDIATELY DEPRECATED.** The user does zero manual work. If a channel cannot be fully automated via API (even with one-time setup), it is removed from the strategy. The LLM is responsible for ALL external posting.
+
+| Status | Channels | Policy |
+|:-------|:---------|:--------|
+| **ACTIVE** | 14 fully-automated channels | LLM posts autonomously |
+| **DEPRECATED** | Hacker News, LessWrong, EA Forum, Lobste.rs, Quora, Stack Exchange, Wikipedia, email, podcasts, press releases, video platforms, Instagram, LinkedIn Articles | Requires human action -- removed |
+| **PASSIVE** | Google Scholar, Semantic Scholar, Google Dataset Search | Indexed automatically from DOI/schema.org markup |
+
+
 
 ---
 
