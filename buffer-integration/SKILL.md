@@ -33,9 +33,9 @@ the user with the specific failure reason.
 
 ---
 
-# BUFFER INTEGRATION SKILL — v3.2
+# BUFFER INTEGRATION SKILL — v3.3
 
-> **Version:** v3.2 (Kaizen-audited 2026-07-11) — excludes journal_line per user: all QNFO/QWAV pubs are exclusively via Zenodo; posts now reference "Published on Zenodo" with indexing metadata only
+> **Version:** v3.3 (Kaizen-audited 2026-07-11) — findings-first design: the most surprising/provocative finding leads every post; no venue boilerplate; indexing metadata only on LinkedIn where space allows
 
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
@@ -410,39 +410,36 @@ def update_kg_social_urls(paper_slug: str, post_results: list) -> dict:
 
 ### Stage 4: Channel-Specific Formatting
 
-Each social platform has different character limits, formatting rules, and audience expectations:
+Each social platform has different character limits, formatting rules, and audience expectations. **POSTS ARE FINDINGS-FIRST, NOT METADATA-FIRST.** The most surprising, provocative, or compelling research result leads every post. No boilerplate about venue/publisher (Zenodo) that mainstream academics dismiss as "not peer-reviewed." Let the finding speak for itself.
 
 ```python
 def format_for_channel(service: str, paper_title: str, paper_doi: str, 
                         key_finding: str = "", paper_url: str = "",
                         indexing: str = "") -> str:
-    """Generate channel-optimized post text including indexing metadata.
+    """Generate channel-optimized post text — findings-first, metadata-trailing.
     
-    All QNFO/QWAV publications are exclusively via Zenodo (not traditional journals).
-    Posts include Zenodo DOI and indexing services for scholarly discoverability.
+    The finding IS the hook. Lead with the most surprising, provocative,
+    or compelling research result. Title, DOI, and indexing info follow.
     
     Args:
         service: 'twitter', 'linkedin', or 'bluesky'
         paper_title: Full publication title
         paper_doi: Zenodo DOI (e.g., '10.5281/zenodo.XXXXXXX')
-        key_finding: One-sentence research finding
+        key_finding: THE most compelling finding — this is the hook
         paper_url: Custom URL (defaults to doi.org/DOI)
-        indexing: Comma-separated indexing services (e.g., 'Zenodo, Google Scholar, Semantic Scholar')
+        indexing: Indexing services (shown only on LinkedIn)
     """
     
-    # Build indexing/metadata lines (compact for Twitter, full for LinkedIn)
+    # Indexing metadata — LinkedIn only (too verbose for Twitter/Bluesky)
     indexing_line = f"📚 Indexed: {indexing}" if indexing else "📚 Indexed: Zenodo, Google Scholar, Semantic Scholar"
-    indexing_short = f"📚 {indexing}" if indexing else "📚 Zenodo, Google Scholar"
     
     templates = {
         "twitter": {
             "max_chars": 280,
             "format": (
-                "🚀 {hook}\n"
-                "📄 Published on Zenodo\n"
-                "🔑 {finding}\n"
+                "{finding}\n\n"
+                "📄 {short_title}\n"
                 "🔗 {link}\n"
-                "{indexing_short}\n"
                 "{hashtags}"
             ),
             "hashtags": "#research #QNFO #QWAV",
@@ -450,10 +447,9 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
         "linkedin": {
             "max_chars": 3000,
             "format": (
-                "📄 New Research Publication\n\n"
-                "**Title:** {title}\n\n"
-                "📄 Published on Zenodo | DOI: {link}\n\n"
                 "{finding}\n\n"
+                "— New research: {title}\n\n"
+                "🔗 Read the full paper: {link}\n\n"
                 "{indexing_line}\n\n"
                 "{hashtags}"
             ),
@@ -462,10 +458,8 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
         "bluesky": {
             "max_chars": 300,
             "format": (
-                "📄 {title}\n\n"
-                "📄 Published on Zenodo\n\n"
                 "{finding}\n\n"
-                "{indexing_short}\n\n"
+                "📄 {short_title}\n"
                 "🔗 {link}"
             ),
             "hashtags": "",
@@ -474,31 +468,23 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
     
     tmpl = templates.get(service, templates["twitter"])
     
-    # Truncate title for short platforms
-    short_title = paper_title[:100] + "..." if len(paper_title) > 100 else paper_title
-    
-    # Use DOI if no custom paper URL provided
+    short_title = paper_title[:80] + "..." if len(paper_title) > 80 else paper_title
     link = paper_url or f"https://doi.org/{paper_doi}"
     
-    # Format finding (keep concise for platform limits)
-    finding_max = 100 if service == "twitter" else (120 if service == "bluesky" else 500)
+    # Finding IS the star — give it maximum real estate
+    finding_max = 160 if service == "twitter" else (200 if service == "bluesky" else 2000)
     finding = key_finding[:finding_max] + "..." if len(key_finding) > finding_max else key_finding
     
-    # Build formatted text
     text = tmpl["format"].format(
-        hook=f"New research: {short_title}",
+        finding=finding or "New research publication on QNFO/QWAV.",
         title=paper_title,
-        finding=finding or "Published on QNFO/QWAV",
+        short_title=short_title,
         link=link,
         hashtags=tmpl["hashtags"],
         indexing_line=indexing_line,
-        indexing_short=indexing_short,
     )
     
-    # Truncate to platform max
     text = text[:tmpl["max_chars"]]
-    
-    # If truncated, add ellipsis
     if len(text) == tmpl["max_chars"] and len(text) >= tmpl["max_chars"] - 3:
         text = text[:tmpl["max_chars"] - 3] + "..."
     
@@ -573,13 +559,13 @@ def verify_channel_ids(channels):
 
 ## Channel Format Reference
 
-| Platform | Max Length | Metadata Fields | Hashtag Strategy | Link Behavior | Best Time |
-|:---------|:----------|:----------------|:-----------------|:--------------|:----------|
-| **Twitter/X** | 280 chars | indexing (compact) | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
-| **LinkedIn** | 3000 chars | indexing (full) | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
-| **Bluesky** | 300 chars | indexing (compact) | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
+| Platform | Max Length | Design | Hashtag Strategy | Link Behavior | Best Time |
+|:---------|:----------|:-------|:-----------------|:--------------|:----------|
+| **Twitter/X** | 280 chars | **Finding-first** (160 chars), title, DOI | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
+| **LinkedIn** | 3000 chars | **Finding-first** (2000 chars), title, DOI, indexing | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
+| **Bluesky** | 300 chars | **Finding-first** (200 chars), title, DOI | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
 
-> **v3.2**: Removed `journal_line` — all QNFO/QWAV publications are exclusively via Zenodo (not traditional journals). Templates now reference "Published on Zenodo" with indexing metadata (e.g., "Indexed: Zenodo, Google Scholar, Semantic Scholar") for scholarly discoverability.
+> **v3.3 — Findings-First Design**: The most surprising/provocative/compelling research result leads EVERY post. No venue/publisher boilerplate. No "New research:" prefix. Indexing metadata shown only on LinkedIn. Let the finding grab attention — title, DOI, and hashtags trail behind.
 
 ## Failure Handling
 
@@ -661,7 +647,7 @@ print(f"  {[v['name'] for v in vals]}")
 
 ---
 
-*buffer-integration v3.2 — Phase 5 of LRAP. v3.2 (2026-07-11): excludes journal_line per user feedback — all QNFO/QWAV publications are exclusively via Zenodo, not traditional journals. Templates now reference "Published on Zenodo" with indexing metadata only (indexing_line, indexing_short). v3.1: added journal + indexing metadata to format_for_channel() templates. v3.0: Schema-corrected for live Buffer GraphQL API.*
+*buffer-integration v3.3 — Phase 5 of LRAP. v3.3 (2026-07-11): findings-first design — the most surprising/provocative finding leads every post (no more "New research:" boilerplate); venue/Zenodo boilerplate removed entirely; indexing metadata shown only on LinkedIn. Title and DOI trail the finding. v3.2: removed journal_line. v3.1: added journal+indexing. v3.0: GraphQL schema corrected.*
 
 ## Handoff Protocol (MANDATORY at Closeout)
 
