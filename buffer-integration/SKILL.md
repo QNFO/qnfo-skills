@@ -33,11 +33,9 @@ the user with the specific failure reason.
 
 ---
 
-# BUFFER INTEGRATION SKILL — v1.0 — v2.2
+# BUFFER INTEGRATION SKILL — v3.1
 
-> **Version:** v1.0 (Kaizen-audited 2026-07-05)
-
-> **Version:** v1.0 (Kaizen-audited 2026-07-05)
+> **Version:** v3.1 (Kaizen-audited 2026-07-11) — adds journal + indexing metadata to social media post templates
 
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
@@ -416,16 +414,34 @@ Each social platform has different character limits, formatting rules, and audie
 
 ```python
 def format_for_channel(service: str, paper_title: str, paper_doi: str, 
-                        key_finding: str = "", paper_url: str = "") -> str:
-    """Generate channel-optimized post text."""
+                        key_finding: str = "", paper_url: str = "",
+                        journal: str = "", indexing: str = "") -> str:
+    """Generate channel-optimized post text including journal and indexing metadata.
+    
+    Args:
+        service: 'twitter', 'linkedin', or 'bluesky'
+        paper_title: Full publication title
+        paper_doi: Zenodo DOI (e.g., '10.5281/zenodo.XXXXXXX')
+        key_finding: One-sentence research finding
+        paper_url: Custom URL (defaults to doi.org/DOI)
+        journal: Journal/venue name (e.g., 'QNFO/QWAV Working Paper', 'Zenodo')
+        indexing: Comma-separated indexing services (e.g., 'Zenodo, Google Scholar, Semantic Scholar')
+    """
+    
+    # Build metadata lines (compact for Twitter, full for LinkedIn)
+    journal_line = f"📰 {journal}" if journal else "📰 QNFO/QWAV Working Paper"
+    indexing_line = f"📚 Indexed: {indexing}" if indexing else "📚 Indexed: Zenodo, Google Scholar, Semantic Scholar"
+    indexing_short = f"📚 {indexing}" if indexing else "📚 Zenodo, Google Scholar"
     
     templates = {
         "twitter": {
             "max_chars": 280,
             "format": (
                 "🚀 {hook}\n"
-                "Key finding: {finding}\n"
-                "📄 Full paper: {link}\n"
+                "{journal_line}\n"
+                "🔑 {finding}\n"
+                "🔗 {link}\n"
+                "{indexing_short}\n"
                 "{hashtags}"
             ),
             "hashtags": "#research #QNFO #QWAV",
@@ -434,19 +450,23 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
             "max_chars": 3000,
             "format": (
                 "📄 New Research Publication\n\n"
-                "{title}\n\n"
+                "**Title:** {title}\n\n"
+                "**Published in:** {journal_line}\n\n"
                 "{finding}\n\n"
-                "Read the full paper: {link}\n\n"
+                "{indexing_line}\n\n"
+                "🔗 Read the full paper: {link}\n\n"
                 "{hashtags}"
             ),
-            "hashtags": "#Research #AcademicPublishing #OpenScience",
+            "hashtags": "#Research #AcademicPublishing #OpenScience #QNFO",
         },
         "bluesky": {
             "max_chars": 300,
             "format": (
                 "📄 {title}\n\n"
+                "{journal_line}\n\n"
                 "{finding}\n\n"
-                "Read: {link}"
+                "{indexing_short}\n\n"
+                "🔗 {link}"
             ),
             "hashtags": "",
         },
@@ -460,16 +480,30 @@ def format_for_channel(service: str, paper_title: str, paper_doi: str,
     # Use DOI if no custom paper URL provided
     link = paper_url or f"https://doi.org/{paper_doi}"
     
-    # Format finding (keep concise for Twitter)
-    finding = key_finding[:120] + "..." if len(key_finding) > 120 and service == "twitter" else key_finding
+    # Format finding (keep concise for platform limits)
+    finding_max = 100 if service == "twitter" else (120 if service == "bluesky" else 500)
+    finding = key_finding[:finding_max] + "..." if len(key_finding) > finding_max else key_finding
     
-    return tmpl["format"].format(
+    # Build formatted text
+    text = tmpl["format"].format(
         hook=f"New research: {short_title}",
         title=paper_title,
         finding=finding or "Published on QNFO/QWAV",
         link=link,
         hashtags=tmpl["hashtags"],
-    )[:tmpl["max_chars"]]
+        journal_line=journal_line,
+        indexing_line=indexing_line,
+        indexing_short=indexing_short,
+    )
+    
+    # Truncate to platform max
+    text = text[:tmpl["max_chars"]]
+    
+    # If truncated, add ellipsis
+    if len(text) == tmpl["max_chars"] and len(text) >= tmpl["max_chars"] - 3:
+        text = text[:tmpl["max_chars"] - 3] + "..."
+    
+    return text
 ```
 
 ---
@@ -540,11 +574,13 @@ def verify_channel_ids(channels):
 
 ## Channel Format Reference
 
-| Platform | Max Length | Hashtag Strategy | Link Behavior | Best Time |
-|:---------|:----------|:-----------------|:--------------|:----------|
-| **Twitter/X** | 280 chars | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
-| **LinkedIn** | 3000 chars | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
-| **Bluesky** | 300 chars | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
+| Platform | Max Length | Metadata Fields | Hashtag Strategy | Link Behavior | Best Time |
+|:---------|:----------|:----------------|:-----------------|:--------------|:----------|
+| **Twitter/X** | 280 chars | journal (short), indexing (compact) | 3-5 specific hashtags | Auto-card from DOI | Tue-Thu 9-11am |
+| **LinkedIn** | 3000 chars | journal (full), indexing (full) | 3-5 professional hashtags | Rich preview | Tue-Thu 8-10am |
+| **Bluesky** | 300 chars | journal (short), indexing (compact) | Optional, community-driven | Plain text link | Tue-Thu 10am-12pm |
+
+> **v3.1**: All templates now include journal/venue name (e.g., "QNFO/QWAV Working Paper", "Zenodo") and indexing information (e.g., "Zenodo, Google Scholar, Semantic Scholar") so scholars can efficiently assess a publication's provenance and findability from the social media post itself.
 
 ## Failure Handling
 
@@ -626,7 +662,7 @@ print(f"  {[v['name'] for v in vals]}")
 
 ---
 
-*buffer-integration v3.0 — Phase 5 of LRAP. Schema-corrected for live Buffer GraphQL API (introspected 2026-07-10). v3.0 fixes: mode=ShareMode enum (not "automatic"), PostActionError→actual union types, full create_post() + post_to_all_channels() embedded, schema introspection script for drift detection.*
+*buffer-integration v3.1 — Phase 5 of LRAP. v3.1 (2026-07-11): adds journal + indexing metadata fields to format_for_channel() templates so social media posts include venue name and indexing services for scholarly discoverability. v3.0: Schema-corrected for live Buffer GraphQL API (introspected 2026-07-10) — mode=ShareMode enum, actual union types, full create_post() + post_to_all_channels().*
 
 ## Handoff Protocol (MANDATORY at Closeout)
 
