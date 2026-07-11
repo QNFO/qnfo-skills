@@ -35,7 +35,7 @@ the user with the specific failure reason.
 
 # BUFFER INTEGRATION SKILL — v3.5
 
-> **Version:** v3.4 (Kaizen-audited 2026-07-11) — platform-native communication: Twitter (bold claim), LinkedIn (credibility + full title), Bluesky (clean + conversational); consistent 📄 visual language across platforms
+> **Version:** v3.5 (Kaizen-audited 2026-07-11) — scheduling with fallback: try addToQueue first, fall back to shareNow on LimitReachedError (Buffer free plan 10-post limit). Stagger: Twitter T+0, LinkedIn T+60, Bluesky T+120.
 
 
 > **Phase 5 of LRAP.** Enables automated social media dissemination of QNFO/QWAV publications via Buffer **GraphQL API**.
