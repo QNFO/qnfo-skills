@@ -632,6 +632,11 @@ def verify_channel_ids(channels):
 | **Twitter/X** | 280 chars | **Finding-first** (160 chars), title, DOI | T+0 (or immediate) | 3-5 specific hashtags | Auto-card from DOI |
 | **LinkedIn** | 3000 chars | **Finding-first** (2000 chars), title, DOI, indexing | T+60m (or immediate) | 3-5 professional hashtags | Rich preview |
 | **Bluesky** | 300 chars | **Finding-first** (200 chars), title, DOI | T+120m (or immediate) | Optional, no hashtags | Plain text link |
+| **Reddit** | 40000 chars (text post) | **Finding-first** + title + DOI | Auto-post (rate-limited) | Subreddit rules, no spam | Crosspost link |
+| **Mastodon** | 500 chars | **Finding-first** (compact) | T+180m (or immediate) | 2-3 community hashtags | Plain text + CW |
+| **RSS Feed** | Unlimited XML | Title + finding + DOI + pubDate | Auto | Feed readers, aggregators | Auto-discovery |
+| **ORCID** | — | Title + DOI + type + date | Manual trigger | Researcher profile | DOI link |
+| **D1 Tracking** | — | All fields tracked | Every post | `dissemination_tracker` | `get_impact_report()` |
 
 > **v3.5 — Scheduling with Fallback**: Posts try `addToQueue` first (staggered: Twitter T+0, LinkedIn T+60m, Bluesky T+120m). If Buffer free plan 10-post limit is exceeded → `LimitReachedError` triggers automatic fallback to `shareNow` (immediate posting) per platform. Findings-first templates (v3.4) with platform-native communication: Twitter (bold claim), LinkedIn (credibility + full title), Bluesky (clean conversational).
 
