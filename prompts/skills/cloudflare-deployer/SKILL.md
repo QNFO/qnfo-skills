@@ -718,7 +718,7 @@ R2 object create/update (qnfo/releases/*/paper.md)
 
 ```bash
 # Check sync health: D1 paper count vs KG Paper node count
-python -c "import urllib.request, json; kg=json.loads(urllib.request.urlopen(urllib.request.Request('https://graph-api.q08.workers.dev/stats',headers={'User-Agent':'Mozilla/5.0'}),timeout=10).read()); print(f'KG Paper nodes: {kg.get(\"labelCounts\",{}).get(\"Paper\",\"?\")}')"
+python -c "import urllib.request, json; kg=json.loads(urllib.request.urlopen(urllib.request.Request('https://graph-api.q08.workers.dev/stats',headers={'User-Agent':'Mozilla/5.0'}),timeout=10).read()); print(f'KG Paper nodes: {next((nl['count'] for nl in kg.get('nodeLabels',[]) if nl['label']=='Paper'),'?')}')"
 ```
 
 **GATE:** D1 `living-paper.papers` count and KG `Paper` node count should differ by ≤ 5 at all times. Any larger discrepancy → run immediate reconciliation via `cron-graph-re-seed`.

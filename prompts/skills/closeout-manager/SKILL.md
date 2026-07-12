@@ -380,7 +380,7 @@ ctx = ssl.create_default_context()
 r = urllib.request.Request(f'{KG}/stats', headers={'User-Agent': 'QNFO-Closeout/3.0'})
 kg = json.loads(urllib.request.urlopen(r, timeout=10, context=ctx).read())
 print(f'KG: {kg.get(\"totalNodes\")}n / {kg.get(\"totalEdges\")}e')
-kp = kg.get('labelCounts', {}).get('Paper', 0)
+kp = next((nl['count'] for nl in kg.get('nodeLabels', []) if nl['label'] == 'Paper'), 0)
 print(f'Paper nodes: {kp}')
 # Check D1 living-paper
 try:

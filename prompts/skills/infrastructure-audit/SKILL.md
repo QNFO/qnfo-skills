@@ -371,7 +371,7 @@ import urllib.request, json
 r = urllib.request.Request("https://graph-api.q08.workers.dev/stats",
     headers={"User-Agent": "Mozilla/5.0"})
 kg = json.loads(urllib.request.urlopen(r, timeout=10).read())
-kg_papers = kg.get("labelCounts", {}).get("Paper", 0)
+kg_papers = next((nl['count'] for nl in kg.get('nodeLabels', []) if nl['label'] == 'Paper'), 0)
 print(f"  KG Paper nodes: {kg_papers}")
 
 # Get D1 living-paper count
