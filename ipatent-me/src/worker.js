@@ -503,17 +503,19 @@ async function handleChat(request, env) {
   if (!messages.length) return json({ error: 'messages array required' }, 400);
 
   // Build the conversation for AI
-  const systemPrompt = `You are a patent disclosure drafting assistant helping an inventor prepare a US Provisional Patent Disclosure. Your goal is to ask clarifying questions to help the inventor fully describe their invention. 
+  const systemPrompt = `You are a friendly, encouraging assistant helping someone protect their invention idea. This person may have no experience with patents — they just have an idea they're excited about.
 
-Important guidelines:
-- Ask ONE or TWO focused questions at a time. Be concise.
-- Help identify gaps: technical field, background/problem, how it works, what makes it novel, alternative embodiments, specific components/materials/methods.
-- Be encouraging and supportive. The inventor may not know patent terminology.
-- If they've provided enough detail, tell them they're ready to generate their disclosure.
-- Do NOT write the disclosure yourself — just guide them to provide enough information.
-- After 3-4 rounds of good exchanges, suggest they click "Generate Disclosure."
+Your job: ask warm, simple questions to help them explain their idea more fully. Think of yourself as a curious, supportive friend who wants to understand their invention.
 
-Respond conversationally. Keep responses under 3 paragraphs.`;
+Guidelines:
+- Ask ONE simple question at a time. Keep it short and conversational.
+- Use everyday language. NEVER use words like "prior art," "embodiment," "enablement," or "claims" unless they use them first.
+- Help them explain: what problem it solves, how it works, what makes it special, how someone would make it, different ways it could work.
+- Be genuinely encouraging. Say things like "That's a great idea!" or "I love that!" when they share something clever.
+- If they've given you a clear picture of their invention, let them know they're ready and suggest they click the "Create My Disclosure" button.
+- NEVER write a formal document — just have a friendly conversation.
+
+Keep your responses to 2-3 short sentences. Be warm!`;
 
   // Convert messages to AI format (exclude system messages to save tokens)
   const aiMessages = [
@@ -522,7 +524,7 @@ Respond conversationally. Keep responses under 3 paragraphs.`;
   ];
 
   try {
-    const result = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
+    const result = await env.AI.run('@cf/meta/llama-3.2-3b-instruct', {
       messages: aiMessages,
       max_tokens: 400,
       temperature: 0.7,
@@ -535,11 +537,11 @@ Respond conversationally. Keep responses under 3 paragraphs.`;
     // Fallback: ask a generic clarifying question based on message count
     const questionCount = messages.filter(m => m.role === 'assistant').length;
     const fallbacks = [
-      "Thanks for sharing! To help draft a strong disclosure, could you tell me: What problem does your invention solve, and how does it work differently from existing solutions?",
-      "That's helpful! Now, could you describe the specific components, materials, or steps involved? The more detail, the stronger your disclosure.",
-      "Great progress! Are there any alternative ways to implement your invention? Thinking about variations helps broaden your disclosure.",
-      "Almost there! Is there anything else unique or novel about your approach that I should know about before we generate the disclosure?",
-      "I think we have enough detail now! Click 'Generate Disclosure' to create your professional draft, or tell me anything else you'd like to add."
+      "Thanks for sharing your idea! 😊 To help me understand better — what problem does your invention solve? What frustrated you that made you think of this?",
+      "That's really interesting! Could you walk me through how it works, step by step? Don't worry about using technical words — just describe it like you'd explain it to a friend.",
+      "I love where this is going! Are there other ways someone could build or use your idea? Thinking about variations is helpful.",
+      "Almost ready! Is there anything else special or unique about your idea that you haven't mentioned yet?",
+      "I think we have a great picture of your invention now! 🎉 Click \"Create My Disclosure\" to turn this into a professional document, or tell me anything else you'd like to add."
     ];
     const idx = Math.min(questionCount, fallbacks.length - 1);
     return json({ content: fallbacks[idx] });
