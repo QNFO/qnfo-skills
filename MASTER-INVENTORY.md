@@ -41,7 +41,7 @@
 
 ---
 
-## WORKERS — 24 (was 33; 5 deleted Session 11, 2 deleted Session 12, 2 merged→1 Session 13, 1 deleted Session 14)
+## WORKERS — 22 (was 33; 5 deleted Session 11, 2 deleted Session 12, 2 merged→1 Session 13, 1 deleted Session 14, 2 deleted Session 18 [TIER 2: 0 traffic])
 
 ### TIER 1: ESSENTIAL CORE (14)
 
@@ -63,7 +63,7 @@
 | audit-worker | Audit trail storage |
 | cron-graph-re-seed | KG-D1 paper reconciliation (every 15 min) |
 
-### TIER 2: SUPPORT / RESEARCH (8)
+### TIER 2: SUPPORT / RESEARCH (6)
 
 | Worker | Purpose |
 |:-------|:--------|
@@ -71,9 +71,7 @@
 | paper-pipeline | Paper processing + vectorize sync (cron daily, should be TIER 1) |
 | murtagh-engine | Murtagh research engine |
 | braid-matrix | Braid matrix research |
-| qnfo-infra-mcp | Infrastructure MCP stub (low value, candidate for deletion) |
 | qnfo-asset-api | Asset management |
-| qnfo-analytics-dashboard | Analytics dashboard (low value, consider Pages static) |
 | **paper-catalog** | **DO: D1→KG paper sync** |
 
 ### TIER 3: MERGED/DELETED (0 remaining)

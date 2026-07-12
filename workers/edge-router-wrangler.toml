@@ -1,0 +1,19 @@
+name = "qnfo-edge-router"
+main = "edge-router-v3.1.js"
+compatibility_date = "2026-07-12"
+
+[[services]]
+binding = "AI_WORKER"
+service = "qnfo-ai-worker"
+
+[[services]]
+binding = "GRAPH_API"
+service = "graph-api"
+
+[[services]]
+binding = "PAPER_CATALOG"
+service = "paper-catalog"
+
+[[services]]
+binding = "PAPERS_SERVER"
+service = "papers-server"

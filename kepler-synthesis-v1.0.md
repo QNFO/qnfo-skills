@@ -1,7 +1,7 @@
 # The Kepler Program: A Comprehensive Framework for Adelic Quantum Computing and Ultrametric Physics
 
 **Author:** Rowan Brad Quni-Gudzinas (ORCID: 0009-0002-4317-5604)
-**Date:** 2026-07-12
+**Date:** 2026-07-12 | **DOI:** [10.5281/zenodo.21320236](https://doi.org/10.5281/zenodo.21320236)
 **License:** QNFO Unified License Agreement (QNFO-ULA)
 **Version:** 1.0.0 (Synthesis, Iteration 4 Verified)
 
@@ -321,7 +321,7 @@ An 11-point DoD (Definition of Done) audit was performed on all automatable clai
 **Human Actions:** 4 REMAINING
 **Iteration:** 4 (full verification cycle)
 **Publications:** 4 Zenodo records + this synthesis = 5 total
-**DOI 4.0:** `10.5281/zenodo.21314315` (Complete Program Bundle, 14 files)
+**DOI:** 10.5281/zenodo.21320236
 
 ---
 
