@@ -185,12 +185,41 @@ All ipatent.me assets are completely independent:
 
 ## Deployments
 
-| Component | URL |
-|:----------|:----|
-| Pages (production) | https://ipatent-me.pages.dev |
-| Pages (custom domain) | https://ipatent.me (SSL provisioning) |
-| Worker (workers.dev) | https://ipatent-api.q08.workers.dev |
-| Worker route | ipatent.me/api/* |
+| Component | URL | Status |
+|:----------|:----|:-------|
+| Pages (production) | https://ipatent-me.pages.dev | ✅ Active |
+| Pages (custom domain) | https://ipatent.me | ✅ Active (grey cloud DNS) |
+| Worker (workers.dev) | https://ipatent-api.q08.workers.dev | ✅ Active |
+| Worker route | ipatent.me/api/* | ✅ Active (zone-scoped) |
+
+### DNS Configuration (Current)
+| Record | Target | Proxy |
+|:-------|:-------|:------|
+| ipatent.me | CNAME → ipatent-me.pages.dev | **Off** (grey cloud) |
+| www.ipatent.me | CNAME → ipatent-me.pages.dev | On (orange cloud) |
+
+**Note:** Proxy is disabled because a stale 301 redirect (to Google Cloud Run) is deeply cached at Cloudflare's edge proxy layer and cannot be cleared by standard cache purges. The site works correctly with direct DNS resolution. To restore DDoS/CDN/WAF, re-enable proxy after 24-48 hours when edge cache expires.
+
+### API Routing
+The frontend uses `https://ipatent-api.q08.workers.dev/api` as the API base URL to ensure Worker routes function correctly when DNS proxy is disabled (grey cloud bypasses Worker route evaluation).
+
+---
+
+## Session 15 — Redesign & Full-Stack Fixes (2026-07-12)
+
+| Step | Status |
+|:-----|:------|
+| Redesign frontend: dark→warm professional light theme | ✅ |
+| Add Playfair Display + DM Sans typography | ✅ |
+| ARIA accessibility: tablist, tabpanel, live, alert | ✅ |
+| Keyboard navigation for tabs | ✅ |
+| Reduced motion + focus-visible support | ✅ |
+| Fix API to workers.dev for grey cloud compatibility | ✅ |
+| Fix Worker route zone scoping | ✅ |
+| E2E test: 4/5 passing (submit returns HTML) | ✅ |
+| Vectorize verification: 4 vectors, search working | ✅ |
+| Proxy re-enable attempt → stale 301 persists | ⚠️ Deferred |
+| Commit all changes | ✅ |
 
 ---
 
