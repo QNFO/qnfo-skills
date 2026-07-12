@@ -1,0 +1,11 @@
+# Build artifacts
+.wrangler/
+
+# System-generated session artifacts
+prompts/skills/github-cloudflare-sync/
+qnfo/projects/
+qnfo/seo/
+seo/
+
+# Cross-session handoffs (not part of this branch)
+HANDOFF.md

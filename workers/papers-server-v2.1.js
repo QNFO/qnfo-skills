@@ -53,7 +53,7 @@ function escapeHtml(str) {
 
 async function serveSitemap(env) {
   try {
-    const obj = await env.PAPERS_BUCKET.get("qnfo/seo/sitemap.xml");
+    const obj = await env.PAPERS_BUCKET.get("seo/sitemap.xml");
     if (obj) {
       return new Response(obj.body, {
         headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" }
@@ -70,7 +70,7 @@ async function serveSitemap(env) {
 
 async function serveLlmsTxt(env) {
   try {
-    const obj = await env.PAPERS_BUCKET.get("qnfo/seo/llms.txt");
+    const obj = await env.PAPERS_BUCKET.get("seo/llms.txt");
     if (obj) {
       return new Response(obj.body, {
         headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" }
@@ -165,7 +165,7 @@ export default {
           try {
             const obj = await env.PAPERS_BUCKET.get(r2Path);
             if (obj) { markdown = await obj.text(); break; }
-          } catch (e) { /* RED-TEAM: silent failure — needs console.error */ }
+          } catch (e) { console.error("R2 markdown fetch failed:", r2Path, e.message); }
         }
         return new Response(renderPaper(result, markdown, slug), { headers: { "Content-Type": "text/html; charset=utf-8" } });
       } catch (e) {

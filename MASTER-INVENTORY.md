@@ -1,5 +1,5 @@
-# QNFO CLOUDFLARE ECOSYSTEM MASTER INVENTORY — 2026-07-11 (Session 12 Update)
-## Consolidated for LLM Maintenance Capacity | Workers: 33→28→26, SEO verified, Red-Team audited
+# QNFO CLOUDFLARE ECOSYSTEM MASTER INVENTORY — 2026-07-11 (Session 13 Update)
+## Consolidated for LLM Maintenance Capacity | Workers: 33→28→26→25, SEO: Worker-backed, QWAV: merged
 
 ---
 
@@ -41,7 +41,7 @@
 
 ---
 
-## WORKERS — 26 (was 33; 5 deleted Session 11, 2 deleted Session 12)
+## WORKERS — 25 (was 33; 5 deleted Session 11, 2 deleted Session 12, 2 merged→1 Session 13)
 
 ### TIER 1: ESSENTIAL CORE (15)
 
@@ -63,7 +63,7 @@
 | audit-worker | Audit trail storage |
 | cron-graph-re-seed | KG-D1 paper reconciliation (every 15 min) |
 
-### TIER 2: SUPPORT / RESEARCH (11)
+### TIER 2: SUPPORT / RESEARCH (9)
 
 | Worker | Purpose |
 |:-------|:--------|
@@ -71,20 +71,19 @@
 | paper-pipeline | Paper processing pipeline |
 | murtagh-engine | Murtagh research engine |
 | braid-matrix | Braid matrix research |
-| conjecture-test | Conjecture testing |
 | qnfo-infra-mcp | Infrastructure MCP server |
-| dns-cleanup | DNS cleanup utility |
 | qnfo-asset-api | Asset management |
 | qnfo-analytics-dashboard | Analytics dashboard |
-| archive-worker | Archive worker |
+| archive-worker | Archive worker (needs queue handler merge) |
 | **paper-catalog** | **RECLASSIFIED: D1→KG paper sync DO** |
 
-### TIER 3: REMAINING META/SEO (2)
+### TIER 3: MERGED/DELETED (0 remaining)
 
 | Worker | Purpose | Action |
 |:-------|:--------|:------|
-| deep-qwav-meta | deep.qwav.tech SEO+OG proxy | KEEP (active domain) |
-| qwav-redirect | 301→deep.qwav.tech | KEEP (needs route check) |
+| ~~deep-qwav-meta~~ | deep.qwav.tech SEO+OG proxy | MERGED into qwav-unified → DELETED |
+| ~~qwav-redirect~~ | 301→deep.qwav.tech | MERGED into qwav-unified → DELETED |
+| **qwav-unified** | Hostname-based routing: meta injection + redirect | **NEW (Session 13)** — handles both qwav domains |
 
 ---
 
@@ -102,17 +101,24 @@
 | dns-cleanup | One-off DNS cleanup utility — 0 traffic |
 | conjecture-test | Test worker — 0 traffic |
 
+### Session 13 Merges/Deletions
+| deep-qwav-meta | Merged into qwav-unified — deleted |
+| qwav-redirect | Merged into qwav-unified — deleted |
+| r2-binding-test | Session 13 test Worker — deleted after verification |
+
 ---
 
-## SEO STATUS (papers.qnfo.org) — ✅ VERIFIED
+## SEO STATUS (papers.qnfo.org) — ✅ WORKER-BACKED (v2.2)
 
 | Endpoint | Status | Content |
 |:---------|:------|:--------|
-| /sitemap.xml | 200 | 617 URLs (616 papers + index) |
-| /llms.txt | 200 | 616 paper entries with titles/DOIs/abstracts |
+| /sitemap.xml | 200 | 617 URLs (616 papers + index), 122KB, R2-backed via Worker |
+| /llms.txt | 200 | 616 paper entries with titles/DOIs/abstracts, 160KB, R2-backed |
 | /robots.txt | 200 | Standard + Sitemap directive |
 
-Files generated from D1 living-paper (616 papers), stored in R2 at `qnfo/seo/`.
+**Served by:** papers-server v2.2 Worker via Worker routes (not Pages static files)
+**R2 path:** `seo/sitemap.xml` and `seo/llms.txt` (bucket: qnfo)
+**Note:** Session 12 used Pages static files. Session 13 migrated to Worker-backed serving after fixing R2 key paths.
 
 ---
 
@@ -132,12 +138,12 @@ Files generated from D1 living-paper (616 papers), stored in R2 at `qnfo/seo/`.
 
 ## CONSOLIDATION PROGRESS
 
-| Resource | Session 9 | Session 11 | Target |
-|:---------|:---------:|:----------:|:------:|
-| Workers | 33 | 28 | **26** (−7) | 15 |
-| Pages | 10 | 7 | 6 |
-| D1 | 5 | 5 | 5 |
-| Vectorize | 3 | 3 | 3 |
+| Resource | Session 9 | Session 11 | Session 12 | Session 13 | Target |
+|:---------|:---------:|:----------:|:----------:|:----------:|:------:|
+| Workers | 33 | 28 | 26 | **25** (−8) | 15 |
+| Pages | 10 | 7 | 7 | 7 | 6 |
+| D1 | 5 | 5 | 5 | 5 | 5 |
+| Vectorize | 3 | 3 | 3 | 3 | 3 |
 
 ---
 
@@ -145,8 +151,8 @@ Files generated from D1 living-paper (616 papers), stored in R2 at `qnfo/seo/`.
 
 | Task | Notes |
 |:-----|:------|
-| Delete 5 empty DNS zones | OAuth token expired — need refresh or API key. Zones: empoweringchange.today, ipatent.me, qnfo.net, qnfo.uk, q-wave.tech |
-| Consolidate TIER 2 workers | 11 support/research workers — need individual audit |
-| Merge deep-qwav-meta + qwav-redirect | 2 remaining TIER 3 workers |
+| Transfer 5 domains away from Registrar | Manual Dashboard action. Zones blocked by Cloudflare Registrar (clientTransferProhibited) |
+| Merge qnfo-archive-worker → archive-worker | Queue consumer needs queue() handler added; source code archived in workers/ |
+| TIER 2 worker audit | 9 remaining support workers — check routes, bindings, traffic |
+| Disable workers_dev on papers-server | Currently auto-enabled by wrangler deploy; low risk but should be explicit |
 | Complete MASTER-PLAN Phase 1 | living-paper schema completion, Pages→Worker migration |
-| API key refresh | OAuth token expired 2026-07-09; wrangler manages auto-refresh for deploys but not API calls |
