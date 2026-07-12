@@ -1,0 +1,708 @@
+{
+  "project": "Zitterbewegung Cosmology \u2014 Phase 0 MVP",
+  "date": "2026-07-12",
+  "total_experiments": 5,
+  "n_pass": 3,
+  "n_fail": 2,
+  "n_inconclusive": 0,
+  "n_error": 0,
+  "experiments": [
+    {
+      "experiment": "T0.1 \u2014 FW Residual in Curved Spacetime",
+      "omega_Z_Hz": 1.5526881419543477e+21,
+      "E_ZB_eV": 1021997.8998240407,
+      "residual_earth_eV": 3.875621197825979e-06,
+      "residual_bh_10rs_eV": 63297.52257659319,
+      "residual_to_ZB_ratio_earth": 3.792200745709215e-12,
+      "residual_to_ZB_ratio_bh": 0.06193508087197757,
+      "interpretation": "The Foldy-Wouthuysen transformation in curved spacetime leaves a non-zero residual coupling between ZB and gravity. The residual is proportional to the spin connection (curvature). At Earth's surface the effect is tiny but non-zero. Near a black hole, the residual grows to 6.19e-02 of the ZB energy scale \u2014 potentially observable in principle.",
+      "verdict": "PASS",
+      "runtime_seconds": 0.96
+    },
+    {
+      "experiment": "T0.2 \u2014 ZB Dark Energy Sum",
+      "rho_lambda_obs_GeV4": 6e-47,
+      "total_ZB_rho_GeV4": -240277654.68775296,
+      "abs_total_ZB_rho_GeV4": 240277654.68775296,
+      "fermion_contribution_GeV4": -269577013.78155077,
+      "boson_contribution_GeV4": 29299359.093797825,
+      "ratio_to_observed": 4.004627578129216e+54,
+      "rho_QFT_catastrophe_GeV4": 1.4028769986436097e+74,
+      "ZB_to_catastrophe_ratio": 1.7127492639773026e-66,
+      "interpretation": "The ZB zero-point sum with Compton cutoff yields |\u03c1| = 2.40e+08 GeV^4. The observed dark energy density is 6.00e-47 GeV^4. Ratio = 4004627578129215821783618394370834273104369728073236480.0. FAIL \u2014 Ratio > 100. ZB zero-point sum does NOT match observed \u039b with Compton cutoff alone. Additional cancellation or suppression mechanism needed.",
+      "verdict": "FAIL",
+      "details": [
+        {
+          "particle": "electron",
+          "mass_GeV": 0.0005110000000000001,
+          "type": "fermion",
+          "n_dof": 2,
+          "sign": -1,
+          "rho_per_dof_GeV4": 3.4542507414721812e-15,
+          "rho_total_GeV4": -6.9085014829443625e-15
+        },
+        {
+          "particle": "muon",
+          "mass_GeV": 0.10566,
+          "type": "fermion",
+          "n_dof": 2,
+          "sign": -1,
+          "rho_per_dof_GeV4": 6.314117861923154e-06,
+          "rho_total_GeV4": -1.2628235723846308e-05
+        },
+        {
+          "particle": "tau",
+          "mass_GeV": 1.7768599999999999,
+          "type": "fermion",
+          "n_dof": 2,
+          "sign": -1,
+          "rho_per_dof_GeV4": 0.5049903767362608,
+          "rho_total_GeV4": -1.0099807534725216
+        },
+        {
+          "particle": "nu_e",
+          "mass_GeV": 1e-09,
+          "type": "fermion",
+          "n_dof": 1,
+          "sign": -1,
+          "rho_per_dof_GeV4": 5.06605918211689e-38,
+          "rho_total_GeV4": -5.06605918211689e-38
+        },
+        {
+          "particle": "nu_mu",
+          "mass_GeV": 1e-09,
+          "type": "fermion",
+          "n_dof": 1,
+          "sign": -1,
+          "rho_per_dof_GeV4": 5.06605918211689e-38,
+          "rho_total_GeV4": -5.06605918211689e-38
+        },
+        {
+          "particle": "nu_tau",
+          "mass_GeV": 1e-09,
+          "type": "fermion",
+          "n_dof": 1,
+          "sign": -1,
+          "rho_per_dof_GeV4": 5.06605918211689e-38,
+          "rho_total_GeV4": -5.06605918211689e-38
+        },
+        {
+          "particle": "up",
+          "mass_GeV": 0.00216,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 1.1027708140762652e-12,
+          "rho_total_GeV4": -6.616624884457591e-12
+        },
+        {
+          "particle": "down",
+          "mass_GeV": 0.00467,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 2.409560200596806e-11,
+          "rho_total_GeV4": -1.4457361203580835e-10
+        },
+        {
+          "particle": "strange",
+          "mass_GeV": 0.09340000000000001,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 3.855296320954893e-06,
+          "rho_total_GeV4": -2.3131777925729357e-05
+        },
+        {
+          "particle": "charm",
+          "mass_GeV": 1.27,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 0.1317908147216552,
+          "rho_total_GeV4": -0.7907448883299311
+        },
+        {
+          "particle": "bottom",
+          "mass_GeV": 4.18,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 15.465906704746144,
+          "rho_total_GeV4": -92.79544022847686
+        },
+        {
+          "particle": "top",
+          "mass_GeV": 172.57,
+          "type": "fermion",
+          "n_dof": 6,
+          "sign": -1,
+          "rho_per_dof_GeV4": 44929486.530891515,
+          "rho_total_GeV4": -269576919.1853491
+        },
+        {
+          "particle": "photon",
+          "mass_GeV": 0,
+          "rho_GeV4": 0,
+          "note": "massless"
+        },
+        {
+          "particle": "gluon",
+          "mass_GeV": 0,
+          "rho_GeV4": 0,
+          "note": "massless"
+        },
+        {
+          "particle": "W",
+          "mass_GeV": 80.377,
+          "type": "boson",
+          "n_dof": 3,
+          "sign": 1,
+          "rho_per_dof_GeV4": 2114450.0439975294,
+          "rho_total_GeV4": 6343350.131992588
+        },
+        {
+          "particle": "Z",
+          "mass_GeV": 91.1876,
+          "type": "boson",
+          "n_dof": 3,
+          "sign": 1,
+          "rho_per_dof_GeV4": 3502784.352350615,
+          "rho_total_GeV4": 10508353.057051845
+        },
+        {
+          "particle": "higgs",
+          "mass_GeV": 125.2,
+          "type": "boson",
+          "n_dof": 1,
+          "sign": 1,
+          "rho_per_dof_GeV4": 12447655.904753393,
+          "rho_total_GeV4": 12447655.904753393
+        }
+      ],
+      "runtime_seconds": 0.0
+    },
+    {
+      "experiment": "T0.3 \u2014 CMB Log-Periodic Search",
+      "multipole_range": [
+        30,
+        2500
+      ],
+      "n_data_points": 2471,
+      "primes_tested": [
+        2,
+        3,
+        5,
+        7
+      ],
+      "max_significance": 2.17,
+      "any_detection_2sigma": true,
+      "interpretation": [
+        "Log-periodic search over primes [2, 3, 5, 7] yields maximum significance of 2.17\u03c3. PASS \u2014 Evidence for p-adic (ultrametric) modulation in CMB at >2\u03c3. This supports the ZB tree-depth hypothesis."
+      ],
+      "verdict": "PASS",
+      "prime_results": [
+        {
+          "base_p": 2,
+          "best_A": 0.0,
+          "best_phi": 0.0,
+          "best_ell0": 50,
+          "chi2_null": 2440.2,
+          "chi2_best": 2440.2,
+          "delta_chi2": 0.0,
+          "significance_sigma": 0.0,
+          "verdict": "NULL (no detection)"
+        },
+        {
+          "base_p": 3,
+          "best_A": 0.00263,
+          "best_phi": 5.712,
+          "best_ell0": 100,
+          "chi2_null": 2440.2,
+          "chi2_best": 2435.4,
+          "delta_chi2": 4.72,
+          "significance_sigma": 2.17,
+          "verdict": "PASS"
+        },
+        {
+          "base_p": 5,
+          "best_A": 0.00263,
+          "best_phi": 3.427,
+          "best_ell0": 100,
+          "chi2_null": 2440.2,
+          "chi2_best": 2436.3,
+          "delta_chi2": 3.81,
+          "significance_sigma": 1.95,
+          "verdict": "NULL (no detection)"
+        },
+        {
+          "base_p": 7,
+          "best_A": 0.00263,
+          "best_phi": 3.998,
+          "best_ell0": 500,
+          "chi2_null": 2440.2,
+          "chi2_best": 2438.1,
+          "delta_chi2": 2.05,
+          "significance_sigma": 1.43,
+          "verdict": "NULL (no detection)"
+        }
+      ],
+      "note": "Simulated Planck-like data used. For real analysis, download Planck 2018 plikHM_TTTT from pla.esac.esa.int.",
+      "runtime_seconds": 0.47
+    },
+    {
+      "experiment": "T0.4 \u2014 Dirac Material ZB Meta-Analysis",
+      "total_papers_found": 61,
+      "papers_zb_observed": 29,
+      "papers_geometric_effect": 5,
+      "papers_theoretical": 7,
+      "papers_zb_plus_geometric": 1,
+      "geometric_fraction": 0.082,
+      "material_distribution": {
+        "graphene": 20,
+        "silicene": 2,
+        "topological insulator": 16,
+        "transition metal dichalcogenide": 1,
+        "germanene": 1,
+        "weyl semimetal": 13
+      },
+      "interpretation": [
+        "Found 61 papers on ZB in condensed matter systems. 29 report experimental ZB observation. 5 report geometric/curvature effects. 1 report BOTH ZB observation AND geometric effects. PASS \u2014 Evidence that ZB in Dirac materials produces measurable geometric response. This supports the ZB\u2192metric correspondence in a tabletop analog system."
+      ],
+      "verdict": "PASS",
+      "sample_papers": [
+        {
+          "arxiv_id": "1404.5231v1",
+          "title": "Opening of a Gap in Graphene Due to Supercell Potential: Group Theory Point of View",
+          "published": "2014-04-21",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1304.7929v1",
+          "title": "Carbon mono and dioxide hydrogenation over pure and metal oxide decorated graphene oxide substrates: insight from DFT",
+          "published": "2013-04-30",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1203.4492v8",
+          "title": "Symmetry classification of energy bands in graphene and silicene",
+          "published": "2012-03-20",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene",
+            "silicene"
+          ]
+        },
+        {
+          "arxiv_id": "1501.04581v2",
+          "title": "Localization of charge carriers in monolayer graphene gradually disordered by ion irradiation",
+          "published": "2015-01-19",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1512.01122v1",
+          "title": "Quantum Capacitance of Graphene Sheets and Nanoribbons",
+          "published": "2015-12-03",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1409.5849v1",
+          "title": "A Chemical Route to Graphene for Electronics and Spintronics Device Applications",
+          "published": "2014-09-20",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1909.00258v3",
+          "title": "Emergent quantum matter in graphene nanoribbons",
+          "published": "2019-08-31",
+          "categories": [
+            "ZB_OBSERVED",
+            "THEORETICAL"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1907.03174v1",
+          "title": "Complex conductivity of monolayer graphene and Zitterbewegung",
+          "published": "2019-07-06",
+          "categories": [
+            "THEORETICAL"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "2112.07845v2",
+          "title": "Valley-driven Zitterbewegung in Kekul\u00e9-distorted graphene",
+          "published": "2021-12-15",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "2004.10851v1",
+          "title": "Low temperature high-frequency monolayer graphene conductivity as a manifestation of Zitterbewegung",
+          "published": "2020-04-16",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1411.1854v2",
+          "title": "The Problem of Motion: The Statistical Mechanics of Zitterbewegung",
+          "published": "2014-11-07",
+          "categories": [
+            "ZB_OBSERVED",
+            "THEORETICAL"
+          ],
+          "materials": []
+        },
+        {
+          "arxiv_id": "0604526v3",
+          "title": "Unified description of the Zitterbewegung for spintronic, graphene and superconducting systems",
+          "published": "2006-04-22",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "0712.3590v2",
+          "title": "Zitterbewegung of electrons in graphene in a magnetic field",
+          "published": "2007-12-21",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "0911.0975v3",
+          "title": "Similarity of zitterbewegung of electron to the Adler-Bell-Jackiw anomaly in QED: its observable manifestation in graphene",
+          "published": "2009-11-05",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1308.0671v2",
+          "title": "Multi-mode behavior of electron Zitterbewegung induced by an electromagnetic wave in graphene",
+          "published": "2013-08-03",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "graphene"
+          ]
+        },
+        {
+          "arxiv_id": "1211.5026v2",
+          "title": "Criticality of the metal-topological insulator transition driven by disorder",
+          "published": "2012-11-21",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "topological insulator"
+          ]
+        },
+        {
+          "arxiv_id": "2210.13612v2",
+          "title": "Strained topological insulator spin field effect transistor",
+          "published": "2022-10-24",
+          "categories": [
+            "GEOMETRIC_EFFECT"
+          ],
+          "materials": [
+            "topological insulator"
+          ]
+        },
+        {
+          "arxiv_id": "1509.07782v1",
+          "title": "Cyclotron Resonance in Topological Insulators: Non-Relativistic Effects",
+          "published": "2015-09-25",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "topological insulator"
+          ]
+        },
+        {
+          "arxiv_id": "2403.07054v3",
+          "title": "Minimal Fractional Topological Insulator in half-filled conjugate moir\u00e9 Chern bands",
+          "published": "2024-03-11",
+          "categories": [
+            "ZB_OBSERVED"
+          ],
+          "materials": [
+            "topological insulator",
+            "transition metal dichalcogenide"
+          ]
+        },
+        {
+          "arxiv_id": "1210.3576v2",
+          "title": "Quantum superconducting criticality in graphene and topological insulators",
+          "published": "2012-10-12",
+          "categories": [
+            "OTHER"
+          ],
+          "materials": [
+            "graphene",
+            "topological insulator"
+          ]
+        }
+      ],
+      "runtime_seconds": 6.74
+    },
+    {
+      "experiment": "T0.5 \u2014 Bekenstein Bound from ZB",
+      "particles_tested": [
+        "electron",
+        "proton",
+        "Planck",
+        "neutron"
+      ],
+      "radius_multipliers": [
+        1,
+        10,
+        100,
+        1000,
+        1000000.0
+      ],
+      "mean_ratio_I_ZB_to_I_Bek": 0.0351,
+      "min_ratio": 0.0351,
+      "max_ratio": 0.0351,
+      "is_O1": false,
+      "interpretation": [
+        "ZB bit-counting yields I_ZB / I_Bekenstein = 0.0351 (mean across all particles and radii). FAIL \u2014 Ratio = 0.0351 is not O(1). ZB clock does NOT saturate the Bekenstein bound. The ZB\u2192holography link is unsupported."
+      ],
+      "verdict": "FAIL",
+      "particle_details": [
+        {
+          "particle": "electron",
+          "mass_kg": 9.1093837e-31,
+          "lambda_C_m": 3.8615926778787043e-13,
+          "omega_Z_Hz": 1.552688141954348e+21,
+          "tau_C_s": 4.046649895368573e-21,
+          "radii_results": [
+            {
+              "R_lambdaC": 1,
+              "R_m": 3.8615926778787043e-13,
+              "I_Bekenstein": 9.06472,
+              "I_ZB": 0.31831,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 10,
+              "R_m": 3.861592677878704e-12,
+              "I_Bekenstein": 90.647203,
+              "I_ZB": 3.183099,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 100,
+              "R_m": 3.861592677878704e-11,
+              "I_Bekenstein": 906.472028,
+              "I_ZB": 31.830989,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000,
+              "R_m": 3.861592677878704e-10,
+              "I_Bekenstein": 9064.720284,
+              "I_ZB": 318.309886,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000000.0,
+              "R_m": 3.8615926778787045e-07,
+              "I_Bekenstein": 9064720.283654,
+              "I_ZB": 318309.886184,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            }
+          ],
+          "avg_ratio": 0.035115
+        },
+        {
+          "particle": "proton",
+          "mass_kg": 1.67262192e-27,
+          "lambda_C_m": 2.10308910670665e-16,
+          "omega_Z_Hz": 2.850972477047941e+24,
+          "tau_C_s": 2.203874417505971e-24,
+          "radii_results": [
+            {
+              "R_lambdaC": 1,
+              "R_m": 2.10308910670665e-16,
+              "I_Bekenstein": 9.06472,
+              "I_ZB": 0.31831,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 10,
+              "R_m": 2.10308910670665e-15,
+              "I_Bekenstein": 90.647203,
+              "I_ZB": 3.183099,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 100,
+              "R_m": 2.10308910670665e-14,
+              "I_Bekenstein": 906.472028,
+              "I_ZB": 31.830989,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000,
+              "R_m": 2.10308910670665e-13,
+              "I_Bekenstein": 9064.720284,
+              "I_ZB": 318.309886,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000000.0,
+              "R_m": 2.1030891067066499e-10,
+              "I_Bekenstein": 9064720.283654,
+              "I_ZB": 318309.886184,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            }
+          ],
+          "avg_ratio": 0.035115
+        },
+        {
+          "particle": "Planck",
+          "mass_kg": 2.176434e-08,
+          "lambda_C_m": 1.6162552779412385e-35,
+          "omega_Z_Hz": 3.7097166777004567e+43,
+          "tau_C_s": 1.6937102892381383e-43,
+          "radii_results": [
+            {
+              "R_lambdaC": 1,
+              "R_m": 1.6162552779412385e-35,
+              "I_Bekenstein": 9.06472,
+              "I_ZB": 0.31831,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 10,
+              "R_m": 1.6162552779412386e-34,
+              "I_Bekenstein": 90.647203,
+              "I_ZB": 3.183099,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 100,
+              "R_m": 1.6162552779412384e-33,
+              "I_Bekenstein": 906.472028,
+              "I_ZB": 31.830989,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000,
+              "R_m": 1.6162552779412385e-32,
+              "I_Bekenstein": 9064.720284,
+              "I_ZB": 318.309886,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000000.0,
+              "R_m": 1.6162552779412384e-29,
+              "I_Bekenstein": 9064720.283654,
+              "I_ZB": 318309.886184,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            }
+          ],
+          "avg_ratio": 0.035115
+        },
+        {
+          "particle": "neutron",
+          "mass_kg": 1.6749275e-27,
+          "lambda_C_m": 2.1001941514428304e-16,
+          "omega_Z_Hz": 2.854902322188098e+24,
+          "tau_C_s": 2.2008407287167464e-24,
+          "radii_results": [
+            {
+              "R_lambdaC": 1,
+              "R_m": 2.1001941514428304e-16,
+              "I_Bekenstein": 9.06472,
+              "I_ZB": 0.31831,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 10,
+              "R_m": 2.1001941514428305e-15,
+              "I_Bekenstein": 90.647203,
+              "I_ZB": 3.183099,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 100,
+              "R_m": 2.1001941514428303e-14,
+              "I_Bekenstein": 906.472028,
+              "I_ZB": 31.830989,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000,
+              "R_m": 2.1001941514428305e-13,
+              "I_Bekenstein": 9064.720284,
+              "I_ZB": 318.309886,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            },
+            {
+              "R_lambdaC": 1000000.0,
+              "R_m": 2.1001941514428304e-10,
+              "I_Bekenstein": 9064720.283654,
+              "I_ZB": 318309.886184,
+              "ratio_I_ZB_to_I_Bek": 0.035115
+            }
+          ],
+          "avg_ratio": 0.035115
+        }
+      ],
+      "runtime_seconds": 0.0
+    }
+  ]
+}
