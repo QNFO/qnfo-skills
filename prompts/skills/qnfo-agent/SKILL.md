@@ -763,7 +763,7 @@ Before starting any significant task, the agent MUST execute unified discovery t
 | **2. Execute** | §0.9 (EXECUTE MANDATE) | Read-vs-Execute Gate, Response Budget, anti-planning-spiral |
 | **3. Verify** | §2 (Verification Requirements) | Filesystem, git, Python, Rule 14 anti-phantom |
 | **4. Audit** | §9.11 (Task Execution Audit) | Per-response audit, mid-session checkpoint, self-evaluation |
-| **5. Close Out** | §10 (Session Lifecycle) | Task audit, Discovery Index update, handoff, commit, merge, push |
+| **5. Close Out** | §10 (Session Lifecycle) | Task audit, D1 portfolio-state update, handoff, commit, merge, push |
 
 **The workflow is automatic.** The agent does not wait for user prompting to discover, verify, or close out. See each phase's section for detailed protocols.
 
@@ -918,7 +918,7 @@ Use `read('%APPDATA%\DeepChat\skills\knowledge-graph\SKILL.md')` for automated d
 
 ### 3.2 Due Diligence Workflow
 
-1. **Pull Discovery Index** — mandatory first step (see §3.1)
+1. **Query D1 Portfolio-State** — mandatory first step (see §3.1)
 1.5. **ARCHITECTURE COMPLIANCE GATE (MANDATORY — v3.13):** Before building ANY infrastructure, validate that the proposed architecture uses ONLY Cloudflare-native services. (a) Allowed: D1, R2, Workers, Pages, KV, Vectorize, Queues, Durable Objects, DDoS, WAF, DNS, Zero Trust. (b) PROHIBITED: Any external cloud service — Neo4j AuraDB, AWS, GCP, Azure, Supabase, PlanetScale, Vercel, Netlify, or any non-Cloudflare infrastructure. (c) Embedded/local databases (Kùzu, SQLite, DuckDB) are acceptable for DEVELOPMENT/TESTING only — production infrastructure must be Cloudflare-hosted and queryable by Workers. (d) If any proposed component is non-Cloudflare → STOP. Flag `[BLOCKED: Architecture Compliance — Cloudflare-native required]`. Redesign using Cloudflare services only.
 
 1.6. **INFRASTRUCTURE STATE VERIFICATION GATE (MANDATORY — v3.14):** Before executing ANY pipeline, upload, deployment, or data-processing task, verify live Cloudflare infrastructure state against the task's claim. This is THE anti-duplication guardrail.
@@ -943,7 +943,7 @@ Use `read('%APPDATA%\DeepChat\skills\knowledge-graph\SKILL.md')` for automated d
 
    **(d) TRUST LIVE INFRASTRUCTURE OVER HANDOFFS.** Handoff documents and task lists are human/agent-generated and can be stale or incorrect. Live Cloudflare state (R2, Vectorize, D1, Workers, Pages) is the SINGLE source of truth for "what has been done." A handoff claiming work is pending does NOT override live evidence that work is complete.
 
-   **(e) This gate applies EVEN IN EXECUTE MODE.** The EXECUTE MODE Discovery Capsule (§0.9.1 rule 3) is expanded: (i) Pull Discovery Index, (ii) Identify target, (iii) **Verify infrastructure state against task claim**, (iv) EXECUTE or SKIP.
+   **(e) This gate applies EVEN IN EXECUTE MODE.** The EXECUTE MODE Discovery Capsule (§0.9.1 rule 3) is expanded: (i) Query D1 portfolio-state, (ii) Identify target, (iii) **Verify infrastructure state against task claim**, (iv) EXECUTE or SKIP.
 
 
 2. **Search for prior work:** Query the index for projects matching current topic (by name, topic tags, summary)
