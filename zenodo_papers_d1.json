@@ -1,0 +1,882 @@
+﻿[
+    {
+        "identifier":  "qnfo-2025-00-9-are-we-following-the-right-path",
+        "zenodo_doi":  "10.5281/zenodo.15533623",
+        "zenodo_url":  null,
+        "title":  "Philosophy of Science",
+        "r2_key":  "qnfo/releases/2025/00/Philosophy of Science/9 Are We Following the Right Path.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-00-3-mechanics",
+        "zenodo_doi":  "10.5281/zenodo.15533729",
+        "zenodo_url":  null,
+        "title":  "Implied Discretization and the Limits of Modeling Continuous Reality",
+        "r2_key":  "qnfo/releases/2025/00/Implied Discretization/3 Mechanics.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-00-1-from-self-to-society",
+        "zenodo_doi":  "10.5281/zenodo.15580769",
+        "zenodo_url":  null,
+        "title":  "Strange Loop of Being",
+        "r2_key":  "qnfo/releases/2025/00/Strange Loop of Being/1 From Self to Society.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "10.5281/zenodo.15705831",
+        "zenodo_doi":  "10.5281/zenodo.15708823",
+        "zenodo_url":  "https://zenodo.org/records/15708823",
+        "title":  "Imperfectly Defining Reality",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.15705831-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.15705831"
+    },
+    {
+        "identifier":  "10.5281/zenodo.16615922",
+        "zenodo_doi":  "10.5281/zenodo.16731814",
+        "zenodo_url":  "https://zenodo.org/records/16731814",
+        "title":  "Formal Framework for a Non-Local Frequency-Based Reality",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.16615922-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.16615922"
+    },
+    {
+        "identifier":  "10.5281/zenodo.16730345",
+        "zenodo_doi":  "10.5281/zenodo.16731979",
+        "zenodo_url":  "https://zenodo.org/records/16731979",
+        "title":  "Critical Examination of the Null Hypotheses in Fundamental Physics",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.16730345-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.16730345"
+    },
+    {
+        "identifier":  "10.5281/zenodo.16732364",
+        "zenodo_doi":  "10.5281/zenodo.16732365",
+        "zenodo_url":  "https://zenodo.org/records/16732365",
+        "title":  "Critical Examination of Spacetime, Mass, and Gravity through Competing Ontological Frameworks",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.16732364-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.16732364"
+    },
+    {
+        "identifier":  "10.5281/zenodo.17074684",
+        "zenodo_doi":  "10.5281/zenodo.17074726",
+        "zenodo_url":  "https://zenodo.org/records/17074726",
+        "title":  "Geometric Unification Framework",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.17074684-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.17074684"
+    },
+    {
+        "identifier":  "qnfo-2025-09-universe-as-self-proving-theorem",
+        "zenodo_doi":  "10.5281/zenodo.17085802",
+        "zenodo_url":  null,
+        "title":  "Universe as Self-Proving Theorem",
+        "r2_key":  "qnfo/releases/2025/09/Universe as Self-Proving Theorem.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "10.5281/zenodo.17120549",
+        "zenodo_doi":  "10.5281/zenodo.17120550",
+        "zenodo_url":  "https://zenodo.org/records/17120550",
+        "title":  "Meta-Analysis of Categorical Equivalence and Scale Invariance",
+        "r2_key":  "qnfo/publications/10.5281-zenodo.17120549-v1.0.0.md",
+        "kg_node_id":  "paper-doi-10.5281-zenodo.17120549"
+    },
+    {
+        "identifier":  "qnfo-2025-09-quantifying-structural-unification-and-epistemic-scaffolding-in-scientific-progress",
+        "zenodo_doi":  "10.5281/zenodo.17229528",
+        "zenodo_url":  null,
+        "title":  "Quantifying Structural Unification and Epistemic Scaffolding in Scientific Progress",
+        "r2_key":  "qnfo/releases/2025/09/Quantifying Structural Unification and Epistemic Scaffolding in Scientific Progress.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-12-physics-bounded-computational-substrate",
+        "zenodo_doi":  "10.5281/zenodo.17440316",
+        "zenodo_url":  null,
+        "title":  "Physics-Native Computational Architectures",
+        "r2_key":  "qnfo/releases/2025/12/Physics-Bounded Computational Substrate.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-11-emergent-number-theory",
+        "zenodo_doi":  "10.5281/zenodo.17499279",
+        "zenodo_url":  null,
+        "title":  "EMERGENT NUMBER THEORY",
+        "r2_key":  "qnfo/releases/2025/11/Emergent Number Theory.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-11-prime-numbers-as-universal-optimization-primitives",
+        "zenodo_doi":  "10.5281/zenodo.17516239",
+        "zenodo_url":  null,
+        "title":  "Prime Numbers as Universal Optimization Primitives",
+        "r2_key":  "qnfo/releases/2025/11/Prime Numbers as Universal Optimization Primitives.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-03-a-unified-framework-for-superdeterminism-neurobiology-and-the-mechanics-of-human-meaning",
+        "zenodo_doi":  "10.5281/zenodo.18882139",
+        "zenodo_url":  null,
+        "title":  "A Unified Framework for Superdeterminism, Neurobiology, and the Mechanics of Human Meaning",
+        "r2_key":  "qnfo/releases/2026/03/A Unified Framework for Superdeterminism, Neurobiology, and the Mechanics of Human Meaning.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-03-mechanics-of-psychological-projection-and-ontological-reality",
+        "zenodo_doi":  "10.5281/zenodo.19135962",
+        "zenodo_url":  null,
+        "title":  "THE MECHANICS OF PSYCHOLOGICAL PROJECTION AND ONTOLOGICAL REALITY",
+        "r2_key":  "qnfo/releases/2026/03/MECHANICS OF PSYCHOLOGICAL PROJECTION AND ONTOLOGICAL REALITY.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-03-simulation-inconsistency-detection-via-neurobiological-and-cognitive-interfaces",
+        "zenodo_doi":  "10.5281/zenodo.19195396",
+        "zenodo_url":  null,
+        "title":  "Simulation Inconsistency Detection via Neurobiological and Cognitive Interfaces",
+        "r2_key":  "qnfo/releases/2026/03/Simulation Inconsistency Detection via Neurobiological and Cognitive Interfaces.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-ultrametric-quantum-computation",
+        "zenodo_doi":  "10.5281/zenodo.19396321",
+        "zenodo_url":  null,
+        "title":  "Ultrametric Quantum Computation",
+        "r2_key":  "qnfo/releases/2026/04/Ultrametric Quantum Computation.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-ultrametric-quantum-gravity-and-computation",
+        "zenodo_doi":  "10.5281/zenodo.19397517",
+        "zenodo_url":  null,
+        "title":  "Ultrametric Quantum Gravity and Computation",
+        "r2_key":  "qnfo/releases/2026/04/Ultrametric Quantum Gravity and Computation.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-syntactic-generation-primitive-distinctions",
+        "zenodo_doi":  "10.5281/zenodo.19511463",
+        "zenodo_url":  null,
+        "title":  "Syntactic Generation Primitive Distinctions",
+        "r2_key":  "qnfo/releases/2026/04/Syntactic Generation Primitive Distinctions.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-log-periodic-oscillations-in-the-cmb",
+        "zenodo_doi":  "10.5281/zenodo.19555030",
+        "zenodo_url":  null,
+        "title":  "Log-Periodic Oscillations in the CMB",
+        "r2_key":  "qnfo/releases/2026/04/Log-Periodic Oscillations in the CMB.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-11-reassessing-the-foundations-of-quantum-computation",
+        "zenodo_doi":  "10.5281/zenodo.20036379",
+        "zenodo_url":  null,
+        "title":  "Ultrametric Quantum Computation and the Langlands Program",
+        "r2_key":  "qnfo/releases/2025/11/Reassessing the Foundations of Quantum Computation.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "b2116f972a844aee",
+        "zenodo_doi":  "10.5281/zenodo.21016544",
+        "zenodo_url":  null,
+        "title":  "\"id\": \"obsidian-8960274bb3e7\",",
+        "r2_key":  "papers/obsidian-8960274bb3e7.json",
+        "kg_node_id":  "paper-b2116f972a844aee"
+    },
+    {
+        "identifier":  "6c2e5204fe545188",
+        "zenodo_doi":  "10.5281/zenodo.21016847",
+        "zenodo_url":  "https://zenodo.org/records/21016847",
+        "title":  "Mathematical Tricks Postulate",
+        "r2_key":  "papers/obsidian-7bbe80c83b0f.json",
+        "kg_node_id":  "paper-6c2e5204fe545188"
+    },
+    {
+        "identifier":  "qnfo-2025-00-iii-9-computational-universe",
+        "zenodo_doi":  "10.5281/zenodo.21016851",
+        "zenodo_url":  null,
+        "title":  "III-9 Computational Universe",
+        "r2_key":  "qnfo/releases/2025/00/Matter without Mass/III-9 Computational Universe.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "77306764e5717a6a",
+        "zenodo_doi":  "10.5281/zenodo.21016853",
+        "zenodo_url":  "https://zenodo.org/records/21016853",
+        "title":  "Imperfectly Defining Reality",
+        "r2_key":  "papers/obsidian-832978fba1b2.json",
+        "kg_node_id":  "paper-77306764e5717a6a"
+    },
+    {
+        "identifier":  "7c2c5566baa1ebb5",
+        "zenodo_doi":  "10.5281/zenodo.21016857",
+        "zenodo_url":  "https://zenodo.org/records/21016857",
+        "title":  "Coherence and Generativity Framework",
+        "r2_key":  "papers/obsidian-32ac699e1e1b.json",
+        "kg_node_id":  "paper-7c2c5566baa1ebb5"
+    },
+    {
+        "identifier":  "7d16f8b1320d23a8",
+        "zenodo_doi":  "10.5281/zenodo.21016859",
+        "zenodo_url":  "https://zenodo.org/records/21016859",
+        "title":  "10 It from Bit",
+        "r2_key":  "papers/obsidian-055bcd7d4bd9.json",
+        "kg_node_id":  "paper-7d16f8b1320d23a8"
+    },
+    {
+        "identifier":  "7edc027fe48a8379",
+        "zenodo_doi":  "10.5281/zenodo.21016861",
+        "zenodo_url":  "https://zenodo.org/records/21016861",
+        "title":  "Co-Evolution of Intelligence",
+        "r2_key":  "papers/obsidian-af7d6d043571.json",
+        "kg_node_id":  "paper-7edc027fe48a8379"
+    },
+    {
+        "identifier":  "7fb3c520b48f6a5c",
+        "zenodo_doi":  "10.5281/zenodo.21016865",
+        "zenodo_url":  "https://zenodo.org/records/21016865",
+        "title":  "B Nodes",
+        "r2_key":  "papers/obsidian-b5e121f3de0b.json",
+        "kg_node_id":  "paper-7fb3c520b48f6a5c"
+    },
+    {
+        "identifier":  "809a5107dc18f070",
+        "zenodo_doi":  "10.5281/zenodo.21016867",
+        "zenodo_url":  "https://zenodo.org/records/21016867",
+        "title":  "Grammar of Reality",
+        "r2_key":  "papers/obsidian-74490a66358d.json",
+        "kg_node_id":  "paper-809a5107dc18f070"
+    },
+    {
+        "identifier":  "809bebdde3ecc5ed",
+        "zenodo_doi":  "10.5281/zenodo.21016871",
+        "zenodo_url":  "https://zenodo.org/records/21016871",
+        "title":  "10 Architecture of Order",
+        "r2_key":  "papers/obsidian-3e60efea16a1.json",
+        "kg_node_id":  "paper-809bebdde3ecc5ed"
+    },
+    {
+        "identifier":  "84e119db29a0bf6c",
+        "zenodo_doi":  "10.5281/zenodo.21016875",
+        "zenodo_url":  "https://zenodo.org/records/21016875",
+        "title":  "15 Autology and the Evolution of Science",
+        "r2_key":  "papers/obsidian-72cac5bf0df0.json",
+        "kg_node_id":  "paper-84e119db29a0bf6c"
+    },
+    {
+        "identifier":  "865e54dd86a89721",
+        "zenodo_doi":  "10.5281/zenodo.21016877",
+        "zenodo_url":  "https://zenodo.org/records/21016877",
+        "title":  "15 Singularities",
+        "r2_key":  "papers/obsidian-a244d6a73c65.json",
+        "kg_node_id":  "paper-865e54dd86a89721"
+    },
+    {
+        "identifier":  "8afcd6425ca4c8ac",
+        "zenodo_doi":  "10.5281/zenodo.21016893",
+        "zenodo_url":  "https://zenodo.org/records/21016893",
+        "title":  "Contemplative Science",
+        "r2_key":  "papers/obsidian-90bcdd995b47.json",
+        "kg_node_id":  "paper-8afcd6425ca4c8ac"
+    },
+    {
+        "identifier":  "8fbb707f86b7d2b1",
+        "zenodo_doi":  "10.5281/zenodo.21016903",
+        "zenodo_url":  "https://zenodo.org/records/21016903",
+        "title":  "16 Alchemy of Awareness",
+        "r2_key":  "papers/obsidian-614cf6e02234.json",
+        "kg_node_id":  "paper-8fbb707f86b7d2b1"
+    },
+    {
+        "identifier":  "qnfo-2025-00-ii-5-enduring-heresy",
+        "zenodo_doi":  "10.5281/zenodo.21016907",
+        "zenodo_url":  null,
+        "title":  "II-5 Enduring Heresy",
+        "r2_key":  "qnfo/releases/2025/00/Matter without Mass/II-5 Enduring Heresy.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "9bd17b8cc80471cf",
+        "zenodo_doi":  "10.5281/zenodo.21016921",
+        "zenodo_url":  "https://zenodo.org/records/21016921",
+        "title":  "Negative Perceptions AI",
+        "r2_key":  "papers/obsidian-2bdcc0ba4a06.json",
+        "kg_node_id":  "paper-9bd17b8cc80471cf"
+    },
+    {
+        "identifier":  "9bfbb811a3dd26bc",
+        "zenodo_doi":  "10.5281/zenodo.21016923",
+        "zenodo_url":  "https://zenodo.org/records/21016923",
+        "title":  "Time",
+        "r2_key":  "papers/obsidian-435a49b8f65c.json",
+        "kg_node_id":  "paper-9bfbb811a3dd26bc"
+    },
+    {
+        "identifier":  "qnfo-2025-00-foundational-incoherence-in-the-language-of-physics",
+        "zenodo_doi":  "10.5281/zenodo.21016925",
+        "zenodo_url":  null,
+        "title":  "Foundational Incoherence in the Language of Physics",
+        "r2_key":  "qnfo/releases/2025/00/Foundational Incoherence in the Language of Physics.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "9e471620972e317c",
+        "zenodo_doi":  "10.5281/zenodo.21016931",
+        "zenodo_url":  "https://zenodo.org/records/21016931",
+        "title":  "Before the Big Bang",
+        "r2_key":  "papers/obsidian-5469ba685194.json",
+        "kg_node_id":  "paper-9e471620972e317c"
+    },
+    {
+        "identifier":  "9e87c2cf4405bd66",
+        "zenodo_doi":  "10.5281/zenodo.21016935",
+        "zenodo_url":  "https://zenodo.org/records/21016935",
+        "title":  "17 Ways of Knowing",
+        "r2_key":  "papers/obsidian-b438fe11a385.json",
+        "kg_node_id":  "paper-9e87c2cf4405bd66"
+    },
+    {
+        "identifier":  "9f79160ae5c95248",
+        "zenodo_doi":  "10.5281/zenodo.21016937",
+        "zenodo_url":  "https://zenodo.org/records/21016937",
+        "title":  "Introduction",
+        "r2_key":  "papers/obsidian-fe409f42c871.json",
+        "kg_node_id":  "paper-9f79160ae5c95248"
+    },
+    {
+        "identifier":  "a595a65fcc9946c5",
+        "zenodo_doi":  "10.5281/zenodo.21016951",
+        "zenodo_url":  "https://zenodo.org/records/21016951",
+        "title":  "Notes",
+        "r2_key":  "papers/obsidian-bcd9bd5d6b20.json",
+        "kg_node_id":  "paper-a595a65fcc9946c5"
+    },
+    {
+        "identifier":  "a7e308e3f02f14d2",
+        "zenodo_doi":  "10.5281/zenodo.21016953",
+        "zenodo_url":  "https://zenodo.org/records/21016953",
+        "title":  "Implied Discretization",
+        "r2_key":  "papers/obsidian-d19e605b1bba.json",
+        "kg_node_id":  "paper-a7e308e3f02f14d2"
+    },
+    {
+        "identifier":  "a8cc19c25831fe99",
+        "zenodo_doi":  "10.5281/zenodo.21016955",
+        "zenodo_url":  "https://zenodo.org/records/21016955",
+        "title":  "N=1 Problem",
+        "r2_key":  "papers/obsidian-17d7a3800310.json",
+        "kg_node_id":  "paper-a8cc19c25831fe99"
+    },
+    {
+        "identifier":  "qnfo-2025-00-c7-edges-philosophy",
+        "zenodo_doi":  "10.5281/zenodo.21016961",
+        "zenodo_url":  null,
+        "title":  "C.7 Edges Philosophy",
+        "r2_key":  "qnfo/releases/2025/00/Consilience/C.7 Edges Philosophy.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "af8bea9717816cb1",
+        "zenodo_doi":  "10.5281/zenodo.21016965",
+        "zenodo_url":  "https://zenodo.org/records/21016965",
+        "title":  "C.1 Edges CM",
+        "r2_key":  "papers/obsidian-5d81bc496ba6.json",
+        "kg_node_id":  "paper-af8bea9717816cb1"
+    },
+    {
+        "identifier":  "b1ca586fc33e196b",
+        "zenodo_doi":  "10.5281/zenodo.21016967",
+        "zenodo_url":  "https://zenodo.org/records/21016967",
+        "title":  "E Glossary",
+        "r2_key":  "papers/obsidian-3e860de16305.json",
+        "kg_node_id":  "paper-b1ca586fc33e196b"
+    },
+    {
+        "identifier":  "b4049806e76874c5",
+        "zenodo_doi":  "10.5281/zenodo.21016981",
+        "zenodo_url":  "https://zenodo.org/records/21016981",
+        "title":  "Comparing Fundamental Frameworks",
+        "r2_key":  "papers/obsidian-6aab39c7b771.json",
+        "kg_node_id":  "paper-b4049806e76874c5"
+    },
+    {
+        "identifier":  "b4e1e10103641c67",
+        "zenodo_doi":  "10.5281/zenodo.21016983",
+        "zenodo_url":  "https://zenodo.org/records/21016983",
+        "title":  "Autaxys and its Generative Engin",
+        "r2_key":  "papers/obsidian-dfe7d8891c68.json",
+        "kg_node_id":  "paper-b4e1e10103641c67"
+    },
+    {
+        "identifier":  "b6d09042590a7c5f",
+        "zenodo_doi":  "10.5281/zenodo.21016987",
+        "zenodo_url":  "https://zenodo.org/records/21016987",
+        "title":  "C.8 Edges InfoSci",
+        "r2_key":  "papers/obsidian-7c5c04cbb9eb.json",
+        "kg_node_id":  "paper-b6d09042590a7c5f"
+    },
+    {
+        "identifier":  "c253bd41e8b9bc06",
+        "zenodo_doi":  "10.5281/zenodo.21016993",
+        "zenodo_url":  "https://zenodo.org/records/21016993",
+        "title":  "Orchestrating the Quantum Future",
+        "r2_key":  "papers/obsidian-b1fdd3b1215b.json",
+        "kg_node_id":  "paper-c253bd41e8b9bc06"
+    },
+    {
+        "identifier":  "qnfo-2025-00-c2-edges-gr",
+        "zenodo_doi":  "10.5281/zenodo.21016995",
+        "zenodo_url":  null,
+        "title":  "C.2 Edges GR",
+        "r2_key":  "qnfo/releases/2025/00/Consilience/C.2 Edges GR.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "c4fda67d1a1abe0a",
+        "zenodo_doi":  "10.5281/zenodo.21016999",
+        "zenodo_url":  "https://zenodo.org/records/21016999",
+        "title":  "A Amplitude",
+        "r2_key":  "papers/obsidian-a2d5b54a77e0.json",
+        "kg_node_id":  "paper-c4fda67d1a1abe0a"
+    },
+    {
+        "identifier":  "qnfo-2025-00-autaxys-defined",
+        "zenodo_doi":  "10.5281/zenodo.21017003",
+        "zenodo_url":  null,
+        "title":  "Autaxys Defined",
+        "r2_key":  "qnfo/releases/2025/00/Autaxys Defined.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "ce1d4aa2f110ad75",
+        "zenodo_doi":  "10.5281/zenodo.21017014",
+        "zenodo_url":  "https://zenodo.org/records/21017014",
+        "title":  "14 Cosmological Frameworks",
+        "r2_key":  "papers/obsidian-c486940c6f5a.json",
+        "kg_node_id":  "paper-ce1d4aa2f110ad75"
+    },
+    {
+        "identifier":  "cfdfa59621349d54",
+        "zenodo_doi":  "10.5281/zenodo.21017018",
+        "zenodo_url":  "https://zenodo.org/records/21017018",
+        "title":  "Modern Physics Metrology",
+        "r2_key":  "papers/obsidian-84464ecf16a1.json",
+        "kg_node_id":  "paper-cfdfa59621349d54"
+    },
+    {
+        "identifier":  "qnfo-2025-00-1-1-introduction",
+        "zenodo_doi":  "10.5281/zenodo.21017018",
+        "zenodo_url":  null,
+        "title":  "Modern Physics Metrology]]",
+        "r2_key":  "qnfo/releases/2025/00/Modern Physics Metrology/1-1 Introduction.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "d114cb8140b808a7",
+        "zenodo_doi":  "10.5281/zenodo.21017022",
+        "zenodo_url":  "https://zenodo.org/records/21017022",
+        "title":  "RESONANCE BETTER MOUSETRAP",
+        "r2_key":  "papers/obsidian-dc600f622b4c.json",
+        "kg_node_id":  "paper-d114cb8140b808a7"
+    },
+    {
+        "identifier":  "d1278ec621e30a6c",
+        "zenodo_doi":  "10.5281/zenodo.21017024",
+        "zenodo_url":  "https://zenodo.org/records/21017024",
+        "title":  "13 Mass Energy Equivalence",
+        "r2_key":  "papers/obsidian-ecddeb6d610b.json",
+        "kg_node_id":  "paper-d1278ec621e30a6c"
+    },
+    {
+        "identifier":  "d55c29c4147d37dc",
+        "zenodo_doi":  "10.5281/zenodo.21017034",
+        "zenodo_url":  "https://zenodo.org/records/21017034",
+        "title":  "Einstein was Wrong",
+        "r2_key":  "papers/obsidian-a6baae6d5752.json",
+        "kg_node_id":  "paper-d55c29c4147d37dc"
+    },
+    {
+        "identifier":  "d6f71f0dccd6e626",
+        "zenodo_doi":  "10.5281/zenodo.21017038",
+        "zenodo_url":  "https://zenodo.org/records/21017038",
+        "title":  "Holographic cosmological constant",
+        "r2_key":  "papers/obsidian-3808d8cef62b.json",
+        "kg_node_id":  "paper-d6f71f0dccd6e626"
+    },
+    {
+        "identifier":  "qnfo-2025-00-illusion-of-randomness",
+        "zenodo_doi":  "10.5281/zenodo.21017042",
+        "zenodo_url":  null,
+        "title":  "Illusion of Randomness",
+        "r2_key":  "qnfo/releases/2025/00/Illusion of Randomness.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "db5771421639e45e",
+        "zenodo_doi":  "10.5281/zenodo.21017048",
+        "zenodo_url":  "https://zenodo.org/records/21017048",
+        "title":  "18 Autaxic Synthesis",
+        "r2_key":  "papers/obsidian-d2257c06d94a.json",
+        "kg_node_id":  "paper-db5771421639e45e"
+    },
+    {
+        "identifier":  "dc5e7bc84035967d",
+        "zenodo_doi":  "10.5281/zenodo.21017054",
+        "zenodo_url":  "https://zenodo.org/records/21017054",
+        "title":  "C Pi-Phi Exponents",
+        "r2_key":  "papers/obsidian-5b0d6cb97414.json",
+        "kg_node_id":  "paper-dc5e7bc84035967d"
+    },
+    {
+        "identifier":  "ddd884b865efc6f3",
+        "zenodo_doi":  "10.5281/zenodo.21017060",
+        "zenodo_url":  "https://zenodo.org/records/21017060",
+        "title":  "19 Future Directions",
+        "r2_key":  "papers/obsidian-a960b7d938b4.json",
+        "kg_node_id":  "paper-ddd884b865efc6f3"
+    },
+    {
+        "identifier":  "dec038fd45f6118d",
+        "zenodo_doi":  "10.5281/zenodo.21017064",
+        "zenodo_url":  "https://zenodo.org/records/21017064",
+        "title":  "10 Philosophical Foundations",
+        "r2_key":  "papers/obsidian-feed04508525.json",
+        "kg_node_id":  "paper-dec038fd45f6118d"
+    },
+    {
+        "identifier":  "qnfo-2025-00-c4-edges-thermo-statmech",
+        "zenodo_doi":  "10.5281/zenodo.21017080",
+        "zenodo_url":  null,
+        "title":  "C.4 Edges Thermo StatMech",
+        "r2_key":  "qnfo/releases/2025/00/Consilience/C.4 Edges Thermo StatMech.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-00-c3-edges-qm",
+        "zenodo_doi":  "10.5281/zenodo.21017082",
+        "zenodo_url":  null,
+        "title":  "C.3 Edges QM",
+        "r2_key":  "qnfo/releases/2025/00/Consilience/C.3 Edges QM.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "ef3339983ddd735e",
+        "zenodo_doi":  "10.5281/zenodo.21017086",
+        "zenodo_url":  "https://zenodo.org/records/21017086",
+        "title":  "11 Particle as Autaxic Process",
+        "r2_key":  "papers/obsidian-42bbb08751d8.json",
+        "kg_node_id":  "paper-ef3339983ddd735e"
+    },
+    {
+        "identifier":  "qnfo-2025-00-bootstrapping-infomatics-v3",
+        "zenodo_doi":  "10.5281/zenodo.21017094",
+        "zenodo_url":  null,
+        "title":  "Bootstrapping Infomatics v3",
+        "r2_key":  "qnfo/releases/2025/00/Bootstrapping Infomatics v3.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "f8dd3d21724c8f36",
+        "zenodo_doi":  "10.5281/zenodo.21017098",
+        "zenodo_url":  "https://zenodo.org/records/21017098",
+        "title":  "Hilbert Godel",
+        "r2_key":  "papers/obsidian-8758f291fd75.json",
+        "kg_node_id":  "paper-f8dd3d21724c8f36"
+    },
+    {
+        "identifier":  "qnfo-2025-00-autaxic-trilemma",
+        "zenodo_doi":  "10.5281/zenodo.21017104",
+        "zenodo_url":  null,
+        "title":  "Autaxic Trilemma",
+        "r2_key":  "qnfo/releases/2025/00/Autaxic Trilemma.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "ff1c8740de1e172d",
+        "zenodo_doi":  "10.5281/zenodo.21017110",
+        "zenodo_url":  "https://zenodo.org/records/21017110",
+        "title":  "11 Ethical Considerations",
+        "r2_key":  "papers/obsidian-67bbe0bfa721.json",
+        "kg_node_id":  "paper-ff1c8740de1e172d"
+    },
+    {
+        "identifier":  "65938ebfdd3667f1",
+        "zenodo_doi":  "10.5281/zenodo.21017126",
+        "zenodo_url":  "https://zenodo.org/records/21017126",
+        "title":  "COSMIC LOGOS",
+        "r2_key":  "papers/obsidian-c6876bfd94b9.json",
+        "kg_node_id":  "paper-65938ebfdd3667f1"
+    },
+    {
+        "identifier":  "qnfo-2025-00-2-8-consequences",
+        "zenodo_doi":  "10.5281/zenodo.21017128",
+        "zenodo_url":  null,
+        "title":  "2-8 Consequences",
+        "r2_key":  "qnfo/releases/2025/00/Modern Physics Metrology/2-8 Consequences.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "5aff7670f88dc145",
+        "zenodo_doi":  "10.5281/zenodo.21017137",
+        "zenodo_url":  "https://zenodo.org/records/21017137",
+        "title":  "New Way of Seeing",
+        "r2_key":  "papers/obsidian-d25f46c42b5d.json",
+        "kg_node_id":  "paper-5aff7670f88dc145"
+    },
+    {
+        "identifier":  "qnfo-2025-00-iii-10-ethical-imperative",
+        "zenodo_doi":  "10.5281/zenodo.21017142",
+        "zenodo_url":  null,
+        "title":  "III-10 Ethical Imperative",
+        "r2_key":  "qnfo/releases/2025/00/Matter without Mass/III-10 Ethical Imperative.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2025-00-illusion-of-time",
+        "zenodo_doi":  "10.5281/zenodo.21017158",
+        "zenodo_url":  null,
+        "title":  "Illusion of Time",
+        "r2_key":  "qnfo/releases/2025/00/Illusion of Time.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "50f4d0a71b8f8696",
+        "zenodo_doi":  "10.5281/zenodo.21017166",
+        "zenodo_url":  "https://zenodo.org/records/21017166",
+        "title":  "Thermodynamic epistemology",
+        "r2_key":  "papers/obsidian-42e169944714.json",
+        "kg_node_id":  "paper-50f4d0a71b8f8696"
+    },
+    {
+        "identifier":  "qnfo-2025-00-iii-7-new-enlightenment",
+        "zenodo_doi":  "10.5281/zenodo.21017168",
+        "zenodo_url":  null,
+        "title":  "III-7 New Enlightenment",
+        "r2_key":  "qnfo/releases/2025/00/Matter without Mass/III-7 New Enlightenment.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "4ce91f6ffc74d0fd",
+        "zenodo_doi":  "10.5281/zenodo.21017174",
+        "zenodo_url":  "https://zenodo.org/records/21017174",
+        "title":  "42 Theses on the Nature of a Pattern-Based Reality",
+        "r2_key":  "papers/obsidian-6abf34cf8e82.json",
+        "kg_node_id":  "paper-4ce91f6ffc74d0fd"
+    },
+    {
+        "identifier":  "48bceb7c905da738",
+        "zenodo_doi":  "10.5281/zenodo.21017178",
+        "zenodo_url":  "https://zenodo.org/records/21017178",
+        "title":  "APPENDICES",
+        "r2_key":  "papers/obsidian-5ab51d70c162.json",
+        "kg_node_id":  "paper-48bceb7c905da738"
+    },
+    {
+        "identifier":  "4735fa7598e07079",
+        "zenodo_doi":  "10.5281/zenodo.21017182",
+        "zenodo_url":  "https://zenodo.org/records/21017182",
+        "title":  "16 Autaxys and the Nature of Mind",
+        "r2_key":  "papers/obsidian-ae872d6fa6d3.json",
+        "kg_node_id":  "paper-4735fa7598e07079"
+    },
+    {
+        "identifier":  "10.5281/zenodo.21046213",
+        "zenodo_doi":  "10.5281/zenodo.21046213",
+        "zenodo_url":  "https://zenodo.org/records/21046213",
+        "title":  "Nonlinear Tree-Based Numeration Systems: A Consolidated Synthesis",
+        "r2_key":  "qnfo/publications/tree-based-numeration-synthesis/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "thesis-ultrametric-foundation",
+        "zenodo_doi":  "10.5281/zenodo.21046214",
+        "zenodo_url":  "https://deep.qwav.tech/papers/ultrametric-foundation/",
+        "title":  "Ultrametric Quantum Computation and the Langlands Program v2",
+        "r2_key":  "qnfo/publications/thesis/ultrametric-foundation/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "10.5281/zenodo.21046734",
+        "zenodo_doi":  "10.5281/zenodo.21046734",
+        "zenodo_url":  "https://zenodo.org/records/21046734",
+        "title":  "Silent-Radix Cryptography: Exploiting the Base Ambiguity of Positional Notation as a Cryptographic Primitive",
+        "r2_key":  "qnfo/publications/silent-radix-cryptography/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "thesis-quantum-computing-ultrametric",
+        "zenodo_doi":  "10.5281/zenodo.21046993",
+        "zenodo_url":  "https://zenodo.org/records/21046993",
+        "title":  "Qudit Quantum Error Correction",
+        "r2_key":  "qnfo/publications/quantum-computing-ultrametric/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "silent-radix-synthesis-v1.0",
+        "zenodo_doi":  "10.5281/zenodo.21090642",
+        "zenodo_url":  "https://zenodo.org/records/21090642",
+        "title":  "Cyclic Measurement and Silent Radix: Ultrametric Foundations for Quantum State Tomography",
+        "r2_key":  "qnfo/releases/2026/07/silent-radix-synthesis-v1.0/paper.md",
+        "kg_node_id":  "paper-silent-radix-synthesis"
+    },
+    {
+        "identifier":  "silent-radix-convergent-synthesis",
+        "zenodo_doi":  "10.5281/zenodo.21102764",
+        "zenodo_url":  null,
+        "title":  "Radix to Ultrametrics to Page-Wootters to Wheeler-DeWitt to Bruhat-Tits: A Convergent Synthesis",
+        "r2_key":  null,
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  null,
+        "zenodo_doi":  "10.5281/zenodo.21102764",
+        "zenodo_url":  null,
+        "title":  "Radix to Ultrametrics to Page-Wootters to Wheeler-DeWitt to Bruhat-Tits: A Convergent Synthesis",
+        "r2_key":  "qnfo/releases/2026/07/radix-to-ultrametrics-to-page-wootters-to-wheeler-dewitt-to/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "10.5281/zenodo.21102770",
+        "zenodo_doi":  "10.5281/zenodo.21102770",
+        "zenodo_url":  null,
+        "title":  "The Bridge Theorem: A Rigorous Mathematical Framework Connecting p-adic and Bruhat-Tits Geometries",
+        "r2_key":  "qnfo/releases/2026/07/bridge-theorem-v1.0/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "zenodo-21120286-page-wootters-clocks",
+        "zenodo_doi":  "10.5281/zenodo.21120286",
+        "zenodo_url":  null,
+        "title":  "Conditional State Distances in Page-Wootters Quantum Clocks: When Does Ultrametricity Emerge?",
+        "r2_key":  null,
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  null,
+        "zenodo_doi":  "10.5281/zenodo.21120286",
+        "zenodo_url":  null,
+        "title":  "Conditional State Distances in Page-Wootters Quantum Clocks: When Does Ultrametricity Emerge?",
+        "r2_key":  "qnfo/releases/2026/07/conditional-state-distances-pw-clocks/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "zenodo-21120469-trapped-ion-pw",
+        "zenodo_doi":  "10.5281/zenodo.21120469",
+        "zenodo_url":  null,
+        "title":  "ultrametric_v2",
+        "r2_key":  null,
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  null,
+        "zenodo_doi":  "10.5281/zenodo.21120469",
+        "zenodo_url":  null,
+        "title":  "Trapped-Ion Page-Wootters Experiment: Protocol for Testing Ultrametricity",
+        "r2_key":  "qnfo/releases/2026/07/trapped-ions-ultrametric/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "silent-radix-v1",
+        "zenodo_doi":  "10.5281/zenodo.21148596",
+        "zenodo_url":  "https://zenodo.org/records/21148596",
+        "title":  "THE SILENT RADIX: Positional Notation as Ultrametric Tree and the Calculus of Indications as Remedy",
+        "r2_key":  "qnfo/releases/2026/07/silent-radix/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  null,
+        "zenodo_doi":  "10.5281/zenodo.21193487",
+        "zenodo_url":  "https://zenodo.org/records/21193487",
+        "title":  "Number-Theoretic Ultrametric Foundations: A Unified p-adic Framework for Error-Correcting Code Classification",
+        "r2_key":  null,
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-quantum-laws-of-form",
+        "zenodo_doi":  "10.5281/zenodo.21206074",
+        "zenodo_url":  "https://zenodo.org/records/21206074",
+        "title":  "Quantum Laws of Form",
+        "r2_key":  "releases/2026/04/quantum-laws-of-form/paper.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-syntactic-token-calculus-research-plan",
+        "zenodo_doi":  "10.5281/zenodo.21206272",
+        "zenodo_url":  null,
+        "title":  "Syntactic Token Calculus Research Plan",
+        "r2_key":  "qnfo/releases/2026/04/Syntactic Token Calculus/Syntactic Token Calculus Research Plan.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "qnfo-2026-04-ultrametric-physics-m12-synthesis",
+        "zenodo_doi":  "10.5281/zenodo.21206278",
+        "zenodo_url":  null,
+        "title":  "Ultrametric Physics Research Plan",
+        "r2_key":  "qnfo/releases/2026/04/Ultrametric Physics/Ultrametric Physics M12 Synthesis.md",
+        "kg_node_id":  null
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p3-bruhat-tits-readout",
+        "zenodo_doi":  "10.5281/zenodo.21214274",
+        "zenodo_url":  "https://zenodo.org/records/21214274",
+        "title":  "Bruhat-Tits Readout Protocol: Measuring the ZBW Z2 Invariant in Majorana Systems",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/zbw-majorana-tqc-p3-bruhat-tits-readout.md",
+        "kg_node_id":  "paper-p3-bruhat-tits-readout"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p4-zbw-anyon-braiding",
+        "zenodo_doi":  "10.5281/zenodo.21214358",
+        "zenodo_url":  "https://zenodo.org/records/21214358",
+        "title":  "Zitterbewegung as the Physical Realization of p-Adic Anyon Braiding",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/zbw-majorana-tqc-p4-zbw-anyon-braiding.md",
+        "kg_node_id":  "paper-p4-zbw-anyon-braiding"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p5-adelic-qec",
+        "zenodo_doi":  "10.5281/zenodo.21214759",
+        "zenodo_url":  "https://zenodo.org/records/21214759",
+        "title":  "Adelic Quantum Error Correction: Intrinsic Qubit Protection from Ostrowski",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/p5-adelic-qec.md",
+        "kg_node_id":  "paper-p5-adelic-qec"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p6-ultrametric-engine",
+        "zenodo_doi":  "10.5281/zenodo.21214775",
+        "zenodo_url":  "https://zenodo.org/records/21214775",
+        "title":  "Ultrametric Engine: Deploying a 20-Principle p-Adic Discovery Worker",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/p6-ultrametric-engine.md",
+        "kg_node_id":  "paper-p6-ultrametric-engine"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p7-grand-synthesis",
+        "zenodo_doi":  "10.5281/zenodo.21214790",
+        "zenodo_url":  "https://zenodo.org/records/21214790",
+        "title":  "The Adelic Physics Program: A Grand Synthesis",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/p7-grand-synthesis.md",
+        "kg_node_id":  "paper-p7-grand-synthesis"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p1-zbw-padic-observable",
+        "zenodo_doi":  "10.5281/zenodo.21215278",
+        "zenodo_url":  "https://zenodo.org/records/21215278",
+        "title":  "Zitterbewegung as a p-Adic Observable: Ultrametric Readout and Intrinsic Topological Protection",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/zbw-majorana-tqc-p1-zbw-padic-observable.md",
+        "kg_node_id":  "paper-p1-zbw-padic-observable"
+    },
+    {
+        "identifier":  "zbw-majorana-tqc-p2-majorana-zbw-correlator",
+        "zenodo_doi":  "10.5281/zenodo.21215279",
+        "zenodo_url":  "https://zenodo.org/records/21215279",
+        "title":  "Majorana Zitterbewegung Current Correlator: Vanishing ZBW Signal as a Z2 Topological Invariant",
+        "r2_key":  "qnfo/releases/2026/07/zbw-majorana-tqc/zbw-majorana-tqc-p2-majorana-zbw-correlator.md",
+        "kg_node_id":  "paper-p2-majorana-zbw-correlator"
+    },
+    {
+        "identifier":  "rq1-zbw-amplification",
+        "zenodo_doi":  "10.5281/zenodo.21221899",
+        "zenodo_url":  null,
+        "title":  "Vortex-Enhanced Zitterbewegung: Amplification Feasibility for Trapped-Ion Dirac Simulators",
+        "r2_key":  "qnfo/releases/2026/07/rq1-zbw-amplification/rq1-zbw-amplification.md",
+        "kg_node_id":  "paper-rq1-zbw-amplification"
+    }
+]
