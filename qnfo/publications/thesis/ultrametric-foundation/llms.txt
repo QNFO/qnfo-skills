@@ -1,0 +1,13 @@
+# QNFO: The Ultrametric Foundation
+> A unified thesis on number, time, knowledge, and computation.
+> Page: https://deep.qwav.tech/papers/ultrametric-foundation/
+
+## Abstract
+Positional notation is inherently an ultrametric tree of nested cycles. The Archimedean line is a derived abstraction. Recovering the native ultrametric resolves cascading errors across mathematics, physics, epistemology, education, quantum computing, and interface design.
+
+## Sections
+- Part I: The Core Discovery — "10" misnomer, silent radix, silent metric, p-adic counter-demonstration, Laws of Form
+- Part II: Time as the Primary Domain — nested cycles, Compton frequency, Zitterbewegung, cosmological time-reversal
+- Part III: Epistemology of the Shift — direction of epistemic risk, antifragile knowledge systems, mathematics as relational grammar
+- Part IV: Practical Applications — p-adic education, ultrametric quantum computing, Archimedean interfaces
+- Part V: The Unified Vision — nested-ring architecture, all-encompassing thesis

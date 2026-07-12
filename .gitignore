@@ -13,3 +13,12 @@ _*
 
 # Git internal
 .git/
+
+# Build artifacts
+.wrangler/
+
+# System-generated session artifacts
+prompts/skills/github-cloudflare-sync/
+
+# Cross-session handoffs (not part of this branch)
+HANDOFF.md
