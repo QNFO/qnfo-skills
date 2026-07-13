@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /papers/ultrametric-foundation/
-Sitemap: https://deep.qwav.tech/sitemap.xml
