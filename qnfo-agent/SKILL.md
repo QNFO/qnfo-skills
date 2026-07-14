@@ -3252,7 +3252,8 @@ When the user says "WHAT'S NEXT?", "PROCEED", "EXECUTE NEXT PROJECT", or similar
 1. **Pull Discovery Index** (mandatory tool invocation — see §3.1)
 2. **Check R2 backlog** for the project with the highest-priority unblocked task: `wrangler r2 object get qnfo/audit/backlog/<project>.json --remote`
 3. **PICK THE MOST-ACTIVE CANDIDATE:** Use the project with the most recent `last_active` timestamp in the Discovery Index, OR the project with the highest-priority unblocked task in R2 backlog. Do NOT enumerate all projects.
-4. **If truly ambiguous** (2+ equally-good candidates): ask ONE clarifying question naming exactly 2 candidates: "X (reason) or Y (reason)?"
+4. **EV TIEBREAKER:** When 2+ candidates are equally matched by activity, use `deep-research`'s `EV_cascade` ranking from the most recent portfolio reassessment (§0.1.1). Query D1 portfolio-state for `priority_score` values. The candidate with the highest EV_cascade wins.
+5. **If truly ambiguous** (2+ equally-good candidates): ask ONE clarifying question naming exactly 2 candidates: "X (EV=Y) or Z (EV=W)?"
 5. **EXECUTE IMMEDIATELY** after identification — no further discovery, no HANDOFF review, no decision log reading.
 
 ---
