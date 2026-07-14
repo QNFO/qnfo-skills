@@ -15,7 +15,7 @@ After every PDF build, autonomously verify:
 - **Math rendering:** Do NOT trust that math rendered correctly. Open the PDF and visually spot-check at least 3 equations.
 - **Embedded vs. raster:** Are equations true vector TeX or rasterized fallback images? Check file size — rasterized math inflates PDFs 5-10x.
 
-> **Related:** publication-publisher
+> **Related:** deep-research, publication-publisher
 
 
 

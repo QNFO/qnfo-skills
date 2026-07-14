@@ -5,7 +5,7 @@ description: "Ideate and critique data visualizations using Edward Tufte's princ
 
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification -- negative verification. (2) Assumption Challenge -- state and test every assumption. (3) Edge Case Check -- empty/null/max/boundary/desync. (4) DoD Integration — run _dod_enforce.py if exists. (5) Iteration -- retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
-> **Related:** algorithmic-art, infographic-syntax-creator, web-perf, frontend-design
+> **Related:** deep-research, algorithmic-art, infographic-syntax-creator, web-perf, frontend-design
 
 ### Programmatic Loading & Execution
 This skill is loaded and executed **programmatically by the LLM system** 
