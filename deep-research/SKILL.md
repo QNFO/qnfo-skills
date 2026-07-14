@@ -1,6 +1,7 @@
 ---
 name: deep-research
 description: Systematic paradigm-shift forecasting and long-range research impact analysis. Maps research domains across 10/20/50/100+ year horizons, synthesizes most significant findings, builds probability-weighted Bayesian cascading dependency models, runs adversarial red-team iteration with counterfactuals and falsification criteria, and outputs optimized theses for maximum likelihood of acceptance. Use when user asks for "deep dive," "paradigm forecast," "long-range research roadmap," "what will be impactful in X years," "maximize research expected value," "comprehensive research forecast," "scientific paradigm shift analysis," or when asked to identify/rank the most significant research directions in any domain. NOT for single-idea deconstruction (use research-planner) or literature search (use literature-search).
+version: "1.1"
 ---
 
 > **Related:** research-planner, literature-search, citation-manager, knowledge-graph, prompt-audit, red-team-dod, memory-management, publication-publisher, github-manager

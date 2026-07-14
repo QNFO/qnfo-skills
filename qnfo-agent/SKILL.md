@@ -1123,6 +1123,91 @@ For structured output formats, use fill_prompt_template:
 
 Prefer read() for QNFO skill workflows, fill_prompt_template() for output formats.
 
+### 6.3 Skills Orchestration Workflows (v1.0 — Maximal Leverage Chains)
+
+Skills are not isolated tools — they are composable building blocks. Chaining them correctly produces compounding leverage. This section documents the canonical workflow chains for QNFO's most common task categories.
+
+#### Research Pipeline (LRAP — Full Cycle)
+
+```
+literature-search ──→ citation-manager ──→ deep-research ──→ research-planner ──→ publication-publisher
+  [Phase 1]           [Phase 2]            [Phase 1/5]      [Phase 3/4]         [Phase 4/5]
+  triage 20–50        validate BibTeX      forecast domain   deconstruct top-N   Zenodo + Pages
+  papers, classify    entries, flag        Bayesian DAG,     candidates into     deploy, social
+  core/supporting     missing DOIs         red-team audit    research programs   media publish
+
+                    ┌─────────────────────────────────────────────┐
+                    │          QUALITY GATE (always active)        │
+                    │  red-team-dod + prompt-audit + test-enforcement │
+                    └─────────────────────────────────────────────┘
+```
+
+**When to use:** "I want to research X" or any RESEARCH INTAKE trigger. The agent should seamlessly route through this chain without the user specifying individual skills.
+
+#### Paradigm Forecasting Pipeline
+
+```
+deep-research ──→ research-planner ──→ publication-publisher
+  Stages 0–9       deconstruct       Zenodo + Pages +
+  forecast +        candidates       social media
+  calibration
+  register
+```
+
+**When to use:** "What research will matter most in X years?" or "Forecast: <domain>"
+
+#### Infrastructure Deployment Pipeline
+
+```
+cloudflare-deployer ──→ infrastructure-audit ──→ seo-discoverability
+  Pages, R2, Workers    audit all resources     robots.txt,
+  deploy artifacts      report drift           sitemaps, llms.txt
+```
+
+**When to use:** Any deploy, publish, or verify operation against Cloudflare infrastructure.
+
+#### Session Lifecycle Pipeline
+
+```
+execution-guard ──→ closeout-manager ──→ skill-sync ──→ kaizen-autonomous-update
+  enforce execution   generate handoffs,  push to GitHub   detect improvements,
+  gates, prevent      upload to R2,      + R2, restart    apply model config
+  phantom claims      update D1                           optimizations
+```
+
+**When to use:** Autonomous — triggers at session boundaries without user prompting.
+
+#### Publication Sub-Pipeline
+
+```
+pdf-builder ──→ publication-publisher ──→ seo-discoverability ──→ buffer-integration
+  XeLaTeX PDF     Zenodo upload +         robots.txt,           social media
+  from Markdown   Pages deploy            sitemaps              dissemination
+```
+
+**When to use:** "Publish this paper" or when research pipeline reaches Stage 4–5.
+
+#### Knowledge Graph Integration (Cross-Cutting)
+
+```
+knowledge-graph ──→ ALL OTHER SKILLS
+  /stats, /impact,    use KG for due
+  /neighbors, /sync   diligence before
+                      any operation
+```
+
+**When to use:** Before ANY significant task — the KG is the mandatory discovery gate (§3.0). Every skill should query the KG for "what exists" before executing.
+
+#### Workflow Execution Rules
+
+1. **Skill chain order is enforced.** Skills earlier in a pipeline must complete before later skills execute. Do not run publication-publisher before literature-search has produced a triaged corpus.
+2. **Each skill's output feeds the next.** The Markdown from literature-search feeds citation-manager's BibTeX extraction. The forecast from deep-research feeds research-planner's deconstruction.
+3. **Quality gate skills are parallel, not sequential.** red-team-dod, test-enforcement, and prompt-audit run simultaneously against every response — they are guards, not pipeline stages.
+4. **Session lifecycle skills are autonomous.** They trigger at session boundaries without user prompting. The agent should never ask "shall I close out?" or "should I sync skills?"
+5. **Infrastructure skills gate publication.** No publication deploys without infrastructure-audit verifying resource health. No social media post without SEO check.
+
+Prefer read() for QNFO skill workflows, fill_prompt_template() for output formats.
+
 ---
 
 ## 7. PUBLICATION STANDARDS
