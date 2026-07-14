@@ -5,7 +5,7 @@ version: "1.13"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification — negative verification, try to prove claims are FALSE. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — verify all criteria met with tool evidence. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
-> **Related:** deep-research, closeout-manager, qnfo-agent, test-enforcement
+> **Related:** deep-research, closeout-manager, test-enforcement, red-team-dod, qnfo-agent
 
 
 

@@ -304,6 +304,60 @@ Explicitly state constraints, failure modes, and boundaries. This section is MAN
 
 RESEARCH INTAKE (§0) triggers when the user wants to research a topic from scratch (literature search → deep reading → draft → publish). STRATEGIC FIT ANALYSIS triggers when the user wants to understand how an EXISTING external technology, concept, or method relates to QNFO's ALREADY-BUILT research infrastructure and strategy. One is about creating new knowledge; the other is about mapping external knowledge onto existing architecture.
 
+### 0.1.1 Portfolio Priority Maintenance — Strategic Reassessment Protocol (v1.0)
+
+**Purpose:** The qnfo-agent manages WHAT to work on (§3 Due Diligence, §9.12 WHAT'S NEXT) but has no mechanism for WHY X over Y. `deep-research` fills this gap — it periodically reassesses the QNFO research portfolio using Bayesian expected value ranking, ensuring the priority stack reflects the highest-EV research directions.
+
+#### When to Reassess
+
+| Trigger | Action | Cadence |
+|:--------|:-------|:--------|
+| **New publication** | Re-run deep-research on the affected domain — did the publication shift any paradigm-shift probabilities? | Per-publication |
+| **Quarterly review** | Full portfolio forecast: rank all active QNFO research domains by EV and adjust resource allocation | Quarterly |
+| **External paradigm signal** | Major preprint, breakthrough, or funding shift in a QNFO domain | Immediate |
+| **Portfolio drift detected** | D1 portfolio-state shows projects in domains not covered by any forecast | Immediate |
+| **Choke node alert** | deep-research Calibration Register (Stage 9) flags a prediction check date approaching | Per-check |
+
+#### Reassessment Protocol
+
+1. **Run deep-research pipeline** on the target domain(s):
+   ```
+   Forecast: <QNFO domain> --quick  # Fast EV ranking for quarterly reviews
+   Forecast: <QNFO domain>           # Full 9-stage for annual strategic planning
+   ```
+
+2. **Integrate EV ranking into the priority stack:**
+   - Map deep-research's top-N paradigm-shift candidates to QNFO project nodes in the Knowledge Graph
+   - Update D1 portfolio-state with `priority_score = EV_cascade` for each affected project
+   - If a candidate's EV exceeds the current top project by >20%, flag `[PRIORITY-REBALANCE]`
+
+3. **Update the WHAT'S NEXT register** (§9.12):
+   - Replace heuristic "pick the most active candidate" with EV-ranked candidate selection
+   - When 2+ candidates are equally matched, use `EV_cascade` as tiebreaker
+
+4. **Cross-reference with Knowledge Graph:**
+   - Query `/neighbors/{domain}` for all projects in the ultrametric ball
+   - Compare project priorities against the deep-research optimal portfolio
+   - Seed FORECAST nodes and DEPENDS_ON edges linking projects to their paradigm-shift candidates
+
+5. **Document in D1:**
+   - Record the reassessment in `qnfo-audit.strategy_reviews`
+   - Update project priorities in `portfolio-state.resources`
+   - Log any priority rebalancing events
+
+#### What This Prevents
+
+- **Priority drift:** Projects accumulate without periodic relevance assessment
+- **Sunk-cost continuation:** Continuing a project because it was started, not because it's still high-EV
+- **Missing paradigm signals:** An external breakthrough shifts the probability landscape but the portfolio doesn't adapt
+- **Portfolio blindness:** Working on low-EV projects while high-EV domains are unstaffed
+
+#### Integration with Session Lifecycle
+
+- **Session start** (§10): Pull latest portfolio priorities from D1 — these were set by the last deep-research reassessment
+- **Session closeout** (§10): If a strategic reassessment trigger fired during the session, queue a deep-research run for the next session
+- **Autonomous continuation** (§0.10): deep-research reassessments are autonomous — they do not wait for user prompting
+
 ---
 
 ## 0.9 EXECUTE MANDATE — HARD GATE (v1.0)

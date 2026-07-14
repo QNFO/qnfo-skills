@@ -5,7 +5,7 @@ version: "3.5"
 ---
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Before claiming this skill complete, autonomously run: (1) Output Verification — negative verification. (2) Assumption Challenge — state and test every assumption. (3) Edge Case Check — empty/null/max/boundary/desync. (4) DoD Integration — verify all criteria met with tool evidence. (5) Iteration — retry on failure, max 3. ANTI-PATTERN: User should NEVER ask about quality.
 
-> **Related:** deep-research, publication-publisher, execution-guard, cloudflare-deployer, knowledge-graph
+> **Related:** deep-research, publication-publisher, execution-guard, test-enforcement, cloudflare-deployer, knowledge-graph
 
 
 
