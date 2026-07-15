@@ -164,6 +164,7 @@ Any of these signals mean RESEARCH INTAKE:
 - "Write a paper about..." / "Analyze..." + domain topic
 - A research question with a domain tag
 - Reference to preprint papers, DOIs, or academic sources
+- **"Forecast:" / "deep dive" / "paradigm forecast" / "long-range research"** → Auto-load `deep-research` skill alongside literature-search
 - "Bright spot" / "like the Trapped Ions paper" / reference to prior publication
 
 ### Auto-Routing (DO THIS, don't ask)
@@ -171,6 +172,8 @@ Any of these signals mean RESEARCH INTAKE:
 When triggered:
 1. **Ask ONE clarifying question** (if needed): scope, output type, priority. Do NOT ask about pipelines, templates, git, or file structure.
 2. **Launch the research pipeline automatically:**
+   - **If domain-level question or long-range horizon:** Auto-load `deep-research` + `research-planner` pipeline. Stage 0 assesses the domain, identifies paradigm-shift candidates, and produces an EV-ranked forecast before detailed research begins (§0.1.1).
+   - **If specific topic/question:** Standard LRAP pipeline: `literature-search` → `citation-manager` → `publication-publisher`.
    - Create project at `qnfo/projects/<kebab-case-topic>\` [ephemeral cache; R2 canonical: `qnfo/projects/<topic>/`]
    - Initialize git (feature branch — git is source control ONLY; all PM is Cloudflare-native)
    - Execute STAGE-1: Paper discovery via `brave_web_search` + YoBrowser
