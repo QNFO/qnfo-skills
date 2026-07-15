@@ -74,9 +74,51 @@ This demonstrates that the Autaxys framework's mathematical structure independen
 
 ---
 
-## 3. What This Means for the Original Records
 
-### 3.1 Master Plan v2.0 to v3.0: Required Changes
+---
+
+## 3. External Literature Gap Analysis (New in v1.0)
+
+The autaxys framework's core terminology — distinctions (D), relations (R), ontological closure (OC), and the Cosmic Algorithm — does not appear in the established physics literature under these terms. External literature searches conducted on 2026-07-15 found:
+
+| Source | Query | Results | Implication |
+|:-------|:------|:-------|:-----------|
+| **arXiv** | "ontological closure" + physics | 0 | The term "ontological closure" is not used in physics preprints |
+| **arXiv** | "distinctions relations" + physics + generative | 0 | D/R primitives vocabulary is unique to this corpus |
+| **arXiv** | "cosmic algorithm" | 0 | The Cosmic Algorithm concept has no arXiv precedent |
+| **Semantic Scholar** | "relational ontology physics" | 0 | No direct match for the framework's relational framing |
+| **Semantic Scholar** | "ontological closure generative physics" | 0 | No generative application of OC in physics literature |
+| **Semantic Scholar** | "relational interpretation quantum mechanics" | 290 | Rovelli's Relational Quantum Mechanics is the nearest established tradition |
+| **Semantic Scholar** | "process philosophy physics" | 190 | Whiteheadian process philosophy in physics is an adjacent intellectual tradition |
+
+This confirms a critical gap: the autaxys framework's vocabulary and conceptual architecture are unique to the QNFO research corpus `[EXTERNAL-SOURCE: multi-source literature search, 2026-07-15]`.
+
+### 3.1 Adjacent External Traditions
+
+While no external literature directly maps onto the D/R + OC framework, three established traditions represent intellectual neighbors that the framework could engage:
+
+| Tradition | Key Figure(s) | Core Claim | Relationship to Autaxys |
+|:----------|:------------|:-----------|:----------------------|
+| **Relational Quantum Mechanics (RQM)** | Carlo Rovelli (1996) | Quantum states are relations between systems, not absolute properties | Shares the relational ontology but without the generative D/R + OC machinery |
+| **Process Philosophy in Physics** | Whitehead (1929), Eastman, Epperson (2004) | Reality is fundamentally process, not substance | Shares the process orientation but without frequency-centric mathematical identity |
+| **Category-Theoretic Quantum Gravity** | Baez, Coecke, Hardy (2000s-present) | Quantum foundations re-expressed in category-theoretic/structuralist terms | Shares the structural/relational approach but uses established mathematical frameworks (monoidal categories) rather than proposing new primitives |
+
+The framework would benefit from explicit engagement with these traditions — both to clarify its own claims through comparison and to establish its distinctiveness within the broader landscape of relational approaches to fundamental physics `[my conjecture]`.
+
+### 3.2 Implications
+
+The absence of external literature matching the framework's core concepts has two implications:
+
+1. **Novelty (if valid):** If the D/R + OC framework yields confirmed empirical predictions, its vocabulary and conceptual architecture would represent a genuine novel contribution to physics.
+
+2. **Isolation (if invalid):** The lack of engagement with established relational traditions (RQM, process philosophy, category-theoretic approaches) means the framework has not been tested against the strongest existing versions of relational and process-based approaches to physics. This is a gap that should be addressed before claiming novelty `[PHILOSOPHY, LLM-INFERRED]`.
+
+The fact that Relational Quantum Mechanics has 290 papers and Process Philosophy in Physics has 190 papers — while the QNFO autaxys corpus has 33 Zenodo records — indicates that these traditions have substantially more developed engagement with mainstream physics. The framework would benefit from explicit positioning relative to these traditions `[my conjecture]`.
+
+
+(?s)(## 3\.\s+What This Means for the Original Records)
+
+### 4.1 Master Plan v2.0 to v3.0: Required Changes
 
 1. **Replace Section 2.1.1** with a statement acknowledging the term "Autaxys" has been deprecated in favor of interpretation-neutral language since Mass-Frequency Identity v3.2.0
 2. **Add new section: "Ontological Status and Interpretational Pluralism"** â€” condensed version of Mass-Frequency 15, documenting dual ontologies, interpretation-neutral math, prediction-independence
@@ -84,7 +126,7 @@ This demonstrates that the Autaxys framework's mathematical structure independen
 4. **Add Map/Territory distinction** to the Overview: "This Master Plan describes a research framework â€” a map."
 5. **Update publication registry** to include three successor publications as canonical versions
 
-### 3.2 Unified Framework v1.9 to v2.0: Required Changes
+### 4.2 Unified Framework v1.9 to v2.0: Required Changes
 
 1. **Replace "Autaxys" with "frequency-centric framework"** or equivalent interpretation-neutral language throughout
 2. **Replace Section 3.0 with calibrated framing** â€” OC presented as conceptual hypothesis [my conjecture], not declared fact
@@ -94,7 +136,7 @@ This demonstrates that the Autaxys framework's mathematical structure independen
 
 ---
 
-## 4. The Meta-Pattern: Protective Belt Dynamics
+## 5. The Meta-Pattern: Protective Belt Dynamics
 
 The ontological transformation documented here is a demonstration of a general pattern in theoretical physics. Between June 2025 and July 2026, the Autaxys framework underwent a classic protective belt adaptation (Lakatos 1970):
 
@@ -111,7 +153,7 @@ Whether this program is genuinely progressive (generating novel confirmed predic
 
 ---
 
-## 5. Cross-Reference Table: Complete Publication Chain
+## 6. Cross-Reference Table: Complete Publication Chain
 
 | Date | Publication | DOI | Role in Transformation |
 |:-----|:-----------|:----|:----------------------|
