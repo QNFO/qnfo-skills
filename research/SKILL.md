@@ -1,7 +1,7 @@
 ---
 name: research
 description: End-to-end research and publication pipeline -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer, SEO optimization, IPFS/Web3 content permanence, and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
-version: "2.2"
+version: "2.3"
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "pinata", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
 priority: 1
@@ -10,10 +10,11 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.2 (Ultra-Consolidated Pipeline + Project Lifecycle + 4-D Distribution)
+# RESEARCH -- v2.3 (Ultra-Consolidated Pipeline + Project Lifecycle + 4-D Distribution)
 
 > **Merges 6:** research-pipeline + deep-research + publication-publisher + buffer-integration + seo-discoverability + ipfs-web3
 > **v2.2 UPDATE (2026-07-18):** Merged in Phase 0 (Project Initialization), Pre-Flight Checklist (P1-P10), Cross-Skill Integration Checklist, Phase Closeout Protocol, Deliverable Registry / Risk Register templates, and Version Tagging Protocol (previously drafted as a separate, since-retired `research-v2` duplicate skill -- consolidated here as the single canonical research skill).
+> **v2.3 UPDATE (2026-07-18):** Added mandatory REPO-TARGET GATE (`git remote -v` check) before every tag/commit/release in Phase 0 and the Phase Closeout Protocol, following ADR-026 Incident 3 (a prior session's Phase Closeout tags -- `v0.1-phase0`, `v1.0.0`, etc. -- plus a Zenodo-DOI GitHub Release were mistakenly created inside `qnfo-skills` instead of the project's own repo, requiring backup+delete remediation).
 > **Related:** Always load `knowledge` for KG/D1 discovery. Load `cloudflare` for deployment to Pages/R2/D1/Workers. Load `git-github` for Phase 0 init and every phase closeout.
 > **Cloudflare Full-Stack:** All publication artifacts live on R2 + D1 + Workers. Zenodo is external archival. Buffer is social dissemination.
 
@@ -55,6 +56,21 @@ Standard directory scaffold:
 ```
 
 Git init on feature branch (NEVER main/master). Create GitHub repo via `gh repo create`.
+
+**REPO-TARGET GATE (HARD, MANDATORY — check before `git init`/`git tag`/`gh repo create`):**
+```
+git remote -v   # or: git -C <target-dir> remote -v
+```
+Verify the remote/working directory is the project's OWN repo
+(`QNFO/<project-name>` or `QNFO/qnfo-research`) — **NEVER `QNFO/qnfo-skills`.**
+`qnfo-skills` is a skills-only repo (ADR-026) and its tags/releases are
+reserved for skill versioning, never research project phases. This check
+applies to every step in this skill that creates a git tag, commit, or
+GitHub Release — not just Phase 0. Verify the repo target FRESH each time;
+do not assume a prior verification still holds after switching directories,
+subagent delegation, or a long session. **A single misdirected `git tag` or
+`gh release create` inside qnfo-skills is a policy violation that requires
+full remediation (backup + delete + audit) — see ADR-026 Incident 3.**
 
 ### 0.2 Project Plan and WBS
 
@@ -110,6 +126,18 @@ Execute Phase Closeout Protocol (below). Tag: `v0.1-phase0`.
 ---
 
 ## Phase Closeout Protocol (MANDATORY -- every phase, for net-new projects with a dedicated repo)
+
+**STEP 0 (HARD GATE, run FIRST, every single time -- no exceptions):**
+```
+git remote -v
+```
+Confirm the remote URL is the PROJECT's own repo (`QNFO/<project-name>` or
+`QNFO/qnfo-research`). If it shows `QNFO/qnfo-skills` -- STOP. Do not commit,
+tag, or create a release. `cd` to the correct project directory first. This
+single check prevents the exact failure mode documented in ADR-026 Incident 3
+(research phase tags `v0.1-phase0`, `v1.0.0`, etc. and a Zenodo-DOI GitHub
+Release were mistakenly created inside `qnfo-skills`, requiring a full
+backup+delete remediation).
 
 ```
 1. COMMIT:  git add <phase-artifacts> && git commit -m "ACTION:CREATE FILE: <files> RATIONALE: Phase N complete"
@@ -780,3 +808,5 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
 | No risk register at project init | ≥5 risks logged at Phase 0 using the risk register template |
 | No deliverable registry | All deliverables tracked with paths and archival targets from Phase 0 |
+| Creating a research phase tag/release inside `qnfo-skills` | `git remote -v` REPO-TARGET GATE before every tag/commit/release (ADR-026 Incident 3) |
+| Assuming a "clean branch" audit is sufficient | Tags and GitHub Releases are independent refs -- audit `git tag -l` and `gh release list` separately, they survive a branch force-push |

@@ -10,14 +10,16 @@ autonomous: false
 self_sufficient: true
 ---
 
-# GIT-GITHUB -- v2.0 (Ultra-Consolidated VC + PM)
+# GIT-GITHUB -- v2.1 (Ultra-Consolidated VC + PM)
 
 > **Merges 2:** git-operations + github-manager
 > **Cloudflare Full-Stack:** Git is version control for the import surface ONLY. R2 + D1 are canonical for project artifacts. GitHub is secondary to D1 for project state. Skills repo (`qnfo-skills`) is for skills exclusively -- NEVER place project data there (ADR-026).
+> **v2.1 UPDATE (2026-07-18):** Added mandatory REPO-TARGET GATE (`git remote -v` before ANY tag/release/commit) after ADR-026 Incident 3 -- a prior session created research-project tags (`v0.1-phase0`, `v1.0.0`) and a Zenodo-DOI GitHub Release inside `qnfo-skills` by mistake. The old "Protected Repositories" section only warned about committing *files*; it did not cover tags/releases, which are independent git refs and slip through file-level checks.
 
 ## execute_plan
 
 update_plan([
+  {"step": "REPO-TARGET GATE: git remote -v -- confirm this is the intended repo, NEVER qnfo-skills for project/research content", "status": "pending"},
   {"step": "Verify current branch: git branch --show-current (IRON RULE: NEVER main/master)", "status": "pending"},
   {"step": "Execute git or GitHub operation", "status": "pending"},
   {"step": "Verify: git log -1 --oneline, git status --short (must be clean)", "status": "pending"},
@@ -51,6 +53,14 @@ ACTION:DELETE FILE: deprecated/old-script.py RATIONALE: Replaced by new version
 
 ### Standard Workflow
 ```bash
+# 0. REPO-TARGET GATE (HARD, run FIRST -- especially before ANY `git tag` or
+#    `gh release create`, not just commits)
+git remote -v
+# Confirm this is the repo you actually intend to operate on. If the task
+# involves research, publications, WBS, project phases, or any content that
+# is not a skill definition -- this MUST NOT be QNFO/qnfo-skills. See
+# "Protected Repositories" below and ADR-026 Incident 3.
+
 # 1. Check state
 git status
 
@@ -204,6 +214,22 @@ GitHub is SECONDARY to D1 for project state. Sync direction: D1 -> GitHub (D1 is
 - **Git repo is for SKILLS ONLY.** NEVER place project data, publications, research artifacts, or governance documents.
 - Git-tracked files in the skills repo are PROTECTED. They survive thin-client cleanups (ADR-021/ADR-025).
 - Violating this rule is a fabrication-level offense (Rule 14).
+- **This restriction applies to git metadata too, not just files** (ADR-026
+  Incident 3): tags (`git tag`), GitHub Releases (`gh release create`), and
+  branches are independent of the file tree. A commit with zero non-skill
+  files can still be wrapped in a project-phase tag (`v0.1-phase0`) or a
+  publication Release (Zenodo DOI announcement) -- both are equally
+  prohibited in `qnfo-skills`.
+- **Before `git tag`, `gh release create`, or `git commit` for ANYTHING other
+  than a skill definition change: run `git remote -v` and confirm the target
+  is NOT `QNFO/qnfo-skills`.** This is the single check that would have
+  prevented Incident 3 (6 stale research/project tags + 1 Zenodo-DOI
+  GitHub Release found embedded in `qnfo-skills`, requiring backup+delete
+  remediation on 2026-07-18).
+- **Routine sync/cleanup audits of `qnfo-skills` MUST check `git tag -l` and
+  `gh release list` in addition to the file tree.** A clean `master` branch
+  does NOT imply a clean repo -- stale tags/releases from before a
+  remediation survive branch force-pushes.
 
 ### Import Surface
 - `qnfo/prompts/` -- system prompts, templates, skills, configs
@@ -222,3 +248,6 @@ GitHub is SECONDARY to D1 for project state. Sync direction: D1 -> GitHub (D1 is
 | Using skills repo as project workspace | ADR-026: skills repo = skills ONLY |
 | `git add .` (adds everything blindly) | Stage specific files: `git add <file>` |
 | Losing work by `git reset --hard` | Check `git stash` or `git reflog` first |
+| Tagging/releasing research content inside `qnfo-skills` | `git remote -v` REPO-TARGET GATE before EVERY tag/release (ADR-026 Incident 3) |
+| Assuming a clean file tree means a clean repo | Also audit `git tag -l` and `gh release list` -- tags/releases survive branch force-pushes |
+| Trusting a prior remediation without re-verifying | Backfilled/legacy tags predating a policy fix can still exist -- explicitly check `git tag -l` against current policy, don't assume a past cleanup got everything |
