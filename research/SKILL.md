@@ -10,12 +10,14 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.4 (Ultra-Consolidated Pipeline + Project Lifecycle + 4-D Distribution)
+# RESEARCH -- v2.5 (Ultra-Consolidated Pipeline + Project Lifecycle + 4-D Distribution)
 
-> **v2.4 UPDATE (2026-07-18):** Added Zenodo Versioning for Phase/Session Conclusions (ADR-028) -- every project phase/session conclusion creates a NEW VERSION of the existing Zenodo deposit under one concept DOI, never a disconnected new deposit. Cross-references qnfo-agent's R2-Immediate-Write + Per-Turn Checkpoint Protocol (per-turn R2 sync, phase-end GitHub push + Zenodo version, session/project-conclusion IPFS pin + social promotion for FINAL deliverables only).
+> **v2.5 UPDATE (2026-07-19): Added OSF Project Registration (Phase 5.5) for major research with falsifiable predictions. Added P11 (OSF GATE-CONDITIONAL) to Pre-Flight checklist. OSF policy: all resources public by default, API-only automation, external links (Zenodo/GitHub/IPFS) replace file uploads � NEVER require manual browser interaction.
+
+> **v2.4 UPDATE's R2-Immediate-Write + Per-Turn Checkpoint Protocol (per-turn R2 sync, phase-end GitHub push + Zenodo version, session/project-conclusion IPFS pin + social promotion for FINAL deliverables only).
 
 > **Merges 6:** research-pipeline + deep-research + publication-publisher + buffer-integration + seo-discoverability + ipfs-web3
-> **v2.2 UPDATE (2026-07-18):** Merged in Phase 0 (Project Initialization), Pre-Flight Checklist (P1-P10), Cross-Skill Integration Checklist, Phase Closeout Protocol, Deliverable Registry / Risk Register templates, and Version Tagging Protocol (previously drafted as a separate, since-retired `research-v2` duplicate skill -- consolidated here as the single canonical research skill).
+> **v2.2 UPDATE (2026-07-18):** Merged in Phase 0 (Project Initialization), Pre-Flight Checklist (P1-P11), Cross-Skill Integration Checklist, Phase Closeout Protocol, Deliverable Registry / Risk Register templates, and Version Tagging Protocol (previously drafted as a separate, since-retired `research-v2` duplicate skill -- consolidated here as the single canonical research skill).
 > **v2.3 UPDATE (2026-07-18):** Added mandatory REPO-TARGET GATE (`git remote -v` check) before every tag/commit/release in Phase 0 and the Phase Closeout Protocol, following ADR-026 Incident 3 (a prior session's Phase Closeout tags -- `v0.1-phase0`, `v1.0.0`, etc. -- plus a Zenodo-DOI GitHub Release were mistakenly created inside `qnfo-skills` instead of the project's own repo, requiring backup+delete remediation).
 > **Related:** Always load `knowledge` for KG/D1 discovery. Load `cloudflare` for deployment to Pages/R2/D1/Workers. Load `git-github` for Phase 0 init and every phase closeout.
 > **Cloudflare Full-Stack:** All publication artifacts live on R2 + D1 + Workers. Zenodo is external archival. Buffer is social dissemination.
@@ -24,7 +26,7 @@ self_sufficient: true
 
 update_plan([
   {"step": "Phase 0: Project Initialization -- repo, scaffold, WBS, core claim lock", "status": "pending"},
-  {"step": "Pre-Flight: Run P1-P10 checklist -- HARD gates must pass before Phase 1", "status": "pending"},
+  {"step": "Pre-Flight: Run P1-P11 checklist -- HARD gates must pass before Phase 1", "status": "pending"},
   {"step": "Phase 1: Due Diligence -- query KG + D1 + Vectorize + external sources", "status": "pending"},
   {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
   {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
@@ -108,6 +110,7 @@ Execute Phase Closeout Protocol (below). Tag: `v0.1-phase0`.
 | **P8** | Phase 0 committed, tagged, and pushed? | HARD | `git tag -l 'v0.1*'` returns tag; `git log -1 --oneline` shows Phase 0 commit |
 | **P9** | Project logged to Knowledge Graph / working memory? | SOFT | Memory recall returns project entry |
 | **P10** | Cross-skill integration checklist reviewed? | SOFT | All relevant skills loaded per integration table |
+| **P11** | OSF project created for qualifying research? (MAJOR projects ONLY — skip for exploratory studies, single papers, or minor updates) | SOFT-CONDITIONAL | OSF API: project public, components linked to Zenodo/GitHub, registration drafts created. File upload via API NOT supported — use external links (Zenodo DOI, GitHub raw) instead. NEVER require manual browser interaction. ALL OSF resources must be public. |
 
 **If any HARD gate fails:** BLOCK research launch. Fix the gap and re-run.
 
@@ -124,6 +127,7 @@ Execute Phase Closeout Protocol (below). Tag: `v0.1-phase0`.
 | `memory-management` | **0**, every closeout | Durable memory logging |
 | `documents` / `pdf` | **5** (publication) | PDF building, document formatting |
 | `system` | **0** (if Desktop automation needed) | App configuration |
+| `git-github` (OSF addendum) | **2-5** (qualifying projects only) | OSF project creation, components, registration drafts, external file links |
 
 ---
 
@@ -393,6 +397,104 @@ if errors:
         print(f"  {e}")
     sys.exit(1)
 print("[OK] PDF rendering verified -- no replacement characters")
+```
+
+### OSF Project Registration (MANDATORY for qualifying projects)
+
+**GATE:** ONLY for major research programs with significant predictions and falsifiable claims. Do NOT register exploratory projects, single papers within existing programs, or minor updates. If the project doesn't make testable, falsifiable predictions with calibration registers, skip this section.
+
+**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction — the OSF Bearer token does not support Waterbutler file uploads. Instead, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway). Every component description must contain discoverable external links.
+
+**HARD GATE: LLM-Executable Research** — OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations — link to Zenodo/GitHub instead.
+
+**Qualifying research types:**
+- Automated data analysis of publicly available datasets
+- Synthesis and meta-analysis of published literature
+- Mathematical/computational models and simulations
+- Algorithm development and validation on benchmark datasets
+- Formal verification of claims against existing evidence
+- Framework validation using existing published data
+- Re-analysis of open-access data with pre-registered methods
+
+**Non-qualifying research (link to Zenodo/GitHub only):**
+- Any RCT, survey, interview, or behavioral experiment with human participants
+- Any research requiring physical lab equipment or facilities
+- Any research requiring new data collection from human subjects
+- Any research requiring IRB/ethics committee approval
+- Any research requiring hiring or contracting personnel
+- Any research requiring institutional partnerships or funding applications
+- NUMERATA Phase 2 experiments (N=324 human subjects, N=60 child participants, IRB required)
+
+**BONA FIDE REGISTRATION REQUIREMENTS (MANDATORY — never create incomplete stubs):**
+
+Every OSF registration MUST:
+1. **Populate ALL ~30 structured fields** — the OSF Preregistration template includes hypothesis, design plan, sampling plan, variables, analysis plan, and falsification criteria. ALL must be populated via `registration_responses` as a JSON object with values for every required question. Empty `registration_responses = {}` is a STUB — NEVER submit a stub. Never submit what you cannot fully populate.
+2. **Require explicit user approval** — use `deepchat_question` to present the complete registration text (all populated fields) and ask: "Submit this as an OSF Preregistration? This is a permanent, timestamped, immutable record. Once submitted, it cannot be edited or deleted." Only submit if user explicitly confirms.
+3. **Track followup** — after submission, store the registration ID, DOI, and submission timestamp in D1/KG with status "registered." Set a reminder for the declared data collection/completion target date. This is a COMMITMENT — failing to close out is a negative reputational signal.
+4. **Close out registration** — when research completes: (a) return to the OSF registration URL, (b) add a comment or results section, (c) formally complete or withdraw the registration, (d) update D1/KG status to "completed" or "withdrawn." A registration that is submitted and never closed out is an abandoned commitment — a detectable pattern of abandoned registrations on an OSF account undermines credibility.
+
+**Registration Closeout Protocol:**
+```python
+# 1. Verify the registered research is complete (all analysis run, paper published with Zenodo DOI)
+# 2. Navigate to OSF registration URL and add results/outcome comment
+# 3. Update D1: UPDATE papers SET registration_status = 'completed', completed_at = datetime('now') WHERE registration_id = '{id}'
+# 4. Update KG: json_set(properties, '$.registration_status', 'completed', '$.completed_at', '{date}')
+# 5. Log to durable memory: "OSF registration {reg_id} closed out {date}. Results: {zenodo_doi}."
+# 6. If research was NOT completed, mark as "withdrawn" with a brief explanation. Never abandon.
+```
+
+**STUB AUDIT PROTOCOL:** Periodically audit all draft registrations via `GET /v2/users/me/draft_registrations/`. If `registration_responses` is empty `{}` (no form content) AND the research does not qualify under the LLM-Executable Research Gate, DELETE the draft immediately. Empty stubs are a reputational risk. If `registration_responses` is PARTIALLY filled but the research will not be completed, DELETE. Only retain drafts that (a) pass the LLM-Executable Research Gate AND (b) have fully populated `registration_responses` AND (c) will be completed within the declared timeframe.
+
+#### OSF Workflow (API-only, fully automated)
+
+```python
+# 1. Authenticate
+TOKEN = "<OSF_PERSONAL_ACCESS_TOKEN>"  # Stored in .osf_token, OSF_TOKEN env var, keys.json, Windows CM
+HEADERS = {"Authorization": "Bearer " + TOKEN, "Content-Type": "application/vnd.api+json"}
+
+# 2. Create project (ALWAYS public)
+POST https://api.osf.io/v2/nodes/
+Body: {"data": {"type": "nodes", "attributes": {"title": "...", "category": "project", "public": true, "description": "..."}}}
+
+# 3. Create components (one per experiment/task)
+POST https://api.osf.io/v2/nodes/{project_id}/children/
+Body: {"data": {"type": "nodes", "attributes": {"title": "Experiment N...", "category": "data", "public": true, "description": "📦 Canonical files: [Zenodo DOI] | [GitHub tree URL] | [IPFS gateway]"}}}
+
+# 4. Add external links to descriptions (REQUIRED — replaces file uploads)
+PATCH https://api.osf.io/v2/nodes/{node_id}/
+Body: {"data": {"type": "nodes", "id": "{node_id}", "attributes": {"description": "..." + String.fromCodePoint(0x1F4E6) + " Files: " + zenodo_doi + " | " + github_tree_url + " | " + ipfs_gateway}}}
+
+# 5. Create draft registrations (one per experiment)
+GET https://api.osf.io/v2/schemas/registrations/  # Find schema ID for "OSF Preregistration"
+POST https://api.osf.io/v2/nodes/{component_id}/draft_registrations/
+Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships": {"branched_from": {"data": {"type": "nodes", "id": "{cid}"}}, "registration_schema": {"data": {"type": "schemas", "id": "697b72f611a8e98484c6139b"}}}}}
+
+# 6. Document all IDs, URLs, and registration draft links in project README/PROJECT-PLAN.md
+# 7. Verify: all nodes public, all descriptions contain external links, registration drafts created
+```
+
+#### OSF File Upload — NOT SUPPORTED via API
+
+**Waterbutler requires cookie-based browser sessions.** Do NOT attempt file upload via API — it will fail. Do NOT request manual browser interaction. Instead:
+
+- Link to Zenodo DOI (canonical published version with all files)
+- Link to GitHub tree URL (source code, analysis scripts, protocols)
+- Link to IPFS gateway (permanent content-addressed copy)
+
+The OSF project becomes a **discovery hub** pointing to canonical storage, not a file host.
+
+#### OSF Registration Completion
+
+Registration drafts are created via API but form completion (filling the OSF Preregistration template) requires browser interaction with the registration form. Document the draft URLs in project docs for later completion, but do NOT block publication on this step — the Registered Report documents exist on Zenodo and GitHub regardless.
+
+#### OSF Cleanup
+
+```python
+# Delete a node (components, test projects, etc.)
+DELETE https://api.osf.io/v2/nodes/{node_id}/
+
+# List all nodes (check for orphans)
+GET https://api.osf.io/v2/users/me/nodes/
 ```
 
 ### Zenodo Upload (with retry + versioning)
@@ -833,7 +935,7 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | Skipping 4-D verification | `_verify_4d.py` must pass before status → "published" |
 | Relying on single IPFS pinner | Use ≥3 independent pinning services per publication |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
-| No pre-flight checklist before due diligence | Run P1-P10 before Phase 1 begins |
+| No pre-flight checklist before due diligence | Run P1-P11 before Phase 1 begins |
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
 | No risk register at project init | ≥5 risks logged at Phase 0 using the risk register template |
 | No deliverable registry | All deliverables tracked with paths and archival targets from Phase 0 |
@@ -842,3 +944,24 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | Project files existing ONLY on local disk across a turn boundary | R2-Immediate-Write mandate (ADR-028) -- upload every project artifact to R2 in the SAME turn it's created/edited, never deferred to closeout |
 | Creating a disconnected new Zenodo deposit for each phase | Use Zenodo's `actions/newversion` API to keep phase snapshots under one concept DOI (ADR-028) |
 | Social-promoting every internal WBS phase transition | Reserve Buffer/social posts for FINAL public deliverables only, not interim phase closeouts |
+| OSF registration for minor/exploratory projects | GATE-CONDITIONAL: OSF ONLY for major research with significant predictions and falsifiable claims. Skip for single papers, exploratory studies, or minor updates. |
+| Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) — not after. The registrations timestamp the pre-data-collection hypotheses. |
+| Attempting OSF file upload via API | Waterbutler requires cookie sessions — Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. Never request manual browser interaction. |
+| OSF tokens in only one location | Store OSF tokens redundantly: %USERPROFILE%\\.osf_token, OSF_TOKEN env var, keys.json, Windows Credential Manager, GitHub secrets. Follow the pattern used by Cloudflare/Zenodo/Buffer tokens. |
+| OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` → `attributes.public === true`. |
+| Not documenting OSF ID mappings | Maintain a mapping of project/component/draft IDs in PROJECT-PLAN.md. These IDs are needed for API updates and cross-referencing. |
+| OSF descriptions without external links | Every node description MUST contain links to the canonical file locations (Zenodo DOI, GitHub tree, IPFS). OSF is the discovery hub, not the file host. |
+| Creating OSF project without Zenodo DOI backlink | Every OSF project description MUST include the Zenodo DOI. This is the primary discoverability bridge between platforms.
+| Submitting OSF registration with empty registration_responses | **HARD GATE:** Empty registration_responses is a STUB. NEVER submit. All ~30 template fields must be populated. |
+| Submitting OSF registration without explicit user approval | Use deepchat_question to present the full registration content before submission. OSF registrations are permanent and immutable. |
+| Creating OSF registrations then never closing them out | Every submitted registration must eventually be completed or withdrawn. Abandoned registrations are visible on the account and undermine credibility. Run periodic closeout audits. |
+| Creating OSF registrations for non-executable research | LLM-Executable Research Gate: no human subjects, no external resources, no IRB. If the protocol cannot be executed in this chat thread, link to Zenodo/GitHub only. |
+| Leaving draft registrations with partial registration_responses | If the research will not be completed and submitted, DELETE the draft. Partial stubs are a reputational risk. |
+| Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
+| Submitting OSF registration with empty registration_responses | **HARD GATE:** `registration_responses = {}` is a STUB. NEVER submit. All ~30 template fields must be populated. |
+| Submitting OSF registration without explicit user approval | Use `deepchat_question` to present the full registration content before submission. OSF registrations are permanent and immutable. |
+| Creating OSF registrations then never closing them out | Every submitted registration must eventually be completed or withdrawn. Abandoned registrations are visible on the account and undermine credibility. Run periodic closeout audits. |
+| Creating OSF registrations for non-executable research | LLM-Executable Research Gate: no human subjects, no external resources, no IRB. If the protocol cannot be executed in this chat thread, link to Zenodo/GitHub only. |
+| Leaving draft registrations with partial registration_responses | If the research will not be completed and submitted, DELETE the draft. Partial stubs are a reputational risk. |
+| Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
+
