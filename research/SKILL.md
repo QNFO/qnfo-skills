@@ -487,7 +487,7 @@ sibling file rather than silently failing) instead of calling
 
 **GATE:** ONLY for major research programs with significant predictions and falsifiable claims. Do NOT register exploratory projects, single papers within existing programs, or minor updates. If the project doesn't make testable, falsifiable predictions with calibration registers, skip this section.
 
-**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction — the OSF Bearer token does not support Waterbutler file uploads. Instead, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway). Every component description must contain discoverable external links.
+**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction. Registration drafts, full form completion (all ~30 schema fields), subject taxonomy assignment, and final registration submission are ALL 100% achievable via the OSF v2 API (verified live 2026-07-20, registration `kj6ar` created via pure API calls, HTTP 201). Only file uploads specifically require Waterbutler (cookie-based sessions) — for those, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway) instead. Do not conflate the file-upload limitation with the registration/form-completion capability — they are different OSF subsystems with different constraints. See "OSF Registration — Full API Automation Protocol" below.
 
 **HARD GATE: LLM-Executable Research** — OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations — link to Zenodo/GitHub instead.
 
@@ -567,9 +567,52 @@ Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships"
 
 The OSF project becomes a **discovery hub** pointing to canonical storage, not a file host.
 
-#### OSF Registration Completion
+#### OSF Registration — Full API Automation Protocol (CORRECTED 2026-07-20)
 
-Registration drafts are created via API but form completion (filling the OSF Preregistration template) requires browser interaction with the registration form. Document the draft URLs in project docs for later completion, but do NOT block publication on this step — the Registered Report documents exist on Zenodo and GitHub regardless.
+**Prior guidance in this section was WRONG and has been retracted.** The entire registration workflow — schema discovery, field population, subject taxonomy, final submission — is achievable via API with ZERO browser interaction. Verified live: registration `kj6ar` created 2026-07-20T12:48:47Z via pure API calls, HTTP 201.
+
+**Step 1 — Discover real schema keys (NEVER assume `q1`/`q2` format):**
+```python
+r = requests.get(f'https://api.osf.io/v2/schemas/registrations/{SCHEMA_ID}/schema_blocks/?page[size]=100', headers=H)
+# Real keys look like '344-2', '344-47', etc. Walk blocks tracking the preceding
+# question-label to build a {key: label} map. Only required=True keys are mandatory.
+```
+
+**Step 2 — For select-type fields, get EXACT verbatim option text:**
+```python
+# API rejects any option text that doesn't match the schema's display_text VERBATIM.
+# Walk schema_blocks from the select-input key forward, collecting select-input-option
+# blocks until the next non-option block type.
+```
+
+**Step 3 — Populate ALL fields in one PATCH:**
+```python
+patch = {'data': {'id': draft_id, 'type': 'draft_registrations',
+                   'attributes': {'registration_responses': responses}}}
+r = requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', headers=H, json=patch)
+# 200 = success. 400 "must be one of the provided options" = re-check Step 2 exact text.
+```
+
+**Step 4 — MANDATORY subject taxonomy (registration 400s without this):**
+```python
+# Subjects require a root->leaf chain, set on the DRAFT (flat list), not the node
+# (which uses list-of-lists). These are SEPARATE relationships.
+chain = []  # build via GET /v2/subjects/{id}/ walking .relationships.parent.data.id to null
+patch = {'data': {'id': draft_id, 'type': 'draft_registrations', 'attributes': {'subjects': chain}}}
+requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', headers=H, json=patch)
+```
+
+**Step 5 — Submit:**
+```python
+reg_data = {'data': {'type': 'registrations', 'attributes': {
+    'draft_registration': draft_id, 'registration_choice': 'immediate'}}}
+r = requests.post(f'https://api.osf.io/v2/nodes/{NODE_ID}/registrations/', headers=H, json=reg_data)
+# HTTP 201 = SUCCESS, fully immutable, date_registered timestamp set.
+```
+
+**Understanding `pending_registration_approval: true` after success:** This is NOT a manual-review queue — OSF confirmed via API error "OSF Registries is an unmoderated provider." It is OSF's mandatory email-confirmation anti-hijacking gate (like 2FA), applied uniformly to ALL registrations regardless of creation method, resolved only by the account holder clicking the emailed confirmation link. Report this precisely: "Registration submitted (HTTP 201, ID `{id}`). Pending only the account holder's email confirmation — OSF's standard anti-hijacking safeguard, not a data-entry step."
+
+**Never again claim** "requires browser interaction" for registration/form completion. That was false. Only file uploads (Waterbutler) have this limitation.
 
 #### OSF Cleanup
 
@@ -1083,7 +1126,8 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | Social-promoting every internal WBS phase transition | Reserve Buffer/social posts for FINAL public deliverables only, not interim phase closeouts |
 | OSF registration for minor/exploratory projects | GATE-CONDITIONAL: OSF ONLY for major research with significant predictions and falsifiable claims. Skip for single papers, exploratory studies, or minor updates. |
 | Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) — not after. The registrations timestamp the pre-data-collection hypotheses. |
-| Attempting OSF file upload via API | Waterbutler requires cookie sessions — Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. Never request manual browser interaction. |
+| Attempting OSF file upload via API | Waterbutler requires cookie sessions — Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. (Registration/form completion has NO such limitation — that is 100% API-automatable; only file uploads need Waterbutler.) |
+| Claiming OSF registration form completion "requires browser interaction" | FALSE — corrected 2026-07-20. Discover real schema keys via `/schema_blocks/` (format `344-N`, not `q1`/`q2`), populate via PATCH, set subject taxonomy chain, submit via POST — all API, HTTP 201 confirmed live (registration `kj6ar`). |
 | OSF tokens in only one location | Store OSF tokens redundantly: %USERPROFILE%\\.osf_token, OSF_TOKEN env var, keys.json, Windows Credential Manager, GitHub secrets. Follow the pattern used by Cloudflare/Zenodo/Buffer tokens. |
 | OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` → `attributes.public === true`. |
 | Not documenting OSF ID mappings | Maintain a mapping of project/component/draft IDs in PROJECT-PLAN.md. These IDs are needed for API updates and cross-referencing. |
