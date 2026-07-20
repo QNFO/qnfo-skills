@@ -4,6 +4,11 @@
 // Free tier available at files.lighthouse.storage — no credit card required.
 // Usage: node lighthouse-pin.js <file-path>
 // Requires: LIGHTHOUSE_API_KEY env var (or ~/.lighthouse_api_key)
+//
+// RED-TEAM FIX (2026-07-20, verified live): node.lighthouse.storage is
+// UNREACHABLE (connection timeout on direct probe, not a 4xx/5xx). The
+// correct/live upload host is upload.lighthouse.storage (confirmed via
+// live probe: HTTP 401 for an invalid key -- endpoint exists and responds).
 
 const fs = require('fs');
 
@@ -12,7 +17,7 @@ async function lighthousePin(filePath) {
   if (!LKEY) throw new Error('LIGHTHOUSE_API_KEY not set');
   const content = fs.readFileSync(filePath);
 
-  const r = await fetch('https://node.lighthouse.storage/api/v0/add', {
+  const r = await fetch('https://upload.lighthouse.storage/api/v0/add', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + LKEY },
     body: content
@@ -21,7 +26,10 @@ async function lighthousePin(filePath) {
   if (d.Hash) {
     console.log('IPFS CID:', d.Hash);
     console.log('Gateway (ipfs.io):', 'https://ipfs.io/ipfs/' + d.Hash);
-    console.log('Gateway (cloudflare):', 'https://cloudflare-ipfs.com/ipfs/' + d.Hash);
+    // RED-TEAM FIX (2026-07-20): cloudflare-ipfs.com no longer resolves via
+    // DNS at all (ENODATA, verified live) -- Cloudflare decommissioned its
+    // public IPFS gateway. Use dweb.link instead.
+    console.log('Gateway (dweb.link):', 'https://dweb.link/ipfs/' + d.Hash);
   } else {
     console.error('Lighthouse pin failed:', JSON.stringify(d));
     process.exitCode = 1;

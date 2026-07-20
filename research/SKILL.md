@@ -895,10 +895,16 @@ const fs = require('fs');
 const content = fs.readFileSync('path/to/file');
 
 (async () => {
-  const result = await s3Put('qnfo-archive', 'publications/document.md', content, 'text/markdown');
+  // RED-TEAM FIX (2026-07-20, verified live): Filebase pinning is
+  // asynchronous -- there is NO x-ipfs-cid header on the PUT response.
+  // Use s3PutAndWaitForCid() (HEAD-polls after PUT) to actually retrieve
+  // the CID, not a bare s3Put() call.
+  const { s3PutAndWaitForCid } = require('../../cloudflare/scripts/filebase-upload.js');
+  const result = await s3PutAndWaitForCid('qnfo-archive', 'publications/document.md', content, 'text/markdown');
   console.log('Filebase upload:', result.status, result.ok);
-  console.log('IPFS CID (from x-ipfs-cid header):', result.ipfsCid);
-  console.log('Gateway: https://ipfs.io/ipfs/' + result.ipfsCid);
+  console.log('IPFS CID (via HEAD poll, x-amz-meta-cid header):', result.ipfsCid);
+  if (result.ipfsCid) console.log('Gateway: https://ipfs.io/ipfs/' + result.ipfsCid);
+  else console.error('WARNING:', result.pinningStatus);
   // Verify: fetch('https://ipfs.io/ipfs/' + result.ipfsCid) -> 200
   return result.ipfsCid;
 })();
@@ -907,12 +913,17 @@ const content = fs.readFileSync('path/to/file');
 #### Lighthouse IPFS Pinning Script (SECONDARY — free Filecoin tier)
 ```js
 // lighthouse-pin.js — Pin to IPFS/Filecoin via Lighthouse (free tier, no CC required)
+// RED-TEAM FIX (2026-07-20, verified live): node.lighthouse.storage is
+// UNREACHABLE (connection timeout, not a 4xx -- confirmed via direct probe).
+// The correct/live upload host is upload.lighthouse.storage (confirmed via
+// live probe: returns HTTP 401 for an invalid key, i.e. endpoint exists and
+// is reachable). Use upload.lighthouse.storage for all new Lighthouse calls.
 const LKEY = process.env.LIGHTHOUSE_API_KEY;
 const fs = require('fs');
 const content = fs.readFileSync('path/to/file');
 
 (async () => {
-  const r = await fetch('https://node.lighthouse.storage/api/v0/add', {
+  const r = await fetch('https://upload.lighthouse.storage/api/v0/add', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + LKEY },
     body: content
@@ -947,7 +958,7 @@ const content = fs.readFileSync('path/to/publication.md', 'utf8');
 | Service | API | Purpose | Credential |
 |:--------|:----|:--------|:-----------|
 | **Filebase** (PRIMARY) | S3-compatible `PUT https://s3.filebase.com/{bucket}/{key}` | Free 5GB, unlimited requests, S3→IPFS auto-pinning bridge | `FILEBASE_ACCESS_KEY` + `FILEBASE_SECRET_KEY` |
-| **Lighthouse** (SECONDARY) | `POST https://node.lighthouse.storage/api/v0/add` | Free-tier Filecoin storage deals (perpetual) | `LIGHTHOUSE_API_KEY` (free tier at files.lighthouse.storage) |
+| **Lighthouse** (SECONDARY) | `POST https://upload.lighthouse.storage/api/v0/add` | Free-tier Filecoin storage deals (perpetual) | `LIGHTHOUSE_API_KEY` (free tier at files.lighthouse.storage) |
 | **Arweave/Irys** | `POST https://node1.irys.xyz/tx/arweave` | Permanent blockchain storage (pay-once) | Requires AR wallet + ~$0.02 in AR tokens |
 | **Internet Archive** | `POST https://web.archive.org/save/{url}` | Wayback Machine snapshot | None required |
 | ~~Pinata~~ | ~~`api.pinata.cloud`~~ | **REMOVED 2026-07-20 — free quota exceeded, account blocked. Do not use.** | -- |
@@ -959,7 +970,11 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
   -d '{"type":"TXT","name":"_dnslink.{subdomain}","content":"dnslink=/ipfs/{CID}","ttl":1}'
 
-# Verify: cloudflare-ipfs.com/ipns/{subdomain}.qnfo.org
+# Verify: dweb.link/ipns/{subdomain}.qnfo.org
+# (RED-TEAM FIX 2026-07-20: cloudflare-ipfs.com/cf-ipfs.com no longer
+# resolve via DNS at all -- Cloudflare's public IPFS gateway was
+# decommissioned. dweb.link supports both /ipfs/ and /ipns/ paths and was
+# verified live 2026-07-20.)
 ```
 
 #### Workflow (PINATA-FREE, 2026-07-20)
@@ -977,7 +992,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 5. **DNSLink**: Create `_dnslink.<paper-subdomain>.qnfo.org` TXT → `/ipfs/{CID}` via Cloudflare API (free, unlimited DNS records)
 6. **Internet Archive**: Submit papers.qnfo.org/papers/{slug} and IPFS gateway URLs (free, no auth)
 7. **Cloudflare R2**: Canonical durable host — upload paper.md/paper.pdf to R2 (free egress) as the primary non-IPFS backup, independent of any pinning-service quota
-8. Verify availability via free public gateways only: `https://ipfs.io/ipfs/{CID}`, `https://cloudflare-ipfs.com/ipfs/{CID}`, `https://dweb.link/ipfs/{CID}`, `https://cloudflare-ipfs.com/ipns/{subdomain}.qnfo.org` — do NOT reference `gateway.pinata.cloud` (service discontinued for this account)
+8. Verify availability via free public gateways only: `https://ipfs.io/ipfs/{CID}`, `https://dweb.link/ipfs/{CID}`, `https://dweb.link/ipns/{subdomain}.qnfo.org` — do NOT reference `gateway.pinata.cloud` (service discontinued for this account) or `cloudflare-ipfs.com`/`cf-ipfs.com` (RED-TEAM FIX 2026-07-20: both domains no longer resolve via DNS at all, confirmed by direct probe — Cloudflare decommissioned its public IPFS gateway)
 9. Create CAR archive: `ipfs-car --pack paper-artifacts/ --output paper.car`
 10. **Log in KG**: Seed Paper node with `ipfs_cid`, `arweave_tx`, `filecoin_cid`, `dns_link` properties
 
@@ -1021,7 +1036,7 @@ Every publication MUST complete Phase 8 before publication status is set to "pub
 1. **Filebase IPFS pinning** — MANDATORY (PRIMARY, replaces Pinata). Free 5GB S3-compatible bucket, no request-volume limit, auto-pins every publication to a permanent CID.
 2. **D1 `ipfs_cid` backfill** — MANDATORY. CID must be stored in `living-paper` D1 within 5 minutes of pinning.
 3. **DNSLink TXT record** — MANDATORY. `_dnslink.{slug}.qnfo.org` → `dnslink=/ipfs/{CID}` on Cloudflare DNS (free, unlimited).
-4. **Multi-gateway verification** — MANDATORY. At least 1 public gateway must serve the content (run `scripts/verify-4d.js`), using only free/unlimited gateways (`ipfs.io`, `cloudflare-ipfs.com`, `dweb.link`) — never `gateway.pinata.cloud`.
+4. **Multi-gateway verification** — MANDATORY. At least 1 public gateway must serve the content (run `scripts/verify-4d.js`), using only free/unlimited gateways that are actually reachable (`ipfs.io`, `dweb.link`) — never `gateway.pinata.cloud`, and never `cloudflare-ipfs.com`/`cf-ipfs.com` (RED-TEAM FIX 2026-07-20: neither domain resolves via DNS anymore — verified by direct probe, ENODATA — Cloudflare decommissioned its public IPFS gateway).
 5. **Cloudflare R2** — MANDATORY as canonical durable host, independent of IPFS pinning-service quotas.
 6. **CID in Knowledge Graph** — RECOMMENDED. Store CID in KG node properties for cross-system discovery.
 
@@ -1082,7 +1097,7 @@ def distribute(content: str, metadata: dict) -> dict:
     # Filebase auto-pins all S3 objects to IPFS. Free 5GB, no request-volume limit.
     
     # === Step 2: Secondary IPFS (Lighthouse, free Filecoin tier) ===
-    # POST https://node.lighthouse.storage/api/v0/add
+    # POST https://upload.lighthouse.storage/api/v0/add  (node.lighthouse.storage is unreachable -- verified live 2026-07-20)
     # Auth: Bearer LIGHTHOUSE_API_KEY (free tier at files.lighthouse.storage)
     
     # === Step 3: Arweave Permanent (when wallet available) ===

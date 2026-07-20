@@ -52,7 +52,71 @@ async function s3Put(bucket, key, body, contentType) {
     },
     body
   });
-  return { status: r.status, ok: r.ok, ipfsCid: r.headers.get('x-ipfs-cid') };
+  // BUG FIX (2026-07-20, red-team): Filebase does NOT return the CID on the PUT
+  // response (no x-ipfs-cid header exists on PUT). Pinning is asynchronous —
+  // the CID only appears on a later HEAD request via the x-amz-meta-cid header,
+  // once x-amz-meta-pinning-status reaches "pinned". Verified live 2026-07-20:
+  // PUT response has zero IPFS-related headers; HEAD ~8s later returned
+  // x-amz-meta-cid + x-amz-meta-pinning-status: pinned. Callers MUST use
+  // s3HeadPollForCid() below to retrieve the real CID — do not trust any CID
+  // read directly off the PUT response.
+  return { status: r.status, ok: r.ok };
+}
+
+async function s3Head(bucket, key) {
+  if (!AK || !SK) throw new Error('FILEBASE_ACCESS_KEY / FILEBASE_SECRET_KEY not set');
+  const amzDate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
+  const dateStamp = amzDate.substring(0, 8);
+  const path = '/' + bucket + '/' + key;
+  const payloadHash = crypto.createHash('sha256').update('').digest('hex');
+
+  const canonicalReq = [
+    'HEAD', path, '',
+    'host:' + HOST,
+    'x-amz-content-sha256:' + payloadHash,
+    'x-amz-date:' + amzDate + '\n',
+    'host;x-amz-content-sha256;x-amz-date',
+    payloadHash
+  ].join('\n');
+
+  const credentialScope = dateStamp + '/us-east-1/s3/aws4_request';
+  const stringToSign = [
+    'AWS4-HMAC-SHA256', amzDate, credentialScope,
+    crypto.createHash('sha256').update(canonicalReq).digest('hex')
+  ].join('\n');
+
+  const kDate = hmac('AWS4' + SK, dateStamp);
+  const kRegion = hmac(kDate, 'us-east-1');
+  const kService = hmac(kRegion, 's3');
+  const kSigning = hmac(kService, 'aws4_request');
+  const signature = hmac(kSigning, stringToSign).toString('hex');
+
+  const auth = 'AWS4-HMAC-SHA256 Credential=' + AK + '/' + credentialScope +
+    ',SignedHeaders=host;x-amz-content-sha256;x-amz-date,Signature=' + signature;
+
+  const r = await fetch('https://' + HOST + path, {
+    method: 'HEAD',
+    headers: { Authorization: auth, Host: HOST, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate }
+  });
+  return {
+    status: r.status,
+    ok: r.ok,
+    ipfsCid: r.headers.get('x-amz-meta-cid'),
+    pinningStatus: r.headers.get('x-amz-meta-pinning-status')
+  };
+}
+
+// Uploads then polls HEAD until the CID is pinned (or maxAttempts exhausted).
+// Filebase pinning is async; typical latency observed live was ~5-10s.
+async function s3PutAndWaitForCid(bucket, key, body, contentType, maxAttempts = 6, delayMs = 3000) {
+  const putResult = await s3Put(bucket, key, body, contentType);
+  if (!putResult.ok) return { ...putResult, ipfsCid: null, pinningStatus: 'put-failed' };
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(res => setTimeout(res, delayMs));
+    const head = await s3Head(bucket, key);
+    if (head.ipfsCid) return { status: putResult.status, ok: true, ipfsCid: head.ipfsCid, pinningStatus: head.pinningStatus };
+  }
+  return { status: putResult.status, ok: true, ipfsCid: null, pinningStatus: 'timed-out-waiting-for-pin' };
 }
 
 if (require.main === module) {
@@ -62,10 +126,11 @@ if (require.main === module) {
     process.exit(1);
   }
   const body = fs.readFileSync(filePath);
-  s3Put(bucket, key, body, contentType).then(result => {
+  s3PutAndWaitForCid(bucket, key, body, contentType).then(result => {
     console.log('Upload result:', JSON.stringify(result));
     if (result.ipfsCid) console.log('IPFS CID:', result.ipfsCid, '-> https://ipfs.io/ipfs/' + result.ipfsCid);
+    else console.error('WARNING: no CID returned —', result.pinningStatus);
   }).catch(e => { console.error('FATAL:', e.message); process.exitCode = 1; });
 }
 
-module.exports = { s3Put };
+module.exports = { s3Put, s3Head, s3PutAndWaitForCid };

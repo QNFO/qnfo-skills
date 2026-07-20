@@ -124,8 +124,14 @@ async function s3Put(key, body, contentType) {
       Host: HOST, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate },
     body: body
   });
-  // Filebase auto-pins all S3 objects to IPFS
-  return { status: r.status, ok: r.ok, ipfsCid: r.headers.get('x-ipfs-cid') };
+  // Filebase auto-pins all S3 objects to IPFS -- BUT this is ASYNCHRONOUS.
+  // RED-TEAM FIX (2026-07-20, verified live): there is NO x-ipfs-cid header
+  // on the PUT response at all. The real CID only appears later via a HEAD
+  // request's x-amz-meta-cid header, once x-amz-meta-pinning-status reaches
+  // "pinned" (observed latency ~5-10s). See scripts/filebase-upload.js
+  // s3PutAndWaitForCid() for the full HEAD-polling implementation -- do not
+  // read result.ipfsCid off the PUT response, it will always be undefined.
+  return { status: r.status, ok: r.ok };
 }
 ```
 
@@ -315,15 +321,27 @@ R2 Write Event ──► qnfo-archive Worker (queue) ──► Filebase S3 PUT �
 ### qnfo-archive Worker Extension (Filebase, replaces Pinata pinByHash)
 ```js
 // On R2 archival event, auto-pin to IPFS via Filebase S3-compatible PUT.
-// Filebase pins on write — no separate "pin" API call needed.
-// Requires: FILEBASE_ACCESS_KEY, FILEBASE_SECRET_KEY (AWS SigV4 auth against s3.filebase.com)
-// See scripts/filebase-upload.js in this skill for the full SigV4 helper (s3Put).
+// Filebase pins on write — no separate "pin" API call needed, BUT the pin
+// itself is asynchronous. Requires: FILEBASE_ACCESS_KEY, FILEBASE_SECRET_KEY
+// (AWS SigV4 auth against s3.filebase.com). See scripts/filebase-upload.js
+// in this skill for the full SigV4 helper (s3PutAndWaitForCid).
+//
+// RED-TEAM FIX (2026-07-20, verified live): the PUT response has NO
+// x-ipfs-cid header (or any IPFS header at all). The CID only becomes
+// available on a subsequent HEAD request via x-amz-meta-cid, once
+// x-amz-meta-pinning-status reaches "pinned" (~5-10s observed latency).
+// A Worker calling this on a queue consumer should PUT immediately, then
+// either (a) poll HEAD in the same invocation with a short delay/retry
+// loop, or (b) PUT now and defer the CID lookup to a later cron/queue pass
+// that HEADs the object and backfills D1 ipfs_cid once pinned.
 async function pinToIPFSViaFilebase(env, key, body, contentType, metadata) {
-  const result = await s3Put(env.FILEBASE_BUCKET || 'qnfo-archive', key, body, contentType);
-  if (!result.ok) {
-    throw new Error('Filebase PUT failed: HTTP ' + result.status + ' — do NOT fall back to Pinata (quota exceeded, blocked). Try Lighthouse instead.');
+  const putResult = await s3Put(env.FILEBASE_BUCKET || 'qnfo-archive', key, body, contentType);
+  if (!putResult.ok) {
+    throw new Error('Filebase PUT failed: HTTP ' + putResult.status + ' — do NOT fall back to Pinata (quota exceeded, blocked). Try Lighthouse instead.');
   }
-  return result.ipfsCid; // returned via x-ipfs-cid response header
+  // CID is NOT available yet. Return null and let the caller poll s3Head()
+  // later (do not block the queue consumer waiting synchronously for pinning).
+  return null;
 }
 ```
 
@@ -347,7 +365,11 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 ```
 
 ### Verification
-- `https://cloudflare-ipfs.com/ipns/{subdomain}.qnfo.org` → serves content from IPFS
+- `https://dweb.link/ipns/{subdomain}.qnfo.org` → serves content from IPFS
+  (RED-TEAM FIX 2026-07-20: `cloudflare-ipfs.com` and `cf-ipfs.com` no
+  longer resolve via DNS at all — confirmed by direct probe, ENODATA.
+  Cloudflare decommissioned its public IPFS gateway. `dweb.link` supports
+  both `/ipfs/` and `/ipns/` paths and was verified live.)
 - `nslookup -type=TXT _dnslink.{subdomain}.qnfo.org` → returns `dnslink=/ipfs/{CID}`
 
 ---

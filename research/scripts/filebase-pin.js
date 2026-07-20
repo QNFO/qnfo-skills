@@ -4,6 +4,13 @@
 // Free tier: 5GB storage, no request-volume rate limit.
 // Usage: node filebase-pin.js <file-path> <bucket> [key]
 // Requires: FILEBASE_ACCESS_KEY, FILEBASE_SECRET_KEY env vars (or ~/.filebase_access_key, ~/.filebase_secret_key)
+//
+// RED-TEAM FIX (2026-07-20, verified live): Filebase does NOT return an
+// x-ipfs-cid header on the PUT response — that header does not exist on PUT
+// at all. Pinning is ASYNCHRONOUS. The real CID only appears later via a
+// HEAD request, in the x-amz-meta-cid header, once x-amz-meta-pinning-status
+// reaches "pinned" (observed latency ~5-10s live). This script now PUTs,
+// then polls HEAD until the CID appears (or times out).
 
 const fs = require('fs');
 const path = require('path');
@@ -30,19 +37,21 @@ function contentTypeFor(filePath) {
   return map[ext] || 'application/octet-stream';
 }
 
-async function s3Put(bucket, key, body, contentType) {
-  const payloadHash = crypto.createHash('sha256').update(body).digest('hex');
+function sigV4Headers(method, objPath, contentType, payloadHash) {
   const amzDate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
   const dateStamp = amzDate.substring(0, 8);
-  const objPath = '/' + bucket + '/' + key;
+
+  const signedHeadersList = contentType
+    ? 'content-type;host;x-amz-content-sha256;x-amz-date'
+    : 'host;x-amz-content-sha256;x-amz-date';
 
   const canonicalReq = [
-    'PUT', objPath, '',
-    'content-type:' + contentType,
+    method, objPath, '',
+    ...(contentType ? ['content-type:' + contentType] : []),
     'host:' + HOST,
     'x-amz-content-sha256:' + payloadHash,
     'x-amz-date:' + amzDate + '\n',
-    'content-type;host;x-amz-content-sha256;x-amz-date',
+    signedHeadersList,
     payloadHash
   ].join('\n');
 
@@ -59,47 +68,64 @@ async function s3Put(bucket, key, body, contentType) {
   const signature = hmac(kSigning, stringToSign).toString('hex');
 
   const auth = 'AWS4-HMAC-SHA256 Credential=' + AK + '/' + credentialScope +
-    ',SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date,Signature=' + signature;
+    ',SignedHeaders=' + signedHeadersList + ',Signature=' + signature;
 
-  const r = await fetch('https://' + HOST + objPath, {
-    method: 'PUT',
-    headers: {
-      Authorization: auth,
-      'Content-Type': contentType,
-      Host: HOST,
-      'x-amz-content-sha256': payloadHash,
-      'x-amz-date': amzDate
-    },
-    body
-  });
-
-  return { status: r.status, ok: r.ok, ipfsCid: r.headers.get('x-ipfs-cid') };
+  const headers = { Authorization: auth, Host: HOST, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate };
+  if (contentType) headers['Content-Type'] = contentType;
+  return headers;
 }
 
-async function filebasePin(filePath, bucket, key) {
+async function s3Put(bucket, key, body, contentType) {
+  const payloadHash = crypto.createHash('sha256').update(body).digest('hex');
+  const objPath = '/' + bucket + '/' + key;
+  const headers = sigV4Headers('PUT', objPath, contentType, payloadHash);
+  const r = await fetch('https://' + HOST + objPath, { method: 'PUT', headers, body });
+  return { status: r.status, ok: r.ok };
+}
+
+async function s3Head(bucket, key) {
+  const objPath = '/' + bucket + '/' + key;
+  const payloadHash = crypto.createHash('sha256').update('').digest('hex');
+  const headers = sigV4Headers('HEAD', objPath, null, payloadHash);
+  const r = await fetch('https://' + HOST + objPath, { method: 'HEAD', headers });
+  return {
+    status: r.status,
+    ok: r.ok,
+    ipfsCid: r.headers.get('x-amz-meta-cid'),
+    pinningStatus: r.headers.get('x-amz-meta-pinning-status')
+  };
+}
+
+async function filebasePin(filePath, bucket, key, maxAttempts = 6, delayMs = 3000) {
   if (!AK || !SK) throw new Error('FILEBASE_ACCESS_KEY / FILEBASE_SECRET_KEY not set');
   const content = fs.readFileSync(filePath);
   const objectKey = key || path.basename(filePath);
   const contentType = contentTypeFor(filePath);
 
-  const result = await s3Put(bucket, objectKey, content, contentType);
-
-  if (result.ok && result.ipfsCid) {
-    console.log('Filebase upload: HTTP', result.status);
-    console.log('IPFS CID:', result.ipfsCid);
-    console.log('Gateway (ipfs.io):', 'https://ipfs.io/ipfs/' + result.ipfsCid);
-    console.log('Gateway (cloudflare):', 'https://cloudflare-ipfs.com/ipfs/' + result.ipfsCid);
-    console.log('Gateway (dweb.link):', 'https://dweb.link/ipfs/' + result.ipfsCid);
-  } else if (result.ok) {
-    console.warn('Filebase upload OK (HTTP ' + result.status + ') but no x-ipfs-cid header returned yet.');
-    console.warn('Filebase pins asynchronously — check the object headers again in a few seconds via a HEAD request,');
-    console.warn('or use `wrangler`/S3 HEAD on s3.filebase.com/' + bucket + '/' + objectKey);
-  } else {
-    console.error('Filebase upload FAILED: HTTP', result.status);
+  const putResult = await s3Put(bucket, objectKey, content, contentType);
+  if (!putResult.ok) {
+    console.error('Filebase upload FAILED: HTTP', putResult.status);
     console.error('Falling back: try scripts/lighthouse-pin.js next. Do NOT retry Pinata (quota exceeded, blocked).');
     process.exitCode = 1;
+    return null;
   }
-  return result.ipfsCid;
+  console.log('Filebase upload: HTTP', putResult.status, '(pinning is async — polling for CID...)');
+
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(res => setTimeout(res, delayMs));
+    const head = await s3Head(bucket, objectKey);
+    if (head.ipfsCid) {
+      console.log('IPFS CID:', head.ipfsCid, '(pinning-status:', head.pinningStatus + ')');
+      console.log('Gateway (ipfs.io):', 'https://ipfs.io/ipfs/' + head.ipfsCid);
+      console.log('Gateway (dweb.link):', 'https://dweb.link/ipfs/' + head.ipfsCid);
+      return head.ipfsCid;
+    }
+  }
+  console.error('WARNING: CID not available after', maxAttempts * delayMs / 1000, 'seconds.');
+  console.error('The object uploaded successfully but Filebase has not finished pinning yet.');
+  console.error('Re-run a HEAD check later, or increase maxAttempts.');
+  process.exitCode = 1;
+  return null;
 }
 
 if (require.main === module) {
@@ -111,4 +137,4 @@ if (require.main === module) {
   filebasePin(filePath, bucket, key).catch(e => { console.error('FATAL:', e.message); process.exitCode = 1; });
 }
 
-module.exports = { filebasePin, s3Put };
+module.exports = { filebasePin, s3Put, s3Head };

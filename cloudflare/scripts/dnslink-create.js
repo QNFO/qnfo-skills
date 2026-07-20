@@ -25,7 +25,10 @@ async function createDnsLink(zoneId, subdomain, cid) {
   }
   console.log(`DNSLink created: _dnslink.${subdomain} -> dnslink=/ipfs/${cid}`);
   console.log(`Verify: nslookup -type=TXT _dnslink.${subdomain}`);
-  console.log(`Gateway: https://cloudflare-ipfs.com/ipns/${subdomain}`);
+  // RED-TEAM FIX (2026-07-20): cloudflare-ipfs.com no longer resolves via
+  // DNS at all (ENODATA, verified live) -- Cloudflare decommissioned its
+  // public IPFS gateway. Use dweb.link instead.
+  console.log(`Gateway: https://dweb.link/ipns/${subdomain}`);
   return d.result;
 }
 

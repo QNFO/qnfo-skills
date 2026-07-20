@@ -15,26 +15,51 @@ async function checkUrl(url, timeoutMs = 8000) {
   }
 }
 
+// RED-TEAM FIX (2026-07-20, verified live): arweave.net/{anything} ALWAYS
+// returns HTTP 200 (it serves an SPA shell for every path, including
+// nonexistent TX IDs) -- a bare checkUrl() against arweave.net/{txId} is a
+// permanent false-positive and can NEVER fail. Use the tx status API
+// instead, which correctly returns HTTP 400 {"error":"invalid tx id"} for a
+// bogus TX and HTTP 200 for a confirmed one -- verified against a real bogus
+// ID live 2026-07-20.
+async function checkArweaveTx(txId, timeoutMs = 8000) {
+  try {
+    const r = await fetch(`https://arweave.net/tx/${txId}/status`, { signal: AbortSignal.timeout(timeoutMs) });
+    return r.status === 200;
+  } catch (e) {
+    return false;
+  }
+}
+
 async function verify4D(cid, arweaveTx, doi, dnslinkSubdomain) {
   const results = { distributed: false, durable: false, discoverable: false, duplicated: false, details: {} };
 
   // Distributed: check >=2 independent IPFS gateways
   if (cid) {
+    // RED-TEAM FIX (2026-07-20, verified live): cloudflare-ipfs.com/cf-ipfs.com
+    // no longer resolve via DNS at all (ENODATA) -- Cloudflare decommissioned
+    // its public IPFS gateway. Replaced with a second working gateway
+    // (w3s.link) so the >=2-gateway "distributed" check still has real signal.
     const gateways = [
       `https://ipfs.io/ipfs/${cid}`,
-      `https://cloudflare-ipfs.com/ipfs/${cid}`,
-      `https://dweb.link/ipfs/${cid}`
+      `https://dweb.link/ipfs/${cid}`,
+      `https://w3s.link/ipfs/${cid}`
     ];
     const checks = await Promise.all(gateways.map(g => checkUrl(g)));
     const passCount = checks.filter(Boolean).length;
     results.details.ipfs_gateways_reachable = passCount;
     results.distributed = passCount >= 2;
-    results.duplicated = passCount >= 4 || (passCount >= 2 && (arweaveTx || doi));
+    // RED-TEAM FIX (2026-07-20): wrap in Boolean() -- the prior
+    // `passCount >= 4 || (passCount >= 2 && (arweaveTx || doi))` expression
+    // leaked the raw arweaveTx/doi STRING value (e.g. "duplicated": "none")
+    // instead of a real boolean, due to JS && short-circuit returning its
+    // right operand rather than coercing to boolean.
+    results.duplicated = Boolean(passCount >= 4 || (passCount >= 2 && (arweaveTx || doi)));
   }
 
   // Durable: Arweave TX confirmed OR DOI resolves
   if (arweaveTx) {
-    results.details.arweave_reachable = await checkUrl(`https://arweave.net/${arweaveTx}`);
+    results.details.arweave_reachable = await checkArweaveTx(arweaveTx);
   }
   if (doi) {
     results.details.doi_resolves = await checkUrl(`https://doi.org/${doi}`);
