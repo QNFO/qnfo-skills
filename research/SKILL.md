@@ -1,6 +1,6 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer, SEO optimization, IPFS/Web3 content permanence, and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.8, deprecated proprietary IPFS/blockchain pinning). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer, SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 version: "2.7"
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
@@ -10,7 +10,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.7 (Ultra-Consolidated Pipeline + Project Lifecycle + 4-D Distribution)
+# RESEARCH -- v2.8 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
 
 > **v2.7 UPDATE (2026-07-20, Pinata quota exceeded):** Pinata IPFS pinning
 > REMOVED from all publication steps — the free-tier account hit its quota
@@ -48,8 +48,8 @@ update_plan([
   {"step": "Phase 4: Deep Research -- 9-stage Bayesian cascade (if paradigm forecast triggered)", "status": "pending"},
   {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
   {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
-  {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, IPFS pin + CAR archive", "status": "pending"},
-  {"step": "Phase 8: 4-D Distribution -- IPFS multi-pinner, Arweave, Filecoin, DNSLink, Internet Archive, verify all 4 dimensions", "status": "pending"},
+  {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
+  {"step": "Phase 8: Core Distribution -- GitHub push + tag, Zenodo new-version, R2 archive sync, D1/KG records, DNSLink (optional)", "status": "pending"},
 ])
 
 **Note:** Phase 0 and the Pre-Flight checklist apply to net-new, long-lived research projects (new repo, new WBS). For a single paper/update within an existing project, skip directly to Phase 1.
@@ -213,7 +213,7 @@ avoids a rewritten-history remediation.
 | 5 -- Publication | `v1.0` | `v1.0` (major version bump) |
 | 6 -- Deployment | `v1.1-deploy` | `v1.1-deploy` |
 | 7 -- Dissemination | `v1.2-disseminate` | `v1.2-disseminate` |
-| 8 -- 4-D Distribution | `v1.3-distribute` | `v1.3-distribute` |
+| 8 -- Core Distribution | `v1.3-distribute` | `v1.3-distribute` |
 
 ---
 
@@ -468,21 +468,21 @@ add `--metadata header-includes="\usepackage{braket}"` if bra-ket macros are
 used directly in the source rather than relying on the preprocessor's
 `\langle`/`\rangle` fallback.
 
-### IPFS Pinning (MANDATORY — every publication)
+### R2 Archive (MANDATORY -- every publication)
 
-**PINATA REMOVED (2026-07-20, free quota exceeded):** Pinata is no longer the
-primary or fallback pinner. Its free tier was hit and blocked mid-pipeline.
-Use **Filebase** (free 5GB S3-compatible bucket, auto-pins to IPFS, no rate
-limit on request volume) as the PRIMARY pinner, backed by **Cloudflare R2**
-(free egress, unlimited storage subject to plan) as the canonical durable
-host and **Lighthouse** (free Filecoin tier) as secondary pinner.
+Every publication's source (paper.md), rendered PDF (paper.pdf), and provenance bundle
+(PROVENANCE-BUNDLE.zip) MUST be uploaded to Cloudflare R2 immediately after Zenodo publishing.
 
 ```bash
-# Pin publication to IPFS via Filebase (S3-compatible, auto-pins to IPFS on PUT).
-# Credentials: FILEBASE_ACCESS_KEY + FILEBASE_SECRET_KEY (from ~/.filebase_access_key, ~/.filebase_secret_key)
-node scripts/filebase-pin.js paper.md paper-slug
+npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.md --file=paper.md --remote
+npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.pdf --file=paper.pdf --remote
 ```
-**CID is stored in D1 `ipfs_cid` column and used for DNSLink records. This is MANDATORY for all publications — no publication is complete without an IPFS CID.**
+
+### DNSLink (OPTIONAL -- read-only IPFS resolution)
+
+```bash
+node ../cloudflare/scripts/dnslink-create.js <zone_id> <subdomain>.qnfo.org <ipfs_cid>
+```
 
 ### PDF Rendering Verification (MANDATORY)
 
@@ -771,14 +771,14 @@ Only use a genuinely NEW deposit for a genuinely NEW, unrelated publication.
 
 ### D1 Insert (living-paper)
 ```sql
-INSERT INTO papers (slug, title, author, abstract, body, doi, ipfs_cid, published_at, updated_at)
+INSERT INTO papers (slug, title, author, abstract, body, doi, published_at, updated_at)
 VALUES ('<slug>', '<title>', '<author>', '<abstract>', '<full markdown body>', '<doi>', '<ipfs_cid>', datetime('now'), datetime('now'))
-ON CONFLICT(slug) DO UPDATE SET body = excluded.body, doi = excluded.doi, ipfs_cid = excluded.ipfs_cid, updated_at = datetime('now');
+ON CONFLICT(slug) DO UPDATE SET body = excluded.body, doi = excluded.doi, updated_at = datetime('now');
 ```
 
-### D1 IPFS CID Backfill (MANDATORY — after IPFS pinning)
+### D1 Record Update (MANDATORY — after IPFS pinning)
 ```sql
--- Backfill IPFS CID into living-paper D1 after Filebase pinning
+-- Update D1 living-paper record after Zenodo publishing
 UPDATE papers SET ipfs_cid = 'bafkreibq...', updated_at = datetime('now') WHERE identifier = 'paper-slug';
 ```
 **Every publication MUST have its IPFS CID stored in D1. The `ipfs_cid` column enables cross-system discovery: D1 → KG → DNSLink → IPFS gateway resolution.**
@@ -804,12 +804,12 @@ Seed Paper node with: slug, DOI, title, author, pages_url, zenodo_url, r2_path. 
 
 ### SEO Audit (MANDATORY before declaring publication complete)
 
-1. **robots.txt** -- verify at root of papers.qnfo.org: allows crawling, points to sitemap
-2. **sitemap.xml** -- all paper pages listed with lastmod dates
-3. **llms.txt** -- machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
-4. **Meta tags** -- `citation_title`, `citation_author`, `citation_doi`, `citation_date`
-5. **Structured data** -- Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
-6. **Open Graph** -- `og:title`, `og:description`, `og:type` (article), `og:url`
+1. **robots.txt** — verify at root of papers.qnfo.org: allows crawling, points to sitemap
+2. **sitemap.xml** — all paper pages listed with lastmod dates
+3. **llms.txt** — machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
+4. **Meta tags** — `citation_title`, `citation_author`, `citation_doi`, `citation_date`
+5. **Structured data** — Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
+6. **Open Graph** — `og:title`, `og:description`, `og:type` (article), `og:url`
 
 ### Buffer Social Media (Phase 5 of LRAP)
 
@@ -856,297 +856,85 @@ URL: <papers.qnfo.org/papers/slug/>
 Hashtags: #QNFO #Research <domain-specific tags>
 ```
 
-### IPFS/Web3 Content Permanence
+### DNSLink (OPTIONAL v2.8 — read-only IPFS gateway resolution)
 
-#### 4-D Distribution Framework (MANDATORY for all publications)
-
-Every QNFO publication MUST achieve all four dimensions before publication is declared complete:
-
-| D | Requirement | Minimum Implementation |
-|:--|:-----------|:----------------------|
-| **Distributed** | Content served without centralized gatekeeper | IPFS (Filebase) + Filecoin (Lighthouse) + Arweave (Irys) |
-| **Durable** | Permanent storage without ongoing maintenance | Arweave (300+ yr), Zenodo (CERN-backed), Internet Archive |
-| **Discoverable** | Findable without specific URI/address | DOI, IPFS CID (content-addressed), DNSLink, Knowledge Graph |
-| **Duplicated** | Multiple redundant independent copies | ≥4 pinning services across ≥2 protocols |
-
-### Multi-Service Pinning Credentials Reference
-```
-Filebase:      FILEBASE_ACCESS_KEY + FILEBASE_SECRET_KEY   (PRIMARY IPFS pinner)
-Lighthouse:    LIGHTHOUSE_API_KEY                           (SECONDARY IPFS pinner, free Filecoin tier)
-Arweave:       ARWEAVE_KEYFILE (wallet file path)
-Zenodo:        ZENODO_TOKEN
-Cloudflare:    CLOUDFLARE_API_TOKEN
-# Pinata REMOVED 2026-07-20 (free quota exceeded, account blocked) — do not add PINATA_API_KEY back
-```
-Check: `Object.keys(process.env).filter(k=>k.includes('FILEBASE')||k.includes('LIGHTHOUSE')||k.includes('ARWEAVE')||k.includes('ZENODO')||k.includes('CLOUDFLARE')).forEach(k=>console.log(k+': available'))`
-
-**PINATA REMOVED (2026-07-20):** Free quota exceeded and the account is
-blocked. Do NOT use `api.pinata.cloud` for any new pinning. Filebase (below)
-is the new PRIMARY pinner: free 5GB S3-compatible bucket, no request-volume
-rate limit, auto-pins every object written to IPFS.
-
-#### Filebase IPFS Pinning Script (PRIMARY — free, unlimited requests)
-```js
-// filebase-pin.js — Pin any content to IPFS via Filebase (S3-compatible PUT, auto-pins)
-// Requires: FILEBASE_ACCESS_KEY + FILEBASE_SECRET_KEY (AWS SigV4 auth against s3.filebase.com)
-// See cloudflare skill scripts/filebase-upload.js for the full SigV4 implementation.
-const { s3Put } = require('../../cloudflare/scripts/filebase-upload.js'); // or inline the SigV4 helper
-const fs = require('fs');
-const content = fs.readFileSync('path/to/file');
-
-(async () => {
-  // RED-TEAM FIX (2026-07-20, verified live): Filebase pinning is
-  // asynchronous -- there is NO x-ipfs-cid header on the PUT response.
-  // Use s3PutAndWaitForCid() (HEAD-polls after PUT) to actually retrieve
-  // the CID, not a bare s3Put() call.
-  const { s3PutAndWaitForCid } = require('../../cloudflare/scripts/filebase-upload.js');
-  const result = await s3PutAndWaitForCid('qnfo-archive', 'publications/document.md', content, 'text/markdown');
-  console.log('Filebase upload:', result.status, result.ok);
-  console.log('IPFS CID (via HEAD poll, x-amz-meta-cid header):', result.ipfsCid);
-  if (result.ipfsCid) console.log('Gateway: https://ipfs.io/ipfs/' + result.ipfsCid);
-  else console.error('WARNING:', result.pinningStatus);
-  // Verify: fetch('https://ipfs.io/ipfs/' + result.ipfsCid) -> 200
-  return result.ipfsCid;
-})();
-```
-
-#### Lighthouse IPFS Pinning Script (SECONDARY — free Filecoin tier)
-```js
-// lighthouse-pin.js — Pin to IPFS/Filecoin via Lighthouse (free tier, no CC required)
-// RED-TEAM FIX (2026-07-20, verified live): node.lighthouse.storage is
-// UNREACHABLE (connection timeout, not a 4xx -- confirmed via direct probe).
-// The correct/live upload host is upload.lighthouse.storage (confirmed via
-// live probe: returns HTTP 401 for an invalid key, i.e. endpoint exists and
-// is reachable). Use upload.lighthouse.storage for all new Lighthouse calls.
-const LKEY = process.env.LIGHTHOUSE_API_KEY;
-const fs = require('fs');
-const content = fs.readFileSync('path/to/file');
-
-(async () => {
-  const r = await fetch('https://upload.lighthouse.storage/api/v0/add', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + LKEY },
-    body: content
-  });
-  const d = await r.json();
-  console.log('IPFS CID:', d.Hash);
-  console.log('Gateway: https://ipfs.io/ipfs/' + d.Hash);
-})();
-```
-
-#### Arweave/Irys Upload Script
-```js
-// _arweave_upload.js — Permanent blockchain archival via Irys (Bundlr on Arweave)
-const fs = require('fs');
-const content = fs.readFileSync('path/to/publication.md', 'utf8');
-
-(async () => {
-  const r = await fetch('https://node1.irys.xyz/tx/arweave', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/octet-stream' },
-    body: content // Prerequisite: AR wallet at $env:ARWEAVE_KEYFILE with funded balance
-  });
-  const d = await r.json();
-  console.log('Arweave TX:', d.id);
-  console.log('URL: https://arweave.net/' + d.id);
-  // One-time cost: ~$0.02 in AR tokens. Storage lasts 300+ years.
-})();
-```
-
-#### DNSLink Creation Script
-
-| Service | API | Purpose | Credential |
-|:--------|:----|:--------|:-----------|
-| **Filebase** (PRIMARY) | S3-compatible `PUT https://s3.filebase.com/{bucket}/{key}` | Free 5GB, unlimited requests, S3→IPFS auto-pinning bridge | `FILEBASE_ACCESS_KEY` + `FILEBASE_SECRET_KEY` |
-| **Lighthouse** (SECONDARY) | `POST https://upload.lighthouse.storage/api/v0/add` | Free-tier Filecoin storage deals (perpetual) | `LIGHTHOUSE_API_KEY` (free tier at files.lighthouse.storage) |
-| **Arweave/Irys** | `POST https://node1.irys.xyz/tx/arweave` | Permanent blockchain storage (pay-once) | Requires AR wallet + ~$0.02 in AR tokens |
-| **Internet Archive** | `POST https://web.archive.org/save/{url}` | Wayback Machine snapshot | None required |
-| ~~Pinata~~ | ~~`api.pinata.cloud`~~ | **REMOVED 2026-07-20 — free quota exceeded, account blocked. Do not use.** | -- |
-
-#### DNSLink (MANDATORY for every publication)
 ```bash
-# Create DNSLink TXT record mapping publication domain to IPFS CID
-curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" \
-  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  -d '{"type":"TXT","name":"_dnslink.{subdomain}","content":"dnslink=/ipfs/{CID}","ttl":1}'
-
-# Verify: dweb.link/ipns/{subdomain}.qnfo.org
-# (RED-TEAM FIX 2026-07-20: cloudflare-ipfs.com/cf-ipfs.com no longer
-# resolve via DNS at all -- Cloudflare's public IPFS gateway was
-# decommissioned. dweb.link supports both /ipfs/ and /ipns/ paths and was
-# verified live 2026-07-20.)
+# Create DNSLink TXT record mapping publication subdomain to IPFS CID
+# Cloudflare DNS: free, unlimited records. Verified via dweb.link.
+node ../cloudflare/scripts/dnslink-create.js <ZONE_ID> <subdomain>.qnfo.org <CID>
+# Verify: nslookup -type=TXT _dnslink.<subdomain>.qnfo.org
+# Gateway: https://dweb.link/ipns/<subdomain>.qnfo.org
 ```
 
-#### Workflow (PINATA-FREE, 2026-07-20)
-1. Compute CID for paper artifacts (paper.md + paper.pdf + PROVENANCE-BUNDLE.zip)
-2. **Filebase** (PRIMARY, free & unlimited requests): S3 `PUT` to `s3.filebase.com/{bucket}/{key}` — auto-pins to IPFS on write, returns CID via `x-ipfs-cid` response header.
-   **Multi-pinner fallback order (updated 2026-07-20, Pinata removed):** if
-   Filebase returns a non-2xx (bucket over its free 5GB quota, auth error,
-   etc.), fall back automatically: Filebase → **Lighthouse** (free Filecoin
-   tier) → **web3.storage** (free tier, if a token is configured). At least
-   one pinner MUST succeed before proceeding to step 4 (DNSLink), since
-   DNSLink needs a real CID to point at. NEVER fall back to Pinata — the
-   account is quota-blocked and must not be retried.
-3. **Lighthouse** (Filecoin, secondary): Upload for perpetual decentralized storage if Filebase's CID needs a second independent pinner
-4. **Arweave/Irys** (when wallet available): Permanent blockchain archival
-5. **DNSLink**: Create `_dnslink.<paper-subdomain>.qnfo.org` TXT → `/ipfs/{CID}` via Cloudflare API (free, unlimited DNS records)
-6. **Internet Archive**: Submit papers.qnfo.org/papers/{slug} and IPFS gateway URLs (free, no auth)
-7. **Cloudflare R2**: Canonical durable host — upload paper.md/paper.pdf to R2 (free egress) as the primary non-IPFS backup, independent of any pinning-service quota
-8. Verify availability via free public gateways only: `https://ipfs.io/ipfs/{CID}`, `https://dweb.link/ipfs/{CID}`, `https://dweb.link/ipns/{subdomain}.qnfo.org` — do NOT reference `gateway.pinata.cloud` (service discontinued for this account) or `cloudflare-ipfs.com`/`cf-ipfs.com` (RED-TEAM FIX 2026-07-20: both domains no longer resolve via DNS at all, confirmed by direct probe — Cloudflare decommissioned its public IPFS gateway)
-9. Create CAR archive: `ipfs-car --pack paper-artifacts/ --output paper.car`
-10. **Log in KG**: Seed Paper node with `ipfs_cid`, `arweave_tx`, `filecoin_cid`, `dns_link` properties
+### Internet Archive (MANDATORY)
 
-#### 4-D Verification Protocol
-```python
-# _verify_4d.py -- ephemeral, delete after execution
-# For each publication, verify all 4 dimensions:
-# 1. Distributed: CID accessible via ≥2 independent IPFS gateways
-# 2. Durable: Arweave TX confirmed, Zenodo DOI resolves, IA snapshot exists
-# 3. Discoverable: DNSLink resolves, DOI redirects, KG node exists with CID
-# 4. Duplicated: ≥4 pinning services confirmed
+```
+GET https://web.archive.org/save/https://papers.qnfo.org/papers/<slug>
 ```
 
----
+### Publication URL Verification
+```bash
+curl -sI https://papers.qnfo.org/papers/<slug>/  # Must return HTTP 200
+```
+
+## Phase 8: Core Distribution Stack (MANDATORY)
+
+### Trigger
+Every publication MUST complete Phase 8 before publication status is set to "published."
+
+### Core Distribution Stack (v2.8)
+
+All distribution dimensions are satisfied by the core QNFO infrastructure:
+
+| Layer | Implementation | Verification |
+|:------|:--------------|:-------------|
+| **GitHub** | Public repo with tags, releases, version history | `git tag -l`, `gh release view` |
+| **Zenodo** | DOI with versioned deposits (concept DOI + version DOIs) | `curl -sI https://doi.org/<doi>` |
+| **R2** | Canonical file archive (md, pdf, provenance bundle) | `npx wrangler r2 object get qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.md --remote --pipe` |
+| **D1/KG** | Living-paper DB entry + Knowledge Graph node | `get_paper_context({slug})`, `query_graph({endpoint:"nodes"})` |
+
+### Pipeline
+```
+Publication Ready (Phase 5 PDF + Phase 6 D1/R2)
+    |
+    |-- GitHub:  git add, git commit, git push --tags (public repo)
+    |-- Zenodo:  create new version deposit, upload PDF+md+bundle, publish
+    |-- R2:      npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/ --remote
+    |-- D1/KG:   INSERT/UPDATE living-paper + sync Knowledge Graph
+    |-- DNSLink (OPTIONAL): _dnslink.<slug>.qnfo.org -> /ipfs/<CID>
+    |-- Internet Archive: submit papers.qnfo.org URL
+```
+
+### DNSLink (OPTIONAL -- convenience layer)
+```bash
+curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records"   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"   -d '{"type":"TXT","name":"_dnslink.{subdomain}","content":"dnslink=/ipfs/{CID}","ttl":1}'
+```
+
+### Deployment Workflow
+1. Confirm content exists (body_md in D1 or paper.md in R2)
+2. Run Phase 5 (Publication: PDF, Zenodo DOI) + Phase 6 (Deploy: D1/R2)
+3. Push to GitHub with version tag, create GitHub Release with DOI link
+4. Upload all artifacts to R2 (canonical durable host)
+5. Seed/update D1 living-paper and Knowledge Graph records
+6. (OPTIONAL) Create DNSLink TXT record if an IPFS CID is available
+7. Submit Internet Archive snapshot
+8. Verify: papers.qnfo.org returns HTTP 200, DOI resolves, R2 content round-trips
 
 ## Verification Gates
 
 | Gate | Check | Evidence |
 |:-----|:------|:---------|
-| **Due Diligence** | KG + D1 + Vectorize + 2+ external sources queried | Query output with counts |
-| **Deduplication** | Raw vs unique paper counts reported | "Found N, M unique" |
+| **Due Diligence** | KG + D1 + 2+ external sources queried | Query output with counts |
 | **Classification** | All papers classified as core/supporting/background/reject | Classification table |
 | **Citation** | All citations trace to real papers, BibTeX verified | `_citation_audit.py` output |
 | **Publication Language** | Zero internal language in paper.md | Scan output: 0 hits |
 | **PDF** | PDF renders without Unicode errors | `_check_pdf.py` output |
-| **DOI** | Zenodo record resolves, cross-references correct, IPFS CID in description | `curl -sI https://doi.org/...` |
-| **Deployment** | papers-server URL HTTP 200 with MathJax, D1 `ipfs_cid` is non-null | curl output with status + wrangler D1 query |
+| **DOI** | Zenodo record resolves, cross-references correct | `curl -sI https://doi.org/...` |
+| **Deployment** | papers-server URL HTTP 200, D1 entry exists with slug/doi | curl output + wrangler D1 query |
 | **SEO** | robots.txt, sitemap, llms.txt, meta tags all present | Verify each URL |
 | **Social** | Buffer posts confirmed in queue | `status: SCHEDULED` in response |
-| **Permanence** | IPFS CID accessible via 2+ gateways | Gateway verification output |
-| **4-D Gate (MANDATORY)** | All 4 dimensions: Distributed (≥2 IPFS), Durable (Arweave+Zenodo+IA), Discoverable (DOI+DNSLink+CID), Duplicated (≥4 pinning services) | `_verify_4d.py` passes all checks |
-
----
-
-## Phase 8: 4-D Distribution Pipeline (MANDATORY — DEFAULT FOR ALL PUBLICATIONS)
-
-### Trigger
-Every publication MUST complete Phase 8 before publication status is set to "published." This is NO LONGER OPTIONAL. IPFS CIDs, DNSLink records, D1 backfill, and multi-gateway verification are DEFAULT requirements for all QNFO research outputs.
-
-### IPFS Distribution Defaults (Hard Requirements, updated 2026-07-20 — Pinata removed)
-1. **Filebase IPFS pinning** — MANDATORY (PRIMARY, replaces Pinata). Free 5GB S3-compatible bucket, no request-volume limit, auto-pins every publication to a permanent CID.
-2. **D1 `ipfs_cid` backfill** — MANDATORY. CID must be stored in `living-paper` D1 within 5 minutes of pinning.
-3. **DNSLink TXT record** — MANDATORY. `_dnslink.{slug}.qnfo.org` → `dnslink=/ipfs/{CID}` on Cloudflare DNS (free, unlimited).
-4. **Multi-gateway verification** — MANDATORY. At least 1 public gateway must serve the content (run `scripts/verify-4d.js`), using only free/unlimited gateways that are actually reachable (`ipfs.io`, `dweb.link`) — never `gateway.pinata.cloud`, and never `cloudflare-ipfs.com`/`cf-ipfs.com` (RED-TEAM FIX 2026-07-20: neither domain resolves via DNS anymore — verified by direct probe, ENODATA — Cloudflare decommissioned its public IPFS gateway).
-5. **Cloudflare R2** — MANDATORY as canonical durable host, independent of IPFS pinning-service quotas.
-6. **CID in Knowledge Graph** — RECOMMENDED. Store CID in KG node properties for cross-system discovery.
-
-### Pipeline
-```
-Publication Ready (Phase 5 PDF + Phase 6 D1/R2)
-    │
-    ├──► Filebase (PRIMARY IPFS, free/unlimited) ──► CID
-    ├──► Lighthouse (Filecoin, free tier)  ──► Filecoin CID
-    ├──► Arweave/Irys (when AR wallet available) ──► TX ID
-    ├──► DNSLink: _dnslink.{slug}.qnfo.org → /ipfs/{CID}  [Cloudflare DNS, free]
-    ├──► Internet Archive: submit all gateway URLs  [free]
-    ├──► Cloudflare R2: canonical durable host  [free egress]
-    ├──► KG: seed Paper node with 4-D properties
-    └──► Legacy stores: GitHub push, R2 archive, Zenodo DOI
-    (Pinata REMOVED 2026-07-20 — quota exceeded, do not reference or retry)
-```
-
-### Deployment Workflow (LLM Agent Steps)
-For each publication:
-1. Check content exists (body_md or equivalent). If metadata-only → flag, queue for content recovery
-2. Run Phase 5 (Publication: PDF, Zenodo DOI) + Phase 6 (Deploy: D1/R2)
-3. Run `distribute()` from the Generic 4-D Protocol above
-4. Seed KG with 4-D properties: `{distribution_status, ipfs_cid, dns_link, ...}`
-5. Verify: run `_verify_4d.py` — must pass before status → "published"
-6. State machine: `draft → published → distributed → durable → complete`
-
-## Generic 4-D Distribution Protocol (LLM-orchestrated)
-
-This protocol applies to ANY research project, paper, or deliverable — not QNFO-specific. An LLM agent should follow these steps autonomously.
-
-### Distribution State Machine
-```
-draft → published → distributed → durable → complete
-```
-- **draft**: Content exists locally, not yet published
-- **published**: Available via HTTP (Worker/Pages/CDN), has DOI/URL
-- **distributed**: Pinned to ≥2 IPFS services, has DNSLink, on ≥3 stores
-- **durable**: On Arweave (permanent) OR Zenodo (CERN-backed) OR Internet Archive
-- **complete**: All 4 dimensions verified: Distributed, Durable, Discoverable, Duplicated
-
-### Protocol: distribute(content, metadata)
-
-```python
-# Universal 4-D distribution pipeline
-# Callable by any LLM agent for any publication
-
-def distribute(content: str, metadata: dict) -> dict:
-    """
-    content: plaintext body of the publication
-    metadata: {title, authors, doi (optional), slug, tags}
-    Returns: {ipfs_cid, dns_link, zenodo_doi, ia_url, filebase_url, distribution_status}
-    """
-    
-    # === Step 1: Primary IPFS (Filebase) — Pinata REMOVED 2026-07-20 (quota exceeded) ===
-    # S3 PUT to https://s3.filebase.com/{bucket}/{key}
-    # Auth: AWS SigV4 with FILEBASE_ACCESS_KEY + FILEBASE_SECRET_KEY
-    # Filebase auto-pins all S3 objects to IPFS. Free 5GB, no request-volume limit.
-    
-    # === Step 2: Secondary IPFS (Lighthouse, free Filecoin tier) ===
-    # POST https://upload.lighthouse.storage/api/v0/add  (node.lighthouse.storage is unreachable -- verified live 2026-07-20)
-    # Auth: Bearer LIGHTHOUSE_API_KEY (free tier at files.lighthouse.storage)
-    
-    # === Step 3: Arweave Permanent (when wallet available) ===
-    # POST https://node1.irys.xyz/tx/arweave
-    # Requires AR wallet + ~$0.02 in AR tokens
-    
-    # === Step 4: DNSLink ===
-    # Create TXT record: _dnslink.{subdomain} → dnslink=/ipfs/{CID}
-    # Use Cloudflare API: POST /zones/{zone_id}/dns_records
-    
-    # === Step 5: Internet Archive ===
-    # GET https://web.archive.org/save/{public_url}
-    
-    # === Step 6: Knowledge Graph ===
-    # Seed Paper node with 4-D properties:
-    # {distribution_status, ipfs_cid, arweave_tx, dns_link, ia_url, zenodo_doi}
-    
-    # === Step 7: Verify ===
-    # Run _verify_4d.py — check all 4 dimensions:
-    # Distributed: CID accessible via ≥2 IPFS gateways
-    # Durable: Arweave/Zenodo/IA confirmed
-    # Discoverable: DNSLink resolves, DOI redirects, CID in KG
-    # Duplicated: ≥4 independent stores
-    
-    return {
-        "distribution_status": "complete",
-        "ipfs_cid": "...",
-        "dns_link": "...",
-        ...
-    }
-```
-
-### Verification Protocol (_verify_4d.py)
-```python
-# Run after distribution. Fails loudly on first gap.
-# Distributed: assert fetch('https://ipfs.io/ipfs/{CID}').status == 200
-# Durable: assert fetch('https://arweave.net/{TX}').status == 200 or doi_resolves
-# Discoverable: assert nslookup('_dnslink.{subdomain}') returns dnslink record
-# Duplicated: assert pin_count >= 4
-```
-
----
-
-## Integration Flow
-```
-research-pipeline -> deep-research -> publication-publisher -> buffer-integration -> seo-discoverability -> ipfs-web3 -> 4d-distribution
-  [lit search +        [paradigm          [Zenodo + D1 +          [social media]         [robots + sitemaps     [IPFS pinning +      [Arweave+Filecoin
-   citations]           forecast]          papers-server]                                 + llms.txt]             CAR archive]          +DNSLink+IA+KG]
-```
+| **DNSLink (OPTIONAL)** | TXT record resolves, dweb.link gateway serves content | `nslookup -type=TXT` + `curl dweb.link/ipns/...` |
+| **Core Distribution Gate (MANDATORY)** | All core layers: GitHub (public repo), Zenodo (DOI), R2 (archive), D1/KG (discoverability) | All 4 layers verified |
 
 ## Anti-Patterns
 | Anti-Pattern | Fix |
@@ -1161,9 +949,9 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | Missing cross-references in Zenodo | related_identifiers for prior versions + cited papers + GitHub |
 | HTML PDF fallback | Pandoc+XeLaTeX ONLY for publication-grade PDFs |
 | Buffer GraphQL with $var format | Use INLINE parameters -- Buffer silently drops $variables |
-| Single-store publishing | 4-D REQUIRED: IPFS+Filecoin+Arweave+DNSLink+IA minimum |
+| Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
-| Publishing without CID in KG | Log `ipfs_cid`, `arweave_tx`, `filecoin_cid` in KG Paper node |
+| Publishing without D1/KG records | Log `doi`, `r2_path` in D1 living-paper + Knowledge Graph Paper node |
 | Skipping 4-D verification | `_verify_4d.py` must pass before status → "published" |
 | Relying on single IPFS pinner | Use ≥3 independent pinning services per publication |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
@@ -1203,6 +991,6 @@ research-pipeline -> deep-research -> publication-publisher -> buffer-integratio
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2) | Strip it -- `scripts/unicode-latex-preprocess.py` does this automatically. It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
-| Using Pinata for any new IPFS pinning (REMOVED 2026-07-20) | Pinata's free quota was exceeded and the account is blocked. Use Filebase (PRIMARY, free 5GB S3-compatible, no request limit) → Lighthouse (SECONDARY, free Filecoin tier) → Arweave (when funded). Never retry `api.pinata.cloud` or reference `gateway.pinata.cloud` in verification steps. |
-| Assuming a paid/quota-limited service is still available without checking first | Before any pinning/distribution run, verify the target free-tier service hasn't hit its quota (e.g., a 429 or account-suspended response) and have a free fallback pinner already configured — don't discover the outage mid-publication. |
+
+
 

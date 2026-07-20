@@ -10,7 +10,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.1 (Full-Stack + 4-D + Consolidation)
+# CLOUDFLARE -- v3.2 (Full-Stack + Consolidation, v2.8 no external IPFS)
 
 > **v3.1 UPDATE (2026-07-20, Pinata quota exceeded):** Removed Pinata from
 > the R2→IPFS Bridge. Filebase (free 5GB S3-compatible, no request-volume
@@ -19,6 +19,15 @@ self_sufficient: true
 > SigV4 helper — this same helper is reused by the `research` skill's
 > `scripts/filebase-pin.js`. Do not add `PINATA_API_KEY`/`PINATA_API_SECRET`
 > back to any Worker env or wrangler secret.
+
+> **v3.2 UPDATE (2026-07-20, red-team audit):** Deprecated "R2→IPFS Bridge"
+> section, Filebase S3 SigV4 upload script, and all external pinning service
+> references. Core stack: Cloudflare R2 (canonical durable host) + D1 (records)
+> + Workers (serving) + DNS (DNSLink for optional IPFS resolution). No external
+> pinning services (Filebase, Lighthouse, Arweave) are required or referenced.
+> Fixed wrangler r2 CLI syntax docs (`{bucket}/{key}` single arg, no `list`
+> subcommand in v4), Workers routes API endpoint (zone-level, not account-level).
+
 
 > **Merges 9:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
@@ -33,7 +42,7 @@ update_plan([
   {"step": "Execute with Cloudflare-native tools (wrangler CLI, REST API, Dashboard)", "status": "pending"},
   {"step": "Verify deployment health + DNS integrity + lifecycle state", "status": "pending"},
   {"step": "Audit: check for orphans, 522-RISK, CNAME chains, resource drift", "status": "pending"},
-  {"step": "4-D Gate: Verify Distributed, Durable, Discoverable, Duplicated storage", "status": "pending"},
+  {"step": "Core Distribution Gate: Verify GitHub, Zenodo, R2, D1/KG layers", "status": "pending"},
 ])
 
 ---
@@ -72,68 +81,22 @@ qnfo-legal   ─┘
 ---
 
 ## Reusable Scripts (Copy-Paste into any execution context)
+### R2 CLI Syntax (wrangler v4+)
+**CRITICAL:** wrangler v4 uses `{bucket}/{key}` as a single positional argument:
+```bash
+# CORRECT (v4+):
+npx wrangler r2 object get qnfo-releases/path/to/file.md --remote --pipe
+npx wrangler r2 object put qnfo-releases/path/to/file.md --file=local.md --remote
 
-### Filebase S3 SigV4 Upload (IPFS Auto-Pin)
-```js
-// _filebase_upload.js — Upload to Filebase → auto IPFS pin
-const crypto = require('crypto');
-const AK = process.env.FILEBASE_ACCESS_KEY;
-const SK = process.env.FILEBASE_SECRET_KEY;
-const HOST = 's3.filebase.com';
-const BUCKET = 'qnfo-archive'; // Use existing bucket or create in dashboard
-
-function hmac(k, d) { return crypto.createHmac('sha256', k).update(d).digest(); }
-
-async function s3Put(key, body, contentType) {
-  const payloadHash = crypto.createHash('sha256').update(body).digest('hex');
-  const amzDate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
-  const dateStamp = amzDate.substring(0, 8);
-  const path = '/' + BUCKET + '/' + key;
-  
-  // AWS SigV4 canonical request
-  const canonicalReq = [
-    'PUT', path, '',
-    'content-type:' + (contentType || 'text/plain'),
-    'host:' + HOST,
-    'x-amz-content-sha256:' + payloadHash,
-    'x-amz-date:' + amzDate + '\n',
-    'content-type;host;x-amz-content-sha256;x-amz-date',
-    payloadHash
-  ].join('\n');
-  
-  // String to sign
-  const credentialScope = dateStamp + '/us-east-1/s3/aws4_request';
-  const stringToSign = [
-    'AWS4-HMAC-SHA256', amzDate, credentialScope,
-    crypto.createHash('sha256').update(canonicalReq).digest('hex')
-  ].join('\n');
-  
-  // Derive signing key
-  const kDate = hmac('AWS4' + SK, dateStamp);
-  const kRegion = hmac(kDate, 'us-east-1');
-  const kService = hmac(kRegion, 's3');
-  const kSigning = hmac(kService, 'aws4_request');
-  const signature = hmac(kSigning, stringToSign).toString('hex');
-  
-  const auth = 'AWS4-HMAC-SHA256 Credential=' + AK + '/' + credentialScope +
-    ',SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date,Signature=' + signature;
-  
-  const r = await fetch('https://' + HOST + path, {
-    method: 'PUT',
-    headers: { Authorization: auth, 'Content-Type': contentType,
-      Host: HOST, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate },
-    body: body
-  });
-  // Filebase auto-pins all S3 objects to IPFS -- BUT this is ASYNCHRONOUS.
-  // RED-TEAM FIX (2026-07-20, verified live): there is NO x-ipfs-cid header
-  // on the PUT response at all. The real CID only appears later via a HEAD
-  // request's x-amz-meta-cid header, once x-amz-meta-pinning-status reaches
-  // "pinned" (observed latency ~5-10s). See scripts/filebase-upload.js
-  // s3PutAndWaitForCid() for the full HEAD-polling implementation -- do not
-  // read result.ipfsCid off the PUT response, it will always be undefined.
-  return { status: r.status, ok: r.ok };
-}
+# WRONG (v3 and earlier, removed in v4):
+npx wrangler r2 object get qnfo-releases "path/to/file.md" --remote --pipe  # FAILS
 ```
+The `r2 object list` subcommand was removed in wrangler v4. Use the REST API for listings:
+```bash
+curl -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"   "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/r2/buckets/{BUCKET}/objects?prefix={PREFIX}"
+```
+
+
 
 ### Worker Deployment (via REST API)
 ```js
@@ -189,6 +152,18 @@ await fetch('https://api.cloudflare.com/client/v4/zones/' + ZONE + '/dns_records
   headers: { 'Authorization': 'Bearer ' + process.env.CLOUDFLARE_API_TOKEN, 'Content-Type': 'application/json' },
   body: JSON.stringify({ type: 'TXT', name: '_dnslink.' + SUB, content: 'dnslink=/ipfs/' + CID, ttl: 1 })
 });
+```
+
+### Worker Routes API (zone-level, NOT account-level)
+
+**FIXED (v3.2):** Workers routes for custom domains use the **zone-level** API endpoint,
+not the account-level endpoint. The old docs incorrectly referenced `/accounts/{id}/workers/routes`.
+
+```js
+// CORRECT: zone-level routes endpoint
+GET  https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/workers/routes  // List routes
+POST https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/workers/routes  // Create route
+// WRONG: account-level endpoint returns "Could not route to .../workers/routes"
 ```
 
 ### Worker Route Creation Script
@@ -298,59 +273,6 @@ Pulumi -> Pulumi provider
 Terraform -> Terraform provider
 REST API -> Cloudflare API
 ```
-
----
-
-## R2→IPFS Bridge (4-D Integration)
-
-**PINATA REMOVED (2026-07-20, free quota exceeded, account blocked).** The
-R2→IPFS bridge now routes through **Filebase** (free 5GB S3-compatible
-bucket, no request-volume limit, auto-pins every object on write) as the
-PRIMARY pinner. This eliminates the extra `pinByHash` API hop entirely —
-writing to Filebase via S3 `PUT` auto-pins in one step.
-
-### Architecture
-```
-R2 Write Event ──► qnfo-archive Worker (queue) ──► Filebase S3 PUT ──► IPFS Network (auto-pin)
-                         │                              │
-                         │                        (fallback: Lighthouse free Filecoin tier)
-  Cloudflare IPFS Gateway ◄── DNSLink ◄── _dnslink TXT
-  (CDN-accelerated edge delivery, free/unlimited)
-```
-
-### qnfo-archive Worker Extension (Filebase, replaces Pinata pinByHash)
-```js
-// On R2 archival event, auto-pin to IPFS via Filebase S3-compatible PUT.
-// Filebase pins on write — no separate "pin" API call needed, BUT the pin
-// itself is asynchronous. Requires: FILEBASE_ACCESS_KEY, FILEBASE_SECRET_KEY
-// (AWS SigV4 auth against s3.filebase.com). See scripts/filebase-upload.js
-// in this skill for the full SigV4 helper (s3PutAndWaitForCid).
-//
-// RED-TEAM FIX (2026-07-20, verified live): the PUT response has NO
-// x-ipfs-cid header (or any IPFS header at all). The CID only becomes
-// available on a subsequent HEAD request via x-amz-meta-cid, once
-// x-amz-meta-pinning-status reaches "pinned" (~5-10s observed latency).
-// A Worker calling this on a queue consumer should PUT immediately, then
-// either (a) poll HEAD in the same invocation with a short delay/retry
-// loop, or (b) PUT now and defer the CID lookup to a later cron/queue pass
-// that HEADs the object and backfills D1 ipfs_cid once pinned.
-async function pinToIPFSViaFilebase(env, key, body, contentType, metadata) {
-  const putResult = await s3Put(env.FILEBASE_BUCKET || 'qnfo-archive', key, body, contentType);
-  if (!putResult.ok) {
-    throw new Error('Filebase PUT failed: HTTP ' + putResult.status + ' — do NOT fall back to Pinata (quota exceeded, blocked). Try Lighthouse instead.');
-  }
-  // CID is NOT available yet. Return null and let the caller poll s3Head()
-  // later (do not block the queue consumer waiting synchronously for pinning).
-  return null;
-}
-```
-
-### Multi-Service Pinning Credentials
-| Service | Credential | Purpose |
-|:--------|:-----------|:--------|
-| Filebase (PRIMARY) | `FILEBASE_ACCESS_KEY` + `FILEBASE_SECRET_KEY` | Free 5GB, no request-volume limit, S3→IPFS auto-pinning |
-| Lighthouse (SECONDARY) | `LIGHTHOUSE_API_KEY` | Free-tier Filecoin storage deals, no CC required |
-| ~~Pinata~~ | ~~`PINATA_API_KEY` + `PINATA_API_SECRET`~~ | **REMOVED 2026-07-20 — free quota exceeded, account blocked. Do not use, do not add credentials back.** |
 
 ---
 
@@ -554,10 +476,10 @@ CNAME pointing to non-existent Worker.
 | Duplicated Workers with same bindings | Consolidate into gateway Worker per Consolidation Pattern |
 | Publishing without DNSLink | Every publication subdomain must have `_dnslink` TXT record |
 | Single copy of critical assets | 4-D: Distributed, Durable, Discoverable, Duplicated |
-| Skipping Arweave/Filecoin for permanence | Permanent blockchain storage for critical deliverables |
+| Single cloud copy of critical assets | Core stack: R2 (canonical) + GitHub (replicated) + Zenodo (archival). At least 2 independent copies for all deliverables. |
 | Unauthenticated `/debug/*` routes bound to production D1 (DROP/CREATE/INSERT) | NEVER ship debug/init/seed endpoints to production Workers. Root cause of 2026-07-18 living-paper 616→3 row data loss (`qnfo-memory-mcp /debug/init`). Gate: any route containing DROP/CREATE TABLE/schema-reset logic requires auth header + non-production-only compatibility flag, or must not exist post-deploy. |
 | Empty backup bucket with no verification | Add a scheduled backup Worker cron (`runBackup`) writing to R2 on day 1 of any new production D1 database. Verify object count > 0 within first 24h, not just bucket existence. |
 | Assuming infra-audit narrative (handoff notes) over live D1 row counts | ALWAYS query live D1 `SELECT COUNT(*)` before trusting audit_sessions.notes — narrative logs can be stale or describe a different table than what actually shipped. |
 | Vectorize binding declared in wrangler config but never called in fetch handler (dead binding masked by LIKE/stub fallback) | Read full Worker source and cross-reference every declared binding name against actual usage in handler code. Found 2026-07-18 in both `qnfo-ipatent` (`/api/search` literal stub despite populated 1024-dim `DISCLOSURES_VZ` index) and `qnfo-qwav` (`/ask` used SQL `LIKE` despite unused `QWAV_VZ` binding to 768-dim `qwav-research-v2` index). Fix: embed query via Workers AI (matching the index's original embedding model), `.query()` the Vectorize index, keep LIKE only as a fallback when AI/Vectorize is unavailable. |
 | Restoring a production D1 database via Time Travel without first exporting a full row/table snapshot of ANY concurrent writes to R2 | Before any Time Travel restore, run `SELECT *` (explicit column list, avoid FTS5 tables which break `d1 export`) and upload the JSON to R2 as a safety net. Verified 2026-07-18: C-01 living-paper restore preceded by snapshot to `qnfo-backups/living-paper/pre-restore-snapshot-*.json`; post-restore diff confirmed zero data loss. |
-| Using Pinata for R2→IPFS pinning (REMOVED 2026-07-20) | Pinata's free quota was exceeded and the account is blocked. Use Filebase (PRIMARY, free 5GB, auto-pins on S3 PUT) → Lighthouse (SECONDARY, free Filecoin tier). Never add `PINATA_API_KEY`/`PINATA_API_SECRET` back to Worker env vars or wrangler secrets. |
+| Using external IPFS pinning services (REMOVED v3.2) | All external pinning (Pinata, Filebase, Lighthouse, Arweave) deprecated. Core stack: R2+D1+Workers+DNS. DNSLink is optional. |
