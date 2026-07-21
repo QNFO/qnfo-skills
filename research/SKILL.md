@@ -1067,6 +1067,62 @@ Auth:    Authorization: Bearer <token>
 Method:  POST with JSON GraphQL body
 ```
 
+#### Buffer 401 Diagnostic Protocol (MANDATORY — v2.12, 2026-07-21)
+
+**INCIDENT (2026-07-21):** A session diagnosed a working Buffer Personal Access
+Token (43 chars, suffix `14Ky`, all 7 scopes active, created 2026-06-21) as
+"stale/expired" after a single `urllib.request` call returned HTTP 401, delaying
+dissemination by an entire session. The token was NEVER the problem — a transient
+or request-format issue caused the 401, and the endpoint `https://api.buffer.com`
+with the GraphQL query below works perfectly. **The token was subsequently
+confirmed live in the SAME session with the SAME endpoint, SAME token value,
+and SAME query — the original 401 was a false alarm.**
+
+**THE RULE: NEVER diagnose a Buffer 401 as "stale token" without running
+the endpoint-discovery diagnostic FIRST. A single 401 from a single call
+is INSUFFICIENT EVIDENCE to declare a token dead.**
+
+**Diagnostic script (write to `_buffer_diag.py`, never inline per kaizen B1):**
+
+```python
+import urllib.request, json, os
+TOKEN = os.environ.get('BUFFER_TOKEN')  # NEVER hand-copy
+
+endpoints = [
+    ('GraphQL api.buffer.com', 'POST',
+     'https://api.buffer.com',
+     json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
+     {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
+    ('GraphQL api.buffer.com/graphql', 'POST',
+     'https://api.buffer.com/graphql',
+     json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
+     {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
+]
+for label, method, url, body, headers in endpoints:
+    try:
+        req = urllib.request.Request(url, data=body, headers=headers, method=method)
+        resp = urllib.request.urlopen(req, timeout=15)
+        print(f'OK {label}: HTTP {resp.getcode()}')
+    except urllib.error.HTTPError as e:
+        print(f'FAIL {label}: HTTP {e.code}')
+    except Exception as e:
+        print(f'FAIL {label}: {e}')
+```
+
+**Decision tree:**
+- GraphQL at `api.buffer.com` returns 200 → token works, proceed with posting
+- GraphQL at `api.buffer.com` returns 401 → try `api.buffer.com/graphql`
+- Both GraphQL endpoints return 401 → token is genuinely stale, regenerate
+- **Never try REST endpoints** (`api.bufferapp.com/1/*`) for diagnosis —
+  Buffer Personal Access Tokens are GraphQL-only; REST returns 401
+  `"Public API tokens are not accepted for REST API access"` even for
+  valid tokens, producing a FALSE diagnostic
+
+**This protocol MUST be run before any "stale token" diagnosis.** If it
+passes, and the posting attempt still fails with 401, the problem is with
+the request format (GraphQL query syntax, escaping, channel ID, text length)
+— NOT the token.
+
 #### Channel Discovery (MANDATORY — run before any post)
 
 Never hardcode channel IDs. Always discover them live:
@@ -1194,6 +1250,7 @@ resp = json.loads(urllib.request.urlopen(req).read())
 | Assuming `post` field available without fragment | Always use `... on PostActionSuccess { post { id status } }` |
 | Single token location | 4-5 redundant locations |
 | Diagnosing 404 as "token dead" | 404 from legacy endpoint = endpoint deprecated, not token |
+| Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol — test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
 | Twitter text > 280 chars → silent empty response | Include `... on InvalidInputError { message }` to catch |
 
 #### Post Format

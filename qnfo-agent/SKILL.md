@@ -233,6 +233,7 @@ the old behavior was correct.
 | KIF-12 | Third-party IPFS pinners (Pinata quota-blocked, Filebase/Lighthouse fragile) caused repeated pin failures | `research`/`cloudflare`: deprecated in favor of R2 + CIDv1 + Cloudflare DNSLink only | commit 37cbe40 |
 | KIF-13 | Trigger table covered only 8/24 installed skills — 16 skills unreachable by autonomous discovery | This doc, §"Full 24-Skill Trigger Table" | v3.37, this doc |
 | KIF-14 | Skill deploy/sync claimed "done" from script exit code 0 alone, without independently re-reading disk/GitHub/R2 | `system` "Tool-Call Execution Mandate"; this doc §9.11 Rule 14 | v2.1 (system), this doc |
+| KIF-15 | Buffer working token misdiagnosed as "stale/expired" from a single HTTP 401 without endpoint-discovery diagnostic — token was fine, same endpoint/query worked moments later | `research` §Buffer 401 Diagnostic Protocol (v2.12) — run diagnostic BEFORE declaring token dead; single 401 = INSUFFICIENT EVIDENCE | v3.38, 2026-07-21 |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
