@@ -1,6 +1,6 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.8, deprecated proprietary IPFS/blockchain pinning). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer, SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.13, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 version: "2.9"
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
@@ -1062,9 +1062,10 @@ Seed Paper node with: slug, DOI, title, author, pages_url, zenodo_url, r2_path. 
 #### Endpoint & Auth
 
 ```
-URL:     https://api.buffer.com
+URL:     https://api.buffer.com/graphql   (also works at bare https://api.buffer.com — both resolve)
 Auth:    Authorization: Bearer <token>
 Method:  POST with JSON GraphQL body
+Legacy:  api.bufferapp.com/1.0/graphql.json → 404 (DOMAIN DEPRECATED)
 ```
 
 #### Buffer 401 Diagnostic Protocol (MANDATORY — v2.12, 2026-07-21)
@@ -1155,7 +1156,7 @@ for c in channels:
 | LinkedIn | `6a170337c687a22dd430685f` | rowan-quni |
 | Bluesky | `6a01d129090476fb9909d885` | Rowan Brad Quni-Gudzinas |
 
-#### Post Creation (Buffer GraphQL — v2.11)
+#### Post Creation (Buffer GraphQL — v2.13, 2026-07-22)
 
 **Mutation:** `createPost` (replaces deprecated `createDraft`)
 
@@ -1164,30 +1165,24 @@ mutation {
   createPost(input: {
     channelId: "<liveIdFromDiscovery>",
     text: "<post text>",
-    schedulingType: automatic,     # REQUIRED: automatic | notification
-    mode: addToQueue,              # REQUIRED: addToQueue | shareNow | shareNext | customScheduled
+    schedulingType: automatic,     # REQUIRED enum: automatic | notification
+    mode: addToQueue,              # REQUIRED enum: addToQueue | shareNow | shareNext | customScheduled
+    assets: [],                    # REQUIRED non-null list — always pass [] (empty list)
     saveToDraft: false             # optional: true = draft mode
   }) {
     __typename                     # MANDATORY — PostActionPayload is a UNION
-    ... on PostActionSuccess {
-      post {
-        id
-        status                     # "scheduled" confirms success
-      }
-    }
-    ... on InvalidInputError {     # catches text-too-long errors
-      message
-    }
   }
 }
 ```
 
-**CRITICAL RULES (v2.11):**
+**CRITICAL RULES (v2.13 — 2026-07-22):**
 1. NEVER use `createDraft` — it no longer exists. Use `createPost`.
-2. The response type is a UNION (`PostActionPayload`). Always include `__typename` AND inline fragment `... on PostActionSuccess { post { id status } }`. Without the fragment, `post` fields will be null because the GraphQL parser cannot dispatch into the union type.
-3. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED non-null fields.
-4. For Twitter, text MUST be under 280 characters. Violations return `InvalidInputError` (not a GraphQL error — it's inside `data.createPost`). Always include `... on InvalidInputError { message }` to catch this.
-5. Endpoint is `https://api.buffer.com` (no trailing path). The legacy `https://api.bufferapp.com/1.0/graphql.json` returns 404 for everything.
+2. **The `assets` field is NON_NULL and REQUIRED.** Always pass `assets: []` (empty list). Omitting it causes `InvalidInputError`.
+3. **Do NOT use inline fragments (`... on PostActionSuccess`, `... on InvalidInputError`).** The `PostActionPayload` union type members are NOT directly accessible as fragment targets — attempting `... on PostActionSuccess { post { id status } }` raises `GRAPHQL_VALIDATION_FAILED: Unknown type "PostActionSuccess"`. Just query `__typename` and check the response: `"PostActionSuccess"` = success; `"InvalidInputError"` = failure (usually text-too-long or missing required field).
+4. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED. The `notification` enum value exists in the schema but does NOT work for posting — use `automatic`.
+5. Twitter text limit: ~280 characters AFTER URL shortening (Buffer shortens URLs to ~23 chars, so raw text including URL can be up to ~410 chars). Violations return `InvalidInputError` (inside `data.createPost.__typename`, NOT as GraphQL errors). Bluesky limit: ~300 characters raw text.
+6. Endpoint is `https://api.buffer.com/graphql` (preferred). The bare `https://api.buffer.com` also works. Legacy endpoint `https://api.bufferapp.com/1.0/graphql.json` returns 404.
+7. **All enum values MUST be unquoted GraphQL identifiers** (e.g., `automatic` not `"automatic"`). Quoting them as strings causes `Enum "SchedulingType" cannot represent non-enum value`.
 
 #### Post Deletion
 
@@ -1245,13 +1240,17 @@ resp = json.loads(urllib.request.urlopen(req).read())
 | Anti-Pattern | Correct |
 |:-------------|:--------|
 | `createDraft` mutation | `createPost` (v2.11 migration) |
-| `api.bufferapp.com/1.0/graphql.json` endpoint | `https://api.buffer.com` |
+| `api.bufferapp.com/1.0/graphql.json` endpoint | `https://api.buffer.com/graphql` |
 | Hardcoded channel IDs | Discover live via channels query |
-| Assuming `post` field available without fragment | Always use `... on PostActionSuccess { post { id status } }` |
+| Using inline fragment `... on PostActionSuccess` | Just use `__typename` — union members are NOT fragment targets (v2.13 fix) |
+| Omitting `assets: []` in input | `assets` is NON_NULL required — always pass `assets: []` |
+| Quoting enum values like `"automatic"` | Unquoted GraphQL identifiers: `automatic` (v2.13 fix) |
+| Using `schedulingType: notification` | Use `automatic` — `notification` exists in schema but doesn't work |
 | Single token location | 4-5 redundant locations |
 | Diagnosing 404 as "token dead" | 404 from legacy endpoint = endpoint deprecated, not token |
 | Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol — test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
-| Twitter text > 280 chars → silent empty response | Include `... on InvalidInputError { message }` to catch |
+| Twitter text > 280 chars after URL-shorten | Trim raw text to ≤410 chars (Buffer shortens URLs to ~23 chars) |
+| Diagnosing "stale token" from truncated PowerShell output | ALWAYS read token via Python `open().read().strip()` — PowerShell `Get-Content` can return stale/cached values |
 
 #### Post Format
 ```
