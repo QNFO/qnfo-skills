@@ -1050,83 +1050,158 @@ Seed Paper node with: slug, DOI, title, author, pages_url, zenodo_url, r2_path. 
 5. **Structured data** — Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
 6. **Open Graph** — `og:title`, `og:description`, `og:type` (article), `og:url`
 
-### Buffer Social Media (Phase 5 of LRAP)
+### Buffer Social Media (v2.11 — COMPLETE REWRITE, 2026-07-21)
 
-#### Channel Mapping
+> **v2.11 BUFFER MIGRATION:** The legacy `api.bufferapp.com/1.0/graphql.json` endpoint
+> and `createDraft` mutation are **DEPRECATED** as of 2026-07-21. All Buffer API calls
+> now use `https://api.buffer.com` with the `createPost` mutation. Verified live
+> with 3-channel posting (Twitter, LinkedIn, Bluesky) for the Informational Universe
+> paper. Old channel IDs are stale — ALWAYS discover live IDs via the channels query
+> below; never hardcode them.
+
+#### Endpoint & Auth
+
+```
+URL:     https://api.buffer.com
+Auth:    Authorization: Bearer <token>
+Method:  POST with JSON GraphQL body
+```
+
+#### Channel Discovery (MANDATORY — run before any post)
+
+Never hardcode channel IDs. Always discover them live:
+
+```python
+import json, urllib.request
+
+TOKEN = os.environ.get('BUFFER_TOKEN')
+HEADERS = {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}
+
+# Step 1: Get organization ID
+query = {"query": "query { account { organizations { id } } }"}
+req = urllib.request.Request('https://api.buffer.com', data=json.dumps(query).encode(), headers=HEADERS)
+org_id = json.loads(urllib.request.urlopen(req).read())['data']['account']['organizations'][0]['id']
+
+# Step 2: Get channels
+query = {"query": f'query {{ channels(input: {{ organizationId: "{org_id}" }}) {{ id name service }} }}'}
+req = urllib.request.Request('https://api.buffer.com', data=json.dumps(query).encode(), headers=HEADERS)
+channels = json.loads(urllib.request.urlopen(req).read())['data']['channels']
+
+for c in channels:
+    print(f"  {c['service']}: {c['name']} -> {c['id']}")
+```
+
+**Verified live channel IDs (2026-07-21 — ALWAYS re-discover, do not trust this table):**
+
 | Platform | channelId | Profile |
 |:---------|:----------|:--------|
-| Twitter/X | `674ca9af22f5c1c91afb6c5c` | @QNFOResearch |
-| LinkedIn | `674ca8c822f5c1c91afb6c58` | QNFO Research |
-| Bluesky | `674ca9d022f5c1c91afb6c5e` | @qnfo.bsky.social |
+| Twitter/X | `685cd2c2acfb098c697a8786` | @RowanQuni |
+| LinkedIn | `6a170337c687a22dd430685f` | rowan-quni |
+| Bluesky | `6a01d129090476fb9909d885` | Rowan Brad Quni-Gudzinas |
 
-#### Post Creation (Buffer GraphQL)
+#### Post Creation (Buffer GraphQL — v2.11)
+
+**Mutation:** `createPost` (replaces deprecated `createDraft`)
+
 ```graphql
 mutation {
-  createDraft(
-    profileId: "<channelId>",
-    day: "<YYYY-MM-DD>",
+  createPost(input: {
+    channelId: "<liveIdFromDiscovery>",
     text: "<post text>",
-    media: { photo: ["<image_url>"] },
-    status: SCHEDULED,
-    now: false,
-    utc: false
-  ) {
-    _id
-    text
-    status
-    scheduledAt
+    schedulingType: automatic,     # REQUIRED: automatic | notification
+    mode: addToQueue,              # REQUIRED: addToQueue | shareNow | shareNext | customScheduled
+    saveToDraft: false             # optional: true = draft mode
+  }) {
+    __typename                     # MANDATORY — PostActionPayload is a UNION
+    ... on PostActionSuccess {
+      post {
+        id
+        status                     # "scheduled" confirms success
+      }
+    }
+    ... on InvalidInputError {     # catches text-too-long errors
+      message
+    }
   }
 }
 ```
 
-**HARD RULES:**
-1. Use INLINE parameters (not $var format) -- Buffer silently drops variables
-2. `status: SCHEDULED` for queued posts, `status: APPROVED` for immediate
-3. `now: false, utc: false` for scheduled posts
-4. Endpoint: `https://api.bufferapp.com/1.0/graphql.json` (confirmed live 2026-07-21)
-5. Authenticate: `Authorization: Bearer <token>` header
+**CRITICAL RULES (v2.11):**
+1. NEVER use `createDraft` — it no longer exists. Use `createPost`.
+2. The response type is a UNION (`PostActionPayload`). Always include `__typename` AND inline fragment `... on PostActionSuccess { post { id status } }`. Without the fragment, `post` fields will be null because the GraphQL parser cannot dispatch into the union type.
+3. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED non-null fields.
+4. For Twitter, text MUST be under 280 characters. Violations return `InvalidInputError` (not a GraphQL error — it's inside `data.createPost`). Always include `... on InvalidInputError { message }` to catch this.
+5. Endpoint is `https://api.buffer.com` (no trailing path). The legacy `https://api.bufferapp.com/1.0/graphql.json` returns 404 for everything.
 
-**Token Protocol (kaizen fix 2026-07-21 -- DO NOT hardcode a token value in
-this or any skill file; the value below was wrong for an unknown period and
-caused a multi-hour debugging session):**
+#### Post Deletion
+
+```graphql
+mutation {
+  deletePost(input: { id: "<postId>" }) {
+    __typename
+    ... on DeletePostSuccess { id }
+    ... on VoidMutationError { message }
+  }
+}
+```
+
+#### Post Verification (Anti-Phantom Gate)
+
+After posting, verify independently:
 
 ```python
-import os
-TOKEN = open(os.path.expanduser('~/buffer/token')).read().strip()
-```
-```powershell
-$env:BUFFER_TOKEN  # if set as an environment variable, prefer this
-# or
-Get-Content "$env:USERPROFILE\buffer\token" -Raw
+# Verify via channels list (no direct post-by-ID query confirmed available)
+query = {"query": f"""query {{
+  channels(input: {{ organizationId: "{org_id}" }}) {{
+    id name
+    posts(input: {{ status: SCHEDULED, limit: 3 }}) {{
+      id text status
+    }}
+  }}
+}}"""}
 ```
 
-- **Canonical token location:** `%USERPROFILE%\buffer\token` (single file,
-  no other location -- delete `.buffer_token`, `buffer\.token`, or any
-  duplicate if found; multiple stale copies is exactly how this incident
-  happened).
-- **BEFORE sending any post, verify the token is live** with a lightweight
-  mutation/introspection call (Buffer's GraphQL schema has no simple `user`
-  query -- use a `createDraft` call and check for a valid `_id` in the
-  response, or a deliberately-malformed query and confirm the error is a
-  GraphQL validation error, not an auth error, to distinguish "token dead"
-  from "query malformed").
-- **A `404 {"error":"The endpoint you requested was not found."}` on a
-  `query { drafts { ... } }`-style call is NOT a broken token** -- Buffer's
-  GraphQL schema (as of 2026-07) does not expose a bulk `drafts` list query
-  on this endpoint. Do not use this as a verification method. Use the
-  `createDraft` mutation's own response (`status: SCHEDULED` present) as
-  the verification signal instead, per the Anti-Phantom Gate.
-- If `createDraft` itself returns 401/403, the token is genuinely dead --
-  regenerate at buffer.com (Settings -> Access Tokens), overwrite
-  `%USERPROFILE%\buffer\token` with the new value, and delete any other
-  copy immediately so there is only ever ONE source of truth.
+#### Token Protocol (v2.11 — REDUNDANT STORAGE MANDATORY)
+
+Token is a Buffer Personal Access Token, 43 characters, suffix `14Ky`.
+
+**Required storage locations (ALL 4-5 MUST exist, never rely on one):**
+1. `%USERPROFILE%\buffer\token` — primary file
+2. `%USERPROFILE%\.buffer_token` — fallback file
+3. `%USERPROFILE%\keys.json` — `buffer_token` key in JSON doc
+4. Environment variable `BUFFER_TOKEN` (session)
+5. Environment variable `BUFFER_TOKEN` (user — set via `[Environment]::SetEnvironmentVariable`)
+
+**Token format:** 43 chars, random alphanumeric + underscores, suffix `14Ky`.
+
+**Token verification (MANDATORY before any post):**
+```python
+query = {"query": "query { account { organizations { id } } }"}
+req = urllib.request.Request('https://api.buffer.com', data=json.dumps(query).encode(), headers=HEADERS)
+resp = json.loads(urllib.request.urlopen(req).read())
+# HTTP 200 + valid org_id = token works. 403/401 = dead token.
+```
+
+**Token regeneration:** Go to https://buffer.com → Settings → API Access Tokens. Overwrite ALL 4-5 storage locations with the new value immediately.
+
+#### Red-Team / Anti-Patterns for Buffer
+
+| Anti-Pattern | Correct |
+|:-------------|:--------|
+| `createDraft` mutation | `createPost` (v2.11 migration) |
+| `api.bufferapp.com/1.0/graphql.json` endpoint | `https://api.buffer.com` |
+| Hardcoded channel IDs | Discover live via channels query |
+| Assuming `post` field available without fragment | Always use `... on PostActionSuccess { post { id status } }` |
+| Single token location | 4-5 redundant locations |
+| Diagnosing 404 as "token dead" | 404 from legacy endpoint = endpoint deprecated, not token |
+| Twitter text > 280 chars → silent empty response | Include `... on InvalidInputError { message }` to catch |
 
 #### Post Format
 ```
 Title: <paper title>
 DOI: <doi>
+Paper URL: <papers.qnfo.org/papers/slug/>
 Abstract: <1-2 sentence summary>
-URL: <papers.qnfo.org/papers/slug/>
 Hashtags: #QNFO #Research <domain-specific tags>
 ```
 
