@@ -10,7 +10,18 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.35 (Safety-Net Core)
+# QNFO-AGENT — v3.36 (Safety-Net Core)
+
+> **v3.36 UPDATE (2026-07-21, Zenodo credential incident):** Added the
+> "manually retyping/reconstructing a truncated API token" anti-pattern
+> after a session spent ~15 tool calls misdiagnosing a Zenodo 403 as
+> "token dead / read-only scope" when the actual cause was a one-character
+> transcription error from copying a truncated `Get-ChildItem env:`
+> display. Rule: ALWAYS reference `$env:TOKEN_NAME` / `os.environ.get(...)`
+> directly in code; NEVER hand-copy a token value shown in truncated
+> form (`prefix...suffix`). See `research` skill's new Zenodo Credential
+> Protocol section and `scripts/zenodo-token-check.py` for the general
+> pattern (applies to any API token, not just Zenodo).
 
 > **v3.35 UPDATE (2026-07-20, kaizen audit):** Extended Publication Language Gate with credential-leak patterns (cfat_/ghp_/sk-/AKIA/Bearer). Added PowerShell `&&`/`curl`-alias/`&`-in-URL anti-patterns. Cross-references `research` skill's new `scripts/credential-scan.py`, `scripts/unicode-latex-preprocess.py`, `scripts/check-pdf.py`.
 
@@ -516,6 +527,7 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | `curl` on Windows PowerShell | Aliased to `Invoke-WebRequest` (different flags, `-s` unrecognized). Use `curl.exe` explicitly, or `python -c 'import urllib.request; ...'`. |
 | `&` in a URL query string passed to native `exec` | PowerShell's parser reserves bare `&` outside quotes. Wrap the full URL in a quoted string, or use `cmd /c curl "url"`, or URL-encode `&` as `%26` if the receiving server tolerates it. |
 | Hardcoded API tokens in ephemeral `_*.py` scripts reaching `git commit` | Run the `research` skill's `scripts/credential-scan.py --staged` before every commit; add `_*.py`/`.env`/`*.token` to `.gitignore` from project Phase 0. |
+| Manually retyping/reconstructing an API token from a truncated terminal display (e.g. `Get-ChildItem env:` showing `TOKEN=abc123...`) instead of referencing the environment variable directly | ALWAYS use `os.environ.get('TOKEN_NAME')` (Python) or `$env:TOKEN_NAME` (PowerShell) directly in code. A hand-copied truncated-and-guessed token produces the SAME generic 403 as a real scope problem — indistinguishable by symptom, causing many wasted diagnostic tool calls. If a 403 occurs, run `research` skill's `scripts/zenodo-token-check.py` (or an equivalent read/write/publish probe) BEFORE concluding the token itself lacks scope. |
 
 ---
 

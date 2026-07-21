@@ -10,7 +10,21 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.8 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.9 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.9 UPDATE (2026-07-21, Zenodo credential incident):** Added the
+> **Zenodo Credential Protocol** section (in Phase 5, immediately before
+> "Zenodo Upload") after a session diagnosed ~15 false "token dead /
+> read-only scope" 403s that were actually caused by manually
+> retyping/reconstructing a token from a truncated terminal display,
+> introducing a one-character transcription error invisible by symptom.
+> New scripts: `scripts/zenodo-token-check.py` (run FIRST on any Zenodo
+> 403 -- distinguishes real scope problems from credential-transcription
+> errors in one call), `scripts/zenodo-create-upload.py` and
+> `scripts/zenodo-metadata-publish.py` (canonical create/upload/
+> metadata/publish pipeline, replacing ad hoc inline scripts, with
+> built-in live-DOI verification). Required token scopes documented:
+> `deposit:write`, `deposit:actions`, `user:email`.
 
 > **v2.7 UPDATE (2026-07-20, Pinata quota exceeded):** Pinata IPFS pinning
 > REMOVED from all publication steps — the free-tier account hit its quota
@@ -644,6 +658,89 @@ DELETE https://api.osf.io/v2/nodes/{node_id}/
 # List all nodes (check for orphans)
 GET https://api.osf.io/v2/users/me/nodes/
 ```
+
+### Zenodo Credential Protocol (MANDATORY — read before ANY Zenodo API call)
+
+**Incident record (2026-07-20/21):** A session spent an entire multi-hour
+block diagnosing repeated `{"status":403,"message":"Permission denied."}`
+errors as "the token has read-only scope" / "the token is dead" across
+~15 different curl/PowerShell/Python attempts, tried sandbox endpoints,
+query-param auth, multipart uploads, and different Content-Type headers —
+none of which was the actual problem. The real root cause: the token had
+been read from a **truncated terminal display** (`Get-ChildItem env:`
+showing `ZENODO_TOKEN = BkLOVH2EDBcc...` with only the prefix visible) and
+then **manually retyped/reconstructed** by guessing the suffix from a
+separate truncated output, producing a 59-character string that was
+subtly wrong versus the real 60-character token. Zenodo returns the exact
+same generic 403 for "wrong token" as for "right token, wrong scope" —
+the two failure modes are **indistinguishable by symptom alone**.
+
+**THE RULE:** Never hardcode, retype, or reconstruct a Zenodo (or any)
+API token from a truncated/partial display. Always reference the live
+environment variable directly in code:
+
+```python
+import os
+TOKEN = os.environ.get('ZENODO_TOKEN')   # Python — correct
+```
+```powershell
+$env:ZENODO_TOKEN                         # PowerShell — correct, pass through directly
+```
+
+**NEVER do this:**
+```python
+TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g'  # WRONG — hand-copied from truncated output
+```
+
+If a token must be inspected for debugging, print ONLY its length
+(`len(token)`) and confirm that length matches expectations — never print
+the full value (credential-leak risk per `qnfo-agent` §Publication
+Language Gate) and never re-derive the value from a partial print.
+
+**Diagnostic script (run FIRST on any Zenodo 403):**
+```bash
+python <research-skill-path>/scripts/zenodo-token-check.py
+```
+This tests read (`GET /deposit/depositions`), write (`POST` a probe
+deposit), and metadata-write (`PUT` on that probe), then cleans up the
+probe deposit. It distinguishes "token has no write scope — generate a
+new one with `deposit:write` + `deposit:actions` scopes" from "token
+works fine, the problem is elsewhere in this call" — collapsing what was
+previously ~15 exploratory tool calls into one.
+
+**Required token scopes** (generate at
+https://zenodo.org/account/settings/applications/):
+
+| Scope | Purpose |
+|---|---|
+| `deposit:write` | Allow upload (but not publishing) |
+| `deposit:actions` | Allow publishing of uploads |
+| `user:email` | Allow access to email address (read-only) |
+
+**Publish pipeline scripts** (replace ad hoc inline `python -c` snippets
+or hand-written one-off scripts — see kaizen fix B1 on why inline
+multi-line Python via `-c` is itself an anti-pattern on Windows):
+```bash
+python <research-skill-path>/scripts/zenodo-create-upload.py <bundle.zip> [--newversion <deposit_id>]
+python <research-skill-path>/scripts/zenodo-metadata-publish.py --metadata-file <metadata.json> [--dry-run]
+```
+`zenodo-create-upload.py` handles both "brand-new deposit" and
+"new version of an existing concept" (via `--newversion`, using the same
+GET-verify-before-`actions/newversion` pattern as the C2 version-chain fix
+below). `zenodo-metadata-publish.py` sets metadata, publishes, and
+verifies the DOI resolves live via `doi.org` + `zenodo.org/api/records`
+before declaring success — never trust the tool's immediate return value
+alone (see the "General principle" memory: verify server-side state
+independently for every remote publish action).
+
+**Metadata gotcha:** Zenodo's REST API requires an `upload_type` (or
+`resource_type`) field in metadata — omitting it produces
+`HTTP 400 {"errors":[{"field":"metadata.resource_type","messages":["Missing data for required field."]}]}`
+on the `actions/publish` call specifically (metadata PUT itself succeeds
+with 200, making this easy to miss until the publish step). Common
+values: `publication`, `dataset`, `software`, `poster`, `presentation`.
+
+---
 
 ### Zenodo Upload (with retry + versioning)
 
