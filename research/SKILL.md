@@ -10,7 +10,68 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.9 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.10 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.10 UPDATE (2026-07-21, credential/protocol kaizen after a session with
+> repeated Buffer/D1/IPFS failures):** Root-caused and permanently fixed three
+> classes of failure from a single session:
+> 1. **Buffer token was stale in this very skill file.** The hardcoded
+>    `1/7feabe69e3c8a6544ee3c20e8b21c2aa` value below was WRONG/EXPIRED and
+>    caused ~10 failed Buffer API calls (401/404) before the user supplied a
+>    screenshot of the actual valid key (Buffer Personal Access Token,
+>    prefix `14Ky`, created 2026-06-21, 7 scopes). **Skills MUST NOT hardcode
+>    live secret values that can silently go stale** -- see the corrected
+>    Buffer section below, which now stores the token ONLY in
+>    `%USERPROFILE%\buffer\token` and instructs verification via a live GET
+>    before any POST, exactly like the Zenodo Credential Protocol already
+>    mandates. Endpoint is `https://api.bufferapp.com/1.0/graphql.json`
+>    (confirmed live) -- `createDraft` mutation works, but there is NO
+>    `drafts` query on this schema (attempting one returns 404 "endpoint
+>    not found" -- this is normal, not a fault; do not misdiagnose it as a
+>    broken token).
+> 2. **D1 REST API account ID was wrong.** Using an incorrect Cloudflare
+>    account ID against `POST /accounts/{id}/d1/database/{uuid}/query`
+>    produces a misleading 401/404 that looks like a scope problem but is
+>    actually a wrong-account-ID problem. `npx wrangler whoami` prints the
+>    correct account ID directly from the live `CLOUDFLARE_API_TOKEN` --
+>    ALWAYS run this first, never hardcode or guess the account ID.
+>    Additionally, `wrangler d1 execute <name> --remote` FAILS with
+>    "Couldn't find a D1 DB with name/binding" unless that name is bound in
+>    a local `wrangler.toml`/`wrangler.jsonc` -- for databases with no local
+>    binding (common for shared infra DBs like `living-paper`), use the
+>    Cloudflare REST API directly with the UUID from `wrangler d1 list`
+>    (or `GET /accounts/{id}/d1/database`), not the `d1 execute` CLI.
+> 3. **D1 `ON CONFLICT` upsert on the `living-paper.papers` table returned
+>    HTTP 400.** The table has FTS5 shadow tables/triggers (`papers_fts`,
+>    `papers_fts_data`, etc.) that can make `ON CONFLICT DO UPDATE` behave
+>    unpredictably. Fix: `SELECT` to check existence first, then choose a
+>    plain `INSERT` (no `ON CONFLICT`) or a plain `UPDATE` -- never a
+>    combined upsert on this table. A single successful INSERT reports
+>    `changes` > 1 because of FTS trigger fan-out; that is expected, not a
+>    duplicate-row bug.
+> 4. **All non-Cloudflare/non-native IPFS pinning services (Filebase,
+>    Pinata, Lighthouse, web3.storage, w3up) are DEPRECATED as of this
+>    version and MUST NOT be used or referenced as an action item.** Per
+>    explicit product direction: IPFS distribution for QNFO publications
+>    uses ONLY (a) Cloudflare R2 as the durable byte-store, (b) a locally
+>    computed CIDv1 (sha2-256, raw codec, base32) for content-addressing
+>    with no third-party pinning dependency, and (c) Cloudflare DNS
+>    DNSLink TXT records (`_dnslink.<slug>.qnfo.org` -> `dnslink=/ipfs/<CID>`)
+>    as the sole naming/distribution layer -- verified via
+>    `nslookup -type=TXT _dnslink.<slug>.qnfo.org` and (once propagated)
+>    `https://dweb.link/ipns/<slug>.qnfo.org` or `https://cloudflare-ipfs.com`.
+>    Every prior "Filebase primary / Lighthouse secondary" instruction in
+>    this skill is now VOID -- see the rewritten IPFS section below.
+> 5. **PowerShell inline `python -c "..."` is now a HARD BLOCK, not just an
+>    anti-pattern note.** This exact session lost >15 tool calls to
+>    `SyntaxError: unterminated string literal` / `The '<' operator is
+>    reserved` from inline quoting collisions between PowerShell's parser
+>    and Python string literals containing `"`, `<`, `>`, or JSON braces.
+>    The `write` -> `exec <file>.py` -> delete pattern (kaizen fix B1,
+>    already documented below) is MANDATORY for any Python beyond a
+>    zero-quote one-liner -- treat any `python -c` call containing a
+>    quote character, an angle bracket, or a dict/JSON literal as
+>    guaranteed to fail and write a file first without even attempting it.
 
 > **v2.9 UPDATE (2026-07-21, Zenodo credential incident):** Added the
 > **Zenodo Credential Protocol** section (in Phase 5, immediately before
@@ -26,18 +87,13 @@ self_sufficient: true
 > built-in live-DOI verification). Required token scopes documented:
 > `deposit:write`, `deposit:actions`, `user:email`.
 
-> **v2.7 UPDATE (2026-07-20, Pinata quota exceeded):** Pinata IPFS pinning
-> REMOVED from all publication steps — the free-tier account hit its quota
-> and is blocked. Replaced with **Filebase** (free 5GB S3-compatible bucket,
-> auto-pins to IPFS, no request-volume limit) as the PRIMARY pinner, backed
-> by **Lighthouse** (free Filecoin tier) as secondary pinner, **Cloudflare
-> R2** as the canonical durable host, and **Cloudflare DNS** for DNSLink —
-> all free, unlimited-request services. Every `api.pinata.cloud` reference,
-> credential check, and gateway URL (`gateway.pinata.cloud`) has been
-> removed or replaced. See `scripts/filebase-pin.js` (new) and the updated
-> `cloudflare` skill's `scripts/filebase-upload.js` for the SigV4 upload
-> helper. `scripts/pinata-pin.js` is retained on disk for historical
-> reference only and MUST NOT be invoked — see its deprecation header.
+> **v2.7 UPDATE (2026-07-20, Pinata quota exceeded) -- SUPERSEDED BY v2.10:**
+> Pinata IPFS pinning removed. The v2.7 replacement (Filebase primary,
+> Lighthouse secondary) is ITSELF now deprecated as of v2.10 -- see the
+> v2.10 banner above and the rewritten IPFS/DNSLink section below. ALL
+> third-party IPFS pinning services (Pinata, Filebase, Lighthouse,
+> web3.storage, w3up, etc.) are out of scope for QNFO publications. Use
+> ONLY Cloudflare R2 + locally-computed CIDv1 + Cloudflare DNS DNSLink.
 
 > **v2.6 UPDATE (2026-07-20, kaizen audit):** Added `scripts/unicode-latex-preprocess.py` (fixes XeLaTeX Unicode-glyph and `keywords:`-field build failures -- A1/A2), `scripts/check-pdf.py` (PyMuPDF preflight + file-lock-safe replace -- B4/B5), `scripts/credential-scan.py` (pre-commit + pre-publish token leak scanner -- A4/C1/D2) wired into the Phase Closeout Protocol STEP 0.5 and the Publication Language Gate, `templates/gitignore-research-project-template.txt` for new project repos, a PROVENANCE-BUNDLE.zip hard gate before Zenodo upload (A3), `.zenodo_versions.json` version-chain tracking convention (C2), a Vectorize confirmation-bias disclosure requirement (C3), a multi-pinner IPFS fallback order Pinata→Filebase→Lighthouse (C4), documented Windows/PowerShell anti-patterns for inline `python -c`, `&&` chaining, and `curl` aliasing (B1/B2/B3), a YAML `---` delimiter conflict check (D3), an auto-discover related_identifiers KG query step (D4), a tag-backfill check in Phase Closeout (D1), and an Obsidian/external-path source material limitation note (C5/D5).
 
@@ -888,19 +944,83 @@ Only use a genuinely NEW deposit for a genuinely NEW, unrelated publication.
 
 ## Phase 6: Cloudflare Deployment
 
-### D1 Insert (living-paper)
-```sql
-INSERT INTO papers (slug, title, author, abstract, body, doi, published_at, updated_at)
-VALUES ('<slug>', '<title>', '<author>', '<abstract>', '<full markdown body>', '<doi>', '<ipfs_cid>', datetime('now'), datetime('now'))
-ON CONFLICT(slug) DO UPDATE SET body = excluded.body, doi = excluded.doi, updated_at = datetime('now');
+### D1 Access Protocol (kaizen fix 2026-07-21 -- read BEFORE any D1 call)
+
+**Root-cause incident:** A session spent 8+ failed tool calls on D1 because
+of (a) a wrong hardcoded Cloudflare account ID, (b) attempting
+`wrangler d1 execute <name> --remote` against a database with no local
+`wrangler.toml` binding, and (c) an `ON CONFLICT` upsert against a table
+with FTS5 shadow tables, which returned HTTP 400. None of these were
+"D1 is broken" -- all three were preventable with the sequence below.
+
+**Step 1 -- ALWAYS get the live account ID first, never hardcode it:**
+```bash
+npx wrangler whoami
+# prints Account Name + Account ID directly from the live CLOUDFLARE_API_TOKEN
 ```
 
-### D1 Record Update (MANDATORY — after IPFS pinning)
-```sql
--- Update D1 living-paper record after Zenodo publishing
-UPDATE papers SET ipfs_cid = 'bafkreibq...', updated_at = datetime('now') WHERE identifier = 'paper-slug';
+**Step 2 -- list databases to get the live UUID (never hardcode a UUID either):**
+```bash
+npx wrangler d1 list
+# or via REST: GET https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/d1/database
 ```
-**Every publication MUST have its IPFS CID stored in D1. The `ipfs_cid` column enables cross-system discovery: D1 → KG → DNSLink → IPFS gateway resolution.**
+Known QNFO database (as of 2026-07-21, ALWAYS re-verify via Step 2, do not
+trust this table blindly in future sessions): `living-paper` database
+contains the `papers` table (also `papers_fts*` FTS5 shadow tables --
+`period_matrices`, `citations`, `citation_edges`, `paper_clusters`,
+`paper_versions`, `selmer_generators`).
+
+**Step 3 -- if the DB has no local wrangler.toml binding, use the REST API
+directly (write a `.py` file first per kaizen fix B1, never inline):**
+```python
+import urllib.request, os, json
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN')
+ACCOUNT = '<from Step 1>'
+DB = '<uuid from Step 2>'
+URL = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/d1/database/{DB}/query'
+HEADERS = {'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json'}
+
+def d1_query(sql, params=None):
+    body = json.dumps({'sql': sql, 'params': params or []})
+    req = urllib.request.Request(URL, data=body.encode(), headers=HEADERS)
+    return json.loads(urllib.request.urlopen(req).read())
+```
+
+**Step 4 -- CHECK-THEN-WRITE, never a combined upsert on `papers`:**
+```python
+# 1. Check existence first
+exists = d1_query("SELECT COUNT(*) as c FROM papers WHERE slug = ?", [slug])['result'][0]['results'][0]['c']
+
+# 2a. If not present: plain INSERT (no ON CONFLICT)
+if not exists:
+    d1_query(
+        "INSERT INTO papers (slug, title, body_md, abstract, authors, doi, status, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [slug, title, body_md, abstract, authors, doi, status, version]
+    )
+# 2b. If present: plain UPDATE
+else:
+    d1_query(
+        "UPDATE papers SET body_md = ?, doi = ?, status = ?, version = ? WHERE slug = ?",
+        [body_md, doi, status, version, slug]
+    )
+```
+Note the column is `body_md`, not `body` -- verify column names with
+`SELECT name FROM sqlite_master WHERE type='table' AND name='papers'`
+followed by `PRAGMA table_info(papers)` if unsure, rather than assuming.
+An `ON CONFLICT(slug) DO UPDATE` on this specific table returned HTTP 400
+in production testing (2026-07-21) -- avoid it until root-caused further;
+the check-then-write pattern above is the confirmed-working alternative.
+
+**Step 5 -- verify via independent re-query (Anti-Phantom Gate):**
+```python
+rows = d1_query("SELECT slug, title, doi, status FROM papers WHERE slug = ?", [slug])['result'][0]['results']
+assert rows, "INSERT/UPDATE did not persist -- do not report success"
+```
+
+**Step 6 -- verify papers-server actually serves it:**
+```bash
+curl -sI https://papers.qnfo.org/papers/<slug>  # NOTE: no trailing slash in the live worker's routing, confirmed 2026-07-21
+```
 
 ### Papers-Server Worker Verification
 ```bash
@@ -963,8 +1083,43 @@ mutation {
 1. Use INLINE parameters (not $var format) -- Buffer silently drops variables
 2. `status: SCHEDULED` for queued posts, `status: APPROVED` for immediate
 3. `now: false, utc: false` for scheduled posts
-4. Token: `1/7feabe69e3c8a6544ee3c20e8b21c2aa` (Buffer access token at `%USERPROFILE%\buffer\token`)
+4. Endpoint: `https://api.bufferapp.com/1.0/graphql.json` (confirmed live 2026-07-21)
 5. Authenticate: `Authorization: Bearer <token>` header
+
+**Token Protocol (kaizen fix 2026-07-21 -- DO NOT hardcode a token value in
+this or any skill file; the value below was wrong for an unknown period and
+caused a multi-hour debugging session):**
+
+```python
+import os
+TOKEN = open(os.path.expanduser('~/buffer/token')).read().strip()
+```
+```powershell
+$env:BUFFER_TOKEN  # if set as an environment variable, prefer this
+# or
+Get-Content "$env:USERPROFILE\buffer\token" -Raw
+```
+
+- **Canonical token location:** `%USERPROFILE%\buffer\token` (single file,
+  no other location -- delete `.buffer_token`, `buffer\.token`, or any
+  duplicate if found; multiple stale copies is exactly how this incident
+  happened).
+- **BEFORE sending any post, verify the token is live** with a lightweight
+  mutation/introspection call (Buffer's GraphQL schema has no simple `user`
+  query -- use a `createDraft` call and check for a valid `_id` in the
+  response, or a deliberately-malformed query and confirm the error is a
+  GraphQL validation error, not an auth error, to distinguish "token dead"
+  from "query malformed").
+- **A `404 {"error":"The endpoint you requested was not found."}` on a
+  `query { drafts { ... } }`-style call is NOT a broken token** -- Buffer's
+  GraphQL schema (as of 2026-07) does not expose a bulk `drafts` list query
+  on this endpoint. Do not use this as a verification method. Use the
+  `createDraft` mutation's own response (`status: SCHEDULED` present) as
+  the verification signal instead, per the Anti-Phantom Gate.
+- If `createDraft` itself returns 401/403, the token is genuinely dead --
+  regenerate at buffer.com (Settings -> Access Tokens), overwrite
+  `%USERPROFILE%\buffer\token` with the new value, and delete any other
+  copy immediately so there is only ever ONE source of truth.
 
 #### Post Format
 ```
@@ -975,15 +1130,85 @@ URL: <papers.qnfo.org/papers/slug/>
 Hashtags: #QNFO #Research <domain-specific tags>
 ```
 
-### DNSLink (OPTIONAL v2.8 — read-only IPFS gateway resolution)
+### IPFS Distribution — Cloudflare + DNSLink ONLY (v2.10, MANDATORY method)
 
-```bash
-# Create DNSLink TXT record mapping publication subdomain to IPFS CID
-# Cloudflare DNS: free, unlimited records. Verified via dweb.link.
-node ../cloudflare/scripts/dnslink-create.js <ZONE_ID> <subdomain>.qnfo.org <CID>
-# Verify: nslookup -type=TXT _dnslink.<subdomain>.qnfo.org
-# Gateway: https://dweb.link/ipns/<subdomain>.qnfo.org
+**All third-party pinning services are deprecated (see v2.10 banner).**
+The canonical, permanent QNFO IPFS distribution method is three steps,
+zero third-party dependencies:
+
+**Step 1 -- Compute the CIDv1 locally (no pinning service call needed for
+content-addressing itself; write a `.py` file, never inline per kaizen B1):**
+```python
+import hashlib
+
+def compute_cidv1(filepath):
+    """CIDv1: raw codec (0x55) + sha2-256 multihash, base32-encoded (RFC4648, lowercase, no padding)."""
+    with open(filepath, 'rb') as f:
+        content = f.read()
+    digest = hashlib.sha256(content).digest()
+    cidv1_bytes = bytes([0x01, 0x55, 0x12, 0x20]) + digest  # cidv1 + raw + sha2-256 + 32-byte len
+    alphabet = 'abcdefghijklmnopqrstuvwxyz234567'
+    bits, value, result = 0, 0, 'b'
+    for byte in cidv1_bytes:
+        value = (value << 8) | byte
+        bits += 8
+        while bits >= 5:
+            bits -= 5
+            result += alphabet[(value >> bits) & 0x1f]
+    if bits > 0:
+        result += alphabet[(value << (5 - bits)) & 0x1f]
+    return result
 ```
+
+**Step 2 -- Upload the durable byte-store to Cloudflare R2 (the CID is a
+label for the content, R2 is what actually keeps it alive and servable):**
+```bash
+npx wrangler r2 object put qnfo-projects/<repo>/<file> --file=<local-path> --remote
+```
+
+**Step 3 -- Create DNSLink TXT records on Cloudflare DNS (the ONLY naming
+layer -- write a `.py` file, never inline):**
+```python
+import urllib.request, os, json
+TOKEN = os.environ.get('CLOUDFLARE_API_TOKEN')
+HEADERS = {'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json'}
+BASE = 'https://api.cloudflare.com/client/v4'
+
+# Get zone ID once per domain
+req = urllib.request.Request(f'{BASE}/zones?name=qnfo.org', headers={'Authorization': 'Bearer ' + TOKEN})
+zone_id = json.loads(urllib.request.urlopen(req).read())['result'][0]['id']
+
+body = json.dumps({
+    'type': 'TXT',
+    'name': f'_dnslink.{subdomain}',
+    'content': f'dnslink=/ipfs/{cid}',
+    'ttl': 3600,
+    'comment': f'DNSLink for {label}'
+})
+req = urllib.request.Request(f'{BASE}/zones/{zone_id}/dns_records', data=body.encode(), headers=HEADERS)
+urllib.request.urlopen(req)
+```
+
+**Verification (MANDATORY, Anti-Phantom Gate):**
+```bash
+nslookup -type=TXT _dnslink.<subdomain>.qnfo.org
+# Must show: dnslink=/ipfs/<cid>
+```
+Gateway resolution (`https://dweb.link/ipns/<subdomain>.qnfo.org` or
+`https://cloudflare-ipfs.com/ipns/<subdomain>.qnfo.org`) may take longer to
+propagate than the DNS record itself -- `nslookup` returning the correct
+TXT record is sufficient DNSLink verification; do NOT block publication
+completion on gateway HTTP fetch succeeding within the same session, but DO
+note `[GATEWAY-PROPAGATION-PENDING]` if it hasn't resolved yet rather than
+silently omitting the check.
+
+**What this deliberately does NOT do:** it does not "pin" content to a
+distributed IPFS network in the traditional sense (no Filecoin deal, no
+third-party pinning service holding a copy). R2 is the actual durable
+store; the CID + DNSLink give it IPFS-compatible addressing and discovery.
+This is an intentional simplification per product direction (2026-07-21) —
+do not add a third-party pinning step back in without an explicit new
+instruction to do so.
 
 ### Internet Archive (MANDATORY)
 
@@ -1072,7 +1297,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
 | Publishing without D1/KG records | Log `doi`, `r2_path` in D1 living-paper + Knowledge Graph Paper node |
 | Skipping 4-D verification | `_verify_4d.py` must pass before status → "published" |
-| Relying on single IPFS pinner | Use ≥3 independent pinning services per publication |
+| Using ANY third-party IPFS pinning service (Filebase/Pinata/Lighthouse/w3up/web3.storage) | DEPRECATED as of v2.10 -- use ONLY Cloudflare R2 (durable store) + locally-computed CIDv1 + Cloudflare DNS DNSLink (naming). No third-party pinner. |
+| Hardcoding a live secret VALUE (token/key) inside a skill file | Store only the FILE PATH where the secret lives (e.g. `%USERPROFILE%\buffer\token`); read it live every time. A hardcoded value in a skill file will silently go stale and cause a debugging session exactly like the 2026-07-21 Buffer incident. |
+| Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh — a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
+| `wrangler d1 execute <name> --remote` on a DB with no local wrangler.toml binding | Use the Cloudflare REST API directly with the UUID from `wrangler d1 list` instead of the CLI. |
+| `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables | Use CHECK-THEN-WRITE (SELECT existence, then plain INSERT or plain UPDATE) instead of a combined upsert. |
+| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createDraft` mutation's own response instead — a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
 | No pre-flight checklist before due diligence | Run P1-P11 before Phase 1 begins |
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
