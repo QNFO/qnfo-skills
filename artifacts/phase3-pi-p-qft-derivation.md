@@ -8,7 +8,9 @@
 
 ## Executive Summary
 
-C1-RT.2a established π is NOT an idèle. Here we derive π_p from first-principles p-adic QFT by computing the Stefan-Boltzmann constant on ℚ_p. Key result: π_p² = 60·((p³−1)/p³)²·ζ_p(4) where ζ_p(4) is the Kubota-Leopoldt p-adic zeta at s=4. The p-adic absolute value |π_p|_p = p for all p — confirming the C1-RT.2a result. The convergence factor w_p = p^{−1} renormalizes the idèle norm, restoring ∥π∥ = 1.
+> **⚠️ RED-TEAM NOTICE (see `phase3-redteam-and-toolcall-audit.md`, C1-RT.2c):** This artifact was found to contain an internal definitional inconsistency and an unverified invocation of ζ_p(4) as a "simple" quantity, which contradicts the project's own prior finding in `zeta-even-values-basel-p-adic.md` (A3, §2.3) that ζ_p at POSITIVE even integers requires the p-adic L-function L_p(s,ω^{1−2n}) and regulators — NOT the simple Kubota-Leopoldt interpolation (which only rigorously covers negative integer arguments). The corrections below are applied in place; the numerical conclusions involving ζ_p(4) are downgraded to UNVERIFIED / BLOCKED pending specialist L-function computation. The qualitative conclusion — π is not capturable by the naive idèle formalism — is UNAFFECTED, since it was independently established in C1-RT.2a via two separate constructions.
+
+C1-RT.2a established π is NOT an idèle. Here we attempt to derive π_p from first-principles p-adic QFT by computing the Stefan-Boltzmann constant on ℚ_p. Result: π_p² = ((p³−1)/p³)²·ζ_p(4) (using ONE consistent definition — see §1.5, correcting an earlier inconsistent draft). **The value of ζ_p(4) itself is `[UNVERIFIED — requires L_p(4,ω^{−3}) computation, not performed here]`.** Consequently the numerical claim "|π_p|_p = p for all p" is `[WITHDRAWN — depended on the abandoned σ̂_p=π_p²/60 definition]`. The claim that a convergence factor w_p = p^{−1} restores ∥π∥=1 is `[OPEN — not derived in this document]`. What survives unconditionally: σ̂/C = 4 (§2), which never depended on π_p's numeric value.
 
 ---
 
@@ -30,35 +32,28 @@ Principal value at n=0 (pole): χ_p(1)=1, term ≡ PV-regularized → contribute
 
 Result: B_p(3) = ζ_p(4)·(p³−1)/p³.
 
-### 1.3 π_p Expression
+### 1.3 Self-Consistency Check — Failure Documented
 
-σ̂_p = (1−p^{−3})·B_p(3) = ((p³−1)/p³)·ζ_p(4)·(p³−1)/p³ = ((p³−1)/p³)²·ζ_p(4)
+A first attempt defined π_p via the analogy `σ̂_p = π_p²/60` (importing the Archimedean rational coefficient 1/60 unchanged). Under that definition:
 
-Setting σ̂_p = π_p²/60 (by analogy with σ̂_∞ = π²/60):
-
+```
 π_p² = 60·((p³−1)/p³)²·ζ_p(4)
-
-### 1.4 p-Adic Absolute Value
-
 |π_p|_p = |60|_p · |(p³−1)/p³|_p² · |ζ_p(4)|_p
+```
 
-|60|_p = p^{ord_p(60)} = 1 for p>5. For p=2,3,5: |60|_p = p^{−ord_p(60)}.
-|(p³−1)/p³|_p = |p³−1|_p/|p³|_p = 1·p³ = p³. So squared: p⁶.
-|ζ_p(4)|_p: this is the critical unknown.
+For p ≥ 7 (where |60|_p = 1) and assuming |ζ_p(4)|_p = 1 (unverified — see §2), this gives |π_p|_p = |(p³−1)/p³|_p² = p⁶ for all such p — a WORSE divergence than either C1-RT.2a candidate. **This definition is REJECTED**: importing the Archimedean 1/60 coefficient unchanged is not justified, since the p-adic Bose-integral computation already produces its OWN dimensionless coefficient with no reason to match the Archimedean normalization factor of 60. The correct approach (§1.5) defines π_p directly from the p-adic coefficient, without importing any Archimedean normalization constant.
 
-For large p (p ≥ 7): |60|_p = 1, |ζ_p(4)|_p = 1 (unit for "generic" primes). Then |π_p|_p = p⁶? That's even worse than the tree definition.
-
-This suggests my normalization is off. Let me revisit.
-
-*Actually, the issue is that σ̂_p is NOT π_p²/60 — this is only an analogy. The p-adic Stefan-Boltzmann constant has its OWN rational coefficient, not 1/60.*
-
-### 1.5 Corrected Expression
+### 1.5 Adopted Expression (Single Consistent Definition)
 
 σ̂_p = ((p³−1)/p³)² · ζ_p(4) is the dimensionless core. In the Archimedean case: σ̂_∞ = π²/60 ≈ 0.1645. For p=2: σ̂_2 = ((7/8)² · ζ_2(4)). 
 
-If we DEFINE π_p by: σ̂_p = π_p², then π_p = √σ̂_p = ((p³−1)/p³)·√ζ_p(4).
+Adopted definition: σ̂_p ≡ π_p² (no imported normalization constant). Then:
 
-**π_p is NOT π/√60 — it's a completely different function of p.** The Archimedean "π" and p-adic "π_p" are related only by playing analogous roles, not by sharing a common origin.
+```
+π_p = √σ̂_p = ((p³−1)/p³)·√ζ_p(4)     [UNVERIFIED — depends on ζ_p(4), see §2]
+```
+
+**π_p is NOT π/√60 — it is a completely different function of p, defined by its own p-adic construction rather than by analogy with the Archimedean normalization.** Its numerical value cannot currently be stated because ζ_p(4) has not been rigorously computed (§2).
 
 ---
 
@@ -66,12 +61,18 @@ If we DEFINE π_p by: σ̂_p = π_p², then π_p = √σ̂_p = ((p³−1)/p³)·
 
 | Quantity | Archimedean | p-Adic |
 |:---------|:------------|:-------|
-| σ̂ | π²/60 ≈ 0.1645 | ((p³−1)/p³)²·ζ_p(4) — rational × p-adic regulator |
-| π_v | π_∞ ≈ 3.14159 (transcendental) | π_p = ((p³−1)/p³)·√ζ_p(4) — p-adic |
-| σ̂/C ratio | 4 (exact) | 4 (exact — ζ cancels) |
+| σ̂ | π²/60 ≈ 0.1645 | ((p³−1)/p³)²·ζ_p(4) — rational × `[UNVERIFIED regulator]` |
+| π_v | π_∞ ≈ 3.14159 (transcendental) | π_p = ((p³−1)/p³)·√ζ_p(4) — `[UNVERIFIED numeric value]` |
+| σ̂/C ratio | 4 (exact) | 4 (exact — ζ_p(4) cancels regardless of its value) |
 
-**The σ̂/C = 4 ratio is the ONLY unconditional prediction.** π_p's exact value requires computing ζ_p(4) explicitly (next Phase 3 task).
+**The σ̂/C = 4 ratio is the ONLY unconditional prediction that survives this analysis.** It required NO assumption about ζ_p(4)'s value — the p-adic regulator cancels identically in the ratio the same way π² cancels in the Archimedean ratio. π_p's exact numeric value is **`[BLOCKED — requires L_p(4,ω^{−3}) computation; see phase3-redteam-and-toolcall-audit.md, C1-RT.2c, for why the Kubota-Leopoldt interpolation formula does not directly apply here]`**.
 
 ---
 
-*[established] for the phase space measure and Bose integral structure. [my conjecture] for the PV regularization of the n=0 pole. [speculative] for the exact form of ζ_p(4) for small primes.*
+## Post-Hoc Correction Notice
+
+This document was red-teamed in `phase3-redteam-and-toolcall-audit.md` (C1-RT.2c). Findings: (1) an internal definitional inconsistency between §1.3 and §1.5 — resolved above by adopting the §1.5 definition only; (2) an unverified treatment of ζ_p(4) as a simple closed-form quantity, contradicting `zeta-even-values-basel-p-adic.md` (A3) §2.3 — downgraded to UNVERIFIED/BLOCKED throughout; (3) an unsubstantiated convergence-factor claim in the original Executive Summary — removed. The σ̂/C=4 result is unaffected by any of these corrections.
+
+---
+
+*[established] for the phase space measure (Haar measure on ℚ_p³) and the algebraic structure of the derivation. [UNVERIFIED/BLOCKED] for any claim depending on the numeric value of ζ_p(4) — this requires computing the p-adic L-function L_p(4,ω^{−3}), which has not been performed. [established] for σ̂/C=4 (independent of ζ_p(4)'s value).*
