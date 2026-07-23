@@ -56,7 +56,7 @@ The catalog is organized in four tiers:
 |:---|:---|:---|
 | **B1.** p-adic Feynman propagator | Artifact: Vladimirov-Volovich propagator, absence of iε/causality, additive character vs. exp, acausal propagation | [PENDING] |
 | **B2.** β-function coefficients (Missarov) | Artifact: Numerical extraction of Missarov 1989 coefficients, comparison to 3/(16π²), RG flow divergence | [PENDING] |
-| **B3.** Critical exponents (ν, η, γ, β) | Artifact: p-adic φ⁴ universality class, hierarchical model exponents, comparison to conformal bootstrap values | [PENDING] |
+| **B3.** Critical Exponents — p-Adic φ⁴ vs. 3D Ising | Artifact: critical-exponents-p-adic-phi4.md — All 5 exponents (ν,η,γ,β,α) differ O(1) from 3D Ising; hierarchical model = naturally p-adic (Dyson 1969 tree = Bruhat-Tits); p-dependent exponents (p=2,3 deviate most); ε-expansion fails p-adically; hyperscaling νd→ν·d_eff(p); tree unifies B3 with C1-RT (causal), C2 (dynamics), B5 (S-matrix); falsifiable via precision measurement of exponents | [EXECUTED] |
 | **B4.** Anomalous dimensions γ_φ | Artifact: p-adic OPE, scaling dimension differences, recursion relations | [PENDING] |
 | **B5.** S-matrix Structural Failure | Artifact: s-matrix-structural-failure.md — LSZ collapse (no θ(t), no T-products, no Wick, no asymptotic states, no optical theorem); Bruhat-Tits tree S-matrix as constructive alternative (Witten diagrams on T_p, UV-finite, tree-unitary); 5 surviving concepts, 9 that perish; integer-spaced bound state poles as sharpest falsifiable prediction | [EXECUTED] |
 | **B6.** Uncertainty principle constant C_p | Artifact: p-adic Fourier normalization, Parseval identity, C_p vs. 1/2 boundary | [PENDING] |
