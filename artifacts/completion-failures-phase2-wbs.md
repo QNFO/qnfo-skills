@@ -73,7 +73,7 @@ The catalog is organized in four tiers:
 | **C1-RT.3.** Tree-to-Building generalization | Artifact: Extend from PGL(2) tree to PGL(n) buildings (n=3,4); partial order on buildings; Green's function unitarity | [PENDING — Phase 3] |
 | **C1-RT.4.** Adelic S-matrix product | Artifact: Restricted tensor product ⊗'_p S_p; convergence of ∏_p A_p(s,t); factorization analysis | [PENDING — Phase 3] |
 | **C1-RT.5.** Page-Wootters adelic clock | Artifact: Interaction Hamiltonian on L²(ℝ)⊗L²(ℚ_p^n); ultrametric conditional states; unique-clock proof via Ostrowski | [PENDING — Phase 3] |
-| **C2.** Time evolution via exp | Artifact: p-adic exp convergence domain analysis, restricted-time evolution operators, global evolution failure | [PENDING] |
+| **C2.** Time Evolution Failure in ℚ_p | Artifact: 	ime-evolution-p-adic-failure.md — exp_p convergence r_p=p^{−1/(p−1)}<1 ∀p; U_p(t) defined only locally (ultrametric ball); group law fails (domain not closed under addition); BCH obstruction; interaction picture+Dyson series doubly fail; restricted-time QM framework via p-adic Lie group analogy; Bruhat-Tits tree Laplacian as alternative to exponential dynamics | [EXECUTED] |
 | **C3.** Continuous symmetries / Noether | Artifact: Totally disconnected topology → no continuous Lie groups, p-adic variational calculus (Vladimirov-Volovich), conserved currents changes | [PENDING] |
 | **C4.** WKB / geometric quantization | Artifact: Absence of closed orbits in ℚ_p, p-adic integration, alternative quantization conditions | [PENDING] |
 
