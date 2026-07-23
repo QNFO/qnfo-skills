@@ -44,7 +44,7 @@ The catalog is organized in four tiers:
 |:---|:---|:---|
 | **A1.** Stefan-Boltzmann p-adic analog | Artifact: p-adic phase space integration over ℚ_p³, p-adic Bose-Einstein distribution, comparison to σ_∞ = π²k⁴/(60ħ³c²) | [PENDING] |
 | **A2.** Casimir force p-adic analog | Artifact: ζ_p-regularization of Casimir sum, Haar measure on ℚ_p², comparison to C_∞ = π²/240 | [PENDING] |
-| **A3.** ζ(2n) Basel sums (mathematical) | Artifact: Kubota-Leopoldt ζ_p values at even integers, divergence analysis, physics implications | [PENDING] |
+| **A3.** ζ(2n) Basel Sums: Archimedean vs. p-Adic | Artifact: zeta-even-values-basel-p-adic.md — ζ(2n)=r_{2n}·π^{2n} (transcendental) vs. ζ_p(2n) (p-adic regulator, algebraic, NO π); ζ_p(1−n)=(1−p^{n−1})ζ(1−n) at negative integers; ξ(s)=π^{−s/2}Γ(s/2)ζ(s) as adelic framework; ζ_2(2) identified as Phase 3 Priority 1 numerical target (controls Casimir, Stefan-Boltzmann, g−2, Lamb shift) | [EXECUTED] |
 | **A4.** Wien displacement p-adic analog | Artifact: p-adic Planck spectrum using χ_p character, transcendental equation analog, peak shift | [PENDING] |
 | **A5.** Loop integral volumes π^{d/2} | Artifact: Systematic comparison of real vs. p-adic spherical volumes per loop order L | [PENDING] |
 
