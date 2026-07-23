@@ -2,9 +2,26 @@
 
 **Project:** Red-team p-adic/adélic re-evaluation of Harmonic Paradigm core concepts
 **Slug:** harmonic-adelic-completions
-**Status:** Phase 0 — Init
+**Status:** Phase 0 ✅ | Phase 1: Due Diligence
 **Date:** 2026-07-23
 **Author:** DeepChat Research Agent
+**Full WBS:** [docs/WBS-COMPLETE-PROGRAM.md](docs/WBS-COMPLETE-PROGRAM.md)
+
+---
+
+## 0. Program Summary
+
+| Phase | Name | Tag | Status |
+|:------|:-----|:----|:-------|
+| 0 | Init — scaffold, claim lock, 3-pillar gate memo | `v0.1-phase0` | ✅ COMPLETE |
+| 1 | Due Diligence — cross-reference, literature audit, prior-art inventory | `v0.2-phase1-dd` | 🔜 NEXT |
+| 2 | Deep Red-Team — 5 pillars: Missarov, thermo, causality, Casimir, propagator | `v0.3-phase2-redteam` | ⏳ |
+| 3 | Adelic Synthesis — product-formula constraints | `v0.4-phase3-synthesis` | ⏳ |
+| 4 | Falsifiability — 21-prediction matrix, calibration register, experimental protocols | `v0.5-phase4-falsifiability` | ⏳ |
+| 5 | Publication — red-team assessment paper, PDF, Zenodo DOI | `v1.0` | ⏳ |
+| 6 | Deployment — GitHub Release, R2, D1, KG, dissemination | `v1.1-deploy` | ⏳ |
+
+**Core Thesis:** "The harmonic oscillator's IR attractor property is ∞-place-specific. The HP's invocation of Vladimirov, Bruhat-Tits trees, and Ostrowski's theorem was bibliographic context-setting, not completion-theoretic reasoning. No adelic harmonic oscillator — with well-defined completions at every Ostrowski place — has been constructed."
 
 ---
 
@@ -12,13 +29,14 @@
 
 The Harmonic Paradigm V1.0–V4.0 (2026) proposed the harmonic oscillator as the "universal IR attractor of quantum theory," spanning an 8-rung ladder from transmon anharmonicity through QED fine-structure constant to quantum gravity. V4.0 formally closed out the program, retracting the logistic β-function ansatz but leaving unresolved: were the remaining falsification pillars (equal-ln(μ)-spacing order-statistics test, power-law vs logarithmic IR approach) tested exclusively over ℝ when V1.0's own bibliography cited Vladimirov-Volovich-Zelenov p-adic QFT (1994) and Ostrowski (1918)?
 
-This project is a **red-team followup** scoped to three questions:
+This project is a **systematic Ostrowski-completion-theoretic red-team evaluation** of the HP's core claims. Phase 0 addressed three gateway questions; Phases 1–6 extend them into a complete program:
 
-1. **What is "harmonic" adélically?** Vladimirov's p-adic fractional derivative produces eigenfunctions on the Bruhat-Tits tree with eigenvalues spaced by powers of p in the p-adic norm — fundamentally different from the Archimedean E_n = ℏω(n+1/2) equal-spacing. Is there a genuinely adelic concept of "harmonic" with completions at every place, or is "harmonic oscillator" an Archimedean-only construct borrowed by the p-adic community by analogy?
+**Phase 0 (✅):** 3-pillar gateway red-team:
+1. **What is "harmonic" adélically?** → Place-dependent; Vladimirov oscillator is analogical, not completion-theoretic.
+2. **Is the IR attractor place-specific?** → Yes; β-function d/d(ln μ) with μ∈ℝ has no p-adic analogue.
+3. **RS-1 α⁻¹ p-adic evaluation.** → Cosmetic; rational core satisfies product formula trivially.
 
-2. **Is the IR attractor property place-specific?** The HP's core flow α(μ→0) → 0 toward the harmonic IR fixed point was tested exclusively over ℝ. The β-function mechanics (differentiation with respect to ln(μ), μ ∈ ℝ) are inherently Archimedean. Does a p-adic renormalization group even have a well-defined β-function, and if so, does it have the same leading-order class (quadratic) at every Ostrowski place?
-
-3. **RS-1 α⁻¹ p-adic evaluation.** The decomposition α⁻¹(0) ≈ 137 = H_5 numerator (137/60) + Δ_adelic + Δ_RG yields a rational core (137) with well-defined p-adic valuations. Is the near-integer coincidence α⁻¹ ≈ 137.036 cosmetic or does it reflect a genuine adelic product-formula condition ∏_v |·|_v = 1 constraining the rational core?
+**Phases 1–6:** Extended red-team: 5-pillar extension (Missarov β-function, p-adic thermo, causality in ℚ_p, p-adic regularization, p-adic propagator) → adelic synthesis → falsifiability refinement → publication → deployment.
 
 ## 1.2 Core Claim Lock
 
