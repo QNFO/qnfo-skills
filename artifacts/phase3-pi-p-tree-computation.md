@@ -15,7 +15,7 @@ Two candidate definitions of π_p exist:
 
 **Both violate the idèle restricted product condition.** The tree definition gives |π_p|_p = p for all p → ∏_p p diverges. The period definition gives |π_p|_p = p^{−1/(p-1)} → ∏_p p^{−1/(p-1)} = 0. Neither makes π an idèle in the standard sense.
 
-**This is itself the central result:** π is NOT a principal adele, nor a norm-1 idèle, nor even an idèle in the standard group J_ℚ. It is a TRANSCENDENTAL adele — an object living in A_ℚ but whose component-wise absolute values do not satisfy the restricted product condition in the usual way.
+**This is itself the central result:** π is NOT a principal adele, nor a norm-1 idèle, nor even an idèle in the standard group J_ℚ. It is a transcendental adele — an object living in A_ℚ but whose component-wise absolute values do not satisfy the restricted product condition in the usual way. (The operative property is π ∉ ℚ, i.e., irrationality; full transcendence is a stronger but not strictly necessary condition for the idèle argument.)
 
 **Consequence for Phase 2 corrections:** The D2.2 correction was conceptually correct (π EXISTS p-adically) but its implication that π is a "norm-1 idèle" is WRONG. The correct statement: π defines its own idèle class through a RENORMALIZED product formula with a convergence factor.
 
@@ -82,13 +82,13 @@ The product ∏_p p^{−1/(p-1)}: the terms are < 1 for all p. For large p, log 
 
 ### 3.1 The Deep Reason
 
-π is NOT a rational number — it's TRANSCENDENTAL over ℚ. The idèle group J_ℚ and the adèle ring A_ℚ are defined over ℚ. A transcendental number like π does NOT naturally embed into the adèles qua rational structure.
+π is not a rational number — it is transcendental over ℚ. The idèle group J_ℚ and the adèle ring A_ℚ are defined over ℚ. A transcendental number like π does not naturally embed into the adèles qua rational structure.
 
 The failure of both definitions to produce a well-behaved idèle norm is NOT a bug — it's a FEATURE. It shows that:
 
-> **π cannot be captured by the standard idèle formalism because π is not an element of any ℚ-variety. It is a TRANSCENDENTAL NUMBER, and the adèle formalism (which is defined over ℚ) cannot fully contain it.**
+> **π cannot be captured by the standard idèle formalism because π ∉ ℚ. The adèle formalism (which is defined over ℚ) cannot fully contain an irrational number of ℚ — and a fortiori a transcendental number.**
 
-This is the adelic analog of the classical problem: π is transcendental → it cannot be captured by finite arithmetic. The adelic framework reveals this transcendence as the impossibility of making π into an idèle.
+This is the adelic analog of the classical problem: π ∉ ℚ → it cannot be captured by finite arithmetic. The adelic framework reveals this as the impossibility of making π into an idèle.
 
 ### 3.2 What This Means for Physics
 
