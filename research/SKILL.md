@@ -1,7 +1,7 @@
 ---
 name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.13, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
-version: "2.9"
+version: "2.15"
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
 priority: 1
@@ -10,7 +10,23 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.14 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.15 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.15 UPDATE (2026-07-24, PQS epistemic bias kaizen):** Added three new
+> HARD gates from the PQS AI-Evaluation Audit session:
+> - **Institutional Status Neutrality Gate (KIF-16):** Strip institutional
+>   metadata before evaluating claims; use epistemic categories (`[UNFALSIFIABLE]`,
+>   `[CONTRADICTS ESTABLISHED EVIDENCE]`, `[UNTESTED]`, `[CONTESTED]`) not
+>   social categories ("fringe", "pseudoscience"); open science is real science.
+> - **AI Convergence Bias Disclosure (KIF-17):** When 2+ AI systems converge
+>   on dismissing a claim, flag explicitly — convergence may reflect shared
+>   training-data bias, not independent validation.
+> - **Mandatory Symmetry Template (KIF-18):** Every literature review MUST
+>   include both "Supporting" AND "Constraining" sections; document structure
+>   enforces epistemic balance.
+> User statement archived: "OPEN SCIENCE IS CHANGING INSTITUTIONAL GATEKEEPERS,
+> AND PUBLIC ACCESS ALWAYS WINS." Cross-references `qnfo-agent` v3.38 and
+> `kaizen-skill-fixes` v1.3.
 
 > **v2.14 UPDATE (2026-07-22, Buffer inline-fragment false-claim correction):**
 > v2.13 wrongly claimed "`PostActionPayload` union type members are NOT
@@ -364,6 +380,42 @@ zero results while internal search (a) returned nonzero, explicitly flag
 `[CONFIRMATION-BIAS-RISK: only internal corpus searched]` in the due
 diligence report -- do not silently present internal-only hits as validation.
 
+### Institutional Status Neutrality Gate (KIF-16, HARD)
+
+**BEFORE evaluating any claim from a self-published or non-peer-reviewed source:**
+
+1. **Strip institutional metadata.** Do not consider: publication venue, peer-review status, author's institutional affiliation, citation count, h-index, or whether the work appears on arXiv vs Nature. These are social signals, not truth signals.
+
+2. **Evaluate substance directly.** Extract the claim. Identify what evidence would support it. Identify what evidence would falsify it. Search for both.
+
+3. **Never use "fringe" or "pseudoscience" as a classification.** These are social categories, not epistemic ones. Use instead:
+   - `[UNFALSIFIABLE]` — no conceivable observation would disconfirm this
+   - `[CONTRADICTS ESTABLISHED EVIDENCE: <specific evidence>]` — name the evidence
+   - `[UNTESTED]` — falsifiable but no relevant experiments exist
+   - `[CONTESTED: <specific debate>]` — active scientific disagreement exists
+
+4. **Open science is real science.** Zenodo, SSRN, ResearchGate, arXiv, and personal websites are legitimate publication channels. Many paradigm-shifting papers (Einstein 1905, Bell 1964, Aspect 1982) were initially self-published or preprinted. Lack of traditional peer review is NOT a heuristic for unreliability.
+
+**GATE:** If any investigation document contains the words "fringe," "pseudoscience," "crank," or "crackpot" without an accompanying `[CONTRADICTS ESTABLISHED EVIDENCE: <specific>]` citation → BLOCKED. Revise to use epistemic categories, not social categories.
+
+### AI Convergence Bias Disclosure (KIF-17, HARD when triggered)
+
+**If the investigation references or incorporates evaluations from multiple AI systems:**
+
+1. **Convergence is NOT validation.** If Claude, Gemini, GPT, and other AI systems all converge on the same evaluation of a claim, this does NOT constitute independent confirmation. All large language models share overlapping training data (web text, academic papers, Wikipedia) that encodes "mainstream consensus" as the default position.
+
+2. **Flag convergence explicitly.** If 2+ AI evaluations agree on dismissing a claim, append:
+   ```
+   [AI-CONVERGENCE-WARNING: Multiple AI systems converged on this evaluation.
+   This may reflect shared training-data priors rather than independent analysis.
+   AI systems systematically underweight paradigm-challenging claims because
+   "mainstream consensus" is overrepresented in training corpora.]
+   ```
+
+3. **Do not treat AI dismissal as authoritative.** An AI saying "this contradicts Bell's theorem" is a STARTING POINT for investigation, not a CONCLUSION. Verify: Does the claim actually contradict Bell's theorem, or does it invoke a known loophole (measurement independence, superdeterminism, retrocausality)? AI systems often oversimplify technical debates.
+
+4. **The meta-lesson:** The PQS session (2026-07-24) failed because the agent uncritically replicated AI dismissals from source conversations instead of investigating the claims directly. The user had to explicitly intervene: "THE SCOPE IS NOT TO EVALUATE ALL 'FRINGE' CLAIMS... BUT TO INVESTIGATE IT SERIOUSLY AND WITHOUT EDITORIALIZING."
+
 ---
 
 ## Phase 2: Literature Search & Triage
@@ -397,6 +449,27 @@ diligence report -- do not silently present internal-only hits as validation.
 ### Reading Protocol
 For each Core paper: read full text, extract 3-5 key claims, note methodology, identify assumptions, flag fabrication risk.
 For each Supporting paper: read abstract + methods + conclusions, note relevance to RQ.
+
+### Mandatory Symmetry Template (KIF-18, HARD)
+
+Every literature review or investigation document MUST include BOTH of the following section headings, populated with actual content:
+
+```markdown
+## Where External Literature Supports [Claim/Framework]
+
+[Enumerate specific papers, experiments, or theoretical results that are
+consistent with or supportive of the claim being investigated. Include DOIs.]
+
+## Where External Literature Constrains or Contradicts [Claim/Framework]
+
+[Enumerate specific papers, experiments, or theoretical results that
+constrain, limit, or contradict the claim being investigated. Include DOIs.
+This section MUST NOT be empty or contain only hedging language.]
+```
+
+**GATE:** If a literature review contains a "Supporting" section but no "Constraining" section (or vice versa) → BLOCKED. Epistemic symmetry is structural, not optional.
+
+**Anti-pattern:** "The literature is broadly supportive, with some minor caveats" is NOT a constraining section. Name specific constraining evidence or explicitly state `[NO CONSTRAINING EVIDENCE FOUND IN SEARCH: <search terms used>]`.
 
 ---
 
