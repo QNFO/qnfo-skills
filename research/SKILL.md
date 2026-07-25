@@ -1,16 +1,43 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.13, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Pandoc+XeLaTeX ONLY), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
-version: "2.15"
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
+version: "2.17"
 priority: 1
 platform: all
 autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.16 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.17 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.17 UPDATE (2026-07-25, default-template + professional-standard kaizen):**
+> Established the **Springer Nature LaTeX Template (`sn-jnl.cls`, v3.1, Dec
+> 2024)** as the MANDATORY DEFAULT TEMPLATE for all QNFO publications and
+> publication-grade PDFs, replacing all prior references to the legacy,
+> retired `svjour3`/`svjour.cls` package (CTAN `springer` package -- verified
+> retired via live Springer Nature LaTeX Author Support page, 2026-07-25).
+> Template files are embedded in this skill at
+> `templates/springer-nature-latex/` (`sn-jnl.cls`, all 8 `.bst` styles,
+> `sn-article.tex` reference example, `sn-bibliography.bib`,
+> `user-manual.pdf`, and `qnfo-paper-template.tex` -- a QNFO-conventions
+> overlay with the mandatory Declarations block pre-populated). See
+> `templates/springer-nature-latex/README.md` for build instructions,
+> class-option table, and the kaizen finding on `.bst` subdirectory
+> placement (bibtex will not find `.bst` files in a `bst/` subfolder --
+> copy the needed style file alongside `paper.tex`/`refs.bib` first).
+> Also added the **Professional Publication Standards** section (new,
+> below) specifying the journal-grade content, tone, structure, and
+> copyediting bar every QNFO publication must clear -- this is the
+> "would a peer reviewer at Foundations of Physics / PRA / NJP accept this
+> without a desk rejection for presentation quality" bar, independent of
+> and in addition to the Physics Writing Standards (`qnfo-agent` §7,
+> content-integrity) and Publication Language Gate (internal-language
+> scrubbing) that already existed. Validated end-to-end: rebuilt *The
+> Macroscopic Boundary Problem in Quantum Reconstructions* on the new
+> template (13 pages, zero undefined references, zero Unicode replacement
+> characters, clean 4-pass build) as the reference case.
 
 > **v2.16 UPDATE (2026-07-25, structured-schema kaizen):** Added
 > **`references/zenodo-deposit-schema.json`** (canonical Zenodo REST API
@@ -634,7 +661,143 @@ All 18 points apply. Minimum: certainty calibration on every non-textbook claim,
 
 **Publish only if ALL >= 3 AND average >= 4.0.**
 
-### PDF Building (Pandoc+XeLaTeX ONLY)
+### Professional Publication Standards (MANDATORY, HARD GATE -- 2026-07-25)
+
+Every QNFO publication -- paper, PDF, or dissemination artifact -- MUST meet
+the content, tone, structure, and copyediting bar that a subject-matter
+peer reviewer at a serious journal (Foundations of Physics, Physical Review
+A, New Journal of Physics, Quantum, or equivalent) would expect, such that
+the submission is judged on its scientific merits and is NOT desk-rejected
+or flagged for unprofessional presentation. This is a DISTINCT gate from
+the Physics Writing Standards (`qnfo-agent` §7, content-integrity: banned
+words, certainty labels, falsifiability) and the Publication Language Gate
+(internal-language/credential scrubbing) -- both of those govern *what is
+said*; this gate governs *how professionally it reads*. A paper can pass
+both of those gates and still fail this one if it reads like a draft.
+
+**Structural requirements (all must be present, in this order, for a
+full research article):**
+1. Title -- concise, informative, no acronyms undefined at first use.
+2. Abstract -- 150-250 words (Springer Nature convention; adjust per
+   target journal), self-contained, no undefined abbreviations, no
+   citations unless the target journal explicitly permits them.
+3. Keywords -- 4-6 terms suitable for indexing.
+4. Introduction -- states the problem, situates it in the literature,
+   states the paper's contribution and structure (a "roadmap" paragraph
+   naming each subsequent section is expected in physics/math papers).
+5. Body sections -- decimal numbering, no more than 3 heading levels
+   (Springer Nature convention), one clear argument thread per section.
+6. Conclusion -- restates contribution, is honest about limitations,
+   does NOT introduce new citations or claims not defended in the body.
+7. Declarations -- all 9 subsections per the template README (Funding,
+   Conflicts of Interest, Ethics, Consent, Author Contributions, Data/
+   Materials/Code Availability, Use of Artificial Intelligence).
+8. Bibliography -- every entry cited in text, no orphan/unused entries,
+   consistent citation style throughout (numbered XOR author-year, never
+   mixed).
+
+**Tone and prose requirements:**
+- **Formal, third-person or first-person-plural ("we argue", "we show"),
+  never first-person-singular ("I think") in the body text** -- singular
+  first person is acceptable only in author-contribution/declaration
+  statements about the author personally.
+- **No hedging filler** ("it could perhaps be argued that", "in some
+  sense") -- state the claim, then qualify it with an explicit certainty
+  label per the Physics Writing Standards, not with vague hedge-words.
+- **No rhetorical questions in the body text** of a research article
+  (acceptable sparingly in a Discussion section framing an open problem,
+  but the default is declarative prose).
+- **No contractions** ("doesn't", "it's") -- expand to full form.
+- **Active voice preferred** over passive, except where passive is the
+  disciplinary convention (e.g., describing an experimental procedure:
+  "the sample was prepared").
+- **Consistent tense**: present tense for established facts and the
+  paper's own ongoing argument ("Section 3 shows..."), past tense for
+  prior work's specific findings ("Hardy derived...").
+- **No AI-generated-sounding transitional filler** ("It is important to
+  note that", "In conclusion, it can be seen that", "Moreover, it is
+  worth mentioning") -- these read as generation artifacts and are a
+  Publication Language Gate concern as well as a tone concern. Replace
+  with direct statements.
+
+**Copyediting checklist (run before every publication, no exceptions):**
+- [ ] Zero spelling errors (run a spell-check pass; do not rely on
+      LaTeX/pandoc to catch these).
+- [ ] Zero grammar errors -- subject-verb agreement, correct article use
+      (a/an/the), correct preposition use throughout.
+- [ ] Consistent hyphenation/compound-word conventions within the paper
+      (e.g., "state-of-the-art" always hyphenated when adjectival, never
+      "state of the art" and "state-of-the-art" mixed).
+- [ ] Consistent capitalization of technical terms (e.g., "Hilbert space"
+      not sometimes "Hilbert Space").
+- [ ] Curly quotes and em-dashes in body prose (`` `` '' `` / `---` in
+      LaTeX source), never straight quotes or double-hyphens in rendered
+      output.
+- [ ] No orphaned section headers (a heading immediately followed by
+      another heading with no body text between them).
+- [ ] No repeated words ("the the"), doubled spaces, or trailing
+      whitespace artifacts from find-replace operations.
+- [ ] Every acronym defined at first use, used consistently thereafter
+      (Springer Nature Instructions for Authors requirement, verified
+      live 2026-07-25).
+- [ ] Every figure/table has a caption, is referenced from body text at
+      least once, and captions do not simply repeat the section text.
+- [ ] Every equation that is referenced elsewhere in the paper has a
+      `\label{}`/`\ref{}` pair, not a hardcoded equation number.
+- [ ] Reference list entries are complete (author, title, venue, year,
+      DOI where available) and formatted identically to each other
+      (same punctuation/ordering pattern for every entry of the same
+      type -- journal article, book, preprint, etc.).
+
+**Self-review protocol (MANDATORY before declaring a paper publication-ready):**
+1. Read the paper start to finish as a hostile peer reviewer would --
+   flag any sentence that would draw a reviewer comment about clarity,
+   rigor, or presentation, not just correctness.
+2. Read the Abstract in isolation -- does it stand alone as a complete
+   summary without the reader needing the rest of the paper?
+3. Read only the section headings in sequence -- do they form a
+   coherent narrative arc on their own?
+4. Check that no paragraph is a single run-on sentence and no section
+   is a single paragraph longer than roughly half a page.
+5. Confirm the Declarations section is complete per the checklist above
+   -- an incomplete Declarations section is itself a professional-
+   quality failure independent of the science.
+
+**GATE:** A publication that fails ANY item in the structural,
+tone/prose, or copyediting checklists above is NOT publication-ready,
+regardless of scientific content quality. Fix the presentation issue,
+then re-run this checklist, before proceeding to PDF build and upload.
+
+### PDF Building
+
+**DEFAULT TEMPLATE (MANDATORY, 2026-07-25): the Springer Nature LaTeX
+Template (`sn-jnl.cls`, v3.1, December 2024)** is the standard template
+for ALL QNFO LaTeX-native publications and publication-grade PDFs. Files
+are embedded in this skill at `templates/springer-nature-latex/` --
+`sn-jnl.cls`, all 8 `.bst` bibliography styles, the official
+`sn-article.tex` reference example, `sn-bibliography.bib`,
+`user-manual.pdf`, and `qnfo-paper-template.tex` (a QNFO-conventions
+starter with the mandatory Declarations block pre-populated). See
+`templates/springer-nature-latex/README.md` for the full class-option
+table and verified build sequence
+(`pdflatex -> bibtex -> pdflatex -> pdflatex`, with the `.bst` file
+copied alongside `paper.tex`/`refs.bib` -- bibtex does not search the
+`bst/` subdirectory by default).
+
+**Do NOT use the legacy `svjour3`/`svjour.cls` package** (CTAN package
+name `springer`) for new LaTeX papers -- it was Springer Nature's
+per-journal class system, retired in favor of the unified `sn-jnl.cls`
+across essentially all Springer Nature journals (verified live against
+Springer Nature's own LaTeX Author Support page, 2026-07-25). Existing
+papers built on `svjour3` should be migrated to `sn-jnl.cls` at the next
+substantive revision.
+
+**For Markdown-native publications** (papers authored and maintained as
+`paper.md` rather than `paper.tex` -- e.g., most QNFO working papers prior
+to journal submission), continue using Pandoc+XeLaTeX per the pipeline
+below. Convert to the Springer Nature LaTeX template at the point of
+formal journal submission, or immediately if the target venue requires
+LaTeX source at all revision stages.
 
 **STEP 0 (MANDATORY, run BEFORE pandoc -- kaizen fix A1/A2):** XeLaTeX's
 default font (Latin Modern) lacks glyphs for many Unicode Greek/math/
@@ -1582,6 +1745,10 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
 | Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` — tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
 | Reconstructing Buffer GraphQL mutation shape from scattered prose each session | Consult `references/buffer-graphql-schema.json` for the single canonical schema (endpoint, auth, channel discovery, createPost input fields, union response handling). |
+| Using the legacy `svjour3`/`svjour.cls` package for new LaTeX papers | Retired -- use `sn-jnl.cls` (Springer Nature's unified template, embedded at `templates/springer-nature-latex/`) as the mandatory default. |
+| Placing a `.bst` bibliography style file in a `bst/` subdirectory relative to `paper.tex` | `bibtex` does not search subdirectories by default -- copy the needed `.bst` alongside `paper.tex`/`refs.bib` before running `bibtex`. |
+| Declaring a paper "publication-ready" after only the Physics Writing Standards / Publication Language Gate pass | Also run the Professional Publication Standards structural, tone/prose, and copyediting checklists -- content-integrity and presentation-quality are separate gates, both mandatory. |
+| Submitting/publishing a paper with an incomplete Declarations section (missing any of the 9 mandatory subsections) | Springer Nature treats incomplete Declarations as an incomplete submission -- write "Not applicable" explicitly rather than omitting a subsection. |
 
 
 

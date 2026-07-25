@@ -1,7 +1,7 @@
 ---
 name: documents
 description: Create, edit, and analyze all document formats -- Word (.docx) with formatting and tracked changes, PowerPoint (.pptx) presentations from outlines, Excel (.xlsx/.csv/.tsv) spreadsheets with formulas and analysis, and PDF manipulation (form filling, merge, split, text/table extraction). For publication-grade LaTeX PDF builds, use the research skill.
-version: "2.1"
+version: "2.3"
 triggers: ["docx", "Word", "document", "PowerPoint", "presentation", "slides", "Excel", "spreadsheet", "CSV", "TSV", "xlsx", "pptx", "PDF", "form", "fill form", "merge PDF", "split PDF", "extract PDF", "table extraction", "tracked changes", "comments", "speaker notes", "formula", "chart", "pivot table", "data analysis", "import", "export", "office", "formatting", "styles", "headers", "footers"]
 related: ["research"]
 priority: 2
@@ -10,7 +10,14 @@ autonomous: false
 self_sufficient: true
 ---
 
-# DOCUMENTS -- v2.2 (Office + PDF + 4-D Export)
+# DOCUMENTS -- v2.3 (Office + PDF + 4-D Export)
+
+> **v2.3 UPDATE (2026-07-25, professional-standard kaizen):** Added the
+> **Professional Publication Standards (Cross-Skill Mandate)** section
+> below, cross-referencing `research/SKILL.md`'s new journal-grade
+> structure/tone/prose/copyediting bar — every .docx/.pptx/.xlsx/.pdf
+> deliverable must meet the same professional-quality gate as LaTeX
+> research papers, not a lower bar just because the format differs.
 
 > **v2.2 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A document is not
@@ -198,12 +205,32 @@ Each `##` becomes a new slide. Lists become bullet points. Tables become formatt
 
 ---
 
+## Professional Publication Standards (Cross-Skill Mandate, 2026-07-25)
+
+Every deliverable produced by this skill -- .docx, .pptx, .xlsx, or .pdf --
+that will be shared externally or delivered as a finished artifact MUST
+meet the same professional content, tone, structure, and copyediting bar
+defined in `research/SKILL.md` § "Professional Publication Standards":
+formal tone (no contractions, no first-person-singular in body content,
+no AI-generated-sounding filler like "It is important to note that"),
+zero spelling/grammar errors, consistent terminology and formatting
+throughout, complete section/slide structure with no orphaned headings,
+and a final self-review pass reading the deliverable as a critical
+external reviewer would. This applies regardless of format -- a .docx
+report or .pptx deck held to a lower bar than a LaTeX paper is still a
+Publication Language / Professional Standards Gate failure. For
+publication-grade research PDFs specifically (LaTeX-native journal
+papers), use the `research` skill's Springer Nature LaTeX Template
+(`sn-jnl.cls`) at `research/templates/springer-nature-latex/` rather than
+generating a PDF directly from this skill.
+
 ## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
 | Creating documents without verification | Always Test-Path + check content |
 | Losing formulas during .xlsx edits | Use formula-preserving edit paths |
 | Wrong file extension | Match: .docx/.pptx/.xlsx/.csv/.pdf |
-| Using this skill for publication PDFs | Use `research` skill for Pandoc+XeLaTeX |
+| Using this skill for publication PDFs | Use `research` skill for Pandoc+XeLaTeX, or the Springer Nature LaTeX template (`sn-jnl.cls`) for LaTeX-native journal papers |
 | Cross-skill document confusion | Documents -> R2 archive -> Papers (via research pipeline) |
+| Delivering a .docx/.pptx/.xlsx with informal tone, contractions, or AI-generated-sounding filler phrasing | Apply the same Professional Publication Standards bar as research papers (see above) -- format does not exempt content from the professional-quality gate |
 \n\n## R2 Archival Script\n`js\n// _r2_archive.js — Archive any document to R2 for durable storage\nconst TOKEN = process.env.CLOUDFLARE_API_TOKEN;\nconst ACCOUNT = '...';\nconst BUCKET = 'qnfo';\nconst KEY = 'documents/filename.ext';\nconst content = '...'; // file content\n\nawait fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/r2/buckets/' + BUCKET + '/objects/' + encodeURIComponent(KEY), {\n  method: 'PUT',\n  headers: { 'Authorization': 'Bearer ' + TOKEN },\n  body: content\n});\n// Verify: GET same URL returns 200 with content\n// Alt: npx wrangler r2 object put qnfo/{KEY} --file {path} --remote\n`

@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
 description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.38"
+version: "3.41"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,23 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.40 (Safety-Net Core)
+# QNFO-AGENT — v3.41 (Safety-Net Core)
+
+> **v3.41 UPDATE (2026-07-25, default-template + professional-standard kaizen):**
+> Established the Springer Nature LaTeX Template (`sn-jnl.cls`, v3.1, Dec
+> 2024) as the MANDATORY DEFAULT for all QNFO LaTeX publications — retiring
+> all references to the legacy `svjour3`/`svjour.cls` package (verified
+> retired live against Springer Nature's own LaTeX Author Support page).
+> Template files embedded in `research/templates/springer-nature-latex/`.
+> Added the **Professional Publication Standards** gate (`research`
+> skill, new section) as a DISTINCT layer on top of the existing Physics
+> Writing Standards (content-integrity) and Publication Language Gate
+> (internal-language scrubbing): every QNFO deliverable — paper, PDF,
+> .docx, .pptx, .xlsx — must clear a journal-grade structure/tone/prose/
+> copyediting bar before being considered publication-ready. See
+> `documents` skill's cross-reference for non-LaTeX deliverables. Both
+> `research` (v2.17) and `documents` (v2.2→2.3) skills updated
+> accordingly; this entry is the pointer for future sessions.
 
 > **v3.40 UPDATE (2026-07-25, systemwide portfolio audit):** Added KIF-22
 > (registry-extension drift — "extend list X when Y happens" mandates fail
@@ -371,6 +387,12 @@ BEFORE declaring "publication-ready," scan for:
 - [ ] PDF rendering verified — no `\ufffd` characters
 - [ ] Zenodo: paper.md + paper.pdf + PROVENANCE-BUNDLE.zip uploaded
 - [ ] D1 living-paper entry exists, papers-server URL verified HTTP 200
+- [ ] `research` skill's Professional Publication Standards checklist
+      (structure, tone/prose, copyediting — DISTINCT from the 18-point
+      Physics Writing Standards above, which governs content-integrity
+      only) has been run and passed. Default LaTeX template is
+      `sn-jnl.cls` (Springer Nature, `research/templates/springer-nature-latex/`)
+      — NOT the retired `svjour3`/`svjour.cls`.
 
 ### Self-Evaluation Rubric (Numeric Quality Gate)
 | Dimension | 1 (Poor) | 3 (Adequate) | 5 (Excellent) |
