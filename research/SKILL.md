@@ -10,7 +10,19 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.15 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.16 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.16 UPDATE (2026-07-25, structured-schema kaizen):** Added
+> **`references/zenodo-deposit-schema.json`** (canonical Zenodo REST API
+> schema, including the `resource_type` persistence-failure incident from
+> the adelic-cross-domain v3.2 newversion publish and the working
+> `upload_type`/`publication_type` string-field fallback) and
+> **`references/buffer-graphql-schema.json`** (canonical Buffer GraphQL
+> schema consolidated from the scattered Phase 7 prose below). Added
+> **`scripts/zenodo-resource-type-fix.py`** — tries known-working metadata
+> shapes in order and verifies persistence via re-GET instead of guessing.
+> Consult these reference files BEFORE constructing any Zenodo/Buffer API
+> call. See `qnfo-agent` KIF-20.
 
 > **v2.15 UPDATE (2026-07-24, PQS epistemic bias kaizen):** Added three new
 > HARD gates from the PQS AI-Evaluation Audit session:
@@ -1568,6 +1580,8 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2) | Strip it -- `scripts/unicode-latex-preprocess.py` does this automatically. It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
+| Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` — tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
+| Reconstructing Buffer GraphQL mutation shape from scattered prose each session | Consult `references/buffer-graphql-schema.json` for the single canonical schema (endpoint, auth, channel discovery, createPost input fields, union response handling). |
 
 
 

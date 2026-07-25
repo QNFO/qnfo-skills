@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "purpose": "Canonical, verified-working Zenodo REST API request/response schema for the QNFO publication pipeline. Read this BEFORE constructing any Zenodo API call to prevent repeated schema-guessing failures documented in incident_log.",
+    "source_of_truth": "https://developers.zenodo.org/",
+    "last_verified_live": "2026-07-25",
+    "incident_log": [
+      "2026-07-21: ~15 tool calls wasted diagnosing 403 as 'token dead/read-only' when actual cause was a hand-transcribed truncated token. See scripts/zenodo-token-check.py.",
+      "2026-07-25 (adelic-cross-domain v3.2 newversion): metadata.resource_type accepted as a bare STRING ('publication') on PUT, but REJECTED as an OBJECT ({type, subtype}) with error 'Not a valid string' on a NEW-VERSION DRAFT's metadata PUT. Working fix was top-level upload_type + publication_type STRING fields instead of a nested resource_type object. ALWAYS GET the current draft metadata first and match its existing field shape before PUTting -- do not assume schema.",
+      "2026-07-25: actions/publish failed with 'Missing data for required field: resource_type' even though a prior metadata PUT with resource_type as a string returned HTTP 200 -- the value was silently NOT persisted server-side. Workaround: use upload_type/publication_type string pair (verified to persist and allow publish to succeed)."
+    ]
+  },
+  "auth": {
+    "header": "Authorization: Bearer <ZENODO_TOKEN>",
+    "token_storage_rule": "NEVER hardcode value. Read live from os.environ.get('ZENODO_TOKEN') or $env:ZENODO_TOKEN. NEVER hand-copy a truncated terminal display (see qnfo-agent KIF-10).",
+    "required_scopes": ["deposit:write", "deposit:actions", "user:email"]
+  },
+  "endpoints": {
+    "create_new_deposit": {
+      "method": "POST",
+      "url": "https://zenodo.org/api/deposit/depositions",
+      "body": {},
+      "note": "Empty JSON body creates an empty draft. Response contains id (deposit id), links.bucket (files upload URL), links.html (draft URL)."
+    },
+    "create_new_version": {
+      "method": "POST",
+      "url": "https://zenodo.org/api/deposit/depositions/{existing_deposit_id}/actions/newversion",
+      "body": {},
+      "note": "existing_deposit_id MUST be the LATEST version deposit id, verified via a GET first (see version_chain_check). Response contains links.latest_draft -- extract the new draft id from the URL's last path segment.",
+      "gotcha": "Calling this on a stale (non-latest) deposit id returns HTTP 403."
+    },
+    "upload_file": {
+      "method": "PUT",
+      "url": "https://zenodo.org/api/deposit/depositions/{deposit_id}/files",
+      "content_type": "application/octet-stream",
+      "note": "CRITICAL: Content-Type MUST be application/octet-stream. Using application/pdf or omitting causes SILENT FAILURE (HTTP 200 but file not actually stored) or HTTP 415. Root cause of a WBS v3.2 deposition corruption incident (9 markers stuck PENDING).",
+      "verify": "GET https://zenodo.org/api/deposit/depositions/{deposit_id}/files afterwards -- confirm filesize matches local file byte count."
+    },
+    "delete_file": {
+      "method": "DELETE",
+      "url": "https://zenodo.org/api/deposit/depositions/{deposit_id}/files/{file_id}",
+      "note": "Use to remove stale files auto-copied by actions/newversion before uploading replacements."
+    },
+    "get_draft_metadata": {
+      "method": "GET",
+      "url": "https://zenodo.org/api/deposit/depositions/{deposit_id}",
+      "note": "ALWAYS run BEFORE any metadata PUT to see the exact current field shape (especially resource_type / upload_type). Match existing shape rather than assuming a schema."
+    },
+    "set_metadata": {
+      "method": "PUT",
+      "url": "https://zenodo.org/api/deposit/depositions/{deposit_id}",
+      "body_schema_variant_A_fresh_deposit": {
+        "metadata": {
+          "title": "string, required",
+          "upload_type": "string, required -- one of: publication, dataset, software, poster, presentation, image, video, lesson, physicalobject, other",
+          "publication_type": "string, required IF upload_type=publication -- one of: annotationcollection, book, section, conferencepaper, datamanagementplan, article, patent, preprint, deliverable, milestone, proposal, report, softwaredocumentation, taxonomictreatment, technicalnote, thesis, workingpaper, other",
+          "description": "string, required, HTML allowed",
+          "creators": [{"name": "Family, Given", "affiliation": "optional", "orcid": "optional"}],
+          "access_right": "string, required -- one of: open, embargoed, restricted, closed",
+          "license": "string, required if access_right=open -- SPDX id e.g. CC-BY-4.0",
+          "version": "string, optional -- e.g. 3.2",
+          "related_identifiers": [
+            {"relation": "isNewVersionOf", "identifier": "10.5281/zenodo.PREVIOUS", "scheme": "doi"},
+            {"relation": "isVersionOf", "identifier": "10.5281/zenodo.CONCEPT", "scheme": "doi"},
+            {"relation": "isSupplementedBy", "identifier": "https://github.com/...", "scheme": "url"},
+            {"relation": "cites", "identifier": "10.5281/zenodo.CITED", "scheme": "doi"}
+          ],
+          "keywords": "ARRAY of strings, not a comma-joined string -- omit entirely if unsure to avoid 400s"
+        }
+      },
+      "body_schema_variant_B_newversion_draft_string_fallback": {
+        "_comment": "VERIFIED WORKING 2026-07-25 for a draft created via actions/newversion when variant A's nested resource_type/publication_type object was rejected with 'Not a valid string'.",
+        "metadata": {
+          "title": "string",
+          "upload_type": "publication",
+          "publication_type": "preprint",
+          "description": "string",
+          "creators": [{"name": "Family, Given"}],
+          "access_right": "open",
+          "license": "CC-BY-4.0",
+          "version": "3.2",
+          "related_identifiers": "same array shape as variant A"
+        }
+      },
+      "response_error_signatures": {
+        "missing_resource_type_on_publish": "HTTP 400 metadata.resource_type Missing data for required field -- occurs on actions/publish even though the metadata PUT returned 200. Means the PUT value was NOT persisted -- re-GET the draft to confirm before assuming success.",
+        "invalid_resource_type_object": "HTTP 400 metadata.resource_type Not a valid string -- occurs when resource_type is a nested object on certain newversion drafts. Fall back to variant B (upload_type + publication_type top-level strings)."
+      }
+    },
+    "publish": {
+      "method": "POST",
+      "url": "https://zenodo.org/api/deposit/depositions/{deposit_id}/actions/publish",
+      "pre_check": "GET the draft metadata FIRST and confirm upload_type/publication_type (or resource_type) is non-empty before calling publish -- a metadata PUT returning 200 is NOT sufficient evidence the field persisted."
+    },
+    "verify_published": {
+      "method": "GET",
+      "urls": [
+        "https://doi.org/10.5281/zenodo.{id}  (expect HTTP 302 redirect)",
+        "https://zenodo.org/api/records/{id}  (expect HTTP 200, JSON with doi and related_identifiers populated)"
+      ],
+      "rule": "NEVER report published from the actions/publish response alone. Independently re-query one of the above URLs in the SAME turn before claiming success (Anti-Phantom Gate)."
+    }
+  },
+  "version_chain_check": {
+    "purpose": "Prevent calling actions/newversion on a stale deposit id (HTTP 403)",
+    "steps": [
+      "1. GET https://zenodo.org/api/deposit/depositions/{last_known_deposit_id} with auth header",
+      "2. If this fails or state is not latest, look up current latest via GET https://zenodo.org/api/records/?q=conceptdoi:\"{concept_doi}\"",
+      "3. Track state in project-local .zenodo_versions.json: {concept_doi, latest_deposit_id, versions:[{doi, deposit_id, tag, published_at}]}"
+    ]
+  },
+  "provenance_bundle_gate": {
+    "rule": "PROVENANCE-BUNDLE.zip MUST exist and contain paper.md + paper.pdf BEFORE upload begins. Verify with a zipfile.namelist() check."
+  }
+}

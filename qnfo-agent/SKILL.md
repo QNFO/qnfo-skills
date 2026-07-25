@@ -10,7 +10,25 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.38 (Safety-Net Core)
+# QNFO-AGENT — v3.39 (Safety-Net Core)
+
+> **v3.39 UPDATE (2026-07-25, tool-availability + structured-schema kaizen):**
+> Red-teamed a live "wrangler is not installed" claim made in this session's
+> own reasoning trace — re-verified with `npx wrangler --version` +
+> `npx wrangler whoami` in the SAME turn, both succeeded (account
+> `quniverse`), proving the claim was a FALSE NEGATIVE from an unrelated
+> signal (see KIF-19). Added §8.6 Rule 16 (Tool-Availability False-Negative
+> Prevention) and `cloudflare` skill's new `scripts/wrangler-check.js`
+> canonical probe. Also added KIF-20 (Zenodo `resource_type` persistence
+> failure) and KIF-21 (D1 large-payload PowerShell JSON corruption), both
+> with new structured schema/spec reference files
+> (`research/references/zenodo-deposit-schema.json`,
+> `cloudflare/references/d1-rest-api-schema.json`,
+> `research/references/buffer-graphql-schema.json`,
+> `cloudflare/references/workers-deploy-metadata-schema.json`) and failsafe
+> scripts (`zenodo-resource-type-fix.py`, `d1-safe-write.js`) so future
+> sessions consult a verified schema spec instead of re-guessing API shapes
+> from scratch.
 
 > **v3.38 UPDATE (2026-07-24, PQS epistemic bias kaizen):** Added KIF-16/17/18
 > from the PQS AI-Evaluation Audit session. KIF-16 (Institution Fallacy):
@@ -255,6 +273,9 @@ the old behavior was correct.
 | KIF-16 | Institution Fallacy — agent treated "not peer reviewed" as proxy for "unreliable," replicating AI "fringe" framing without questioning it | `qnfo-agent` §0.0 Rule 6 + `research` §1 Institutional Status Neutrality Gate — evaluate claims against evidence, not institutional status; banned "fringe"/"pseudoscience" without specific contradicting-evidence citations | v3.38, 2026-07-24, PQS session |
 | KIF-17 | Convergence Trap — AI agreement treated as validation when it may reflect shared training-data bias | `research` §1 AI Convergence Bias Disclosure — flag when 2+ AI evaluations converge on dismissal; convergence is NOT independent confirmation | v3.38, 2026-07-24, PQS session |
 | KIF-18 | Symmetry Violation — investigation documents defaulted to supporting-evidence-only structure | `research` §2 Mandatory Symmetry Template — both "Supporting" AND "Constraining" sections required; document structure enforces epistemic balance | v3.38, 2026-07-24, PQS session |
+| KIF-19 | "Wrangler is not installed" FALSE NEGATIVE — sessions repeatedly concluded wrangler was unavailable from `npm ls -g wrangler` returning empty, a bare `where`/`which wrangler` miss, or a Python `subprocess.run()` call that doesn't inherit the shell's npx PATH resolution — when `npx wrangler --version` / `npx wrangler whoami` in fact succeed every time (wrangler is invoked exclusively via npx, never a global install). This exact session's own reasoning trace repeated the false claim. | `cloudflare` `scripts/wrangler-check.js` (canonical availability+auth probe, checks npx-invoked version+whoami, not global list); `qnfo-agent` §8.6 Rule 16 below | v3.39, 2026-07-25, this session — re-verified live: `npx wrangler whoami` returned account `quniverse` |
+| KIF-20 | Zenodo `metadata.resource_type` silently failed to persist as a bare string (PUT returned 200, but `actions/publish` then failed "Missing data for required field"), and was outright REJECTED as a nested object ("Not a valid string") on an `actions/newversion` draft specifically. Root cause of ~10 exploratory calls during the adelic-cross-domain v3.2 Zenodo newversion publish. | `research` `references/zenodo-deposit-schema.json` (documents both schema variants + the exact failure signatures) and `scripts/zenodo-resource-type-fix.py` (tries variants in order, verifies persistence via re-GET, stops at first working shape) | v3.39, 2026-07-25, adelic-cross-domain v3.2 session |
+| KIF-21 | D1 write of a large multi-KB `body_md` string via PowerShell `ConvertTo-Json` + `curl.exe` silently corrupted into the literal 15-byte string `"[object Object]"` instead of the actual content — the `{success:true, changes:5}` response gave no indication of the corruption; only a follow-up `SELECT LENGTH(body_md)` caught it. | `cloudflare` `scripts/d1-safe-write.js` (Node.js-native JSON construction avoids the PowerShell serialization bug; mandatory re-GET length-verification built in, refuses to report success on mismatch) | v3.39, 2026-07-25, adelic-cross-domain v3.2 session |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
@@ -454,6 +475,9 @@ re-derive or re-copy these rules elsewhere.
 ### Subagent/Parallelization Efficiency
 14. **Delegate divergent/independent research to `explorer` subagents in parallel**, not sequential tool calls in the main thread, when the sub-investigations do not depend on each other.
 15. **Inline all subagent inputs — never pass file paths.** File I/O, git, and Python execution stay in the parent session (per §5 Subagent Delegation rules) so results can be synthesized without re-reading files the subagent already read.
+
+### Tool-Availability False-Negative Prevention (KIF-19, MANDATORY)
+16. **NEVER conclude "X is not installed" from a single indirect signal.** `npm ls -g wrangler` returning empty, a bare `where`/`which <tool>` miss, or a Python `subprocess.run()` PATH failure are ALL insufficient evidence for CLI tools that are invoked via `npx` (wrangler, and any other npx-cached package) rather than globally installed. The ONLY sufficient test for wrangler specifically is `npx wrangler --version` (and `npx wrangler whoami` for auth) executed via the `exec` tool directly — run `cloudflare` skill's `scripts/wrangler-check.js` for the canonical probe. If a "not installed" claim appears in reasoning/thinking output without having run this exact probe in the SAME turn, it is a phantom diagnostic and must be corrected before acting on it (see KIF-19).
 
 ---
 

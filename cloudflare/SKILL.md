@@ -10,7 +10,24 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.3 (Full-Stack + Consolidation, v2.8 no external IPFS)
+# CLOUDFLARE -- v3.5 (Full-Stack + Consolidation, v2.8 no external IPFS)
+
+> **v3.5 UPDATE (2026-07-25, wrangler false-negative + structured-schema kaizen):**
+> Root-caused a live "wrangler is not installed" claim in this session's own
+> reasoning output — direct re-verification via `npx wrangler --version` +
+> `npx wrangler whoami` (executed via `exec`, same turn) both succeeded
+> (account `quniverse`, token valid). The false claim traced to checking the
+> WRONG signal (`npm ls -g wrangler` / bare PATH lookup / subprocess PATH
+> loss) instead of the only sufficient test (`npx wrangler <cmd>` directly).
+> Added canonical **`scripts/wrangler-check.js`** probe — run this instead of
+> re-deriving an availability check ad hoc. Also added
+> **`references/d1-rest-api-schema.json`** (D1 REST schema + FTS5/upsert
+> gotchas) and **`references/workers-deploy-metadata-schema.json`** (Worker
+> multipart deploy schema + binding shapes + the CRLF-boundary code-corruption
+> bug), plus **`scripts/d1-safe-write.js`** (Node-native CHECK-THEN-WRITE
+> helper that avoids the PowerShell `ConvertTo-Json` large-payload corruption
+> bug and always re-verifies via length comparison). See `qnfo-agent`
+> KIF-19/20/21.
 
 > **v3.3 UPDATE (2026-07-21, phantom-claim audit):** Added the **Tool-Call
 > Execution Mandate** section below (immediately after `execute_plan`).
@@ -525,3 +542,7 @@ CNAME pointing to non-existent Worker.
 | Vectorize binding declared in wrangler config but never called in fetch handler (dead binding masked by LIKE/stub fallback) | Read full Worker source and cross-reference every declared binding name against actual usage in handler code. Found 2026-07-18 in both `qnfo-ipatent` (`/api/search` literal stub despite populated 1024-dim `DISCLOSURES_VZ` index) and `qnfo-qwav` (`/ask` used SQL `LIKE` despite unused `QWAV_VZ` binding to 768-dim `qwav-research-v2` index). Fix: embed query via Workers AI (matching the index's original embedding model), `.query()` the Vectorize index, keep LIKE only as a fallback when AI/Vectorize is unavailable. |
 | Restoring a production D1 database via Time Travel without first exporting a full row/table snapshot of ANY concurrent writes to R2 | Before any Time Travel restore, run `SELECT *` (explicit column list, avoid FTS5 tables which break `d1 export`) and upload the JSON to R2 as a safety net. Verified 2026-07-18: C-01 living-paper restore preceded by snapshot to `qnfo-backups/living-paper/pre-restore-snapshot-*.json`; post-restore diff confirmed zero data loss. |
 | Using external IPFS pinning services (REMOVED v3.2) | All external pinning (Pinata, Filebase, Lighthouse, Arweave) deprecated. Core stack: R2+D1+Workers+DNS. DNSLink is optional. |
+| Concluding "wrangler is not installed" from `npm ls -g wrangler`, a bare `where wrangler` miss, or a Python `subprocess.run()` PATH failure (KIF-19) | Run `node scripts/wrangler-check.js` — the ONLY sufficient test is `npx wrangler --version` + `npx wrangler whoami` executed directly via `exec`. Wrangler is invoked exclusively via `npx`, never globally installed. |
+| Guessing D1/Zenodo/Workers/Buffer API request shapes from memory each session | Consult `references/d1-rest-api-schema.json`, `references/workers-deploy-metadata-schema.json` (this skill) and `../research/references/zenodo-deposit-schema.json`, `../research/references/buffer-graphql-schema.json` (research skill) BEFORE constructing the call. |
+| `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables (HTTP 400) | Use `scripts/d1-safe-write.js` (CHECK-THEN-WRITE, never a combined upsert) — see `references/d1-rest-api-schema.json`. |
+| Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
