@@ -434,7 +434,12 @@ DMARC: TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com"
 Baseline: 6. Database IDs: `ipatent-db`, `qnfo-cms`, `living-paper`, `portfolio-state`, `qnfo-graph`, `qnfo-audit`
 
 ### R2 Buckets
-Baseline: 14 buckets (added `releases` 2026-07-15, distinct from `qnfo-releases`).
+Baseline: 13 buckets (corrected 2026-07-25 systemwide audit — live enumeration returned 13:
+`deepchat`, `git-repos`, `ipatent`, `palimpsest-research`, `play-the-ball`, `qnfo`, `qnfo-assets`,
+`qnfo-audit`, `qnfo-backups`, `qnfo-projects`, `qnfo-releases`, `qnfo-skills`, `releases`.
+The prior "14" baseline could not be reconciled against any deletion record — OPEN ITEM F-1,
+see `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md`. Any future count ≠ 13 without
+an audit-trail row is drift.)
 
 ### Workers
 Baseline: 7 (post-consolidation 2026-07-18).
@@ -479,7 +484,7 @@ CNAME pointing to non-existent Worker.
 | Workers | 7 | 8-9 | 10+ |
 | Pages Projects | 5 | 6-7 | 8+ |
 | Vectorize Indexes | 4 | +/- 1 | +/- 2+ |
-| R2 Buckets | 14 | +/- 1 | +/- 3+ |
+| R2 Buckets | 13 | +/- 1 | +/- 3+ |
 | Queues | 1 | +/- 1 | +/- 2+ |
 | KV Namespaces | 1 | +/- 1 | +/- 2+ |
 | DNS Zones | 12 active | +/- 1 | +/- 3+ |
@@ -504,6 +509,18 @@ CNAME pointing to non-existent Worker.
 `qnfo-lifecycle` runs a daily 05:00 UTC cron (`runBackup`) that exports `portfolio-state.resources` and `qnfo-audit.audit_sessions` to `qnfo-backups/{db}/{table}-{date}.json`. **Before this fix, `qnfo-backups` was 0 objects for the database's entire lifetime** — a silent single-point-of-failure that turned a 3-row data-loss incident (C-01, 2026-07-18) into an unrecoverable event without D1 Time Travel. Extend `runBackup`'s `tables` array whenever a new production-critical D1 table is added (e.g., `living-paper.papers` once schema stabilizes).
 
 **C-01 RESOLVED (2026-07-18):** `living-paper.papers` fully restored to 616 rows via `wrangler d1 time-travel restore --bookmark=00000b67-...`. KG-D1 reconciled to 616=616 (26 missing KG Paper nodes seeded via `qnfo-gateway` `/sync`). Zero data loss confirmed — a concurrent session's 189-row write (13 orphan chapter files) was verified already contained within the restored 616-row set.
+
+**BACKUP GAP CLOSED (2026-07-25, KIF-22):** `qnfo-lifecycle` v1.2 deployed with `living-paper.papers` added to the daily `runBackup` tables array (LIVING_PAPER D1 binding). The mandate above ("extend runBackup whenever a new production-critical table is added") had sat unexecuted for 7 days while the table grew to 931 rows with zero scheduled backups. First backup verified: `qnfo-backups/living-paper/papers-2026-07-25.json` (4.9 MB, 931 rows).
+
+### Gateway /sync Bulk Contract (documented 2026-07-25, F-6)
+`POST https://qnfo-gateway.q08.workers.dev/sync` requires EXACTLY:
+```json
+{"action": "bulk", "nodes": [{"id": "...", "name": "...", "label": "...", "properties": {}}], "edges": []}
+```
+Any other body shape returns the unhelpful `{"error":"Only bulk sync supported"}`. Nodes upsert via `ON CONFLICT(id)`. Use `id: "paper:<slug>"` convention for Paper nodes. Batch ≤50 per call.
+
+### KG-D1 Paper Reconciliation (MANDATORY periodic check, KIF-23)
+Publication pipelines write D1 but KG seeding is session-dependent — drift accumulates silently (257 missing Paper nodes found 2026-07-25, 29% of corpus invisible to KG-first due diligence). Reconcile by diffing `SELECT DISTINCT slug FROM papers` (living-paper) against KG `paper:<slug>` ids + `properties.slug`, then bulk-seed missing via `/sync`. Run this diff during every infrastructure audit.
 
 ### R2 Path Hygiene
 **CRITICAL RULE:** Bucket name IS the namespace. NEVER prefix keys with `qnfo/` inside the `qnfo` bucket.

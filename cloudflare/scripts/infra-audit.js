@@ -4,16 +4,26 @@
 // Requires: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID env vars
 
 const T = process.env.CLOUDFLARE_API_TOKEN;
-const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID;
 
 async function cf(path) {
   const r = await fetch(`https://api.cloudflare.com/client/v4${path}`, { headers: { Authorization: `Bearer ${T}` } });
   return r.json();
 }
 
+// F-5 fix (2026-07-25): self-discover account ID from the token instead of
+// hard-failing when CLOUDFLARE_ACCOUNT_ID is unset. Env var remains an override.
+async function discoverAccountId() {
+  if (process.env.CLOUDFLARE_ACCOUNT_ID) return process.env.CLOUDFLARE_ACCOUNT_ID;
+  const d = await cf('/accounts?per_page=5');
+  const accounts = d.result || [];
+  if (accounts.length === 0) throw new Error('No accounts visible to this token and CLOUDFLARE_ACCOUNT_ID not set');
+  if (accounts.length > 1) console.error(`WARN: ${accounts.length} accounts visible; using first (${accounts[0].name}). Set CLOUDFLARE_ACCOUNT_ID to override.`);
+  return accounts[0].id;
+}
+
 async function runInfraAudit() {
   if (!T) throw new Error('CLOUDFLARE_API_TOKEN not set');
-  if (!ACCOUNT) throw new Error('CLOUDFLARE_ACCOUNT_ID not set');
+  const ACCOUNT = await discoverAccountId();
 
   const [workers, d1, r2, vectorize, queues, kv, pages, zones] = await Promise.all([
     cf(`/accounts/${ACCOUNT}/workers/scripts`),

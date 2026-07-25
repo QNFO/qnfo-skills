@@ -10,7 +10,17 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.39 (Safety-Net Core)
+# QNFO-AGENT — v3.40 (Safety-Net Core)
+
+> **v3.40 UPDATE (2026-07-25, systemwide portfolio audit):** Added KIF-22
+> (registry-extension drift — "extend list X when Y happens" mandates fail
+> silently; living-paper.papers went 7 days with zero scheduled backups
+> despite an explicit written mandate; fixed via qnfo-lifecycle v1.2 +
+> live-enumeration drift rule) and KIF-23 (KG-D1 dual-write drift — 257/887
+> published papers were missing from the KG; fixed via gateway /sync
+> diff-and-seed, now a mandatory infra-audit step). Full audit report:
+> `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md` +
+> GitHub `QNFO/systemwide-audit-2026-07` + Zenodo DOI (see repo).
 
 > **v3.39 UPDATE (2026-07-25, tool-availability + structured-schema kaizen):**
 > Red-teamed a live "wrangler is not installed" claim made in this session's
@@ -276,6 +286,8 @@ the old behavior was correct.
 | KIF-19 | "Wrangler is not installed" FALSE NEGATIVE — sessions repeatedly concluded wrangler was unavailable from `npm ls -g wrangler` returning empty, a bare `where`/`which wrangler` miss, or a Python `subprocess.run()` call that doesn't inherit the shell's npx PATH resolution — when `npx wrangler --version` / `npx wrangler whoami` in fact succeed every time (wrangler is invoked exclusively via npx, never a global install). This exact session's own reasoning trace repeated the false claim. | `cloudflare` `scripts/wrangler-check.js` (canonical availability+auth probe, checks npx-invoked version+whoami, not global list); `qnfo-agent` §8.6 Rule 16 below | v3.39, 2026-07-25, this session — re-verified live: `npx wrangler whoami` returned account `quniverse` |
 | KIF-20 | Zenodo `metadata.resource_type` silently failed to persist as a bare string (PUT returned 200, but `actions/publish` then failed "Missing data for required field"), and was outright REJECTED as a nested object ("Not a valid string") on an `actions/newversion` draft specifically. Root cause of ~10 exploratory calls during the adelic-cross-domain v3.2 Zenodo newversion publish. | `research` `references/zenodo-deposit-schema.json` (documents both schema variants + the exact failure signatures) and `scripts/zenodo-resource-type-fix.py` (tries variants in order, verifies persistence via re-GET, stops at first working shape) | v3.39, 2026-07-25, adelic-cross-domain v3.2 session |
 | KIF-21 | D1 write of a large multi-KB `body_md` string via PowerShell `ConvertTo-Json` + `curl.exe` silently corrupted into the literal 15-byte string `"[object Object]"` instead of the actual content — the `{success:true, changes:5}` response gave no indication of the corruption; only a follow-up `SELECT LENGTH(body_md)` caught it. | `cloudflare` `scripts/d1-safe-write.js` (Node.js-native JSON construction avoids the PowerShell serialization bug; mandatory re-GET length-verification built in, refuses to report success on mismatch) | v3.39, 2026-07-25, adelic-cross-domain v3.2 session |
+| KIF-22 | Registry-extension drift — skill instructions of the form "extend list X whenever Y happens" fail silently because nothing compares the maintained list against live state. `living-paper.papers` (931 production rows) had ZERO scheduled backups for 7 days despite the cloudflare skill's explicit written mandate to add it to `runBackup`; the R2 bucket baseline (14) also drifted from live (13) with no reconciliation. | `qnfo-lifecycle` v1.2 (LIVING_PAPER binding + backup verified: `qnfo-backups/living-paper/papers-2026-07-25.json`, 4.9 MB); cloudflare skill baselines corrected to live-enumerated values; rule: drift checks MUST enumerate live state, never trust maintained lists | v3.40, 2026-07-25, systemwide audit |
+| KIF-23 | KG-D1 dual-write drift — publication pipelines write D1 `living-paper.papers` but KG Paper-node seeding is per-session/manual, so drift accumulates silently. Found 257 of 887 published papers (29%) absent from the KG, making KG-first due diligence systematically under-report "what exists." | Diff-and-seed reconciliation via `qnfo-gateway` `POST /sync` (`{action:"bulk",nodes,edges}`, batches ≤50, `paper:<slug>` id convention) — executed: 257 nodes seeded, 0 errors, KG Papers 1255→1512; cloudflare skill "KG-D1 Paper Reconciliation" section makes this diff mandatory in every infra audit | v3.40, 2026-07-25, systemwide audit |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
