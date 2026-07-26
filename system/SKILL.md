@@ -1,8 +1,8 @@
 ---
 name: system
-description: DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
-version: "2.1"
-triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
+description: DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
+version: "2.2"
+triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "skill hygiene", "skill locations", "duplicate skills", "stale skills", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
 related: ["cloudflare"]
 priority: 3
 platform: all
@@ -10,7 +10,14 @@ autonomous: false
 self_sufficient: true
 ---
 
-# SYSTEM -- v2.1 (Ultra-Consolidated Config + Skills + Desktop)
+# SYSTEM -- v2.2 (Ultra-Consolidated Config + Skills + Desktop + Hygiene)
+
+> **v2.2 UPDATE (2026-07-26, skill location hygiene):** Added the
+> **Canonical Skill Locations** and **Skill Hygiene Enforcement** sections.
+> Skills exist in ONE canonical location only. Duplicate/stale locations
+> are detected and must be cleaned. New scripts: `skill-hygiene.js`,
+> `skill-locations-audit.md` template. GitHub dual-remote (QNFO + rwnq8)
+> is intentional mirroring, not duplication.
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. Skill sync is not "done"
@@ -26,9 +33,132 @@ self_sufficient: true
 
 update_plan([
   {"step": "Identify target: configuration, skill lifecycle, or desktop automation", "status": "pending"},
+  {"step": "Run skill-hygiene.js if skill-related", "status": "pending"},
   {"step": "Execute with proper tooling", "status": "pending"},
   {"step": "Verify: settings persisted, skills deployed, or action confirmed", "status": "pending"},
 ])
+
+---
+
+## Canonical Skill Locations (MANDATORY — v2.2)
+
+### Single Source of Truth
+
+| Layer | Canonical Location | Purpose |
+|:------|:-------------------|:--------|
+| **Local Disk** | `%USERPROFILE%\.deepchat\skills\` | Primary working directory, git-tracked |
+| **GitHub Primary** | `QNFO/qnfo-skills` | Organization repo, `origin` remote |
+| **GitHub Mirror** | `rwnq8/qnfo-skills` | Personal backup, `rwnq8` remote |
+| **R2 Backup** | `qnfo-skills` bucket, `prompts/skills/<name>/` | Cloudflare R2 disaster recovery |
+
+### PROHIBITED Locations (Must Not Exist)
+
+| Path | Why Prohibited |
+|:-----|:---------------|
+| `%APPDATA%\.deepchat\skills\` | Legacy bootstrap location, causes version conflicts |
+| `%APPDATA%\DeepChat\skills\` | Unused app data location, confuses discovery |
+| `%LOCALAPPDATA%\DeepChat\skills\` | Electron cache, not for skills |
+
+### What Constitutes a "Skill"
+
+A skill is **NOT just SKILL.md** — it includes all supplemental files:
+
+```
+<skill-name>/
+├── SKILL.md          (required — the skill definition)
+├── scripts/          (optional — utility scripts the skill invokes)
+├── references/       (optional — supporting reference docs)
+├── templates/        (optional — file templates the skill instantiates)
+└── assets/           (optional — static assets)
+```
+
+**Sync operations MUST include ALL files**, not just SKILL.md. Use `skill-sync.js` which walks the entire directory tree.
+
+### GitHub Dual-Remote (Intentional Mirroring)
+
+The local repo has TWO remotes configured:
+- `origin` → `https://github.com/QNFO/qnfo-skills.git` (primary)
+- `rwnq8` → `https://github.com/rwnq8/qnfo-skills.git` (mirror)
+
+This is **intentional redundancy**, not duplication. Both repos should have identical HEAD commits. After every push:
+```powershell
+git push origin master
+git push rwnq8 master
+```
+
+---
+
+## Skill Hygiene Enforcement (MANDATORY — v2.2)
+
+### Pre-Session Gate
+
+Before any skill-related work, run the hygiene audit:
+```powershell
+node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+```
+
+**Exit codes:**
+- `0` = All clean, proceed
+- `1` = Stale locations found, cleanup required before proceeding
+- `2` = Version conflicts, manual resolution required
+- `3` = Script error
+
+**If exit code ≠ 0, DO NOT proceed with skill modifications until resolved.**
+
+### Stale Location Cleanup Protocol
+
+If stale locations are detected:
+
+1. **Check for version conflicts:**
+   ```powershell
+   Get-Content "<stale>\<skill>\SKILL.md" | Select-String "version:"
+   Get-Content "$env:USERPROFILE\.deepchat\skills\<skill>\SKILL.md" | Select-String "version:"
+   ```
+
+2. **If stale has newer/valuable changes:**
+   - Merge to canonical location first
+   - Commit to git
+   - Then delete stale
+
+3. **Delete stale location:**
+   ```powershell
+   Remove-Item -Recurse -Force "<stale-path>"
+   ```
+
+4. **Re-run hygiene audit to confirm clean:**
+   ```powershell
+   node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+   # Must exit with code 0
+   ```
+
+### DeepChat Startup Integration
+
+**Option A: Windows Task Scheduler (Recommended)**
+```powershell
+$action = New-ScheduledTaskAction -Execute "node" -Argument "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+$trigger = New-ScheduledTaskTrigger -AtLogOn
+$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
+Register-ScheduledTask -TaskName "DeepChat-SkillHygiene" -Action $action -Trigger $trigger -Principal $principal -Description "Audit skill locations on startup"
+```
+
+**Option B: Manual Pre-Session Check**
+At the start of any session involving skill modifications, the agent should run `skill-hygiene.js` and report results.
+
+**Option C: Audit Log Review**
+Check the latest audit report:
+```powershell
+Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | ConvertFrom-Json
+```
+
+### Anti-Patterns (Skill Hygiene)
+
+| Anti-Pattern | Detection | Fix |
+|:-------------|:----------|:----|
+| Editing skills in stale location | `skill-hygiene.js` exit 1 | Move edits to canonical, delete stale |
+| SKILL.md-only sync | R2 missing scripts/templates | Use `skill-sync.js` for full sync |
+| Forgetting rwnq8 push | `git log rwnq8/master` behind | `git push rwnq8 master` |
+| Creating skills in AppData | `skill-hygiene.js` exit 1 | Only create in `%USERPROFILE%\.deepchat\skills\` |
+| Manual token copy | Truncated tokens cause auth | Use `$env:TOKEN_NAME` directly |
 
 ---
 
@@ -50,12 +180,18 @@ this turn is a PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
 ### App Settings
 **Path:** `%APPDATA%\DeepChat\app-settings.json`
 
+Key settings:
+- `skillsPath`: `%USERPROFILE%\.deepchat\skills` (MUST point to canonical location)
+- `enableSkills`: `true`
+
 ```json
 {
   "theme": "light",
   "language": "en",
   "fontSize": 14,
   "fontFamily": "Inter",
+  "skillsPath": "C:\\Users\\LENOVO\\.deepchat\\skills",
+  "enableSkills": true,
   "modelConfig": {
     "temperature": 0.3,
     "maxTokens": 64000,
@@ -77,7 +213,7 @@ this turn is a PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
 
 ### Disaster Recovery
 1. Settings lost -> restore from `deepchat-config` skill backup
-2. GitHub backup -> `qnfo-skills` repo
+2. GitHub backup -> `qnfo-skills` repo (QNFO/qnfo-skills or rwnq8/qnfo-skills)
 3. R2 backup -> `prompts/skills/` on R2 bucket `qnfo-skills`
 4. DeepChat restart: `taskkill /F /IM DeepChat.exe` -> auto-restart
 
@@ -128,22 +264,32 @@ update_plan([...])
 CREATE -> WRITE (SKILL.md with complete content) -> DEPLOY -> VERIFY -> MAINTAIN
 ```
 
-### Deployment
+### Deployment (3-Layer Sync)
 1. **Local disk:** Write to `%USERPROFILE%\.deepchat\skills\<name>\SKILL.md`
-2. **GitHub:** Commit and push to `qnfo-skills` repo
-3. **R2:** Upload to `qnfo-skills/prompts/skills/<name>/SKILL.md`
-4. **Verify:** All three layers have identical content
+2. **GitHub:** Commit and push to BOTH remotes:
+   ```powershell
+   git add -A
+   git commit -m "skill: <name> v<version>"
+   git push origin master
+   git push rwnq8 master
+   ```
+3. **R2:** Upload ALL files (not just SKILL.md):
+   ```powershell
+   node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
+   ```
+4. **Verify:** All layers have identical content
 
 ### Verification
-```bash
+```powershell
 # Check local
 Test-Path "$env:USERPROFILE\.deepchat\skills\<name>\SKILL.md"
 
-# Check GitHub
-git log -1 --oneline
+# Check GitHub (both remotes)
+git log -1 --oneline origin/master
+git log -1 --oneline rwnq8/master
 
 # Check R2
-npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote
+npx wrangler r2 object get qnfo-skills prompts/skills/<name>/SKILL.md --remote
 ```
 
 ---
@@ -193,66 +339,47 @@ get_window_state({pid: 1234, window_id: 5678})
 | Click on XAML app without element_index | XAML requires element_index for type_text |
 | Launching app without `start_minimized: true` | Launch hidden to not disrupt user |
 
+---
+
 ## Reusable Scripts
+
+### Skill Hygiene Audit
+```powershell
+# Run before any skill work
+node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+# Exit 0 = clean, Exit 1 = stale locations, Exit 2 = version conflicts
+```
+
+### Full Skill Sync (All Files)
+```powershell
+# Syncs ALL skill files (not just SKILL.md) to R2
+node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
+```
 
 ### Worker Fleet Audit
 ```js
-// _worker_audit.js — List all Workers + bindings + health
-const T = process.env.CLOUDFLARE_API_TOKEN;
-const ACCOUNT = "...";
-const w = await (await fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/workers/scripts', {
-  headers: { 'Authorization': 'Bearer ' + T }
-})).json();
-for (const wr of (w.result||[])) {
-  const b = await (await fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/workers/scripts/' + wr.id + '/bindings', {
-    headers: { 'Authorization': 'Bearer ' + T }
-  })).json();
-  let h = 'unknown';
-  try { h = (await fetch('https://' + wr.id + '.workers.dev/health')).status === 200 ? 'healthy' : 'unhealthy'; } catch(e) {}
-  console.log(wr.id + ': ' + h + ' [' + (b.result||[]).map(function(x){return x.type+':'+x.name}).join(',') + ']');
-}
+// See cloudflare/scripts/worker-audit.js
 ```
 
 ### Infrastructure Audit
 ```js
-// _infra_audit.js — Full fleet audit (Workers, D1, R2, Vectorize, Queues, KV, DNS, Pages, 522-RISK)
-// Run each resource count sequentially, report totals, flag anomalies vs baselines
-```
-
-### R2 Hygiene Check
-```js
-// _r2_hygiene.js — Check for qnfo/qnfo/ double-prefix anti-pattern
-// Bucket name IS the namespace. Never prefix keys with bucket name inside that bucket.
-```
-
-### DNSLink Verification
-```js
-// _dnslink_verify.js — Check all DNSLink TXT records across all zones
-const T = process.env.CLOUDFLARE_API_TOKEN;
-const zones = await (await fetch('https://api.cloudflare.com/client/v4/zones', {
-  headers: { 'Authorization': 'Bearer ' + T }
-})).json();
-for (const z of (zones.result||[])) {
-  const dns = await (await fetch('https://api.cloudflare.com/client/v4/zones/' + z.id + '/dns_records?type=TXT', {
-    headers: { 'Authorization': 'Bearer ' + T }
-  })).json();
-  const dnslink = (dns.result||[]).filter(function(r) { return r.content.includes('dnslink'); });
-  dnslink.forEach(function(r) { console.log(z.name + ': ' + r.name + ' ' + r.content); });
-}
+// See cloudflare/scripts/infra-audit.js
 ```
 
 ---
 
-## Verification
+## Verification Checklist
 - [ ] Config changes persist across DeepChat restarts
-- [ ] Skills synced to all 3 layers: disk -> GitHub -> R2
+- [ ] Skills synced to all 3 layers: disk -> GitHub (both remotes) -> R2
+- [ ] `skill-hygiene.js` exits with code 0 (no stale locations)
 - [ ] Desktop automation result confirmed via window state
 - [ ] `health_report()` returns all checks passing
 - [ ] No skill has external file references (self-sufficiency)
 - [ ] No skill has fewer than 15 trigger keywords
-- [ ] **4-D Gate:** Critical assets (ULA, publications, deliverables) verified across ≥4 distribution stores
-- [ ] **IPFS:** Content pinned via Filebase (PRIMARY, free/unlimited) or Lighthouse (SECONDARY) — Pinata REMOVED 2026-07-20 (quota exceeded, blocked), CID logged in KG
-- [ ] **DNSLink:** `_dnslink` TXT records exist for all publication subdomains
+- [ ] **4-D Gate:** Critical assets verified across ≥4 distribution stores
 - [ ] **Worker fleet:** ≤7 Workers (consolidation pattern enforced), 0 orphaned Workers
 - [ ] **R2 hygiene:** No `qnfo/qnfo/` double-prefix paths in qnfo bucket
-\n\n### Skill Sync\n`js\n// _skill_sync.js — Sync all skills to GitHub + R2 after edits\nconst { execSync } = require('child_process');\nconst TOKEN = process.env.CLOUDFLARE_API_TOKEN;\nconst ACCOUNT = '...';\nconst HOME = process.env.USERPROFILE + '/.deepchat/skills';\n\n// 1. Git commit + push\nexecSync('git add -A && git commit -m skills-update && git push', { cwd: HOME });\n\n// 2. R2 sync (all 23 skills)\nconst skills = fs.readdirSync(HOME).filter(d => fs.existsSync(HOME + '/' + d + '/SKILL.md'));\nfor (const s of skills) {\n  const content = fs.readFileSync(HOME + '/' + s + '/SKILL.md', 'utf8');\n  await fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/r2/buckets/qnfo-skills/objects/' + encodeURIComponent('prompts/skills/' + s + '/SKILL.md'), {\n    method: 'PUT',\n    headers: { 'Authorization': 'Bearer ' + TOKEN },\n    body: content\n  });\n}\nconsole.log('Synced ' + skills.length + ' skills to GitHub + R2');\n`
+
+---
+
+*system v2.2 — DeepChat configuration, skill ecosystem management, skill location hygiene, and desktop automation.*
