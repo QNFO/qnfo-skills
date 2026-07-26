@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
 description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.44"
+version: "3.45"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,20 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.44 (Safety-Net Core)
+# QNFO-AGENT — v3.45 (Safety-Net Core)
+
+> **v3.45 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
+> The v3.44 dictionary-based Unicode-to-LaTeX conversion was a band-aid, not
+> a solution. Dictionaries can never be comprehensive. The CORRECT fix is to
+> configure XeLaTeX to use fonts that HAVE Unicode glyphs: `unicode-math`
+> package + `STIX Two Math` font. This handles ALL Unicode math symbols
+> (Greek, subscripts, superscripts, blackboard bold, operators, etc.) without
+> any character dictionaries. New: `research/scripts/build-pdf.py` (holistic
+> build pipeline), `research/templates/qnfo-xelatex-unicode.yaml` (Pandoc
+> defaults). The old `unicode-latex-preprocess.py` is deprecated — it's no
+> longer needed when using the correct font configuration. Verified: the
+> "Measure-Theoretic Artifacts" paper (Zenodo 21595214) now builds with ZERO
+> replacement characters using this approach.
 
 > **v3.44 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate — KIF-26):**
 > Red-teamed a published Zenodo PDF (21595214) with 135 U+FFFD replacement
@@ -339,7 +352,7 @@ the old behavior was correct.
 | KIF-23 | KG-D1 dual-write drift — publication pipelines write D1 `living-paper.papers` but KG Paper-node seeding is per-session/manual, so drift accumulates silently. Found 257 of 887 published papers (29%) absent from the KG, making KG-first due diligence systematically under-report "what exists." | Diff-and-seed reconciliation via `qnfo-gateway` `POST /sync` (`{action:"bulk",nodes,edges}`, batches ≤50, `paper:<slug>` id convention) — executed: 257 nodes seeded, 0 errors, KG Papers 1255→1512; cloudflare skill "KG-D1 Paper Reconciliation" section makes this diff mandatory in every infra audit | v3.40, 2026-07-25, systemwide audit |
 | KIF-24 | Skill location drift — skills existed in multiple directories (`%USERPROFILE%\.deepchat\skills\` canonical vs `%APPDATA%\.deepchat\skills\` stale legacy bootstrap location) causing version conflicts (e.g., `code-review` v1.0 canonical vs v2.1 stale). Prior R2 syncs only synced SKILL.md files, missing 26 supplemental files (scripts, templates, references). GitHub dual-remote (QNFO + rwnq8) is intentional mirroring, not duplication. | `system` skill v2.2 adds Canonical Skill Locations section + Skill Hygiene Enforcement gate. New scripts: `system/scripts/skill-hygiene.js` (exit 0=clean, 1=stale, 2=conflicts), `system/templates/skill-locations-audit.md` checklist. Stale `%APPDATA%\.deepchat\skills\` deleted. Future syncs MUST use `skill-sync.js` which walks ALL files per skill. Pre-session gate: run `skill-hygiene.js`, block if exit ≠ 0. | v3.42, 2026-07-26, skill hygiene audit |
 | KIF-25 | Skill Auto-Loading Weak Link — DeepChat shows only 8 skills in system prompt; the 24-Skill Trigger Table (inside qnfo-agent body) is invisible until qnfo-agent is explicitly loaded via `skill_view`. Without loading qnfo-agent first, the LLM cannot autonomously discover which skill to use for a given task, causing skill loading to rely on user manually triggering skill load or the LLM guessing. | `system` skill v2.3 adds Session Initialization Protocol with three layers: (1) `deepchat-skill-hygiene.vbs` in Windows Startup folder runs skill-hygiene.js at logon, (2) `/init` custom prompt (added via `add-init-prompt.js`) loads qnfo-agent + system + runs hygiene check at session start, (3) `skill-loader.js` generates skill discovery summaries programmatically. Use `/init` at session start to ensure autonomous skill discovery works correctly. | v3.43, 2026-07-26, session initialization kaizen |
-| KIF-26 | PDF published with 135 U+FFFD replacement characters (Zenodo 21595214, "Measure-Theoretic Artifacts" paper) — `unicode-latex-preprocess.py` v1.0 only handled numeric subscripts (₀-₉) but physics papers use letter subscripts (ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ) for ℚₚ, vₚ(x), etc. Also missing: ħ (h-bar), ℓ (script ell), 𝔸 (blackboard A for adeles), superscript letters. The existing `check-pdf.py` was NOT a mandatory gate — PDFs could be published without passing it. | `research` `scripts/unicode-latex-preprocess.py` v2.0 (adds ALL Unicode subscript/superscript letters + physics symbols); `scripts/check-pdf.py` v2.0 (now a MANDATORY PRE-PUBLICATION GATE with exit code 1 = MUST NOT PUBLISH); `research` skill §5 updated with mandatory pipeline: preprocess → build → check → publish. | v3.44, 2026-07-26, PDF rendering kaizen |
+| KIF-26 | PDF published with 135 U+FFFD replacement characters (Zenodo 21595214, "Measure-Theoretic Artifacts" paper). **Root cause:** XeLaTeX's default font (Latin Modern) lacks glyphs for many Unicode characters. **Wrong fix (v3.44):** Dictionary-based Unicode→LaTeX conversion — dictionaries can never be comprehensive. **Correct fix (v3.45):** Configure XeLaTeX to use `unicode-math` package + `STIX Two Math` font, which has complete Unicode math coverage. No character dictionaries needed. | `research` `scripts/build-pdf.py` v1.0 (holistic build pipeline with unicode-math + STIX Two Math); `templates/qnfo-xelatex-unicode.yaml` (Pandoc defaults); `scripts/check-pdf.py` v2.0 (mandatory pre-publication gate). The old `unicode-latex-preprocess.py` is DEPRECATED — use `build-pdf.py` instead. | v3.45, 2026-07-26, holistic PDF kaizen |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 

@@ -3,7 +3,7 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.18"
+version: "2.19"
 priority: 1
 platform: all
 autonomous: true
@@ -11,6 +11,19 @@ self_sufficient: true
 ---
 
 # RESEARCH -- v2.17 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
+> The v2.18 dictionary-based `unicode-latex-preprocess.py` was a band-aid.
+> Dictionaries can never be comprehensive — there are thousands of Unicode
+> math symbols. The CORRECT solution: configure XeLaTeX to use fonts that
+> HAVE the glyphs. New pipeline:
+> 1. `scripts/build-pdf.py` — uses `unicode-math` package + `STIX Two Math`
+>    font, which has complete Unicode mathematical symbol coverage
+> 2. `templates/qnfo-xelatex-unicode.yaml` — Pandoc defaults file
+> 3. `scripts/check-pdf.py` — mandatory verification gate
+> The old `unicode-latex-preprocess.py` is DEPRECATED. With the correct font
+> configuration, Unicode symbols render directly without conversion.
+> Verified: "Measure-Theoretic Artifacts" paper builds with ZERO errors.
 
 > **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate — KIF-26):**
 > Red-teamed a published Zenodo PDF (21595214) with 135 U+FFFD replacement
@@ -812,26 +825,38 @@ below. Convert to the Springer Nature LaTeX template at the point of
 formal journal submission, or immediately if the target venue requires
 LaTeX source at all revision stages.
 
-**STEP 0 (MANDATORY, run BEFORE pandoc -- kaizen fix A1/A2):** XeLaTeX's
-default font (Latin Modern) lacks glyphs for many Unicode Greek/math/
-subscript/superscript/bra-ket characters used in physics prose outside
-`$...$`, and Pandoc's `keywords:` YAML field crashes some XeLaTeX templates
-with an undefined `\xmpquote` macro. Run the preprocessor first:
-```bash
-python scripts/unicode-latex-preprocess.py paper.md --out paper.build.md
-```
-This converts Unicode math characters to LaTeX math (wrapped in `$...$`,
-never double-converting characters already inside math spans) and strips
-the `keywords:` field. Build FROM `paper.build.md`, not the original.
+**HOLISTIC SOLUTION (v2.19, KIF-26 v2):** Instead of converting Unicode
+characters to LaTeX via dictionaries (which can never be comprehensive),
+we configure XeLaTeX to use fonts that HAVE the Unicode glyphs.
 
+**The correct approach:** Use the `unicode-math` LaTeX package with a font
+that has complete Unicode mathematical symbol coverage (STIX Two Math,
+TeX Gyre Pagella Math, Libertinus Math, etc.). This handles ALL Unicode
+math symbols — Greek letters, subscripts, superscripts, blackboard bold,
+operators, etc. — without any character dictionaries.
+
+**Recommended build command (single step):**
 ```bash
-pandoc paper.build.md -o paper.pdf --pdf-engine=xelatex \
-  --template=default \
-  --metadata date="$(date +%Y-%m-%d)" \
-  --metadata link-citations=true \
-  --metadata bibliography=refs.bib \
+python scripts/build-pdf.py paper.md
+```
+
+This script:
+1. Configures Pandoc + XeLaTeX with `unicode-math` + `STIX Two Math`
+2. Builds the PDF
+3. Verifies zero rendering errors
+4. Reports any issues with actionable remediation
+
+**Manual build (if you need more control):**
+```bash
+pandoc paper.md -o paper.pdf --pdf-engine=xelatex \
+  --variable=header-includes:"\usepackage{fontspec}\usepackage{unicode-math}\setmathfont{STIX Two Math}\setmainfont{TeX Gyre Pagella}" \
+  --variable=geometry:margin=1in \
   --citeproc
 ```
+
+**DEPRECATED:** `unicode-latex-preprocess.py` is no longer needed when using
+the correct font configuration. It remains in the scripts directory for
+legacy compatibility but should not be used for new publications.
 **NEVER use reportlab or HTML fallbacks for publication-grade PDFs.**
 
 **If the build still fails with a LaTeX error mentioning a specific missing
