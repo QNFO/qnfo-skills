@@ -3,7 +3,7 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.17"
+version: "2.18"
 priority: 1
 platform: all
 autonomous: true
@@ -11,6 +11,19 @@ self_sufficient: true
 ---
 
 # RESEARCH -- v2.17 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate — KIF-26):**
+> Red-teamed a published Zenodo PDF (21595214) with 135 U+FFFD replacement
+> characters. Root cause: `unicode-latex-preprocess.py` v1.0 only handled
+> numeric subscripts (₀-₉) but physics papers use letter subscripts
+> (ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ) for ℚₚ, vₚ(x), etc. Also missing: ħ (h-bar),
+> ℓ (script ell), 𝔸 (blackboard A for adeles), and superscript letters.
+> Fix: `unicode-latex-preprocess.py` v2.0 adds ALL subscript/superscript
+> letters + physics symbols; `check-pdf.py` v2.0 is now a MANDATORY
+> PRE-PUBLICATION GATE (exit code 1 = MUST NOT PUBLISH). The PDF build
+> pipeline is now: preprocess → pandoc → **check-pdf.py HARD GATE** → upload.
+> A PDF that fails `check-pdf.py` MUST NOT be published to Zenodo or any
+> public distribution channel.
 
 > **v2.17 UPDATE (2026-07-25, default-template + professional-standard kaizen):**
 > Established the **Springer Nature LaTeX Template (`sn-jnl.cls`, v3.1, Dec
@@ -845,18 +858,58 @@ npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.pdf -
 node ../cloudflare/scripts/dnslink-create.js <zone_id> <subdomain>.qnfo.org <ipfs_cid>
 ```
 
-### PDF Rendering Verification (MANDATORY)
+### PDF Rendering Verification (MANDATORY HARD GATE — KIF-26)
+
+**THIS IS A BLOCKING GATE.** A PDF that fails this check MUST NOT be
+published to Zenodo, R2, or any public distribution channel. Exit code 1
+from `check-pdf.py` = PUBLICATION BLOCKED.
 
 **Preflight (kaizen fix B4):** verify PyMuPDF is installed before relying on
 it -- `pip show PyMuPDF`. If missing: `pip install PyMuPDF`.
 
+**The complete PDF build pipeline (MANDATORY order, no steps skipped):**
 ```bash
+# Step 1: Preprocess Unicode → LaTeX (MANDATORY, fixes KIF-01/KIF-26)
+python scripts/unicode-latex-preprocess.py paper.md --out paper.build.md
+
+# Step 2: Build PDF
+pandoc paper.build.md -o paper.pdf --pdf-engine=xelatex \
+  --template=default \
+  --metadata date="$(date +%Y-%m-%d)" \
+  --metadata link-citations=true \
+  --metadata bibliography=refs.bib \
+  --citeproc
+
+# Step 3: HARD GATE — verify PDF rendering (MANDATORY, exit 1 = BLOCKED)
 python scripts/check-pdf.py paper.pdf
+if [ $? -ne 0 ]; then
+  echo "[BLOCKED] PDF failed rendering verification. MUST NOT publish."
+  exit 1
+fi
+
+# Step 4: Only proceed to upload if Step 3 passed
+# ... Zenodo upload, R2 upload, etc.
 ```
-This checks: PDF opens without error (corrupt-file detection), zero pages
-contain `\ufffd` (Unicode replacement character -- glyph miss), zero
-completely empty pages, page count > 0, and prints a per-page character
-count for a quick sanity skim. Exit code 0 = pass, 1 = BLOCKED.
+
+**What check-pdf.py verifies (v2.0):**
+- PDF opens without error (corrupt-file detection)
+- Zero pages contain U+FFFD (Unicode replacement character — glyph miss)
+- Zero common glyph-miss patterns (□, ▯, and other placeholder boxes)
+- Zero completely empty pages
+- Page count > 0
+- Warns (non-blocking) if unconverted Unicode patterns suggest the
+  preprocessor was not run
+
+**Exit codes:**
+- `0` = PASS — PDF is publication-ready
+- `1` = FAIL — Rendering errors detected, MUST NOT publish
+- `2` = BLOCKED — Script cannot run (missing dependency, bad arguments)
+
+**If check-pdf.py fails:**
+1. Re-run `unicode-latex-preprocess.py` on the source markdown
+2. Rebuild with pandoc
+3. Re-run `check-pdf.py`
+4. Only proceed to upload after exit code 0
 
 **File-lock handling (kaizen fix B5):** if the build script needs to replace
 an existing `paper.pdf` that a PDF viewer currently has open, `os.replace()`
