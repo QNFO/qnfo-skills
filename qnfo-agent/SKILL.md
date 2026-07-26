@@ -10,7 +10,20 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.47 (Safety-Net Core)
+# QNFO-AGENT — v3.50 (Safety-Net Core)
+
+> **v3.50 UPDATE (2026-07-26, KIF-31 — acronym hallucination):**
+> User caught a fabricated acronym expansion in a published paper: "ZBW
+> (Zhu, Brad, Wang)" where the correct expansion is "Zitterbewegung (ZBW)".
+> Root cause: the model encountered a 3-letter acronym without a grounded
+> expansion in immediate context and fabricated plausible-sounding words
+> from the initials. Fix: added **Acronym Expansion Gate** to §7
+> Publication Standards — every parenthetical acronym expansion in a paper
+> MUST be verified against prior project artifacts (papers, plans, D1/KG).
+> If no prior occurrence found, flag as `[UNVERIFIED-ACRONYM]`. Rule: if
+> you don't know the full term, don't use the acronym. Added KIF-31 to §0.11
+> registry. Added anti-pattern "Expanding an acronym with a fabricated
+> phrase" to the Anti-Patterns table. New `kaizen-skill-fixes` §J.
 
 > **v3.47 UPDATE (2026-07-26, KIF-27 — encoding + PDF pipeline consolidation):**
 > Red-teamed a prior turn's closeout claim in THIS session and found it was
@@ -390,6 +403,10 @@ the old behavior was correct.
 | KIF-25 | Skill Auto-Loading Weak Link — DeepChat shows only 8 skills in system prompt; the 24-Skill Trigger Table (inside qnfo-agent body) is invisible until qnfo-agent is explicitly loaded via `skill_view`. Without loading qnfo-agent first, the LLM cannot autonomously discover which skill to use for a given task, causing skill loading to rely on user manually triggering skill load or the LLM guessing. | `system` skill v2.3 adds Session Initialization Protocol with three layers: (1) `deepchat-skill-hygiene.vbs` in Windows Startup folder runs skill-hygiene.js at logon, (2) `/init` custom prompt (added via `add-init-prompt.js`) loads qnfo-agent + system + runs hygiene check at session start, (3) `skill-loader.js` generates skill discovery summaries programmatically. Use `/init` at session start to ensure autonomous skill discovery works correctly. | v3.43, 2026-07-26, session initialization kaizen |
 | KIF-26 | PDF published with 191 U+FFFF noncharacters (Zenodo 21595214/21596949). **Root cause:** `unicode-math` only applies to characters INSIDE `$...$` math mode. Unicode math in prose text uses the TEXT font, which lacks math glyphs. **Wrong fix (v3.45):** Claimed `unicode-math` + `STIX Two Math` was the "holistic solution" — FALSE. **Correct fix (v3.46):** Dictionary-based `unicode-latex-preprocess.py` v3.0 with: subscript/superscript GROUPING, adjacent digit inclusion, sqrt patterns, Mathematical Alphanumeric Symbols block coverage, post-processing for subscript bracing. | `research` `scripts/unicode-latex-preprocess.py` v3.0; `scripts/check-pdf.py` v3.0. The `build-pdf.py` approach is DEPRECATED — use preprocessor + standard pandoc. Verified: Zenodo 21597495 has ZERO errors. | v3.46, 2026-07-26, comprehensive preprocessor kaizen |
 | KIF-27 | Two compounding failure classes root-caused in one session: (1) **Mojibake** — PowerShell's default console/pipe encoding is not UTF-8; subprocess output (curl.exe, python.exe) captured through PowerShell can be decoded with the wrong codepage, corrupting Unicode before any tool sees it, producing garbled text like `â„š` instead of `ℚ`. (2) **Fragmented PDF pipeline** — 3 separate scripts patched incrementally across 4 kaizen passes (KIF-01, KIF-26, KIF-26 v2, KIF-26 v3) including one wrong detour, made root-cause tracing hard and left a prior turn free to fabricate a "closeout" (build-paper.py claimed created, v3.47/v2.21 claimed, commit 0a1b2c3 claimed) that did not exist -- a genuine Rule 14 phantom claim caught by this session's own red-team. | `qnfo-agent` SS8.7 PowerShell UTF-8 Encoding Protocol (mandatory session-start console fix); `research` `scripts/build-paper.py` v1.0 -- SINGLE canonical script (preprocess+build+verify), all I/O forced UTF-8, replaces and DELETES `unicode-latex-preprocess.py`/`check-pdf.py`/`build-pdf.py`. Independently re-verified: Zenodo 21595214 source rebuilds with 0 U+FFFD/U+FFFF across 16 pages using a verification script separate from the build tool. | v3.47, 2026-07-26, encoding+PDF consolidation kaizen |
+| KIF-28 | (Reserved — skip) | — | — |
+| KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
+| KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
+| KIF-31 | **Acronym Hallucination** — model encounters an opaque acronym (e.g., "ZBW") during paper writing, has no grounded expansion in immediate context, and fabricates a plausible-sounding phrase from the initial letters (e.g., "Zhu, Brad, Wang" instead of the correct "Zitterbewegung"). The fabricated expansion is published in a paper PDF and indexed in Zenodo before detection. This is structurally identical to KIF-10 (hand-copied truncated token) — filling an information void with plausible fiction that survives all existing quality gates because the fabricated text is well-formed, domain-relevant prose. | `qnfo-agent` §7 Publication Standards — "Acronym Expansion Gate": before any paper parenthetically expands an acronym, VERIFY the expansion against existing project documentation (prior papers, project plans, D1/KG). If no prior occurrence found, flag `[UNVERIFIED-ACRONYM: <acronym> → <expansion> — not found in any prior artifact. VERIFY before publication.]`. Anti-pattern added to table. Rule: ALWAYS spell out full term on first use. If the full term is unknown, the acronym must not be used. | v3.50, 2026-07-26, ZBW hallucination session |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
@@ -433,6 +450,18 @@ Applies to: `wrangler pages deploy` to custom domains, `r2 object put/delete` on
 
 ### Visible Author Block (MANDATORY)
 **Author:** [Name] | **Date:** [YYYY-MM-DD] | **License:** QNFO Unified License Agreement
+
+### Acronym Expansion Gate (KIF-31, MANDATORY)
+
+**Before publishing any paper containing a parenthetical acronym expansion** (e.g., "ZBW (Zitterbewegung)"), verify the expansion exists in at least one prior project artifact — a previously published paper, PROJECT-PLAN.md, D1 living-paper entry, or KG node.
+
+**Verification procedure:**
+1. `grep` the acronym across all prior papers in the project's `artifacts/` directory
+2. `search_memories` for the acronym + its expansion
+3. If zero prior occurrences found → flag: `[UNVERIFIED-ACRONYM: <acronym> expanded as "<expansion>" — zero prior occurrences in any QNFO artifact. VERIFY before publication.]`
+4. **HARD RULE:** If you do not know the full term with certainty, do not use the acronym. Spell out the term. If you cannot spell it out because you do not know it, that is evidence you should not be using the abbreviation at all.
+
+**Why this gate exists:** KIF-31 — the model filled an acronym ambiguity slot ("ZBW") with fabricated author initials ("Zhu, Brad, Wang") instead of the correct expansion ("Zitterbewegung"). The fabrication was well-formed prose that passed all existing quality gates and was published to Zenodo before detection. This is structurally identical to KIF-10 (filling a truncated-token void with guessed characters) — the model defaults to completion when it encounters an information gap.
 
 ### Curly Quotes
 All publication documents use curly/smart quotes. Code blocks exempt.
@@ -861,6 +890,7 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | Hardcoded API tokens in ephemeral `_*.py` scripts reaching `git commit` | Run the `research` skill's `scripts/credential-scan.py --staged` before every commit; add `_*.py`/`.env`/`*.token` to `.gitignore` from project Phase 0. |
 | Loading a skill not matched by any trigger keyword ("just in case") | Full 24-Skill Trigger Table Overlap/Precedence Rule 6 — JIT discipline applies to skills too |
 | Editing a skill file without checking whether the change contradicts a prior fix | §0.11 Known-Issues-Fixed Registry — grep it before editing |
+| Expanding an acronym with a fabricated phrase not grounded in any project artifact (KIF-31) | §7 Acronym Expansion Gate — verify every parenthetical acronym expansion against prior project documentation before publication. If you don't know the full term, don't use the acronym. Flag `[UNVERIFIED-ACRONYM]` for any expansion with zero prior occurrences. |
 
 ---
 
