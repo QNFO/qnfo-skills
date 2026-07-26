@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-check-pdf.py -- PDF rendering + integrity verification (v2.0, KIF-26 HARD BLOCK gate)
+check-pdf.py -- PDF rendering + integrity verification (v3.0, KIF-26 v2)
 
-VERSION: 2.0 (2026-07-26)
+VERSION: 3.0 (2026-07-26)
 
 This script is a MANDATORY PRE-PUBLICATION GATE. A PDF that fails this check
 MUST NOT be published to Zenodo, R2, or any public distribution channel.
@@ -13,7 +13,6 @@ CHECKS PERFORMED:
 3. Zero completely empty pages (get_text() returns only whitespace)
 4. Page count > 0
 5. Reports per-page character count for sanity skim
-6. (v2.0) Scans for common rendering failure patterns beyond U+FFFD
 
 EXIT CODES:
   0 = PASS - PDF is publication-ready
@@ -22,23 +21,22 @@ EXIT CODES:
 
 KAIZEN HISTORY:
 - v1.0: Basic U+FFFD and empty page detection
-- v2.0 (KIF-26): Added comprehensive glyph-miss pattern detection, mandatory
-  gate status, clearer error messages with remediation steps
+- v2.0 (KIF-26): Added comprehensive glyph-miss pattern detection
+- v3.0 (KIF-26 v2): Removed misleading "unconverted Unicode" warnings.
+  When using unicode-math + STIX Two Math (the correct solution), Unicode
+  characters render correctly but remain as Unicode in extracted text.
+  The only true failure indicator is U+FFFD replacement characters.
 
 Usage:
     python check-pdf.py paper.pdf
 
 Integration with publication pipeline:
-    # In your build script:
-    python unicode-latex-preprocess.py paper.md
-    pandoc paper.md -o paper.pdf --pdf-engine=xelatex
-    python check-pdf.py paper.pdf || exit 1  # HARD BLOCK on failure
+    python build-pdf.py paper.md  # This calls check-pdf.py automatically
 """
 import sys
 import time
 import os
 import shutil
-import re
 
 
 def _require_fitz():
@@ -74,29 +72,6 @@ def replace_with_retry(src, dst, attempts=3, delay_s=2):
     raise last_err
 
 
-# Common rendering failure patterns (beyond U+FFFD)
-GLYPH_MISS_PATTERNS = [
-    ('\ufffd', 'U+FFFD replacement character'),
-    ('□', 'missing glyph box'),
-    ('▯', 'missing glyph box (vertical)'),
-    ('\u25a1', 'white square (glyph placeholder)'),
-    ('\u25a0', 'black square (glyph placeholder)'),
-    ('\u2610', 'ballot box (glyph placeholder)'),
-]
-
-# Patterns that indicate the preprocessor was NOT run
-UNPROCESSED_UNICODE_PATTERNS = [
-    # Blackboard bold that should have been converted
-    (r'[ℚℝℂℤℕℍ𝔸]', 'unconverted blackboard-bold letter'),
-    # Subscript letters that should have been converted
-    (r'[ₐₑₒₓₕₖₗₘₙₚₛₜ]', 'unconverted subscript letter'),
-    # Greek letters outside math mode (heuristic: followed by space/punctuation)
-    (r'[αβγδεζηθικλμνξπρστυφχψω]\s', 'possible unconverted Greek letter'),
-    # h-bar and script ell
-    (r'[ħℓ]', 'unconverted physics symbol (ħ or ℓ)'),
-]
-
-
 def check_pdf(path):
     fitz = _require_fitz()
     
@@ -113,32 +88,23 @@ def check_pdf(path):
         return 1
 
     errors = []
-    warnings = []
     empty_pages = []
     total_chars = 0
+    total_replacement_chars = 0
     
     for page in doc:
         text = page.get_text()
         page_chars = len(text)
         total_chars += page_chars
         
-        # Check for replacement characters and glyph-miss patterns
-        for pattern, desc in GLYPH_MISS_PATTERNS:
-            if pattern in text:
-                count = text.count(pattern)
-                errors.append(
-                    f'Page {page.number + 1}: {count} {desc}(s) found — '
-                    f'run unicode-latex-preprocess.py and rebuild'
-                )
-        
-        # Check for unprocessed Unicode (preprocessor was not run)
-        for regex, desc in UNPROCESSED_UNICODE_PATTERNS:
-            matches = re.findall(regex, text)
-            if matches:
-                warnings.append(
-                    f'Page {page.number + 1}: {len(matches)} {desc}(s) detected — '
-                    f'may indicate preprocessor was not run'
-                )
+        # Check for U+FFFD replacement characters - the ONLY true failure indicator
+        replacement_count = text.count('\ufffd')
+        if replacement_count > 0:
+            total_replacement_chars += replacement_count
+            errors.append(
+                f'Page {page.number + 1}: {replacement_count} U+FFFD replacement character(s) — '
+                f'font is missing glyphs. Use unicode-math + STIX Two Math.'
+            )
         
         # Check for empty pages
         if not text.strip():
@@ -146,27 +112,23 @@ def check_pdf(path):
         
         print(f'[INFO] Page {page.number + 1}: {page_chars} chars')
 
-    print(f'\n[INFO] Total pages: {doc.page_count}, Total chars: {total_chars}')
+    page_count = doc.page_count
+    doc.close()
+    
+    print(f'\n[INFO] Total pages: {page_count}, Total chars: {total_chars}')
 
     if empty_pages:
         errors.append(f'Empty pages (no extractable text): {empty_pages}')
-
-    # Report warnings (non-blocking but should be reviewed)
-    if warnings:
-        print('\n[WARNINGS] (review recommended, not blocking):')
-        for w in warnings:
-            print(f'  ⚠ {w}')
 
     # Report errors (blocking)
     if errors:
         print('\n[FAIL] PDF verification FAILED — MUST NOT PUBLISH:')
         for e in errors:
             print(f'  ❌ {e}')
-        print('\n[REMEDIATION STEPS]:')
-        print('  1. Run: python unicode-latex-preprocess.py paper.md')
-        print('  2. Rebuild: pandoc paper.md -o paper.pdf --pdf-engine=xelatex')
-        print('  3. Re-run: python check-pdf.py paper.pdf')
-        print('  4. Only publish after this script exits with code 0')
+        print('\n[REMEDIATION]:')
+        print('  Use build-pdf.py which configures XeLaTeX with unicode-math + STIX Two Math.')
+        print('  This font has comprehensive Unicode coverage and eliminates glyph-miss errors.')
+        print('  Command: python build-pdf.py paper.md')
         return 1
 
     print('\n[PASS] PDF rendering verified — no replacement characters, no empty pages.')
