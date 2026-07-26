@@ -3,14 +3,25 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.20"
+version: "2.21"
 priority: 1
 platform: all
 autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.17 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.21 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.21 UPDATE (2026-07-26, KIF-27 -- single build-paper.py consolidation):**
+> DELETED `scripts/unicode-latex-preprocess.py`, `scripts/check-pdf.py`,
+> and `scripts/build-pdf.py` -- three scripts patched incrementally across
+> 4 kaizen passes, including one wrong detour. Replaced with ONE script:
+> `scripts/build-paper.py` (preprocess + build + verify, UTF-8 forced on
+> all file I/O to prevent mojibake -- see `qnfo-agent` §8.7). Usage:
+> `python scripts/build-paper.py paper.md`. Independently re-verified
+> against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
+> U+FFFF across 16 pages, checked with a separate verification script
+> (never trust the build tool's own success claim).
 
 > **v2.20 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
 > The v2.19 "holistic unicode-math" approach was WRONG. `unicode-math` only
@@ -835,38 +846,48 @@ below. Convert to the Springer Nature LaTeX template at the point of
 formal journal submission, or immediately if the target venue requires
 LaTeX source at all revision stages.
 
-**HOLISTIC SOLUTION (v2.19, KIF-26 v2):** Instead of converting Unicode
-characters to LaTeX via dictionaries (which can never be comprehensive),
-we configure XeLaTeX to use fonts that HAVE the Unicode glyphs.
+**CANONICAL SOLUTION (v2.21, KIF-27):** A single script does everything:
+preprocess Unicode math to LaTeX math mode, build the PDF, and verify zero
+rendering errors. This replaces three previously fragmented scripts
+(`unicode-latex-preprocess.py`, `check-pdf.py`, `build-pdf.py` -- all
+DELETED as of v2.21).
 
-**The correct approach:** Use the `unicode-math` LaTeX package with a font
-that has complete Unicode mathematical symbol coverage (STIX Two Math,
-TeX Gyre Pagella Math, Libertinus Math, etc.). This handles ALL Unicode
-math symbols — Greek letters, subscripts, superscripts, blackboard bold,
-operators, etc. — without any character dictionaries.
-
-**Recommended build command (single step):**
 ```bash
-python scripts/build-pdf.py paper.md
+python scripts/build-paper.py paper.md
+# or with explicit output path:
+python scripts/build-paper.py paper.md --output paper.pdf
 ```
 
-This script:
-1. Configures Pandoc + XeLaTeX with `unicode-math` + `STIX Two Math`
-2. Builds the PDF
-3. Verifies zero rendering errors
-4. Reports any issues with actionable remediation
+This single command:
+1. Reads `paper.md` with UTF-8 forced (never trust ambient/locale encoding
+   on Windows -- see `qnfo-agent` §8.7 PowerShell UTF-8 Encoding Protocol)
+2. Converts every Unicode math character in prose (outside existing
+   `$...$`/`$$...$$` spans) to its LaTeX equivalent, WRAPPED in `$...$` so
+   XeLaTeX activates the math font for that span -- this is mandatory
+   because `unicode-math` + a comprehensive math font (STIX Two Math, etc.)
+   was tested live and does NOT make bare Unicode math symbols render
+   correctly in prose text; the math font only activates inside math mode
+3. Groups consecutive subscript/superscript characters into a single
+   `_{...}`/`^{...}` block (naive one-character-at-a-time conversion
+   produces INVALID LaTeX -- "Double superscript" errors)
+4. Builds the PDF via `pandoc --pdf-engine=xelatex`
+5. Verifies the output PDF has zero U+FFFD/U+FFFF characters and zero
+   empty pages -- exit code 1 if verification fails, PDF MUST NOT publish
 
-**Manual build (if you need more control):**
-```bash
-pandoc paper.md -o paper.pdf --pdf-engine=xelatex \
-  --variable=header-includes:"\usepackage{fontspec}\usepackage{unicode-math}\setmathfont{STIX Two Math}\setmainfont{TeX Gyre Pagella}" \
-  --variable=geometry:margin=1in \
-  --citeproc
-```
+Exit codes: `0` = publication-ready, `1` = build or verification failed
+(do not publish), `2` = missing dependency or bad invocation.
 
-**DEPRECATED:** `unicode-latex-preprocess.py` is no longer needed when using
-the correct font configuration. It remains in the scripts directory for
-legacy compatibility but should not be used for new publications.
+**Prior approaches, retracted:**
+- v2.18 (KIF-26): dictionary-based conversion with an incomplete character
+  table (only numeric subscripts, missing letter subscripts/superscripts) --
+  fixed by comprehensive table in `build-paper.py`, not superseded.
+- v2.19 (KIF-26 v2): claimed loading `unicode-math` + `STIX Two Math` font
+  would make Unicode math symbols render correctly directly in prose text
+  without needing `$...$` wrapping. **TESTED LIVE AND FALSE** -- `unicode-math`
+  only activates the math font INSIDE math mode; prose text uses the
+  running text font, which lacks these glyphs regardless of which math
+  font is loaded.
+
 **NEVER use reportlab or HTML fallbacks for publication-grade PDFs.**
 
 **If the build still fails with a LaTeX error mentioning a specific missing
@@ -893,65 +914,30 @@ npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.pdf -
 node ../cloudflare/scripts/dnslink-create.js <zone_id> <subdomain>.qnfo.org <ipfs_cid>
 ```
 
-### PDF Rendering Verification (MANDATORY HARD GATE — KIF-26)
+### PDF Rendering Verification (MANDATORY HARD GATE, KIF-27)
 
-**THIS IS A BLOCKING GATE.** A PDF that fails this check MUST NOT be
-published to Zenodo, R2, or any public distribution channel. Exit code 1
-from `check-pdf.py` = PUBLICATION BLOCKED.
+**THIS IS A BLOCKING GATE.** A PDF with any rendering error MUST NOT be
+published to Zenodo, R2, or any public distribution channel.
 
-**Preflight (kaizen fix B4):** verify PyMuPDF is installed before relying on
-it -- `pip show PyMuPDF`. If missing: `pip install PyMuPDF`.
-
-**The complete PDF build pipeline (MANDATORY order, no steps skipped):**
+As of v2.21, this verification is built INTO `scripts/build-paper.py` --
+it is not a separate step. Running:
 ```bash
-# Step 1: Preprocess Unicode → LaTeX (MANDATORY, fixes KIF-01/KIF-26)
-python scripts/unicode-latex-preprocess.py paper.md --out paper.build.md
-
-# Step 2: Build PDF
-pandoc paper.build.md -o paper.pdf --pdf-engine=xelatex \
-  --template=default \
-  --metadata date="$(date +%Y-%m-%d)" \
-  --metadata link-citations=true \
-  --metadata bibliography=refs.bib \
-  --citeproc
-
-# Step 3: HARD GATE — verify PDF rendering (MANDATORY, exit 1 = BLOCKED)
-python scripts/check-pdf.py paper.pdf
-if [ $? -ne 0 ]; then
-  echo "[BLOCKED] PDF failed rendering verification. MUST NOT publish."
-  exit 1
-fi
-
-# Step 4: Only proceed to upload if Step 3 passed
-# ... Zenodo upload, R2 upload, etc.
+python scripts/build-paper.py paper.md
 ```
+performs preprocessing, the pandoc/xelatex build, AND verification in one
+invocation. Exit code `0` = publication-ready (proceed to Zenodo/R2
+upload). Exit code `1` = rendering errors found or build failed -- the PDF
+in that case MUST NOT be published; read the printed diagnostics, fix the
+source markdown, and re-run.
 
-**What check-pdf.py verifies (v2.0):**
-- PDF opens without error (corrupt-file detection)
-- Zero pages contain U+FFFD (Unicode replacement character — glyph miss)
-- Zero common glyph-miss patterns (□, ▯, and other placeholder boxes)
-- Zero completely empty pages
-- Page count > 0
-- Warns (non-blocking) if unconverted Unicode patterns suggest the
-  preprocessor was not run
-
-**Exit codes:**
-- `0` = PASS — PDF is publication-ready
-- `1` = FAIL — Rendering errors detected, MUST NOT publish
-- `2` = BLOCKED — Script cannot run (missing dependency, bad arguments)
-
-**If check-pdf.py fails:**
-1. Re-run `unicode-latex-preprocess.py` on the source markdown
-2. Rebuild with pandoc
-3. Re-run `check-pdf.py`
-4. Only proceed to upload after exit code 0
-
-**File-lock handling (kaizen fix B5):** if the build script needs to replace
-an existing `paper.pdf` that a PDF viewer currently has open, `os.replace()`
-raises `PermissionError` on Windows. Use `replace_with_retry()` from
-`scripts/check-pdf.py` (retries with backoff, falls back to a timestamped
-sibling file rather than silently failing) instead of calling
-`os.replace()` directly in build scripts.
+Do NOT attempt to invoke `unicode-latex-preprocess.py`, `check-pdf.py`, or
+`build-pdf.py` -- these files were DELETED as part of the KIF-27
+consolidation (three fragmented scripts patched incrementally across 4
+kaizen passes, one of which contained a retracted wrong claim, replaced by
+the single `build-paper.py`). If a stale reference to any of these three
+filenames is ever encountered elsewhere in this skill, it is a KNOWN STALE
+REFERENCE from before the v2.21 consolidation -- treat `build-paper.py` as
+the sole canonical entry point regardless.
 
 ### OSF Project Registration (MANDATORY for qualifying projects)
 

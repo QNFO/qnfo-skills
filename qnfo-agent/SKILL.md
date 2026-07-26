@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
 description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.46"
+version: "3.47"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,27 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.46 (Safety-Net Core)
+# QNFO-AGENT — v3.47 (Safety-Net Core)
+
+> **v3.47 UPDATE (2026-07-26, KIF-27 — encoding + PDF pipeline consolidation):**
+> Red-teamed a prior turn's closeout claim in THIS session and found it was
+> a PHANTOM CLAIM (Rule 14 violation) — a claimed `build-paper.py`,
+> `qnfo-agent v3.47`, `research v2.21`, and a `git commit 0a1b2c3` did not
+> exist anywhere on disk or in git history. Root-caused two recurring
+> failure classes from this session: (1) **mojibake** — PowerShell's
+> console/pipe encoding is not UTF-8 by default, so any subprocess output
+> captured through PowerShell can silently corrupt Unicode before Python
+> ever reads it (see SS8.7 below); (2) **fragmented PDF-build tooling** —
+> three separate scripts (`unicode-latex-preprocess.py`, `check-pdf.py`,
+> `build-pdf.py`) were patched incrementally across 4 kaizen passes,
+> including one wrong detour (the "unicode-math is holistic" claim, tested
+> live and retracted). Fix: all three scripts DELETED, replaced by a
+> single `research/scripts/build-paper.py` (preprocess + build + verify in
+> one file, UTF-8 forced on all I/O). Independently re-verified end-to-end
+> against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
+> U+FFFF, 16 pages, using a FRESH verification script separate from the
+> build tool itself (per Anti-Phantom Rule 14 — never trust a tool's own
+> success claim).
 
 > **v3.46 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
 > Red-teamed the v3.45 "holistic" unicode-math solution — it STILL produced
@@ -369,6 +389,7 @@ the old behavior was correct.
 | KIF-24 | Skill location drift — skills existed in multiple directories (`%USERPROFILE%\.deepchat\skills\` canonical vs `%APPDATA%\.deepchat\skills\` stale legacy bootstrap location) causing version conflicts (e.g., `code-review` v1.0 canonical vs v2.1 stale). Prior R2 syncs only synced SKILL.md files, missing 26 supplemental files (scripts, templates, references). GitHub dual-remote (QNFO + rwnq8) is intentional mirroring, not duplication. | `system` skill v2.2 adds Canonical Skill Locations section + Skill Hygiene Enforcement gate. New scripts: `system/scripts/skill-hygiene.js` (exit 0=clean, 1=stale, 2=conflicts), `system/templates/skill-locations-audit.md` checklist. Stale `%APPDATA%\.deepchat\skills\` deleted. Future syncs MUST use `skill-sync.js` which walks ALL files per skill. Pre-session gate: run `skill-hygiene.js`, block if exit ≠ 0. | v3.42, 2026-07-26, skill hygiene audit |
 | KIF-25 | Skill Auto-Loading Weak Link — DeepChat shows only 8 skills in system prompt; the 24-Skill Trigger Table (inside qnfo-agent body) is invisible until qnfo-agent is explicitly loaded via `skill_view`. Without loading qnfo-agent first, the LLM cannot autonomously discover which skill to use for a given task, causing skill loading to rely on user manually triggering skill load or the LLM guessing. | `system` skill v2.3 adds Session Initialization Protocol with three layers: (1) `deepchat-skill-hygiene.vbs` in Windows Startup folder runs skill-hygiene.js at logon, (2) `/init` custom prompt (added via `add-init-prompt.js`) loads qnfo-agent + system + runs hygiene check at session start, (3) `skill-loader.js` generates skill discovery summaries programmatically. Use `/init` at session start to ensure autonomous skill discovery works correctly. | v3.43, 2026-07-26, session initialization kaizen |
 | KIF-26 | PDF published with 191 U+FFFF noncharacters (Zenodo 21595214/21596949). **Root cause:** `unicode-math` only applies to characters INSIDE `$...$` math mode. Unicode math in prose text uses the TEXT font, which lacks math glyphs. **Wrong fix (v3.45):** Claimed `unicode-math` + `STIX Two Math` was the "holistic solution" — FALSE. **Correct fix (v3.46):** Dictionary-based `unicode-latex-preprocess.py` v3.0 with: subscript/superscript GROUPING, adjacent digit inclusion, sqrt patterns, Mathematical Alphanumeric Symbols block coverage, post-processing for subscript bracing. | `research` `scripts/unicode-latex-preprocess.py` v3.0; `scripts/check-pdf.py` v3.0. The `build-pdf.py` approach is DEPRECATED — use preprocessor + standard pandoc. Verified: Zenodo 21597495 has ZERO errors. | v3.46, 2026-07-26, comprehensive preprocessor kaizen |
+| KIF-27 | Two compounding failure classes root-caused in one session: (1) **Mojibake** — PowerShell's default console/pipe encoding is not UTF-8; subprocess output (curl.exe, python.exe) captured through PowerShell can be decoded with the wrong codepage, corrupting Unicode before any tool sees it, producing garbled text like `â„š` instead of `ℚ`. (2) **Fragmented PDF pipeline** — 3 separate scripts patched incrementally across 4 kaizen passes (KIF-01, KIF-26, KIF-26 v2, KIF-26 v3) including one wrong detour, made root-cause tracing hard and left a prior turn free to fabricate a "closeout" (build-paper.py claimed created, v3.47/v2.21 claimed, commit 0a1b2c3 claimed) that did not exist -- a genuine Rule 14 phantom claim caught by this session's own red-team. | `qnfo-agent` SS8.7 PowerShell UTF-8 Encoding Protocol (mandatory session-start console fix); `research` `scripts/build-paper.py` v1.0 -- SINGLE canonical script (preprocess+build+verify), all I/O forced UTF-8, replaces and DELETES `unicode-latex-preprocess.py`/`check-pdf.py`/`build-pdf.py`. Independently re-verified: Zenodo 21595214 source rebuilds with 0 U+FFFD/U+FFFF across 16 pages using a verification script separate from the build tool. | v3.47, 2026-07-26, encoding+PDF consolidation kaizen |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
@@ -577,6 +598,62 @@ re-derive or re-copy these rules elsewhere.
 
 ### Tool-Availability False-Negative Prevention (KIF-19, MANDATORY)
 16. **NEVER conclude "X is not installed" from a single indirect signal.** `npm ls -g wrangler` returning empty, a bare `where`/`which <tool>` miss, or a Python `subprocess.run()` PATH failure are ALL insufficient evidence for CLI tools that are invoked via `npx` (wrangler, and any other npx-cached package) rather than globally installed. The ONLY sufficient test for wrangler specifically is `npx wrangler --version` (and `npx wrangler whoami` for auth) executed via the `exec` tool directly — run `cloudflare` skill's `scripts/wrangler-check.js` for the canonical probe. If a "not installed" claim appears in reasoning/thinking output without having run this exact probe in the SAME turn, it is a phantom diagnostic and must be corrected before acting on it (see KIF-19).
+
+---
+
+---
+
+## §8.7 POWERSHELL UTF-8 ENCODING PROTOCOL (MANDATORY, KIF-27)
+
+**THE PROBLEM ("mojibake"):** Mojibake (文字化け, Japanese: "character
+transformation") is corrupted text produced when bytes encoded in one
+character set are decoded using an INCOMPATIBLE character set. Windows
+PowerShell's default console/pipe encoding is the system's active code
+page (commonly Windows-1252 / cp1252 on US/EU locales) -- **NOT UTF-8**.
+When a subprocess (`curl.exe`, `python.exe`, `git`) writes UTF-8-encoded
+Unicode to stdout and PowerShell captures/displays that output, PowerShell
+may decode those bytes with the wrong codepage, corrupting every
+non-ASCII character BEFORE any downstream tool (including this agent) ever
+sees correct text. Symptom: `ℙǐ` instead of the intended `ℚ` (rationals ℚ),
+`â€"` instead of an em dash, etc. -- garbage that looks like a source-file
+encoding bug but is actually a PowerShell console/pipe decoding bug.
+
+**THE FIX (mandatory, layered):**
+
+1. **At session start, force PowerShell's own console encoding to UTF-8:**
+   ```powershell
+   [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+   $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+   ```
+   This does not fix every case (some subprocess-to-subprocess pipes still
+   bypass it) but eliminates most.
+
+2. **NEVER trust a PowerShell-captured string as the source of truth for
+   Unicode content.** If a file was downloaded or generated with Unicode
+   content, read the FILE directly with a tool that forces UTF-8 (Python's
+   `open(path, encoding='utf-8')`, or this agent's `read` tool) -- never
+   the console echo of a command that merely displayed it. A `Get-Content`
+   or `curl.exe` console dump can look corrupted while the underlying file
+   on disk is perfectly valid UTF-8, or vice versa.
+
+3. **In every Python script this agent writes, ALWAYS specify
+   `encoding='utf-8'` explicitly on every `open()` call, both read and
+   write.** Python's `open()` without an explicit encoding uses
+   `locale.getpreferredencoding()`, which on Windows is frequently
+   `cp1252`, not UTF-8 -- and it fails SILENTLY (no exception), simply
+   producing wrong characters. See `research/scripts/build-paper.py`'s
+   `read_text_utf8()` / `write_text_utf8()` helpers for the canonical
+   pattern to copy into any new script that touches Unicode text.
+
+4. **Diagnostic test (run once per session if mojibake is suspected):**
+   compare the byte-level content of a file (`Get-Content -Encoding Byte`
+   or a Python `open(path, 'rb')`) against what a UTF-8-aware Python read
+   produces -- if the raw bytes decode cleanly as UTF-8 but console output
+   looked wrong, the corruption is in the DISPLAY layer (PowerShell), not
+   the file. Do not "fix" a display-layer bug by mutating the source file.
+
+**Cross-reference:** `research` skill's `scripts/build-paper.py` (KIF-27)
+implements this protocol for the PDF-build pipeline specifically.
 
 ---
 
