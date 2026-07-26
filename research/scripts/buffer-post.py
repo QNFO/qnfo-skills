@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Buffer GraphQL Post Publisher (v1.1 — 2026-07-22, corrected)
 ==============================================================

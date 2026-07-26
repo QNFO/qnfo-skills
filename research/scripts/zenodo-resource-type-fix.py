@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 zenodo-resource-type-fix.py -- Failsafe metadata-shape resolver for Zenodo
 deposit PUT calls, specifically for actions/newversion drafts.

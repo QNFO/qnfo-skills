@@ -194,7 +194,7 @@ This flag reflects OSF's built-in **email confirmation security gate** — ident
 
 ### A1: Pandoc+XeLaTeX Unicode Math Rendering Failure
 
-**Problem:** XeLaTeX default font (Latin Modern) lacks Unicode Greek subscript/superscript glyphs. Symbols ω₀₁, α, 10⁻⁴, |0⟩, ℚ, ℝ all produce `￿` (replacement characters) in PDF output.
+**Problem:** XeLaTeX default font (Latin Modern) lacks Unicode Greek subscript/superscript glyphs. Symbols ω₀₁, α, 10⁻⁴, |0⟩, ℚ, ℝ all produce `U+FFFF` (replacement characters) in PDF output.
 
 **Fix:** Add Unicode→LaTeX math preprocessor to PDF build step.
 

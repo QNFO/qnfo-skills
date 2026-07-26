@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Zenodo Metadata + Publish (Step 3-4 of the publish pipeline)
 
@@ -61,11 +62,11 @@ def main():
     token = get_token()
     headers = {'Authorization': f'Bearer {token}'}
 
-    with open(args.pending_file) as f:
+    with open(args.pending_file, encoding='utf-8') as f:
         pending = json.load(f)
     deposit_id = pending['deposit_id']
 
-    with open(args.metadata_file) as f:
+    with open(args.metadata_file, encoding='utf-8') as f:
         metadata_body = json.load(f)
 
     if 'upload_type' not in metadata_body and 'resource_type' not in metadata_body:
@@ -113,7 +114,7 @@ def main():
         'concept_doi': data['conceptdoi'],
         'url': f'https://doi.org/{doi}',
     }
-    with open('_zenodo_publish_result.json', 'w') as f:
+    with open('_zenodo_publish_result.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, indent=2)
     print('\nSaved to _zenodo_publish_result.json -- '
           'copy these values into your project\'s .zenodo_versions.json')

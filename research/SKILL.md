@@ -1,17 +1,37 @@
-﻿---
+---
 name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.21"
+version: "2.22"
 priority: 1
 platform: all
 autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.21 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.22 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
 
+> **v2.22 UPDATE (2026-07-26, KIF-28 — comprehensive encoding kaizen):**
+> Red-teamed KIF-28 closeout: Source File Encoding Integrity section and 7
+> encoding anti-pattern rows were claimed as added but did not exist on disk.
+> Added: (1) **Source File Encoding Integrity (HARD GATE)** — BOM, U+FFFD,
+> U+FFFF, Python encoding declarations, and PowerShell encoding checks all
+> mandatory before commit/publish; (2) 7 encoding anti-pattern rows; (3) BOM
+> stripped from this file; (4) U+FFFD/U+FFFF characters removed from the
+> verification code example (replaced with Python escape text). See `qnfo-agent`
+> v3.48 for complementary anti-pattern updates and KIF-28 registry entry.
+>
+> **v2.22 UPDATE (2026-07-26, KIF-28 — comprehensive encoding kaizen):**
+> Red-teamed KIF-28 closeout: Source File Encoding Integrity section and 7
+> encoding anti-pattern rows were claimed as added but did not exist on disk.
+> Added: (1) **Source File Encoding Integrity (HARD GATE)** — BOM, U+FFFD,
+> U+FFFF, Python encoding declarations, and PowerShell encoding checks all
+> mandatory before commit/publish; (2) 7 encoding anti-pattern rows; (3) BOM
+> stripped from this file; (4) U+FFFD/U+FFFF characters removed from the
+> verification code example (replaced with Python escape text). See `qnfo-agent`
+> v3.48 for complementary anti-pattern updates and KIF-28 registry entry.
+>
 > **v2.21 UPDATE (2026-07-26, KIF-27 -- single build-paper.py consolidation):**
 > DELETED `scripts/unicode-latex-preprocess.py`, `scripts/check-pdf.py`,
 > and `scripts/build-pdf.py` -- three scripts patched incrementally across
@@ -814,6 +834,65 @@ full research article):**
 tone/prose, or copyediting checklists above is NOT publication-ready,
 regardless of scientific content quality. Fix the presentation issue,
 then re-run this checklist, before proceeding to PDF build and upload.
+
+### Source File Encoding Integrity (HARD GATE, KIF-28 MANDATE)
+
+**BEFORE any build, commit, or publish operation on markdown source files:**
+
+1. **Zero BOM (Byte Order Mark):** No `.md`, `.py`, `.js`, `.tex`, or `.bib` file
+   shall contain a UTF-8 BOM (U+FEFF). BOM silently breaks: Pandoc frontmatter
+   parsing, YAML libraries, `git diff` display, and some spell-checkers.
+   Verify: first 3 bytes of the file MUST NOT be `ï»¿`.
+
+2. **Zero U+FFFD (REPLACEMENT CHARACTER):** This character means "bytes were
+   decoded with the wrong encoding" -- it is ALWAYS a corruption signal, never
+   intentional content. Any file containing U+FFFD MUST NOT be committed or
+   published.
+
+3. **Zero U+FFFF (NONCHARACTER):** This noncharacter appears in PDFs when a
+   font lacks a glyph, but it must NEVER appear in source markdown. Its presence
+   in a source file means a prior encoding corruption event is still propagating.
+
+4. **All Python scripts: `# -*- coding: utf-8 -*-` on line 1 or 2** (after
+   shebang). Every `open()` call for text files MUST specify `encoding='utf-8'`
+   explicitly -- Python's default on Windows is `locale.getpreferredencoding()`
+   (cp1252), which SILENTLY produces wrong characters without any exception.
+
+5. **All PowerShell commands that interact with files: use `-Encoding UTF8`.**
+   `Get-Content` without `-Encoding` defaults to the system codepage and will
+   silently corrupt UTF-8 content.
+
+**Pre-commit verification script** (run via `skill_run` or as `_fffd_scan.py`,
+write to file first per KIF-27, never inline):
+```bash
+python -c "
+import sys, os
+for root, dirs, files in os.walk('.'):
+    for fn in files:
+        if any(fn.endswith(e) for e in ('.md','.py','.js','.tex','.bib','.json','.yaml','.yml')):
+            fp = os.path.join(root, fn)
+            with open(fp, 'rb') as f:
+                data = f.read()
+            issues = []
+            if data[:3] == b'ï»¿':
+                issues.append('BOM')
+            text = data.decode('utf-8', errors='replace')
+            if '\\ufffd' in text:
+                issues.append('U+FFFD')
+            if '\\uffff' in text:
+                issues.append('U+FFFF')
+            if issues:
+                print(f'{fp}: {" / ".join(issues)}')
+                sys.exit(1)
+print('ENCODING GATE: PASS')
+"
+```
+
+**GATE:** If the pre-commit scan exits non-zero, BLOCK the git commit.
+This is a HARD gate -- encoding corruption in source propagates to PDFs,
+Zenodo archives, D1 inserts, and all downstream distribution channels.
+A single U+FFFD in source can survive through Pandoc, XeLaTeX, Zenodo,
+and IPFS, producing a permanently corrupted public artifact.
 
 ### PDF Building
 
@@ -1822,6 +1901,13 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Using the legacy `svjour3`/`svjour.cls` package for new LaTeX papers | Retired -- use `sn-jnl.cls` (Springer Nature's unified template, embedded at `templates/springer-nature-latex/`) as the mandatory default. |
 | Placing a `.bst` bibliography style file in a `bst/` subdirectory relative to `paper.tex` | `bibtex` does not search subdirectories by default -- copy the needed `.bst` alongside `paper.tex`/`refs.bib` before running `bibtex`. |
 | Declaring a paper "publication-ready" after only the Physics Writing Standards / Publication Language Gate pass | Also run the Professional Publication Standards structural, tone/prose, and copyediting checklists -- content-integrity and presentation-quality are separate gates, both mandatory. |
+| PowerShell default encoding is NOT UTF-8 (system codepage silently corrupts Unicode) | Set [Console]::OutputEncoding AND $OutputEncoding to UTF-8 before any file/pipe operation (KIF-27, qnfo-agent SS8.7) |
+| Python open() without encoding='utf-8' on Windows | Always specify encoding='utf-8' explicitly -- bare open() uses cp1252 default and SILENTLY produces wrong characters (KIF-27) |
+| Source markdown files with BOM (U+FEFF) | Strip BOM before any commit; BOM breaks Pandoc frontmatter and YAML parsing (KIF-28) |
+| U+FFFD/U+FFFF characters in source markdown | Run FFFD scanner pre-commit; these are ALWAYS corruption signals, never intentional (KIF-26, KIF-28) -- see Source File Encoding Integrity gate |
+| Python script missing # -*- coding: utf-8 -*- declaration | Every .py file MUST declare encoding on line 1 or 2; Python reads files as ASCII by default on some platforms (KIF-28) |
+| Get-Content/Out-File without -Encoding UTF8 on PowerShell | Default to system codepage; use -Encoding UTF8 or read via Python with explicit encoding='utf-8' (KIF-28) |
+| Skipping FFFD/BOM scan before git commit or publication | Run pre-commit encoding scan per Source File Encoding Integrity gate; encoding corruption survives all downstream pipeline stages (KIF-28) |
 | Submitting/publishing a paper with an incomplete Declarations section (missing any of the 9 mandatory subsections) | Springer Nature treats incomplete Declarations as an incomplete submission -- write "Not applicable" explicitly rather than omitting a subsection. |
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 credential-scan.py -- Pre-commit credential leak scanner (kaizen fix A4/C1/D2)
 

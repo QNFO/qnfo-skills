@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Zenodo Create + Upload (Step 1-2 of the publish pipeline)
 
@@ -141,7 +142,7 @@ def main():
     upload_file(headers, bucket_url, args.bundle)
 
     pending = {'deposit_id': deposit_id, 'bucket_url': bucket_url, 'concept_id': concept_id}
-    with open('_zenodo_pending_deposit.json', 'w') as f:
+    with open('_zenodo_pending_deposit.json', 'w', encoding='utf-8') as f:
         json.dump(pending, f, indent=2)
 
     print(f'\nDeposit ready: https://zenodo.org/deposit/{deposit_id}')
