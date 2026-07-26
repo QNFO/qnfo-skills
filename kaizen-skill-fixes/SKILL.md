@@ -10,7 +10,7 @@ tags:
   - epistemic-bias
 ---
 
-# KAIZEN SKILL FIXES — v1.5
+# KAIZEN SKILL FIXES — v1.6
 
 > Generated 2026-07-20 from the No Thing + Huang Response deep-dive session.
 > v1.1: Added E1 (OSF full API automation — corrects prior false claim of manual-intervention requirement).
@@ -18,6 +18,7 @@ tags:
 > v1.3: Added G1/G2/G3 (Epistemic Bias Fixes from PQS AI-Evaluation Audit 2026-07-24 — Institution Fallacy, Convergence Trap, Symmetry Requirement).
 > v1.4: Added H1 (Cross-Domain Consilience Translation Protocol — research skill Phase 1, 2026-07-26).
 > v1.5: Added I1 — KIF-30 Mandatory PDF Inclusion in all Zenodo Deposits (2026-07-26).
+> v1.6: Added J1 — KIF-31 Acronym Hallucination Gate (2026-07-26). Model fabricated "Zhu, Brad, Wang" as expansion of ZBW (Zitterbewegung) during paper-13 writing; published to Zenodo before detection. Added Acronym Expansion Gate to qnfo-agent §7 Publication Standards.
 > All fixes are concrete skill-system improvements, not project-specific work.
 
 ## execute_plan
@@ -34,6 +35,7 @@ update_plan([
   {"step": "F1: Buffer API — fix broken inline fragments, add missing assets:[] (CRITICAL, 2026-07-22)", "status": "pending"},
   {"step": "H1: Cross-Domain Consilience Translation Protocol — research skill Phase 1 (HIGH, 2026-07-26)", "status": "pending"},
   {"step": "I1: Mandatory PDF inclusion in all Zenodo deposits — research §5 P5.PDF HARD GATE (CRITICAL, 2026-07-26)", "status": "pending"},
+  {"step": "J1: Acronym Hallucination Gate — KIF-31, qnfo-agent v3.50 §7 (CRITICAL, 2026-07-26)", "status": "completed"},
 ])
 
 ---
@@ -366,7 +368,76 @@ cred_patterns = [
 6. **H1** goes into `research` skill Phase 1 as "Cross-Domain Consilience Gate (KIF-29, SOFT)", positioned after the existing epistemic bias gates (KIF-16/KIF-17/KIF-18).
 7. **I1** goes into `research` skill §5 (Zenodo Upload section) as HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call.
 
-**Verification:** After applying fixes, rebuild the Huang response v2.3 PDF — should render 16 pages CLEAN with zero replacement characters. For E1, the verification is the live registration `https://osf.io/kj6ar/` created 2026-07-20T12:48:47Z via pure API calls.
+**Cross-references:**
+- `research` v2.24 — HARD GATE P5.PDF, updated file upload list, newversion PDF requirement
+- `qnfo-agent` v3.49 — KIF-30 registry entry, anti-pattern table extension
+- Live demonstration: ALP v1.0 (no PDFs) → v2.0 (12 PDFs + bundle), DOIs 10.5281/zenodo.21609539 → 10.5281/zenodo.21609602
+
+### Implementation Notes (I1)
+
+I1 goes into `research` skill §5 (Zenodo Upload section) as HARD GATE P5.PDF. The gate must pass before any Zenodo `actions/publish` call — verify `paper.pdf` (and all program PDFs) exist locally, are built from the current source, and pass the KIF-27 PDF rendering verification gate.
+
+---
+
+## J: CRITICAL Fix — Acronym Hallucination Gate (KIF-31, 2026-07-26)
+
+### J1: Model Fabricates Acronym Expansions
+
+**Problem:** During paper-13 ("The Silent Parameter as the Local Langlands Correspondence for GL(1) at p = 2") writing in the ALP closeout session, the model parenthetically expanded "ZBW" as "(Zhu, Brad, Wang)" — three fabricated author initials. The correct expansion is "Zitterbewegung" — the quantum mechanical oscillatory phenomenon at the heart of the entire ZBW research program. The fabricated expansion was published in both the markdown source and the PDF, uploaded to Zenodo (deposit 21610573), and survived all existing quality gates undetected.
+
+**Root cause:** The model encountered a 3-letter opaque token "ZBW" during prose generation. When expanding it for the "first use spells out" convention, no grounded expansion was available in immediate context. The model filled the ambiguity slot via intelligent completion — generating plausible words for each initial letter (Z→Zhu, B→Brad, W→Wang) — producing text that was syntactically correct, domain-adjacent (person names in an academic paper), and passed all existing gates: Publication Language Gate (no internal language), PDF rendering check (clean), credential scan (not a token).
+
+**Why existing gates failed to catch this:**
+| Gate | Why it passed |
+|:-----|:--------------|
+| Publication Language Gate | "Zhu, Brad, Wang" is well-formed English, not internal project language |
+| PDF Rendering Gate (KIF-27) | No Unicode issues in ASCII names |
+| Credential Scan (KIF-04) | Not a token pattern |
+| Physics Writing Standards | Passes all 18 points — it's grammatical prose |
+| Banned Words Scan | No banned words in the fabricated phrase |
+| Pre-Publication Checklist | All items check out for well-formed text |
+
+The failure is **structural**: all existing gates check *surface quality* (syntax, formatting, absence of bad patterns). None check *semantic grounding* — whether a claim that looks like a fact actually traces to a verifiable source in the project's knowledge base.
+
+**Fix — Acronym Expansion Gate (KIF-31, MANDATORY):**
+
+1. Added to `qnfo-agent` §7 Publication Standards: before publishing any paper containing a parenthetical acronym expansion, VERIFY the expansion against:
+   - All prior papers in the project's `artifacts/` directory (grep the acronym)
+   - Project memories (`search_memories` for acronym + expansion)
+   - D1 living-paper entries and KG nodes
+   - The project's PROJECT-PLAN.md and research plans
+
+2. If zero prior occurrences found → flag: `[UNVERIFIED-ACRONYM: ZBW → "Zhu, Brad, Wang" — zero prior occurrences in any QNFO artifact. VERIFY before publication.]`
+
+3. **HARD RULE:** If the full term is unknown, do not use the acronym. Spell out the term. If you cannot spell it out, that is evidence you should not be using the abbreviation.
+
+4. Added KIF-31 to `qnfo-agent` §0.11 Known-Issues-Fixed Registry.
+
+5. Added anti-pattern to `qnfo-agent` Anti-Patterns table: "Expanding an acronym with a fabricated phrase not grounded in any project artifact."
+
+**Vulnerability surface analysis:** The acronym hallucination failure mode is a special case of a broader class: **intelligent slot-filling** — any time the model encounters a "slot" in generated text that requires specific, grounded knowledge not available in context, it will fill it with plausible fiction. Other potential slot types: citation references, equation numbers, author names, data values, DOI numbers. The remediation principle generalizes: **before publishing, every factual assertion that is NOT a self-contained logical deduction from the paper's own content must be traced to a prior project artifact or flagged as unverified.**
+
+### Anti-Pattern Correction Table
+
+| Old (WRONG) behavior | Corrected behavior |
+|:---------------------|:-------------------|
+| Expand acronym "ZBW" → "Zhu, Brad, Wang" (fabricated) | "Zitterbewegung (ZBW)" — verified against all prior project artifacts |
+| Trust that well-formed prose expansions are correct | Verify every parenthetical acronym expansion against the project knowledge base |
+| No check on acronym grounding before publication | Acronym Expansion Gate: flag `[UNVERIFIED-ACRONYM]` for any expansion with zero prior occurrences |
+| Acronym defined on first use by any plausible expansion | If the full term is unknown, spell it out OR don't use the acronym |
+
+### Verification
+
+- Paper-13 corrected: "ZBW (Zhu, Brad, Wang)" → "Zitterbewegung (ZBW)" in source markdown
+- PDF rebuilt: 12 pages, CLEAN (0 U+FFFD), verified "Zitterbewegung" rendered correctly
+- qnfo-agent SKILL.md: v3.50 with KIF-31 registry entry, Acronym Expansion Gate in §7, anti-pattern in table
+- kaizen-skill-fixes SKILL.md: v1.6 with §J1
+
+### Implementation Notes (J1)
+
+J1 goes into `qnfo-agent` §7 (Publication Standards) as "Acronym Expansion Gate (KIF-31, MANDATORY)." The verification procedure uses existing tools (`grep`, `search_memories`) and requires no new infrastructure. The gate is positioned before the Publication Language Gate in §7 so that fabricated expansions are caught before style-checking occurs.
+
+**Verification:** After applying fixes, rebuild the Huang response v2.3 PDF — should render 16 pages CLEAN
 
 ---
 
