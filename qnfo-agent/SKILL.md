@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
 description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.45"
+version: "3.46"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,23 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.45 (Safety-Net Core)
+# QNFO-AGENT — v3.46 (Safety-Net Core)
+
+> **v3.46 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
+> Red-teamed the v3.45 "holistic" unicode-math solution — it STILL produced
+> 191 U+FFFF errors. Root cause: `unicode-math` only applies to characters
+> INSIDE `$...$` math mode. Unicode math in prose text uses the TEXT font
+> (TeX Gyre Pagella), which lacks math glyphs. The ONLY correct solution is
+> to convert Unicode math to LaTeX math commands wrapped in `$...$`.
+> `unicode-latex-preprocess.py` v3.0 now handles: (1) subscript/superscript
+> GROUPING (10⁻¹²⁰ → `$^{-120}$` not `$^{-}^{1}^{2}^{0}$`), (2) adjacent
+> digits pulled into math mode (∞↔2 → `$\infty\leftrightarrow2$`), (3) sqrt
+> patterns, (4) Mathematical Alphanumeric Symbols block (script, fraktur,
+> italic Greek), (5) post-processing to fix subscript bracing. Verified:
+> Zenodo 21597495 has ZERO rendering errors. The v3.44/v3.45 "unicode-math
+> is the holistic solution" claim was FALSE — dictionary-based preprocessing
+> IS the correct approach, but the dictionary must be comprehensive and the
+> grouping logic must be correct.
 
 > **v3.45 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
 > The v3.44 dictionary-based Unicode-to-LaTeX conversion was a band-aid, not
@@ -352,7 +368,7 @@ the old behavior was correct.
 | KIF-23 | KG-D1 dual-write drift — publication pipelines write D1 `living-paper.papers` but KG Paper-node seeding is per-session/manual, so drift accumulates silently. Found 257 of 887 published papers (29%) absent from the KG, making KG-first due diligence systematically under-report "what exists." | Diff-and-seed reconciliation via `qnfo-gateway` `POST /sync` (`{action:"bulk",nodes,edges}`, batches ≤50, `paper:<slug>` id convention) — executed: 257 nodes seeded, 0 errors, KG Papers 1255→1512; cloudflare skill "KG-D1 Paper Reconciliation" section makes this diff mandatory in every infra audit | v3.40, 2026-07-25, systemwide audit |
 | KIF-24 | Skill location drift — skills existed in multiple directories (`%USERPROFILE%\.deepchat\skills\` canonical vs `%APPDATA%\.deepchat\skills\` stale legacy bootstrap location) causing version conflicts (e.g., `code-review` v1.0 canonical vs v2.1 stale). Prior R2 syncs only synced SKILL.md files, missing 26 supplemental files (scripts, templates, references). GitHub dual-remote (QNFO + rwnq8) is intentional mirroring, not duplication. | `system` skill v2.2 adds Canonical Skill Locations section + Skill Hygiene Enforcement gate. New scripts: `system/scripts/skill-hygiene.js` (exit 0=clean, 1=stale, 2=conflicts), `system/templates/skill-locations-audit.md` checklist. Stale `%APPDATA%\.deepchat\skills\` deleted. Future syncs MUST use `skill-sync.js` which walks ALL files per skill. Pre-session gate: run `skill-hygiene.js`, block if exit ≠ 0. | v3.42, 2026-07-26, skill hygiene audit |
 | KIF-25 | Skill Auto-Loading Weak Link — DeepChat shows only 8 skills in system prompt; the 24-Skill Trigger Table (inside qnfo-agent body) is invisible until qnfo-agent is explicitly loaded via `skill_view`. Without loading qnfo-agent first, the LLM cannot autonomously discover which skill to use for a given task, causing skill loading to rely on user manually triggering skill load or the LLM guessing. | `system` skill v2.3 adds Session Initialization Protocol with three layers: (1) `deepchat-skill-hygiene.vbs` in Windows Startup folder runs skill-hygiene.js at logon, (2) `/init` custom prompt (added via `add-init-prompt.js`) loads qnfo-agent + system + runs hygiene check at session start, (3) `skill-loader.js` generates skill discovery summaries programmatically. Use `/init` at session start to ensure autonomous skill discovery works correctly. | v3.43, 2026-07-26, session initialization kaizen |
-| KIF-26 | PDF published with 135 U+FFFD replacement characters (Zenodo 21595214, "Measure-Theoretic Artifacts" paper). **Root cause:** XeLaTeX's default font (Latin Modern) lacks glyphs for many Unicode characters. **Wrong fix (v3.44):** Dictionary-based Unicode→LaTeX conversion — dictionaries can never be comprehensive. **Correct fix (v3.45):** Configure XeLaTeX to use `unicode-math` package + `STIX Two Math` font, which has complete Unicode math coverage. No character dictionaries needed. | `research` `scripts/build-pdf.py` v1.0 (holistic build pipeline with unicode-math + STIX Two Math); `templates/qnfo-xelatex-unicode.yaml` (Pandoc defaults); `scripts/check-pdf.py` v2.0 (mandatory pre-publication gate). The old `unicode-latex-preprocess.py` is DEPRECATED — use `build-pdf.py` instead. | v3.45, 2026-07-26, holistic PDF kaizen |
+| KIF-26 | PDF published with 191 U+FFFF noncharacters (Zenodo 21595214/21596949). **Root cause:** `unicode-math` only applies to characters INSIDE `$...$` math mode. Unicode math in prose text uses the TEXT font, which lacks math glyphs. **Wrong fix (v3.45):** Claimed `unicode-math` + `STIX Two Math` was the "holistic solution" — FALSE. **Correct fix (v3.46):** Dictionary-based `unicode-latex-preprocess.py` v3.0 with: subscript/superscript GROUPING, adjacent digit inclusion, sqrt patterns, Mathematical Alphanumeric Symbols block coverage, post-processing for subscript bracing. | `research` `scripts/unicode-latex-preprocess.py` v3.0; `scripts/check-pdf.py` v3.0. The `build-pdf.py` approach is DEPRECATED — use preprocessor + standard pandoc. Verified: Zenodo 21597495 has ZERO errors. | v3.46, 2026-07-26, comprehensive preprocessor kaizen |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 

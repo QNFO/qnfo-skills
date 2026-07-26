@@ -3,7 +3,7 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.19"
+version: "2.20"
 priority: 1
 platform: all
 autonomous: true
@@ -11,6 +11,16 @@ self_sufficient: true
 ---
 
 # RESEARCH -- v2.17 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.20 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
+> The v2.19 "holistic unicode-math" approach was WRONG. `unicode-math` only
+> applies to characters INSIDE `$...$`. Unicode math in prose uses the text
+> font, which lacks glyphs. `unicode-latex-preprocess.py` v3.0 is the correct
+> solution with: subscript/superscript GROUPING (10⁻¹²⁰ → `$^{-120}$`),
+> adjacent digits, sqrt patterns, Mathematical Alphanumeric Symbols block,
+> post-processing for subscript bracing. Verified: Zenodo 21597495 = ZERO
+> errors. The `build-pdf.py` wrapper is DEPRECATED — use the preprocessor
+> directly with standard pandoc.
 
 > **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
 > The v2.18 dictionary-based `unicode-latex-preprocess.py` was a band-aid.
