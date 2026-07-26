@@ -10,8 +10,23 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.22 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.23 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
 
+> **v2.23 UPDATE (2026-07-26, KIF-29 — cross-domain consilience gate):**
+> Added **Cross-Domain Consilience Gate (KIF-29, SOFT)** to Phase 1 (Due Diligence),
+> following the Universal Consilience Translator v2.0 prompt engineering and
+> right-sizing session. The gate triggers when research spans 2+ domains or
+> uses domain-specific terminology without external analogues. Output: a compact
+> 6-domain structural translation (Physics, CS, CogSci, Information Theory,
+> Biology, Sociology) with Core Dynamic, Cross-Domain Lexicon, Domain Translations
+> (Lexicon/Instance/Ramification each), Synthesis Consilience, and Research
+> Integration. Wired into Phase 2 (Lexicon terms → parallel literature search),
+> Phase 4 (Synthesis → Bayesian cascade), and Phase 5 (Lexicon table in paper).
+> Anti-patterns added for domain siloing, ad hoc analogies, single-domain
+> literature search, and consilience claims without a unification principle.
+> See `kaizen-skill-fixes` v1.4 §H for the fix design document. The full UCT-v2
+> prompt is archived at `D:\Obsidian\notes\v1\2026\07\26\_26207185215.md`.
+>
 > **v2.22 UPDATE (2026-07-26, KIF-28 — comprehensive encoding kaizen):**
 > Red-teamed KIF-28 closeout: Source File Encoding Integrity section and 7
 > encoding anti-pattern rows were claimed as added but did not exist on disk.
@@ -521,6 +536,83 @@ diligence report -- do not silently present internal-only hits as validation.
 3. **Do not treat AI dismissal as authoritative.** An AI saying "this contradicts Bell's theorem" is a STARTING POINT for investigation, not a CONCLUSION. Verify: Does the claim actually contradict Bell's theorem, or does it invoke a known loophole (measurement independence, superdeterminism, retrocausality)? AI systems often oversimplify technical debates.
 
 4. **The meta-lesson:** The PQS session (2026-07-24) failed because the agent uncritically replicated AI dismissals from source conversations instead of investigating the claims directly. The user had to explicitly intervene: "THE SCOPE IS NOT TO EVALUATE ALL 'FRINGE' CLAIMS... BUT TO INVESTIGATE IT SERIOUSLY AND WITHOUT EDITORIALIZING."
+
+### Cross-Domain Consilience Gate (KIF-29, SOFT)
+
+**Trigger (SOFT GATE):** Run this gate during Phase 1 if ANY of:
+- The research question spans 2+ recognisable domains (physics + CS, cognition + biology, etc.)
+- The core claim uses domain-specific terminology with no external analogues identified
+- The project is explicitly tagged as "consilience," "cross-domain," or "interdisciplinary"
+
+**Purpose:** Every concept carries structural isomorphisms across disciplines. What appears as "a valuation" in number theory is "a measurement" in physics, "a constraint check" in CS, "a threshold" in cognition, "a fitness function" in biology, and "a norm" in sociology. Without systematic cross-domain translation, research stays siloed — producing internally coherent papers that miss the consilience discovery. This gate ensures the agent does not merely search within the source domain but actively maps the core claim onto structurally analogous domains.
+
+**Protocol:** Produce a compact 6-domain translation using this template. The output is stored in `artifacts/consilience-gate.md` for the project record.
+
+```markdown
+# Cross-Domain Consilience Audit: [Core Claim]
+
+## Core Dynamic
+[One jargon-free sentence: what does the claim *do* — classify, bind, transform, constrain, measure?]
+
+## Cross-Domain Lexicon
+| Source Term | Physics | CS | CogSci | InfoTheory | Biology | Sociology |
+|:------------|:--------|:---|:-------|:-----------|:--------|:----------|
+| [term 1]    | ... | ... | ... | ... | ... | ... |
+| [term 2]    | ... | ... | ... | ... | ... | ... |
+| [term 3]    | ... | ... | ... | ... | ... | ... |
+
+## Domain Translations
+### Physics
+- **Lexicon:** [1-2 terms: energy, field, phase space, symmetry, gauge...]
+- **Instance:** [1 concrete physical system/law that embodies the same dynamic]
+- **Ramification:** [1 testable implication — what measurement or experiment follows?]
+
+### Computer Science
+- **Lexicon:** [1-2 terms: data structure, algorithm, type system, complexity class...]
+- **Instance:** [1 concrete computing system, protocol, or architecture]
+- **Ramification:** [1 testable implication — impact on computability, scaling, verification?]
+
+### Cognitive Science
+- **Lexicon:** [1-2 terms: perception, memory, learning, attention, mental model...]
+- **Instance:** [1 concrete reasoning pattern, illusion, or neural behaviour]
+- **Ramification:** [1 testable implication — effect on induction, category formation, bias?]
+
+### Information Theory
+- **Lexicon:** [1-2 terms: entropy, mutual information, channel capacity, coding...]
+- **Instance:** [1 concrete coding scheme or noisy-channel phenomenon]
+- **Ramification:** [1 testable implication — effect on signal integrity, rate-distortion?]
+
+### Biology
+- **Lexicon:** [1-2 terms: evolution, homeostasis, signalling, niche, plasticity...]
+- **Instance:** [1 living system, evolutionary dynamic, or regulatory network]
+- **Ramification:** [1 testable implication — what would be selected for/against?]
+
+### Sociology
+- **Lexicon:** [1-2 terms: norms, institutions, network dynamics, power, collective behaviour...]
+- **Instance:** [1 concrete social phenomenon — diffusion, polarisation, isomorphism]
+- **Ramification:** [1 testable implication — impact on resilience, inequality, coordination?]
+
+## Synthesis Consilience
+**Meta-Principle:** [One statement: what is invariant across all 6 translations?]
+**Frontier Question:** [One question: what assumption, if relaxed, would unify two previously separate domains?]
+
+## Research Integration
+- **Scoping:** [How the Lexicon generates new hypotheses or reveals blind spots]
+- **Deep Dive:** [How to design a model/simulation/experiment testing the cross-domain analogy]
+- **Execution:** [How to build a prototype/intervention/policy based on the Synthesis]
+```
+
+**Gate check:** If a qualifying research project reaches Phase 2 without this audit existing in `artifacts/consilience-gate.md`, flag `[DOMAIN-SILOED: cross-domain consilience gate skipped on qualifying research]` in the due diligence report. This is a SOFT gate (does not block Phase 2), but its absence must be explicitly noted and justified ("single-domain research, no external analogues identified after explicit check" is a valid justification).
+
+**Integration with later phases:**
+
+| Phase | Integration |
+|:------|:------------|
+| **Phase 2 (Literature)** | Use each translated Lexicon term as an additional search query in the corresponding domain. Example: if the physics Instance is "phase transition," search biology for "phase transition in gene regulation" and sociology for "tipping points in collective behaviour." |
+| **Phase 4 (Deep Research)** | Feed the Synthesis Consilience meta-principle into Stage 1 (Paradigm-Shift Candidate Identification) as an additional candidate. The Frontier Question becomes a Stage 5 Calibration Register entry. |
+| **Phase 5 (Publication)** | The Cross-Domain Lexicon table is publication-ready. The Synthesis Consilience becomes the paper's unifying thesis or a dedicated "Cross-Domain Implications" section. |
+
+**Anti-pattern:** Running this gate on research that genuinely operates within a single domain and forcing strained analogies. The gate is for *qualifying* cross-domain research — if the Lexicon produces only trivial or forced mappings (e.g., "this quantum operator is like... a social norm because both are rules"), mark `[CROSS-DOMAIN-NOT-APPLICABLE: no non-trivial structural isomorphisms found across domains]` and move on. The absence of a consilience finding is itself a valid result.
 
 ---
 
@@ -1244,6 +1336,26 @@ values: `publication`, `dataset`, `software`, `poster`, `presentation`.
 
 ### Zenodo Upload (with retry + versioning)
 
+**HARD GATE P5.PDF (KIF-30, MANDATORY — 2026-07-26): PDF RENDERING AND INCLUSION IS REQUIRED.**
+**Zenodo does NOT render complex mathematical markdown natively.** A markdown-only deposit
+is unreadable to human consumers on zenodo.org. Before ANY Zenodo upload:
+
+1. All papers MUST be rendered to publication-quality PDFs via `scripts/build-paper.py`
+2. ALL rendered PDFs MUST be confirmed present locally (`Test-Path` for every `.pdf`)
+3. ALL rendered PDFs MUST be uploaded individually to the Zenodo deposit — in addition to
+   the PROVENANCE-BUNDLE.zip that contains the source markdown
+4. The PDF rendering pipeline ensures zero U+FFFD/U+FFFF errors (see §PDF Building)
+5. This gate applies to both brand-new deposits AND new versions of existing deposits
+
+**GATE:** If the deposit's file list does not contain individual PDFs for every paper,
+the deposit is INCOMPLETE. A markdown-only deposit is a publication protocol violation
+and must be remediated before the deposit is considered valid.
+
+**Why this matters:** GitHub beautifully renders markdown in-browser. Zenodo does not.
+A reader who visits a Zenodo landing page and downloads the markdown will see raw LaTeX
+(`\mathbb{Z}`, `\mathrm{SU}(2)`, etc.) — not mathematical notation. The PDF is the
+human-readable artifact. The markdown is the machine-readable source. Both are required.
+
 **HARD GATE (kaizen fix A3):** `PROVENANCE-BUNDLE.zip` MUST be built and
 verified BEFORE any Zenodo upload begins -- not added ad hoc during the
 upload step. The bundle MUST contain: `paper.md`, `paper.pdf`,
@@ -1266,10 +1378,13 @@ Body: {}  # Empty metadata to create draft
 #### 2. Upload Files
 ```python
 PUT https://zenodo.org/api/deposit/depositions/{id}/files
-Files: paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md
+Files: paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md,
+       ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
 ```
-**GATE:** Do not proceed to Step 3 until all 4 files are confirmed present in
-the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
+**GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
+present in the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
+This is a HARD GATE — a deposit without individual PDFs is INCOMPLETE and must
+be remediated before publishing. See HARD GATE P5.PDF (KIF-30) above.
 
 #### 3. Set Metadata
 ```python
@@ -1835,6 +1950,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Social** | Buffer posts confirmed in queue | `status: SCHEDULED` in response |
 | **DNSLink (OPTIONAL)** | TXT record resolves, dweb.link gateway serves content | `nslookup -type=TXT` + `curl dweb.link/ipns/...` |
 | **Core Distribution Gate (MANDATORY)** | All core layers: GitHub (public repo), Zenodo (DOI), R2 (archive), D1/KG (discoverability) | All 4 layers verified |
+| **Cross-Domain Consilience (SOFT)** | For qualifying cross-domain research: `artifacts/consilience-gate.md` exists with Core Dynamic, 6-domain Lexicon, all Domain Translations, and Synthesis Consilience | File present OR `[CROSS-DOMAIN-NOT-APPLICABLE]` justification documented |
 
 ## Anti-Patterns
 | Anti-Pattern | Fix |
@@ -1909,6 +2025,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Get-Content/Out-File without -Encoding UTF8 on PowerShell | Default to system codepage; use -Encoding UTF8 or read via Python with explicit encoding='utf-8' (KIF-28) |
 | Skipping FFFD/BOM scan before git commit or publication | Run pre-commit encoding scan per Source File Encoding Integrity gate; encoding corruption survives all downstream pipeline stages (KIF-28) |
 | Submitting/publishing a paper with an incomplete Declarations section (missing any of the 9 mandatory subsections) | Springer Nature treats incomplete Declarations as an incomplete submission -- write "Not applicable" explicitly rather than omitting a subsection. |
+| Research scoped entirely within one domain's lexicon, no cross-domain translation check exists | Cross-Domain Consilience Gate (KIF-29, SOFT) at Phase 1 for qualifying research — produce `artifacts/consilience-gate.md` with 6-domain structural translation |
+| Cross-domain analogies made ad hoc, not structurally verified | Use the structured template: Core Dynamic → Cross-Domain Lexicon → Domain Translations (Lexicon/Instance/Ramification for each) → Synthesis Consilience |
+| Literature search uses only source-domain terms on cross-domain projects | Translate Lexicon terms into parallel search queries for each target domain (e.g., physics "phase transition" → biology "phase transition in gene regulation", sociology "tipping points") |
+| No structural bridge between domains in the final paper | Publish the Cross-Domain Lexicon table + Synthesis Consilience paragraph as a dedicated section of the research output |
+| Consilience claimed without a unification principle | Synthesis Consilience MUST contain one invariant mechanism + one frontier question — otherwise flag `[CONSILIENCE-UNVERIFIED: no unifying meta-principle derived]` |
+| Forcing strained analogies on genuinely single-domain research | Mark `[CROSS-DOMAIN-NOT-APPLICABLE: no non-trivial structural isomorphisms found]` — absence of consilience is a valid result, not a failure |
 
 
 
