@@ -1,4 +1,4 @@
----
+﻿---
 name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
@@ -17,45 +17,45 @@ self_sufficient: true
 > and `scripts/build-pdf.py` -- three scripts patched incrementally across
 > 4 kaizen passes, including one wrong detour. Replaced with ONE script:
 > `scripts/build-paper.py` (preprocess + build + verify, UTF-8 forced on
-> all file I/O to prevent mojibake -- see `qnfo-agent` §8.7). Usage:
+> all file I/O to prevent mojibake -- see `qnfo-agent` Â§8.7). Usage:
 > `python scripts/build-paper.py paper.md`. Independently re-verified
 > against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
 > U+FFFF across 16 pages, checked with a separate verification script
 > (never trust the build tool's own success claim).
 
-> **v2.20 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
+> **v2.20 UPDATE (2026-07-26, KIF-26 v3 â€” comprehensive preprocessor fix):**
 > The v2.19 "holistic unicode-math" approach was WRONG. `unicode-math` only
 > applies to characters INSIDE `$...$`. Unicode math in prose uses the text
 > font, which lacks glyphs. `unicode-latex-preprocess.py` v3.0 is the correct
-> solution with: subscript/superscript GROUPING (10⁻¹²⁰ → `$^{-120}$`),
+> solution with: subscript/superscript GROUPING (10â»Â¹Â²â° â†’ `$^{-120}$`),
 > adjacent digits, sqrt patterns, Mathematical Alphanumeric Symbols block,
 > post-processing for subscript bracing. Verified: Zenodo 21597495 = ZERO
-> errors. The `build-pdf.py` wrapper is DEPRECATED — use the preprocessor
+> errors. The `build-pdf.py` wrapper is DEPRECATED â€” use the preprocessor
 > directly with standard pandoc.
 
-> **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
+> **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution â€” KIF-26 v2):**
 > The v2.18 dictionary-based `unicode-latex-preprocess.py` was a band-aid.
-> Dictionaries can never be comprehensive — there are thousands of Unicode
+> Dictionaries can never be comprehensive â€” there are thousands of Unicode
 > math symbols. The CORRECT solution: configure XeLaTeX to use fonts that
 > HAVE the glyphs. New pipeline:
-> 1. `scripts/build-pdf.py` — uses `unicode-math` package + `STIX Two Math`
+> 1. `scripts/build-pdf.py` â€” uses `unicode-math` package + `STIX Two Math`
 >    font, which has complete Unicode mathematical symbol coverage
-> 2. `templates/qnfo-xelatex-unicode.yaml` — Pandoc defaults file
-> 3. `scripts/check-pdf.py` — mandatory verification gate
+> 2. `templates/qnfo-xelatex-unicode.yaml` â€” Pandoc defaults file
+> 3. `scripts/check-pdf.py` â€” mandatory verification gate
 > The old `unicode-latex-preprocess.py` is DEPRECATED. With the correct font
 > configuration, Unicode symbols render directly without conversion.
 > Verified: "Measure-Theoretic Artifacts" paper builds with ZERO errors.
 
-> **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate — KIF-26):**
+> **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate â€” KIF-26):**
 > Red-teamed a published Zenodo PDF (21595214) with 135 U+FFFD replacement
 > characters. Root cause: `unicode-latex-preprocess.py` v1.0 only handled
-> numeric subscripts (₀-₉) but physics papers use letter subscripts
-> (ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ) for ℚₚ, vₚ(x), etc. Also missing: ħ (h-bar),
-> ℓ (script ell), 𝔸 (blackboard A for adeles), and superscript letters.
+> numeric subscripts (â‚€-â‚‰) but physics papers use letter subscripts
+> (â‚ â‚‘ â‚’ â‚“ â‚• â‚– â‚— â‚˜ â‚™ â‚š â‚› â‚œ) for â„šâ‚š, vâ‚š(x), etc. Also missing: Ä§ (h-bar),
+> â„“ (script ell), ð”¸ (blackboard A for adeles), and superscript letters.
 > Fix: `unicode-latex-preprocess.py` v2.0 adds ALL subscript/superscript
 > letters + physics symbols; `check-pdf.py` v2.0 is now a MANDATORY
 > PRE-PUBLICATION GATE (exit code 1 = MUST NOT PUBLISH). The PDF build
-> pipeline is now: preprocess → pandoc → **check-pdf.py HARD GATE** → upload.
+> pipeline is now: preprocess â†’ pandoc â†’ **check-pdf.py HARD GATE** â†’ upload.
 > A PDF that fails `check-pdf.py` MUST NOT be published to Zenodo or any
 > public distribution channel.
 
@@ -79,7 +79,7 @@ self_sufficient: true
 > copyediting bar every QNFO publication must clear -- this is the
 > "would a peer reviewer at Foundations of Physics / PRA / NJP accept this
 > without a desk rejection for presentation quality" bar, independent of
-> and in addition to the Physics Writing Standards (`qnfo-agent` §7,
+> and in addition to the Physics Writing Standards (`qnfo-agent` Â§7,
 > content-integrity) and Publication Language Gate (internal-language
 > scrubbing) that already existed. Validated end-to-end: rebuilt *The
 > Macroscopic Boundary Problem in Quantum Reconstructions* on the new
@@ -93,7 +93,7 @@ self_sufficient: true
 > `upload_type`/`publication_type` string-field fallback) and
 > **`references/buffer-graphql-schema.json`** (canonical Buffer GraphQL
 > schema consolidated from the scattered Phase 7 prose below). Added
-> **`scripts/zenodo-resource-type-fix.py`** — tries known-working metadata
+> **`scripts/zenodo-resource-type-fix.py`** â€” tries known-working metadata
 > shapes in order and verifies persistence via re-GET instead of guessing.
 > Consult these reference files BEFORE constructing any Zenodo/Buffer API
 > call. See `qnfo-agent` KIF-20.
@@ -105,7 +105,7 @@ self_sufficient: true
 >   `[CONTRADICTS ESTABLISHED EVIDENCE]`, `[UNTESTED]`, `[CONTESTED]`) not
 >   social categories ("fringe", "pseudoscience"); open science is real science.
 > - **AI Convergence Bias Disclosure (KIF-17):** When 2+ AI systems converge
->   on dismissing a claim, flag explicitly — convergence may reflect shared
+>   on dismissing a claim, flag explicitly â€” convergence may reflect shared
 >   training-data bias, not independent validation.
 > - **Mandatory Symmetry Template (KIF-18):** Every literature review MUST
 >   include both "Supporting" AND "Constraining" sections; document structure
@@ -126,7 +126,7 @@ self_sufficient: true
 > bare, undiagnostic `__typename`. The v2.13 `Unknown type "PostActionSuccess"`
 > error that led to the false claim was caused by fragmenting on a
 > **non-existent** type name (`Post`) in an earlier attempt, not by any
-> actual GraphQL union restriction — a schema-shape mistake mis-generalized
+> actual GraphQL union restriction â€” a schema-shape mistake mis-generalized
 > into a false rule. `scripts/buffer-post.py` bumped to v1.1 with the
 > corrected mutation (requests `message` on every error variant, `post.id`
 > on success) and tested live for both the success and
@@ -218,9 +218,9 @@ self_sufficient: true
 > web3.storage, w3up, etc.) are out of scope for QNFO publications. Use
 > ONLY Cloudflare R2 + locally-computed CIDv1 + Cloudflare DNS DNSLink.
 
-> **v2.6 UPDATE (2026-07-20, kaizen audit):** Added `scripts/unicode-latex-preprocess.py` (fixes XeLaTeX Unicode-glyph and `keywords:`-field build failures -- A1/A2), `scripts/check-pdf.py` (PyMuPDF preflight + file-lock-safe replace -- B4/B5), `scripts/credential-scan.py` (pre-commit + pre-publish token leak scanner -- A4/C1/D2) wired into the Phase Closeout Protocol STEP 0.5 and the Publication Language Gate, `templates/gitignore-research-project-template.txt` for new project repos, a PROVENANCE-BUNDLE.zip hard gate before Zenodo upload (A3), `.zenodo_versions.json` version-chain tracking convention (C2), a Vectorize confirmation-bias disclosure requirement (C3), a multi-pinner IPFS fallback order Pinata→Filebase→Lighthouse (C4), documented Windows/PowerShell anti-patterns for inline `python -c`, `&&` chaining, and `curl` aliasing (B1/B2/B3), a YAML `---` delimiter conflict check (D3), an auto-discover related_identifiers KG query step (D4), a tag-backfill check in Phase Closeout (D1), and an Obsidian/external-path source material limitation note (C5/D5).
+> **v2.6 UPDATE (2026-07-20, kaizen audit):** Added `scripts/unicode-latex-preprocess.py` (fixes XeLaTeX Unicode-glyph and `keywords:`-field build failures -- A1/A2), `scripts/check-pdf.py` (PyMuPDF preflight + file-lock-safe replace -- B4/B5), `scripts/credential-scan.py` (pre-commit + pre-publish token leak scanner -- A4/C1/D2) wired into the Phase Closeout Protocol STEP 0.5 and the Publication Language Gate, `templates/gitignore-research-project-template.txt` for new project repos, a PROVENANCE-BUNDLE.zip hard gate before Zenodo upload (A3), `.zenodo_versions.json` version-chain tracking convention (C2), a Vectorize confirmation-bias disclosure requirement (C3), a multi-pinner IPFS fallback order Pinataâ†’Filebaseâ†’Lighthouse (C4), documented Windows/PowerShell anti-patterns for inline `python -c`, `&&` chaining, and `curl` aliasing (B1/B2/B3), a YAML `---` delimiter conflict check (D3), an auto-discover related_identifiers KG query step (D4), a tag-backfill check in Phase Closeout (D1), and an Obsidian/external-path source material limitation note (C5/D5).
 
-> **v2.5 UPDATE (2026-07-19): Added OSF Project Registration (Phase 5.5) for major research with falsifiable predictions. Added P11 (OSF GATE-CONDITIONAL) to Pre-Flight checklist. OSF policy: all resources public by default, API-only automation, external links (Zenodo/GitHub/IPFS) replace file uploads � NEVER require manual browser interaction.
+> **v2.5 UPDATE (2026-07-19): Added OSF Project Registration (Phase 5.5) for major research with falsifiable predictions. Added P11 (OSF GATE-CONDITIONAL) to Pre-Flight checklist. OSF policy: all resources public by default, API-only automation, external links (Zenodo/GitHub/IPFS) replace file uploads ï¿½ NEVER require manual browser interaction.
 
 > **v2.4 UPDATE's R2-Immediate-Write + Per-Turn Checkpoint Protocol (per-turn R2 sync, phase-end GitHub push + Zenodo version, session/project-conclusion IPFS pin + social promotion for FINAL deliverables only).
 
@@ -249,24 +249,24 @@ update_plan([
 
 ---
 
-## Tool-Call Execution Mandate (Anti-Phantom Gate — MANDATORY, 2026-07-21)
+## Tool-Call Execution Mandate (Anti-Phantom Gate â€” MANDATORY, 2026-07-21)
 
 This skill already carries extensive per-phase verification gates (BibTeX
 audit, PDF rendering check, DOI resolution, papers-server HTTP 200, etc.).
 This section is the umbrella rule they all serve: **no remote publication
-action — Zenodo deposit, GitHub push/tag/release, R2 upload, D1
-living-paper insert, OSF registration, Buffer post — may be reported as
+action â€” Zenodo deposit, GitHub push/tag/release, R2 upload, D1
+living-paper insert, OSF registration, Buffer post â€” may be reported as
 successful without an INDEPENDENT re-query of the live state in the SAME
 turn.** An API's immediate `"success": true`/`201 Created` response is the
-FIRST signal, not the LAST — it confirms the request was accepted, not
+FIRST signal, not the LAST â€” it confirms the request was accepted, not
 that the artifact is durably live and correct.
 
-1. **Zenodo** — never report "published" from the create/publish API response alone. Wait for indexing, then verify via `curl -sI https://doi.org/10.5281/zenodo.<id>` returning HTTP 200 (not the Zenodo API's own state field).
-2. **Git push** — verify via an independent GitHub API query (`GET /repos/{owner}/{repo}/commits/{sha}`) or `git ls-remote origin <branch>`, not the local push exit code alone.
-3. **R2 upload** — download the file back (`wrangler r2 object get ... --remote`) and compare size/hash to the source.
-4. **D1 living-paper / KG inserts** — re-run a `SELECT`/`/neighbors` query and show the row/edge actually present.
-5. **OSF registrations** — confirm via `GET /v2/registrations/{id}/` showing the real `date_registered`/`pending_registration_approval` state, never assert "registered" from the POST response body alone.
-6. **Any claim this session already reported success on** — if closing out or continuing a prior session's claim, re-verify live state before repeating the claim; a prior turn's phantom claim propagates if not re-checked (see memory: never trust a remote action as successful without confirming actual server-side state).
+1. **Zenodo** â€” never report "published" from the create/publish API response alone. Wait for indexing, then verify via `curl -sI https://doi.org/10.5281/zenodo.<id>` returning HTTP 200 (not the Zenodo API's own state field).
+2. **Git push** â€” verify via an independent GitHub API query (`GET /repos/{owner}/{repo}/commits/{sha}`) or `git ls-remote origin <branch>`, not the local push exit code alone.
+3. **R2 upload** â€” download the file back (`wrangler r2 object get ... --remote`) and compare size/hash to the source.
+4. **D1 living-paper / KG inserts** â€” re-run a `SELECT`/`/neighbors` query and show the row/edge actually present.
+5. **OSF registrations** â€” confirm via `GET /v2/registrations/{id}/` showing the real `date_registered`/`pending_registration_approval` state, never assert "registered" from the POST response body alone.
+6. **Any claim this session already reported success on** â€” if closing out or continuing a prior session's claim, re-verify live state before repeating the claim; a prior turn's phantom claim propagates if not re-checked (see memory: never trust a remote action as successful without confirming actual server-side state).
 7. If live re-verification cannot be run in this turn, the response MUST read `[NOT-VERIFIED: reason]` instead of "published"/"deployed"/"live"/"confirmed".
 
 ---
@@ -280,13 +280,13 @@ that the artifact is durably live and correct.
 Standard directory scaffold:
 ```
 <project-slug>/
-├── README.md
-├── PROJECT-PLAN.md
-├── .gitignore
-├── docs/            # Source documents, prior work
-├── artifacts/       # Literature reviews, gate memos, test results
-├── notebooks/       # Working notes, calculation notebooks
-└── releases/        # Versioned Zenodo-ready bundles
+â”œâ”€â”€ README.md
+â”œâ”€â”€ PROJECT-PLAN.md
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ docs/            # Source documents, prior work
+â”œâ”€â”€ artifacts/       # Literature reviews, gate memos, test results
+â”œâ”€â”€ notebooks/       # Working notes, calculation notebooks
+â””â”€â”€ releases/        # Versioned Zenodo-ready bundles
 ```
 
 Git init on feature branch (NEVER main/master). Create GitHub repo via `gh repo create`.
@@ -298,20 +298,20 @@ scripts frequently contain hardcoded tokens during development), `.env`,
 the qnfo-skills allowlist repo -- it needs its own permissive `.gitignore`,
 not the skills repo's default-deny one.
 
-**REPO-TARGET GATE (HARD, MANDATORY — check before `git init`/`git tag`/`gh repo create`):**
+**REPO-TARGET GATE (HARD, MANDATORY â€” check before `git init`/`git tag`/`gh repo create`):**
 ```
 git remote -v   # or: git -C <target-dir> remote -v
 ```
 Verify the remote/working directory is the project's OWN repo
-(`QNFO/<project-name>` or `QNFO/qnfo-research`) — **NEVER `QNFO/qnfo-skills`.**
+(`QNFO/<project-name>` or `QNFO/qnfo-research`) â€” **NEVER `QNFO/qnfo-skills`.**
 `qnfo-skills` is a skills-only repo (ADR-026) and its tags/releases are
 reserved for skill versioning, never research project phases. This check
 applies to every step in this skill that creates a git tag, commit, or
-GitHub Release — not just Phase 0. Verify the repo target FRESH each time;
+GitHub Release â€” not just Phase 0. Verify the repo target FRESH each time;
 do not assume a prior verification still holds after switching directories,
 subagent delegation, or a long session. **A single misdirected `git tag` or
 `gh release create` inside qnfo-skills is a policy violation that requires
-full remediation (backup + delete + audit) — see ADR-026 Incident 3.**
+full remediation (backup + delete + audit) â€” see ADR-026 Incident 3.**
 
 ### 0.2 Project Plan and WBS
 
@@ -319,7 +319,7 @@ Write `PROJECT-PLAN.md` with: Charter, Phases with WBS, Milestones with gate cri
 
 ### 0.3 Core Claim Lock
 
-If project audits/evaluates a claim: restate in logically valid, falsifiable terms. Document original AND reformulation if original had errors. Lock in `PROJECT-PLAN.md §1.2`.
+If project audits/evaluates a claim: restate in logically valid, falsifiable terms. Document original AND reformulation if original had errors. Lock in `PROJECT-PLAN.md Â§1.2`.
 
 ### 0.4 Knowledge Graph / Memory Seed
 
@@ -351,12 +351,12 @@ assume such files don't exist just because a glob search returns empty.
 | **P3** | Directory structure created? (`docs/`, `artifacts/`, `notebooks/`, `releases/`) | HARD | Directory listing shows all 4 dirs |
 | **P4** | `PROJECT-PLAN.md` written with charter, WBS, milestones, deliverables, risks? | HARD | All 6 sections populated; no placeholder text |
 | **P5** | `README.md` written with project overview? | SOFT | File exists with name, status, quick start |
-| **P6** | Core claim reformulated and locked (if applicable)? | HARD | `PROJECT-PLAN.md §1.2` contains locked, logically valid formulation |
+| **P6** | Core claim reformulated and locked (if applicable)? | HARD | `PROJECT-PLAN.md Â§1.2` contains locked, logically valid formulation |
 | **P7** | `.gitignore` present? | SOFT | File exists covering IDE, OS, build artifacts |
 | **P8** | Phase 0 committed, tagged, and pushed? | HARD | `git tag -l 'v0.1*'` returns tag; `git log -1 --oneline` shows Phase 0 commit |
 | **P9** | Project logged to Knowledge Graph / working memory? | SOFT | Memory recall returns project entry |
 | **P10** | Cross-skill integration checklist reviewed? | SOFT | All relevant skills loaded per integration table |
-| **P11** | OSF project created for qualifying research? (MAJOR projects ONLY — skip for exploratory studies, single papers, or minor updates) | SOFT-CONDITIONAL | OSF API: project public, components linked to Zenodo/GitHub, registration drafts created. File upload via API NOT supported — use external links (Zenodo DOI, GitHub raw) instead. NEVER require manual browser interaction. ALL OSF resources must be public. |
+| **P11** | OSF project created for qualifying research? (MAJOR projects ONLY â€” skip for exploratory studies, single papers, or minor updates) | SOFT-CONDITIONAL | OSF API: project public, components linked to Zenodo/GitHub, registration drafts created. File upload via API NOT supported â€” use external links (Zenodo DOI, GitHub raw) instead. NEVER require manual browser interaction. ALL OSF resources must be public. |
 
 **If any HARD gate fails:** BLOCK research launch. Fix the gap and re-run.
 
@@ -475,14 +475,14 @@ diligence report -- do not silently present internal-only hits as validation.
 2. **Evaluate substance directly.** Extract the claim. Identify what evidence would support it. Identify what evidence would falsify it. Search for both.
 
 3. **Never use "fringe" or "pseudoscience" as a classification.** These are social categories, not epistemic ones. Use instead:
-   - `[UNFALSIFIABLE]` — no conceivable observation would disconfirm this
-   - `[CONTRADICTS ESTABLISHED EVIDENCE: <specific evidence>]` — name the evidence
-   - `[UNTESTED]` — falsifiable but no relevant experiments exist
-   - `[CONTESTED: <specific debate>]` — active scientific disagreement exists
+   - `[UNFALSIFIABLE]` â€” no conceivable observation would disconfirm this
+   - `[CONTRADICTS ESTABLISHED EVIDENCE: <specific evidence>]` â€” name the evidence
+   - `[UNTESTED]` â€” falsifiable but no relevant experiments exist
+   - `[CONTESTED: <specific debate>]` â€” active scientific disagreement exists
 
 4. **Open science is real science.** Zenodo, SSRN, ResearchGate, arXiv, and personal websites are legitimate publication channels. Many paradigm-shifting papers (Einstein 1905, Bell 1964, Aspect 1982) were initially self-published or preprinted. Lack of traditional peer review is NOT a heuristic for unreliability.
 
-**GATE:** If any investigation document contains the words "fringe," "pseudoscience," "crank," or "crackpot" without an accompanying `[CONTRADICTS ESTABLISHED EVIDENCE: <specific>]` citation → BLOCKED. Revise to use epistemic categories, not social categories.
+**GATE:** If any investigation document contains the words "fringe," "pseudoscience," "crank," or "crackpot" without an accompanying `[CONTRADICTS ESTABLISHED EVIDENCE: <specific>]` citation â†’ BLOCKED. Revise to use epistemic categories, not social categories.
 
 ### AI Convergence Bias Disclosure (KIF-17, HARD when triggered)
 
@@ -553,7 +553,7 @@ constrain, limit, or contradict the claim being investigated. Include DOIs.
 This section MUST NOT be empty or contain only hedging language.]
 ```
 
-**GATE:** If a literature review contains a "Supporting" section but no "Constraining" section (or vice versa) → BLOCKED. Epistemic symmetry is structural, not optional.
+**GATE:** If a literature review contains a "Supporting" section but no "Constraining" section (or vice versa) â†’ BLOCKED. Epistemic symmetry is structural, not optional.
 
 **Anti-pattern:** "The literature is broadly supportive, with some minor caveats" is NOT a constraining section. Name specific constraining evidence or explicitly state `[NO CONSTRAINING EVIDENCE FOUND IN SEARCH: <search terms used>]`.
 
@@ -627,7 +627,7 @@ Identify high-EV shifts. Score candidates on: probability, impact, timeline, tes
 
 ### Stage 4: Bayesian Sensitivity Analysis
 For each candidate:
-1. **±20% sensitivity:** Vary each assumption probability by ±20%, observe EV shift
+1. **Â±20% sensitivity:** Vary each assumption probability by Â±20%, observe EV shift
 2. **Halve-priors:** Cut all optimistic priors by 50%, recompute
 3. **Correlation stress-test:** Assume worst-case correlation between fragile assumptions
 4. **Output:** Tornado chart of assumption sensitivities, EV ranges
@@ -680,7 +680,7 @@ occurrences on their own line at column 0:
 python -c "import sys; t=open('paper.md',encoding='utf-8').read(); print(sum(1 for l in t.split(chr(10)) if l.strip()=='---'))"
 ```
 Only the FIRST TWO such lines (opening and closing the YAML block) are valid
-frontmatter delimiters. `scripts/unicode-latex-preprocess.py` already
+frontmatter delimiters. `scripts/build-paper.py` (preprocess stage) already
 handles this correctly (it anchors the frontmatter regex to the START of the
 file with `^---\n...\n---\n`), but any custom tooling touching `paper.md`
 must apply the same anchoring rule -- never a naive "split on ---".
@@ -695,7 +695,7 @@ Scan for ALL of:
 - **STYLE:** Straight quotes in body, bare Unicode math outside $...$, generation artifacts -> BLOCKING
 - **CREDENTIAL LEAKS (kaizen fix D2):** `cfat_[a-zA-Z0-9_]{20,}`, `ghp_[a-zA-Z0-9]{36}`, `sk-[a-zA-Z0-9]{20,}`, `AKIA[0-9A-Z]{16}`, `Bearer [A-Za-z0-9._-]{20,}` -> BLOCKING. Run `scripts/credential-scan.py paper.md` as part of this gate, not just at git-commit time -- a token could be pasted into the paper body itself, which is a worse leak than a script file since it gets published to Zenodo/IPFS permanently.
 
-#### Physics Writing Standards (18-point -- see qnfo-agent §7)
+#### Physics Writing Standards (18-point -- see qnfo-agent Â§7)
 All 18 points apply. Minimum: certainty calibration on every non-textbook claim, falsifiability conditions on speculative claims, banned word operational definitions.
 
 #### Self-Evaluation Rubric
@@ -716,7 +716,7 @@ peer reviewer at a serious journal (Foundations of Physics, Physical Review
 A, New Journal of Physics, Quantum, or equivalent) would expect, such that
 the submission is judged on its scientific merits and is NOT desk-rejected
 or flagged for unprofessional presentation. This is a DISTINCT gate from
-the Physics Writing Standards (`qnfo-agent` §7, content-integrity: banned
+the Physics Writing Standards (`qnfo-agent` Â§7, content-integrity: banned
 words, certainty labels, falsifiability) and the Publication Language Gate
 (internal-language/credential scrubbing) -- both of those govern *what is
 said*; this gate governs *how professionally it reads*. A paper can pass
@@ -860,7 +860,7 @@ python scripts/build-paper.py paper.md --output paper.pdf
 
 This single command:
 1. Reads `paper.md` with UTF-8 forced (never trust ambient/locale encoding
-   on Windows -- see `qnfo-agent` §8.7 PowerShell UTF-8 Encoding Protocol)
+   on Windows -- see `qnfo-agent` Â§8.7 PowerShell UTF-8 Encoding Protocol)
 2. Converts every Unicode math character in prose (outside existing
    `$...$`/`$$...$$` spans) to its LaTeX equivalent, WRAPPED in `$...$` so
    XeLaTeX activates the math font for that span -- this is mandatory
@@ -943,9 +943,9 @@ the sole canonical entry point regardless.
 
 **GATE:** ONLY for major research programs with significant predictions and falsifiable claims. Do NOT register exploratory projects, single papers within existing programs, or minor updates. If the project doesn't make testable, falsifiable predictions with calibration registers, skip this section.
 
-**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction. Registration drafts, full form completion (all ~30 schema fields), subject taxonomy assignment, and final registration submission are ALL 100% achievable via the OSF v2 API (verified live 2026-07-20, registration `kj6ar` created via pure API calls, HTTP 201). Only file uploads specifically require Waterbutler (cookie-based sessions) — for those, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway) instead. Do not conflate the file-upload limitation with the registration/form-completion capability — they are different OSF subsystems with different constraints. See "OSF Registration — Full API Automation Protocol" below.
+**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction. Registration drafts, full form completion (all ~30 schema fields), subject taxonomy assignment, and final registration submission are ALL 100% achievable via the OSF v2 API (verified live 2026-07-20, registration `kj6ar` created via pure API calls, HTTP 201). Only file uploads specifically require Waterbutler (cookie-based sessions) â€” for those, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway) instead. Do not conflate the file-upload limitation with the registration/form-completion capability â€” they are different OSF subsystems with different constraints. See "OSF Registration â€” Full API Automation Protocol" below.
 
-**HARD GATE: LLM-Executable Research** — OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations — link to Zenodo/GitHub instead.
+**HARD GATE: LLM-Executable Research** â€” OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations â€” link to Zenodo/GitHub instead.
 
 **Qualifying research types:**
 - Automated data analysis of publicly available datasets
@@ -965,13 +965,13 @@ the sole canonical entry point regardless.
 - Any research requiring institutional partnerships or funding applications
 - NUMERATA Phase 2 experiments (N=324 human subjects, N=60 child participants, IRB required)
 
-**BONA FIDE REGISTRATION REQUIREMENTS (MANDATORY — never create incomplete stubs):**
+**BONA FIDE REGISTRATION REQUIREMENTS (MANDATORY â€” never create incomplete stubs):**
 
 Every OSF registration MUST:
-1. **Populate ALL ~30 structured fields** — the OSF Preregistration template includes hypothesis, design plan, sampling plan, variables, analysis plan, and falsification criteria. ALL must be populated via `registration_responses` as a JSON object with values for every required question. Empty `registration_responses = {}` is a STUB — NEVER submit a stub. Never submit what you cannot fully populate.
-2. **Require explicit user approval** — use `deepchat_question` to present the complete registration text (all populated fields) and ask: "Submit this as an OSF Preregistration? This is a permanent, timestamped, immutable record. Once submitted, it cannot be edited or deleted." Only submit if user explicitly confirms.
-3. **Track followup** — after submission, store the registration ID, DOI, and submission timestamp in D1/KG with status "registered." Set a reminder for the declared data collection/completion target date. This is a COMMITMENT — failing to close out is a negative reputational signal.
-4. **Close out registration** — when research completes: (a) return to the OSF registration URL, (b) add a comment or results section, (c) formally complete or withdraw the registration, (d) update D1/KG status to "completed" or "withdrawn." A registration that is submitted and never closed out is an abandoned commitment — a detectable pattern of abandoned registrations on an OSF account undermines credibility.
+1. **Populate ALL ~30 structured fields** â€” the OSF Preregistration template includes hypothesis, design plan, sampling plan, variables, analysis plan, and falsification criteria. ALL must be populated via `registration_responses` as a JSON object with values for every required question. Empty `registration_responses = {}` is a STUB â€” NEVER submit a stub. Never submit what you cannot fully populate.
+2. **Require explicit user approval** â€” use `deepchat_question` to present the complete registration text (all populated fields) and ask: "Submit this as an OSF Preregistration? This is a permanent, timestamped, immutable record. Once submitted, it cannot be edited or deleted." Only submit if user explicitly confirms.
+3. **Track followup** â€” after submission, store the registration ID, DOI, and submission timestamp in D1/KG with status "registered." Set a reminder for the declared data collection/completion target date. This is a COMMITMENT â€” failing to close out is a negative reputational signal.
+4. **Close out registration** â€” when research completes: (a) return to the OSF registration URL, (b) add a comment or results section, (c) formally complete or withdraw the registration, (d) update D1/KG status to "completed" or "withdrawn." A registration that is submitted and never closed out is an abandoned commitment â€” a detectable pattern of abandoned registrations on an OSF account undermines credibility.
 
 **Registration Closeout Protocol:**
 ```python
@@ -998,9 +998,9 @@ Body: {"data": {"type": "nodes", "attributes": {"title": "...", "category": "pro
 
 # 3. Create components (one per experiment/task)
 POST https://api.osf.io/v2/nodes/{project_id}/children/
-Body: {"data": {"type": "nodes", "attributes": {"title": "Experiment N...", "category": "data", "public": true, "description": "📦 Canonical files: [Zenodo DOI] | [GitHub tree URL] | [IPFS gateway]"}}}
+Body: {"data": {"type": "nodes", "attributes": {"title": "Experiment N...", "category": "data", "public": true, "description": "ðŸ“¦ Canonical files: [Zenodo DOI] | [GitHub tree URL] | [IPFS gateway]"}}}
 
-# 4. Add external links to descriptions (REQUIRED — replaces file uploads)
+# 4. Add external links to descriptions (REQUIRED â€” replaces file uploads)
 PATCH https://api.osf.io/v2/nodes/{node_id}/
 Body: {"data": {"type": "nodes", "id": "{node_id}", "attributes": {"description": "..." + String.fromCodePoint(0x1F4E6) + " Files: " + zenodo_doi + " | " + github_tree_url + " | " + ipfs_gateway}}}
 
@@ -1013,9 +1013,9 @@ Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships"
 # 7. Verify: all nodes public, all descriptions contain external links, registration drafts created
 ```
 
-#### OSF File Upload — NOT SUPPORTED via API
+#### OSF File Upload â€” NOT SUPPORTED via API
 
-**Waterbutler requires cookie-based browser sessions.** Do NOT attempt file upload via API — it will fail. Do NOT request manual browser interaction. Instead:
+**Waterbutler requires cookie-based browser sessions.** Do NOT attempt file upload via API â€” it will fail. Do NOT request manual browser interaction. Instead:
 
 - Link to Zenodo DOI (canonical published version with all files)
 - Link to GitHub tree URL (source code, analysis scripts, protocols)
@@ -1023,25 +1023,25 @@ Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships"
 
 The OSF project becomes a **discovery hub** pointing to canonical storage, not a file host.
 
-#### OSF Registration — Full API Automation Protocol (CORRECTED 2026-07-20)
+#### OSF Registration â€” Full API Automation Protocol (CORRECTED 2026-07-20)
 
-**Prior guidance in this section was WRONG and has been retracted.** The entire registration workflow — schema discovery, field population, subject taxonomy, final submission — is achievable via API with ZERO browser interaction. Verified live: registration `kj6ar` created 2026-07-20T12:48:47Z via pure API calls, HTTP 201.
+**Prior guidance in this section was WRONG and has been retracted.** The entire registration workflow â€” schema discovery, field population, subject taxonomy, final submission â€” is achievable via API with ZERO browser interaction. Verified live: registration `kj6ar` created 2026-07-20T12:48:47Z via pure API calls, HTTP 201.
 
-**Step 1 — Discover real schema keys (NEVER assume `q1`/`q2` format):**
+**Step 1 â€” Discover real schema keys (NEVER assume `q1`/`q2` format):**
 ```python
 r = requests.get(f'https://api.osf.io/v2/schemas/registrations/{SCHEMA_ID}/schema_blocks/?page[size]=100', headers=H)
 # Real keys look like '344-2', '344-47', etc. Walk blocks tracking the preceding
 # question-label to build a {key: label} map. Only required=True keys are mandatory.
 ```
 
-**Step 2 — For select-type fields, get EXACT verbatim option text:**
+**Step 2 â€” For select-type fields, get EXACT verbatim option text:**
 ```python
 # API rejects any option text that doesn't match the schema's display_text VERBATIM.
 # Walk schema_blocks from the select-input key forward, collecting select-input-option
 # blocks until the next non-option block type.
 ```
 
-**Step 3 — Populate ALL fields in one PATCH:**
+**Step 3 â€” Populate ALL fields in one PATCH:**
 ```python
 patch = {'data': {'id': draft_id, 'type': 'draft_registrations',
                    'attributes': {'registration_responses': responses}}}
@@ -1049,7 +1049,7 @@ r = requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', hea
 # 200 = success. 400 "must be one of the provided options" = re-check Step 2 exact text.
 ```
 
-**Step 4 — MANDATORY subject taxonomy (registration 400s without this):**
+**Step 4 â€” MANDATORY subject taxonomy (registration 400s without this):**
 ```python
 # Subjects require a root->leaf chain, set on the DRAFT (flat list), not the node
 # (which uses list-of-lists). These are SEPARATE relationships.
@@ -1058,7 +1058,7 @@ patch = {'data': {'id': draft_id, 'type': 'draft_registrations', 'attributes': {
 requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', headers=H, json=patch)
 ```
 
-**Step 5 — Submit:**
+**Step 5 â€” Submit:**
 ```python
 reg_data = {'data': {'type': 'registrations', 'attributes': {
     'draft_registration': draft_id, 'registration_choice': 'immediate'}}}
@@ -1066,7 +1066,7 @@ r = requests.post(f'https://api.osf.io/v2/nodes/{NODE_ID}/registrations/', heade
 # HTTP 201 = SUCCESS, fully immutable, date_registered timestamp set.
 ```
 
-**Understanding `pending_registration_approval: true` after success:** This is NOT a manual-review queue — OSF confirmed via API error "OSF Registries is an unmoderated provider." It is OSF's mandatory email-confirmation anti-hijacking gate (like 2FA), applied uniformly to ALL registrations regardless of creation method, resolved only by the account holder clicking the emailed confirmation link. Report this precisely: "Registration submitted (HTTP 201, ID `{id}`). Pending only the account holder's email confirmation — OSF's standard anti-hijacking safeguard, not a data-entry step."
+**Understanding `pending_registration_approval: true` after success:** This is NOT a manual-review queue â€” OSF confirmed via API error "OSF Registries is an unmoderated provider." It is OSF's mandatory email-confirmation anti-hijacking gate (like 2FA), applied uniformly to ALL registrations regardless of creation method, resolved only by the account holder clicking the emailed confirmation link. Report this precisely: "Registration submitted (HTTP 201, ID `{id}`). Pending only the account holder's email confirmation â€” OSF's standard anti-hijacking safeguard, not a data-entry step."
 
 **Never again claim** "requires browser interaction" for registration/form completion. That was false. Only file uploads (Waterbutler) have this limitation.
 
@@ -1080,20 +1080,20 @@ DELETE https://api.osf.io/v2/nodes/{node_id}/
 GET https://api.osf.io/v2/users/me/nodes/
 ```
 
-### Zenodo Credential Protocol (MANDATORY — read before ANY Zenodo API call)
+### Zenodo Credential Protocol (MANDATORY â€” read before ANY Zenodo API call)
 
 **Incident record (2026-07-20/21):** A session spent an entire multi-hour
 block diagnosing repeated `{"status":403,"message":"Permission denied."}`
 errors as "the token has read-only scope" / "the token is dead" across
 ~15 different curl/PowerShell/Python attempts, tried sandbox endpoints,
-query-param auth, multipart uploads, and different Content-Type headers —
+query-param auth, multipart uploads, and different Content-Type headers â€”
 none of which was the actual problem. The real root cause: the token had
 been read from a **truncated terminal display** (`Get-ChildItem env:`
 showing `ZENODO_TOKEN = BkLOVH2EDBcc...` with only the prefix visible) and
 then **manually retyped/reconstructed** by guessing the suffix from a
 separate truncated output, producing a 59-character string that was
 subtly wrong versus the real 60-character token. Zenodo returns the exact
-same generic 403 for "wrong token" as for "right token, wrong scope" —
+same generic 403 for "wrong token" as for "right token, wrong scope" â€”
 the two failure modes are **indistinguishable by symptom alone**.
 
 **THE RULE:** Never hardcode, retype, or reconstruct a Zenodo (or any)
@@ -1102,20 +1102,20 @@ environment variable directly in code:
 
 ```python
 import os
-TOKEN = os.environ.get('ZENODO_TOKEN')   # Python — correct
+TOKEN = os.environ.get('ZENODO_TOKEN')   # Python â€” correct
 ```
 ```powershell
-$env:ZENODO_TOKEN                         # PowerShell — correct, pass through directly
+$env:ZENODO_TOKEN                         # PowerShell â€” correct, pass through directly
 ```
 
 **NEVER do this:**
 ```python
-TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g'  # WRONG — hand-copied from truncated output
+TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g'  # WRONG â€” hand-copied from truncated output
 ```
 
 If a token must be inspected for debugging, print ONLY its length
-(`len(token)`) and confirm that length matches expectations — never print
-the full value (credential-leak risk per `qnfo-agent` §Publication
+(`len(token)`) and confirm that length matches expectations â€” never print
+the full value (credential-leak risk per `qnfo-agent` Â§Publication
 Language Gate) and never re-derive the value from a partial print.
 
 **Diagnostic script (run FIRST on any Zenodo 403):**
@@ -1124,9 +1124,9 @@ python <research-skill-path>/scripts/zenodo-token-check.py
 ```
 This tests read (`GET /deposit/depositions`), write (`POST` a probe
 deposit), and metadata-write (`PUT` on that probe), then cleans up the
-probe deposit. It distinguishes "token has no write scope — generate a
+probe deposit. It distinguishes "token has no write scope â€” generate a
 new one with `deposit:write` + `deposit:actions` scopes" from "token
-works fine, the problem is elsewhere in this call" — collapsing what was
+works fine, the problem is elsewhere in this call" â€” collapsing what was
 previously ~15 exploratory tool calls into one.
 
 **Required token scopes** (generate at
@@ -1139,7 +1139,7 @@ https://zenodo.org/account/settings/applications/):
 | `user:email` | Allow access to email address (read-only) |
 
 **Publish pipeline scripts** (replace ad hoc inline `python -c` snippets
-or hand-written one-off scripts — see kaizen fix B1 on why inline
+or hand-written one-off scripts â€” see kaizen fix B1 on why inline
 multi-line Python via `-c` is itself an anti-pattern on Windows):
 ```bash
 python <research-skill-path>/scripts/zenodo-create-upload.py <bundle.zip> [--newversion <deposit_id>]
@@ -1150,12 +1150,12 @@ python <research-skill-path>/scripts/zenodo-metadata-publish.py --metadata-file 
 GET-verify-before-`actions/newversion` pattern as the C2 version-chain fix
 below). `zenodo-metadata-publish.py` sets metadata, publishes, and
 verifies the DOI resolves live via `doi.org` + `zenodo.org/api/records`
-before declaring success — never trust the tool's immediate return value
+before declaring success â€” never trust the tool's immediate return value
 alone (see the "General principle" memory: verify server-side state
 independently for every remote publish action).
 
 **Metadata gotcha:** Zenodo's REST API requires an `upload_type` (or
-`resource_type`) field in metadata — omitting it produces
+`resource_type`) field in metadata â€” omitting it produces
 `HTTP 400 {"errors":[{"field":"metadata.resource_type","messages":["Missing data for required field."]}]}`
 on the `actions/publish` call specifically (metadata PUT itself succeeds
 with 200, making this easy to miss until the publish step). Common
@@ -1256,7 +1256,7 @@ the latest deposit ID", preventing the fragmented-citation-record failure
 mode where a disconnected new deposit gets created because the correct ID
 was lost or misremembered.
 
-#### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent §8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
+#### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent Â§8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
 
 At every session or phase conclusion for a project with an existing Zenodo
 deposit, create a NEW VERSION rather than a disconnected upload:
@@ -1386,41 +1386,41 @@ Seed Paper node with: slug, DOI, title, author, pages_url, zenodo_url, r2_path. 
 
 ### SEO Audit (MANDATORY before declaring publication complete)
 
-1. **robots.txt** — verify at root of papers.qnfo.org: allows crawling, points to sitemap
-2. **sitemap.xml** — all paper pages listed with lastmod dates
-3. **llms.txt** — machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
-4. **Meta tags** — `citation_title`, `citation_author`, `citation_doi`, `citation_date`
-5. **Structured data** — Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
-6. **Open Graph** — `og:title`, `og:description`, `og:type` (article), `og:url`
+1. **robots.txt** â€” verify at root of papers.qnfo.org: allows crawling, points to sitemap
+2. **sitemap.xml** â€” all paper pages listed with lastmod dates
+3. **llms.txt** â€” machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
+4. **Meta tags** â€” `citation_title`, `citation_author`, `citation_doi`, `citation_date`
+5. **Structured data** â€” Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
+6. **Open Graph** â€” `og:title`, `og:description`, `og:type` (article), `og:url`
 
-### Buffer Social Media (v2.11 — COMPLETE REWRITE, 2026-07-21)
+### Buffer Social Media (v2.11 â€” COMPLETE REWRITE, 2026-07-21)
 
 > **v2.11 BUFFER MIGRATION:** The legacy `api.bufferapp.com/1.0/graphql.json` endpoint
 > and `createDraft` mutation are **DEPRECATED** as of 2026-07-21. All Buffer API calls
 > now use `https://api.buffer.com` with the `createPost` mutation. Verified live
 > with 3-channel posting (Twitter, LinkedIn, Bluesky) for the Informational Universe
-> paper. Old channel IDs are stale — ALWAYS discover live IDs via the channels query
+> paper. Old channel IDs are stale â€” ALWAYS discover live IDs via the channels query
 > below; never hardcode them.
 
 #### Endpoint & Auth
 
 ```
-URL:     https://api.buffer.com/graphql   (also works at bare https://api.buffer.com — both resolve)
+URL:     https://api.buffer.com/graphql   (also works at bare https://api.buffer.com â€” both resolve)
 Auth:    Authorization: Bearer <token>
 Method:  POST with JSON GraphQL body
-Legacy:  api.bufferapp.com/1.0/graphql.json → 404 (DOMAIN DEPRECATED)
+Legacy:  api.bufferapp.com/1.0/graphql.json â†’ 404 (DOMAIN DEPRECATED)
 ```
 
-#### Buffer 401 Diagnostic Protocol (MANDATORY — v2.12, 2026-07-21)
+#### Buffer 401 Diagnostic Protocol (MANDATORY â€” v2.12, 2026-07-21)
 
 **INCIDENT (2026-07-21):** A session diagnosed a working Buffer Personal Access
 Token (43 chars, suffix `14Ky`, all 7 scopes active, created 2026-06-21) as
 "stale/expired" after a single `urllib.request` call returned HTTP 401, delaying
-dissemination by an entire session. The token was NEVER the problem — a transient
+dissemination by an entire session. The token was NEVER the problem â€” a transient
 or request-format issue caused the 401, and the endpoint `https://api.buffer.com`
 with the GraphQL query below works perfectly. **The token was subsequently
 confirmed live in the SAME session with the SAME endpoint, SAME token value,
-and SAME query — the original 401 was a false alarm.**
+and SAME query â€” the original 401 was a false alarm.**
 
 **THE RULE: NEVER diagnose a Buffer 401 as "stale token" without running
 the endpoint-discovery diagnostic FIRST. A single 401 from a single call
@@ -1454,10 +1454,10 @@ for label, method, url, body, headers in endpoints:
 ```
 
 **Decision tree:**
-- GraphQL at `api.buffer.com` returns 200 → token works, proceed with posting
-- GraphQL at `api.buffer.com` returns 401 → try `api.buffer.com/graphql`
-- Both GraphQL endpoints return 401 → token is genuinely stale, regenerate
-- **Never try REST endpoints** (`api.bufferapp.com/1/*`) for diagnosis —
+- GraphQL at `api.buffer.com` returns 200 â†’ token works, proceed with posting
+- GraphQL at `api.buffer.com` returns 401 â†’ try `api.buffer.com/graphql`
+- Both GraphQL endpoints return 401 â†’ token is genuinely stale, regenerate
+- **Never try REST endpoints** (`api.bufferapp.com/1/*`) for diagnosis â€”
   Buffer Personal Access Tokens are GraphQL-only; REST returns 401
   `"Public API tokens are not accepted for REST API access"` even for
   valid tokens, producing a FALSE diagnostic
@@ -1465,9 +1465,9 @@ for label, method, url, body, headers in endpoints:
 **This protocol MUST be run before any "stale token" diagnosis.** If it
 passes, and the posting attempt still fails with 401, the problem is with
 the request format (GraphQL query syntax, escaping, channel ID, text length)
-— NOT the token.
+â€” NOT the token.
 
-#### Channel Discovery (MANDATORY — run before any post)
+#### Channel Discovery (MANDATORY â€” run before any post)
 
 Never hardcode channel IDs. Always discover them live:
 
@@ -1491,7 +1491,7 @@ for c in channels:
     print(f"  {c['service']}: {c['name']} -> {c['id']}")
 ```
 
-**Verified live channel IDs (2026-07-21 — ALWAYS re-discover, do not trust this table):**
+**Verified live channel IDs (2026-07-21 â€” ALWAYS re-discover, do not trust this table):**
 
 | Platform | channelId | Profile |
 |:---------|:----------|:--------|
@@ -1499,7 +1499,7 @@ for c in channels:
 | LinkedIn | `6a170337c687a22dd430685f` | rowan-quni |
 | Bluesky | `6a01d129090476fb9909d885` | Rowan Brad Quni-Gudzinas |
 
-#### Post Creation (Buffer GraphQL — v2.13, 2026-07-22)
+#### Post Creation (Buffer GraphQL â€” v2.13, 2026-07-22)
 
 **Mutation:** `createPost` (replaces deprecated `createDraft`)
 
@@ -1510,23 +1510,23 @@ mutation {
     text: "<post text>",
     schedulingType: automatic,     # REQUIRED enum: automatic | notification
     mode: addToQueue,              # REQUIRED enum: addToQueue | shareNow | shareNext | customScheduled
-    assets: [],                    # REQUIRED non-null list — always pass [] (empty list)
+    assets: [],                    # REQUIRED non-null list â€” always pass [] (empty list)
     saveToDraft: false             # optional: true = draft mode
   }) {
-    __typename                     # MANDATORY — PostActionPayload is a UNION
+    __typename                     # MANDATORY â€” PostActionPayload is a UNION
   }
 }
 ```
 
-**CRITICAL RULES (v2.14 — 2026-07-22, corrected):**
-1. NEVER use `createDraft` — it no longer exists. Use `createPost`.
+**CRITICAL RULES (v2.14 â€” 2026-07-22, corrected):**
+1. NEVER use `createDraft` â€” it no longer exists. Use `createPost`.
 2. **The `assets` field is NON_NULL and REQUIRED.** Always pass `assets: []` (empty list). Omitting it causes `InvalidInputError`.
-3. **Inline fragments on `PostActionPayload` DO WORK — v2.13's claim otherwise was FALSE and is retracted.** `PostActionPayload` is a real GraphQL union and its members (`PostActionSuccess`, `InvalidInputError`, `UnauthorizedError`, `UnexpectedError`, `NotFoundError`, `LimitReachedError`, `RestProxyError` — confirmed via `__type(name: "PostActionPayload") { possibleTypes { name } }`) ARE valid inline-fragment targets. The v2.13 error (`Unknown type "PostActionSuccess"`) was caused by fragmenting on a NON-existent type name (e.g. `Post`), not by a union limitation. **Always request `message` inside every error-variant fragment and `post { id }` inside `PostActionSuccess`** — querying only `__typename` throws away the single most useful piece of debugging information Buffer provides (e.g. the exact "10 scheduled posts out of 10 allowed" queue-limit text). See `scripts/buffer-post.py` v1.1 for the corrected, verified-live mutation.
-4. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED. The `notification` enum value exists in the schema but does NOT work for posting — use `automatic`.
-5. Twitter text limit: ~280 characters AFTER URL shortening (Buffer shortens URLs to ~23 chars, so raw text including URL can be up to ~410 chars). Bluesky limit: ~300 characters raw text. Violations return `InvalidInputError` with an exact message inside `data.createPost` (via the `... on InvalidInputError { message }` fragment) — read it rather than guessing.
+3. **Inline fragments on `PostActionPayload` DO WORK â€” v2.13's claim otherwise was FALSE and is retracted.** `PostActionPayload` is a real GraphQL union and its members (`PostActionSuccess`, `InvalidInputError`, `UnauthorizedError`, `UnexpectedError`, `NotFoundError`, `LimitReachedError`, `RestProxyError` â€” confirmed via `__type(name: "PostActionPayload") { possibleTypes { name } }`) ARE valid inline-fragment targets. The v2.13 error (`Unknown type "PostActionSuccess"`) was caused by fragmenting on a NON-existent type name (e.g. `Post`), not by a union limitation. **Always request `message` inside every error-variant fragment and `post { id }` inside `PostActionSuccess`** â€” querying only `__typename` throws away the single most useful piece of debugging information Buffer provides (e.g. the exact "10 scheduled posts out of 10 allowed" queue-limit text). See `scripts/buffer-post.py` v1.1 for the corrected, verified-live mutation.
+4. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED. The `notification` enum value exists in the schema but does NOT work for posting â€” use `automatic`.
+5. Twitter text limit: ~280 characters AFTER URL shortening (Buffer shortens URLs to ~23 chars, so raw text including URL can be up to ~410 chars). Bluesky limit: ~300 characters raw text. Violations return `InvalidInputError` with an exact message inside `data.createPost` (via the `... on InvalidInputError { message }` fragment) â€” read it rather than guessing.
 6. Endpoint is `https://api.buffer.com/graphql` (preferred). The bare `https://api.buffer.com` also works. Legacy endpoint `https://api.bufferapp.com/1.0/graphql.json` returns 404.
 7. **All enum values MUST be unquoted GraphQL identifiers** (e.g., `automatic` not `"automatic"`). Quoting them as strings causes `Enum "SchedulingType" cannot represent non-enum value`.
-8. **`LimitReachedError` is a genuine account-level constraint (e.g. "10 scheduled posts out of 10 allowed"), not an agent/script failure.** It requires the human user to clear their Buffer queue or upgrade their plan — do not retry, do not treat as a bug to fix, and disclose it plainly as `[BLOCKED: account queue limit, user action required]` rather than a phantom "posted" claim.
+8. **`LimitReachedError` is a genuine account-level constraint (e.g. "10 scheduled posts out of 10 allowed"), not an agent/script failure.** It requires the human user to clear their Buffer queue or upgrade their plan â€” do not retry, do not treat as a bug to fix, and disclose it plainly as `[BLOCKED: account queue limit, user action required]` rather than a phantom "posted" claim.
 
 #### Post Deletion
 
@@ -1556,16 +1556,16 @@ query = {"query": f"""query {{
 }}"""}
 ```
 
-#### Token Protocol (v2.11 — REDUNDANT STORAGE MANDATORY)
+#### Token Protocol (v2.11 â€” REDUNDANT STORAGE MANDATORY)
 
 Token is a Buffer Personal Access Token, 43 characters, suffix `14Ky`.
 
 **Required storage locations (ALL 4-5 MUST exist, never rely on one):**
-1. `%USERPROFILE%\buffer\token` — primary file
-2. `%USERPROFILE%\.buffer_token` — fallback file
-3. `%USERPROFILE%\keys.json` — `buffer_token` key in JSON doc
+1. `%USERPROFILE%\buffer\token` â€” primary file
+2. `%USERPROFILE%\.buffer_token` â€” fallback file
+3. `%USERPROFILE%\keys.json` â€” `buffer_token` key in JSON doc
 4. Environment variable `BUFFER_TOKEN` (session)
-5. Environment variable `BUFFER_TOKEN` (user — set via `[Environment]::SetEnvironmentVariable`)
+5. Environment variable `BUFFER_TOKEN` (user â€” set via `[Environment]::SetEnvironmentVariable`)
 
 **Token format:** 43 chars, random alphanumeric + underscores, suffix `14Ky`.
 
@@ -1577,7 +1577,7 @@ resp = json.loads(urllib.request.urlopen(req).read())
 # HTTP 200 + valid org_id = token works. 403/401 = dead token.
 ```
 
-**Token regeneration:** Go to https://buffer.com → Settings → API Access Tokens. Overwrite ALL 4-5 storage locations with the new value immediately.
+**Token regeneration:** Go to https://buffer.com â†’ Settings â†’ API Access Tokens. Overwrite ALL 4-5 storage locations with the new value immediately.
 
 #### Red-Team / Anti-Patterns for Buffer
 
@@ -1586,17 +1586,17 @@ resp = json.loads(urllib.request.urlopen(req).read())
 | `createDraft` mutation | `createPost` (v2.11 migration) |
 | `api.bufferapp.com/1.0/graphql.json` endpoint | `https://api.buffer.com/graphql` |
 | Hardcoded channel IDs | Discover live via channels query |
-| Querying only `__typename` without `message` on error fragments | Request `message` inside every error-variant fragment (`InvalidInputError`, `LimitReachedError`, etc.) — it contains the exact actionable reason (v2.14 fix) |
-| Claiming "inline fragments don't work on PostActionPayload" | FALSE (v2.13 error) — fragments DO work; the real bug was fragmenting on a non-existent type name like `Post` instead of a real union member (v2.14 fix, verified live) |
-| Omitting `assets: []` in input | `assets` is NON_NULL required — always pass `assets: []` |
+| Querying only `__typename` without `message` on error fragments | Request `message` inside every error-variant fragment (`InvalidInputError`, `LimitReachedError`, etc.) â€” it contains the exact actionable reason (v2.14 fix) |
+| Claiming "inline fragments don't work on PostActionPayload" | FALSE (v2.13 error) â€” fragments DO work; the real bug was fragmenting on a non-existent type name like `Post` instead of a real union member (v2.14 fix, verified live) |
+| Omitting `assets: []` in input | `assets` is NON_NULL required â€” always pass `assets: []` |
 | Quoting enum values like `"automatic"` | Unquoted GraphQL identifiers: `automatic` (v2.13 fix) |
-| Using `schedulingType: notification` | Use `automatic` — `notification` exists in schema but doesn't work |
+| Using `schedulingType: notification` | Use `automatic` â€” `notification` exists in schema but doesn't work |
 | Single token location | 4-5 redundant locations |
 | Diagnosing 404 as "token dead" | 404 from legacy endpoint = endpoint deprecated, not token |
-| Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol — test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
-| Twitter text > 280 chars after URL-shorten | Trim raw text to ≤410 chars (Buffer shortens URLs to ~23 chars) |
-| Diagnosing "stale token" from truncated PowerShell output | ALWAYS read token via Python `open().read().strip()` — PowerShell `Get-Content` can return stale/cached values |
-| Treating `LimitReachedError` as an agent bug and retrying indefinitely | It's a genuine account-level queue cap (e.g. 10/10 scheduled posts) — disclose as `[BLOCKED: account queue limit]`, do not retry, requires user to clear queue or upgrade plan (v2.14) |
+| Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol â€” test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
+| Twitter text > 280 chars after URL-shorten | Trim raw text to â‰¤410 chars (Buffer shortens URLs to ~23 chars) |
+| Diagnosing "stale token" from truncated PowerShell output | ALWAYS read token via Python `open().read().strip()` â€” PowerShell `Get-Content` can return stale/cached values |
+| Treating `LimitReachedError` as an agent bug and retrying indefinitely | It's a genuine account-level queue cap (e.g. 10/10 scheduled posts) â€” disclose as `[BLOCKED: account queue limit]`, do not retry, requires user to clear queue or upgrade plan (v2.14) |
 
 #### Post Format
 ```
@@ -1607,7 +1607,7 @@ Abstract: <1-2 sentence summary>
 Hashtags: #QNFO #Research <domain-specific tags>
 ```
 
-### IPFS Distribution — Cloudflare + DNSLink ONLY (v2.10, MANDATORY method)
+### IPFS Distribution â€” Cloudflare + DNSLink ONLY (v2.10, MANDATORY method)
 
 **All third-party pinning services are deprecated (see v2.10 banner).**
 The canonical, permanent QNFO IPFS distribution method is three steps,
@@ -1683,7 +1683,7 @@ silently omitting the check.
 distributed IPFS network in the traditional sense (no Filecoin deal, no
 third-party pinning service holding a copy). R2 is the actual durable
 store; the CID + DNSLink give it IPFS-compatible addressing and discovery.
-This is an intentional simplification per product direction (2026-07-21) —
+This is an intentional simplification per product direction (2026-07-21) â€”
 do not add a third-party pinning step back in without an explicit new
 instruction to do so.
 
@@ -1773,17 +1773,17 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
 | Publishing without D1/KG records | Log `doi`, `r2_path` in D1 living-paper + Knowledge Graph Paper node |
-| Skipping 4-D verification | `_verify_4d.py` must pass before status → "published" |
+| Skipping 4-D verification | `_verify_4d.py` must pass before status â†’ "published" |
 | Using ANY third-party IPFS pinning service (Filebase/Pinata/Lighthouse/w3up/web3.storage) | DEPRECATED as of v2.10 -- use ONLY Cloudflare R2 (durable store) + locally-computed CIDv1 + Cloudflare DNS DNSLink (naming). No third-party pinner. |
 | Hardcoding a live secret VALUE (token/key) inside a skill file | Store only the FILE PATH where the secret lives (e.g. `%USERPROFILE%\buffer\token`); read it live every time. A hardcoded value in a skill file will silently go stale and cause a debugging session exactly like the 2026-07-21 Buffer incident. |
-| Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh — a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
+| Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh â€” a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
 | `wrangler d1 execute <name> --remote` on a DB with no local wrangler.toml binding | Use the Cloudflare REST API directly with the UUID from `wrangler d1 list` instead of the CLI. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables | Use CHECK-THEN-WRITE (SELECT existence, then plain INSERT or plain UPDATE) instead of a combined upsert. |
-| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createDraft` mutation's own response instead — a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
+| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createDraft` mutation's own response instead â€” a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
 | No pre-flight checklist before due diligence | Run P1-P11 before Phase 1 begins |
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
-| No risk register at project init | ≥5 risks logged at Phase 0 using the risk register template |
+| No risk register at project init | â‰¥5 risks logged at Phase 0 using the risk register template |
 | No deliverable registry | All deliverables tracked with paths and archival targets from Phase 0 |
 | Creating a research phase tag/release inside `qnfo-skills` | `git remote -v` REPO-TARGET GATE before every tag/commit/release (ADR-026 Incident 3) |
 | Assuming a "clean branch" audit is sufficient | Tags and GitHub Releases are independent refs -- audit `git tag -l` and `gh release list` separately, they survive a branch force-push |
@@ -1791,11 +1791,11 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Creating a disconnected new Zenodo deposit for each phase | Use Zenodo's `actions/newversion` API to keep phase snapshots under one concept DOI (ADR-028) |
 | Social-promoting every internal WBS phase transition | Reserve Buffer/social posts for FINAL public deliverables only, not interim phase closeouts |
 | OSF registration for minor/exploratory projects | GATE-CONDITIONAL: OSF ONLY for major research with significant predictions and falsifiable claims. Skip for single papers, exploratory studies, or minor updates. |
-| Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) — not after. The registrations timestamp the pre-data-collection hypotheses. |
-| Attempting OSF file upload via API | Waterbutler requires cookie sessions — Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. (Registration/form completion has NO such limitation — that is 100% API-automatable; only file uploads need Waterbutler.) |
-| Claiming OSF registration form completion "requires browser interaction" | FALSE — corrected 2026-07-20. Discover real schema keys via `/schema_blocks/` (format `344-N`, not `q1`/`q2`), populate via PATCH, set subject taxonomy chain, submit via POST — all API, HTTP 201 confirmed live (registration `kj6ar`). |
+| Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) â€” not after. The registrations timestamp the pre-data-collection hypotheses. |
+| Attempting OSF file upload via API | Waterbutler requires cookie sessions â€” Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. (Registration/form completion has NO such limitation â€” that is 100% API-automatable; only file uploads need Waterbutler.) |
+| Claiming OSF registration form completion "requires browser interaction" | FALSE â€” corrected 2026-07-20. Discover real schema keys via `/schema_blocks/` (format `344-N`, not `q1`/`q2`), populate via PATCH, set subject taxonomy chain, submit via POST â€” all API, HTTP 201 confirmed live (registration `kj6ar`). |
 | OSF tokens in only one location | Store OSF tokens redundantly: %USERPROFILE%\\.osf_token, OSF_TOKEN env var, keys.json, Windows Credential Manager, GitHub secrets. Follow the pattern used by Cloudflare/Zenodo/Buffer tokens. |
-| OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` → `attributes.public === true`. |
+| OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` â†’ `attributes.public === true`. |
 | Not documenting OSF ID mappings | Maintain a mapping of project/component/draft IDs in PROJECT-PLAN.md. These IDs are needed for API updates and cross-referencing. |
 | OSF descriptions without external links | Every node description MUST contain links to the canonical file locations (Zenodo DOI, GitHub tree, IPFS). OSF is the discovery hub, not the file host. |
 | Creating OSF project without Zenodo DOI backlink | Every OSF project description MUST include the Zenodo DOI. This is the primary discoverability bridge between platforms.
@@ -1813,11 +1813,11 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
 | `python -c "..."` inline scripts on Windows (kaizen fix B1) | Nested double-quotes in f-strings collide with `python -c "..."` outer quotes; Windows escaping of `\n`, dict literals, and Unicode breaks silently. `write` the script to a `_*.py` file first, `exec` it, then delete -- never inline for anything beyond a one-liner with zero quotes/dicts/regex. |
 | `curl` on Windows PowerShell (kaizen fix B3) | PowerShell aliases `curl` to `Invoke-WebRequest`, which has different flags (`-s` is not recognized) and fails. Use `python -c 'import urllib.request; ...'` (single-line, no nested quotes) or invoke `curl.exe` explicitly (the real binary, bypassing the alias). |
-| Unicode math left unconverted for XeLaTeX (kaizen fix A1) | Run `scripts/unicode-latex-preprocess.py` before every Pandoc+XeLaTeX build -- see PDF Building section above. |
-| `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2) | Strip it -- `scripts/unicode-latex-preprocess.py` does this automatically. It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
+| Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `scripts/build-paper.py` before every Pandoc+XeLaTeX build -- see PDF Building section above (v2.21+). |
+| `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2 — SUPERSEDED by KIF-27) | Strip it -- `scripts/build-paper.py` does this automatically (preprocess stage). It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
-| Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` — tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
+| Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` â€” tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
 | Reconstructing Buffer GraphQL mutation shape from scattered prose each session | Consult `references/buffer-graphql-schema.json` for the single canonical schema (endpoint, auth, channel discovery, createPost input fields, union response handling). |
 | Using the legacy `svjour3`/`svjour.cls` package for new LaTeX papers | Retired -- use `sn-jnl.cls` (Springer Nature's unified template, embedded at `templates/springer-nature-latex/`) as the mandatory default. |
 | Placing a `.bst` bibliography style file in a `bst/` subdirectory relative to `paper.tex` | `bibtex` does not search subdirectories by default -- copy the needed `.bst` alongside `paper.tex`/`refs.bib` before running `bibtex`. |
