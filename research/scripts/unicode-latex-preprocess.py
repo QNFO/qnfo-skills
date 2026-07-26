@@ -1,48 +1,28 @@
 #!/usr/bin/env python3
 """
-unicode-latex-preprocess.py -- Pandoc+XeLaTeX pre-build fixer (kaizen fix A1/A2/A3)
+unicode-latex-preprocess.py -- Pandoc+XeLaTeX pre-build fixer (v3.0, KIF-26 v3)
 
-VERSION: 2.0 (2026-07-26)
+VERSION: 3.0 (2026-07-26)
 
-PROBLEM (A1): XeLaTeX's default font (Latin Modern) lacks glyphs for many
-Unicode math/Greek/symbol characters used in physics prose written outside
-$...$ delimiters (omega, alpha, phi, pi, subscript/superscript digits,
-bra-ket notation, blackboard-bold letters). These render as U+FFFD
-replacement characters ("tofu") in the final PDF.
+THE FUNDAMENTAL PROBLEM:
+XeLaTeX text fonts (TeX Gyre Pagella, STIX Two Text, etc.) do NOT contain
+mathematical symbols like ℚ, ℤ, ₚ, ⁰, etc. These glyphs only exist in MATH
+fonts (STIX Two Math, Latin Modern Math, etc.), which are only used inside
+LaTeX math mode ($...$).
 
-PROBLEM (A2): Pandoc's YAML `keywords:` frontmatter field is passed through
-to the XeLaTeX template's XMP metadata module, which calls an undefined
-\\xmpquote macro on some Pandoc/LaTeX template combinations, aborting the
-build with a hard LaTeX error.
+THE SOLUTION:
+Convert Unicode math characters to LaTeX math commands wrapped in $...$,
+so XeLaTeX uses the math font (which has the glyphs) instead of the text
+font (which doesn't).
 
-PROBLEM (A3 - KIF-26, 2026-07-26): The original script only handled NUMERIC
-subscripts (₀-₉) but physics papers extensively use LETTER subscripts:
-ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ (e.g., ℚₚ for p-adics, vₚ(x), ℓₚ). Also missing:
-ħ (h-bar), ℓ (script ell), 𝔸 (blackboard A for adeles), and superscript
-letters. This caused 135+ U+FFFD errors in the "Measure-Theoretic Artifacts"
-paper (Zenodo 21595214).
-
-FIX:
-1. Split YAML frontmatter from body. Strip `keywords:` (and any block-style
-   continuation lines) from the frontmatter -- keywords are not required by
-   Zenodo/D1 metadata and are not worth a broken build.
-2. Convert Unicode Greek/symbol/subscript/superscript/bra-ket characters to
-   their LaTeX math equivalents, but ONLY outside existing $...$ / $$...$$
-   math spans (never double-convert characters a human already wrapped in
-   math delimiters -- that would emit literal backslashes inside math mode).
-3. Write the corrected file back (in place, or to a --out path).
-4. (v2.0) Expanded coverage: ALL Unicode subscript/superscript letters,
-   h-bar, script ell, blackboard A, and other physics symbols.
+KEY FIX IN v3.0:
+Consecutive subscripts/superscripts are now GROUPED into a single ^{...}
+or _{...} block. Previously, "10⁻¹²⁰" became "$^{-}^{1}^{2}^{0}$" which is
+invalid LaTeX (double superscript error). Now it correctly becomes "$^{-120}$".
 
 Usage:
     python unicode-latex-preprocess.py paper.md
     python unicode-latex-preprocess.py paper.md --out paper.build.md
-
-This is NOT a substitute for writing math correctly in $...$ from the start.
-It is a safety net for prose Unicode characters (e.g. "the phase omega_0 is
-measured in radians") that are common in physics writing outside display
-math. Always re-run check-pdf.py after building to confirm zero replacement
-characters remain.
 """
 import re
 import sys
@@ -82,6 +62,7 @@ SYMBOLS = {
     '\u2193': r'\downarrow', '\u2194': r'\leftrightarrow', '\u2195': r'\updownarrow',
     '\u21d2': r'\Rightarrow', '\u21d0': r'\Leftarrow', '\u21d4': r'\Leftrightarrow',
     '\u21a6': r'\mapsto', '\u2197': r'\nearrow', '\u2198': r'\searrow',
+    '\u21aa': r'\hookrightarrow',
     # Set theory
     '\u2205': r'\emptyset', '\u2229': r'\cap', '\u222a': r'\cup',
     '\u2208': r'\in', '\u2209': r'\notin', '\u220b': r'\ni', '\u220c': r'\notni',
@@ -89,7 +70,8 @@ SYMBOLS = {
     '\u2284': r'\not\subset', '\u2285': r'\not\supset',
     # Arithmetic
     '\u00d7': r'\times', '\u00f7': r'\div', '\u00b7': r'\cdot', '\u2217': r'\ast',
-    '\u2218': r'\circ', '\u2219': r'\bullet', '\u221a': r'\sqrt{}',
+    '\u2218': r'\circ', '\u2219': r'\bullet',
+    # Note: √ (U+221A) is handled specially below to capture its argument
     '\u2295': r'\oplus', '\u2296': r'\ominus', '\u2297': r'\otimes', '\u2298': r'\oslash',
     '\u2299': r'\odot', '\u22c5': r'\cdot',
     # Brackets
@@ -98,9 +80,9 @@ SYMBOLS = {
     # Blackboard bold (number sets)
     '\u2115': r'\mathbb{N}', '\u2124': r'\mathbb{Z}', '\u211a': r'\mathbb{Q}',
     '\u211d': r'\mathbb{R}', '\u2102': r'\mathbb{C}', '\u210d': r'\mathbb{H}',
-    '\u2119': r'\mathbb{P}', '\u1d538': r'\mathbb{A}',  # Adele ring (KIF-26)
+    '\u2119': r'\mathbb{P}', '\u1d538': r'\mathbb{A}',
     '\U0001D538': r'\mathbb{A}',  # Alternative encoding for 𝔸
-    # Physics-specific (KIF-26)
+    # Physics-specific
     '\u0127': r'\hbar',  # ħ (reduced Planck constant)
     '\u2113': r'\ell',   # ℓ (script ell, Planck length)
     '\u212b': r'\text{\AA}',  # Å (Angstrom)
@@ -116,47 +98,112 @@ SYMBOLS = {
     '\u2118': r'\wp',  # Weierstrass p
     '\u2135': r'\aleph', '\u2136': r'\beth', '\u2137': r'\gimel', '\u2138': r'\daleth',
     '\u210f': r'\hbar',  # Alternative h-bar encoding
-    '\u2223': r'\mid', '\u2225': r'\parallel', '\u22a5': r'\perp',
+    '\u2223': r'\mid', '\u2225': r'\parallel',
+    # Emoji/symbols that need text-mode handling
+    '\u2705': r'\checkmark',  # ✅ (green checkmark emoji -> checkmark)
+    '\u274c': r'\times',      # ❌ (red X emoji -> times)
+    '\u2714': r'\checkmark',  # ✔ (checkmark)
+    '\u2718': r'\times',      # ✘ (ballot X)
+    # Script letters
+    '\u2112': r'\mathcal{L}',  # ℒ (script L / Lagrangian)
+    '\u2110': r'\mathcal{I}',  # ℐ (script I)
+    '\u2131': r'\mathcal{F}',  # ℱ (script F)
+    '\u210b': r'\mathcal{H}',  # ℋ (script H / Hamiltonian)
+    '\u2133': r'\mathcal{M}',  # ℳ (script M)
+    '\u211b': r'\mathcal{R}',  # ℛ (script R)
+    # Mathematical fraktur (from Mathematical Alphanumeric Symbols block)
+    '\U0001D530': r'\mathfrak{s}',  # 𝔰
+    '\U0001D529': r'\mathfrak{l}',  # 𝔩
+    '\U0001D51E': r'\mathfrak{a}',  # 𝔞
+    '\U0001D51F': r'\mathfrak{b}',  # 𝔟
+    '\U0001D520': r'\mathfrak{c}',  # 𝔠
+    '\U0001D521': r'\mathfrak{d}',  # 𝔡
+    '\U0001D522': r'\mathfrak{e}',  # 𝔢
+    '\U0001D523': r'\mathfrak{f}',  # 𝔣
+    '\U0001D524': r'\mathfrak{g}',  # 𝔤
+    '\U0001D525': r'\mathfrak{h}',  # 𝔥
+    '\U0001D526': r'\mathfrak{i}',  # 𝔦
+    '\U0001D527': r'\mathfrak{j}',  # 𝔧
+    '\U0001D528': r'\mathfrak{k}',  # 𝔨
+    '\U0001D52A': r'\mathfrak{m}',  # 𝔪
+    '\U0001D52B': r'\mathfrak{n}',  # 𝔫
+    '\U0001D52C': r'\mathfrak{o}',  # 𝔬
+    '\U0001D52D': r'\mathfrak{p}',  # 𝔭
+    '\U0001D52E': r'\mathfrak{q}',  # 𝔮
+    '\U0001D52F': r'\mathfrak{r}',  # 𝔯
+    '\U0001D531': r'\mathfrak{t}',  # 𝔱
+    '\U0001D532': r'\mathfrak{u}',  # 𝔲
+    '\U0001D533': r'\mathfrak{v}',  # 𝔳
+    '\U0001D534': r'\mathfrak{w}',  # 𝔴
+    '\U0001D535': r'\mathfrak{x}',  # 𝔵
+    '\U0001D536': r'\mathfrak{y}',  # 𝔶
+    '\U0001D537': r'\mathfrak{z}',  # 𝔷
+    # Mathematical italic Greek (from Mathematical Alphanumeric Symbols block)
+    '\U0001D6FF': r'\delta',  # 𝛿 (mathematical italic delta)
+    '\U0001D6FC': r'\alpha',  # 𝛼 (mathematical italic alpha)
+    '\U0001D6FD': r'\beta',   # 𝛽 (mathematical italic beta)
+    '\U0001D6FE': r'\gamma',  # 𝛾 (mathematical italic gamma)
+    '\U0001D700': r'\epsilon', # 𝜀 (mathematical italic epsilon)
+    '\U0001D701': r'\zeta',   # 𝜁 (mathematical italic zeta)
+    '\U0001D702': r'\eta',    # 𝜂 (mathematical italic eta)
+    '\U0001D703': r'\theta',  # 𝜃 (mathematical italic theta)
+    '\U0001D704': r'\iota',   # 𝜄 (mathematical italic iota)
+    '\U0001D705': r'\kappa',  # 𝜅 (mathematical italic kappa)
+    '\U0001D706': r'\lambda', # 𝜆 (mathematical italic lambda)
+    '\U0001D707': r'\mu',     # 𝜇 (mathematical italic mu)
+    '\U0001D708': r'\nu',     # 𝜈 (mathematical italic nu)
+    '\U0001D709': r'\xi',     # 𝜉 (mathematical italic xi)
+    '\U0001D70B': r'\pi',     # 𝜋 (mathematical italic pi)
+    '\U0001D70C': r'\rho',    # 𝜌 (mathematical italic rho)
+    '\U0001D70E': r'\sigma',  # 𝜎 (mathematical italic sigma)
+    '\U0001D70F': r'\tau',    # 𝜏 (mathematical italic tau)
+    '\U0001D710': r'\upsilon', # 𝜐 (mathematical italic upsilon)
+    '\U0001D711': r'\phi',    # 𝜑 (mathematical italic phi)
+    '\U0001D712': r'\chi',    # 𝜒 (mathematical italic chi)
+    '\U0001D713': r'\psi',    # 𝜓 (mathematical italic psi)
+    '\U0001D714': r'\omega',  # 𝜔 (mathematical italic omega)
+    # Mathematical script (from Mathematical Alphanumeric Symbols block)
+    '\U0001D49F': r'\mathcal{D}',  # 𝒟 (script D)
+    '\U0001D4B6': r'\mathcal{a}',  # 𝒶 (script a)
+    # Modifier letters used as superscripts
+    '\u1D9C': r'^{c}',  # ᶜ (modifier letter small c)
 }
 
-# === SUBSCRIPT DIGITS (U+2080 - U+2089) ===
-SUBSCRIPT_DIGITS = {
+# === SUBSCRIPT CHARACTERS ===
+# Map Unicode subscript to the plain character it represents
+SUBSCRIPTS = {
+    # Digits
     '\u2080': '0', '\u2081': '1', '\u2082': '2', '\u2083': '3', '\u2084': '4',
     '\u2085': '5', '\u2086': '6', '\u2087': '7', '\u2088': '8', '\u2089': '9',
-}
-
-# === SUBSCRIPT LETTERS (U+2090 - U+209C) — KIF-26 FIX ===
-SUBSCRIPT_LETTERS = {
+    # Letters
     '\u2090': 'a', '\u2091': 'e', '\u2092': 'o', '\u2093': 'x',
-    '\u2094': r'\schwa',  # ₔ (schwa) - rare, use text mode
     '\u2095': 'h', '\u2096': 'k', '\u2097': 'l', '\u2098': 'm',
     '\u2099': 'n', '\u209a': 'p', '\u209b': 's', '\u209c': 't',
-    # Additional subscript letters from other Unicode blocks
+    # Additional from other blocks
     '\u1d62': 'i', '\u1d63': 'r', '\u1d64': 'u', '\u1d65': 'v',
-    '\u1d66': r'\beta', '\u1d67': r'\gamma', '\u1d68': r'\rho', '\u1d69': r'\phi',
-    '\u1d6a': r'\chi', '\u2c7c': 'j',
+    '\u2c7c': 'j',
+    # Symbols
+    '\u208a': '+', '\u208b': '-', '\u208c': '=', '\u208d': '(', '\u208e': ')',
 }
 
-# === SUPERSCRIPT DIGITS ===
-SUPERSCRIPT_DIGITS = {
+# === SUPERSCRIPT CHARACTERS ===
+# Map Unicode superscript to the plain character it represents
+SUPERSCRIPTS = {
+    # Digits
     '\u2070': '0', '\u00b9': '1', '\u00b2': '2', '\u00b3': '3', '\u2074': '4',
     '\u2075': '5', '\u2076': '6', '\u2077': '7', '\u2078': '8', '\u2079': '9',
+    # Symbols
     '\u207a': '+', '\u207b': '-', '\u207c': '=', '\u207d': '(', '\u207e': ')',
+    '\u207f': 'n', '\u2071': 'i',
+    # Letters (limited set available in Unicode)
 }
 
-# === SUPERSCRIPT LETTERS — KIF-26 FIX ===
-SUPERSCRIPT_LETTERS = {
-    '\u1d43': 'a', '\u1d47': 'b', '\u1d9c': 'c', '\u1d48': 'd', '\u1d49': 'e',
-    '\u1da0': 'f', '\u1d4d': 'g', '\u02b0': 'h', '\u2071': 'i', '\u02b2': 'j',
-    '\u1d4f': 'k', '\u02e1': 'l', '\u1d50': 'm', '\u207f': 'n', '\u1d52': 'o',
-    '\u1d56': 'p', '\u02b3': 'r', '\u02e2': 's', '\u1d57': 't', '\u1d58': 'u',
-    '\u1d5b': 'v', '\u02b7': 'w', '\u02e3': 'x', '\u02b8': 'y', '\u1dbb': 'z',
-    # Greek superscripts
-    '\u1d45': r'\alpha', '\u1d5d': r'\beta', '\u1d5e': r'\gamma', '\u1d5f': r'\delta',
-    '\u1d60': r'\phi', '\u1d61': r'\chi',
-}
+# Square root pattern: √ followed by a number or simple expression
+# √5 -> \sqrt{5}
+# Complex expressions like √(ħG/c³) need special handling
+SQRT_PATTERN = re.compile(r'√(\d+|[a-zA-Z])')
 
-# Bra-ket notation: |x>, <x|, <x|y> -- must run before generic symbol pass
+# Bra-ket notation patterns
 BRAKET_PATTERNS = [
     (re.compile(r'\u27e8([^\u27e8\u27e9]+)\|([^\u27e8\u27e9]+)\u27e9'), r'\\langle \1 | \2 \\rangle'),
     (re.compile(r'\|([^\u27e8\u27e9|]+)\u27e9'), r'|\1\\rangle'),
@@ -181,21 +228,53 @@ def _split_math_spans(text):
 
 def convert_prose_unicode(segment):
     """Convert Unicode math characters to LaTeX ONLY within a non-math segment,
-    wrapping each converted run in $...$ so LaTeX renders it as math."""
+    wrapping each converted run in $...$ so LaTeX renders it as math.
+    
+    KEY: Consecutive subscripts/superscripts are GROUPED into a single block.
+    E.g., "10⁻¹²⁰" becomes "$10^{-120}$", not "$10^{-}^{1}^{2}^{0}$".
+    
+    ALSO: Adjacent digits/letters next to math symbols are included in the same
+    math span. E.g., "∞↔2" becomes "$\infty \leftrightarrow 2$".
+    """
     out = []
     buf = []
     
-    # Build the complete set of convertible characters
-    convertible = (
-        set(GREEK) | set(SYMBOLS) | 
-        set(SUBSCRIPT_DIGITS) | set(SUBSCRIPT_LETTERS) |
-        set(SUPERSCRIPT_DIGITS) | set(SUPERSCRIPT_LETTERS)
-    )
+    # Character categories
+    subscript_chars = set(SUBSCRIPTS)
+    superscript_chars = set(SUPERSCRIPTS)
+    greek_chars = set(GREEK)
+    symbol_chars = set(SYMBOLS)
+    
+    all_convertible = subscript_chars | superscript_chars | greek_chars | symbol_chars
+    
+    # Characters that should be pulled into math mode if adjacent to math
+    # Note: Do NOT include {} or () as they have special meaning in markdown/LaTeX
+    math_adjacent = set('0123456789')
 
     i = 0
     n = len(segment)
+    
     while i < n:
-        # Try bra-ket multi-char patterns first at this position
+        # Try sqrt pattern first (√5 -> \sqrt{5})
+        sqrt_match = SQRT_PATTERN.match(segment, i)
+        if sqrt_match:
+            if buf:
+                out.append(''.join(buf))
+                buf = []
+            out.append(r'$\sqrt{' + sqrt_match.group(1) + '}$')
+            i = sqrt_match.end()
+            continue
+        
+        # Handle bare √ without argument (rare, but handle gracefully)
+        if i < n and segment[i] == '√':
+            if buf:
+                out.append(''.join(buf))
+                buf = []
+            out.append(r'$\sqrt{}$')
+            i += 1
+            continue
+        
+        # Try bra-ket multi-char patterns
         matched_braket = False
         for pat, repl in BRAKET_PATTERNS:
             m = pat.match(segment, i)
@@ -211,38 +290,66 @@ def convert_prose_unicode(segment):
             continue
 
         ch = segment[i]
-        if ch in convertible:
-            run = []
-            while i < n and segment[i] in convertible:
+        
+        if ch in all_convertible:
+            # Start a math run - also include adjacent digits/letters
+            math_parts = []
+            
+            while i < n and (segment[i] in all_convertible or segment[i] in math_adjacent):
                 c = segment[i]
-                if c in GREEK:
-                    run.append(GREEK[c])
-                elif c in SYMBOLS:
-                    run.append(SYMBOLS[c])
-                elif c in SUBSCRIPT_DIGITS:
-                    run.append('_{' + SUBSCRIPT_DIGITS[c] + '}')
-                elif c in SUBSCRIPT_LETTERS:
-                    run.append('_{' + SUBSCRIPT_LETTERS[c] + '}')
-                elif c in SUPERSCRIPT_DIGITS:
-                    run.append('^{' + SUPERSCRIPT_DIGITS[c] + '}')
-                elif c in SUPERSCRIPT_LETTERS:
-                    run.append('^{' + SUPERSCRIPT_LETTERS[c] + '}')
-                i += 1
+                
+                if c in subscript_chars:
+                    # Collect consecutive subscripts into one _{...}
+                    sub_content = []
+                    while i < n and segment[i] in subscript_chars:
+                        sub_content.append(SUBSCRIPTS[segment[i]])
+                        i += 1
+                    math_parts.append('_{' + ''.join(sub_content) + '}')
+                    
+                elif c in superscript_chars:
+                    # Collect consecutive superscripts into one ^{...}
+                    sup_content = []
+                    while i < n and segment[i] in superscript_chars:
+                        sup_content.append(SUPERSCRIPTS[segment[i]])
+                        i += 1
+                    math_parts.append('^{' + ''.join(sup_content) + '}')
+                    
+                elif c in greek_chars:
+                    math_parts.append(GREEK[c])
+                    i += 1
+                    
+                elif c in symbol_chars:
+                    math_parts.append(SYMBOLS[c])
+                    i += 1
+                    
+                elif c in math_adjacent:
+                    # Include adjacent alphanumeric characters in math mode
+                    math_parts.append(c)
+                    i += 1
+                    
+                else:
+                    i += 1
+            
+            # Flush any pending text buffer
             if buf:
                 out.append(''.join(buf))
                 buf = []
-            out.append('$' + ''.join(run) + '$')
+            
+            # Output the math run
+            if math_parts:
+                out.append('$' + ''.join(math_parts) + '$')
         else:
             buf.append(ch)
             i += 1
+    
     if buf:
         out.append(''.join(buf))
+    
     return ''.join(out)
 
 
 def strip_keywords_field(frontmatter):
-    """Remove a top-level `keywords:` YAML key and any indented continuation
-    lines (block scalar or list items) that belong to it."""
+    """Remove a top-level `keywords:` YAML key and any indented continuation lines."""
     lines = frontmatter.split('\n')
     out = []
     skipping = False
@@ -283,6 +390,17 @@ def process_file(path, out_path=None):
     new_body = ''.join(new_segments)
 
     result = header + new_body
+    
+    # Post-processing: fix subscript/superscript patterns that need braces
+    # _\mathbb{X} -> _{\mathbb{X}}
+    # ^\mathbb{X} -> ^{\mathbb{X}}
+    result = re.sub(r'_\\(mathbb|mathcal|mathfrak)\{([^}]+)\}', r'_{\\\1{\2}}', result)
+    result = re.sub(r'\^\\(mathbb|mathcal|mathfrak)\{([^}]+)\}', r'^{\\\1{\2}}', result)
+    
+    # Also fix patterns like $X$_$Y$ -> $X_Y$ (merge adjacent math spans)
+    result = re.sub(r'\$([^$]+)\$_\$([^$]+)\$', r'$\1_{\2}$', result)
+    result = re.sub(r'\$([^$]+)\$\^\$([^$]+)\$', r'$\1^{\2}$', result)
+    
     target = out_path or path
     with open(target, 'w', encoding='utf-8') as f:
         f.write(result)
