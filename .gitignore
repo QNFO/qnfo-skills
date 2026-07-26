@@ -1,5 +1,5 @@
 # ============================================================================
-# qnfo-skills — ALLOWLIST POLICY (ADR-026, hardened 2026-07-18 remediation)
+# qnfo-skills â€” ALLOWLIST POLICY (ADR-026, hardened 2026-07-18 remediation)
 # ============================================================================
 # THIS REPOSITORY IS STRICTLY FOR SKILL FILES. NOTHING ELSE.
 #
@@ -45,7 +45,13 @@
 !/system/
 
 # ============================================================================
-# STEP 4: Defense-in-depth — inside allowed skill dirs, still block anything
+# STEP 4: Allow failsafe infrastructure (skill corruption prevention tools)
+# ============================================================================
+!/failsafe/
+
+
+# ============================================================================
+# STEP 4: Defense-in-depth â€” inside allowed skill dirs, still block anything
 # that looks like research/project/JIT ephemera (unanchored patterns apply
 # at any depth within the allowed directories from Step 3).
 # ============================================================================
