@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
 description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.42"
+version: "3.43"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,17 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.42 (Safety-Net Core)
+# QNFO-AGENT — v3.43 (Safety-Net Core)
+
+> **v3.43 UPDATE (2026-07-26, session initialization + auto-loading fix):**
+> Added KIF-25 (Skill Auto-Loading Weak Link). DeepChat shows only 8 skills
+> in system prompt; the 24-Skill Trigger Table inside qnfo-agent is invisible
+> until qnfo-agent is explicitly loaded via `skill_view`. Fix: `system` skill
+> v2.3 adds Session Initialization Protocol with three layers: (1) Windows
+> Startup VBS script runs skill-hygiene.js at logon, (2) `/init` custom prompt
+> loads qnfo-agent + system at session start, (3) `skill-loader.js` generates
+> discovery summaries. Use `/init` at session start to ensure autonomous skill
+> discovery works correctly.
 
 > **v3.42 UPDATE (2026-07-26, skill location hygiene):** Added KIF-24
 > (Skill Location Drift). Skills existed in multiple directories causing
@@ -316,6 +326,7 @@ the old behavior was correct.
 | KIF-22 | Registry-extension drift — skill instructions of the form "extend list X whenever Y happens" fail silently because nothing compares the maintained list against live state. `living-paper.papers` (931 production rows) had ZERO scheduled backups for 7 days despite the cloudflare skill's explicit written mandate to add it to `runBackup`; the R2 bucket baseline (14) also drifted from live (13) with no reconciliation. | `qnfo-lifecycle` v1.2 (LIVING_PAPER binding + backup verified: `qnfo-backups/living-paper/papers-2026-07-25.json`, 4.9 MB); cloudflare skill baselines corrected to live-enumerated values; rule: drift checks MUST enumerate live state, never trust maintained lists | v3.40, 2026-07-25, systemwide audit |
 | KIF-23 | KG-D1 dual-write drift — publication pipelines write D1 `living-paper.papers` but KG Paper-node seeding is per-session/manual, so drift accumulates silently. Found 257 of 887 published papers (29%) absent from the KG, making KG-first due diligence systematically under-report "what exists." | Diff-and-seed reconciliation via `qnfo-gateway` `POST /sync` (`{action:"bulk",nodes,edges}`, batches ≤50, `paper:<slug>` id convention) — executed: 257 nodes seeded, 0 errors, KG Papers 1255→1512; cloudflare skill "KG-D1 Paper Reconciliation" section makes this diff mandatory in every infra audit | v3.40, 2026-07-25, systemwide audit |
 | KIF-24 | Skill location drift — skills existed in multiple directories (`%USERPROFILE%\.deepchat\skills\` canonical vs `%APPDATA%\.deepchat\skills\` stale legacy bootstrap location) causing version conflicts (e.g., `code-review` v1.0 canonical vs v2.1 stale). Prior R2 syncs only synced SKILL.md files, missing 26 supplemental files (scripts, templates, references). GitHub dual-remote (QNFO + rwnq8) is intentional mirroring, not duplication. | `system` skill v2.2 adds Canonical Skill Locations section + Skill Hygiene Enforcement gate. New scripts: `system/scripts/skill-hygiene.js` (exit 0=clean, 1=stale, 2=conflicts), `system/templates/skill-locations-audit.md` checklist. Stale `%APPDATA%\.deepchat\skills\` deleted. Future syncs MUST use `skill-sync.js` which walks ALL files per skill. Pre-session gate: run `skill-hygiene.js`, block if exit ≠ 0. | v3.42, 2026-07-26, skill hygiene audit |
+| KIF-25 | Skill Auto-Loading Weak Link — DeepChat shows only 8 skills in system prompt; the 24-Skill Trigger Table (inside qnfo-agent body) is invisible until qnfo-agent is explicitly loaded via `skill_view`. Without loading qnfo-agent first, the LLM cannot autonomously discover which skill to use for a given task, causing skill loading to rely on user manually triggering skill load or the LLM guessing. | `system` skill v2.3 adds Session Initialization Protocol with three layers: (1) `deepchat-skill-hygiene.vbs` in Windows Startup folder runs skill-hygiene.js at logon, (2) `/init` custom prompt (added via `add-init-prompt.js`) loads qnfo-agent + system + runs hygiene check at session start, (3) `skill-loader.js` generates skill discovery summaries programmatically. Use `/init` at session start to ensure autonomous skill discovery works correctly. | v3.43, 2026-07-26, session initialization kaizen |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 

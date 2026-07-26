@@ -1,7 +1,7 @@
 ---
 name: system
-description: DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
-version: "2.2"
+description: DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, session initialization (/init prompt), and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
+version: "2.3"
 triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "skill hygiene", "skill locations", "duplicate skills", "stale skills", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
 related: ["cloudflare"]
 priority: 3
@@ -10,7 +10,16 @@ autonomous: false
 self_sufficient: true
 ---
 
-# SYSTEM -- v2.2 (Ultra-Consolidated Config + Skills + Desktop + Hygiene)
+# SYSTEM -- v2.3 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
+
+> **v2.3 UPDATE (2026-07-26, session initialization + startup integration):**
+> Added **Session Initialization Protocol** to fix the skill auto-loading
+> weak link (KIF-25). New components: (1) `/init` custom prompt that loads
+> qnfo-agent + system + runs skill-hygiene.js at session start, (2)
+> `deepchat-skill-hygiene.vbs` in Windows Startup folder for automatic
+> hygiene checks at logon, (3) `skill-loader.js` for generating skill
+> discovery summaries. The 24-Skill Trigger Table inside qnfo-agent is
+> now reliably accessible via the `/init` command.
 
 > **v2.2 UPDATE (2026-07-26, skill location hygiene):** Added the
 > **Canonical Skill Locations** and **Skill Hygiene Enforcement** sections.
@@ -341,6 +350,72 @@ get_window_state({pid: 1234, window_id: 5678})
 
 ---
 
+## Session Initialization Protocol (v2.3)
+
+### The Problem (KIF-25: Skill Auto-Loading Weak Link)
+
+DeepChat shows only 8 skills in the system prompt. The **24-Skill Trigger Table**
+(which enables autonomous skill discovery) is inside qnfo-agent's body — but
+qnfo-agent must be explicitly loaded via `skill_view` for the table to be active.
+Without loading qnfo-agent first, the LLM cannot discover which skill to use.
+
+### The Solution
+
+Three-layer automatic initialization:
+
+**Layer 1: Windows Startup (Automatic)**
+- `deepchat-skill-hygiene.vbs` in Windows Startup folder
+- Runs `skill-hygiene.js` silently at every Windows logon
+- Logs results to `%USERPROFILE%\.deepchat\audit\startup-hygiene.log`
+- Location: `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\`
+
+**Layer 2: /init Custom Prompt (User-Triggered)**
+- Type `/init` in DeepChat to initialize session
+- Executes: `skill_view("qnfo-agent")` + `skill_view("system")` + `skill-hygiene.js`
+- Ensures 24-Skill Trigger Table is available for autonomous discovery
+- Added via `system/scripts/add-init-prompt.js`
+
+**Layer 3: skill-loader.js (Programmatic)**
+- Generates compact skill discovery summary
+- Can be called by scripts/tools that need skill information
+- Usage: `node skill-loader.js [--json|--triggers]`
+
+### Usage
+
+**Option A: Manual Session Init (Recommended)**
+```
+/init
+```
+This loads qnfo-agent + system and runs hygiene check.
+
+**Option B: Direct Skill Loading**
+```
+skill_view("qnfo-agent")  # Load safety-net core with trigger table
+skill_view("system")       # Load skill management
+```
+
+**Option C: Task-Specific Loading**
+When you know which skill you need:
+```
+skill_view("research")     # For papers/Zenodo/literature
+skill_view("cloudflare")   # For Workers/R2/D1/infra
+skill_view("code-review")  # For code quality/security
+```
+
+### Verification
+```powershell
+# Check startup script exists
+Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\deepchat-skill-hygiene.vbs"
+
+# Check /init prompt exists
+(Get-Content "$env:APPDATA\DeepChat\custom_prompts.json" | ConvertFrom-Json).PSObject.Properties | Where-Object { $_.Value.id -eq 'init-session' }
+
+# Check startup log
+Get-Content "$env:USERPROFILE\.deepchat\audit\startup-hygiene.log" -Tail 5
+```
+
+---
+
 ## Reusable Scripts
 
 ### Skill Hygiene Audit
@@ -382,4 +457,4 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
 
 ---
 
-*system v2.2 — DeepChat configuration, skill ecosystem management, skill location hygiene, and desktop automation.*
+*system v2.3 — DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
