@@ -24,17 +24,17 @@ tags:
 ## execute_plan
 
 update_plan([
-  {"step": "A1: Pandoc+XeLaTeX Unicode→LaTeX preprocessor (CRITICAL)", "status": "pending"},
-  {"step": "A2: Strip keywords YAML before Pandoc build (CRITICAL)", "status": "pending"},
-  {"step": "A3: PROVENANCE-BUNDLE.zip HARD GATE before Zenodo (CRITICAL)", "status": "pending"},
-  {"step": "A4: Pre-commit credential scan + _*.py in .gitignore (CRITICAL)", "status": "pending"},
-  {"step": "B1-B3: PowerShell/Windows anti-patterns (HIGH)", "status": "pending"},
-  {"step": "C3: Vectorize confirmation bias disclosure (MEDIUM)", "status": "pending"},
-  {"step": "D2: Pub Language Gate extended for credentials (LOW)", "status": "pending"},
-  {"step": "E1: OSF full API automation — corrected false claim (CRITICAL, CORRECTION)", "status": "pending"},
-  {"step": "F1: Buffer API — fix broken inline fragments, add missing assets:[] (CRITICAL, 2026-07-22)", "status": "pending"},
-  {"step": "H1: Cross-Domain Consilience Translation Protocol — research skill Phase 1 (HIGH, 2026-07-26)", "status": "pending"},
-  {"step": "I1: Mandatory PDF inclusion in all Zenodo deposits — research §5 P5.PDF HARD GATE (CRITICAL, 2026-07-26)", "status": "pending"},
+  {"step": "A1: Pandoc+XeLaTeX Unicode→LaTeX preprocessor (CRITICAL)", "status": "completed"},
+  {"step": "A2: Strip keywords YAML before Pandoc build (CRITICAL)", "status": "completed"},
+  {"step": "A3: PROVENANCE-BUNDLE.zip HARD GATE before Zenodo (CRITICAL)", "status": "completed"},
+  {"step": "A4: Pre-commit credential scan + _*.py in .gitignore (CRITICAL)", "status": "completed"},
+  {"step": "B1-B3: PowerShell/Windows anti-patterns (HIGH)", "status": "completed"},
+  {"step": "C3: Vectorize confirmation bias disclosure (MEDIUM)", "status": "completed"},
+  {"step": "D2: Pub Language Gate extended for credentials (LOW)", "status": "completed"},
+  {"step": "E1: OSF full API automation — corrected false claim (CRITICAL, CORRECTION)", "status": "completed"},
+  {"step": "F1: Buffer API — fix broken inline fragments, add missing assets:[] (CRITICAL, 2026-07-22)", "status": "completed"},
+  {"step": "H1: Cross-Domain Consilience Translation Protocol — research skill Phase 1 (HIGH, 2026-07-26)", "status": "completed"},
+  {"step": "I1: Mandatory PDF inclusion in all Zenodo deposits — research §5 P5.PDF HARD GATE (CRITICAL, 2026-07-26)", "status": "completed"},
   {"step": "J1: Acronym Hallucination Gate — KIF-31, qnfo-agent v3.50 §7 (CRITICAL, 2026-07-26)", "status": "completed"},
 ])
 
