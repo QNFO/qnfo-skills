@@ -10,7 +10,19 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.23 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.24 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.24 UPDATE (2026-07-26, KIF-30 — mandatory PDF inclusion in Zenodo):**
+> Added **HARD GATE P5.PDF (KIF-30)** to §5 Zenodo Upload — ALL PDFs MUST be
+> rendered via `build-paper.py`, confirmed present locally, AND uploaded
+> individually to every Zenodo deposit (both new and newversion). A
+> markdown-only deposit is a publication protocol violation and MUST be
+> remediated with a major version bump. The gate was red-teamed live against
+> the ALP v1.0 deposit (DOI 10.5281/zenodo.21609539, 0 PDFs) and fixed in
+> ALP v2.0 (DOI 10.5281/zenodo.21609889, 14 files including all 12 PDFs).
+> Updated upload checklist, newversion PDF requirement, and Anti-Patterns
+> table. See `qnfo-agent` v3.49 KIF-30 registry and `kaizen-skill-fixes`
+> v1.5 §H for the full incident record and remediation protocol.
 
 > **v2.23 UPDATE (2026-07-26, KIF-29 — cross-domain consilience gate):**
 > Added **Cross-Domain Consilience Gate (KIF-29, SOFT)** to Phase 1 (Due Diligence),
