@@ -16,7 +16,7 @@ self_sufficient: true
 > Red-teamed the session-init audit and found 14/25 skill directories are
 > DeepChat/Claude Code platform defaults with no `version:` fields (or no
 > SKILL.md). User directive: deprecate — do not use, do not modify, do not
-> sync as QNFO artifacts. PHYSICAL DELETION: 13 platform-default skill directories removed from `.deepchat\skills\`. Fix: Added **§8.10 QNFO-Skill Boundary Gate** —
+> sync as QNFO artifacts. PHYSICAL DELETION: 13 platform-default + `failsafe` (14 total) removed from `.deepchat\skills\`. `failsafe` rationale: safety is a property of operations, not a separate skill — pre-write backup, size guard, and audit trailing are embedded in every skill workflow. Fix: Added **§8.10 QNFO-Skill Boundary Gate** —
 > strict partition between QNFO-authored skills (11, versioned, git-tracked)
 > and platform defaults (13+1, read-only, never loaded for QNFO tasks).
 > Added KIF-35 to registry. Added anti-pattern. Bumped version to v3.54.
@@ -254,7 +254,7 @@ self_sufficient: true
 > **Priority 0 — always active. Contains ALL operational guardrails.**
 > **Cloudflare Full-Stack Mandate:** ALL execution MUST plan and evaluate Cloudflare full-stack. Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN — evaluate as ONE integrated platform. NEVER treat components in isolation.
 
-## 11-Skill Trigger Table (QNFO-Authored Only)
+## 10-Skill Trigger Table (QNFO-Authored Only)
 
 `skill_list()` is the single source of truth for what is actually installed —
 re-run it if this table and reality ever disagree. When a task domain
@@ -997,7 +997,6 @@ The following 13 skill directories were **physically deleted** on 2026-07-27. Th
 | `deepchat-settings` | Yes | No | Platform default |
 | `doc-coauthoring` | Yes | No | Platform default |
 | `docx` | Yes | No | Platform default |
-| `failsafe` | **No** | N/A | QNFO toolkit (no SKILL.md) — excluded from skill discovery |
 | `git-commit` | Yes | No | Platform default |
 | `infographic-syntax-creator` | Yes | No | Platform default |
 | `mcp-builder` | Yes | No | Platform default |
@@ -1014,15 +1013,15 @@ The following 13 skill directories were **physically deleted** on 2026-07-27. Th
 2. **NEVER modify these skills.** Any edits will be silently overwritten by the next DeepChat library update. This includes SKILL.md, scripts, templates — all files.
 3. **NEVER commit changes to these skills.** They are not in the QNFO-skills git repo (`.gitignore` or untracked). If they appear in `git status`, they are contamination.
 4. **NEVER sync these skills to R2/gitHub.** They are platform-scoped, not project-scoped.
-5. **`failsafe` is a special case:** QNFO-authored PowerShell toolkit with NO SKILL.md. It exists as a utility directory, not a discoverable skill. Do not add a SKILL.md — it's intentionally a script-only toolkit.
+5. **Failsafe is not a separate skill.** The concept has been deleted from the skills directory. Pre-write backup, size guards, path verification, version tracking, and audit trailing are embedded directly in skill workflows — not delegated to a standalone entity. Adding a separate "failsafe" skill is a category error: safety is a property of operations, not a separate operation.
 
 ### Canonical Partition
 
 | Category | Count | Skills | Author | Versioned |
 |:---------|:------|:-------|:-------|:----------|
-| **QNFO-authored** | 11 | `cloudflare`, `code`, `code-review`, `documents`, `frontend-design`, `git-github`, `kaizen-skill-fixes`, `knowledge`, `qnfo-agent`, `research`, `system` | QNFO | Yes (v2.x–v3.x) |
-| **Platform defaults (DELETED 2026-07-27)** | 13 | (all listed above except `failsafe`) | DeepChat/Claude Code | No |
-| **QNFO toolkit** | 1 | `failsafe` | QNFO | No (no SKILL.md) |
+| **QNFO-authored** | 10 | `cloudflare`, `code`, `code-review`, `documents`, `frontend-design`, `git-github`, `kaizen-skill-fixes`, `knowledge`, `qnfo-agent`, `research`, `system` | QNFO | Yes (v2.x–v3.x) |
+| **Platform defaults (DELETED 2026-07-27)** | 13 | (all 13 removed — see table above) | DeepChat/Claude Code | N/A |
+| **QNFO toolkit (DELETED 2026-07-27)** | 1 | `failsafe` — 10 PowerShell safety scripts. Deleted per design principle: failsafe is NOT a separate skill. All skill operations (writes, edits, syncs, commits) must be intrinsically failsafe — pre-write backup, size guard, path verification, version tracking, and audit trailing are embedded in every skill workflow. A standalone "failsafe" skill is a category error. | QNFO (former) | N/A |
 
 ### Detection Gate (Session Start)
 
@@ -1030,7 +1029,7 @@ At every session start, run:
 ```powershell
 $qnfoAuthored = @("cloudflare","code","code-review","documents","frontend-design","git-github","kaizen-skill-fixes","knowledge","qnfo-agent","research","system")
 $allSkills = (Get-ChildItem "$env:USERPROFILE\.deepchat\skills" -Directory | Where-Object { $_.Name -notin @('.git','prompts') }).Name
-$external = $allSkills | Where-Object { $_ -notin $qnfoAuthored -and $_ -ne 'failsafe' }
+$external = $allSkills | Where-Object { $_ -notin $qnfoAuthored }
 if ($external.Count -gt 0) { Write-Host "INFO: $($external.Count) platform-default skills present (not QNFO-authored, not modifiable)" }
 ```
 
