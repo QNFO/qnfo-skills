@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
-description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.52 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-33). The safety-net core. Skill discovery FAILS without this loaded first.
-version: "3.52"
+description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.54 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-35). The safety-net core. Skill discovery FAILS without this loaded first.
+version: "3.54"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,17 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.53 (Safety-Net Core)
+# QNFO-AGENT — v3.54 (Safety-Net Core)
+
+> **v3.54 UPDATE (2026-07-27, KIF-35 — deprecated/external skill contamination):**
+> Red-teamed the session-init audit and found 14/25 skill directories are
+> DeepChat/Claude Code platform defaults with no `version:` fields (or no
+> SKILL.md). User directive: deprecate — do not use, do not modify, do not
+> sync as QNFO artifacts. Fix: Added **§8.10 QNFO-Skill Boundary Gate** —
+> strict partition between QNFO-authored skills (11, versioned, git-tracked)
+> and platform defaults (13+1, read-only, never loaded for QNFO tasks).
+> Added KIF-35 to registry. Added anti-pattern. Bumped version to v3.54.
+> Fixed version drift in frontmatter (was 3.52 despite body being 3.53).
 
 > **v3.53 UPDATE (2026-07-27, KIF-34 — edit tool Unicode matching failure):**
 > Red-teamed the DeepChat cleanup session and found the `edit` tool's exact-text
@@ -449,6 +459,7 @@ the old behavior was correct.
 | KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
 | KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
 | KIF-34 | **Edit Tool Unicode Matching Failure** — the `edit` tool's exact-text matching failed 8+ times on paragraphs containing em-dashes (U+2014) and section-signs (U+00A7) during the DeepChat cleanup session (2026-07-27). `read` confirmed the text was present, but `edit` returned "Cannot find." Root cause: byte-level Unicode matching inconsistency between tool and file encoding paths. Wasted ~15 tool calls. | `qnfo-agent` §8.7.1 Edit Tool Unicode Matching Failure — max 2 retries, then switch to Python/PowerShell replacement. Anti-pattern added. | v3.53, 2026-07-27, deepchat-cleanup session |
+| KIF-35 | **Deprecated/External Skill Contamination** — 14 of 25 skill directories in `.deepchat\skills\` are DeepChat/Claude Code defaults (`algorithmic-art`, `deepchat-settings`, `doc-coauthoring`, `docx`, `failsafe`, `git-commit`, `infographic-syntax-creator`, `mcp-builder`, `memory-management`, `pdf`, `pptx`, `skill-creator`, `web-artifacts-builder`, `xlsx`). These are NOT QNFO-authored, have no `version:` field (or no SKILL.md), and will be overwritten by any DeepChat library update. Using, modifying, or syncing these skills as QNFO artifacts creates phantom skill dependencies and contamination risk. Fix: §8.10 QNFO-Skill Boundary Gate — strict partition between QNFO-authored skills (versioned, git-tracked) and platform defaults (read-only, never loaded for QNFO tasks, never synced). Anti-pattern added. | v3.54, 2026-07-27, session-init red-team |
 | KIF-33 | **Memory-Skill Persistence Architecture** — 30+ operational memories in D1/Vectorize with zero skill-level redundancy. Single-point-of-failure: memory deletion/eviction/search-mismatch silently loses critical agent context. Root cause: no protocol distinguishing which memories should be elevated to skills. Fix: §8.9 4-tier model (ephemeral→short-term→long-term→permanent), classification flow, 4 critical operational rules hardened into qnfo-agent, `memories/history.log` files created in 4 skill directories. Principle: MEMORIES ARE NOT SKILLS. Git-backed, version-controlled skill files are the only acceptable permanent store for multi-session operational instructions. | `qnfo-agent` §8.9 Memory-Skill Persistence Protocol; `memories/` dirs in qnfo-agent, kaizen-skill-fixes, research, system. | v3.52, 2026-07-27, memory audit |
 | KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
 | KIF-31 | **Acronym Hallucination** — model encounters an opaque acronym (e.g., "ZBW") during paper writing, has no grounded expansion in immediate context, and fabricates a plausible-sounding phrase from the initial letters (e.g., "Zhu, Brad, Wang" instead of the correct "Zitterbewegung"). The fabricated expansion is published in a paper PDF and indexed in Zenodo before detection. This is structurally identical to KIF-10 (hand-copied truncated token) — filling an information void with plausible fiction that survives all existing quality gates because the fabricated text is well-formed, domain-relevant prose. | `qnfo-agent` §7 Publication Standards — "Acronym Expansion Gate": before any paper parenthetically expands an acronym, VERIFY the expansion against existing project documentation (prior papers, project plans, D1/KG). If no prior occurrence found, flag `[UNVERIFIED-ACRONYM: <acronym> → <expansion> — not found in any prior artifact. VERIFY before publication.]`. Anti-pattern added to table. Rule: ALWAYS spell out full term on first use. If the full term is unknown, the acronym must not be used. | v3.50, 2026-07-26, ZBW hallucination session |
@@ -977,6 +988,68 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | Creating files in `%USERPROFILE%\Pictures\`, `Desktop\`, or `Documents\` | �8.8 PROHIBITED Locations � these are user directories, not application directories. |
 | Working directory contamination (project files, repos, artifacts in DeepChat install dir) | �8.8 Session-Start Hygiene Audit � mandatory scan before any file creation. Flag `[INSTALL-DIR-CONTAMINATION]`. |
 | Expanding an acronym with a fabricated phrase not grounded in any project artifact (KIF-31) | §7 Acronym Expansion Gate — verify every parenthetical acronym expansion against prior project documentation before publication. If you don't know the full term, don't use the acronym. Flag `[UNVERIFIED-ACRONYM]` for any expansion with zero prior occurrences. |
+| Loading, modifying, syncing, or deploying a DeepChat/Claude Code default skill as if it were QNFO-authored | §8.10 QNFO-Skill Boundary Gate — these 14 skills are read-only platform defaults. Never load them for QNFO tasks. Never commit changes to them. Never sync them to QNFO repos. |
+
+---
+
+## §8.10 QNFO-SKILL BOUNDARY GATE (MANDATORY — v3.54, KIF-35)
+
+### Deprecated/External Skills (DO NOT USE, DO NOT MODIFY, DO NOT SYNC)
+
+The following 14 skill directories in `.deepchat\skills\` are **DeepChat/Claude Code platform defaults** — NOT QNFO-authored:
+
+| Skill Directory | Has SKILL.md | Has version | Status |
+|:----------------|:-------------|:------------|:-------|
+| `algorithmic-art` | Yes | No | Platform default |
+| `deepchat-settings` | Yes | No | Platform default |
+| `doc-coauthoring` | Yes | No | Platform default |
+| `docx` | Yes | No | Platform default |
+| `failsafe` | **No** | N/A | QNFO toolkit (no SKILL.md) — excluded from skill discovery |
+| `git-commit` | Yes | No | Platform default |
+| `infographic-syntax-creator` | Yes | No | Platform default |
+| `mcp-builder` | Yes | No | Platform default |
+| `memory-management` | Yes | No | Platform default |
+| `pdf` | Yes | No | Platform default |
+| `pptx` | Yes | No | Platform default |
+| `skill-creator` | Yes | No | Platform default |
+| `web-artifacts-builder` | Yes | No | Platform default |
+| `xlsx` | Yes | No | Platform default |
+
+### Rules (HARD ENFORCEMENT)
+
+1. **NEVER load these skills for QNFO tasks.** They appear in `skill_list()` but are NOT QNFO-authored. The 24-Skill Trigger Table already excludes them — QNFO-authored skills only.
+2. **NEVER modify these skills.** Any edits will be silently overwritten by the next DeepChat library update. This includes SKILL.md, scripts, templates — all files.
+3. **NEVER commit changes to these skills.** They are not in the QNFO-skills git repo (`.gitignore` or untracked). If they appear in `git status`, they are contamination.
+4. **NEVER sync these skills to R2/gitHub.** They are platform-scoped, not project-scoped.
+5. **`failsafe` is a special case:** QNFO-authored PowerShell toolkit with NO SKILL.md. It exists as a utility directory, not a discoverable skill. Do not add a SKILL.md — it's intentionally a script-only toolkit.
+
+### Canonical Partition
+
+| Category | Count | Skills | Author | Versioned |
+|:---------|:------|:-------|:-------|:----------|
+| **QNFO-authored** | 11 | `cloudflare`, `code`, `code-review`, `documents`, `frontend-design`, `git-github`, `kaizen-skill-fixes`, `knowledge`, `qnfo-agent`, `research`, `system` | QNFO | Yes (v2.x–v3.x) |
+| **Platform defaults** | 13 | (all listed above except `failsafe`) | DeepChat/Claude Code | No |
+| **QNFO toolkit** | 1 | `failsafe` | QNFO | No (no SKILL.md) |
+
+### Detection Gate (Session Start)
+
+At every session start, run:
+```powershell
+$qnfoAuthored = @("cloudflare","code","code-review","documents","frontend-design","git-github","kaizen-skill-fixes","knowledge","qnfo-agent","research","system")
+$allSkills = (Get-ChildItem "$env:USERPROFILE\.deepchat\skills" -Directory | Where-Object { $_.Name -notin @('.git','prompts') }).Name
+$external = $allSkills | Where-Object { $_ -notin $qnfoAuthored -and $_ -ne 'failsafe' }
+if ($external.Count -gt 0) { Write-Host "INFO: $($external.Count) platform-default skills present (not QNFO-authored, not modifiable)" }
+```
+
+### KIF-35 Rationale
+
+The 2026-07-27 session-init red-team audit found 14/25 skill directories lack `version:` fields. These are DeepChat/Claude Code library defaults bundled with the app. Any attempt to use/rely on/modify these skills for QNFO workflows creates:
+- **Phantom dependencies:** code that silently depends on a skill that ships with DeepChat but isn't git-tracked
+- **Version blindness:** no way to know when these skills were last updated or by whom
+- **Sync contamination:** committing these files would mix platform code with QNFO code
+- **Overwrite risk:** DeepChat library updates silently overwrite local modifications
+
+The boundary is absolute: QNFO-authored skills go in the QNFO-skills git repo with versioned SKILL.md files. Everything else is read-only infrastructure.
 
 ---
 
