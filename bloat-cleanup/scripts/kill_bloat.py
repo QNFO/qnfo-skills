@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Kill bloatware processes with anti-restart retry logic."""
+"""Kill bloatware processes with anti-restart retry logic.
+v1.1 — 2026-07-27 KAIZEN: sc → sc.exe (KIF-05), reset=0 → reset=86400 (KIF-30 drift fix),
+UTF-8 I/O (KIF-27). Still uses a fixed process list (audit_services.py provides
+dynamic service discovery)."""
 import subprocess, sys, time
 
 BLOAT_PROCESSES = [
@@ -58,10 +61,15 @@ def main():
         svc = stubborn_map.get(proc)
         if svc:
             print(f"  Attempting service-level kill for {proc} via {svc}...")
-            subprocess.run(["sc", "stop", svc], capture_output=True, timeout=10)
-            subprocess.run(["sc", "config", svc, "start=disabled"], capture_output=True, timeout=10)
-            # Disable auto-recovery
-            subprocess.run(["sc", "failure", svc, "reset=0", "actions="], capture_output=True, timeout=5)
+            # KIF-05: use sc.exe (NOT bare sc — PowerShell alias trap)
+            subprocess.run(["sc.exe", "stop", svc],
+                          capture_output=True, encoding="utf-8", errors="replace", timeout=10)
+            # Note: space after "start=" is MANDATORY for sc.exe
+            subprocess.run(["sc.exe", "config", svc, "start=", "disabled"],
+                          capture_output=True, encoding="utf-8", errors="replace", timeout=10)
+            # KIF-30: reset=86400 (1 day), not reset=0 (immediate)
+            subprocess.run(["sc.exe", "failure", svc, "reset=", "86400", "actions=", ""],
+                          capture_output=True, encoding="utf-8", errors="replace", timeout=5)
             # Try kill again
             ok, msg = kill_process(proc, retries=1)
             print(f"    {msg}")

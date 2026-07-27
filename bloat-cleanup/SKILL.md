@@ -1,11 +1,3 @@
----
-name: bloat-cleanup
-description: >-
-  Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement.
-  Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services,
-  run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files,
-  purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
----
 
 # Bloat Cleanup
 
@@ -13,7 +5,7 @@ Automated system cleanup for Windows machines running DeepChat. Covers disk decl
 
 ## Trigger Keywords
 
-"cleanup", "bloatware", "vampire processes", "free space", "declutter", "thin client", "system audit", "optimize Windows", "speed up laptop", "kill bloat", "clean my system", "disk cleanup", "free RAM"
+"cleanup", "bloatware", "vampire processes", "free space", "declutter", "thin client", "system audit", "optimize Windows", "speed up laptop", "kill bloat", "clean my system", "disk cleanup", "free RAM", "audit services", "dynamic services", "service audit", "disable services"
 
 ## Architecture
 
@@ -23,13 +15,19 @@ All logic lives in bundled Python scripts under `scripts/`. The SKILL.md provide
 bloat-cleanup/
 ├── SKILL.md
 └── scripts/
-    ├── audit_system.py     # Full system audit (disk, processes, services, thin-client)
-    ├── kill_bloat.py       # Kill bloatware processes with anti-restart logic
-    ├── disable_services.py # Stop + disable + remove auto-recovery for services
-    ├── clean_disk.py       # Delete caches, temps, logs, dumps, package caches
-    ├── thin_client.py      # Enforce KIF-32 (detect project violations, clean sessions)
-    └── full_clean.py       # Orchestrator: runs all phases in sequence
+    ├── audit_system.py       # Full system audit (disk, processes, services, thin-client)
+    ├── audit_services.py     # ★ NEW (KIF-40): Dynamic runtime service classification
+    ├── kill_bloat.py         # Kill bloatware processes with anti-restart logic
+    ├── disable_services.py   # Legacy: stop + disable from fixed list (v2.0, sc.exe, reset=86400)
+    ├── dynamic_disable.py    # ★ NEW (KIF-40): Runtime target generation + apply (dry-run default)
+    ├── clean_disk.py         # Delete caches, temps, logs, dumps, package caches
+    ├── thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
+    └── full_clean.py         # Orchestrator: runs all phases in sequence (7 phases)
 ```
+
+**Two-tier service management:**
+1. **Static (legacy):** `disable_services.py` — fixed hardcoded list. Used as a safety baseline.
+2. **Dynamic (★ preferred):** `audit_services.py` → `dynamic_disable.py` — runtime heuristic classification with no fixed list. Discovers all 284+ services, classifies by vendor/pattern/state, generates targets dynamically.
 
 ## Workflow
 
@@ -37,13 +35,34 @@ bloat-cleanup/
 ```
 skill_run bloat-cleanup scripts/full_clean.py
 ```
-This runs audit → kill → disable services → clean disk → thin-client → verify (6 phases).
+This runs 7 phases: audit → dynamic service analysis → kill processes → disable services (legacy) → clean disk → thin-client → verify.
 
 ### Targeted: Run individual phases
 
-**Audit only** (no changes):
+**System audit only** (no changes):
 ```
 skill_run bloat-cleanup scripts/audit_system.py
+```
+
+**★ Dynamic service audit** (read-only, no admin required):
+```
+skill_run bloat-cleanup scripts/audit_services.py
+```
+Discovers all services and classifies them as `essential`, `bloat`, `suspicious`, `user_installed`, or `unknown`. Shows actionable targets with rationale. **Always run this first** before making service changes.
+
+**★ Dynamic service disable** (admin required for `--apply`):
+```
+# Dry-run (default — see what would be disabled):
+skill_run bloat-cleanup scripts/dynamic_disable.py
+
+# Dry-run with suspicious 3rd-party services:
+skill_run bloat-cleanup scripts/dynamic_disable.py --include-suspicious
+
+# Apply (requires admin + --confirm):
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\dynamic_disable.py" --apply --confirm
+
+# Apply with suspicious services:
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\dynamic_disable.py" --apply --confirm --include-suspicious
 ```
 
 **Kill bloatware processes only:**
@@ -51,7 +70,7 @@ skill_run bloat-cleanup scripts/audit_system.py
 skill_run bloat-cleanup scripts/kill_bloat.py
 ```
 
-**Disable bloatware services:**
+**Disable bloatware services (legacy fixed list):**
 > ⚠️ **ADMIN REQUIRED.** This script manages Windows services (stop, startup=disabled, recovery clear).
 > Running without admin will show "SKIP (may need admin)" for all services and make no changes.
 > To run as admin, open an elevated PowerShell/CMD and execute:
@@ -81,6 +100,45 @@ skill_run bloat-cleanup scripts/thin_client.py --clean
 ### audit_system.py
 Scans all drives, lists cleanable files with sizes, checks running bloatware processes, checks service status, lists startup registry items, audits thin-client compliance (`.deepchat/projects/`, archive, session offload files), reports `agent.db` size. **Read-only, makes no changes.**
 
+### audit_services.py ★ NEW (KIF-40)
+**Dynamic runtime service analysis** — replaces the hardcoded `BLOAT_SERVICES` list with heuristic classification. Queries all ~284 services via `Get-CimInstance Win32_Service` and classifies each as:
+
+| Classification | Description | Action |
+|---|---|---|
+| `essential` | Critical OS services (RpcSs, DcomLaunch, WinDefend, etc.) | Never touch |
+| `bloat` | High-confidence bloatware (Lenovo, Dolby, search indexing, telemetry) | Safe to disable |
+| `bloat_stopped` | Bloat that's currently stopped (low priority) | Flag for cleanup |
+| `suspicious` | Third-party auto-start, no clear purpose | Review before disabling |
+| `user_installed` | Known apps (MySQL, Docker, Steam, Discord, etc.) | User decides |
+| `inactive` | Stopped + Manual/Disabled — dormant | Ignore |
+| `unknown` | No heuristic match | Investigate |
+
+**Classification rules (in priority order):**
+1. **Critical OS safelist** — 60+ essential services never flagged
+2. **Vendor patterns** — Lenovo, Dolby, Elevoc, Adobe, Google updaters
+3. **Windows bloat patterns** — WSearch, DiagTrack, DusmSvc, WpnService, CDPSvc, PcaSvc, StiSvc, FontCache
+4. **Feature bloat** — Xbox, OneDrive, Office ClickToRun
+5. **Third-party auto-start** — services with Auto start, Running, but no Microsoft/Windows in display name → `suspicious`
+6. **User software detection** — MySQL, PostgreSQL, Docker, Steam, Discord, etc.
+
+**Read-only, no admin required.** Always run this first.
+
+### dynamic_disable.py ★ NEW (KIF-40)
+**Dynamic target generation + disable** — consumes the same classification rules as `audit_services.py` to generate a target list at runtime, then disables services.
+
+**Modes:**
+- **Dry-run (default):** Shows what WOULD be disabled. No changes. No admin needed.
+- **`--apply --confirm`:** Actually stops + disables + clears recovery. Requires admin.
+- **`--include-suspicious`:** Also targets third-party auto-start services (more aggressive).
+- **`--json`:** Output targets as JSON for programmatic consumption.
+
+**Safety features:**
+- `NEVER_DISABLE` safelist of 60+ critical OS services
+- `--confirm` flag required for `--apply`
+- Admin privilege check before applying
+- Post-disable verification via `sc.exe qfailure`
+- Uses `sc.exe` with `reset=86400` (KIF-30 compliant)
+
 ### kill_bloat.py
 Kills these processes with 3-retry logic:
 - **Search/Shell**: SearchHost, SearchApp, SearchIndexer, StartMenuExperienceHost, TextInputHost, LockApp
@@ -88,10 +146,10 @@ Kills these processes with 3-retry logic:
 - **Lenovo**: MSPCManagerService
 - **Startup bloat**: GoogleDriveFS, uTorrent, Claude, Widgets, CrossDeviceService, OneNote, SecurityHealthSystray
 
-For stubborn processes that restart, falls back to service-level kill (stop + disable + clear auto-recovery).
+For stubborn processes that restart, falls back to service-level kill (stop + disable + clear auto-recovery) using `sc.exe` with `reset=86400` (KIF-30 fix applied v1.1).
 
-### disable_services.py
-Stops, disables startup, and clears auto-recovery for:
+### disable_services.py (Legacy)
+Stops, disables startup, and clears auto-recovery for a **fixed list**:
 - **Windows bloat**: WSearch, SysMain, DiagTrack, WpnService, DusmSvc, CDPSvc, PcaSvc, StiSvc, FontCache
 - **Lenovo bloat**: LITSSVC, LenovoFnAndFunctionKeys, PC Manager Service Store
 - **Audio bloat**: DolbyDAXAPI, ElevocService
@@ -101,6 +159,8 @@ Stops, disables startup, and clears auto-recovery for:
 Critical: clears `sc.exe failure` auto-recovery actions to prevent Windows auto-restart. The red-team audit from 2026-07-27 confirmed 4 services restarted when only taskkill was used — this script fixes that root cause.
 
 > **WARNING — PowerShell `sc` alias trap (KIF-05 class):** In PowerShell, `sc` is an ALIAS for `Set-Content`, NOT `sc.exe`. Running `sc failure WSearch reset=0 actions=` in PowerShell silently fails with "A positional parameter cannot be found." The correct invocation is `cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'` (note: `reset=` requires AT LEAST one blank-space-delimited argument; `86400` = 1 day reset window). This requires Administrator privileges.
+
+> **Note:** `disable_services.py` is the legacy fixed-list approach. Prefer `audit_services.py` + `dynamic_disable.py` for runtime discovery on unfamiliar machines.
 
 ### clean_disk.py
 Deletes (with error handling and size reporting):
@@ -125,23 +185,24 @@ Checks:
 With `--clean`: deletes all old session directories (keeps current session).
 
 ### full_clean.py
-Orchestrator running all 5 scripts in order: audit → kill → disable services → clean disk → thin-client (with `--clean`) → re-audit to verify. Reports elapsed time and final disk state.
+Orchestrator running all 7 phases in sequence: audit → dynamic service analysis → kill processes → disable services (legacy) → clean disk → thin-client (with `--clean`) → re-audit to verify. Reports elapsed time and final disk state.
 
-## Known Limitations (from Red-Team Audit 2026-07-27, updated kaizen 2026-07-27)
+## Known Limitations (from Red-Team Audit 2026-07-27, updated KIF-40 kaizen 2026-07-27)
 
 1. **SearchHost/StartMenuExperienceHost** restart endlessly — even with service disable. The only permanent fix requires registry policy or `Remove-AppxPackage Microsoft.Windows.Search` (admin PowerShell).
 2. **MsMpEng (Defender)** consumes 200-300 MB — not targeted by this skill. Instead, recommend adding DeepChat directories to Defender exclusions via `Add-MpPreference -ExclusionPath`.
-3. **Office ClickToRun** may restart even after service disable — requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by `disable_services.py` v2.0. Note: `sc` alone fails in PowerShell — see WARNING above.
+3. **Office ClickToRun** may restart even after service disable — requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by both `disable_services.py` v2.0 and `dynamic_disable.py` v1.0. Note: `sc` alone fails in PowerShell — see WARNING above.
 4. **Lenovo MSPCManagerService** may restart — recommend uninstalling "Lenovo PC Manager" via `winget uninstall`.
 5. Some paths require administrator privileges (Windows Temp, CBS logs, service config). The scripts handle permission errors gracefully and report which items need admin.
-6. **KIF-30 (2026-07-27 kaizen): eset=0 drift bug.** disable_services.py v1.0 used eset=0 (immediate failure-counter reset) instead of the documented eset= 86400 (1-day window). The SKILL.md was updated during the KIF-28 red-team pass but the Python script was NOT — a registry-extension drift bug (cf. KIF-22 class). Fixed in v2.0: eset= 86400 with explicit sc.exe, post-disable verification via sc.exe qfailure, and UTF-8 I/O.
+6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug — fixed in v1.1 (2026-07-27 KIF-40 kaizen).
+7. **KIF-40 (2026-07-27 kaizen): Dynamic service audit.** The original `disable_services.py` used a hardcoded list of 16 services, missing vendor-specific bloat (Dolby, Elevoc, Adobe updaters, Google updaters, Xbox services, OneDrive) and failing to classify unknown services. Resolved by `audit_services.py` (runtime heuristic classification of 284+ services) and `dynamic_disable.py` (dynamic target generation). The legacy fixed-list script remains as a safety baseline.
 
 ## Post-Cleanup Verification
 
 After running cleanup, always verify:
 1. Disk space changed as expected
 2. Bloat processes didn't restart (check with `audit_system.py`)
-3. Services stayed disabled
+3. Services stayed disabled (verify with `audit_services.py`)
 4. Thin-client violations resolved
 
 If processes restart, the permanent fix is usually:
@@ -151,3 +212,18 @@ Get-AppxPackage Microsoft.Windows.Search | Remove-AppxPackage
 cmd /c 'sc.exe config WSearch start= disabled'
 cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'
 ```
+
+## DeepChat Runtime Context
+- Skill root: `C:\Users\LENOVO\.deepchat\skills\bloat-cleanup`.
+- Relative paths mentioned by this skill are relative to the skill root unless stated otherwise.
+- When this skill needs script execution, prefer `skill_run` over `exec`.
+- Bundled runnable scripts:
+  - scripts\audit_system.py (python)
+  - scripts\audit_services.py (python) ★ NEW
+  - scripts\clean_disk.py (python)
+  - scripts\disable_services.py (python)
+  - scripts\dynamic_disable.py (python) ★ NEW
+  - scripts\full_clean.py (python)
+  - scripts\kill_bloat.py (python)
+  - scripts\thin_client.py (python)
+- Do not guess script paths or change directories to locate skill files.
