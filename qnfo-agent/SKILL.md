@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
-description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.57 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-38). The safety-net core. Skill discovery FAILS without this loaded first.
-version: "3.57"
+description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.57 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-39). The safety-net core. Skill discovery FAILS without this loaded first.
+version: "3.58"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,20 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.57 (Safety-Net Core)
+# QNFO-AGENT — v3.58 (Safety-Net Core)
+
+> **v3.58 UPDATE (2026-07-27, KIF-39 — Root Cause Analysis + Information-Void Gate + Meta-Pattern Anti-Patterns + KIF-37 Research Remediation):**
+> Deep analysis of all 38 KIF entries identified 4 systemic root causes (RC1-RC4)
+> and 3 cross-cutting meta-patterns. Added to `kaizen-skill-fixes` §P as permanent
+> reference. Added **Information Void Completion Gate** (§7, FP-021) — the general
+> mechanism behind KIF-10 (truncated token), KIF-19 (false negative), and KIF-31
+> (acronym hallucination): the model fills information gaps with plausible fiction
+> that passes all internal-consistency quality gates. Defense: external ground-truth
+> verification before any action/publication. Added 3 meta-pattern anti-patterns:
+> Fix-the-Instance-Miss-the-Class, Exponential Multi-Layer Vulnerability, and
+> Fix-Becomes-Next-Failure. Remediated 6 unsafe code examples in `research`
+> SKILL.md (KIF-37 enforcement). Added KIF-39 to registry. kaizen-skill-fixes
+> bumped to v2.1.0. Bumped to v3.58.
 
 > **v3.57 UPDATE (2026-07-27, KIF-38 — Autonomous Pattern Recognition Engine):**
 > kaizen-skill-fixes transformed from passive historical archive (v1.6, 645 lines)
@@ -490,6 +503,7 @@ the old behavior was correct.
 | KIF-36 | **D1 API Hardcoded Account ID / DB UUID** — sessions hardcode Cloudflare account IDs and D1 database UUIDs in Python scripts (e.g., `account='71a70f...'`, `db='1a4e4ab2...'`) copied from prior sessions. These values go STALE silently — the token IS available (env var, `.cloudflare_token` file, `keys.json`) but the script hits the WRONG ACCOUNT and returns a misleading 401 indistinguishable from a real auth failure. Root cause: no canonical auto-discovery mechanism existed. This is the SAME failure class as KIF-19 (wrangler false negative) — guessing infrastructure identifiers instead of discovering them live. Fix: `cloudflare/scripts/d1-query.py` — canonical script that auto-discovers token (4 sources), account ID (`npx wrangler whoami`), and DB UUID (`npx wrangler d1 list`) with session caching to `%USERPROFILE%\.deepchat\d1-cache.json`. Usage: `python d1-query.py --db <name> --sql "..." --params ...`. Never hardcode account IDs or DB UUIDs again. | `cloudflare` skill D1 Access Protocol; `cloudflare/scripts/d1-query.py` | v3.55, 2026-07-27, this session |
 | KIF-37 | **SKILL.md Code Example Platform Drift** — SKILL.md files contain code examples written for POSIX shell (`python -c "..."`, `curl`, `&&` chaining, `npx` without `cmd /c` wrapper) that are copy-pasted by sessions and FAIL on Windows PowerShell. Audited all 12 SKILL.md files this session: 18 inline `python -c` examples (9 in research, 3 in qnfo-agent, 3 in kaizen-skill-fixes, 3 in other skills), 12 bare `curl` examples (8 in research, 2 in cloudflare, 2 in code), 5 `&&` chains. These cause ~6-8 wasted tool calls per session when copy-pasted. **Root cause:** KIF-05 documented the fix but SKILL.md code examples were never updated to reflect it. Skills serve dual role (reference docs + copy-paste source) and these roles conflict. Fix: §8.11 Skill Edit Protocol mandates that every code example for copy-paste execution must either: (a) use platform-verified syntax (`curl.exe`, `;` not `&&`, canonical script reference instead of inline `python -c`), or (b) explicitly annotate the platform wrapper. New code examples default to unsafe; existing examples are flagged for incremental remediation. | `qnfo-agent` §8.11 Skill Edit Protocol; `research` D1 Access Protocol (d1-query.py reference replaces inline Python); this audit report | v3.56, 2026-07-27, this session |
 | KIF-38 | **Kaizen-Skill-Fixes Passive-Reference Architecture** — kaizen-skill-fixes was a passive historical archive (v1.6, 645 lines) that only documented past fixes when a human manually triggered a red-team session. Recurring failure patterns (platform mismatch, credential leaks, encoding errors, API drift, phantom claims) went undetected across sessions because no automated pattern-watching existed. Every session independently re-discovered and re-fixed the same failure modes. **Root cause:** The skill had no active monitoring capability — it was a reference document, not an execution engine. **Fix:** kaizen-skill-fixes v2.0.0 — Autonomous Pattern Recognition Engine with 5-layer feedback loop: (1) Failure Pattern Registry with 20 canonical signatures (FP-001 through FP-020, each with frequency counters persisted in D1 + local JSON), (2) Session Scanner (start/during/end auto-detection from tool output), (3) Autonomous Trigger Logic (severity-based frequency thresholds: CRITICAL@1, HIGH@3, MEDIUM@5, LOW@10 — auto-execute remediation without user prompting), (4) Remediation Engine (generate + apply fix + update KIF registry autonomously), (5) Autonomous Verification (6-point post-fix checklist with escalation). qnfo-agent trigger table updated — kaizen-skill-fixes is now an ACTIVE execution skill loaded at session start. | `kaizen-skill-fixes` v2.0.0 complete rewrite (SKILL.md + `references/pattern-registry.json`); `qnfo-agent` trigger table + overlap rule #5 + anti-patterns updated | v3.57, 2026-07-27, this session |
+| KIF-39 | **Root Cause Analysis + Information-Void Completion Gate + Meta-Pattern Anti-Patterns + KIF-37 Research Remediation** — Deep analysis of all 38 KIF entries, 20 Failure Patterns, and 11 red-team audit sessions identified that NO failure was a "model error." Four systemic root causes (RC1-RC4) and three cross-cutting meta-patterns (MP1-MP3) were documented in `kaizen-skill-fixes` §P. **RC1:** Hardcoded/Stale Identifiers (KIF-10/11/19/36). **RC2:** Dual-Role Document Drift (KIF-05/37). **RC3:** No Active Watchdog (KIF-13/14/22/23/24/25/27/30/33/35/38). **RC4:** Information-Void Completion — model fills gaps with plausible fiction (KIF-10/19/31). **Meta-Patterns:** Fix-the-Instance-Miss-the-Class (5-9 day general-fix latency), Exponential Multi-Layer Vulnerability, Fix-Becomes-Next-Failure (verification debt). **Fix:** Added §P to kaizen-skill-fixes (v2.1.0); Added Information Void Completion Gate to qnfo-agent §7 (FP-021, general defense against RC4); Added 3 meta-pattern anti-patterns; Remediated 6 unsafe code examples in research SKILL.md (KIF-37 enforcement). | `kaizen-skill-fixes` §P + v2.1.0; `qnfo-agent` §7 Information Void Completion Gate + §0.11 KIF-39 + 3 anti-patterns; `research` SKILL.md 6 unsafe code examples fixed; `kaizen-skill-fixes/references/pattern-registry.json` FP-021 added | v3.58, 2026-07-27, this session |
 | KIF-35 | **Deprecated/External Skill Contamination** — 14 of 25 skill directories in `.deepchat\skills\` are DeepChat/Claude Code defaults (`algorithmic-art`, `deepchat-settings`, `doc-coauthoring`, `docx`, `failsafe`, `git-commit`, `infographic-syntax-creator`, `mcp-builder`, `memory-management`, `pdf`, `pptx`, `skill-creator`, `web-artifacts-builder`, `xlsx`). These are NOT QNFO-authored, have no `version:` field (or no SKILL.md), and will be overwritten by any DeepChat library update. Using, modifying, or syncing these skills as QNFO artifacts creates phantom skill dependencies and contamination risk. Fix: §8.10 QNFO-Skill Boundary Gate — strict partition between QNFO-authored skills (versioned, git-tracked) and platform defaults (read-only, never loaded for QNFO tasks, never synced). Anti-pattern added. | v3.54, 2026-07-27, session-init red-team |
 | KIF-33 | **Memory-Skill Persistence Architecture** — 30+ operational memories in D1/Vectorize with zero skill-level redundancy. Single-point-of-failure: memory deletion/eviction/search-mismatch silently loses critical agent context. Root cause: no protocol distinguishing which memories should be elevated to skills. Fix: §8.9 4-tier model (ephemeral→short-term→long-term→permanent), classification flow, 4 critical operational rules hardened into qnfo-agent, `memories/history.log` files created in 4 skill directories. Principle: MEMORIES ARE NOT SKILLS. Git-backed, version-controlled skill files are the only acceptable permanent store for multi-session operational instructions. | `qnfo-agent` §8.9 Memory-Skill Persistence Protocol; `memories/` dirs in qnfo-agent, kaizen-skill-fixes, research, system. | v3.52, 2026-07-27, memory audit |
 | KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
@@ -549,6 +563,32 @@ Applies to: `wrangler pages deploy` to custom domains, `r2 object put/delete` on
 4. **HARD RULE:** If you do not know the full term with certainty, do not use the acronym. Spell out the term. If you cannot spell it out because you do not know it, that is evidence you should not be using the abbreviation at all.
 
 **Why this gate exists:** KIF-31 — the model filled an acronym ambiguity slot ("ZBW") with fabricated author initials ("Zhu, Brad, Wang") instead of the correct expansion ("Zitterbewegung"). The fabrication was well-formed prose that passed all existing quality gates and was published to Zenodo before detection. This is structurally identical to KIF-10 (filling a truncated-token void with guessed characters) — the model defaults to completion when it encounters an information gap.
+
+### Information Void Completion Gate (RC4 / FP-021, MANDATORY)
+
+**The general mechanism:** When the model encounters an information gap — a
+truncated terminal display, an acronym with no known expansion, a signal that
+could mean multiple things — it does NOT flag the gap. It COMPLETES the pattern
+with plausible fiction that passes all existing quality gates because those
+gates check internal consistency (grammar, tone, structure), not correspondence
+to external ground truth.
+
+**Three gap types (same mechanism, different surfaces):**
+
+| Gap Type | Example | Defense |
+|:---------|:--------|:--------|
+| **Truncated/ambiguous terminal output** | `Get-ChildItem env:` shows `TOKEN=abc123...xyz` | Always reference `$env:TOKEN_NAME` / `os.environ.get()` directly. Never hand-copy or reconstruct. (KIF-10) |
+| **Opaque acronym with no prior expansion** | "ZBW" → fabricated as "Zhu, Brad, Wang" | § Acronym Expansion Gate above — verify against prior project artifacts. If unknown, spell out or delete. (KIF-31) |
+| **Ambiguous tool-availability signal** | `npm ls -g` returns empty → "wrangler not installed" | Run canonical probe (`npx wrangler --version`) directly. Never conclude from indirect signal. (KIF-19, §8.6 Rule 16) |
+
+**Hard rule:** Before acting on or publishing ANY information derived from an
+ambiguous or incomplete source, verify against external ground truth. If no
+ground truth is available, flag the ambiguity explicitly with
+`[UNVERIFIED: <source> — <ambiguity>]`. Never let an information gap survive
+to the action or publication pipeline without a verification gate.
+
+**Cross-reference:** `kaizen-skill-fixes` §P.1 RC4 (Information-Void Completion),
+FP-021 (pattern registry), KIF-10 / KIF-19 / KIF-31.
 
 ### Curly Quotes
 All publication documents use curly/smart quotes. Code blocks exempt.
@@ -1023,6 +1063,9 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | Hardcoding Cloudflare account ID or D1 database UUID in Python scripts (KIF-36) | Use `cloudflare/scripts/d1-query.py` — auto-discovers credentials, account ID, and DB UUID from live infrastructure. Never copy account IDs or UUIDs from prior sessions. Same failure class as KIF-19. |
 | Including POSIX-only code examples in SKILL.md (bare `curl`, inline `python -c`, `&&` chaining, `npx` without `cmd /c`) without platform annotation (KIF-37) | §8.11 Skill Edit Protocol — code examples for copy-paste execution must use `curl.exe`, `;` not `&&`, canonical script references instead of inline `python -c`. Reference canonical scripts (`d1-query.py`, `build-paper.py`, `credential-scan.py`) instead of inline code blocks. |
 | Not loading kaizen-skill-fixes at session start — treating it as passive reference (KIF-38) | kaizen-skill-fixes v2.0+ is an ACTIVE autonomous execution skill. Load at session start alongside qnfo-agent. The Autonomous Pattern Recognition Engine detects recurring failures and auto-fixes them without user prompting. Skipping it means recurring patterns go undetected across sessions. |
+| Fixing only the specific instance without generalizing to the failure CLASS (Meta-Pattern 1, RC2) | After every kaizen fix, ask: "What ELSE could have this same failure mechanism?" Cross-reference with existing KIF entries. The class-level fix typically arrives 5-9 days after the first instance — accelerate this by generalizing immediately. See `kaizen-skill-fixes` §P.2 MP1. |
+| Adding layers of indirection without collapse-checks (Meta-Pattern 2, RC1) | Every layer between the agent and ground truth multiplies failure probability. Eliminate indirection: auto-discover live state at each layer, use canonical scripts (`d1-query.py`, `build-paper.py`) that collapse multi-layer operations into single verified calls. See `kaizen-skill-fixes` §P.2 MP2. |
+| Declaring a fix "done" without INDEPENDENT verification (Meta-Pattern 3, RC3) | A fix creates verification debt — confidence from the fix disables the skepticism that caught the bug. Verify with a mechanism SEPARATE from the fix tool (re-scan with different script, re-read from different path). The Autonomous Verification layer (§O) enforces this. See `kaizen-skill-fixes` §P.2 MP3. |
 
 ---
 

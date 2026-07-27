@@ -1,7 +1,7 @@
 ---
 name: kaizen-skill-fixes
 description: AUTONOMOUS PATTERN RECOGNITION ENGINE — Active monitoring and unsupervised remediation for the QNFO skill ecosystem. Detects recurring failure patterns via frequency analysis, triggers autonomous fixes without manual prompting, and maintains the canonical Failure Pattern Registry. Works across sessions via D1 persistence. Execute mode: active watchdog, not passive reference.
-version: "2.0.0"
+version: "2.1.0"
 triggers: ["always active", "autonomous monitoring", "pattern detection", "unsupervised remediation", "kaizen", "red team", "bugfix", "failure pattern", "frequency analysis", "self-healing", "watchdog"]
 related: ["qnfo-agent", "research", "cloudflare", "system"]
 priority: 0
@@ -10,7 +10,15 @@ autonomous: true
 self_sufficient: true
 ---
 
-# KAIZEN SKILL FIXES — v2.0.0 (Autonomous Pattern Recognition Engine)
+# KAIZEN SKILL FIXES — v2.1.0 (Autonomous Pattern Recognition Engine + Root Cause Analysis)
+
+> **v2.1.0 UPDATE (2026-07-27, KIF-39 — Root Cause Analysis):** Added §P: Root
+> Cause Analysis — 4 systemic failure classes (RC1-RC4) and 3 cross-cutting
+> meta-patterns (MP1-MP3) identified from deep analysis of all 38 KIF entries,
+> 20 Failure Patterns, and 11 red-team audit sessions. NO failure was a "model
+> error" — every failure traces to one of these architectural properties.
+> Added FP-021 (Information-Void Completion) to the pattern registry. Bumped
+> pattern-registry.json to v1.1.0 with 21 patterns. Bumped to v2.1.0.
 
 > **v2.0.0 UPDATE (2026-07-27, AUTONOMOUS ENGINE UPGRADE):** Transformed from a
 > passive historical reference skill into an **active autonomous monitoring and
@@ -44,12 +52,14 @@ self_sufficient: true
 ## execute_plan
 
 update_plan([
-  {"step": "AUTONOMOUS WATCHDOG: Session-start pattern scan against Failure Pattern Registry (§L)", "status": "pending"},
-  {"step": "AUTONOMOUS WATCHDOG: During-session tool output monitoring — detect new patterns in real time (§L.2)", "status": "pending"},
-  {"step": "AUTONOMOUS WATCHDOG: Session-end frequency analysis — check thresholds, trigger autonomous fixes (§M)", "status": "pending"},
-  {"step": "AUTONOMOUS WATCHDOG: D1 persistence sync — update pattern-registry.json and D1 kaizen_patterns (§K.3)", "status": "pending"},
-  {"step": "Fix: Platform-unsafe code examples in 3 primary skills (KIF-37 remediation)", "status": "pending"},
-  {"step": "Fix: KIF-38 — add autonomous engine to qnfo-agent registry + trigger table", "status": "pending"},
+  {"step": "AUTONOMOUS WATCHDOG: Session-start pattern scan (DONE v2.0)", "status": "completed"},
+  {"step": "AUTONOMOUS WATCHDOG: During-session monitoring (DONE v2.0)", "status": "completed"},
+  {"step": "AUTONOMOUS WATCHDOG: Session-end frequency analysis (DONE v2.0)", "status": "completed"},
+  {"step": "AUTONOMOUS WATCHDOG: D1 persistence sync (DONE v2.0)", "status": "completed"},
+  {"step": "Fix: Platform-unsafe code examples (KIF-37 remediation — DONE v2.1.0)", "status": "completed"},
+  {"step": "Fix: Root Cause Analysis §P (RC1-RC4 + MP1-MP3 — DONE v2.1.0)", "status": "completed"},
+  {"step": "Fix: Information-Void Completion Gate (FP-021 — DONE v2.1.0)", "status": "completed"},
+  {"step": "Fix: Meta-Pattern anti-patterns in qnfo-agent (DONE v2.1.0)", "status": "completed"},
 ])
 
 ---
@@ -830,6 +840,142 @@ Model expanded "ZBW" as "Zhu, Brad, Wang" — three fabricated author initials. 
 | Skipping session-start pattern scan | §L.1 MANDATORY — run before any task execution |
 | Skipping post-fix verification | §O MANDATORY — 6-point verification checklist after every autonomous fix |
 | False positive: suppressing patterns without logging | §O.3 — log false_positive_count, suppress at ≥3, keep auditable |
+
+---
+
+---
+
+## §P: ROOT CAUSE ANALYSIS — THE 4 SYSTEMIC FAILURE CLASSES (KIF-38 Deep Analysis, 2026-07-27)
+
+> Deep analysis of all 38 KIF entries, 20 Failure Patterns, and 11 red-team
+> audit sessions revealed that NO failure was a "model error." Every failure
+> traces to one or more of 4 systemic root causes. These are NOT bugs —
+> they are architectural properties of the QNFO skill ecosystem that must
+> be designed around, not fixed once.
+
+### §P.1: The 4 Root Causes
+
+#### RC1: Hardcoded/Stale Identifiers — "Copy-Paste Infrastructure"
+
+**Mechanism:** Sessions copy infrastructure identifiers (account IDs, DB UUIDs,
+API tokens) from prior session output instead of discovering them live from the
+environment. These values go stale silently, producing misleading 401/403 errors
+indistinguishable from real auth failures.
+
+**Affected KIFs:** KIF-10 (Zenodo token), KIF-11 (Buffer PAT), KIF-19 (wrangler
+"not installed" false negative), KIF-36 (D1 account ID/DB UUID)
+
+**General principle:** Never copy infrastructure identifiers across sessions.
+Always discover them live. Every new infrastructure surface (D1, R2, Zenodo,
+Buffer, wrangler) requires a canonical auto-discovery script.
+
+**Current defense:** `d1-query.py` (auto-discovers token + account + DB UUID),
+`zenodo-token-check.py` (token validation), `wrangler-check.js` (availability probe)
+
+#### RC2: Dual-Role Document Drift — "Documentation as Code"
+
+**Mechanism:** SKILL.md files serve two incompatible purposes: (1) reference
+documentation with concise, platform-agnostic code examples, and (2) copy-paste
+execution source for `exec` tool calls. These roles conflict because POSIX
+syntax (`python -c`, `curl`, `&&`) fails on Windows PowerShell.
+
+**Affected KIFs:** KIF-05 (documented the fix but never propagated to code
+examples), KIF-37 (audited 30 unsafe examples across 12 SKILL.md files)
+
+**General principle:** Documentation that doubles as execution source must be
+verified on the execution platform. Canonical script references (`d1-query.py`,
+`build-paper.py`) should replace inline `python -c` in all code blocks.
+
+**Current defense:** §8.11 Skill Edit Protocol (mandatory platform checklist),
+canonical script references, incremental remediation strategy.
+
+#### RC3: No Active Watchdog — "Passive Reference"
+
+**Mechanism:** Every failure detection required a human-triggered red-team
+session. Between audits (often 5-9 days), regressions accumulated silently with
+no automated monitoring. The kaizen-skill-fixes skill itself was the canonical
+example — it was a passive historical archive (v1.6) that only documented fixes
+when manually triggered.
+
+**Affected KIFs:** KIF-13, KIF-14, KIF-22, KIF-23, KIF-24, KIF-25, KIF-27,
+KIF-30, KIF-33, KIF-35, KIF-38
+
+**General principle:** Any mechanism that requires human triggering to detect
+drift WILL drift. Autonomous frequency-based monitoring at severity-gated
+thresholds is the general solution.
+
+**Current defense:** kaizen-skill-fixes v2.0 Autonomous Pattern Recognition
+Engine (§K–O) — session-start/during/end scanning, D1-persisted frequency
+counters, autonomous remediation at severity thresholds.
+
+#### RC4: Information-Void Completion — "Plausible Fiction"
+
+**Mechanism:** When the model encounters an information gap — a truncated token
+in terminal output, an acronym with no grounded expansion, a missing tool — it
+does not flag the gap. It COMPLETES the pattern with plausible fiction that
+passes all existing quality gates because quality gates check internal
+consistency, not ground-truth correspondence.
+
+**Three manifestations of the SAME mechanism:**
+1. **KIF-10:** Hand-copied truncated Zenodo token filled in with guessed characters
+2. **KIF-31:** Acronym "ZBW" expanded as fabricated "Zhu, Brad, Wang" (correct: Zitterbewegung)
+3. **KIF-19:** "Wrangler is not installed" fabricated from insufficient diagnostic signal
+
+**General principle:** Ambiguity is a completion prompt, not a stop sign. The
+model defaults to filling information gaps with plausible fiction. The defense
+is EXTERNAL ground-truth verification BEFORE a gap reaches the publication or
+action pipeline.
+
+**Current defense:** §7 Acronym Expansion Gate (KIF-31), §8.6 Rule 5 (never
+hand-copy tokens), §8.6 Rule 16 (tool-availability false-negative prevention)
+
+### §P.2: Three Cross-Cutting Meta-Patterns
+
+#### Meta-Pattern 1: "Fix the Instance, Miss the Class"
+
+The first incident of a failure class produces a surgical fix for that ONE
+surface. The class-level fix arrives 5-9 days later after 2-4 more incidents on
+different surfaces of the SAME class.
+
+| Instance Fix | Class Missed | Time to General Fix |
+|:-------------|:-------------|:--------------------|
+| KIF-10: zenodo token → `$env:` | ALL hand-copied truncated data | ~9 days (KIF-36) |
+| KIF-05: PowerShell `python -c` → write-to-file | ALL SKILL.md code examples | ~6 days (KIF-37) |
+| KIF-01: Unicode math → preprocessor | ALL Unicode in PowerShell pipes | ~5 days (KIF-27) |
+
+**Mitigation:** When fixing an instance, immediately ask: "What ELSE could have
+the same failure mechanism?" Cross-reference with existing KIF entries to
+accelerate class-level generalization.
+
+#### Meta-Pattern 2: "Exponential Vulnerability in Multi-Layer Systems"
+
+Every layer of indirection between the agent and ground truth adds a new
+failure surface. The probability of any failure is the PRODUCT of per-layer
+probabilities — not the sum.
+
+```
+Agent → Skill SKILL.md (platform-drift) → D1 Memory (volatile) → D1 DB (stale UUIDs) → Zenodo API (truncated token) → Published artifact (no re-verification)
+```
+
+**Mitigation:** Eliminate indirection. Auto-discover live state at every layer.
+Canonical scripts that do full-stack verification (`d1-query.py`, `build-paper.py`,
+`credential-scan.py`) collapse multiple layers into single verified operations.
+
+#### Meta-Pattern 3: "The Fix Itself Becomes the Next Failure"
+
+A fix that works on one surface creates VERIFICATION DEBT — the confidence
+from the fix disables the skepticism that detected the original problem.
+
+| Fix Introduced | Subsequent Failure |
+|:---------------|:-------------------|
+| KIF-26: `unicode-math` + `STIX Two Math` → "holistic solution" | STILL had 191 U+FFFF errors — `unicode-math` only works inside `$...$` |
+| KIF-27: consolidate 3 scripts → `build-paper.py` | `build-paper.py` didn't exist — phantom claim caught by red-team |
+| KIF-19: `wrangler-check.js` | D1 queries still hardcoded account IDs (KIF-36) |
+
+**Mitigation:** Every fix must be verified by a mechanism INDEPENDENT of the
+fix itself. The Autonomous Verification layer (§O, 6-point post-fix checklist)
+explicitly addresses this — re-scan for the original pattern with a separate
+tool after applying the fix.
 
 ---
 

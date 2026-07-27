@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "last_updated": "2026-07-27T00:00:00Z",
   "patterns": {
     "FP-001": {
@@ -499,6 +499,31 @@
         "fix_description": "Elevate to skill file per 4-tier model — MEMORIES ARE NOT SKILLS"
       },
       "related_kif": ["KIF-33"],
+      "status": "active",
+      "false_positive_count": 0
+    },
+    "FP-021": {
+      "signature": {
+        "type": "keyword",
+        "keywords": ["acronym expansion", "fabricated", "unverified acronym", "guessed characters", "filled in", "plausible fiction", "information void", "ground truth"],
+        "tool": "any",
+        "context": "Model fills an information gap (truncated token, unknown acronym, missing tool) with domain-plausible fiction that passes all internal-consistency quality gates"
+      },
+      "category": "hallucination",
+      "severity": "CRITICAL",
+      "frequency": {
+        "sessions_seen": 0,
+        "total_occurrences": 0,
+        "last_seen": null,
+        "first_seen": null
+      },
+      "remediation": {
+        "action": "add_gate",
+        "target_file": "qnfo-agent/SKILL.md",
+        "target_section": "§7 Information Void Completion Gate",
+        "fix_description": "Before acting on or publishing any information from an ambiguous/incomplete source, verify against external ground truth. Information gaps are completion prompts, not stop signs — the model fills them silently. Defense: external verification BEFORE the gap reaches the action/publish pipeline."
+      },
+      "related_kif": ["KIF-10", "KIF-19", "KIF-31"],
       "status": "active",
       "false_positive_count": 0
     }

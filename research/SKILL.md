@@ -801,7 +801,13 @@ contain the bare string `---`, which some naive frontmatter parsers
 misinterpret as a second frontmatter block. Before building, count `---`
 occurrences on their own line at column 0:
 ```bash
-python -c "import sys; t=open('paper.md',encoding='utf-8').read(); print(sum(1 for l in t.split(chr(10)) if l.strip()=='---'))"
+# Windows: write this to _yaml_check.py, then `python _yaml_check.py`; never inline python -c
+# Build-paper.py handles this automatically -- prefer: python scripts/build-paper.py paper.md
+python _yaml_check.py
+```
+Where `_yaml_check.py` contains:
+```python
+import sys; t=open('paper.md',encoding='utf-8').read(); print(sum(1 for l in t.splitlines() if l.strip()=='---'))
 ```
 Only the FIRST TWO such lines (opening and closing the YAML block) are valid
 frontmatter delimiters. `scripts/build-paper.py` (preprocess stage) already
@@ -966,10 +972,14 @@ then re-run this checklist, before proceeding to PDF build and upload.
    `Get-Content` without `-Encoding` defaults to the system codepage and will
    silently corrupt UTF-8 content.
 
-**Pre-commit verification script** (run via `skill_run` or as `_fffd_scan.py`,
-write to file first per KIF-27, never inline):
+**Pre-commit verification scan** (write to file via `write` tool, then execute — never inline `python -c`):
 ```bash
-python -c "
+# Canonical: python scripts/credential-scan.py --staged
+# Or: write _fffd_scan.py, then exec python _fffd_scan.py
+python _fffd_scan.py
+```
+`_fffd_scan.py` content (use the `write` tool for the script body, then `exec`):
+```python
 import sys, os
 for root, dirs, files in os.walk('.'):
     for fn in files:
@@ -989,9 +999,7 @@ for root, dirs, files in os.walk('.'):
                 print(f'{fp}: {" / ".join(issues)}')
                 sys.exit(1)
 print('ENCODING GATE: PASS')
-"
 ```
-
 **GATE:** If the pre-commit scan exits non-zero, BLOCK the git commit.
 This is a HARD gate -- encoding corruption in source propagates to PDFs,
 Zenodo archives, D1 inserts, and all downstream distribution channels.
@@ -1374,7 +1382,18 @@ upload step. The bundle MUST contain: `paper.md`, `paper.pdf`,
 `PROJECT-PLAN.md`, `README.md`, all `artifacts/*.md`, all `docs/*.md`.
 Verify before upload:
 ```bash
-python -c "import zipfile,sys; z=zipfile.ZipFile('PROVENANCE-BUNDLE.zip'); names=z.namelist(); required=['paper.md','paper.pdf']; missing=[r for r in required if not any(r in n for n in names)]; print('Bundle contents:', names); sys.exit(1 if missing else 0)"
+# Windows-safe: write to _check_bundle.py, then exec; never inline python -c
+python _check_bundle.py
+```
+`_check_bundle.py` content:
+```python
+import zipfile, sys
+z = zipfile.ZipFile('PROVENANCE-BUNDLE.zip')
+names = z.namelist()
+required = ['paper.md', 'paper.pdf']
+missing = [r for r in required if not any(r in n for n in names)]
+print('Bundle contents:', names)
+sys.exit(1 if missing else 0)
 ```
 If this check is not run and passed, the Zenodo deposit is INCOMPLETE even
 if `actions/publish` succeeds -- missing provenance is a silent failure, not
@@ -1430,8 +1449,18 @@ POST https://zenodo.org/api/deposit/depositions/{id}/actions/publish
 
 #### 5. Verify
 ```bash
-curl -sI https://doi.org/10.5281/zenodo/{id}  # Must return HTTP 200
-curl -s https://zenodo.org/api/records/{id} | python -c "import sys,json; r=json.load(sys.stdin); print('DOI:', r.get('doi')); print('Related:', len(r.get('related_identifiers',[])))"
+# Windows: use curl.exe (not PowerShell alias) and write Python to file, never pipe to python -c
+curl.exe -sI https://doi.org/10.5281/zenodo/{id}  # Must return HTTP 200
+curl.exe -s https://zenodo.org/api/records/{id} -o _zenodo_record.json
+python _verify_zenodo.py
+```
+`_verify_zenodo.py` content:
+```python
+import json
+with open('_zenodo_record.json', 'r', encoding='utf-8') as f:
+    r = json.load(f)
+print('DOI:', r.get('doi'))
+print('Related:', len(r.get('related_identifiers', [])))
 ```
 
 #### Zenodo Retry Protocol
@@ -1582,8 +1611,18 @@ curl -sI https://papers.qnfo.org/papers/<slug>  # NOTE: no trailing slash in the
 
 ### Papers-Server Worker Verification
 ```bash
-curl -sI https://papers.qnfo.org/papers/<slug>/  # Must return HTTP 200
-curl -s https://papers.qnfo.org/papers/<slug>/ | python -c "import sys; c=sys.stdin.read(); print('MathJax:', 'MathJax' in c); print('Size:', len(c))"
+# Windows: use curl.exe and write Python to file, never pipe to python -c
+curl.exe -sI https://papers.qnfo.org/papers/<slug>/  # Must return HTTP 200
+curl.exe -s https://papers.qnfo.org/papers/<slug>/ -o _papers_check.html
+python _papers_verify.py <slug>
+```
+`_papers_verify.py` content:
+```python
+import sys
+with open('_papers_check.html', 'r', encoding='utf-8') as f:
+    c = f.read()
+print('MathJax:', 'MathJax' in c)
+print('Size:', len(c))
 ```
 
 ### R2 Archive
@@ -2028,7 +2067,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Leaving draft registrations with partial registration_responses | If the research will not be completed and submitted, DELETE the draft. Partial stubs are a reputational risk. |
 | Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
 | `python -c "..."` inline scripts on Windows (kaizen fix B1) | Nested double-quotes in f-strings collide with `python -c "..."` outer quotes; Windows escaping of `\n`, dict literals, and Unicode breaks silently. `write` the script to a `_*.py` file first, `exec` it, then delete -- never inline for anything beyond a one-liner with zero quotes/dicts/regex. |
-| `curl` on Windows PowerShell (kaizen fix B3) | PowerShell aliases `curl` to `Invoke-WebRequest`, which has different flags (`-s` is not recognized) and fails. Use `python -c 'import urllib.request; ...'` (single-line, no nested quotes) or invoke `curl.exe` explicitly (the real binary, bypassing the alias). |
+| `curl` on Windows PowerShell (kaizen fix B3) | PowerShell aliases `curl` to `Invoke-WebRequest`, which has different flags (`-s` is not recognized) and fails. Use `curl.exe` explicitly (the real binary, bypassing the alias). Never pipe to inline `python -c` — write Python to file first per KIF-37 §8.11. |
 | Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `scripts/build-paper.py` before every Pandoc+XeLaTeX build -- see PDF Building section above (v2.21+). |
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2 — SUPERSEDED by KIF-27) | Strip it -- `scripts/build-paper.py` does this automatically (preprocess stage). It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
