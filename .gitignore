@@ -47,6 +47,7 @@
 # ============================================================================
 # STEP 4: Allow failsafe infrastructure (skill corruption prevention tools)
 # ============================================================================
+!/kaizen-skill-fixes/
 !/failsafe/
 
 
