@@ -188,15 +188,34 @@ await fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/r2/bu
 // Alt: npx wrangler r2 object put {BUCKET}/{KEY} --file path --remote
 ```
 
-### D1 Query Script
+### D1 Query Script (CANONICAL — KIF-36, v3.2, 2026-07-27)
+
+**NEVER hardcode account IDs or database UUIDs in scripts.** Use the canonical
+auto-discovery script `scripts/d1-query.py` which discovers credentials,
+account ID, and database UUID from live infrastructure:
+
+```bash
+# Query by database NAME (never by UUID)
+python scripts/d1-query.py --db living-paper --sql "SELECT slug, doi FROM papers WHERE slug=?" --params zbw-p5-capstone
+
+# Force re-discovery (bypass session cache)
+python scripts/d1-query.py --refresh --db qnfo-graph --sql "SELECT COUNT(*) FROM nodes"
+
+# Raw JSON output for programmatic use
+python scripts/d1-query.py --db living-paper --sql "SELECT * FROM papers LIMIT 5" --raw
+```
+
+**Token discovery** (automatic, in order): env var → `~/.cloudflare_token` → `~/keys.json` → Win32 API.
+**Account ID discovery**: `npx wrangler whoami` → cache.
+**DB UUID discovery**: `npx wrangler d1 list` → cache by name.
+
+Cache file: `%USERPROFILE%\.deepchat\d1-cache.json` (session-scoped, regenerated on `--refresh`).
+
+**DEPRECATED (pre-KIF-36):**
 ```js
-// _d1_query.js — Execute D1 SQL via REST API
+// DO NOT USE — hardcoded ACCOUNT + DB constants cause silent 401s
 const T = process.env.CLOUDFLARE_API_TOKEN;
-await fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/d1/database/' + DB + '/query', {
-  method: 'POST',
-  headers: { 'Authorization': 'Bearer ' + T, 'Content-Type': 'application/json' },
-  body: JSON.stringify({ sql: 'SELECT * FROM t LIMIT 10' })
-});
+await fetch('...accounts/' + ACCOUNT + '/d1/database/' + DB + '/query', ...);
 ```
 
 ### DNSLink Creation Script

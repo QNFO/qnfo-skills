@@ -1495,6 +1495,15 @@ Only use a genuinely NEW deposit for a genuinely NEW, unrelated publication.
 
 ### D1 Access Protocol (kaizen fix 2026-07-21 -- read BEFORE any D1 call)
 
+**CANONICAL (KIF-36, 2026-07-27):** Use `cloudflare/scripts/d1-query.py` instead of
+manual Steps 1-3 below. It auto-discovers token, account ID, and DB UUID:
+```bash
+python cloudflare/scripts/d1-query.py --db living-paper --sql "SELECT ..." --params ...
+```
+The script handles token discovery (4 sources), account ID (`npx wrangler whoami`),
+DB UUID (`npx wrangler d1 list`), and session caching. Steps 4-6 (check-then-write,
+verify, papers-server check) still apply after querying.
+
 **Root-cause incident:** A session spent 8+ failed tool calls on D1 because
 of (a) a wrong hardcoded Cloudflare account ID, (b) attempting
 `wrangler d1 execute <name> --remote` against a database with no local

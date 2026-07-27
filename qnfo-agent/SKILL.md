@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
-description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.54 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-35). The safety-net core. Skill discovery FAILS without this loaded first.
-version: "3.54"
+description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.56 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-37). The safety-net core. Skill discovery FAILS without this loaded first.
+version: "3.56"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,9 +10,33 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.54 (Safety-Net Core)
+# QNFO-AGENT — v3.56 (Safety-Net Core)
 
-> **v3.54 UPDATE (2026-07-27, KIF-35 — deprecated/external skill contamination):**
+> **v3.56 UPDATE (2026-07-27, KIF-37 — SKILL.md code example platform drift):**
+> Comprehensive audit of all 12 SKILL.md files found 30 code examples that fail
+> on Windows PowerShell: 18 inline `python -c` (PowerShell parser collision), 12
+> bare `curl` (Invoke-WebRequest alias), 5 `&&` chains. These cause ~6-8 wasted
+> tool calls per session when copy-pasted. Root cause: KIF-05 documented the fix
+> but SKILL.md code examples were never updated — skills serve dual role as
+> reference docs AND copy-paste execution source, and these roles conflict.
+> Fix: Added **§8.11 Skill Edit Protocol — Code Example Platform Verification**
+> with a mandatory platform checklist, canonical script reference pattern, and
+> incremental remediation strategy. Added KIF-37 to registry + anti-pattern.
+> Bumped to v3.56.
+
+> **v3.55 UPDATE (2026-07-27, KIF-36 — D1 API hardcoded account ID / DB UUID):**
+> Red-teamed a D1 REST API 401 failure from the prior turn's post-closeout audit.
+> The token was available (env var, `.cloudflare_token`, `keys.json` — all live),
+> but the inline Python script hardcoded a **stale wrong account ID**
+> (`71a70f45102a73239c3c1a8c2ba276e3` from a prior session) instead of the correct
+> account (`edb167b78c9fb901ea5b3ca58ce3ccc4b`, quniverse). The root cause is the
+> SAME failure class as KIF-19 (wrangler false negative): sessions guess/hardcode
+> infrastructure identifiers instead of discovering them live. Fix:
+> `cloudflare/scripts/d1-query.py` — canonical script that auto-discovers token
+> (4 sources: env var, `.cloudflare_token`, `keys.json`, Win32 API), account ID
+> (`npx wrangler whoami`), and DB UUID (`npx wrangler d1 list`) with session
+> caching to `%USERPROFILE%\.deepchat\d1-cache.json`. Added KIF-36 to registry,
+> anti-pattern, and `cloudflare` skill D1 Access Protocol section. Bumped to v3.55.
 > Red-teamed the session-init audit and found 14/25 skill directories are
 > DeepChat/Claude Code platform defaults with no `version:` fields (or no
 > SKILL.md). User directive: deprecate — do not use, do not modify, do not
@@ -452,6 +476,8 @@ the old behavior was correct.
 | KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
 | KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
 | KIF-34 | **Edit Tool Unicode Matching Failure** — the `edit` tool's exact-text matching failed 8+ times on paragraphs containing em-dashes (U+2014) and section-signs (U+00A7) during the DeepChat cleanup session (2026-07-27). `read` confirmed the text was present, but `edit` returned "Cannot find." Root cause: byte-level Unicode matching inconsistency between tool and file encoding paths. Wasted ~15 tool calls. | `qnfo-agent` §8.7.1 Edit Tool Unicode Matching Failure — max 2 retries, then switch to Python/PowerShell replacement. Anti-pattern added. | v3.53, 2026-07-27, deepchat-cleanup session |
+| KIF-36 | **D1 API Hardcoded Account ID / DB UUID** — sessions hardcode Cloudflare account IDs and D1 database UUIDs in Python scripts (e.g., `account='71a70f...'`, `db='1a4e4ab2...'`) copied from prior sessions. These values go STALE silently — the token IS available (env var, `.cloudflare_token` file, `keys.json`) but the script hits the WRONG ACCOUNT and returns a misleading 401 indistinguishable from a real auth failure. Root cause: no canonical auto-discovery mechanism existed. This is the SAME failure class as KIF-19 (wrangler false negative) — guessing infrastructure identifiers instead of discovering them live. Fix: `cloudflare/scripts/d1-query.py` — canonical script that auto-discovers token (4 sources), account ID (`npx wrangler whoami`), and DB UUID (`npx wrangler d1 list`) with session caching to `%USERPROFILE%\.deepchat\d1-cache.json`. Usage: `python d1-query.py --db <name> --sql "..." --params ...`. Never hardcode account IDs or DB UUIDs again. | `cloudflare` skill D1 Access Protocol; `cloudflare/scripts/d1-query.py` | v3.55, 2026-07-27, this session |
+| KIF-37 | **SKILL.md Code Example Platform Drift** — SKILL.md files contain code examples written for POSIX shell (`python -c "..."`, `curl`, `&&` chaining, `npx` without `cmd /c` wrapper) that are copy-pasted by sessions and FAIL on Windows PowerShell. Audited all 12 SKILL.md files this session: 18 inline `python -c` examples (9 in research, 3 in qnfo-agent, 3 in kaizen-skill-fixes, 3 in other skills), 12 bare `curl` examples (8 in research, 2 in cloudflare, 2 in code), 5 `&&` chains. These cause ~6-8 wasted tool calls per session when copy-pasted. **Root cause:** KIF-05 documented the fix but SKILL.md code examples were never updated to reflect it. Skills serve dual role (reference docs + copy-paste source) and these roles conflict. Fix: §8.11 Skill Edit Protocol mandates that every code example for copy-paste execution must either: (a) use platform-verified syntax (`curl.exe`, `;` not `&&`, canonical script reference instead of inline `python -c`), or (b) explicitly annotate the platform wrapper. New code examples default to unsafe; existing examples are flagged for incremental remediation. | `qnfo-agent` §8.11 Skill Edit Protocol; `research` D1 Access Protocol (d1-query.py reference replaces inline Python); this audit report | v3.56, 2026-07-27, this session |
 | KIF-35 | **Deprecated/External Skill Contamination** — 14 of 25 skill directories in `.deepchat\skills\` are DeepChat/Claude Code defaults (`algorithmic-art`, `deepchat-settings`, `doc-coauthoring`, `docx`, `failsafe`, `git-commit`, `infographic-syntax-creator`, `mcp-builder`, `memory-management`, `pdf`, `pptx`, `skill-creator`, `web-artifacts-builder`, `xlsx`). These are NOT QNFO-authored, have no `version:` field (or no SKILL.md), and will be overwritten by any DeepChat library update. Using, modifying, or syncing these skills as QNFO artifacts creates phantom skill dependencies and contamination risk. Fix: §8.10 QNFO-Skill Boundary Gate — strict partition between QNFO-authored skills (versioned, git-tracked) and platform defaults (read-only, never loaded for QNFO tasks, never synced). Anti-pattern added. | v3.54, 2026-07-27, session-init red-team |
 | KIF-33 | **Memory-Skill Persistence Architecture** — 30+ operational memories in D1/Vectorize with zero skill-level redundancy. Single-point-of-failure: memory deletion/eviction/search-mismatch silently loses critical agent context. Root cause: no protocol distinguishing which memories should be elevated to skills. Fix: §8.9 4-tier model (ephemeral→short-term→long-term→permanent), classification flow, 4 critical operational rules hardened into qnfo-agent, `memories/history.log` files created in 4 skill directories. Principle: MEMORIES ARE NOT SKILLS. Git-backed, version-controlled skill files are the only acceptable permanent store for multi-session operational instructions. | `qnfo-agent` §8.9 Memory-Skill Persistence Protocol; `memories/` dirs in qnfo-agent, kaizen-skill-fixes, research, system. | v3.52, 2026-07-27, memory audit |
 | KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
@@ -982,6 +1008,8 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | Working directory contamination (project files, repos, artifacts in DeepChat install dir) | �8.8 Session-Start Hygiene Audit � mandatory scan before any file creation. Flag `[INSTALL-DIR-CONTAMINATION]`. |
 | Expanding an acronym with a fabricated phrase not grounded in any project artifact (KIF-31) | §7 Acronym Expansion Gate — verify every parenthetical acronym expansion against prior project documentation before publication. If you don't know the full term, don't use the acronym. Flag `[UNVERIFIED-ACRONYM]` for any expansion with zero prior occurrences. |
 | Loading, modifying, syncing, or deploying a DeepChat/Claude Code default skill as if it were QNFO-authored | §8.10 QNFO-Skill Boundary Gate — these 14 skills are read-only platform defaults. Never load them for QNFO tasks. Never commit changes to them. Never sync them to QNFO repos. |
+| Hardcoding Cloudflare account ID or D1 database UUID in Python scripts (KIF-36) | Use `cloudflare/scripts/d1-query.py` — auto-discovers credentials, account ID, and DB UUID from live infrastructure. Never copy account IDs or UUIDs from prior sessions. Same failure class as KIF-19. |
+| Including POSIX-only code examples in SKILL.md (bare `curl`, inline `python -c`, `&&` chaining, `npx` without `cmd /c`) without platform annotation (KIF-37) | §8.11 Skill Edit Protocol — code examples for copy-paste execution must use `curl.exe`, `;` not `&&`, canonical script references instead of inline `python -c`. Reference canonical scripts (`d1-query.py`, `build-paper.py`, `credential-scan.py`) instead of inline code blocks. |
 
 ---
 
@@ -1042,6 +1070,77 @@ The 2026-07-27 session-init red-team audit found 14/25 skill directories lack `v
 - **Overwrite risk:** DeepChat library updates silently overwrite local modifications
 
 The boundary is absolute: QNFO-authored skills go in the QNFO-skills git repo with versioned SKILL.md files. Everything else is read-only infrastructure.
+
+---
+
+## §8.11 SKILL EDIT PROTOCOL — CODE EXAMPLE PLATFORM VERIFICATION (KIF-37, MANDATORY — v3.56)
+
+> **INCIDENT RECORD (2026-07-27, this session):** A comprehensive audit of all 12
+> SKILL.md files found 30 code examples that fail on Windows PowerShell: 18 inline
+> `python -c` (PowerShell parser collides with Python string literals), 12 bare
+> `curl` (PowerShell alias to Invoke-WebRequest), and 5 `&&` chains. These are
+> copy-pasted by sessions into `exec` tool calls and fail silently or waste 2-3
+> diagnostic retries each — a recurring ~6-8 tool-call tax per session. **Root
+> cause:** KIF-05 documented the fix (write-to-file, never inline `python -c`) in
+> v3.37, but the SKILL.md code examples were never updated to reflect it. Skills
+> serve dual roles — reference documentation AND copy-paste execution source —
+> and these roles conflict because reference docs favor concise platform-agnostic
+> syntax while execution sources must work on the HOST platform (Windows
+> PowerShell, not POSIX sh).
+
+### THE RULE
+
+**Every code example in a SKILL.md file that a session will copy-paste into an
+`exec` tool call MUST be verified on the current platform.** The current
+platform is Windows with PowerShell as the primary shell. Code examples that
+fail on this platform are "dead on arrival" — the session will waste tool calls
+diagnosing the failure before applying the KIF-05/KIF-36 workaround it should
+have started with.
+
+### Code Example Platform Checklist (run BEFORE declaring a SKILL.md edit complete)
+
+| Code Pattern | Windows Requirement | Violation Symptom |
+|:-------------|:--------------------|:------------------|
+| `python -c "..."` with quotes/regex/dicts | Write to `_script.py` file, then `python _script.py` | `SyntaxError` / `ParserError` |
+| `curl <url>` | `curl.exe <url>` (PowerShell aliases `curl`) | `Invoke-WebRequest : A parameter cannot be found...` |
+| `cmd1 && cmd2 && cmd3` | `cmd1; cmd2; cmd3` (PowerShell uses `;`) | `The token '&&' is not a valid statement separator` |
+| `npx wrangler <cmd>` in Python subprocess | `['cmd','/c','npx','wrangler',<cmd>]` or `['npx','wrangler',<cmd>,'--json']` | Silent failure / empty output |
+| `subprocess.run(['npx',...])` | Use `run_npx()` helper from `d1-query.py` | Command not found / wrong output encoding |
+| Regex on CLI output (box-drawing tables) | Use `--json` flag on wrangler commands instead | Wrong UUID/ID matched from collapsed output |
+
+### Preferred Pattern: Reference Canonical Scripts
+
+Instead of inline code blocks that need platform rewrites, prefer referencing
+canonical scripts that already handle platform detection:
+
+```markdown
+# BAD: inline python -c that fails on PowerShell
+python -c "import json, urllib.request; ..."
+
+# GOOD: reference canonical script
+python cloudflare/scripts/d1-query.py --db living-paper --sql "SELECT ..." --params ...
+```
+
+**Canonical scripts (always platform-safe):**
+- `cloudflare/scripts/d1-query.py` — D1 queries (KIF-36)
+- `research/scripts/build-paper.py` — PDF building (KIF-27)
+- `research/scripts/credential-scan.py` — credential scanning (KIF-04)
+- `cloudflare/scripts/wrangler-check.js` — wrangler availability probe (KIF-19)
+
+### Incremental Remediation
+
+Existing SKILL.md code examples with unsafe patterns are flagged but NOT
+immediately rewritten — the audit found 30 instances across 4 skills. When
+editing a SKILL.md for any other reason, also fix unsafe code examples in
+the same file. Over time, all examples drift toward platform safety.
+
+### Detection Gate (Session Start)
+
+At every session start, scan loaded skills for unsafe code patterns:
+```powershell
+# Quick self-check: if a SKILL.md code block starts with python -c or bare curl,
+# mentally prepend the Windows wrapper before copy-pasting.
+```
 
 ---
 
