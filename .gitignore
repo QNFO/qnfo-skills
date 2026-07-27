@@ -81,3 +81,6 @@
 **/*.pak
 **/*.dat
 **/*.bin
+
+# DeepChat internal tracking files (not QNFO artifacts)
+**/.lastActivity
