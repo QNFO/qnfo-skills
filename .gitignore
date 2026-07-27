@@ -46,6 +46,21 @@
 !/system/
 
 # ============================================================================
+# STEP 3a: Additional QNFO-authorized skills
+# ============================================================================
+!/code-review/
+
+# ============================================================================
+# STEP 3b: Allow DeepChat skill-load path (prompts/skills/ mirrors root skills)
+# ============================================================================
+!/prompts/
+!/prompts/*/
+!/prompts/skills/*/
+!/prompts/skills/*/scripts/
+!/prompts/skills/*/references/
+!/prompts/skills/*/templates/
+
+# ============================================================================
 # STEP 4: Allow failsafe infrastructure (skill corruption prevention tools)
 # ============================================================================
 !/kaizen-skill-fixes/

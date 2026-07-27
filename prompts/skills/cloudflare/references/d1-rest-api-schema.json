@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "purpose": "Canonical D1 REST API request/response schema + hard-won gotchas. Read BEFORE any D1 query/insert/update to avoid repeated failures already root-caused in prior sessions.",
+    "last_verified_live": "2026-07-25"
+  },
+  "discovery_sequence": {
+    "step_1_account_id": {
+      "command": "npx wrangler whoami",
+      "note": "ALWAYS get the live account ID this way. NEVER hardcode or guess -- a wrong account ID produces a misleading 401/404 indistinguishable from a real permission problem."
+    },
+    "step_2_database_uuid": {
+      "command": "npx wrangler d1 list",
+      "alt_rest": "GET https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/d1/database",
+      "note": "NEVER hardcode a database UUID either -- always re-verify fresh."
+    },
+    "step_3_binding_check": {
+      "note": "wrangler d1 execute <name> --remote FAILS with 'Couldn't find a D1 DB with name/binding' unless that name is bound in a LOCAL wrangler.toml/wrangler.jsonc. For shared infra DBs with no local binding (e.g. living-paper), use the REST API directly instead of the CLI."
+    }
+  },
+  "query_endpoint": {
+    "method": "POST",
+    "url": "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/d1/database/{DATABASE_UUID}/query",
+    "headers": {
+      "Authorization": "Bearer <CLOUDFLARE_API_TOKEN>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "sql": "parameterized SQL string using ? placeholders",
+      "params": ["array of bound values, in order"]
+    },
+    "response_shape": {
+      "success": true,
+      "result": [
+        {"results": ["array of row objects"], "success": true, "meta": {"changes": "number", "rows_written": "number"}}
+      ]
+    },
+    "gotchas": [
+      "ON CONFLICT upsert against a table with FTS5 shadow tables (e.g. living-paper.papers has papers_fts*) returned HTTP 400 in production testing. Use CHECK-THEN-WRITE instead: SELECT existence first, then a plain INSERT (no ON CONFLICT) or plain UPDATE -- never a combined upsert on such tables.",
+      "A single successful INSERT on an FTS5-triggered table can report changes > 1 due to trigger fan-out -- this is expected, NOT a duplicate-row bug.",
+      "Column names must be verified, not assumed: run SELECT name FROM sqlite_master WHERE type='table' AND name='<table>' then PRAGMA table_info(<table>) if unsure. (Known gotcha: living-paper.papers uses body_md, not body.)",
+      "Large body_md string writes via inline PowerShell JSON construction (ConvertTo-Json) have corrupted content in past sessions (stored literal '[object Object]' string, 15 bytes, instead of the actual 47KB content). ROOT CAUSE: PowerShell's ConvertTo-Json mis-serializing a large multi-line string with embedded YAML/markdown special characters when piped through curl.exe with a temp JSON file. FIX: use Node.js (fs.readFileSync + JSON.stringify + https.request) instead of PowerShell string-building for any D1 write payload larger than a few hundred characters. Verify by reading back LENGTH(body_md) and comparing to local file byte count -- do not trust the 'success:true, changes:N' response wrapper alone."
+    ]
+  },
+  "verification_gate": {
+    "rule": "After ANY INSERT/UPDATE, re-run a SELECT against the exact row/column just written and compare byte length or content hash to the source. A 'success:true' wrapper on the write response is NOT verification (Anti-Phantom Gate, qnfo-agent Rule 14).",
+    "example": "SELECT LENGTH(body_md) as blen FROM papers WHERE slug = ? -- compare blen to len(local_file_content)"
+  },
+  "backup_before_destructive_ops": {
+    "rule": "Before any D1 Time Travel restore, export a full row/table snapshot (explicit column list, avoid FTS5 tables which break d1 export) to R2 as a safety net FIRST.",
+    "example_path": "qnfo-backups/{db}/pre-restore-snapshot-{timestamp}.json"
+  }
+}
