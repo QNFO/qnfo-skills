@@ -1,11 +1,14 @@
 {
-  "version": "1.1.0",
-  "last_updated": "2026-07-27T00:00:00Z",
+  "version": "1.1.1",
+  "last_updated": "2026-07-27T12:29:40Z",
   "patterns": {
     "FP-001": {
       "signature": {
         "type": "keyword",
-        "keywords": ["python -c \"", "python -c '"],
+        "keywords": [
+          "python -c \"",
+          "python -c '"
+        ],
         "tool": "exec",
         "context": "Exec tool invoking Python with inline -c containing nested quotes/dicts/regex"
       },
@@ -23,7 +26,10 @@
         "target_section": "Code example blocks",
         "fix_description": "Replace inline python -c with canonical script reference or write-to-file pattern"
       },
-      "related_kif": ["KIF-05", "KIF-37"],
+      "related_kif": [
+        "KIF-05",
+        "KIF-37"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -48,14 +54,19 @@
         "target_section": "Code example blocks",
         "fix_description": "Replace curl with curl.exe or Python urllib.request via canonical script"
       },
-      "related_kif": ["KIF-05", "KIF-37"],
+      "related_kif": [
+        "KIF-05",
+        "KIF-37"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-003": {
       "signature": {
         "type": "keyword",
-        "keywords": ["&&"],
+        "keywords": [
+          "&&"
+        ],
         "tool": "exec",
         "context": "Exec tool with && statement chaining in PowerShell"
       },
@@ -73,7 +84,10 @@
         "target_section": "Code example blocks",
         "fix_description": "Replace && with ; or split into separate sequential tool calls"
       },
-      "related_kif": ["KIF-05", "KIF-37"],
+      "related_kif": [
+        "KIF-05",
+        "KIF-37"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -98,24 +112,30 @@
         "target_section": "Pre-commit scan",
         "fix_description": "Remove token, move to env var or token file, run credential-scan.py"
       },
-      "related_kif": ["KIF-04"],
+      "related_kif": [
+        "KIF-04"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-005": {
       "signature": {
         "type": "keyword",
-        "keywords": ["\\ufffd", "U+FFFD", "REPLACEMENT CHARACTER"],
+        "keywords": [
+          "\\ufffd",
+          "U+FFFD",
+          "REPLACEMENT CHARACTER"
+        ],
         "tool": "any",
         "context": "File content or tool output containing replacement characters"
       },
       "category": "encoding_error",
       "severity": "CRITICAL",
       "frequency": {
-        "sessions_seen": 0,
-        "total_occurrences": 0,
-        "last_seen": null,
-        "first_seen": null
+        "sessions_seen": 1,
+        "total_occurrences": 11,
+        "last_seen": "2026-07-27T12:29:40Z",
+        "first_seen": "2026-07-27T12:29:40Z"
       },
       "remediation": {
         "action": "write_script",
@@ -123,14 +143,23 @@
         "target_section": "Preprocess stage",
         "fix_description": "Trace to encoding root cause, force UTF-8 on all I/O, rebuild"
       },
-      "related_kif": ["KIF-01", "KIF-26", "KIF-27", "KIF-28"],
-      "status": "active",
+      "related_kif": [
+        "KIF-01",
+        "KIF-26",
+        "KIF-27",
+        "KIF-28"
+      ],
+      "status": "remediated",
       "false_positive_count": 0
     },
     "FP-006": {
       "signature": {
         "type": "keyword",
-        "keywords": ["\\uffff", "U+FFFF", "NONCHARACTER"],
+        "keywords": [
+          "\\uffff",
+          "U+FFFF",
+          "NONCHARACTER"
+        ],
         "tool": "any",
         "context": "PDF content or file content containing noncharacters"
       },
@@ -148,7 +177,9 @@
         "target_section": "Preprocess + verify stages",
         "fix_description": "Preprocess Unicode math to LaTeX math mode before Pandoc+XeLaTeX build"
       },
-      "related_kif": ["KIF-26"],
+      "related_kif": [
+        "KIF-26"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -173,14 +204,22 @@
         "target_section": "Token reference section",
         "fix_description": "Replace hardcoded token with file-path reference, read live each time"
       },
-      "related_kif": ["KIF-10", "KIF-11", "KIF-15"],
+      "related_kif": [
+        "KIF-10",
+        "KIF-11",
+        "KIF-15"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-008": {
       "signature": {
         "type": "keyword",
-        "keywords": ["403", "Permission denied", "zenodo"],
+        "keywords": [
+          "403",
+          "Permission denied",
+          "zenodo"
+        ],
         "tool": "exec",
         "context": "Zenodo API returning 403 from hand-copied or malformed token"
       },
@@ -198,14 +237,20 @@
         "target_section": "Diagnostic",
         "fix_description": "Run zenodo-token-check.py FIRST — distinguish scope problem from transcription error"
       },
-      "related_kif": ["KIF-10"],
+      "related_kif": [
+        "KIF-10"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-009": {
       "signature": {
         "type": "keyword",
-        "keywords": ["wrangler is not installed", "wrangler not found", "wrangler not available"],
+        "keywords": [
+          "wrangler is not installed",
+          "wrangler not found",
+          "wrangler not available"
+        ],
         "tool": "any",
         "context": "Agent reasoning claiming wrangler unavailable"
       },
@@ -223,7 +268,9 @@
         "target_section": "Canonical probe",
         "fix_description": "Run wrangler-check.js — npx wrangler --version + whoami directly"
       },
-      "related_kif": ["KIF-19"],
+      "related_kif": [
+        "KIF-19"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -248,14 +295,22 @@
         "target_section": "Auto-discovery",
         "fix_description": "Use d1-query.py — auto-discovers token, account ID, DB UUID from live infra"
       },
-      "related_kif": ["KIF-36"],
+      "related_kif": [
+        "KIF-36"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-011": {
       "signature": {
         "type": "keyword",
-        "keywords": ["I will", "I'll", "Let me", "Going to", "shall I"],
+        "keywords": [
+          "I will",
+          "I'll",
+          "Let me",
+          "Going to",
+          "shall I"
+        ],
         "tool": "any",
         "context": "Response text with future-tense action promises lacking tool invocation evidence"
       },
@@ -273,7 +328,10 @@
         "target_section": "§9.11 Rule 14",
         "fix_description": "No claim without execution evidence. Scan response before delivery."
       },
-      "related_kif": ["KIF-14", "KIF-27"],
+      "related_kif": [
+        "KIF-14",
+        "KIF-27"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -298,14 +356,18 @@
         "target_section": "§7 Acronym Expansion Gate",
         "fix_description": "Verify every acronym expansion against prior project artifacts before publication"
       },
-      "related_kif": ["KIF-31"],
+      "related_kif": [
+        "KIF-31"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-013": {
       "signature": {
         "type": "keyword",
-        "keywords": ["Cannot find the specified text to replace"],
+        "keywords": [
+          "Cannot find the specified text to replace"
+        ],
         "tool": "edit",
         "context": "Edit tool failing on Unicode text (em-dash, section sign, multi-byte chars)"
       },
@@ -323,14 +385,18 @@
         "target_section": "§8.7.1",
         "fix_description": "Max 2 retries, then switch to PowerShell or Python replacement"
       },
-      "related_kif": ["KIF-34"],
+      "related_kif": [
+        "KIF-34"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-014": {
       "signature": {
         "type": "keyword",
-        "keywords": ["[object Object]"],
+        "keywords": [
+          "[object Object]"
+        ],
         "tool": "exec",
         "context": "D1 query result containing literal [object Object] string"
       },
@@ -348,7 +414,9 @@
         "target_section": "Safe write",
         "fix_description": "Use d1-safe-write.js — Node-native JSON + mandatory length-verification re-GET"
       },
-      "related_kif": ["KIF-21"],
+      "related_kif": [
+        "KIF-21"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -373,7 +441,9 @@
         "target_section": "Source File Encoding Integrity",
         "fix_description": "Strip BOM from all source files; BOM breaks Pandoc and YAML parsing"
       },
-      "related_kif": ["KIF-28"],
+      "related_kif": [
+        "KIF-28"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -398,7 +468,10 @@
         "target_section": "run_npx helper",
         "fix_description": "Use ['cmd', '/c', 'npx', ...] or d1-query.py's run_npx() helper"
       },
-      "related_kif": ["KIF-19", "KIF-36"],
+      "related_kif": [
+        "KIF-19",
+        "KIF-36"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
@@ -423,14 +496,20 @@
         "target_section": "§8.6 Rule 11",
         "fix_description": "Always add --remote to wrangler r2 commands — omit = silent no-op to Miniflare"
       },
-      "related_kif": ["KIF-08"],
+      "related_kif": [
+        "KIF-08"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-018": {
       "signature": {
         "type": "keyword",
-        "keywords": ["skill hygiene", "location drift", "stale skill"],
+        "keywords": [
+          "skill hygiene",
+          "location drift",
+          "stale skill"
+        ],
         "tool": "any",
         "context": "Multiple copies of same skill in different directories"
       },
@@ -448,14 +527,20 @@
         "target_section": "Hygiene check",
         "fix_description": "Run skill-hygiene.js — exit 0=clean, 1=stale, 2=conflicts"
       },
-      "related_kif": ["KIF-24"],
+      "related_kif": [
+        "KIF-24"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-019": {
       "signature": {
         "type": "keyword",
-        "keywords": ["platform default", "non-QNFO skill", "skill boundary"],
+        "keywords": [
+          "platform default",
+          "non-QNFO skill",
+          "skill boundary"
+        ],
         "tool": "any",
         "context": "Loading/modifying/syncing a DeepChat platform-default skill"
       },
@@ -473,14 +558,20 @@
         "target_section": "§8.10",
         "fix_description": "Detect and delete platform-default skills per QNFO-Skill Boundary Gate"
       },
-      "related_kif": ["KIF-35"],
+      "related_kif": [
+        "KIF-35"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-020": {
       "signature": {
         "type": "keyword",
-        "keywords": ["memory only", "not in skill", "persistence gap"],
+        "keywords": [
+          "memory only",
+          "not in skill",
+          "persistence gap"
+        ],
         "tool": "any",
         "context": "Critical operational rule stored only in D1/Vectorize memory"
       },
@@ -498,14 +589,25 @@
         "target_section": "§8.9",
         "fix_description": "Elevate to skill file per 4-tier model — MEMORIES ARE NOT SKILLS"
       },
-      "related_kif": ["KIF-33"],
+      "related_kif": [
+        "KIF-33"
+      ],
       "status": "active",
       "false_positive_count": 0
     },
     "FP-021": {
       "signature": {
         "type": "keyword",
-        "keywords": ["acronym expansion", "fabricated", "unverified acronym", "guessed characters", "filled in", "plausible fiction", "information void", "ground truth"],
+        "keywords": [
+          "acronym expansion",
+          "fabricated",
+          "unverified acronym",
+          "guessed characters",
+          "filled in",
+          "plausible fiction",
+          "information void",
+          "ground truth"
+        ],
         "tool": "any",
         "context": "Model fills an information gap (truncated token, unknown acronym, missing tool) with domain-plausible fiction that passes all internal-consistency quality gates"
       },
@@ -523,7 +625,11 @@
         "target_section": "§7 Information Void Completion Gate",
         "fix_description": "Before acting on or publishing any information from an ambiguous/incomplete source, verify against external ground truth. Information gaps are completion prompts, not stop signs — the model fills them silently. Defense: external verification BEFORE the gap reaches the action/publish pipeline."
       },
-      "related_kif": ["KIF-10", "KIF-19", "KIF-31"],
+      "related_kif": [
+        "KIF-10",
+        "KIF-19",
+        "KIF-31"
+      ],
       "status": "active",
       "false_positive_count": 0
     }
