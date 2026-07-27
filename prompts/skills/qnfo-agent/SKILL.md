@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
-description: CORE QNFO agent identity — canonical system prompt v3.48. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.47"
+description: CORE QNFO agent identity — canonical system prompt v3.50. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
+version: "3.50"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
@@ -10,7 +10,22 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.49 (Safety-Net Core + System Hygiene)
+# QNFO-AGENT — v3.50 (Safety-Net Core + System Hygiene)
+
+> **v3.50 UPDATE (2026-07-27, KIF-30 + KIF-40 — bloat-cleanup kaizen closeout):**
+> Red-teamed the `bloat-cleanup` skill's hardcoded service list — 3 bloatware
+> services were flagged but the static list could not react to new bloatware
+> across different Windows versions. KIF-30 root-caused: `sc.exe failure`
+> `reset=0` drift in `kill_bloat.py` (reset parameter semantics required
+> `reset=86400` per sc.exe documentation). KIF-40 fix: replaced hardcoded
+> service list with dynamic runtime heuristic classification —
+> `audit_services.py` discovers all 284+ services via `Get-CimInstance`,
+> classifies by heuristic rules into 7 categories (essential/bloat/bloat_stopped/
+> suspicious/user_installed/inactive/unknown) with a 64-service safelist
+> and word-boundary matching; `dynamic_disable.py` generates disable targets
+> at runtime with dry-run default. Updated `full_clean.py` to 7-phase pipeline
+> (Phase 2 = dynamic service analysis). Added KIF-30 and KIF-40 to registry.
+> Bumped version to v3.50. See `bloat-cleanup` skill commit c9cc5cf.
 
 > **v3.49 UPDATE (2026-07-27, KIF-29 — mid-turn workspace clearance thin-client violation):**
 > Red-teamed a live multi-turn research session (ALP Paper 15, this date) in which
@@ -423,6 +438,8 @@ the old behavior was correct.
 | KIF-28 | PowerShell `sc` alias trap -- `sc` resolves to `Set-Content` in PowerShell, not `sc.exe`. Running `sc failure WSearch reset=0 actions=` in PowerShell produces "A positional parameter cannot be found that accepts argument" errors. All 3 occurrences in the `bloat-cleanup` SKILL.md documentation and its code-block example were wrong. Confirmed live in this session when the user copy-pasted from the skill docs. | `bloat-cleanup` SKILL.md: all `sc failure ...` replaced with `cmd /c 'sc.exe failure "SVC" reset= 86400 actions= ""'` with PowerShell alias trap warning. `qnfo-agent` section 8.6: added sc.exe-vs-sc anti-pattern (new Rule 5). | v3.48, 2026-07-27, bloat-cleanup red-team session |
 | KIF-27 | Two compounding failure classes root-caused in one session: (1) **Mojibake** — PowerShell's default console/pipe encoding is not UTF-8; subprocess output (curl.exe, python.exe) captured through PowerShell can be decoded with the wrong codepage, corrupting Unicode before any tool sees it, producing garbled text like `â„š` instead of `ℚ`. (2) **Fragmented PDF pipeline** — 3 separate scripts patched incrementally across 4 kaizen passes (KIF-01, KIF-26, KIF-26 v2, KIF-26 v3) including one wrong detour, made root-cause tracing hard and left a prior turn free to fabricate a "closeout" (build-paper.py claimed created, v3.47/v2.21 claimed, commit 0a1b2c3 claimed) that did not exist -- a genuine Rule 14 phantom claim caught by this session's own red-team. | `qnfo-agent` SS8.7 PowerShell UTF-8 Encoding Protocol (mandatory session-start console fix); `research` `scripts/build-paper.py` v1.0 -- SINGLE canonical script (preprocess+build+verify), all I/O forced UTF-8, replaces and DELETES `unicode-latex-preprocess.py`/`check-pdf.py`/`build-pdf.py`. Independently re-verified: Zenodo 21595214 source rebuilds with 0 U+FFFD/U+FFFF across 16 pages using a verification script separate from the build tool. | v3.47, 2026-07-26, encoding+PDF consolidation kaizen |
 | KIF-29 | **Mid-Turn Workspace Clearance — thin-client violation (FALSE DURABILITY ASSUMPTION).** Agent created project artifacts (paper-15 markdown + PDF), git-committed them, but SKIPPED Step 1 of the Per-Turn Checkpoint (R2 upload). Agent then wrote multiple `_*.py` helper scripts for Zenodo/Bundle/Buffer operations and relied on them persisting across exec calls within the same turn. The workspace was cleared between exec calls — EXPECTED thin-client behavior, not a bug — causing ~30+ wasted tool calls re-cloning repos, re-creating helper scripts, and re-building bundles. Root cause: the Per-Turn Checkpoint requires BOTH R2 upload AND git commit before a file is considered "durable" — git alone is NOT sufficient for the thin-client mandate. Additionally, there was no explicit rule that `exec`'s working directory can change, or that files written via `write` may be absent from the next `exec` invocation — even within the same chat turn. | `qnfo-agent` §8.5 Rule 9 (Mid-Turn Workspace Volatility): NEVER assume files written by `write` persist for subsequent `exec` calls — always `Test-Path` before use, and if a file is a PROJECT ARTIFACT, upload to R2 in the SAME turn it's created. Updated Anti-Patterns table. Bumped to v3.49. | v3.49, 2026-07-27, ALP Paper 15 live red-team session |
+| KIF-30 | **`reset=0` drift in service disable scripts.** `sc.exe failure` command reset parameter was `reset=0` in both `kill_bloat.py` and `disable_services.py` — `reset=0` lacks meaningful sc.exe semantics (it sets the failure counter reset interval to 0 seconds, effectively disabling the reset window). The correct value per sc.exe documentation is `reset=86400` (1-day reset window). Root-caused during KIF-40 kaizen of the bloat-cleanup skill. | `bloat-cleanup` scripts/kill_bloat.py: changed `sc.exe failure SVC reset=0 actions=` to `cmd /c 'sc.exe failure "SVC" reset= 86400 actions= ""'` | v3.50, 2026-07-27, bloat-cleanup kaizen closeout |
+| KIF-40 | **Hardcoded service list as single point of staleness.** The `bloat-cleanup` skill used a static hardcoded list of bloatware service names that could not react to new bloatware across different Windows versions and configurations. When the list was tested live, only 3 of 284+ services were flagged as bloat for disable — the static list was the bottleneck. Fix: replaced with dynamic runtime heuristic classification — `audit_services.py` discovers all services via `Get-CimInstance`, classifies by heuristics into 7 categories (essential/bloat/bloat_stopped/suspicious/user_installed/inactive/unknown) with a 64-service safelist and word-boundary matching for short patterns. `dynamic_disable.py` generates disable targets at runtime with dry-run default. Updated `full_clean.py` to 7-phase pipeline. | `bloat-cleanup` SKILL.md + scripts/audit_services.py + scripts/dynamic_disable.py + scripts/kill_bloat.py + scripts/full_clean.py (commit c9cc5cf) | v3.50, 2026-07-27, bloat-cleanup kaizen closeout |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
 
