@@ -695,6 +695,29 @@ curl -s -X POST https://qno-research-mcp.q08.workers.dev/mcp \
 
 ---
 
+## File/Project Hygiene
+
+### Same-Turn Cleanup Mandate (KIF-32)
+
+Code review and MCP server building generate temporary files. ALL of these
+must be cleaned up in the same turn:
+
+- **Scratch scripts** (`_*.py`): Delete immediately after execution.
+- **Test output**: Delete after verification.
+- **Build artifacts**: `node_modules/`, `dist/`, `__pycache__/` -- delete
+  after the build is complete and verified.
+- **MCP server code**: MUST be committed to git same-turn. Never leave
+  a "drafted but uncommitted" MCP server on local disk across turns.
+
+### No Local Project Files
+
+- NEVER create project files under `.deepchat/projects/`, Desktop, or
+  Documents. All code lives in git repos + R2.
+- When reviewing code that exists locally, verify it has a remote git
+  origin before working on it. If local-only, push BEFORE review.
+
+---
+
 ## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
@@ -705,3 +728,5 @@ curl -s -X POST https://qno-research-mcp.q08.workers.dev/mcp \
 | Non-Cloudflare MCP deployment | Deploy as Cloudflare Worker |
 | `any` type without justification | Document WHY `any` is necessary |
 | Silent error swallowing | Log all errors with context; never empty catch |
+| Leaving scratch files on disk after review/build | Delete `_*.py`, `__pycache__/`, test output same-turn (KIF-32) |
+| Drafting MCP server code locally without git commit same-turn | Commit to git in the SAME turn, or treat as not-yet-existing (KIF-09) |

@@ -228,10 +228,39 @@ GitHub is SECONDARY to D1 for project state. Sync direction: D1 -> GitHub (D1 is
 
 ---
 
+## File/Project Hygiene (KIF-32 Enforcement)
+
+### NO git repos in .deepchat/projects/
+
+KIF-32 prohibits local project files. A git repository checked out under
+`.deepchat/projects/` is a KIF-32 VIOLATION -- it puts project files on
+local disk outside the thin-client protocol. Before any `git clone` or
+`git init`, verify the target path is NOT under `.deepchat/projects/`.
+
+**Enforcement:**
+- NEVER `git clone` or `git init` under `.deepchat/projects/`, Desktop,
+  Documents, or any system directory (C:\, C:\Windows, C:\Program Files).
+- **Canonical project paths:** Projects live on R2 (Cloudflare) with git
+  mirrors on GitHub. Local clones are temporary scratchpads only.
+- If a project repo needs local checkout for work:
+  1. Clone to a temp location: `git clone <url> $env:TEMP\<project>`
+  2. Work, commit, push.
+  3. Delete local clone immediately: `Remove-Item -Recurse $env:TEMP\<project>`
+- After `git push`, delete local project files (per JIT thin-client protocol).
+
+### Skills Repository (qnfo-skills) is PROTECTED
+
+The skills repo survives thin-client cleanups (ADR-021/ADR-025). NEVER place
+project data, publications, research artifacts, or governance documents there.
+See ADR-026 below.
+
+---
+
 ## Protected Repositories
 
+
 ### qnfo-skills (ADR-026)
-- **Git repo is for SKILLS ONLY.** NEVER place project data, publications, research artifacts, or governance documents.
+- **Git repo is for SKILLS ONLY.** See also KIF-32 above. NEVER place project data, publications, research artifacts, or governance documents.
 - Git-tracked files in the skills repo are PROTECTED. They survive thin-client cleanups (ADR-021/ADR-025).
 - Violating this rule is a fabrication-level offense (Rule 14).
 - **This restriction applies to git metadata too, not just files** (ADR-026

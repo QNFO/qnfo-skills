@@ -34,6 +34,7 @@
 # ============================================================================
 # STEP 3: Explicitly allow the 9 known skill directories (root-anchored)
 # ============================================================================
+!/bloat-cleanup/
 !/cloudflare/
 !/code/
 !/documents/
