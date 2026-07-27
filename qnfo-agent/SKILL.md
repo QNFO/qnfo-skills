@@ -10,7 +10,22 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.50 (Safety-Net Core)
+# QNFO-AGENT — v3.51 (Safety-Net Core)
+
+> **v3.51 UPDATE (2026-07-27, KIF-32 — file storage hygiene):**
+> User demanded a full audit of scattered DeepChat files. Found ~6,884 MB
+> across 5+ locations. The install directory at `AppData\Local\Programs\DeepChat`
+> had been used as a catch-all working directory by multiple sessions,
+> accumulating project files from 5 repos, 8 stale empty skill directories,
+> and a `.git` repo. Root cause: no skill defined WHERE files should be
+> created during agent execution. Fix: Added **§8.8 File Storage Hygiene**
+> (MANDATORY) — PROHIBITED locations, canonical file locations, session-start
+> hygiene audit, install dir contamination protocol. Added KIF-32 to §0.11
+> registry. Added 4 new file-storage anti-patterns. Cleaned up 13 items
+> (stale dirs, zip, screenshots, secrets log, wrangler cache). Synced
+> divergent system/SKILL.md install-dir copy to canonical. Red-team passed:
+> credential scan (expected findings), encoding audit (0 BOM/U+FFFD/U+FFFF),
+> cleanup verification. VACUUM on agent.db pending.
 
 > **v3.50 UPDATE (2026-07-26, KIF-31 — acronym hallucination):**
 > User caught a fabricated acronym expansion in a published paper: "ZBW
@@ -406,6 +421,7 @@ the old behavior was correct.
 | KIF-28 | (Reserved — skip) | — | — |
 | KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
 | KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
+| KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
 | KIF-31 | **Acronym Hallucination** — model encounters an opaque acronym (e.g., "ZBW") during paper writing, has no grounded expansion in immediate context, and fabricates a plausible-sounding phrase from the initial letters (e.g., "Zhu, Brad, Wang" instead of the correct "Zitterbewegung"). The fabricated expansion is published in a paper PDF and indexed in Zenodo before detection. This is structurally identical to KIF-10 (hand-copied truncated token) — filling an information void with plausible fiction that survives all existing quality gates because the fabricated text is well-formed, domain-relevant prose. | `qnfo-agent` §7 Publication Standards — "Acronym Expansion Gate": before any paper parenthetically expands an acronym, VERIFY the expansion against existing project documentation (prior papers, project plans, D1/KG). If no prior occurrence found, flag `[UNVERIFIED-ACRONYM: <acronym> → <expansion> — not found in any prior artifact. VERIFY before publication.]`. Anti-pattern added to table. Rule: ALWAYS spell out full term on first use. If the full term is unknown, the acronym must not be used. | v3.50, 2026-07-26, ZBW hallucination session |
 
 **Rule:** Adding a new fix here is mandatory whenever a kaizen/red-team session identifies a NEW root-caused bug — this is the durable ledger, not a per-session note. `kaizen-skill-fixes` skill remains the narrative/detail record; this table is the fast-lookup index.
@@ -890,6 +906,10 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 | Hardcoded API tokens in ephemeral `_*.py` scripts reaching `git commit` | Run the `research` skill's `scripts/credential-scan.py --staged` before every commit; add `_*.py`/`.env`/`*.token` to `.gitignore` from project Phase 0. |
 | Loading a skill not matched by any trigger keyword ("just in case") | Full 24-Skill Trigger Table Overlap/Precedence Rule 6 — JIT discipline applies to skills too |
 | Editing a skill file without checking whether the change contradicts a prior fix | §0.11 Known-Issues-Fixed Registry — grep it before editing |
+| Creating files in the Electron install directory (`AppData\Local\Programs\DeepChat\`) | �8.8 File Storage Hygiene � PROHIBITED. Install dir is app binaries + resources only. Move project files to correct repo, delete ephemeral files, delete stale directories. |
+| Leaving stale empty directories in the install directory | �8.8 Install Directory Contamination Protocol � delete immediately. Empty directories are evidence of a prior session that failed to clean up. |
+| Creating files in `%USERPROFILE%\Pictures\`, `Desktop\`, or `Documents\` | �8.8 PROHIBITED Locations � these are user directories, not application directories. |
+| Working directory contamination (project files, repos, artifacts in DeepChat install dir) | �8.8 Session-Start Hygiene Audit � mandatory scan before any file creation. Flag `[INSTALL-DIR-CONTAMINATION]`. |
 | Expanding an acronym with a fabricated phrase not grounded in any project artifact (KIF-31) | §7 Acronym Expansion Gate — verify every parenthetical acronym expansion against prior project documentation before publication. If you don't know the full term, don't use the acronym. Flag `[UNVERIFIED-ACRONYM]` for any expansion with zero prior occurrences. |
 
 ---
