@@ -10,7 +10,25 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.51 (Safety-Net Core)
+# QNFO-AGENT — v3.52 (Safety-Net Core)
+
+> **v3.52 UPDATE (2026-07-27, KIF-33 — memory persistence architecture):**
+> Red-teamed the memory system: 30+ memories in D1/Vectorize. Only 12 are
+> genuinely ephemeral (project events); the remaining 18+ contain operational
+> rules, anti-patterns, and configuration facts that the agent MUST retain
+> across sessions. Memory is searchable but VOLATILE — deletion, eviction, or
+> a semantic mismatch will silently lose critical context. Fix: (1) Added
+> **§8.9 MEMORY-SKILL PERSISTENCE PROTOCOL** — 4-tier model (ephemeral →
+> short-term memory → long-term skill-log → permanent skill-instruction),
+> classification flow, migration triggers. (2) Hardened 4 critical operational
+> rules into qnfo-agent §8.9 + anti-patterns (install-dir prohibition, git push
+> verification, BOM/U+FFFD/U+FFFF gate, session-start audit). (3) Created
+> `memories/` directories with `history.log` files in qnfo-agent, kaizen-skill-fixes,
+> research, and system skills — long-term skill-relevant event logs. (4) KIF-33
+> in registry. (5) 5 new anti-pattern entries for memory persistence violations.
+> Principle: MEMORIES ARE NOT SKILLS. Critical multi-session instructions MUST
+> live in skill files (git-backed, multi-remote, version-controlled). Memories
+> are the intermediate tier between ephemeral LLM threads and permanent records.
 
 > **v3.51 UPDATE (2026-07-27, KIF-32 — file storage hygiene):**
 > User demanded a full audit of scattered DeepChat files. Found ~6,884 MB
@@ -421,6 +439,7 @@ the old behavior was correct.
 | KIF-28 | (Reserved — skip) | — | — |
 | KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
 | KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
+| KIF-33 | **Memory-Skill Persistence Architecture** — 30+ operational memories in D1/Vectorize with zero skill-level redundancy. Single-point-of-failure: memory deletion/eviction/search-mismatch silently loses critical agent context. Root cause: no protocol distinguishing which memories should be elevated to skills. Fix: §8.9 4-tier model (ephemeral→short-term→long-term→permanent), classification flow, 4 critical operational rules hardened into qnfo-agent, `memories/history.log` files created in 4 skill directories. Principle: MEMORIES ARE NOT SKILLS. Git-backed, version-controlled skill files are the only acceptable permanent store for multi-session operational instructions. | `qnfo-agent` §8.9 Memory-Skill Persistence Protocol; `memories/` dirs in qnfo-agent, kaizen-skill-fixes, research, system. | v3.52, 2026-07-27, memory audit |
 | KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
 | KIF-31 | **Acronym Hallucination** — model encounters an opaque acronym (e.g., "ZBW") during paper writing, has no grounded expansion in immediate context, and fabricates a plausible-sounding phrase from the initial letters (e.g., "Zhu, Brad, Wang" instead of the correct "Zitterbewegung"). The fabricated expansion is published in a paper PDF and indexed in Zenodo before detection. This is structurally identical to KIF-10 (hand-copied truncated token) — filling an information void with plausible fiction that survives all existing quality gates because the fabricated text is well-formed, domain-relevant prose. | `qnfo-agent` §7 Publication Standards — "Acronym Expansion Gate": before any paper parenthetically expands an acronym, VERIFY the expansion against existing project documentation (prior papers, project plans, D1/KG). If no prior occurrence found, flag `[UNVERIFIED-ACRONYM: <acronym> → <expansion> — not found in any prior artifact. VERIFY before publication.]`. Anti-pattern added to table. Rule: ALWAYS spell out full term on first use. If the full term is unknown, the acronym must not be used. | v3.50, 2026-07-26, ZBW hallucination session |
 
