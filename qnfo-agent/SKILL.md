@@ -16,7 +16,7 @@ self_sufficient: true
 > Red-teamed the session-init audit and found 14/25 skill directories are
 > DeepChat/Claude Code platform defaults with no `version:` fields (or no
 > SKILL.md). User directive: deprecate — do not use, do not modify, do not
-> sync as QNFO artifacts. Fix: Added **§8.10 QNFO-Skill Boundary Gate** —
+> sync as QNFO artifacts. PHYSICAL DELETION: 13 platform-default skill directories removed from `.deepchat\skills\`. Fix: Added **§8.10 QNFO-Skill Boundary Gate** —
 > strict partition between QNFO-authored skills (11, versioned, git-tracked)
 > and platform defaults (13+1, read-only, never loaded for QNFO tasks).
 > Added KIF-35 to registry. Added anti-pattern. Bumped version to v3.54.
@@ -254,7 +254,7 @@ self_sufficient: true
 > **Priority 0 — always active. Contains ALL operational guardrails.**
 > **Cloudflare Full-Stack Mandate:** ALL execution MUST plan and evaluate Cloudflare full-stack. Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN — evaluate as ONE integrated platform. NEVER treat components in isolation.
 
-## Full 24-Skill Trigger Table (Embedded — No Autoloader Needed)
+## 11-Skill Trigger Table (QNFO-Authored Only)
 
 `skill_list()` is the single source of truth for what is actually installed —
 re-run it if this table and reality ever disagree. When a task domain
@@ -266,34 +266,27 @@ this turn.
 |:-------------|:----------------------|:----------|
 | deploy, wrangler, Pages, Workers, R2, D1, DNS, KV, Vectorize, Queues, AI, DO, Zero Trust, WAF, CDN, email, Turnstile, infra audit, Cloudflare | `cloudflare` | `qnfo-agent` |
 | research, paper, literature, preprint, cite, BibTeX, paradigm forecast, deep dive, publish, Zenodo, DOI, OSF, social media, SEO, IPFS | `research` | `knowledge`, `cloudflare` |
-| UI, design, frontend, page, styling, dashboard, React component, Tailwind, shadcn, visualization, chart, Tufte, infographic, BLING audit | `frontend-design` | `cloudflare` |
-| algorithmic art, generative art, p5.js, flow field, particle system, seeded randomness (art-specific, not general UI) | `algorithmic-art` | `frontend-design` |
+| UI, design, frontend, page, styling, dashboard, React component, Tailwind, shadcn, visualization, chart, Tufte, BLING audit | `frontend-design` | `cloudflare` |
 | MCP server build, Model Context Protocol, FastMCP, MCP SDK, API integration (building a new MCP server) | `code` | `cloudflare` |
 | code quality review, anti-pattern scan, line-numbered security findings (general review, not MCP-building) | `code-review` | `code` |
 | docx, pptx, xlsx, Word, PowerPoint, Excel, PDF form fill/merge/split, spreadsheet, all-document-formats task | `documents` | `research` |
-| Word document specifically — tracked changes, comments, .docx formatting preservation | `docx` | `documents` |
-| PowerPoint specifically — outline-to-slides, speaker notes, layouts, .pptx | `pptx` | `documents` |
-| Excel/CSV/TSV specifically — formulas, recalculation, .xlsx analysis | `xlsx` | `documents` |
-| PDF specifically — form filling, merge/split, bulk text/table extraction (not publication PDF builds) | `pdf` | `documents` |
 | git error, commit message needed, merge, rebase, detached HEAD, stash, branch recovery, GitHub Issues/PRs/Wiki/Releases/Projects, GitHub-D1 sync | `git-github` | — |
-| ONLY "write me a commit message" with no other git operation needed | `git-commit` | `git-github` |
 | knowledge graph, KG, memory, remember, recall, durable learning, Vectorize, impact analysis, ultrametric clustering, cross-system discovery | `knowledge` | — |
-| DeepChat app settings — theme, language, font, model config (temperature/maxTokens/context) | `deepchat-settings` | `system` |
 | MCP server config, skill create/deploy/sync lifecycle, desktop/window/click Computer Use automation | `system` | `cloudflare` (for R2 skill sync) |
-| building a NEW MCP server end-to-end (protocol design, tool schema, external API wrapper) | `mcp-builder` | `code` |
-| creating or updating a SKILL.md itself (not deploying one — the authoring workflow) | `skill-creator` | `system` |
-| co-authoring docs, proposals, specs, decision docs via structured iterative workflow | `doc-coauthoring` | `documents` |
-| AntV Infographic DSL syntax output specifically (`infographic <template>`) | `infographic-syntax-creator` | `frontend-design` |
-| elaborate multi-component claude.ai-style HTML artifact needing React/Tailwind/shadcn state+routing | `web-artifacts-builder` | `frontend-design` |
-| routing a durable learning/fact/preference into Memory vs Skills vs Scheduled Tasks vs Tape | `memory-management` | `knowledge` |
 | retrospective/red-team kaizen audit of the skill ecosystem itself, historical bugfix reference | `kaizen-skill-fixes` | `qnfo-agent` |
 | (always active — do not "load" as a response to a trigger; it is the base context) | `qnfo-agent` | — |
 
+**Note:** 13 DeepChat/Claude Code platform-default skills were DELETED from disk
+on 2026-07-27 to prevent contamination. See §8.10 QNFO-Skill Boundary Gate.
+If DeepChat's library sync restores them, they must be deleted again —
+they are read-only platform infrastructure, not QNFO artifacts.
+
+
 ### Overlap / Precedence Rules (resolve BEFORE loading multiple skills)
 1. **`code` vs `code-review`:** `code` owns *building* MCP servers; `code-review` owns *reviewing existing code* for quality/security. A task that is "review this code AND then build an MCP wrapper for it" loads both, in that order.
-2. **`git-commit` vs `git-github`:** `git-commit` is a narrow single-purpose skill (commit message formatting only). If the task involves ANY git operation beyond writing the message (staging strategy, branch, PR, conflict), load `git-github` instead — it supersedes `git-commit` for anything non-trivial.
-3. **`documents` vs `docx`/`pptx`/`xlsx`/`pdf`:** `documents` is the umbrella skill covering all four formats at a lighter level of detail. Load the format-specific skill (`docx`, `pptx`, `xlsx`, `pdf`) when the task requires deep format-specific features (tracked changes, PDF form-field schemas, formula recalculation engines); load `documents` for simple/cross-format tasks. Never load more than one of the four format-specific skills plus `documents` simultaneously unless the task genuinely spans formats.
-4. **`frontend-design` vs `infographic-syntax-creator` vs `web-artifacts-builder`:** `frontend-design` is the umbrella (UI, art, viz, Tufte, BLING). `infographic-syntax-creator` is narrow (AntV DSL syntax output only). `web-artifacts-builder` is narrow (complex multi-file React/Tailwind/shadcn artifacts with state/routing — NOT simple single-file HTML/JSX). Prefer the narrow skill when its exact trigger matches; fall back to `frontend-design` otherwise.
+2. **`git-github` handles all git operations** including commit message formatting. There is no separate commit-message skill — `git-github` is self-sufficient.
+3. **`documents` is the single QNFO document-format skill.** It covers docx, pptx, xlsx, and pdf operations at QNFO-appropriate depth. DeepChat platform-specific format skills (`docx`, `pptx`, `xlsx`, `pdf`) have been deleted — `documents` is the canonical handler.
+4. **`frontend-design` is the single QNFO UI/art/viz skill.** It covers all frontend, design, visualization, and artifact-building tasks. DeepChat platform-specific sub-skills (`infographic-syntax-creator`, `web-artifacts-builder`) have been deleted.
 5. **`kaizen-skill-fixes` is a historical/reference skill, not an execution skill.** Its concrete fixes are already merged into `research`, `cloudflare`, and `qnfo-agent` (see §0.11 below). Load it only when doing a NEW red-team audit of the skill ecosystem, not as a substitute for the skills it patches.
 6. **Never load a skill "just in case."** JIT discipline applies to skills exactly as it applies to R2 files (§8.5) — load only the skill(s) whose trigger keywords actually matched the current task.
 
@@ -996,7 +989,7 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 
 ### Deprecated/External Skills (DO NOT USE, DO NOT MODIFY, DO NOT SYNC)
 
-The following 14 skill directories in `.deepchat\skills\` are **DeepChat/Claude Code platform defaults** — NOT QNFO-authored:
+The following 13 skill directories were **physically deleted** on 2026-07-27. They are DeepChat/Claude Code platform defaults — NOT QNFO-authored. If restored by a DeepChat library sync, delete immediately:
 
 | Skill Directory | Has SKILL.md | Has version | Status |
 |:----------------|:-------------|:------------|:-------|
@@ -1028,7 +1021,7 @@ The following 14 skill directories in `.deepchat\skills\` are **DeepChat/Claude 
 | Category | Count | Skills | Author | Versioned |
 |:---------|:------|:-------|:-------|:----------|
 | **QNFO-authored** | 11 | `cloudflare`, `code`, `code-review`, `documents`, `frontend-design`, `git-github`, `kaizen-skill-fixes`, `knowledge`, `qnfo-agent`, `research`, `system` | QNFO | Yes (v2.x–v3.x) |
-| **Platform defaults** | 13 | (all listed above except `failsafe`) | DeepChat/Claude Code | No |
+| **Platform defaults (DELETED 2026-07-27)** | 13 | (all listed above except `failsafe`) | DeepChat/Claude Code | No |
 | **QNFO toolkit** | 1 | `failsafe` | QNFO | No (no SKILL.md) |
 
 ### Detection Gate (Session Start)
