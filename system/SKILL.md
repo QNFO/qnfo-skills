@@ -1,6 +1,6 @@
 ---
 name: system
-description: DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, session initialization (/init prompt), and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
+description: **SESSION STARTUP: load qnfo-agent first via skill_view('qnfo-agent'), then system via skill_view('system').** DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, session initialization (/init prompt), and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
 version: "2.3"
 triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "skill hygiene", "skill locations", "duplicate skills", "stale skills", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
 related: ["cloudflare"]

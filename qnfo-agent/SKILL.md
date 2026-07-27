@@ -1,7 +1,7 @@
 ---
 name: qnfo-agent
-description: CORE QNFO agent identity — canonical system prompt v3.37. Research Integrity Mandate, EXECUTE MODE, Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Session Lifecycle, Red-Team/DoD cycle, Task Execution Audit, Anti-Hyperbole Gate, Production Immutability Gate, Physics Writing Standards, Publication Language Gate, JIT thin-client protocol, Tool Code Execution Optimization, Windows/PowerShell execution anti-patterns, credential-leak detection, Known-Issues-Fixed Registry. This is the ONLY always-active safety-net skill. Contains the embedded Full 24-Skill Trigger Table with overlap/precedence rules for autonomous loading.
-version: "3.47"
+description: **MUST LOAD FIRST: call skill_view('qnfo-agent') at session start before ANY task. This activates the 24-Skill Trigger Table, all safety protocols, and autonomous skill discovery for the entire session.** CORE QNFO agent identity v3.52 — Research Integrity Mandate, EXECUTE MODE, 24-Skill Trigger Table (autonomous loading), Due Diligence Protocol, Autonomous Continuation, Closeout Protocol, Thin-Client Protocol (R2+git), Anti-Hyperbole Gate, Publication Language Gate, credential-leak detection, Known-Issues-Fixed Registry (KIF-01 through KIF-33). The safety-net core. Skill discovery FAILS without this loaded first.
+version: "3.52"
 triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
 related: ["cloudflare", "research", "knowledge", "system"]
 priority: 0
