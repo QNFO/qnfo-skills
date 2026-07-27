@@ -10,7 +10,16 @@ autonomous: true
 self_sufficient: true
 ---
 
-# QNFO-AGENT — v3.52 (Safety-Net Core)
+# QNFO-AGENT — v3.53 (Safety-Net Core)
+
+> **v3.53 UPDATE (2026-07-27, KIF-34 — edit tool Unicode matching failure):**
+> Red-teamed the DeepChat cleanup session and found the `edit` tool's exact-text
+> matching failed 8+ times on paragraphs containing em-dashes (U+2014) and
+> section-signs (U+00A7). `read` confirmed the text existed, but `edit`
+> consistently returned "Cannot find the specified text to replace." This
+> wasted ~15 tool calls. Fix: Added **§8.7.1 Edit Tool Unicode Matching
+> Failure** — workflow of max 2 retries then switch to Python/PowerShell
+> replacement. Added KIF-34 to registry. Added anti-pattern.
 
 > **v3.52 UPDATE (2026-07-27, KIF-33 — memory persistence architecture):**
 > Red-teamed the memory system: 30+ memories in D1/Vectorize. Only 12 are
@@ -439,6 +448,7 @@ the old behavior was correct.
 | KIF-28 | (Reserved — skip) | — | — |
 | KIF-29 | Cross-Domain Consilience — research stays siloed within one domain's terminology, missing structural isomorphisms across disciplines. | `kaizen-skill-fixes` §H1; `research` skill Phase 1 Cross-Domain Consilience Gate (KIF-29, SOFT) | v3.48, kaizen-skill-fixes v1.4 |
 | KIF-30 | Zenodo Deposits Published Without PDFs — markdown-only deposits with zero rendered output. | `research` §5 HARD GATE P5.PDF — verify all PDFs exist locally and pass KIF-27 verification before any Zenodo `actions/publish` call | v3.49, kaizen-skill-fixes v1.5 |
+| KIF-34 | **Edit Tool Unicode Matching Failure** — the `edit` tool's exact-text matching failed 8+ times on paragraphs containing em-dashes (U+2014) and section-signs (U+00A7) during the DeepChat cleanup session (2026-07-27). `read` confirmed the text was present, but `edit` returned "Cannot find." Root cause: byte-level Unicode matching inconsistency between tool and file encoding paths. Wasted ~15 tool calls. | `qnfo-agent` §8.7.1 Edit Tool Unicode Matching Failure — max 2 retries, then switch to Python/PowerShell replacement. Anti-pattern added. | v3.53, 2026-07-27, deepchat-cleanup session |
 | KIF-33 | **Memory-Skill Persistence Architecture** — 30+ operational memories in D1/Vectorize with zero skill-level redundancy. Single-point-of-failure: memory deletion/eviction/search-mismatch silently loses critical agent context. Root cause: no protocol distinguishing which memories should be elevated to skills. Fix: §8.9 4-tier model (ephemeral→short-term→long-term→permanent), classification flow, 4 critical operational rules hardened into qnfo-agent, `memories/history.log` files created in 4 skill directories. Principle: MEMORIES ARE NOT SKILLS. Git-backed, version-controlled skill files are the only acceptable permanent store for multi-session operational instructions. | `qnfo-agent` §8.9 Memory-Skill Persistence Protocol; `memories/` dirs in qnfo-agent, kaizen-skill-fixes, research, system. | v3.52, 2026-07-27, memory audit |
 | KIF-32 | **File Storage Hygiene** � agent created files in the install directory at `AppData\Local\Programs\DeepChat` and in multiple other locations (Pictures, project dirs, user root), scattering ~6,884 MB across 5+ locations. Root cause: no skill defined WHERE files should be created during agent execution. The install directory became a catch-all working directory with project files from 5 different repos, 8 stale empty skill directories, and a `.git` repo. | `qnfo-agent` �8.8 File Storage Hygiene (prohibited locations, canonical locations, session-start audit, contamination protocol); `system` �Canonical Skill Locations and PROHIBITED Locations (extended to cover agent-created files, not just skills). | v3.51, 2026-07-27, file storage audit |
 | KIF-31 | **Acronym Hallucination** — model encounters an opaque acronym (e.g., "ZBW") during paper writing, has no grounded expansion in immediate context, and fabricates a plausible-sounding phrase from the initial letters (e.g., "Zhu, Brad, Wang" instead of the correct "Zitterbewegung"). The fabricated expansion is published in a paper PDF and indexed in Zenodo before detection. This is structurally identical to KIF-10 (hand-copied truncated token) — filling an information void with plausible fiction that survives all existing quality gates because the fabricated text is well-formed, domain-relevant prose. | `qnfo-agent` §7 Publication Standards — "Acronym Expansion Gate": before any paper parenthetically expands an acronym, VERIFY the expansion against existing project documentation (prior papers, project plans, D1/KG). If no prior occurrence found, flag `[UNVERIFIED-ACRONYM: <acronym> → <expansion> — not found in any prior artifact. VERIFY before publication.]`. Anti-pattern added to table. Rule: ALWAYS spell out full term on first use. If the full term is unknown, the acronym must not be used. | v3.50, 2026-07-26, ZBW hallucination session |
@@ -664,6 +674,43 @@ re-derive or re-copy these rules elsewhere.
 16. **NEVER conclude "X is not installed" from a single indirect signal.** `npm ls -g wrangler` returning empty, a bare `where`/`which <tool>` miss, or a Python `subprocess.run()` PATH failure are ALL insufficient evidence for CLI tools that are invoked via `npx` (wrangler, and any other npx-cached package) rather than globally installed. The ONLY sufficient test for wrangler specifically is `npx wrangler --version` (and `npx wrangler whoami` for auth) executed via the `exec` tool directly — run `cloudflare` skill's `scripts/wrangler-check.js` for the canonical probe. If a "not installed" claim appears in reasoning/thinking output without having run this exact probe in the SAME turn, it is a phantom diagnostic and must be corrected before acting on it (see KIF-19).
 
 ---
+
+---
+
+## §8.7.1 EDIT TOOL UNICODE MATCHING FAILURE (KIF-34, MANDATORY -- 2026-07-27)
+
+> **INCIDENT RECORD (2026-07-27, DEEPCHAT-CLEANUP session):** The `edit` tool's
+> exact-text matching failed 8+ times on a single paragraph of anti-patterns
+> containing em-dashes (—, U+2014) and section-signs (§, U+00A7). The `read`
+> tool confirmed the text was present, but `edit` consistently returned
+> "Cannot find the specified text to replace." This wasted ~15 tool calls
+> and made what should have been a 30-second edit take 20+ minutes across
+> multiple retries with different encoding permutations. **Root cause:** The
+> `edit` tool's exact-text matching uses byte-level comparison and can fail
+> when Unicode characters are involved — especially em-dashes (rendered as
+> `â€"` in PowerShell, `---` in markdown, but stored as `[e2][80][94]` in
+> UTF-8 bytes). The tool and the file agree on the UTF-8 bytes, but the
+> matching algorithm may process the text through different normalization
+> paths, causing a mismatch on multi-byte sequences.
+
+### Workaround (MANDATORY when edit fails twice on the same text)
+
+If `edit` fails with "Cannot find the specified text to replace" twice on
+text that `read` confirms exists:
+
+1. **Use PowerShell with a broader text match** — match a unique ASCII-only
+   slice of the old text (e.g., "Working directory contamination" instead
+   of the full paragraph) and replace a larger block
+2. **Use Python script** — write a `_replace.py` script that reads the file
+   in UTF-8, does the replacement with `str.replace()`, and writes back.
+   Python's string matching is byte-for-byte correct for UTF-8.
+3. **Never retry more than 3 times** — each retry costs a full tool call.
+   After 2 failures, switch to a different approach immediately.
+
+### Anti-Pattern Added
+
+| Edit tool retried 5+ times on Unicode text that `read` confirmed exists |
+| §8.7.1 Workaround — switch to PowerShell or Python replacement after 2 failures |
 
 ---
 
