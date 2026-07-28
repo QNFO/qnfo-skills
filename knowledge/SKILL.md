@@ -61,7 +61,7 @@ for label in stats.get('nodeLabels', []):
     print(f"  {label['label']}: {label['count']}")
 ```
 
-**Current state (live):** Query at session start via `query_graph('stats')`. DO NOT rely on static cached numbers — KG state evolves across sessions. Last verified: 2026-07-28 (2,457 nodes, 1,492 edges, 1,526 Paper nodes).
+**Current state (live):** Query at session start via `query_graph('stats')`. DO NOT rely on static cached numbers — KG state evolves across sessions. Last verified: 2026-07-28 live (2,500 nodes, 1,492 edges, 1,569 Paper nodes).
 
 ## Reusable Scripts
 
@@ -175,9 +175,9 @@ results = query_graph('query', {
 The Knowledge Graph is the canonical ecosystem registry. MUST query `/stats` before claiming "comprehensive" or "all" discovery.
 
 ### Step 0b: KG Label Counts
-Query live labels at session start. Last verified 2026-07-28:
+Query live labels at session start. Last verified 2026-07-28 live:
 ```
-Paper: 1526, CloudflareAsset: 120, R2Object: 105, Project: 94
+Paper: 1569, CloudflareAsset: 120, R2Object: 105, Project: 94
 Concept: 66, Skill: 60, ResearchQuestion: 49, Finding: 45
 Decision: 39, GovernancePolicy: 14, OpenItem: 25
 ```

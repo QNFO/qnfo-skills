@@ -3,14 +3,38 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.22"
+version: "2.25"
 priority: 1
 platform: all
 autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.24 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+# RESEARCH -- v2.25 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+
+> **v2.25 UPDATE (2026-07-28, KIF-42 — Zenodo bucket PUT protocol):**
+> Red-teamed a Zenodo publication session and found the research SKILL.md
+> documented a non-existent Zenodo API endpoint in §5 "Upload Files" step 2:
+> `PUT /deposit/depositions/{id}/files`. The Zenodo API does NOT accept
+> multi-file uploads to this URL; files must be uploaded INDIVIDUALLY to
+> the bucket URL via `PUT {bucket_url}/{filename}`. This caused every
+> session's first Zenodo upload attempt to fail (wrong endpoint → ad hoc
+> scripts → orphan deposits → incomplete publishes with missing source
+> files). **Root causes:** (1) RC2 (Dual-Role Document Drift) — the
+> canonical `zenodo-create-upload.py` script works correctly but only
+> uploads ONE file (the bundle); individual PDFs and source markdown
+> require separate bucket PUT calls after the canonical script, and
+> this workflow gap was undocumented. (2) RC4 (Information-Void
+> Completion) — when the first upload attempt returned cryptic errors
+> (405, 415, 403), ad hoc scripts were written to guess the API shape
+> instead of reading the canonical script. **Fix:** (1) Corrected the
+> "Upload Files" section to document the bucket PUT protocol with a
+> Multi-File Upload Procedure (6-step: build bundle → canonical script
+> → upload individual files → verify → metadata/publish → verify DOI).
+> (2) Added KIF-42 to `qnfo-agent` §0.11 registry + anti-patterns table.
+> (3) Added anti-pattern: "Using wrong Zenodo upload API endpoint."
+> See `qnfo-agent` v3.60 for the full registry entry and root cause analysis.
+
 
 > **v2.24 UPDATE (2026-07-26, KIF-30 — mandatory PDF inclusion in Zenodo):**
 > Added **HARD GATE P5.PDF (KIF-30)** to §5 Zenodo Upload — ALL PDFs MUST be
@@ -1406,17 +1430,49 @@ Headers: Authorization: Bearer <ZENODO_TOKEN>
 Body: {}  # Empty metadata to create draft
 ```
 
-#### 2. Upload Files
+#### 2. Upload Files (KIF-42 — bucket PUT protocol)
+
+**CRITICAL:** The Zenodo API does NOT accept `PUT /deposit/depositions/{id}/files`.
+Files must be uploaded INDIVIDUALLY to the bucket URL via `PUT {bucket_url}/{filename}`.
+After running `zenodo-create-upload.py` (which uploads the bundle only), use the
+Multi-File Upload Protocol below to upload individual PDFs and source files:
+
 ```python
-PUT https://zenodo.org/api/deposit/depositions/{id}/files
-Files: paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md,
-       ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
+# Multi-File Upload Protocol — upload individual files to the same bucket
+import requests, json, os
+TOKEN = os.environ["ZENODO_TOKEN"]
+H = {"Authorization": f"Bearer {TOKEN}"}
+
+# Read pending deposit info (written by zenodo-create-upload.py)
+with open("_zenodo_pending_deposit.json") as f:
+    pending = json.load(f)
+bucket_url = pending["bucket_url"]
+
+# Upload each file individually to the bucket
+for local_path, zenodo_name in [
+    ("releases/paper-v1.0.pdf", "paper.pdf"),
+    ("paper.md", "paper.md"),
+    ("artifacts/red-team-audit-memo.md", "red-team-audit-memo.md"),
+]:
+    with open(local_path, "rb") as fh:
+        r = requests.put(f"{bucket_url}/{zenodo_name}", data=fh, headers=H)
+    assert r.status_code in (200, 201), f"Upload of {zenodo_name} failed: HTTP {r.status_code}"
+    print(f"  Uploaded: {zenodo_name}")
+
+# Verify all files present
+dep_id = pending["deposit_id"]
+r = requests.get(f"https://zenodo.org/api/deposit/depositions/{dep_id}", headers=H)
+files = [f["filename"] for f in r.json().get("files", [])]
+print(f"Files on deposit: {files}")
+assert "paper.pdf" in files, "PAPER.PDF MISSING — do not publish"
 ```
+
+Then proceed to `zenodo-metadata-publish.py --metadata-file metadata.json`.
+
 **GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
 present in the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
 This is a HARD GATE — a deposit without individual PDFs is INCOMPLETE and must
-be remediated before publishing. See HARD GATE P5.PDF (KIF-30) above.
-
+be remediated before publishing. 
 #### 3. Set Metadata
 ```python
 PUT https://zenodo.org/api/deposit/depositions/{id}

@@ -61,7 +61,7 @@ for label in stats.get('nodeLabels', []):
     print(f"  {label['label']}: {label['count']}")
 ```
 
-**Current state (2026-07):** 3,242 nodes, 4,697 edges. Paper=1,227, Project=92, Skill=60, Concept=49, ResearchQuestion=49, Finding=44, GovernancePolicy=14.
+**Current state (live):** Query at session start via `query_graph('stats')`. DO NOT rely on static cached numbers — KG state evolves across sessions. Last verified: 2026-07-28 live (2,500 nodes, 1,492 edges, 1,569 Paper nodes).
 
 ## Reusable Scripts
 
@@ -175,12 +175,13 @@ results = query_graph('query', {
 The Knowledge Graph is the canonical ecosystem registry. MUST query `/stats` before claiming "comprehensive" or "all" discovery.
 
 ### Step 0b: KG Label Counts
-Enumerate what exists by label:
+Query live labels at session start. Last verified 2026-07-28 live:
 ```
-Paper: 1227, Project: 92, Skill: 60, Concept: 49
-ResearchQuestion: 49, Finding: 44, GovernancePolicy: 14
-Decision: ??, Handoff: ??, Session: ??
+Paper: 1569, CloudflareAsset: 120, R2Object: 105, Project: 94
+Concept: 66, Skill: 60, ResearchQuestion: 49, Finding: 45
+Decision: 39, GovernancePolicy: 14, OpenItem: 25
 ```
+**DO NOT rely on static numbers — run `query_graph('stats')` live.**
 
 ### Step 0c: D1 + Vectorize Cross-Reference
 - D1 portfolio-state: `npx wrangler d1 execute portfolio-state --remote --command "SELECT type, COUNT(*) as count FROM resources GROUP BY type" -y`
