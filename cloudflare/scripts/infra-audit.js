@@ -51,6 +51,7 @@ async function runInfraAudit() {
   console.log(JSON.stringify(summary, null, 2));
   console.log('\nWorkers:', (workers.result || []).map(w => w.id).join(', '));
   console.log('D1 Databases:', (d1.result || []).map(d => d.name).join(', '));
+  console.log('Vectorize Indexes:', (vectorize.result || []).map(v => `${v.name} (${v.config?.dimensions || '?'}d ${v.config?.metric || '?'})`).join(', '));
   console.log('Pages Projects:', (pages.result || []).map(p => p.name).join(', '));
   console.log('DNS Zones:', (zones.result || []).map(z => z.name).join(', '));
 
