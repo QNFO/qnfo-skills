@@ -31,7 +31,7 @@ self_sufficient: true
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. Skill sync is not "done"
 > until all 3 layers (disk/GitHub/R2) are independently re-read back in
-> the same turn — a script's exit code alone does not prove GitHub or R2
+> the same turn â€” a script's exit code alone does not prove GitHub or R2
 > actually received the content.
 
 > **Merges 3:** deepchat-config + skill-management + computer-use
@@ -49,7 +49,7 @@ update_plan([
 
 ---
 
-## Canonical Skill Locations (MANDATORY — v2.2)
+## Canonical Skill Locations (MANDATORY â€” v2.2)
 
 ### Single Source of Truth
 
@@ -70,15 +70,15 @@ update_plan([
 
 ### What Constitutes a "Skill"
 
-A skill is **NOT just SKILL.md** — it includes all supplemental files:
+A skill is **NOT just SKILL.md** â€” it includes all supplemental files:
 
 ```
 <skill-name>/
-├── SKILL.md          (required — the skill definition)
-├── scripts/          (optional — utility scripts the skill invokes)
-├── references/       (optional — supporting reference docs)
-├── templates/        (optional — file templates the skill instantiates)
-└── assets/           (optional — static assets)
+â”œâ”€â”€ SKILL.md          (required â€” the skill definition)
+â”œâ”€â”€ scripts/          (optional â€” utility scripts the skill invokes)
+â”œâ”€â”€ references/       (optional â€” supporting reference docs)
+â”œâ”€â”€ templates/        (optional â€” file templates the skill instantiates)
+â””â”€â”€ assets/           (optional â€” static assets)
 ```
 
 **Sync operations MUST include ALL files**, not just SKILL.md. Use `skill-sync.js` which walks the entire directory tree.
@@ -86,8 +86,8 @@ A skill is **NOT just SKILL.md** — it includes all supplemental files:
 ### GitHub Dual-Remote (Intentional Mirroring)
 
 The local repo has TWO remotes configured:
-- `origin` → `https://github.com/QNFO/qnfo-skills.git` (primary)
-- `rwnq8` → `https://github.com/rwnq8/qnfo-skills.git` (mirror)
+- `origin` â†’ `https://github.com/QNFO/qnfo-skills.git` (primary)
+- `rwnq8` â†’ `https://github.com/rwnq8/qnfo-skills.git` (mirror)
 
 This is **intentional redundancy**, not duplication. Both repos should have identical HEAD commits. After every push:
 ```powershell
@@ -97,7 +97,7 @@ git push rwnq8 master
 
 ---
 
-## Skill Hygiene Enforcement (MANDATORY — v2.2)
+## Skill Hygiene Enforcement (MANDATORY â€” v2.2)
 
 ### Pre-Session Gate
 
@@ -112,7 +112,7 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
 - `2` = Version conflicts, manual resolution required
 - `3` = Script error
 
-**If exit code ≠ 0, DO NOT proceed with skill modifications until resolved.**
+**If exit code â‰  0, DO NOT proceed with skill modifications until resolved.**
 
 ### Stale Location Cleanup Protocol
 
@@ -171,15 +171,15 @@ Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | Conve
 
 ---
 
-## Tool-Call Execution Mandate (Anti-Phantom Gate — MANDATORY)
+## Tool-Call Execution Mandate (Anti-Phantom Gate â€” MANDATORY)
 
 Claiming a setting is "changed", a skill is "deployed"/"synced", or a
 desktop action is "done" without an invoked tool call showing evidence in
-this turn is a PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+this turn is a PHANTOM CLAIM (`qnfo-agent` Â§9.11 Rule 14) â€” BLOCKED.
 
-1. **Settings changes** — call the actual `deepchat_settings_*` tool and confirm the returned value matches the requested change; do not assert a setting changed without the tool's confirmed return value.
-2. **Skill deploy/sync** — a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `Test-Path` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) — compare content, not just presence.
-3. **Desktop automation** — after any click/type/launch action, call `get_window_state` again and show the resulting UI state; do not claim an action succeeded from the dispatch call's return alone.
+1. **Settings changes** â€” call the actual `deepchat_settings_*` tool and confirm the returned value matches the requested change; do not assert a setting changed without the tool's confirmed return value.
+2. **Skill deploy/sync** â€” a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `Test-Path` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) â€” compare content, not just presence.
+3. **Desktop automation** â€” after any click/type/launch action, call `get_window_state` again and show the resulting UI state; do not claim an action succeeded from the dispatch call's return alone.
 4. If any of the 3 sync layers cannot be re-verified in this turn, say `[NOT-VERIFIED: layer X unconfirmed]` instead of "synced"/"deployed"/"done".
 
 ---
@@ -355,7 +355,7 @@ get_window_state({pid: 1234, window_id: 5678})
 ### The Problem (KIF-25: Skill Auto-Loading Weak Link)
 
 DeepChat shows only 8 skills in the system prompt. The **24-Skill Trigger Table**
-(which enables autonomous skill discovery) is inside qnfo-agent's body — but
+(which enables autonomous skill discovery) is inside qnfo-agent's body â€” but
 qnfo-agent must be explicitly loaded via `skill_view` for the table to be active.
 Without loading qnfo-agent first, the LLM cannot discover which skill to use.
 
@@ -451,10 +451,10 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
 - [ ] `health_report()` returns all checks passing
 - [ ] No skill has external file references (self-sufficiency)
 - [ ] No skill has fewer than 15 trigger keywords
-- [ ] **4-D Gate:** Critical assets verified across ≥4 distribution stores
-- [ ] **Worker fleet:** ≤7 Workers (consolidation pattern enforced), 0 orphaned Workers
+- [ ] **4-D Gate:** Critical assets verified across â‰¥4 distribution stores
+- [ ] **Worker fleet:** â‰¤7 Workers (consolidation pattern enforced), 0 orphaned Workers
 - [ ] **R2 hygiene:** No `qnfo/qnfo/` double-prefix paths in qnfo bucket
 
 ---
 
-*system v2.3 — DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
+*system v2.3 â€” DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
