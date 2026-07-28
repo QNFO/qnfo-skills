@@ -10,31 +10,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.25 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
-
-> **v2.25 UPDATE (2026-07-28, KIF-42 — Zenodo bucket PUT protocol):**
-> Red-teamed a Zenodo publication session and found the research SKILL.md
-> documented a non-existent Zenodo API endpoint in §5 "Upload Files" step 2:
-> `PUT /deposit/depositions/{id}/files`. The Zenodo API does NOT accept
-> multi-file uploads to this URL; files must be uploaded INDIVIDUALLY to
-> the bucket URL via `PUT {bucket_url}/{filename}`. This caused every
-> session's first Zenodo upload attempt to fail (wrong endpoint → ad hoc
-> scripts → orphan deposits → incomplete publishes with missing source
-> files). **Root causes:** (1) RC2 (Dual-Role Document Drift) — the
-> canonical `zenodo-create-upload.py` script works correctly but only
-> uploads ONE file (the bundle); individual PDFs and source markdown
-> require separate bucket PUT calls after the canonical script, and
-> this workflow gap was undocumented. (2) RC4 (Information-Void
-> Completion) — when the first upload attempt returned cryptic errors
-> (405, 415, 403), ad hoc scripts were written to guess the API shape
-> instead of reading the canonical script. **Fix:** (1) Corrected the
-> "Upload Files" section to document the bucket PUT protocol with a
-> Multi-File Upload Procedure (6-step: build bundle → canonical script
-> → upload individual files → verify → metadata/publish → verify DOI).
-> (2) Added KIF-42 to `qnfo-agent` §0.11 registry + anti-patterns table.
-> (3) Added anti-pattern: "Using wrong Zenodo upload API endpoint."
-> See `qnfo-agent` v3.60 for the full registry entry and root cause analysis.
-
+# RESEARCH -- v2.24 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
 
 > **v2.24 UPDATE (2026-07-26, KIF-30 — mandatory PDF inclusion in Zenodo):**
 > Added **HARD GATE P5.PDF (KIF-30)** to §5 Zenodo Upload — ALL PDFs MUST be
@@ -754,6 +730,91 @@ print(f"Unused BibTeX entries: {len(unused)} -- {', '.join(sorted(unused))}")
 
 **Triggered by:** "deep dive", "paradigm forecast", "forecast", "long-range research", "maximize EVs".
 
+### Stage -1: Likelihood Calibration Protocol (HARD GATE, KIF-31)
+
+**GATE:** Every P(E|H) or P(E|¬H) likelihood value > 0.80 assigned in Stage 2
+MUST trace to at least one empirical calibration pillar BEFORE it enters the
+Bayesian cascade.  Likelihoods assigned without an anchor are "well-quantified
+noise" — precise decimals communicating false quantitative precision for
+what are fundamentally directionally informed human intuitions.  9 stages of
+arithmetic on uncalibrated numbers produce EV rankings that reflect optimism
+bias, not reality, and Stage 6's Kelly-like allocation then bets *real
+resources* on compounded intuitions.
+
+**Calibration Pillars (at least one required per likelihood > 0.80):**
+
+| Pillar | Operational Definition | Constraint |
+|:-------|:----------------------|:-----------|
+| **Empirical Base Rate** | Search literature for how often claims of the same type resolve to confirmed findings. Cite at least one meta-analysis or systematic review. | Value MUST fall within [baseRate × 0.5, baseRate × 2.0] |
+| **Reference-Class Forecast** | Identify ≥3 closest historical scientific predictions of the same type, magnitude, and maturity as the target claim. Record their actual outcomes. | Likelihood MUST include justification drawn from the reference-class range |
+| **Calibrated Subjective Confidence** | Before assigning any likelihood, complete a 15-minute calibration training run on ≥20 everyday-quantity questions (90% confidence intervals), measuring personal Brier score / overconfidence error. | If overconfidence > 0.15 Brier, adjust all likelihoods > 0.80 downward by factor (1.0 − overconfidence_error) |
+| **Explicit Inter-Rater Reliability Anchor** | A REVIEWER subagent independently assigns the same likelihood without seeing the primary agent's value. Report the divergence. | If divergence > 0.15 and no consensus reached, use the MORE CONSERVATIVE value |
+| **Unconditionally Known Prior** | A peer-reviewed empirical estimate exists (e.g., "discover 10 GeV supersymmetry" has a peer-reviewed prior from LHC null results). | Use directly. No pillar adjustment applied. |
+
+**Protocol (run BEFORE Stage 2 assumption audit):**
+
+1. For every assumption that will receive a P(E|H) > 0.80, identify which
+   calibration pillar(s) apply.  Document the anchor in
+   `artifacts/likelihood-calibration.md` using the template below.
+2. Run calibration training (≥20-question confidence interval quiz).
+   Measure Brier score.  If Brier > 0.15, apply the overconfidence adjustment
+   factor to ALL likelihoods > 0.80 in this cascade.
+3. Delegate the same assumptions to a REVIEWER subagent for independent
+   assignment.  If divergence > 0.15 on any assumption, use the more
+   conservative value and flag the disagreement in the calibration report.
+4. Any raw likelihood > 0.80 that CANNOT be anchored to an empirical pillar
+   is **capped at 0.80** and labeled `[CALIBRATION-CAP: no empirical pillar
+   for P > 0.80]`.
+5. Calibration training is **mandatory** the first time any proposal passes
+   through the full 9-stage cascade.  Subsequent proposals by the same agent
+   may reuse the same calibration score if the training was completed within
+   the same session or < 7 days prior.
+
+**Required output: `artifacts/likelihood-calibration.md`**
+
+```markdown
+# Likelihood Calibration Audit: {project-slug}
+
+## Assumption H1: {short statement}
+
+| Parameter | Raw Estimate | Pillar | Anchor / Rationale | Calibrated |
+|:----------|:-------------|:-------|:-------------------|:-----------|
+| P(E1\|H1) | 0.90 | Empirical Base Rate | {citation}: X/Y claims of this type confirmed → base rate 0.72 | 0.75 |
+| P(E1\|¬H1) | 0.20 | Reference Class | {3 historical cases with outcomes} | 0.15 |
+| ... | ... | ... | ... | ... |
+
+## Calibration Training Results
+Brier score: {value}  |  Overconfidence error: {value}  |  Adjustment factor: {value}
+
+## Inter-Rater Reliability
+| Assumption | Agent Value | Reviewer Value | Divergence | Resolution |
+|:-----------|:------------|:---------------|:-----------|:-----------|
+| H1 E1      | 0.90 (raw)  | 0.72           | 0.18       | Conservative (0.72) used |
+```
+
+**HARD GATE checks before Stage 2 may proceed:**
+1. Every raw likelihood > 0.80 has a documented empirical pillar — or is
+   capped at 0.80 with the `[CALIBRATION-CAP]` tag.
+2. Calibration training Brier score recorded.  If > 0.15, the adjustment
+   factor has been applied to all > 0.80 likelihoods.
+3. Inter-rater reliability report exists (REVIEWER subagent assigned every
+   assumption independently).
+4. `artifacts/likelihood-calibration.md` is committed before any Stage 2
+   assumption table is populated.
+
+**Integration with the cascade:** Calibrated likelihoods from Stage -1 are
+the *only* values that enter Stage 2's Enabling Assumptions Table.  Raw
+(pre-calibration) values are recorded for transparency in the calibration
+report but never flow into the cascade arithmetic.  Stage 4 sensitivity
+analysis (see below) operates on the calibrated values and their documented
+spans.
+
+**Relationship to Stage 5 Calibration Register:** Stage -1 calibrates the
+*inputs* to the cascade (the likelihoods).  Stage 5 calibrates the *outputs*
+of the cascade (the predictions).  Both are required — calibrating inputs
+without tracking outputs, or tracking outputs without calibrated inputs, is
+each a half-measure that leaves the other half unverified.
+
 ### Stage 0: Domain Assessment
 Map the field. Identify key research questions, active paradigms, methodological approaches. Produce domain topology map.
 
@@ -773,20 +834,76 @@ Identify high-EV shifts. Score candidates on: probability, impact, timeline, tes
 4. **Scaling Pessimist:** "Can't scale past N"
 5. **Resource Realist:** "Would cost $Y and take Z years -- nobody will fund it"
 
-### Stage 4: Bayesian Sensitivity Analysis
-For each candidate:
-1. **Â±20% sensitivity:** Vary each assumption probability by Â±20%, observe EV shift
-2. **Halve-priors:** Cut all optimistic priors by 50%, recompute
-3. **Correlation stress-test:** Assume worst-case correlation between fragile assumptions
-4. **Output:** Tornado chart of assumption sensitivities, EV ranges
+### Stage 4: Likelihood-Span Sensitivity Analysis (KIF-31 upgrade)
 
-### Stage 5: Calibration Register (MANDATORY)
-For each non-obvious prediction, create a dated calibration entry:
+**Rationale:** The prior "±20% sensitivity" instruction was methodologically
+invalid — it perturbed a number whose baseline had no empirical meaning,
+analyzing precision around an arbitrary point rather than accuracy around a
+range.  This replaces it with span-based sensitivity driven by the Stage -1
+calibration pillars, which define a meaningful lower and upper bound for
+each likelihood.
+
+For each candidate:
+
+1. **Likelihood-Span Sensitivity:** For each calibrated likelihood from
+   Stage -1, move it to its documented **lower bound** and **upper bound**,
+   recomputing EV at each extreme.  The span is defined by the calibration
+   pillar that anchored the value:
+   - Empirical Base Rate → [baseRate × 0.5, baseRate × 2.0]
+   - Reference Class → [refClassMin, refClassMax] from the 3+ historical
+     cases
+   - Calibrated Subjective Confidence → [calibrated − Brier, calibrated +
+     Brier]
+   - Unconditionally Known Prior → [prior − σ, prior + σ] where σ is the
+     prior's reported uncertainty
+   - [CALIBRATION-CAP]'d values (capped at 0.80 with no pillar) → [0.50,
+     1.00] as the broadest defensible span — a span narrower than this
+     implies knowledge you have already admitted you lack
+2. **Halve-priors:** Cut all optimistic priors by 50%, recompute (retained
+   from prior version — this is a different stress test than span
+   sensitivity)
+3. **Correlation stress-test:** Assume worst-case correlation between
+   assumptions whose calibration pillars are the same type (e.g., two
+   assumptions both anchored only to subjective confidence share the same
+   overconfidence bias — treat them as perfectly correlated in the
+   pessimistic direction)
+4. **Output:** Tornado chart of assumption sensitivities with spans,
+   EV ranges annotated with which pillar drives each span, and a
+   side-by-side comparison table:
+   ```
+   | Candidate | Raw EV (uncalibrated) | Calibrated EV | EV Range [lower, upper] |
+   ```
+   The EV ranking shift between raw and calibrated is a mandatory disclosure
+   — if a candidate drops from #1 to #4 after calibration, that is the most
+   important finding of the sensitivity analysis.
+
+### Stage 5: Calibration Register (MANDATORY, KIF-32 strength-weighted)
+
+For each non-obvious prediction, create a dated calibration entry with its
+likelihood-anchor provenance visible — so post-hoc rationalizers cannot
+later claim "we always knew this was a high-confidence prediction" when the
+evidence pillar was a single agent's uncalibrated intuition:
+
 ```
 [CHECK: 2030] By 2030, ______ should be observed if ______ is correct.
+Likelihood-Anchor: {which Stage -1 pillar was used? Empirical Base Rate | Reference Class | Calibrated Subjective | Known Prior | NONE [CALIBRATION-CAP]}
+Strength: [STRONG] | [WEAK]
 Status: [PENDING]
+Post-hoc risk: {what language a post-hoc rationalizer would use if this
+                prediction fails}
 ```
-This prevents post-hoc rationalization.
+
+**Strength tags:**
+- **[STRONG]:** Likelihood anchored by Empirical Base Rate, Reference Class,
+  or Known Prior — an external, verifiable, non-subjective pillar.
+- **[WEAK]:** Likelihood anchored only by Calibrated Subjective Confidence
+  or [CALIBRATION-CAP]'d — internal to the agent, even if calibration
+  training reduced the bias.
+
+This prevents post-hoc rationalization AND makes the prediction's epistemic
+provenance visible to future readers — a prediction that failed despite a
+STRONG likelihood anchor is a more interesting disconfirmation than one that
+failed on a WEAK anchor.
 
 ### Stage 6: Optimal Portfolio Allocation
 Resource allocation across candidates using EV ranking:
@@ -1430,49 +1547,17 @@ Headers: Authorization: Bearer <ZENODO_TOKEN>
 Body: {}  # Empty metadata to create draft
 ```
 
-#### 2. Upload Files (KIF-42 — bucket PUT protocol)
-
-**CRITICAL:** The Zenodo API does NOT accept `PUT /deposit/depositions/{id}/files`.
-Files must be uploaded INDIVIDUALLY to the bucket URL via `PUT {bucket_url}/{filename}`.
-After running `zenodo-create-upload.py` (which uploads the bundle only), use the
-Multi-File Upload Protocol below to upload individual PDFs and source files:
-
+#### 2. Upload Files
 ```python
-# Multi-File Upload Protocol — upload individual files to the same bucket
-import requests, json, os
-TOKEN = os.environ["ZENODO_TOKEN"]
-H = {"Authorization": f"Bearer {TOKEN}"}
-
-# Read pending deposit info (written by zenodo-create-upload.py)
-with open("_zenodo_pending_deposit.json") as f:
-    pending = json.load(f)
-bucket_url = pending["bucket_url"]
-
-# Upload each file individually to the bucket
-for local_path, zenodo_name in [
-    ("releases/paper-v1.0.pdf", "paper.pdf"),
-    ("paper.md", "paper.md"),
-    ("artifacts/red-team-audit-memo.md", "red-team-audit-memo.md"),
-]:
-    with open(local_path, "rb") as fh:
-        r = requests.put(f"{bucket_url}/{zenodo_name}", data=fh, headers=H)
-    assert r.status_code in (200, 201), f"Upload of {zenodo_name} failed: HTTP {r.status_code}"
-    print(f"  Uploaded: {zenodo_name}")
-
-# Verify all files present
-dep_id = pending["deposit_id"]
-r = requests.get(f"https://zenodo.org/api/deposit/depositions/{dep_id}", headers=H)
-files = [f["filename"] for f in r.json().get("files", [])]
-print(f"Files on deposit: {files}")
-assert "paper.pdf" in files, "PAPER.PDF MISSING — do not publish"
+PUT https://zenodo.org/api/deposit/depositions/{id}/files
+Files: paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md,
+       ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
 ```
-
-Then proceed to `zenodo-metadata-publish.py --metadata-file metadata.json`.
-
 **GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
 present in the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
 This is a HARD GATE — a deposit without individual PDFs is INCOMPLETE and must
-be remediated before publishing. 
+be remediated before publishing. See HARD GATE P5.PDF (KIF-30) above.
+
 #### 3. Set Metadata
 ```python
 PUT https://zenodo.org/api/deposit/depositions/{id}
@@ -2147,6 +2232,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | No structural bridge between domains in the final paper | Publish the Cross-Domain Lexicon table + Synthesis Consilience paragraph as a dedicated section of the research output |
 | Consilience claimed without a unification principle | Synthesis Consilience MUST contain one invariant mechanism + one frontier question — otherwise flag `[CONSILIENCE-UNVERIFIED: no unifying meta-principle derived]` |
 | Forcing strained analogies on genuinely single-domain research | Mark `[CROSS-DOMAIN-NOT-APPLICABLE: no non-trivial structural isomorphisms found]` — absence of consilience is a valid result, not a failure |
+| Assigning precise numeric likelihoods (0.90, 0.75, 0.20) to cascade assumptions with ZERO empirical anchoring | Execute Stage -1 Likelihood Calibration Protocol (KIF-31) BEFORE Stage 2 — every P > 0.80 MUST have an empirical pillar (base rate, reference class, calibrated confidence, or known prior). Unanchored likelihoods > 0.80 are capped at 0.80 with [CALIBRATION-CAP] tag. |
+| Running ±20% sensitivity analysis on anchorless likelihoods, then presenting this as "validated" | Use Likelihood-Span Sensitivity (Stage 4, KIF-31 upgrade) — spans are defined by the calibration pillar type (base-rate range, reference-class min/max, Brier-error band). An anchorless likelihood at 0.80 uses [0.50, 1.00] — the widest and most honest span. |
+| Outputting Stage 5 Calibration Register entries with [CHECK: 2030] tags but no indication of how strong the underlying likelihood evidence is | Every register entry MUST tag its likelihood-anchor provenance: [STRONG] (base rate / reference class / known prior) or [WEAK] (calibrated subjective / [CALIBRATION-CAP]). This makes the epistemic basis visible to future readers. |
+| Single-agent subjective confidence treated as objective probability, with no inter-rater verification | REVIEWER subagent independently assigns every likelihood — if divergence > 0.15, use the MORE CONSERVATIVE value and flag the disagreement in `artifacts/likelihood-calibration.md`. |
+| Running calibration training with no Brier-score awareness | Before cascading, complete a ≥20-question confidence-interval quiz. If Brier > 0.15, adjust all > 0.80 likelihoods downward by factor (1.0 − overconfidence_error). |
+| Presenting EV rankings without showing the shift from raw (uncalibrated) to calibrated | Mandatory side-by-side disclosure in Stage 4 output: Raw EV ranking vs Calibrated EV ranking. A candidate that drops from #1 to #4 after calibration is the most important finding of the analysis. |
 
 
 
