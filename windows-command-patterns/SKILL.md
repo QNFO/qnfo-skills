@@ -1,6 +1,6 @@
 ---
 name: windows-command-patterns
-description: description: Windows PowerShell error prevention. KIF-05/06/07/09 enforcement via ps-lint.ps1 and ps-safe-exec.ps1. Activate before any exec, grep, or Select-String on Windows.
+description: Windows PowerShell error prevention. KIF-05/06/07/09 enforcement via ps-lint.ps1 and ps-safe-exec.ps1. Activate before any exec, grep, or Select-String on Windows.
 ---
 
 # Windows Command Execution Patterns Ã¢â‚¬â€ v1.1 (Permanent Instruction Layer + Active Tools)
