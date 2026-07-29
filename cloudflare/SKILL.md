@@ -10,8 +10,16 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.6 (9-MCP Coverage + Full-Stack, red-team verified, v2.8 no external IPFS)
+# CLOUDFLARE -- v3.7 (10-MCP Coverage + Full-Stack, red-team verified, v2.8 no external IPFS)
 
+> **v3.7 UPDATE (2026-07-29, 10-MCP coverage + infra audit):**
+> Added `cloudflare-logpush` (10th MCP server, 59% coverage). Full infrastructure
+> audit confirmed: 7/7 Workers healthy, lifecycle/status=200 (I-02 FIXED),
+> archive/health=200 (I-03 FIXED), D1 papers=918, KG paper:*=902 (delta=16,
+> 98.3% coverage — down from prior 610 gap). Backup file created
+> (`mcp-settings.json.bak-2026-07-29`, 10,985 bytes). Config red-team: zero
+> drift, JSON valid. See `qnfo-agent` KIF-48 (MCP coverage mandate).
+>
 > **v3.6 UPDATE (2026-07-29, 9-MCP coverage + red-team audit):**
 > DeepChat now connects to 9 Cloudflare MCP servers (up from 5), covering
 > 53% of the available Cloudflare MCP ecosystem. Added AI Gateway
@@ -79,7 +87,7 @@ self_sufficient: true
 > subcommand in v4), Workers routes API endpoint (zone-level, not account-level).
 
 
-> **Merges 10:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers (v3.6)
+> **Merges 11:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7)
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
 > **Related:** Always load with `qnfo-agent` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
 > **Full-Stack Mandate:** Evaluate Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN as ONE integrated platform. NEVER isolate components.
@@ -120,7 +128,7 @@ CLAIMS per `qnfo-agent` §9.11 Rule 14 — BLOCKED.
 
 DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → hosted Streamable HTTP). All servers expose `/mcp` and `/sse` (compatibility alias) through MCP SDK v2 factories. OAuth triggers automatically on first use.
 
-### Configured (9/17 — 53% coverage)
+### Configured (10/17 — 59% coverage)
 
 | # | MCP Server ID | Endpoint | Auth | Purpose |
 |:--|:--------------|:---------|:----:|:--------|
@@ -133,12 +141,12 @@ DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → host
 | 7 | `cloudflare-graphql` | `graphql.mcp.cloudflare.com/mcp` | OAuth | Cross-product GraphQL Analytics API |
 | 8 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
 | 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | None | Internet insights, BGP, traffic trends (autoApprove: all) |
+| 10 | `cloudflare-logpush` | `logs.mcp.cloudflare.com/mcp` | OAuth | Workers log export, logpush job management |
 
-### Not Configured (8 — add on demand)
+### Not Configured (7 — add on demand)
 
 | MCP Server | Endpoint | Priority |
 |:-----------|:---------|:--------:|
-| `logpush` | `logs.mcp.cloudflare.com/mcp` | LOW |
 | `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | LOW (already have qnfo-browser-run) |
 | `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | LOW |
 | `containers-mcp` | `containers.mcp.cloudflare.com/mcp` | LOW |
