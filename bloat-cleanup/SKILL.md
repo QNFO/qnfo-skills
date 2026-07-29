@@ -37,9 +37,17 @@ bloat-cleanup/
     â”œâ”€â”€ disable_services.py   # Legacy: stop + disable from fixed list (v2.0, sc.exe, reset=86400)
     â”œâ”€â”€ dynamic_disable.py    # â˜… NEW (KIF-40): Runtime target generation + apply (dry-run default)
     â”œâ”€â”€ clean_disk.py         # Delete caches, temps, logs, dumps, package caches
-    â”œâ”€â”€ thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
-    â””â”€â”€ full_clean.py         # Orchestrator: runs all phases in sequence (7 phases)
-```
+    â”œâ”€â”€     ├── thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
+    ├── agent_db_prune.py     # v2.3: Delete old sessions + VACUUM agent.db
+    ├── kill_clean_restart.bat # v2.3: Autonomous kill->clean->restart
+    ├── kill_clean_restart_14d.bat # v2.3: Aggressive 14-day prune
+    ├── admin_watcher.ps1     # v2.3: SYSTEM admin signal watcher
+    ├── trigger_admin.ps1     # v2.3: No-admin operation queuing
+    ├── manage_watcher.ps1    # v2.3: Watcher install/check/repair/stop
+    ├── quick_optimize.ps1    # v2.3: Bundled non-admin optimizations
+    ├── system_tune.ps1       # v2.3: Power plan, startup, config cleanup
+    └── full_clean.py         # Orchestrator: runs all phases (8 phases)
+`
 
 **Two-tier service management:**
 1. **Static (legacy):** `disable_services.py` â€” fixed hardcoded list. Used as a safety baseline.

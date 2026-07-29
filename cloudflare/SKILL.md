@@ -1,7 +1,7 @@
 ---
 name: cloudflare
-description: ULTRA-CONSOLIDATED Cloudflare Full-Stack -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.3"
+description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (9-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
+version: "3.6"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,21 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.5 (Full-Stack + Consolidation, v2.8 no external IPFS)
+# CLOUDFLARE -- v3.6 (9-MCP Coverage + Full-Stack, red-team verified, v2.8 no external IPFS)
+
+> **v3.6 UPDATE (2026-07-29, 9-MCP coverage + red-team audit):**
+> DeepChat now connects to 9 Cloudflare MCP servers (up from 5), covering
+> 53% of the available Cloudflare MCP ecosystem. Added AI Gateway
+> (`cloudflare-ai-gateway`, log search + prompt inspection), GraphQL
+> Analytics (`cloudflare-graphql`, cross-product analytics), Audit Logs
+> (`cloudflare-auditlogs`, compliance trail), and Radar
+> (`cloudflare-radar`, internet insights — public, read-only). All
+> endpoints DNS-verified (104.18.24.159/25.159) and return HTTP 401
+> (OAuth, consistent with existing servers). Config red-team: zero
+> drift in 23 existing entries, 4/4 new entries validated, backup at
+> `mcp-settings.json.bak-2026-07-29`. Full MCP endpoint reference table
+> added below (§DeepChat MCP Server Coverage). See `qnfo-agent`
+> KIF-48 (MCP coverage mandate).
 
 > **v3.5 UPDATE (2026-07-25, wrangler false-negative + structured-schema kaizen):**
 > Root-caused a live "wrangler is not installed" claim in this session's own
@@ -65,7 +79,7 @@ self_sufficient: true
 > subcommand in v4), Workers routes API endpoint (zone-level, not account-level).
 
 
-> **Merges 9:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler
+> **Merges 10:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers (v3.6)
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
 > **Related:** Always load with `qnfo-agent` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
 > **Full-Stack Mandate:** Evaluate Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN as ONE integrated platform. NEVER isolate components.
@@ -99,6 +113,50 @@ CLAIMS per `qnfo-agent` §9.11 Rule 14 — BLOCKED.
 4. **DNS record** — `GET /zones/{id}/dns_records` (or `dig`) after any create/update; confirm the record resolves as intended, not just that the API accepted the write.
 5. **Health/status endpoints** — actually call the endpoint (`curl`/`fetch`) and show the HTTP status + body; do not infer health from deploy success alone.
 6. If verification cannot be run in this turn, the response MUST read `[NOT-VERIFIED: <reason>]` — never "deployed", "fixed", "healthy", or "confirmed".
+
+---
+
+## DeepChat MCP Server Coverage (v3.6 — 9 of 17 available)
+
+DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → hosted Streamable HTTP). All servers expose `/mcp` and `/sse` (compatibility alias) through MCP SDK v2 factories. OAuth triggers automatically on first use.
+
+### Configured (9/17 — 53% coverage)
+
+| # | MCP Server ID | Endpoint | Auth | Purpose |
+|:--|:--------------|:---------|:----:|:--------|
+| 1 | `cloudflare` | `mcp.cloudflare.com/mcp` | OAuth | Full-stack Workers, Pages, R2, D1, KV, Queues, AI, DNS |
+| 2 | `cloudflare-docs` | `docs.mcp.cloudflare.com/mcp` | None | Documentation search (autoApprove: all) |
+| 3 | `cloudflare-bindings` | `bindings.mcp.cloudflare.com/mcp` | OAuth | Workers bindings, wrangler.toml configs |
+| 4 | `cloudflare-builds` | `builds.mcp.cloudflare.com/mcp` | OAuth | Pages + Workers CI/CD, build logs |
+| 5 | `cloudflare-observability` | `observability.mcp.cloudflare.com/mcp` | OAuth | Workers logs, metrics, invocation tracing |
+| 6 | `cloudflare-ai-gateway` | `ai-gateway.mcp.cloudflare.com/mcp` | OAuth | AI Gateway log search, prompt/response inspection |
+| 7 | `cloudflare-graphql` | `graphql.mcp.cloudflare.com/mcp` | OAuth | Cross-product GraphQL Analytics API |
+| 8 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
+| 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | None | Internet insights, BGP, traffic trends (autoApprove: all) |
+
+### Not Configured (8 — add on demand)
+
+| MCP Server | Endpoint | Priority |
+|:-----------|:---------|:--------:|
+| `logpush` | `logs.mcp.cloudflare.com/mcp` | LOW |
+| `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | LOW (already have qnfo-browser-run) |
+| `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | LOW |
+| `containers-mcp` | `containers.mcp.cloudflare.com/mcp` | LOW |
+| `cloudflare-casb-mcp-server` | `casb.mcp.cloudflare.com/mcp` | LOW |
+| `cloudflare-autorag-mcp-server` | `autorag.mcp.cloudflare.com/mcp` | LOW |
+| `cloudflare-blog` | `blog.mcp.cloudflare.com/mcp` | TRIVIAL |
+| `dex-analysis` | `dex.mcp.cloudflare.com/mcp` | TRIVIAL |
+
+### MCP Verification Gate
+
+Before claiming "MCP server X is working", verify with:
+```bash
+# All endpoints should return HTTP 401 (OAuth required) or HTTP 200 (public)
+curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp
+```
+- **401** = endpoint live, auth required (normal for OAuth servers)
+- **404/530** = endpoint not deployed or DNS not propagated
+- **200** = public endpoint (docs, radar)
 
 ---
 
@@ -587,3 +645,5 @@ Publication pipelines write D1 but KG seeding is session-dependent — drift acc
 | Guessing D1/Zenodo/Workers/Buffer API request shapes from memory each session | Consult `references/d1-rest-api-schema.json`, `references/workers-deploy-metadata-schema.json` (this skill) and `../research/references/zenodo-deposit-schema.json`, `../research/references/buffer-graphql-schema.json` (research skill) BEFORE constructing the call. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables (HTTP 400) | Use `scripts/d1-safe-write.js` (CHECK-THEN-WRITE, never a combined upsert) — see `references/d1-rest-api-schema.json`. |
 | Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
+| Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include all high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-observability`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, and `cloudflare-radar`. See §DeepChat MCP Server Coverage for the canonical list. |
+| Trusting that an MCP server is reachable without a live HTTP probe | Verify with `curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp` — 401 = live (auth required), 404/530 = not deployed. Never claim an MCP server "is working" from config validation alone. |
