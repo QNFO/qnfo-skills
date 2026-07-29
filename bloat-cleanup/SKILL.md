@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 2.4
+version: 2.5
 triggers:
 - cleanup
 - bloatware
@@ -40,9 +40,15 @@ bloat-cleanup/
     +-- defender_exclusions.py # v2.4: Add DeepChat paths to Defender exclusions
     +-- remove_appx.py        # v2.4: Remove known AppX bloatware packages
     +-- thin_client.py        # Enforce KIF-32 + KIF-48 (project violations, root hygiene, orphan archives, clean sessions)
-    +-- agent_db_prune.py     # v2.3: Delete old sessions + VACUUM agent.db
-    +-- kill_clean_restart.bat # v2.3: Autonomous kill->clean->restart
-    +-- kill_clean_restart_14d.bat # v2.3: Aggressive 14-day prune
+    +-- agent_db_prune.py     # v2.1: Budget-laptop prune (7d default, 3d budget, target-size, FTS-aware)
+    +-- analyze_agent_db.py   # Read-only: table sizes, session age distribution, tape breakdown
+    +-- red_team_audit_db.py  # v2.1: Post-prune integrity audit (orphans, FK, FTS, integrity_check)
+    +-- red_light.py          # Ultra-light version: fast spot-checks
+    +-- clean_fts_orphans.py  # v2.1: Clean orphaned FTS entries + rebuild indexes
+    +-- vacuum_only.py        # Standalone VACUUM runner (run with DeepChat closed)
+    +-- kill_clean_restart.bat # v2.5: 7-day maintenance prune + restart
+    +-- kill_clean_restart_14d.bat # v2.5: Aggressive 14-day prune
+    +-- kill_clean_restart_budget.bat # v2.5: Budget laptop 3-day prune
     +-- admin_watcher.ps1     # v2.3: SYSTEM admin signal watcher
     +-- trigger_admin.ps1     # v2.3: No-admin operation queuing
     +-- manage_watcher.ps1    # v2.3: Watcher install/check/repair/stop
@@ -239,7 +245,7 @@ python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\remove_appx.py" --a
 ### full_clean.py
 Orchestrator running all 7 phases in sequence: audit ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ dynamic service analysis ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ kill processes ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ disable services (legacy) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ clean disk ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ thin-client (with `--clean`) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ re-audit to verify. Reports elapsed time and final disk state.
 
-## Known Limitations (from Red-Team Audit 2026-07-27, updated v2.4 kaizen 2026-07-29)
+## Known Limitations (from Red-Team Audit 2026-07-29, v2.5 kaizen)
 
 1. **SearchHost/StartMenuExperienceHost** restart endlessly ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â even with service disable. The only permanent fix requires registry policy or `Remove-AppxPackage Microsoft.Windows.Search` (admin PowerShell).
 2. **MsMpEng (Defender)** consumes 200-300 MB ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â not targeted by this skill. Instead, recommend adding DeepChat directories to Defender exclusions via `Add-MpPreference -ExclusionPath`.
@@ -249,6 +255,7 @@ Orchestrator running all 7 phases in sequence: audit ÃƒÆ’Ã†â€™Ãƒ�
 6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â fixed in v1.1 (2026-07-27 KIF-40 kaizen).
 7. **KIF-40 (2026-07-27 kaizen): Dynamic service audit.** The original `disable_services.py` used a hardcoded list of 16 services, missing vendor-specific bloat (Dolby, Elevoc, Adobe updaters, Google updaters, Xbox services, OneDrive) and failing to classify unknown services. Resolved by `audit_services.py` (runtime heuristic classification of 284+ services) and `dynamic_disable.py` (dynamic target generation). The legacy fixed-list script remains as a safety baseline.
 8. **KIF-48 (2026-07-29 red-team): .deepchat root hygiene gap.** `thin_client.py` only scanned `.deepchat/projects/` and `archive/`, missing arbitrary project directories in `.deepchat` root (e.g., `qnfo-unified/`, `biophoton-ultrametric-consilience/`), loose project files (`*.js`, `*.jsonc`, `*.reg`), and orphan zip archives in `AppData\Roaming` (e.g., 1.6 GB `DeepChat.zip`). Resolved by KIF-48 scanning: directory allowlist check, file extension check, orphan archive scan. Updated v2.4 (2026-07-29).
+9. **KIF-49 (2026-07-29 red-team): FTS orphan leak after session prune.** `agent_db_prune.py` v2.0 skipped `deepchat_tape_search_fts` and `deepchat_tape_search_projection` during deletion (44,853 orphan entries found post-prune red-team audit). Root cause: FTS tables WITH `session_id` column (`tape_search_fts`, `projection`, `_meta` variants) were incorrectly grouped with FTS tables WITHOUT `session_id` (`search_documents_fts`). Fixed in v2.1: FTS_WITH_SESSION_ID list deleted inline; FTS_NO_SESSION_ID uses rebuild-based orphan cleanup. Additionally, orphan FTS meta tables cleaned. Two orphan `usage_stats` rows also fixed. Run `clean_fts_orphans.py` to clean any remaining FTS orphans.
 
 ## Post-Cleanup Verification
 
