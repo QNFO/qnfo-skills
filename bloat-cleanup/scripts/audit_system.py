@@ -168,6 +168,33 @@ def main():
 
     report["thin_client"] = violations
 
+    # === APPX BLOATWARE CHECK ===
+    print("\n=== APPX BLOATWARE ===")
+    appx_bloat = [
+        "Microsoft.XboxGameOverlay", "Microsoft.XboxGamingOverlay",
+        "Microsoft.XboxIdentityProvider", "Microsoft.BingSearch",
+        "Microsoft.WidgetsPlatformRuntime", "Microsoft.YourPhone",
+        "Microsoft.GetHelp", "Microsoft.StartExperiencesApp",
+        "Microsoft.Windows.DevHome", "MicrosoftWindows.CrossDevice",
+        "Microsoft.MicrosoftPCManager", "Microsoft.ApplicationCompatibilityEnhancements",
+    ]
+    appx_found = 0
+    for pkg in appx_bloat:
+        r = subprocess.run(
+            ['powershell', '-NoProfile', '-Command',
+             f'(Get-AppxPackage -Name "{pkg}" -ErrorAction SilentlyContinue).Count'],
+            capture_output=True, text=True, timeout=10
+        )
+        try:
+            count = int(r.stdout.strip() or '0')
+        except:
+            count = 0
+        if count > 0:
+            appx_found += 1
+            print(f"  BLOAT: {pkg} ({count} installed)")
+    report["other"].append({"type": "appx_bloat", "count": appx_found})
+    print(f"  AppX bloat packages: {appx_found} installed")
+
     # === AGENT.DB SIZE ===
     agent_db = os.path.join(user, "AppData", "Roaming", "DeepChat", "app_db", "agent.db")
     if os.path.exists(agent_db):
@@ -182,11 +209,13 @@ def main():
     running_svcs = sum(1 for s in report["services"] if s["running"])
     startup_count = len(report["startup"])
     violations_count = len(report["thin_client"])
+    appx_count = next((item["count"] for item in report["other"] if item.get("type") == "appx_bloat"), 0)
 
     print(f"  Cleanable disk: {total_cleanable:.0f} MB")
     print(f"  Bloat processes: {running_procs} running")
     print(f"  Bloat services: {running_svcs} running")
     print(f"  Startup items: {startup_count}")
+    print(f"  AppX bloat: {appx_count} packages")
     print(f"  Thin-client violations: {violations_count}")
 
     return report

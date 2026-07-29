@@ -25,33 +25,34 @@ Automated system cleanup for Windows machines running DeepChat. Covers disk decl
 
 ## Architecture
 
-All logic lives in bundled Python scripts under `scripts/`. The SKILL.md provides workflow guidance. The agent should run scripts via `skill_run` or `exec`.
+All logic lives in bundled Python scripts under  + "scripts/" + @". The SKILL.md provides workflow guidance. The agent should run scripts via  + "skill_run" + @ or  + "exec" + @.
 
-```
+ + "`" + @"
 bloat-cleanup/
-â”œâ”€â”€ SKILL.md
-â””â”€â”€ scripts/
-    â”œâ”€â”€ audit_system.py       # Full system audit (disk, processes, services, thin-client)
-    â”œâ”€â”€ audit_services.py     # â˜… NEW (KIF-40): Dynamic runtime service classification
-    â”œâ”€â”€ kill_bloat.py         # Kill bloatware processes with anti-restart logic
-    â”œâ”€â”€ disable_services.py   # Legacy: stop + disable from fixed list (v2.0, sc.exe, reset=86400)
-    â”œâ”€â”€ dynamic_disable.py    # â˜… NEW (KIF-40): Runtime target generation + apply (dry-run default)
-    â”œâ”€â”€ clean_disk.py         # Delete caches, temps, logs, dumps, package caches
-    â”œâ”€â”€     ├── thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
-    ├── agent_db_prune.py     # v2.3: Delete old sessions + VACUUM agent.db
-    ├── kill_clean_restart.bat # v2.3: Autonomous kill->clean->restart
-    ├── kill_clean_restart_14d.bat # v2.3: Aggressive 14-day prune
-    ├── admin_watcher.ps1     # v2.3: SYSTEM admin signal watcher
-    ├── trigger_admin.ps1     # v2.3: No-admin operation queuing
-    ├── manage_watcher.ps1    # v2.3: Watcher install/check/repair/stop
-    ├── quick_optimize.ps1    # v2.3: Bundled non-admin optimizations
-    ├── system_tune.ps1       # v2.3: Power plan, startup, config cleanup
-    └── full_clean.py         # Orchestrator: runs all phases (8 phases)
-`
-
++-- SKILL.md
++-- scripts/
+    +-- audit_system.py       # Full system audit (disk, processes, services, thin-client, AppX)
+    +-- audit_services.py     # Dynamic runtime service classification (KIF-40)
+    +-- kill_bloat.py         # Kill bloatware processes with anti-restart logic
+    +-- disable_services.py   # Legacy: stop + disable from fixed list (v2.0, sc.exe, reset=86400)
+    +-- dynamic_disable.py    # Runtime target generation + apply (KIF-40, dry-run default)
+    +-- clean_disk.py         # Delete caches, temps, logs, dumps, package caches
+    +-- defender_exclusions.py # v2.4: Add DeepChat paths to Defender exclusions
+    +-- remove_appx.py        # v2.4: Remove known AppX bloatware packages
+    +-- thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
+    +-- agent_db_prune.py     # v2.3: Delete old sessions + VACUUM agent.db
+    +-- kill_clean_restart.bat # v2.3: Autonomous kill->clean->restart
+    +-- kill_clean_restart_14d.bat # v2.3: Aggressive 14-day prune
+    +-- admin_watcher.ps1     # v2.3: SYSTEM admin signal watcher
+    +-- trigger_admin.ps1     # v2.3: No-admin operation queuing
+    +-- manage_watcher.ps1    # v2.3: Watcher install/check/repair/stop
+    +-- quick_optimize.ps1    # v2.3: Bundled non-admin optimizations
+    +-- system_tune.ps1       # v2.3: Power plan, startup, config cleanup
+    +-- full_clean.py         # Orchestrator: runs all 10 phases
+ + "`" + @"
 **Two-tier service management:**
-1. **Static (legacy):** `disable_services.py` â€” fixed hardcoded list. Used as a safety baseline.
-2. **Dynamic (â˜… preferred):** `audit_services.py` â†’ `dynamic_disable.py` â€” runtime heuristic classification with no fixed list. Discovers all 284+ services, classifies by vendor/pattern/state, generates targets dynamically.
+1. **Static (legacy):** `disable_services.py` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â fixed hardcoded list. Used as a safety baseline.
+2. **Dynamic (ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ preferred):** `audit_services.py` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ `dynamic_disable.py` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â runtime heuristic classification with no fixed list. Discovers all 284+ services, classifies by vendor/pattern/state, generates targets dynamically.
 
 ## Workflow
 
@@ -59,7 +60,7 @@ bloat-cleanup/
 ```
 skill_run bloat-cleanup scripts/full_clean.py
 ```
-This runs 7 phases: audit â†’ dynamic service analysis â†’ kill processes â†’ disable services (legacy) â†’ clean disk â†’ thin-client â†’ verify.
+This runs 10 phases: audit, dynamic service analysis, kill processes, disable services, Defender exclusions, AppX removal, clean disk, agent DB prune, thin-client, verify.
 
 ### Targeted: Run individual phases
 
@@ -68,15 +69,15 @@ This runs 7 phases: audit â†’ dynamic service analysis â†’ kill proces
 skill_run bloat-cleanup scripts/audit_system.py
 ```
 
-**â˜… Dynamic service audit** (read-only, no admin required):
+**ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Dynamic service audit** (read-only, no admin required):
 ```
 skill_run bloat-cleanup scripts/audit_services.py
 ```
 Discovers all services and classifies them as `essential`, `bloat`, `suspicious`, `user_installed`, or `unknown`. Shows actionable targets with rationale. **Always run this first** before making service changes.
 
-**â˜… Dynamic service disable** (admin required for `--apply`):
+**ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Dynamic service disable** (admin required for `--apply`):
 ```
-# Dry-run (default â€” see what would be disabled):
+# Dry-run (default ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â see what would be disabled):
 skill_run bloat-cleanup scripts/dynamic_disable.py
 
 # Dry-run with suspicious 3rd-party services:
@@ -95,7 +96,7 @@ skill_run bloat-cleanup scripts/kill_bloat.py
 ```
 
 **Disable bloatware services (legacy fixed list):**
-> âš ï¸ **ADMIN REQUIRED.** This script manages Windows services (stop, startup=disabled, recovery clear).
+> ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â **ADMIN REQUIRED.** This script manages Windows services (stop, startup=disabled, recovery clear).
 > Running without admin will show "SKIP (may need admin)" for all services and make no changes.
 > To run as admin, open an elevated PowerShell/CMD and execute:
 > `python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\disable_services.py"`
@@ -124,8 +125,8 @@ skill_run bloat-cleanup scripts/thin_client.py --clean
 ### audit_system.py
 Scans all drives, lists cleanable files with sizes, checks running bloatware processes, checks service status, lists startup registry items, audits thin-client compliance (`.deepchat/projects/`, archive, session offload files), reports `agent.db` size. **Read-only, makes no changes.**
 
-### audit_services.py â˜… NEW (KIF-40)
-**Dynamic runtime service analysis** â€” replaces the hardcoded `BLOAT_SERVICES` list with heuristic classification. Queries all ~284 services via `Get-CimInstance Win32_Service` and classifies each as:
+### audit_services.py ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW (KIF-40)
+**Dynamic runtime service analysis** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â replaces the hardcoded `BLOAT_SERVICES` list with heuristic classification. Queries all ~284 services via `Get-CimInstance Win32_Service` and classifies each as:
 
 | Classification | Description | Action |
 |---|---|---|
@@ -134,21 +135,21 @@ Scans all drives, lists cleanable files with sizes, checks running bloatware pro
 | `bloat_stopped` | Bloat that's currently stopped (low priority) | Flag for cleanup |
 | `suspicious` | Third-party auto-start, no clear purpose | Review before disabling |
 | `user_installed` | Known apps (MySQL, Docker, Steam, Discord, etc.) | User decides |
-| `inactive` | Stopped + Manual/Disabled â€” dormant | Ignore |
+| `inactive` | Stopped + Manual/Disabled ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â dormant | Ignore |
 | `unknown` | No heuristic match | Investigate |
 
 **Classification rules (in priority order):**
-1. **Critical OS safelist** â€” 60+ essential services never flagged
-2. **Vendor patterns** â€” Lenovo, Dolby, Elevoc, Adobe, Google updaters
-3. **Windows bloat patterns** â€” WSearch, DiagTrack, DusmSvc, WpnService, CDPSvc, PcaSvc, StiSvc, FontCache
-4. **Feature bloat** â€” Xbox, OneDrive, Office ClickToRun
-5. **Third-party auto-start** â€” services with Auto start, Running, but no Microsoft/Windows in display name â†’ `suspicious`
-6. **User software detection** â€” MySQL, PostgreSQL, Docker, Steam, Discord, etc.
+1. **Critical OS safelist** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â 60+ essential services never flagged
+2. **Vendor patterns** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Lenovo, Dolby, Elevoc, Adobe, Google updaters
+3. **Windows bloat patterns** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â WSearch, DiagTrack, DusmSvc, WpnService, CDPSvc, PcaSvc, StiSvc, FontCache
+4. **Feature bloat** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Xbox, OneDrive, Office ClickToRun
+5. **Third-party auto-start** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â services with Auto start, Running, but no Microsoft/Windows in display name ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ `suspicious`
+6. **User software detection** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â MySQL, PostgreSQL, Docker, Steam, Discord, etc.
 
 **Read-only, no admin required.** Always run this first.
 
-### dynamic_disable.py â˜… NEW (KIF-40)
-**Dynamic target generation + disable** â€” consumes the same classification rules as `audit_services.py` to generate a target list at runtime, then disables services.
+### dynamic_disable.py ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW (KIF-40)
+**Dynamic target generation + disable** ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â consumes the same classification rules as `audit_services.py` to generate a target list at runtime, then disables services.
 
 **Modes:**
 - **Dry-run (default):** Shows what WOULD be disabled. No changes. No admin needed.
@@ -180,9 +181,9 @@ Stops, disables startup, and clears auto-recovery for a **fixed list**:
 - **Office**: ClickToRunSvc
 - **Optional**: Spooler (disable only if no printer)
 
-Critical: clears `sc.exe failure` auto-recovery actions to prevent Windows auto-restart. The red-team audit from 2026-07-27 confirmed 4 services restarted when only taskkill was used â€” this script fixes that root cause.
+Critical: clears `sc.exe failure` auto-recovery actions to prevent Windows auto-restart. The red-team audit from 2026-07-27 confirmed 4 services restarted when only taskkill was used ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â this script fixes that root cause.
 
-> **WARNING â€” PowerShell `sc` alias trap (KIF-05 class):** In PowerShell, `sc` is an ALIAS for `Set-Content`, NOT `sc.exe`. Running `sc failure WSearch reset=0 actions=` in PowerShell silently fails with "A positional parameter cannot be found." The correct invocation is `cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'` (note: `reset=` requires AT LEAST one blank-space-delimited argument; `86400` = 1 day reset window). This requires Administrator privileges.
+> **WARNING ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â PowerShell `sc` alias trap (KIF-05 class):** In PowerShell, `sc` is an ALIAS for `Set-Content`, NOT `sc.exe`. Running `sc failure WSearch reset=0 actions=` in PowerShell silently fails with "A positional parameter cannot be found." The correct invocation is `cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'` (note: `reset=` requires AT LEAST one blank-space-delimited argument; `86400` = 1 day reset window). This requires Administrator privileges.
 
 > **Note:** `disable_services.py` is the legacy fixed-list approach. Prefer `audit_services.py` + `dynamic_disable.py` for runtime discovery on unfamiliar machines.
 
@@ -193,7 +194,7 @@ Deletes (with error handling and size reporting):
 - Browsers: Chrome code/sw/shader caches, Edge code/shader caches
 - VS Code: CachedData, CachedExtensionVSIXs, Cache
 - Apps: Discord cache, Explorer thumbnails, Office telemetry, PC Manager store, D3DShader
-- TexLive: `doc/` and `source/` directories (safe â€” all available online)
+- TexLive: `doc/` and `source/` directories (safe ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â all available online)
 - Crash dumps: minidumps, MEMORY.DMP, CrashDumps
 - User Temp
 
@@ -201,24 +202,49 @@ Deletes (with error handling and size reporting):
 Enforces KIF-32: "No local project files or archives in .deepchat, AppData, or anywhere in the local file system."
 
 Checks:
-1. `.deepchat/projects/` â€” flags each project directory, checks git push status
-2. `.deepchat/archive/` â€” violation if exists
-3. Desktop/Documents â€” looks for git repos or project-like directories
-4. Session offload files â€” lists old sessions (keeps current)
+1. `.deepchat/projects/` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â flags each project directory, checks git push status
+2. `.deepchat/archive/` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â violation if exists
+3. Desktop/Documents ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â looks for git repos or project-like directories
+4. Session offload files ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â lists old sessions (keeps current)
 
 With `--clean`: deletes all old session directories (keeps current session).
 
+
+### defender_exclusions.py (v2.4)
+Adds DeepChat paths and process to Windows Defender exclusions. Reduces MsMpEng CPU/RAM overhead. Requires Administrator. Run --verify-only for dry-run.
+
+`ash
+# Add exclusions (requires admin):
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\defender_exclusions.py"
+
+# Verify only (no changes):
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\defender_exclusions.py" --verify-only
+`
+
+### remove_appx.py (v2.4)
+Removes known bloatware AppX packages (Xbox, Bing, Widgets, YourPhone, etc.) from both user and provisioned stores. Requires Administrator for provisioned removal.
+
+`ash
+# Dry-run (see what would be removed):
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\remove_appx.py" --dry-run
+
+# Live removal:
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\remove_appx.py"
+
+# Aggressive (includes more packages):
+python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\remove_appx.py" --aggressive
+`
 ### full_clean.py
-Orchestrator running all 7 phases in sequence: audit â†’ dynamic service analysis â†’ kill processes â†’ disable services (legacy) â†’ clean disk â†’ thin-client (with `--clean`) â†’ re-audit to verify. Reports elapsed time and final disk state.
+Orchestrator running all 7 phases in sequence: audit ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ dynamic service analysis ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ kill processes ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ disable services (legacy) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ clean disk ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ thin-client (with `--clean`) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ re-audit to verify. Reports elapsed time and final disk state.
 
-## Known Limitations (from Red-Team Audit 2026-07-27, updated KIF-40 kaizen 2026-07-27)
+## Known Limitations (from Red-Team Audit 2026-07-27, updated v2.4 kaizen 2026-07-29)
 
-1. **SearchHost/StartMenuExperienceHost** restart endlessly â€” even with service disable. The only permanent fix requires registry policy or `Remove-AppxPackage Microsoft.Windows.Search` (admin PowerShell).
-2. **MsMpEng (Defender)** consumes 200-300 MB â€” not targeted by this skill. Instead, recommend adding DeepChat directories to Defender exclusions via `Add-MpPreference -ExclusionPath`.
-3. **Office ClickToRun** may restart even after service disable â€” requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by both `disable_services.py` v2.0 and `dynamic_disable.py` v1.0. Note: `sc` alone fails in PowerShell â€” see WARNING above.
-4. **Lenovo MSPCManagerService** may restart â€” recommend uninstalling "Lenovo PC Manager" via `winget uninstall`.
+1. **SearchHost/StartMenuExperienceHost** restart endlessly ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â even with service disable. The only permanent fix requires registry policy or `Remove-AppxPackage Microsoft.Windows.Search` (admin PowerShell).
+2. **MsMpEng (Defender)** consumes 200-300 MB ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â not targeted by this skill. Instead, recommend adding DeepChat directories to Defender exclusions via `Add-MpPreference -ExclusionPath`.
+3. **Office ClickToRun** may restart even after service disable ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by both `disable_services.py` v2.0 and `dynamic_disable.py` v1.0. Note: `sc` alone fails in PowerShell ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â see WARNING above.
+4. **Lenovo MSPCManagerService** may restart ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â recommend uninstalling "Lenovo PC Manager" via `winget uninstall`.
 5. Some paths require administrator privileges (Windows Temp, CBS logs, service config). The scripts handle permission errors gracefully and report which items need admin.
-6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug â€” fixed in v1.1 (2026-07-27 KIF-40 kaizen).
+6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â fixed in v1.1 (2026-07-27 KIF-40 kaizen).
 7. **KIF-40 (2026-07-27 kaizen): Dynamic service audit.** The original `disable_services.py` used a hardcoded list of 16 services, missing vendor-specific bloat (Dolby, Elevoc, Adobe updaters, Google updaters, Xbox services, OneDrive) and failing to classify unknown services. Resolved by `audit_services.py` (runtime heuristic classification of 284+ services) and `dynamic_disable.py` (dynamic target generation). The legacy fixed-list script remains as a safety baseline.
 
 ## Post-Cleanup Verification
@@ -231,7 +257,7 @@ After running cleanup, always verify:
 
 If processes restart, the permanent fix is usually:
 ```powershell
-# Admin PowerShell â€” MANDATORY: use sc.exe (NOT the 'sc' alias which is Set-Content)
+# Admin PowerShell ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â MANDATORY: use sc.exe (NOT the 'sc' alias which is Set-Content)
 Get-AppxPackage Microsoft.Windows.Search | Remove-AppxPackage
 cmd /c 'sc.exe config WSearch start= disabled'
 cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'
@@ -243,10 +269,10 @@ cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'
 - When this skill needs script execution, prefer `skill_run` over `exec`.
 - Bundled runnable scripts:
   - scripts\audit_system.py (python)
-  - scripts\audit_services.py (python) â˜… NEW
+  - scripts\audit_services.py (python) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW
   - scripts\clean_disk.py (python)
   - scripts\disable_services.py (python)
-  - scripts\dynamic_disable.py (python) â˜… NEW
+  - scripts\dynamic_disable.py (python) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW
   - scripts\full_clean.py (python)
   - scripts\kill_bloat.py (python)
   - scripts\thin_client.py (python)
