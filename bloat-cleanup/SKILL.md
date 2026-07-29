@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 2.5
+version: 2.6
 triggers:
 - cleanup
 - bloatware
@@ -46,6 +46,8 @@ bloat-cleanup/
     +-- red_light.py          # Ultra-light version: fast spot-checks
     +-- clean_fts_orphans.py  # v2.1: Clean orphaned FTS entries + rebuild indexes
     +-- vacuum_only.py        # Standalone VACUUM runner (run with DeepChat closed)
+    +-- budget_laptop_tune.py # v2.0 (KIF-50): Comprehensive system audit + auto-apply + admin queue
+    +-- apply_budget_opts.py  # v2.0 (KIF-50): Fast-path non-admin apply + queue variant
     +-- kill_clean_restart.bat # v2.5: 7-day maintenance prune + restart
     +-- kill_clean_restart_14d.bat # v2.5: Aggressive 14-day prune
     +-- kill_clean_restart_budget.bat # v2.5: Budget laptop 3-day prune
@@ -256,6 +258,7 @@ Orchestrator running all 7 phases in sequence: audit ÃƒÆ’Ã†â€™Ãƒ�
 7. **KIF-40 (2026-07-27 kaizen): Dynamic service audit.** The original `disable_services.py` used a hardcoded list of 16 services, missing vendor-specific bloat (Dolby, Elevoc, Adobe updaters, Google updaters, Xbox services, OneDrive) and failing to classify unknown services. Resolved by `audit_services.py` (runtime heuristic classification of 284+ services) and `dynamic_disable.py` (dynamic target generation). The legacy fixed-list script remains as a safety baseline.
 8. **KIF-48 (2026-07-29 red-team): .deepchat root hygiene gap.** `thin_client.py` only scanned `.deepchat/projects/` and `archive/`, missing arbitrary project directories in `.deepchat` root (e.g., `qnfo-unified/`, `biophoton-ultrametric-consilience/`), loose project files (`*.js`, `*.jsonc`, `*.reg`), and orphan zip archives in `AppData\Roaming` (e.g., 1.6 GB `DeepChat.zip`). Resolved by KIF-48 scanning: directory allowlist check, file extension check, orphan archive scan. Updated v2.4 (2026-07-29).
 9. **KIF-49 (2026-07-29 red-team): FTS orphan leak after session prune.** `agent_db_prune.py` v2.0 skipped `deepchat_tape_search_fts` and `deepchat_tape_search_projection` during deletion (44,853 orphan entries found post-prune red-team audit). Root cause: FTS tables WITH `session_id` column (`tape_search_fts`, `projection`, `_meta` variants) were incorrectly grouped with FTS tables WITHOUT `session_id` (`search_documents_fts`). Fixed in v2.1: FTS_WITH_SESSION_ID list deleted inline; FTS_NO_SESSION_ID uses rebuild-based orphan cleanup. Additionally, orphan FTS meta tables cleaned. Two orphan `usage_stats` rows also fixed. Run `clean_fts_orphans.py` to clean any remaining FTS orphans.
+10. **KIF-50 (2026-07-29 red-team): Budget laptop comprehensive tuner.** No single script covered all budget-laptop optimizations end-to-end. Created `budget_laptop_tune.py`: read-only system audit (RAM, disk, services, VBS, visual effects, agent.db, startup, top processes) with severity-rated recommendations; non-admin auto-apply (power plan, transparency, config cleanup); admin queue (hibernation, VBS/HVCI, defender exclusions, dynamic service disable, AppX removal). Run `python budget_laptop_tune.py` for audit; `--apply` to execute non-admin + queue admin. `apply_budget_opts.py` is the fast-path variant. VACUUM confirmed working with DeepChat live (WAL/SHM locks harmless).
 
 ## Post-Cleanup Verification
 
