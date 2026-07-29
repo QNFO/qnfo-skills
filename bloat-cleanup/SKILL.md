@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 2.3
+version: 2.4
 triggers:
 - cleanup
 - bloatware
@@ -39,7 +39,7 @@ bloat-cleanup/
     +-- clean_disk.py         # Delete caches, temps, logs, dumps, package caches
     +-- defender_exclusions.py # v2.4: Add DeepChat paths to Defender exclusions
     +-- remove_appx.py        # v2.4: Remove known AppX bloatware packages
-    +-- thin_client.py        # Enforce KIF-32 (detect project violations, clean sessions)
+    +-- thin_client.py        # Enforce KIF-32 + KIF-48 (project violations, root hygiene, orphan archives, clean sessions)
     +-- agent_db_prune.py     # v2.3: Delete old sessions + VACUUM agent.db
     +-- kill_clean_restart.bat # v2.3: Autonomous kill->clean->restart
     +-- kill_clean_restart_14d.bat # v2.3: Aggressive 14-day prune
@@ -201,6 +201,8 @@ Deletes (with error handling and size reporting):
 ### thin_client.py
 Enforces KIF-32: "No local project files or archives in .deepchat, AppData, or anywhere in the local file system."
 
+Enforces KIF-48: ".deepchat root directory and file hygiene. Only operational directories and files permitted in .deepchat root. No orphan zip/archive files in AppData\Roaming. No project artifacts masquerading as operational files."
+
 Checks:
 1. `.deepchat/projects/` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â flags each project directory, checks git push status
 2. `.deepchat/archive/` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â violation if exists
@@ -246,6 +248,7 @@ Orchestrator running all 7 phases in sequence: audit ÃƒÆ’Ã†â€™Ãƒ�
 5. Some paths require administrator privileges (Windows Temp, CBS logs, service config). The scripts handle permission errors gracefully and report which items need admin.
 6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â fixed in v1.1 (2026-07-27 KIF-40 kaizen).
 7. **KIF-40 (2026-07-27 kaizen): Dynamic service audit.** The original `disable_services.py` used a hardcoded list of 16 services, missing vendor-specific bloat (Dolby, Elevoc, Adobe updaters, Google updaters, Xbox services, OneDrive) and failing to classify unknown services. Resolved by `audit_services.py` (runtime heuristic classification of 284+ services) and `dynamic_disable.py` (dynamic target generation). The legacy fixed-list script remains as a safety baseline.
+8. **KIF-48 (2026-07-29 red-team): .deepchat root hygiene gap.** `thin_client.py` only scanned `.deepchat/projects/` and `archive/`, missing arbitrary project directories in `.deepchat` root (e.g., `qnfo-unified/`, `biophoton-ultrametric-consilience/`), loose project files (`*.js`, `*.jsonc`, `*.reg`), and orphan zip archives in `AppData\Roaming` (e.g., 1.6 GB `DeepChat.zip`). Resolved by KIF-48 scanning: directory allowlist check, file extension check, orphan archive scan. Updated v2.4 (2026-07-29).
 
 ## Post-Cleanup Verification
 
