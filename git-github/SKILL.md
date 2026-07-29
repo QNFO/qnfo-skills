@@ -10,7 +10,19 @@ autonomous: false
 self_sufficient: true
 ---
 
-# GIT-GITHUB -- v2.2 (Ultra-Consolidated VC + PM)
+# GIT-GITHUB -- v2.3 (Ultra-Consolidated VC + PM)
+
+> **v2.3 UPDATE (2026-07-29, KIF-32 thin-client temp-volatility incident):**
+> Added **TEMP Volatility & Same-Turn Commit Mandate (HARD GATE)** below.
+> A session editing Continuum Trilogy files cloned to `$env:TEMP` lost work
+> across 3 re-clones because Windows temp directories are volatile — the
+> system cleaned the temp directory between turns before `git commit` ran.
+> **Edits applied to a temp checkout MUST be committed AND pushed in the
+> SAME turn as the edit.** Deferring commit to a later turn = guaranteed
+> data loss. The old "Work, commit, push" three-step phrasing wrongly implied
+> multi-turn work with a deferred commit was acceptable — it is not.
+> Incident produced ~25 wasted tool calls and demonstrated exactly the
+> failure mode KIF-32 was designed to prevent.
 
 > **v2.2 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below, extending the existing
@@ -242,10 +254,46 @@ local disk outside the thin-client protocol. Before any `git clone` or
   Documents, or any system directory (C:\, C:\Windows, C:\Program Files).
 - **Canonical project paths:** Projects live on R2 (Cloudflare) with git
   mirrors on GitHub. Local clones are temporary scratchpads only.
-- If a project repo needs local checkout for work:
-  1. Clone to a temp location: `git clone <url> $env:TEMP\<project>`
-  2. Work, commit, push.
-  3. Delete local clone immediately: `Remove-Item -Recurse $env:TEMP\<project>`
+### TEMP Volatility & Same-Turn Commit Mandate (HARD GATE, v2.3)
+
+**Windows `$env:TEMP` is VOLATILE. It can be cleaned by the system, session
+cleanup, or between tool-call turns without warning.** Any clone to a temp
+location is a MAXIMUM ONE-TURN checkout. The sequence:
+
+**HARD GATE — this is the ONLY permitted workflow for temp-location edits:**
+
+```
+# Step 1: Clone (this turn only)
+git clone <url> $env:TEMP\<project>
+
+# Step 2: Apply ALL edits (this turn only)
+
+# Step 3: Commit (MANDATORY SAME TURN — never defer)
+git add <files> ; git commit -m "ACTION:..."
+
+# Step 4: Push (MANDATORY SAME TURN — never defer)
+git push origin <branch>
+
+# Step 5: Verify push reached remote (Anti-Phantom Gate)
+git ls-remote origin <branch>
+
+# Step 6: Delete local clone immediately
+Remove-Item -Recurse -Force $env:TEMP\<project>
+```
+
+**What is FORBIDDEN (v2.3 HARD GATE):**
+- ❌ Edit a file in turn N, plan to commit in turn N+1 — the temp may be gone
+- ❌ Clone, edit file 1, think "I'll edit file 2 next turn then commit" — lost
+- ❌ Apply fixes iteratively across turns without committing each batch
+- ❌ Assume `Test-Path $env:TEMP\<project>` returns true across turn boundaries
+
+**If a task requires multi-turn editing of a temp clone:**
+1. Clone, edit batch 1, commit, push, delete clone — all in turn 1
+2. Next turn: re-clone (gets latest from remote), edit batch 2, commit, push, delete
+3. Never assume a clone from turn N still exists in turn N+1
+
+**R2 is the canonical durable store.** Git is the mirror. Temp is a one-turn
+scratchpad. Never treat temp as persistent storage.
 - After `git push`, delete local project files (per JIT thin-client protocol).
 
 ### Skills Repository (qnfo-skills) is PROTECTED
@@ -300,3 +348,6 @@ See ADR-026 below.
 | Tagging/releasing research content inside `qnfo-skills` | `git remote -v` REPO-TARGET GATE before EVERY tag/release (ADR-026 Incident 3) |
 | Assuming a clean file tree means a clean repo | Also audit `git tag -l` and `gh release list` -- tags/releases survive branch force-pushes |
 | Trusting a prior remediation without re-verifying | Backfilled/legacy tags predating a policy fix can still exist -- explicitly check `git tag -l` against current policy, don't assume a past cleanup got everything |
+| Editing files in a temp clone without committing same-turn (KIF-32, v2.3) | **HARD GATE:** clone → edit → commit → push → delete, ALL in one turn. Never defer commit across turn boundaries. If a file was edited in turn N and `git status` showed changes at the start of turn N+1, re-clone the repo and re-apply the edits — the local files may have been silently lost or corrupted. |
+| Assuming `$env:TEMP` persists across turns on Windows (v2.3) | Temp directories are volatile. System cleanup, session teardown, or storage-sense can evict files between turns. `Test-Path $env:TEMP\<project>` returning true in turn N does NOT guarantee it returns true in turn N+1. |
+| Multi-turn iterative editing on a single temp clone (v2.3) | Re-clone each turn (fetching latest from remote). Batch edits must be atomic per turn: if you can't finish all edits in one turn, commit what you have, push it, and pick up the rest next turn from a fresh clone. |

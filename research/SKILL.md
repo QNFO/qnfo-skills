@@ -3,14 +3,45 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.25"
+version: "2.26"
 priority: 1
 platform: all
 autonomous: true
 self_sufficient: true
 ---
 
-# RESEARCH -- v2.24 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG)
+> **v2.26 UPDATE (2026-07-29, KIF-32 thin-client temp-volatility incident):**
+> Companion update to git-github v2.3. A session editing Continuum Trilogy
+> Paper III source files cloned to `$env:TEMP` lost work across 3 re-clones
+> because Windows temp directories can be cleaned between turns. The Phase 5
+> PDF build/edit cycle is especially vulnerable: the agent reads a local clone,
+> edits the source to fix math-mode issues, tries to build, discovers more
+> issues, edits again — often across 5-10 turns on the same clone. **Every
+> edit to a temp clone MUST be followed by git commit + push in the SAME
+> turn**, not batched for a "final commit" at the end. Added Phase 5 temp
+> guard below and anti-pattern rows. Cross-reference: git-github v2.3
+> §TEMP Volatility & Same-Turn Commit Mandate (HARD GATE).
+
+> **v2.25 UPDATE (2026-07-29, Cloudflare MCP integration kaizen):**
+> Red-team audit identified that this skill references Cloudflare infrastructure
+> (D1, R2, Workers) but gives zero guidance on using the 17 Cloudflare MCP servers
+> for deployment verification, observability, and dissemination. Added:
+> 1. Phase 1 (Due Diligence): `cloudflare-browser-mcp-server` for headless browser
+>    web research; `cloudflare-blog` for relevant Cloudflare announcements.
+> 2. Phase 6 (Deployment): MCP-driven deployment verification chain (`cloudflare-builds`
+>    + `cloudflare-observability` + `cloudflare-bindings` + `cloudflare-auditlogs`)
+>    as a HARD GATE after every D1/R2/Worker deployment.
+> 3. Phase 7 (Dissemination): `cloudflare-radar` for domain ranking insights;
+>    `cloudflare-docs` for SEO best-practice verification; `dex-analysis` for
+>    papers.qnfo.org latency monitoring.
+> 4. Phase 8 (Core Distribution): Full 17-MCP verification chain as the mandatory
+>    gate before setting status="published".
+> 5. Cross-Skill Integration Checklist: added `cloudflare` skill load at Phase 6
+>    (was already present) and reference to §MCP-Driven Operations decision matrix.
+> See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
+> matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
+
+# RESEARCH -- v2.25 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification)
 
 > **v2.24 UPDATE (2026-07-26, KIF-30 — mandatory PDF inclusion in Zenodo):**
 > Added **HARD GATE P5.PDF (KIF-30)** to §5 Zenodo Upload — ALL PDFs MUST be
@@ -415,7 +446,7 @@ assume such files don't exist just because a glob search returns empty.
 |---|---|---|
 | `git-github` | **0** (init), every closeout | Branch discipline, conventional commits, repo creation |
 | `knowledge` | **0** (KG seed), **1** (DD), every closeout | KG queries, D1 cross-reference, project state logging |
-| `cloudflare` | **6** (deployment) | R2 archive, D1 insert, Worker verification |
+| `cloudflare` | **6** (deployment), **8** (distribution) | R2 archive, D1 insert, Worker verification, **MUST consult §MCP-Driven Operations decision matrix** for MCP-first verification (observability, builds, auditlogs, bindings, graphql, dns-analytics) |
 | `research` | **All phases** | This skill -- the master pipeline |
 | `memory-management` | **0**, every closeout | Durable memory logging |
 | `documents` / `pdf` | **5** (publication) | PDF building, document formatting |
@@ -1775,6 +1806,41 @@ npx wrangler r2 object put releases/<YYYY>/<MM>/<slug>/paper.pdf --file=paper.pd
 ### Knowledge Graph Seed
 Seed Paper node with: slug, DOI, title, author, pages_url, zenodo_url, r2_path. Connect BELONGS_TO domain/program edges.
 
+### MCP-Driven Deployment Verification (HARD GATE — v2.25)
+
+**MANDATORY after every D1 insert, R2 upload, or Worker deployment.** The prior
+practice of `curl /health` or `npx wrangler` exit-code checks is insufficient —
+it confirms the REQUEST was accepted, not that the artifact is live and healthy.
+This gate replaces single-source verification with a cross-MCP verification chain.
+
+**Verification chain (execute in order, ALL must pass before declaring deployment complete):**
+
+```
+1. cloudflare-builds      → confirm deploy/push succeeded, get build ID + timestamp
+2. cloudflare-observability → confirm Worker is receiving healthy invocations (0 errors)
+3. cloudflare-bindings    → verify declared wrangler.jsonc bindings match actual runtime
+4. cloudflare-auditlogs   → confirm deploy action appears in account audit trail
+```
+
+**For D1/R2-only changes (no Worker deploy):**
+```
+1. cloudflare             → re-query the D1 row or R2 object to confirm write persisted
+2. cloudflare-auditlogs   → confirm the write action is recorded
+```
+
+**Gate criteria:**
+- `cloudflare-builds` returns a successful build with timestamp ≤ 5 min old
+- `cloudflare-observability` shows ≥ 1 healthy invocation since build timestamp
+- `cloudflare-bindings` shows zero missing/extra bindings
+- `cloudflare-auditlogs` contains a matching action entry
+
+**If any MCP server is unreachable:** fall back to the existing CLI/REST verification
+(`npx wrangler deployments list`, `curl /health`, `GET /accounts/{id}/audit_logs`)
+but explicitly flag `[MCP-UNAVAILABLE: <server>, fell back to CLI]`. Never silently
+skip verification.
+
+See `cloudflare` skill v3.9 §MCP-Driven Operations for the full decision matrix.
+
 ---
 
 ## Phase 7: Dissemination & Permanence
@@ -2134,7 +2200,14 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 5. Seed/update D1 living-paper and Knowledge Graph records
 6. (OPTIONAL) Create DNSLink TXT record if an IPFS CID is available
 7. Submit Internet Archive snapshot
-8. Verify: papers.qnfo.org returns HTTP 200, DOI resolves, R2 content round-trips
+8. **MCP-DRIVEN VERIFICATION (v2.25 — HARD GATE):** Run the cross-MCP chain from Phase 6 §MCP-Driven Deployment Verification:
+   - `cloudflare-builds` → deploy confirmation
+   - `cloudflare-observability` → Worker metrics, error rates
+   - `cloudflare-bindings` → binding integrity
+   - `cloudflare-auditlogs` → deploy action recorded
+   - `dns-analytics` → DNS query volumes (if custom domain)
+   - `dex-analysis` → end-user latency verification
+9. Verify: papers.qnfo.org returns HTTP 200, DOI resolves, R2 content round-trips
 
 ## Verification Gates
 
@@ -2147,6 +2220,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **PDF** | PDF renders without Unicode errors | `_check_pdf.py` output |
 | **DOI** | Zenodo record resolves, cross-references correct | `curl -sI https://doi.org/...` |
 | **Deployment** | papers-server URL HTTP 200, D1 entry exists with slug/doi | curl output + wrangler D1 query |
+| **MCP-Driven Deployment (v2.25)** | Cross-MCP verification chain: builds + observability + bindings + auditlogs + dns-analytics + dex-analysis all confirm deployment | MCP tool results with timestamps |
 | **SEO** | robots.txt, sitemap, llms.txt, meta tags all present | Verify each URL |
 | **Social** | Buffer posts confirmed in queue | `status: SCHEDULED` in response |
 | **DNSLink (OPTIONAL)** | TXT record resolves, dweb.link gateway serves content | `nslookup -type=TXT` + `curl dweb.link/ipns/...` |
@@ -2238,6 +2312,9 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Single-agent subjective confidence treated as objective probability, with no inter-rater verification | REVIEWER subagent independently assigns every likelihood — if divergence > 0.15, use the MORE CONSERVATIVE value and flag the disagreement in `artifacts/likelihood-calibration.md`. |
 | Running calibration training with no Brier-score awareness | Before cascading, complete a ≥20-question confidence-interval quiz. If Brier > 0.15, adjust all > 0.80 likelihoods downward by factor (1.0 − overconfidence_error). |
 | Presenting EV rankings without showing the shift from raw (uncalibrated) to calibrated | Mandatory side-by-side disclosure in Stage 4 output: Raw EV ranking vs Calibrated EV ranking. A candidate that drops from #1 to #4 after calibration is the most important finding of the analysis. |
+| Editing source files in a temp git clone across multiple turns without committing each turn (KIF-32, v2.26) | **HARD GATE (cross-ref git-github v2.3):** clone → edit ALL files in one batch → commit → push → delete, ALL in one turn. Phase 5 PDF build/edit cycles are especially dangerous: the agent often edits → builds → discovers more issues → edits again across turns on the same clone. Deferring commit to a "final batch" guarantees data loss when the temp directory is cleaned between turns. Re-clone each turn from the remote to get the latest state. |
+| Assuming a temp clone's files survive across tool-call turns on Windows (v2.26) | `$env:TEMP` is volatile. System cleanup, session teardown, or storage-sense can evict files between turns. Never trust `Test-Path` results from a prior turn. |
+| Batched "final commit" of edits accumulated across multiple turns on a temp clone (v2.26) | Commit each turn's edits as an atomic unit with `git push`. A "final commit at the end" that was deferred for 3+ turns will find the repo directory empty and all edits lost. |
 
 
 
