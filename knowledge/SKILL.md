@@ -10,7 +10,14 @@ autonomous: true
 self_sufficient: true
 ---
 
-# KNOWLEDGE -- v2.1 (Ultra-Consolidated KG + Memory)
+> **v2.2 UPDATE (2026-07-29, Cloudflare MCP kaizen):**
+> Added references to `cloudflare-autorag-mcp-server` (automated RAG with Workers AI +
+> Vectorize) as the preferred method for building RAG pipelines over manual Vectorize
+> insert + query calls. Added `cloudflare-ai-gateway` as the canonical AI query logging
+> source for memory operations. Updated Cross-System Discovery Hierarchy to include
+> MCP-first retrieval paths. See `cloudflare` skill v3.9 §MCP-Driven Operations.
+
+# KNOWLEDGE -- v2.2 (Ultra-Consolidated KG + Memory + AutoRAG)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A KG edge/node write or a
@@ -272,12 +279,36 @@ When discovering "what exists," query in this order:
 | Priority | System | API | Returns |
 |:---------|:-------|:----|:--------|
 | **1. KG (canonical topology)** | graph-api Worker (`query_graph`) | `/stats`, `/nodes`, `/neighbors`, `/impact` | What exists AND how things connect |
-| **2. D1 (structured records)** | wrangler D1 exec | `portfolio-state`, `living-paper`, `qnfo-audit` | Row-level structured data |
+| **2. D1 (structured records)** | `cloudflare/scripts/d1-query.py` | `portfolio-state`, `living-paper`, `qnfo-audit` | Row-level structured data |
 | **3. Vectorize (semantic search)** | `search_memories`, `search_papers` | 768-dim cosine similarity | Meaning-based search across memories + papers |
-| **4. R2 (file artifacts)** | wrangler R2 object get/list | `qnfo/` bucket | Canonical file storage (last resort for discovery) |
-| **5. Local filesystem** | `Get-ChildItem`, `glob`, `grep` | CWD | Ephemeral cache -- verify against R2 before trusting |
+| **4. MCP: AutoRAG (automated RAG)** | `cloudflare-autorag-mcp-server` | Workers AI + Vectorize pipeline | Full RAG pipeline — indexing, embedding, retrieval (PREFERRED over manual Vectorize) |
+| **5. MCP: AI Gateway (query logging)** | `cloudflare-ai-gateway` | Gateway log search, prompt inspection | Trace AI queries, debug prompt/response patterns |
+| **6. R2 (file artifacts)** | wrangler R2 object get/list | `qnfo/` bucket | Canonical file storage (last resort for discovery) |
+| **7. Local filesystem** | `Get-ChildItem`, `glob`, `grep` | CWD | Ephemeral cache -- verify against R2 before trusting |
 
 **Always query KG first.** Files on disk are an incomplete, stale subset. The KG is the single source of truth for ecosystem topology.
+
+### AutoRAG Integration (v2.2)
+
+When building or updating RAG pipelines for knowledge retrieval, prefer
+`cloudflare-autorag-mcp-server` over manual Vectorize insert + Workers AI query patterns.
+AutoRAG automates:
+- Document ingestion and chunking
+- Embedding generation via Workers AI
+- Vectorize index population
+- Query-time retrieval with reranking
+
+Manual Vectorize operations (`search_memories`, `search_papers`, `remember_fact`) remain
+available as fallbacks when AutoRAG is unreachable or for single-document operations.
+
+### AI Gateway Logging (v2.2)
+
+All AI-powered knowledge operations (semantic search, memory storage, paper retrieval) flow
+through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP server to:
+- Inspect prompt/response pairs for knowledge queries
+- Debug embedding quality issues
+- Audit AI usage patterns across the knowledge pipeline
+- Verify no prompt injection or data leakage in stored memories
 
 ---
 

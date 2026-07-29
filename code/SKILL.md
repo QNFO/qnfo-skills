@@ -10,7 +10,15 @@ autonomous: false
 self_sufficient: true
 ---
 
-# CODE -- v2.1 (Ultra-Consolidated Review + MCP)
+> **v2.2 UPDATE (2026-07-29, Cloudflare MCP deploy kaizen):**
+> Added MCP-driven deployment verification to the Deploy & Verify and Testing
+> Checklist sections. After every MCP server deploy, the verification chain now
+> requires `cloudflare-builds` (build confirmation), `cloudflare-observability`
+> (invocation health), `cloudflare-bindings` (binding integrity), and
+> `cloudflare-auditlogs` (deploy trail). See `cloudflare` skill v3.9
+> §MCP-Driven Operations for the full decision matrix.
+
+# CODE -- v2.2 (Ultra-Consolidated Review + MCP + Deploy Verification)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A code review finding or
@@ -653,7 +661,7 @@ export default {
 # Deploy
 npx wrangler deploy
 
-# Verify endpoint
+# Verify endpoint (basic)
 curl -s https://qno-research-mcp.q08.workers.dev/health
 # {"status":"ok","uptime":1721200000000}
 
@@ -670,6 +678,28 @@ curl -s -X POST https://qno-research-mcp.q08.workers.dev/mcp \
     "id": 1
   }'
 ```
+
+**MCP-Driven Deployment Verification (v2.2 — HARD GATE):**
+After `npx wrangler deploy`, run this cross-MCP verification chain BEFORE declaring
+the deploy successful. The `curl /health` check above is a sanity test, not verification.
+
+```
+1. cloudflare-builds      → confirm deploy succeeded, capture build ID + timestamp
+2. cloudflare-observability → confirm Worker is receiving healthy invocations (≥1, 0 errors)
+3. cloudflare-bindings    → verify wrangler.jsonc bindings match actual runtime bindings
+4. cloudflare-auditlogs   → confirm deploy action appears in account audit trail
+```
+
+**Gate criteria:**
+- `cloudflare-builds` returns successful build ≤ 5 min old
+- `cloudflare-observability` shows invocations since build timestamp with 0 errors
+- `cloudflare-bindings` reports zero missing/extra bindings
+- `cloudflare-auditlogs` contains the deploy action
+
+**If any MCP server is unreachable:** fall back to `npx wrangler deployments list` +
+`GET /accounts/{id}/audit_logs` and flag `[MCP-UNAVAILABLE: <server>]`. Never silently skip.
+
+See `cloudflare` skill v3.9 §MCP-Driven Operations for the canonical decision matrix.
 
 ### MCP Tool Design Rules (HARD)
 1. **Input validation FIRST:** Every tool validates ALL inputs before any business logic. Return structured error immediately on invalid input.
@@ -692,6 +722,10 @@ curl -s -X POST https://qno-research-mcp.q08.workers.dev/mcp \
 - [ ] Error responses don't leak internal state (no stack traces, no DB queries, no file paths)
 - [ ] Rate limiting works (if applicable)
 - [ ] Cold start time < 500ms
+- [ ] **MCP verification (v2.2):** Deploy confirmed via `cloudflare-builds`
+- [ ] **MCP verification (v2.2):** Worker healthy via `cloudflare-observability`
+- [ ] **MCP verification (v2.2):** Bindings match wrangler.jsonc via `cloudflare-bindings`
+- [ ] **MCP verification (v2.2):** Deploy recorded in `cloudflare-auditlogs`
 
 ---
 

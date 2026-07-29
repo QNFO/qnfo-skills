@@ -1,7 +1,7 @@
 ---
 name: cloudflare
-description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (9-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.6"
+description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
+version: "3.8"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,40 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.7 (10-MCP Coverage + Full-Stack, red-team verified, v2.8 no external IPFS)
+# CLOUDFLARE -- v3.9 (17-MCP Coverage + MCP-Driven Operations, red-team verified, v2.8 no external IPFS)
+
+
+> **v3.9 UPDATE (2026-07-29, MCP-Driven Operations red-team + kaizen):**
+> Red-team audit of all skills/settings against the 17-MCP server fleet identified 7
+> integration gaps: skills referenced Cloudflare MCP servers in their documentation but
+> gave zero operational guidance on WHEN and HOW to use specific MCP servers during
+> research, infrastructure, and operations workflows. This update adds:
+> 1. **MCP-Driven Operations section** (new, below) — a decision matrix mapping every
+>    common Cloudflare operation to its preferred MCP server(s), ensuring agents reach
+>    for `cloudflare-observability` not `curl` for Worker health checks, `cloudflare-graphql`
+>    not raw REST for cross-product analytics, and `cloudflare-auditlogs` not `wrangler`
+>    for deployment audit trails.
+> 2. **Updated Infrastructure Audit** to use `cloudflare-observability` (per-Worker
+>    metrics), `cloudflare-graphql` (cross-product analytics), `cloudflare-auditlogs`
+>    (compliance verification), and `dns-analytics` (zone query volumes) as first-class
+>    audit tools — not as an afterthought.
+> 3. **Updated Retrieval Sources** with `cloudflare-docs` MCP and `cloudflare-blog` MCP
+>    as preferred doc search channels.
+> 4. **New anti-patterns** for reaching for raw CLI/REST when an MCP server exists.
+> Companion kaizen updates: research skill v2.25 (Phases 1,6,7,8 MCP integration),
+>    code skill v2.2 (MCP server deploy/verify workflow), knowledge skill v2.2
+>    (AutoRAG + AI Gateway references). See `tape_handoff mcp-driven-operations-2026-07-29`
+>    for full audit findings and skill delta map.
+
+> **v3.8 UPDATE (2026-07-29, 17-MCP coverage — FULL COVERAGE):**
+> Configured all 7 remaining Cloudflare MCP servers: `cloudflare-browser-mcp-server` (browser automation),
+> `dns-analytics` (DNS analytics), `containers-mcp` (Docker containers on edge),
+> `cloudflare-casb-mcp-server` (SaaS security), `cloudflare-autorag-mcp-server` (AutoRAG),
+> `cloudflare-blog` (blog search, public), `dex-analysis` (Digital Experience).
+> All 7 endpoints verified live (6× 401 OAuth, 1× 405 blog — all reachable).
+> Full infrastructure audit re-verified: 7/7 Workers healthy, D1 papers=918, KG paper:*=902 (delta=16, 98.3%).
+> Config: 17/17 Cloudflare MCP servers (100% coverage), 35 total MCP servers, 13,519 bytes. KIF-48 CLOSED.
+> Backup created: `mcp-settings.json.bak-2026-07-29-v2`.
 
 > **v3.7 UPDATE (2026-07-29, 10-MCP coverage + infra audit):**
 > Added `cloudflare-logpush` (10th MCP server, 59% coverage). Full infrastructure
@@ -87,7 +120,7 @@ self_sufficient: true
 > subcommand in v4), Workers routes API endpoint (zone-level, not account-level).
 
 
-> **Merges 11:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7)
+> **Merges 18:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7) + browser-mcp + dns-analytics + containers-mcp + casb-mcp + autorag-mcp + blog-mcp + dex-mcp (v3.8)
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
 > **Related:** Always load with `qnfo-agent` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
 > **Full-Stack Mandate:** Evaluate Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN as ONE integrated platform. NEVER isolate components.
@@ -124,11 +157,11 @@ CLAIMS per `qnfo-agent` §9.11 Rule 14 — BLOCKED.
 
 ---
 
-## DeepChat MCP Server Coverage (v3.6 — 9 of 17 available)
+## DeepChat MCP Server Coverage (v3.8 — 17 of 17 available)
 
 DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → hosted Streamable HTTP). All servers expose `/mcp` and `/sse` (compatibility alias) through MCP SDK v2 factories. OAuth triggers automatically on first use.
 
-### Configured (10/17 — 59% coverage)
+### Configured (17/17 — 100% coverage)
 
 | # | MCP Server ID | Endpoint | Auth | Purpose |
 |:--|:--------------|:---------|:----:|:--------|
@@ -142,18 +175,17 @@ DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → host
 | 8 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
 | 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | None | Internet insights, BGP, traffic trends (autoApprove: all) |
 | 10 | `cloudflare-logpush` | `logs.mcp.cloudflare.com/mcp` | OAuth | Workers log export, logpush job management |
+| 11 | `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | OAuth | Headless browser automation, screenshots, PDF generation |
+| 12 | `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | OAuth | DNS query analytics, query volumes, top domain queries |
+| 13 | `containers-mcp` | `containers.mcp.cloudflare.com/mcp` | OAuth | Deploy & manage Docker containers on Cloudflare edge |
+| 14 | `cloudflare-casb-mcp-server` | `casb.mcp.cloudflare.com/mcp` | OAuth | CASB — Cloud Access Security Broker, SaaS security audits |
+| 15 | `cloudflare-autorag-mcp-server` | `autorag.mcp.cloudflare.com/mcp` | OAuth | AutoRAG — Automated RAG with Workers AI + Vectorize |
+| 16 | `cloudflare-blog` | `blog.mcp.cloudflare.com/mcp` | None | Search blog.cloudflare.com posts (public, no auth) |
+| 17 | `dex-analysis` | `dex.mcp.cloudflare.com/mcp` | OAuth | Digital Experience monitoring, network performance analysis |
 
-### Not Configured (7 — add on demand)
+### Coverage Complete — 17/17 (100%)
 
-| MCP Server | Endpoint | Priority |
-|:-----------|:---------|:--------:|
-| `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | LOW (already have qnfo-browser-run) |
-| `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | LOW |
-| `containers-mcp` | `containers.mcp.cloudflare.com/mcp` | LOW |
-| `cloudflare-casb-mcp-server` | `casb.mcp.cloudflare.com/mcp` | LOW |
-| `cloudflare-autorag-mcp-server` | `autorag.mcp.cloudflare.com/mcp` | LOW |
-| `cloudflare-blog` | `blog.mcp.cloudflare.com/mcp` | TRIVIAL |
-| `dex-analysis` | `dex.mcp.cloudflare.com/mcp` | TRIVIAL |
+All 17 available Cloudflare MCP servers are now configured. No servers remain to add.
 
 ### MCP Verification Gate
 
@@ -617,13 +649,93 @@ Publication pipelines write D1 but KG seeding is session-dependent — drift acc
 
 ---
 
-## Retrieval Sources (Prefer over pre-training)
+## Retrieval Sources (Prefer over pre-training — MCP-first)
 
 | Source | Method | Use for |
 |:-------|:-------|:--------|
-| Cloudflare docs | `search_cloudflare_documentation({query})` | Limits, pricing, API reference |
+| Cloudflare docs MCP | `cloudflare-docs` MCP server (`search_cloudflare_documentation`) | Limits, pricing, API reference (PREFERRED over `search_cloudflare_documentation` tool) |
+| Cloudflare blog MCP | `cloudflare-blog` MCP server | Recent announcements, product updates, migration guides |
 | Workers types | `npm pack @cloudflare/workers-types` | Type signatures, binding shapes |
 | Wrangler config schema | `node_modules/wrangler/config-schema.json` | Config fields, binding shapes |
+
+---
+
+## MCP-Driven Operations (v3.9 — MANDATORY preference order)
+
+**HARD RULE:** When a Cloudflare MCP server exists for an operation, use it BEFORE falling back to raw `npx wrangler`, REST API, or `curl`. MCP servers provide structured, typed, auto-authenticated results — CLI/REST are error-prone (wrong account IDs, silent encoding issues, PowerShell quoting traps). Every QNFO operational domain is mapped below.
+
+### Operation → MCP Server Decision Matrix
+
+| When you need to... | Use this MCP server (1st choice) | Fallback (2nd) | NEVER (wasteful) |
+|:--------------------|:---------------------------------|:---------------|:-----------------|
+| Deploy/manage Workers, Pages, R2, D1, KV, Queues, AI, DNS | `cloudflare` (main) | wrangler CLI | Raw REST when MCP is available |
+| Search Cloudflare docs/prod limits | `cloudflare-docs` | `search_cloudflare_documentation` tool | Web search for Cloudflare docs |
+| Inspect Workers bindings/wrangler.toml | `cloudflare-bindings` | Read wrangler.jsonc locally | Guess from memory |
+| Check Pages/Worker build logs, CI/CD deploy history | `cloudflare-builds` | `npx wrangler deployments list` | Claim "deployed" without build confirmation |
+| Monitor Worker health, logs, invocation tracing | `cloudflare-observability` | `curl /health` endpoint | `workers_get_worker_code` alone |
+| Inspect AI Gateway logs, prompt/response tracing | `cloudflare-ai-gateway` | Raw Gateway REST API | Assume AI calls worked |
+| Cross-product analytics (all Cloudflare products) | `cloudflare-graphql` | Per-product REST APIs | Manual aggregation |
+| Query account audit trail, compliance reports | `cloudflare-auditlogs` | Manual `GET /accounts/{id}/audit_logs` | Trust "it was deployed" narrative |
+| Internet insights, BGP, traffic trends, domain rankings | `cloudflare-radar` | External internet stats tools | Guess traffic patterns |
+| Export/stream Workers logs to external destinations | `cloudflare-logpush` | Manual log download via REST | Lose logs between sessions |
+| Headless browser automation, screenshots, PDF gen | `cloudflare-browser-mcp-server` | YoBrowser / CDP | Local browser (thin-client) |
+| DNS query analytics, query volumes, top queries | `dns-analytics` | `nslookup` / `dig` | Guess zone traffic |
+| Deploy Docker containers on Cloudflare edge | `containers-mcp` | Manual REST + Container Registry | Local Docker (no edge) |
+| SaaS security audits, CASB scanning | `cloudflare-casb-mcp-server` | Manual SaaS config review | Assume connected apps are secure |
+| Automated RAG with Workers AI + Vectorize | `cloudflare-autorag-mcp-server` | Manual Vectorize insert + Workers AI call | Skip RAG entirely |
+| Search blog.cloudflare.com for announcements | `cloudflare-blog` | Web search for "Cloudflare blog" | Assume nothing changed |
+| Digital Experience monitoring, network perf | `dex-analysis` | Manual `curl` latency tests | Assume "it's fine" |
+
+### Multi-Server Workflows
+
+**Infrastructure Audit (full ecosystem):**
+```
+1. cloudflare             → list Workers, D1, R2, KV, Pages, Queues, DNS zones
+2. cloudflare-observability → per-Worker metrics, error rates, invocation counts
+3. cloudflare-graphql     → cross-product analytics (bandwidth, requests, threat data)
+4. cloudflare-auditlogs   → deployment audit trail, who changed what when
+5. dns-analytics          → per-zone query volumes, top domain queries
+6. cloudflare-builds      → verify latest deployment for each Worker/Pages project
+7. cloudflare-bindings    → cross-reference declared vs actual bindings per Worker
+```
+**Result:** A single audit that answers "what exists, is it healthy, who touched it, and how much traffic does it get" — all from MCP servers without a single `curl` or `wrangler` call.
+
+**Post-Deploy Verification:**
+```
+1. cloudflare-builds      → confirm deploy succeeded, get build ID
+2. cloudflare-observability → confirm new Worker is receiving healthy invocations
+3. cloudflare-auditlogs   → confirm deploy action appears in audit trail
+4. cloudflare-bindings    → verify bindings match wrangler.jsonc
+5. dns-analytics          → (if custom domain) confirm DNS resolution traffic
+6. dex-analysis           → verify end-user latency is within baseline
+```
+
+**Research Publication → Production (full pipeline):**
+```
+1. cloudflare             → D1 insert (living-paper), R2 archive, DNS DNSLink
+2. cloudflare-observability → confirm papers-server Worker serves new paper
+3. cloudflare-graphql     → confirm CDN cache hit ratio increasing (paper gaining readers)
+4. cloudflare-radar       → check papers.qnfo.org domain ranking trend
+5. cloudflare-blog        → search for relevant Cloudflare announcements to cite
+6. cloudflare-auditlogs   → complete publication audit trail
+```
+
+**Security Posture Review:**
+```
+1. cloudflare-casb-mcp-server → audit all connected SaaS apps
+2. cloudflare-auditlogs       → review recent privileged operations
+3. cloudflare                 → check WAF rules, DDoS protection status, API Shield
+4. cloudflare-graphql         → threat analytics, blocked request trends
+5. cloudflare-docs            → verify security feature configurations against best practices
+```
+
+### MCP Anti-Phantom Gate for Operations
+
+When an MCP server call returns a success response, treat it with the same verification rigor as CLI/REST:
+1. **`cloudflare-observability`** — a Worker listed as "healthy" by the MCP is a STARTING POINT, not verification. Cross-reference against `cloudflare-builds` (deploy date matches) and `cloudflare-auditlogs` (deploy action recorded).
+2. **`cloudflare-builds`** — "deploy succeeded" must be paired with `cloudflare-observability` showing healthy invocations within the same timeframe.
+3. **`cloudflare-graphql`** — analytics results must be time-bounded and cross-referenced against `cloudflare-observability` for consistency.
+4. **MCP-only verification chain:** two MCP servers independently confirming the same fact (e.g., Worker X is healthy per observability AND its latest deploy succeeded per builds AND the deploy action appears in auditlogs) constitutes a verified claim. Single-MCP-server results are directionally useful but not verified.
 
 ---
 
@@ -655,3 +767,8 @@ Publication pipelines write D1 but KG seeding is session-dependent — drift acc
 | Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
 | Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include all high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-observability`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, and `cloudflare-radar`. See §DeepChat MCP Server Coverage for the canonical list. |
 | Trusting that an MCP server is reachable without a live HTTP probe | Verify with `curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp` — 401 = live (auth required), 404/530 = not deployed. Never claim an MCP server "is working" from config validation alone. |
+| Using raw `npx wrangler` or REST API when an MCP server exists for that operation (KIF-49) | Consult §MCP-Driven Operations decision matrix FIRST. `cloudflare-observability` replaces `curl /health`. `cloudflare-builds` replaces `npx wrangler deployments list`. `cloudflare-auditlogs` replaces manual audit log REST queries. CLI/REST are FALLBACKS, not defaults. |
+| Claiming "deployed" or "healthy" from a single MCP server response alone (MCP Anti-Phantom Gate) | Cross-reference any operational claim against at least TWO independent MCP servers (e.g., observability + builds + auditlogs = verified). Single-MCP feed is directional, not confirmed. |
+| Skipping `cloudflare-observability` during infrastructure audits in favor of REST/curl health checks | Observability MCP provides structured metrics (error rates, p50/p99 latency, invocation counts) that a raw `curl /health` cannot. Use it as the FIRST health check, not the last. |
+| Running DNS zone audits without `dns-analytics` | `dns-analytics` MCP shows actual query volumes and top queries per zone — a zone could have perfect DNS records but zero traffic (dead domain). `nslookup` alone misses this. |
+| Deploying Workers/Pages without checking `cloudflare-builds` for build confirmation | `cloudflare-builds` MCP is the canonical deploy-history source. Wrangler's `deploy` exit code confirms the REQUEST was accepted, not that the build pipeline succeeded and the artifact is serving. |
