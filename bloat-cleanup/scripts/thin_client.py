@@ -27,7 +27,8 @@ OPERATIONAL_DIRS = {
 
 # KIF-48: Operational files allowed in .deepchat root
 OPERATIONAL_FILES = {
-    ".gitignore", ".gitmodules", "keys.json",
+    ".gitignore", ".gitmodules", ".gitattributes", "keys.json",
+    "d1-cache.json",
     "verify_skills.ps1", "admin_watcher.ps1",
     "config.json", "package.json", "pnpm-lock.yaml",
     "CNAME", "README.md"

@@ -116,7 +116,7 @@ c.execute("""
     SELECT ns.id, ns.title, 
            datetime(ns.updated_at/1000, 'unixepoch') as last_updated,
            ns.is_pinned,
-           COUNT(te.id) as tape_count
+           COUNT(*) as tape_count
     FROM new_sessions ns
     LEFT JOIN deepchat_tape_entries te ON te.session_id = ns.id
     GROUP BY ns.id
@@ -127,7 +127,7 @@ for row in c.fetchall():
     sid, title, updated, pinned, count = row
     title_short = (title or '(no title)')[:50]
     pin = ' [PINNED]' if pinned else ''
-    print(f"  {tape_count:>7,} entries | {updated} | {title_short}{pin}")
+    print(f"  {count:>7,} entries | {updated} | {title_short}{pin}")
 
 print()
 
