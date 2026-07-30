@@ -1,5 +1,5 @@
 # ============================================================================
-# qnfo-skills â€” ALLOWLIST POLICY (ADR-026, hardened 2026-07-18 remediation)
+# qnfo-skills Ã¢â‚¬â€ ALLOWLIST POLICY (ADR-026, hardened 2026-07-18 remediation)
 # ============================================================================
 # THIS REPOSITORY IS STRICTLY FOR SKILL FILES. NOTHING ELSE.
 #
@@ -50,6 +50,7 @@
 # ============================================================================
 !/code-review/
 !/email-composer/
+!/qnfo-core/
 
 # ============================================================================
 # STEP 3b: Allow DeepChat skill-load path (prompts/skills/ mirrors root skills)
@@ -69,7 +70,7 @@
 
 
 # ============================================================================
-# STEP 4: Defense-in-depth â€” inside allowed skill dirs, still block anything
+# STEP 4: Defense-in-depth Ã¢â‚¬â€ inside allowed skill dirs, still block anything
 # that looks like research/project/JIT ephemera (unanchored patterns apply
 # at any depth within the allowed directories from Step 3).
 # ============================================================================
