@@ -1,13 +1,6 @@
 ---
 name: qnfo-agent
 description: MUST LOAD FIRST via skill_view. Activates 24-skill trigger table, safety, discovery. Core QNFO identity v3.61: Research Integrity, EXECUTE MODE, KIF-01 to KIF-45.
-version: "3.61"
-triggers: ["always active", "core identity", "system prompt", "research integrity", "execute", "due diligence", "closeout", "session lifecycle", "red team", "definition of done", "policy", "governance", "QNFO", "QWAV", "QACP", "skill discovery", "skill trigger", "tool execution optimization", "known issues"]
-related: ["cloudflare", "research", "knowledge", "system"]
-priority: 0
-platform: all
-autonomous: true
-self_sufficient: true
 ---
 
 # QNFO-AGENT ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â v3.61 (KIF-43, KIF-44, KIF-45 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â PowerShell quoting + Zenodo upload + Buffer token kaizen)

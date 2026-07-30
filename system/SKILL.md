@@ -1,13 +1,6 @@
 ---
 name: system
 description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
-version: "2.3"
-triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "skill hygiene", "skill locations", "duplicate skills", "stale skills", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
-related: ["cloudflare"]
-priority: 3
-platform: all
-autonomous: false
-self_sufficient: true
 ---
 
 # SYSTEM -- v2.3 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
