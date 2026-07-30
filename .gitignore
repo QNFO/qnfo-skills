@@ -49,6 +49,7 @@
 # STEP 3a: Additional QNFO-authorized skills
 # ============================================================================
 !/code-review/
+!/email-composer/
 
 # ============================================================================
 # STEP 3b: Allow DeepChat skill-load path (prompts/skills/ mirrors root skills)
