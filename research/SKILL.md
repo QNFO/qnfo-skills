@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage structured forecast protocol with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.30"
+version: "2.34"
 priority: 1
 platform: all
 autonomous: true
@@ -41,7 +41,51 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.31 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast Integration Map)
+# RESEARCH -- v2.34 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+
+> **v2.34 UPDATE (2026-07-30, kaizen):**
+> Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
+> parent-agent audit (Subagent Failure Handling protocol invoked).
+> Changes:
+> (1) [SOFT] Removed stale `_verify_4d.py` reference in anti-patterns; replaced with
+>     Core Distribution Gate description (Accuracy Auditor, parent-agent).
+> (2) [SOFT] Clarified `_citation_audit.py` in Verification Gates as a reusable inline
+>     pattern, not a standalone script (Accuracy Auditor, parent-agent).
+> (3) [SOFT] Fixed v2.33 banner miscount: "9 HARD issues" → "9 issues (3 HARD, 6 SOFT)"
+>     with per-fix severity tags (Status Auditor, parent-agent).
+> (4) [SOFT] Fixed v2.33 banner item 6: "10-stage pipeline" → "11-stage pipeline
+>     (Stages -1 through 10)" (Status Auditor, parent-agent).
+> Deferred: (D1) cronjob integration for scheduled calibration register/literature checks,
+> (D2) subagent_orchestrator for Phase 2 parallel literature searches, (D3) tape_handoff
+> for phase-to-phase session continuity, (D4) cross-skill version reference live verification
+> (cloudflare v3.9, code v2.2, etc.), (F3) remaining mojibake encoding cleanup in
+> anti-patterns section. Cross-reference: kaizen v1.1 (self-kaizen protocol, subagent
+> failure handling).
+
+> **v2.33 UPDATE (2026-07-30, kaizen — practical applications + backcasting default):**
+> Kaizen adding Stages 9 and 10 (Practical Applications Extension + Counterfactual
+> Backcasting) to the Structured Forecast Protocol, making them MANDATORY for all
+> research projects. Red-team review: 5 parallel subagents attempted, 4 truncated
+> (workspace path mismatch), 1 partial; fell back to direct parent-agent audit.
+> Changes:
+> 1. **Stage 9: Practical Applications Extension** — maps each forecast candidate/era
+>    onto concrete application domains (computation, AI, measurement, communication,
+>    economics, etc.) with falsifiable claims and calibration register entries.
+> 2. **Stage 10: Counterfactual Backcasting** — systematic backcasting across target
+>    disciplines with tiered historical forks (Tier 1: ~20yr, Tier 2: ~60yr,
+>    Tier 3: ~120yr, Tier 4: alternate axioms). Produces "counterfactual technology
+>    stack" tables and calibration register entries.
+> 3. **Forecast Integration Map** — new Stage 9 and 10 rows added.
+> 4. **Verification Gates** — two new gates: Practical Applications Extension (SOFT)
+>    and Counterfactual Backcasting (SOFT).
+> 5. **Anti-Patterns** — 4 new rows for missing Stages 9 and 10.
+> 6. **Design principle paragraph** — updated to reference the full 11-stage pipeline (Stages -1 through 10).
+> 7. **Frontmatter description** — "9-stage" → "11-stage structured forecast protocol."
+> Zero blocking issues. **Remediation red-team (2026-07-30):** Full 5-adversary re-run found 9 issues (3 HARD, 6 SOFT).
+> Fixes applied: (F1) brave_web_search → Browser/exec+curl [HARD], (F2) _check_pdf.py phantom-fix → build-paper.py
+> in Verification Gates table [HARD], (F3) .kaizen_history created [HARD], (S1) two 9-stage references → full protocol [SOFT],
+> (S2) KIF-32 collision resolved → KIF-54 [SOFT], (S3) trailing-slash contradiction fixed [SOFT], (S4) v2.28 chronology
+> note added [SOFT], (S5) v2.22 dedup verified [SOFT], (S6) v2.32 gap documented [SOFT].
 
 > **v2.31 UPDATE (2026-07-30, kaizen clean + forecast integration audit):**
 > Comprehensive kaizen audit and red-team review. Changes:
@@ -99,6 +143,7 @@ self_sufficient: true
 >     KIF-31 upgrade)" row replaced with "Use Judgment Sensitivity Analysis
 >     (Stage 4, v2.27)."
 > 13. Version bumped: 2.26 → 2.28 (frontmatter `version` field + heading).
+> **Note:** v2.27 was a retroactive kaizen applied AFTER v2.28, inserted between v2.26 and v2.28 in the banner chronology. The "2.26 → 2.28" bump reflects the version state at the time v2.28 was created.
 
 > **v2.27 UPDATE (2026-07-30, Bayesian Cascade retirement kaizen):**
 > Per user directive, the "9-Stage Bayesian Cascade" is RETIRED and replaced
@@ -548,11 +593,15 @@ so agents never treat forecasting as a standalone deliverable to be "checked off
 | **Stage 7: Strategic Memo** | Phase 5 (Publication §Abstract + Conclusion) | Executive synthesis becomes the paper's thesis statement |
 | **Stage 8: Cross-Review** | Phase 5 (Publication §Declarations) | Reviewer findings inform the "Use of Artificial Intelligence" declaration |
 | **Consilience Gate (KIF-29)** | Phase 1 → Phase 4 (Stage 1), Phase 2, Phase 5 | Synthesis Consilience becomes an additional Stage 1 candidate; Lexicon terms expand Phase 2 search queries; Cross-Domain table becomes a Phase 5 section |
+| **Stage 9: Practical Applications** | Phase 5 (Publication §Applications), Phase 8 (Distribution) | Maps each forecast candidate/era onto concrete application domains with falsifiable claims; generates additional calibration register entries |
+| **Stage 10: Counterfactual Backcasting** | Phase 5 (Publication §Discussion/Backcast), Phase 8 (Distribution) | Systematic backcasting across target disciplines with tiered historical forks; produces counterfactual technology stack tables and calibration register entries |
 
 **Design principle:** Forecasting is not a separate "module" bolted onto research — it is the
 analytical engine that generates the paper's claims, structure, and falsifiable predictions.
 The agent should think of Phase 4 not as "now we do forecasting" but as "now we generate the
-substantive content that Phases 5-8 will publish." The PUBLICATION PRINCIPLE (Phase 4 header)
+substantive content that Phases 5-8 will publish." Stages 9 and 10 extend this: Stage 9 makes
+the forecast actionable by grounding it in concrete domains; Stage 10 stress-tests it by
+imagining alternative evolutionary paths. The PUBLICATION PRINCIPLE (Phase 4 header)
 enforces this: the reader sees good analysis, not methodology signage.
 
 
@@ -768,7 +817,7 @@ diligence report -- do not silently present internal-only hits as validation.
 |:-------|:-------|:--------|
 | **Semantic Scholar API** | REST API with `fields=title,authors,year,abstract,externalIds` | Highest-quality academic results |
 | **arXiv API** | `http://export.arxiv.org/api/query?search_query=<query>` | Preprint search |
-| **Web search** | `brave_web_search` tool | Broader discovery |
+| **Web search** | Browser (`load_url`) or `exec` with `curl` | Broader discovery |
 | **QNFO Vectorize** | `search_papers({query: \"...\", limit: 10})` | Existing QNFO corpus semantic search |
 | **QNFO Knowledge Graph** | `query_graph('query', {query: 'MATCH (p:Paper) WHERE ...'})` | Related QNFO concepts |
 
@@ -862,7 +911,7 @@ print(f"Unused BibTeX entries: {len(unused)} -- {', '.join(sorted(unused))}")
 
 **Runs for ALL projects.** The scope scales: a single-result paper runs a lighter
 version (assumptions enumerated, uncertainty ranges, sensitivity check, at least one
-calibration prediction); a paradigm forecast runs the full 9-stage protocol.
+calibration prediction); a paradigm forecast runs the full protocol (all 11 stages).
 
 **PUBLICATION PRINCIPLE (MANDATORY):** In research outputs — papers, PDFs,
 abstracts, presentations — do NOT name the methodology. Do not write "We applied
@@ -917,7 +966,7 @@ resources* based on compounded intuitions.
    is **capped at 0.80** and labeled `[CALIBRATION-CAP: no empirical pillar
    for P > 0.80]`.
 5. Calibration training is **mandatory** the first time any proposal passes
-   through the full 9-stage protocol.  Subsequent proposals by the same agent
+   through the full protocol.  Subsequent proposals by the same agent
    may reuse the same calibration score if the training was completed within
    the same session or < 7 days prior.
 
@@ -1026,7 +1075,7 @@ For each candidate:
 as `[V1-LEGACY: EV numbers are false-precision artifacts from v1 Bayesian Cascade —
 replace with qualitative ranking per v2.27]`.
 
-### Stage 5: Calibration Register (MANDATORY, KIF-32 strength-weighted)
+### Stage 5: Calibration Register (MANDATORY, KIF-54 strength-weighted)
 
 For each non-obvious prediction, create a dated calibration entry with its
 likelihood-anchor provenance visible — so post-hoc rationalizers cannot
@@ -1078,6 +1127,119 @@ check, NOT independent inter-rater reliability in a statistical sense. The revie
 challenges: Did the analysis miss a paradigm? Did it overfit to the current literature?
 Are the judgment estimates consistent and well-reasoned? Are anchoring biases (e.g.,
 hammer-sees-nail in the analyst's domain of expertise) identified and flagged?
+
+---
+
+### Stage 9: Practical Applications Extension (MANDATORY for all projects)
+
+**Runs for ALL projects. Scope scales.** A single-result paper maps its forecast
+onto 2-3 application domains; a paradigm forecast maps onto 5+ domains with
+falsifiable claims per domain.
+
+**Purpose:** The forecast protocol produces paradigm-shift candidates and
+calibration predictions, but these are abstract — "sheaf-theoretic measurement
+will be adopted by 2035." Stage 9 grounds every forecast candidate in concrete
+operational domains, answering: "If this candidate is correct, what does it
+enable that we cannot do today?" This prevents forecasts from remaining purely
+theoretical and ensures every prediction has a practical face.
+
+**Protocol:**
+
+1. **Domain Mapping:** For each top-ranked forecast candidate (from Stage 1),
+   identify 2-5 concrete application domains. The domains must be recognizable
+   by practitioners — computation, AI/ML, measurement/metrology, communication,
+   cryptography/security, energy, medicine, economics/finance, cognitive
+   science, robotics, materials science, etc. If the candidate has no plausible
+   practical application in any domain, flag it as `[PURELY THEORETICAL]` and
+   note that its calibration timeline should be extended accordingly.
+
+2. **Operational Signature:** For each candidate-domain pair, articulate the
+   *operational signature* — the specific change in how practitioners work
+   that the candidate enables. Example: "Era 10 (Contextual Enclosure) →
+   quantum error correction: every error syndrome carries a context tag
+   $(C, \Delta)$, making the cocycle condition a verifiable hardware check."
+
+3. **Falsifiable Claims:** For each candidate-domain pair, produce at least
+   one falsifiable claim that is testable in that domain.
+
+4. **Calibration Register Entries:** Register at least one dated, strength-weighted
+   prediction per domain cluster. These supplement Stage 5's general predictions
+   with domain-specific falsifiable anchors.
+
+5. **Cross-Domain Consilience:** If the Cross-Domain Consilience Gate (KIF-29)
+   was triggered in Phase 1, cross-reference the Stage 9 domain mapping against
+   the consilience audit's 6-domain translations. Flag any domain where the
+   forecast's practical application contradicts or enriches the consilience.
+
+**Output:** A "Practical Applications Extension" document (stored in
+`artifacts/`) with: domain mapping table, operational signatures, domain-specific
+falsifiable claims, additional calibration register entries, and cross-domain
+consilience cross-references.
+
+**Integration with publication (Phase 5):** The domain mapping becomes a
+"Practical Applications" section in the paper. Falsifiable claims become part
+of the paper's calibration register. The operational signatures drive the
+paper's evidence-of-impact argument.
+
+### Stage 10: Counterfactual Backcasting (MANDATORY for all projects)
+
+**Runs for ALL projects. Scope scales.** A single-result paper backcasts across
+2-3 target disciplines at 1-2 fork tiers; a paradigm forecast backcasts across
+4+ disciplines at 3-4 fork tiers.
+
+**Purpose:** Stage 9 maps the forecast forward into applications. Stage 10
+maps backward: given a hypothetically advanced state of the target disciplines
+(Stratigraphy, Metrology, Number Theory, Valuation Theory — or whatever
+disciplines the research operates within), what technology stacks would be
+available today, and what historical forks could have produced them?
+
+This is a counterfactual exercise that serves three functions:
+(a) It stress-tests the forecast by asking "what would have to be true for
+    this to already exist?" — revealing hidden timeline assumptions.
+(b) It identifies *actionable near-term forks* — Tier 1 forks that could
+    have been achieved with a ~20-year research reprioritization.
+(c) It generates *calibration register entries* for the backcast claims,
+    providing a second independent set of falsifiable predictions.
+
+**Protocol:**
+
+1. **Target Discipline Identification:** Identify the core disciplines the
+   research depends on. State the current state and the "target state."
+
+2. **Tiered Fork Classification:**
+
+   | Tier | Description | Temporal Distance |
+   |:-----|:------------|:------------------|
+   | **Tier 1** | Single research program reprioritized ~20 years ago | 2000s fork → impacts by 2020s |
+   | **Tier 2** | Coordinated advancement across 2-3 disciplines | 1960s fork → impacts by 2000s |
+   | **Tier 3** | Incompatible mathematical foundations required | 1900s fork → impacts by 1980s |
+   | **Tier 4** | The axioms themselves differ | Indefinite |
+
+3. **Counterfactual Technology Stack:** For each discipline × tier, describe
+   the counterfactual technology. Be specific: name, capability, enabling fork.
+
+4. **Summary Table:** Map every Discipline × Tier → Counterfactual Technology.
+
+5. **Calibration Register Entries:** Register at least one dated prediction
+   per backcast tier — reverse predictions: "If Tier N fork had occurred, we
+   would observe X by now."
+
+6. **Near-Term Fork Recommendations:** Tier 1 forks become actionable
+   recommendations for the paper's Future Work section.
+
+**Output:** A "Counterfactual Backcasting" document (stored in `artifacts/`)
+with: target discipline assessment, tiered fork classification, counterfactual
+technology stack table, backcast calibration register entries, and near-term
+fork recommendations.
+
+**Integration with publication (Phase 5):** The backcast becomes a
+"Counterfactual Technology Stacks" section. The tiered fork table is
+publication-ready. Near-term fork recommendations become Future Work.
+
+**Generalization:** The protocol template uses Stratigraphy, Metrology, Number
+Theory, and Valuation Theory as placeholders. The agent MUST replace these
+with the actual core disciplines of the research project. Every research
+project has core disciplines — identify them from Phase 1 due diligence.
 
 ---
 
@@ -1918,7 +2080,7 @@ assert rows, "INSERT/UPDATE did not persist -- do not report success"
 
 **Step 6 -- verify papers-server actually serves it:**
 ```bash
-curl -sI https://papers.qnfo.org/papers/<slug>  # NOTE: no trailing slash in the live worker's routing, confirmed 2026-07-21
+curl -sI https://papers.qnfo.org/papers/<slug>/  # Both with and without trailing slash resolved as of 2026-07-30; trailing slash is canonical
 ```
 
 ### Papers-Server Worker Verification
@@ -2355,9 +2517,9 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 |:-----|:------|:---------|
 | **Due Diligence** | KG + D1 + 2+ external sources queried | Query output with counts |
 | **Classification** | All papers classified as core/supporting/background/reject | Classification table |
-| **Citation** | All citations trace to real papers, BibTeX verified | `_citation_audit.py` output |
+| **Citation** | All citations trace to real papers, BibTeX verified | `_citation_audit.py` output (reusable inline pattern from Phase 3 — write to file, execute, then delete) |
 | **Publication Language** | Zero internal language in paper.md | Scan output: 0 hits |
-| **PDF** | PDF renders without Unicode errors | `_check_pdf.py` output |
+| **PDF** | PDF renders without Unicode errors | `build-paper.py` exit code 0 |
 | **DOI** | Zenodo record resolves, cross-references correct | `curl -sI https://doi.org/...` |
 | **Deployment** | papers-server URL HTTP 200, D1 entry exists with slug/doi | curl output + wrangler D1 query |
 | **MCP-Driven Deployment (v2.25)** | Cross-MCP verification chain: builds + observability + bindings + auditlogs + dns-analytics + dex-analysis all confirm deployment | MCP tool results with timestamps |
@@ -2366,6 +2528,8 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **DNSLink (OPTIONAL)** | TXT record resolves, dweb.link gateway serves content | `nslookup -type=TXT` + `curl dweb.link/ipns/...` |
 | **Core Distribution Gate (MANDATORY)** | All core layers: GitHub (public repo), Zenodo (DOI), R2 (archive), D1/KG (discoverability) | All 4 layers verified |
 | **Cross-Domain Consilience (SOFT)** | For qualifying cross-domain research: `artifacts/consilience-gate.md` exists with Core Dynamic, 6-domain Lexicon, all Domain Translations, and Synthesis Consilience | File present OR `[CROSS-DOMAIN-NOT-APPLICABLE]` justification documented |
+| **Practical Applications Extension (SOFT)** | For all research: `artifacts/practical-applications-extension.md` exists with domain mapping, operational signatures, domain-specific falsifiable claims, and additional calibration register entries | File present with populated domain mapping table |
+| **Counterfactual Backcasting (SOFT)** | For all research: `artifacts/counterfactual-backcasting.md` exists with target discipline assessment, tiered fork classification, counterfactual technology stack table, and backcast calibration register entries | File present with populated fork tier table |
 
 ## Anti-Patterns
 | Anti-Pattern | Fix |
@@ -2383,7 +2547,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
 | Publishing without D1/KG records | Log `doi`, `r2_path` in D1 living-paper + Knowledge Graph Paper node |
-| Skipping 4-D verification | `_verify_4d.py` must pass before status â†’ "published" |
+| Skipping 4-D verification | All 4 core distribution layers (GitHub, Zenodo, R2, D1/KG) must be independently verified before status â†’ "published" |
 | Using ANY third-party IPFS pinning service (Filebase/Pinata/Lighthouse/w3up/web3.storage) | DEPRECATED as of v2.10 -- use ONLY Cloudflare R2 (durable store) + locally-computed CIDv1 + Cloudflare DNS DNSLink (naming). No third-party pinner. |
 | Hardcoding a live secret VALUE (token/key) inside a skill file | Store only the FILE PATH where the secret lives (e.g. `%USERPROFILE%\buffer\token`); read it live every time. A hardcoded value in a skill file will silently go stale and cause a debugging session exactly like the 2026-07-21 Buffer incident. |
 | Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh â€” a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
@@ -2450,3 +2614,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Editing source files in a temp git clone across multiple turns without committing each turn (KIF-32, v2.26) | **HARD GATE (cross-ref git-github v2.3):** clone → edit ALL files in one batch → commit → push → delete, ALL in one turn. Phase 5 PDF build/edit cycles are especially dangerous: the agent often edits → builds → discovers more issues → edits again across turns on the same clone. Deferring commit to a "final batch" guarantees data loss when the temp directory is cleaned between turns. Re-clone each turn from the remote to get the latest state. |
 | Assuming a temp clone's files survive across tool-call turns on Windows (v2.26) | `$env:TEMP` is volatile. System cleanup, session teardown, or storage-sense can evict files between turns. Never trust `Test-Path` results from a prior turn. |
 | Batched "final commit" of edits accumulated across multiple turns on a temp clone (v2.26) | Commit each turn's edits as an atomic unit with `git push`. A "final commit at the end" that was deferred for 3+ turns will find the repo directory empty and all edits lost. |
+| Skipping Stage 9 (Practical Applications) because "the forecast is too theoretical" | Stage 9 is MANDATORY for ALL projects. Even theoretical forecasts have practical applications — if not in technology, then in education, methodology, or cross-domain consilience. Flag `[PURELY THEORETICAL]` if genuinely no domain exists, but this should be rare. |
+| Listing application domains without operational signatures (e.g., "this applies to quantum computing") | Every Stage 9 domain entry MUST articulate the specific change in practice — the operational signature. "Applies to X" is not an application; "changes how X is done by enabling Y" is. |
+| Backcasting only one discipline or one fork tier | Stage 10 is most informative with cross-discipline interactions. A single-discipline backcast misses the primary insight: "if A advanced but B didn't, X exists but Y doesn't." |
+| Using placeholder discipline names (Stratigraphy, Metrology, etc.) instead of the research's actual core disciplines | Stage 10's template uses generic placeholders. The agent MUST replace them with the actual core disciplines identified in Phase 1 due diligence. |

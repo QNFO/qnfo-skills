@@ -1,37 +1,79 @@
 ---
 name: kaizen
-description: Proactive skill improvement protocol — audit, upgrade, and harden any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Uses structured forecasting to predict skill needs BEFORE users report problems. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals (stale refs, contradictions, outdated banners); when a skill's dependencies have changed; or when proactively scanning for skill rot across the ecosystem. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements.
+description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
-> **v1.1 UPDATE (2026-07-30, kaizen — self-kaizen):**
+> **v1.2 UPDATE (2026-07-30, kaizen — autonomous CI/CD infrastructure):**
 > Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
-> parent-agent audit (Self-Kaizen Protocol invoked). HARD findings: 2 (both negated —
-> `skill_run` confirmed as valid tool, research v2.31 confirmed via `skill_view`).
+> parent-agent audit (Self-Kaizen Protocol invoked). HARD findings: 0. SOFT findings: 3.
+> DESIGN findings: 10.
 > Changes:
-> (1) Added Self-Kaizen Protocol section — mandatory steps when kaizen audits itself
-> (S-01, parent-agent).
-> (2) Added Subagent Failure Handling section — truncated outputs must trigger direct
-> fallback (S-02, parent-agent).
-> (3) Added pre-flight checks to Phase 0 — `memory_recall`, `tape_info`, `tape_anchors`,
-> double-kaizen detection (S-03/S-05, parent-agent).
-> (4) Added Phase 4 disambiguation note — distinguishes research skill's Phase 4 from
-> kaizen's Phase 4 (S-04, parent-agent).
-> (5) Added `update_plan` and `cronjob` to Cross-Skill Integration table (D-01/D-02,
-> parent-agent).
-> (6) Added Kaizen History Log section — per-skill `.kaizen_history` tracking (D-03,
-> parent-agent).
-> (7) Added Calibration Register section — dated fragility predictions (D-04,
-> parent-agent).
-> (8) Added 7 new anti-patterns: history log, update_plan, truncation, memory_recall,
-> cronjob, calibration register, double-kaizen.
-> Cross-reference: research v2.31 (confirmed live), self-kaizen protocol now documented.
+> (1) [DESIGN] Added Autonomous Watchtower Protocol (Phase -1) — runs at every session
+>     start; scans all 28 installed skills for staleness, drift, incident markers;
+>     produces prioritized kaizen candidate list. Uses `skill_list` + `memory_recall` +
+>     `.kaizen_history` + `tape_anchors` for 4-axis health scoring.
+> (2) [DESIGN] Added Session Retrospective Protocol (Phase R) — runs at every session
+>     end; mines conversation summary, tape_search, tape_anchors, and memory for tool-failure
+>     patterns, anti-patterns, and improvement triggers. Produces Retrospective Register.
+> (3) [DESIGN] Added Continuous Monitoring Phase (Phase 6) — lightweight post-kaizen
+>     follow-up across 1-3 subsequent sessions; verifies fixes held, checks for regression,
+>     escalates to full re-kaizen if new anti-patterns emerge.
+> (4) [DESIGN] Added Knowledge Graph Feedback Loop — kaizen findings create structured KG
+>     edges (`KAIZENED_IN`, `DEPENDS_ON`, `TRIGGERED`) for cross-skill impact tracing and
+>     dependency graph maintenance.
+> (5) [DESIGN] Added Heuristic Accumulation Protocol — sessions produce heuristics
+>     (anti-patterns, tool-failure patterns, workarounds) stored in durable memory with
+>     `category: "anti_pattern"` or `"heuristic"`; Watchtower picks these up for kaizen
+>     candidate scoring.
+> (6) [DESIGN] Added Tape & Conversation Mining Protocol — `tape_search` for failure
+>     patterns + `search_conversations` + `get_conversation_history` for retrospective
+>     signal extraction + `conversationSummary` parsing for kaizen triggers.
+> (7) [DESIGN] Added Concrete cronjob Protocol — working daily `kaizen-watchtower` task
+>     that runs Autonomous Watchtower, writes report to durable memory, and flags any
+>     skill with staleness score > 0.7 for immediate attention.
+> (8) [DESIGN] Added Automated Skill Dependency Graph — built from `skill_list` +
+>     cross-reference grep across all installed SKILL.md files; maps `DEPENDS_ON` edges
+>     between skills; maintained by Watchtower.
+> (9) [DESIGN] Added Incident-to-Fix Pipeline — when a session retrospective detects a
+>     tool failure traced to a stale skill, auto-flags it as a HARD kaizen candidate
+>     in the Watchtower report for the next session.
+> (10) [DESIGN] Added Fix-Verification Feedback Loop — Phase 6 monitoring re-checks
+>     subsequent session retrospectives for recurrence of fix-targeted anti-patterns;
+>     if recurrence detected, escalates to full re-kaizen with escalated severity.
+> (11) [SOFT] Fixed canonical case study version reference: "research v2.31" → "research
+>     v2.34" (confirmed live via skill_view) — Accuracy Auditor, parent-agent.
+> (12) [SOFT] Added `search_conversations`, `get_conversation_history`, `get_conversation_stats`,
+>     `query_graph`, `search_memories`, and `conversationSummary` to the tools leveraged
+>     by the new protocols — Novelty Auditor, parent-agent.
+> (13) [SOFT] Updated Cross-Skill Integration table with new Phase -1/R/6 entries.
+> Cross-reference: research v2.34 (confirmed live), self-kaizen protocol now includes
+> autonomous CI/CD infrastructure.
 
-# KAIZEN v1.1 (Proactive Skill Improvement Protocol)
+> **v1.2.1 UPDATE (2026-07-31, sync-kaizen — gitignore allowlist gap):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 1. SOFT findings: 1.
+> Changes:
+> (1) [HARD] .gitignore ADR-026 allowlist missing 14 of 28 installed skills (50%).
+>     Removed dead `!/qnfo-agent/` entry. Added 14 DeepChat-installed skills to
+>     allowlist: algorithmic-art, deepchat-settings, doc-coauthoring, docx, git-commit,
+>     infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx,
+>     skill-creator, web-artifacts-builder, windows-command-patterns, xlsx.
+>     This unblocked xlsx v1.1 kaizen (recalc.py) and skill-creator v1.1 kaizen files
+>     from git obscurity — they existed on disk but were invisible to the repo.
+> (2) [SOFT] Added anti-pattern: "Skill installed by DeepChat but not added to
+>     gitignore allowlist" — `skill_list` vs `git ls-files` cross-reference as
+>     Watchtower scan step (Accuracy + Completeness Auditors, parent-agent).
+> Confirmed: cronjob "No provider configured" anti-pattern from v1.2 — all 3 existing
+> cronjobs (Daily System Verification, QNFO Secrets Rotation, Calibration Register Audit)
+> fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
+> Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
+
+# KAIZEN v1.2.1 (Autonomous Continuous-Improvement Protocol)
 
 ## Overview
 
 Kaizen is a continuous-improvement protocol for skills and configuration
-artifacts. It has two modes:
+artifacts. It has **three modes**:
 
 1. **Reactive kaizen** — triggered by user request ("audit X skill", "update Y
    for Z change"). This is the minimum baseline.
@@ -41,13 +83,187 @@ artifacts. It has two modes:
    Map) was NOT a user-requested fix — it was an architectural insight that
    made the "seamless weaving" of forecasting into research explicit and
    auditable.
+3. **Autonomous kaizen** — runs WITHOUT user prompting. The Autonomous Watchtower
+   scans all skills at session start, the Session Retrospective mines completed
+   sessions for patterns, and Continuous Monitoring verifies fixes across
+   subsequent sessions. This mode turns kaizen from a tool you call into an
+   infrastructure that runs itself — the agent proactively maintains the skill
+   ecosystem, surfacing drift and incidents before they cause failures.
+
+### The Autonomous CI/CD Loop
+
+```
+Session Start ──► Autonomous Watchtower (Phase -1)
+     │                    │
+     │              Prioritized candidate list
+     │                    │
+     ▼                    ▼
+Session Body ────► Triggered kaizen (if Watchtower flagged HARD candidates)
+     │                    │
+     │              Phases 0-5 (Standard Pipeline)
+     │                    │
+     ▼                    ▼
+Session End ────► Session Retrospective (Phase R)
+     │                    │
+     │              Patterns → Heuristic Accumulation → Memory
+     │                    │
+     ▼                    ▼
+Next Session ────► Continuous Monitoring (Phase 6)
+     │                    │
+     │              Verify fixes held; escalate if regression
+     │                    │
+     └────────────────────┘
+     (loop: Watchtower picks up retrospective findings)
+```
+
+## Autonomous Watchtower Protocol (Phase -1, MANDATORY at session start)
+
+**Runs at the start of EVERY session where the kaizen skill is loaded.**
+This is the autonomous trigger — the agent doesn't wait to be asked.
+
+### Watchtower Scan (4-axis health scoring)
+
+```
+For each installed skill:
+  1. STALENESS-AXIS:    days since last kaizen (from .kaizen_history or memory_recall)
+                        0-30 days = 0.0 | 30-60 = 0.4 | 60-90 = 0.7 | >90 = 1.0
+  2. INCIDENT-AXIS:     recent session failures traced to this skill (from memory_recall
+                        query: "<skill-name> failure incident")
+                        0 incidents = 0.0 | 1 = 0.3 | 2-3 = 0.6 | >3 = 1.0
+  3. DRIFT-AXIS:        version mismatch in cross-references (from dependency graph)
+                        No drift = 0.0 | minor drift = 0.4 | major drift = 0.8
+  4. CALIBRATION-AXIS:  overdue calibration register predictions (from memory_recall)
+                        None overdue = 0.0 | 1 overdue = 0.3 | >1 overdue = 0.6
+  COMPOSITE: (STALENESS × 0.4) + (INCIDENT × 0.3) + (DRIFT × 0.2) + (CALIBRATION × 0.1)
+```
+
+### Watchtower Execution (MANDATORY steps)
+
+```
+1. skill_list() — get all installed skills and their descriptions
+2. For EACH skill with score > 0.0:
+   a. memory_recall({query: "<skill-name> kaizen failure incident"})
+   b. Check if .kaizen_history exists and parse last kaizen date
+   c. Check Calibration Register predictions for overdue entries
+3. Build Skill Dependency Graph (see §Automated Skill Dependency Graph)
+4. For EACH skill with cross-references:
+   a. Check if referenced skill version matches actual version
+   b. If drifted, compute DRIFT-AXIS score
+5. Produce WATCHTOWER REPORT:
+   - Top 5 skills by composite score (most fragile first)
+   - Any skill with score > 0.5: flag as "kaizen candidate"
+   - Any skill with score > 0.8: flag as "IMMEDIATE — HARD candidates"
+   - Any HARD incident markers: auto-trigger kaizen without user prompt
+6. memory_remember(category="task_outcome", content="Watchtower scan: N skills scanned, M flagged.")
+7. If any HARD candidates exist: display watchtower report and begin Phase 0 for the highest-scoring skill.
+```
+
+### Watchtower Gate
+
+- If **NO skill scores > 0.5:** Report "Watchtower: all skills healthy" — no action.
+- If **any skill scores > 0.5 but < 0.8:** Report "Watchtower: N kaizen candidates" — queue for next session, do NOT block current session.
+- If **any skill scores > 0.8:** Report "Watchtower: M IMMEDIATE candidates" — ask user with `deepchat_question`: "Kaizen on <skill> (score X.X)? Or defer?"
+- If **INCIDENT-AXIS > 0.5 on any skill:** Auto-trigger kaizen — do not ask.
+
+## Session Retrospective Protocol (Phase R, MANDATORY at session end)
+
+**Runs at the end of EVERY session where the kaizen skill is loaded,**
+or when `tape_handoff` is written. Mines the completed session for patterns.
+
+### Retrospective Data Sources
+
+| Source | Tool | Signal Extracted |
+|:-------|:-----|:-----------------|
+| **Conversation Summary** | Read from session context | Tool failures, anti-patterns mentioned, skills loaded |
+| **Tape Anchors** | `tape_anchors()` | Handoff markers, kaizen sessions, incident anchors |
+| **Tape Search (failures)** | `tape_search({query: "error OR failed OR 401 OR 403 OR 404 OR timeout OR truncated"})` | Tool-call failures, API errors, subagent truncations |
+| **Tape Search (kaizen)** | `tape_search({query: "kaizen OR fix OR stale OR drift OR anti-pattern"})` | Prior kaizen activity, deferred fixes |
+| **Memory Recall** | `memory_recall({query: "session failure OR tool error OR anti-pattern"})` | Durable patterns from prior sessions |
+| **Conversation History** | `search_conversations({query: "<skill-name>", limit: 5})` | Recent sessions involving this skill |
+
+### Retrospective Execution
+
+```
+1. Parse conversationSummary for:
+   - Any mention of tool failures (e.g., "401", "403", "timeout", "truncated")
+   - Any mention of anti-patterns discovered
+   - Skills that were kaizened during the session
+2. tape_search for failure patterns:
+   - Count unique failing tool calls
+   - Map each failure to the skill that would own the fix
+3. For each failure → skill mapping:
+   - If skill has an existing anti-pattern for this failure: note "known pattern"
+   - If skill has NO anti-pattern for this failure: flag "NEW PATTERN"
+4. Produce RETROSPECTIVE REGISTER:
+   ```markdown
+   # Session Retrospective: {session_id} @ {date}
+   ## Patterns Discovered
+   - [NEW] <pattern>: <skill> — <tool> failed with <error> (N occurrences)
+   - [RECURRING] <pattern>: <skill> — prior fix may not have held
+   ## Skills Affected
+   - <skill>: <N> failure patterns, <M> new anti-patterns
+   ## Kaizen Candidates (auto-escalated to Watchtower)
+   - <skill>: triggered by new anti-pattern discovery
+   ```
+5. memory_remember(category="heuristic", content="<pattern>: <skill> — <tool> failed N times in session <id>. Root cause: <analysis>.")
+6. memory_remember(category="anti_pattern", content="<skill>: discovered anti-pattern '<pattern>' in session <id>.")
+7. If new patterns discovered for any skill: update that skill's Watchtower INCIDENT-AXIS score.
+```
+
+### Retrospective Gate
+
+- If **0 new patterns:** "Retrospective: clean session." Log only.
+- If **1-2 new patterns:** Queue for next Autonomous Watchtower scan. Do not block.
+- If **3+ new patterns OR any RECURRING pattern:** Auto-escalate to Watchtower HARD candidate. Begin Phase 0 for the highest-scoring affected skill in the NEXT session.
+
+## Continuous Monitoring Phase (Phase 6, AUTOMATIC after kaizen closeout)
+
+After a kaizen session closes (Phase 5), the fix does NOT disappear — it enters
+a lightweight monitoring window across 1-3 subsequent sessions.
+
+### Monitoring Protocol
+
+```
+For each skill kaizened in the last 3 sessions (from memory_recall + .kaizen_history):
+
+1. SESSION +1 (next session after kaizen):
+   a. Check Session Retrospective for ANY recurrence of the fixed anti-pattern
+   b. If recurrence detected → MONITORING-ALERT: escalate severity, queue full re-kaizen
+   c. If no recurrence → MONITORING-PASS: log checkpoint
+
+2. SESSION +2:
+   a. Same check as +1
+   b. If still clean → MONITORING-CLEAN-2: reduce monitoring intensity
+
+3. SESSION +3:
+   a. Final check
+   b. If still clean → MONITORING-RESOLVED: remove from active monitoring
+   c. If recurrence after +2 clean → MONITORING-REGRESSION: escalate to full re-kaizen
+```
+
+### Monitoring Registry
+
+Maintained in durable memory with category `task_outcome`:
+```
+memory_remember(category="task_outcome",
+  content="Monitoring checkpoint: <skill> v<N> fix #<id> | Session +1/+2/+3 | Status: PASS/ALERT/CLEAN/REGRESSION | Evidence: <from retrospective>")
+```
+
+### Escalation Rules
+
+| Signal | Action |
+|:-------|:-------|
+| Recurrence at +1 | Full re-kaizen, escalate severity (SOFT → HARD) |
+| Recurrence at +2 (was clean at +1) | Full re-kaizen, investigate intermittent failure |
+| Recurrence at +3 (was clean at +1,+2) | Full re-kaizen, possible environmental trigger |
+| Clean through +3 | Close monitoring, log MONITORING-RESOLVED |
 
 ## Self-Kaizen Protocol (MANDATORY when kaizen audits itself)
 
 When the kaizen skill is kaizening itself (self-kaizen), the agent MUST:
 
 1. **Read the skill independently** — do not rely solely on subagent outputs; subagent_orchestrator truncation can lose audit findings. The parent agent must also read the full SKILL.md directly.
-2. **Cross-verify every version reference** — the canonical case study (research skill v2.31) must be live-verified via `skill_view("research")` to confirm the version header matches. Never trust a `skill_list` description field for version numbers; those are separate metadata that may drift independently of the actual SKILL.md heading.
+2. **Cross-verify every version reference** — the canonical case study (research skill) must be live-verified via `skill_view("research")` to confirm the version header matches. Never trust a `skill_list` description field for version numbers; those are separate metadata that may drift independently of the actual SKILL.md heading.
 3. **Test every tool name claim** — the Runtime Context block may reference tools that were available at creation time but could have been renamed/deprecated. Verify each tool name against the current available tools list.
 4. **Use `update_plan` from Phase 0** — track progress through Phases 0-5 with the progress checklist tool so the self-kaizen execution is auditable.
 
@@ -67,12 +283,14 @@ When subagent_orchestrator outputs are truncated, the parent agent MUST:
 - `memory_recall({query: "<skill-name> kaizen"})` — check for prior kaizen sessions on this skill. Log the most recent session date and version.
 - `tape_info()` — inspect current session tape for related kaizen activity.
 - `tape_anchors()` — check for recent kaizen handoff anchors.
+- **Check Autonomous Watchtower report** — if this kaizen was triggered by Watchtower, log the trigger score and axes.
+- **Check Session Retrospective** — if this kaizen was triggered by retrospective pattern discovery, log the pattern and occurrence count.
 - If a prior kaizen session completed within the last 24 hours on the same skill, flag `[RECENT-KAIZEN: <date>, v<version>]` and confirm the user wants to kaizen again. Double-kaizen (two consecutive kaizen sessions with no user changes between them) is an anti-pattern.
 
 Kaizen initiates from one of these signals:
 
-| Signal | Example | Reactive or Proactive |
-|:-------|:--------|:----------------------|
+| Signal | Example | Reactive / Proactive / Autonomous |
+|:-------|:--------|:----------------------------------|
 | **User directive** | "Audit X skill" | Reactive |
 | **Cross-skill version drift** | Skill A references Skill B v2.3, but B is now v3.0 | Proactive |
 | **Tool capability change** | New MCP server available, skill doesn't use it | Proactive |
@@ -80,6 +298,10 @@ Kaizen initiates from one of these signals:
 | **Self-audit interval** | Any skill not kaizen'd in >30 days | Proactive |
 | **Forecast signal** | Structured forecast predicts a skill will need update within N weeks | Proactive |
 | **Incident-triggered** | A session failed because a skill was wrong (e.g., stale token, deleted script) | Reactive |
+| **Watchtower HARD candidate** | Autonomous Watchtower scores skill > 0.8 | Autonomous |
+| **Watchtower INCIDENT-AXIS > 0.5** | Session retrospective found tool failures traced to this skill | Autonomous |
+| **Retrospective new pattern** | Session retrospective discovered 3+ new anti-patterns | Autonomous |
+| **Continuous monitoring regression** | Phase 6 monitoring detected fix recurrence at +1/+2/+3 | Autonomous |
 
 > **Disambiguation:** Where this skill says "Phase 4 (Structured Forecast)," it refers to the **research skill's** Phase 4 (Deep Research & Structured Forecast Protocol). The kaizen skill's own Phase 4 is "Verification Gate." Context determines which is meant: the case study and forecast protocol sections reference the research skill; the pipeline phases reference kaizen itself.
 
@@ -185,6 +407,26 @@ After all fixes applied:
 4. TAPE: `tape_handoff(name="kaizen/<skill-name>-vN.M", summary="...")`
 5. SYNC: If this is a live-installed skill, ensure the on-disk file is
    current. No git commit required for skill files outside a repo.
+6. KAIZEN HISTORY LOG: Append entry to `.kaizen_history` or `kaizen-history.json`.
+7. CALIBRATION REGISTER: Update the skill's calibration register with new
+   fragility predictions.
+8. KNOWLEDGE GRAPH: If applicable, create/update KG edges for cross-skill
+   impact tracing (see §Knowledge Graph Feedback Loop).
+9. MONITORING REGISTRY: Register this fix in the Continuous Monitoring
+   registry for Phase 6 follow-up.
+```
+
+### Phase 6: Continuous Monitoring Registration (MANDATORY after every kaizen closeout)
+
+After Phase 5 completes, register the fix for monitoring:
+
+```
+1. memory_remember(category="task_outcome",
+   content="Monitoring entry: <skill> v<N> | Fixes: <list of fix IDs> | 
+            Session +0: kaizen complete | Next check: session +1")
+2. Set a Watchtower calibration register prediction:
+   "[CHECK: <date + 3 sessions>] <skill> v<N> fixes will hold through +3 monitoring checkpoints.
+    Recurrence risk: [LOW/MODERATE/HIGH] based on fix type."
 ```
 
 ## Proactive Kaizen: The Forecast-Driven Model
@@ -261,7 +503,9 @@ suggested this — only proactive gap-scanning did.
 | Tool deprecation announced | Kaizen all skills that use the deprecated tool |
 | >30 days since last kaizen on any skill | Run the proactive forecast protocol |
 | Session failure traced to a stale skill reference | Kaizen the failing skill + all skills that reference it |
-| **Scheduled audit (monthly)** | Use `cronjob` to run a `kaizen --batch --dry-run` scan of all installed skills; review findings before applying |
+| **Scheduled audit (daily)** | Use `cronjob` to run Autonomous Watchtower scan of all installed skills; review HARD candidates before next session |
+| **Watchtower score > 0.5** | Queue for next available session; do not block |
+| **Watchtower score > 0.8** | Immediate kaizen — begin Phase 0 |
 
 ## Red-Team Integration (MANDATORY)
 
@@ -303,6 +547,243 @@ If only 1 reviewer slot exists:
 2. Each gets a FRESH subagent session (no context contamination)
 3. This is slower but still complete — speed is sacrificed, not thoroughness
 
+## Knowledge Graph Feedback Loop (MANDATORY for autonomous CI/CD)
+
+Kaizen findings create structured Knowledge Graph edges for cross-skill impact
+tracing. This makes the skill ecosystem navigable — when skill A is kaizened,
+the agent can query which skills depend on A and assess cascade risk.
+
+### Edge Types
+
+| Edge | From | To | Meaning |
+|:-----|:-----|:---|:--------|
+| `KAIZENED_IN` | Skill node | Session node | This skill was kaizened in this session |
+| `DEPENDS_ON` | Skill A | Skill B | Skill A references Skill B in its cross-skill integration table |
+| `TRIGGERED` | Incident node | Kaizen session | This incident triggered this kaizen |
+| `MONITORED_BY` | Skill (version) | Monitoring entry | This fix is under continuous monitoring |
+| `DISCOVERED_IN` | Anti-pattern node | Session node | This anti-pattern was discovered in this session |
+| `REGISTERED_IN` | Calibration prediction | Skill node | This prediction belongs to this skill |
+
+### Protocol (run during Phase 5 closeout)
+
+```
+1. If the target skill has a KG node: add KAIZENED_IN edge to current session
+2. For each cross-skill reference found during dependency audit:
+   a. Verify or create DEPENDS_ON edge between skills
+   b. If version drift was detected: annotate edge with drift metadata
+3. If the kaizen was triggered by an incident: add TRIGGERED edge
+4. If new anti-patterns were discovered: create anti-pattern node + DISCOVERED_IN edge
+5. If calibration register updated: create REGISTERED_IN edge
+6. Update skill's KG node with: latest version, last kaizen date, composite health score
+```
+
+### Dependency Graph Maintenance
+
+The Automated Skill Dependency Graph (built by the Watchtower) maps all
+`DEPENDS_ON` edges between skills. This graph enables:
+
+- **Impact analysis:** "If I kaizen skill A, which other skills need cascade updates?"
+- **Drift detection:** "Skill B references A v2.0, but A is now v3.0 — drift."
+- **Fragility ranking:** "Skill C depends on 5 other skills — highest cascade risk."
+
+**Build protocol (Watchtower run):**
+```
+1. skill_list() → get all skill paths
+2. For each skill: read SKILL.md, grep for cross-reference patterns:
+   - "See `X` skill vN.M"
+   - "Load `X` for..."
+   - "Cross-Skill Integration" table entries (excluding tools)
+3. Build DEPENDS_ON edges in the dependency graph
+4. Store in durable memory for rapid lookup:
+   memory_remember(category="project_fact", content="Skill dependency graph: <skill> DEPENDS_ON [list]")
+```
+
+## Heuristic Accumulation Protocol (AUTOMATIC)
+
+Sessions produce heuristics continuously — an anti-pattern discovered during
+a research session, a workaround for a PowerShell bug, a new validation gate.
+The Heuristic Accumulation Protocol ensures these don't disappear when the
+session ends.
+
+### Protocol (run during Session Retrospective)
+
+```
+For each pattern discovered during the session:
+
+1. Determine the skill that OWNS this pattern:
+   - If tool-failure pattern: the skill that instructs use of that tool
+   - If anti-pattern: the skill that would be improved by documenting it
+   - If workaround: the skill whose instructions need the workaround
+
+2. memory_remember(category="anti_pattern",
+   content="<skill-name>: <pattern description>. Discovered in session <id>. 
+            Occurrences: <N>. Root cause: <analysis>.")
+   — OR —
+   memory_remember(category="heuristic",
+   content="<skill-name>: <workaround or improvement>. Discovered in session <id>.")
+
+3. Increment the owning skill's Watchtower INCIDENT-AXIS counter:
+   - This makes the Watchtower more likely to trigger a kaizen on that skill
+
+4. If pattern has 3+ occurrences across sessions (check via memory_recall):
+   - Auto-escalate to Watchtower HARD candidate
+   - Flag: "[ACCUMULATED-PATTERN: <pattern> has N occurrences across sessions]"
+```
+
+### Heuristic Categories
+
+| Category | Storage | Watchtower Impact | Example |
+|:---------|:--------|:------------------|:--------|
+| `anti_pattern` | memory_remember(category="anti_pattern") | INCIDENT-AXIS +0.3 | "PowerShell inline python -c fails with nested quotes" |
+| `heuristic` | memory_remember(category="heuristic") | Low (documentation) | "Use write→exec→delete pattern for multi-line Python" |
+| `task_outcome` | memory_remember(category="task_outcome") | Monitoring only | "Fix #3 held through +2 checkpoints" |
+| `project_fact` | memory_remember(category="project_fact") | Dependency graph | "Skill dependency graph snapshot" |
+
+## Tape & Conversation Mining Protocol (AUTOMATIC)
+
+### Tape Mining (run during Session Retrospective)
+
+```
+1. tape_search({query: "error OR failed OR 401 OR 403 OR 404 OR timeout OR truncated",
+                 kinds: ["tool_result", "tool_call"]})
+   → Extract: tool name, error message, owning skill
+
+2. tape_search({query: "kaizen OR fix OR stale OR drift OR anti-pattern",
+                 kinds: ["anchor", "message"]})
+   → Extract: what was kaizened, what fixes were applied, what's deferred
+
+3. tape_anchors()
+   → Extract: handoff anchors that reference kaizen activity
+
+4. Group by skill, count occurrences, feed into Retrospective Register
+```
+
+### Conversation History Mining (run during Autonomous Watchtower)
+
+```
+1. search_conversations({query: "<skill-name> failure OR error OR broken", limit: 5})
+   → Scan recent conversations for incidents involving this skill
+
+2. get_conversation_history({conversationId: "<id>"}) OR get_conversation_stats()
+   → If an incident conversation is found, extract the failure pattern
+
+3. Feed findings into Watchtower INCIDENT-AXIS scoring
+```
+
+### Conversation Summary Mining (run at session start)
+
+```
+The conversationSummary field in the session context contains a summary of
+the prior session's activity. Parse it for:
+
+1. "Kaizen on <skill>" → that skill was recently kaizened; check monitoring status
+2. "Deferred: <items>" → these items are pending; queue for current session if still relevant
+3. "<N> HARD, <M> SOFT" → unresolved findings; check if owner skill needs kaizen
+4. Any mention of tool failures, session failures, or broken references
+```
+
+## Concrete cronjob Protocol (AUTONOMOUS trigger)
+
+### Daily Watchtower Scan
+
+```
+cronjob(action="create", job={
+  name: "kaizen-watchtower-daily",
+  description: "Autonomous Watchtower scan of all installed skills. 
+                Scores each skill on staleness/incident/drift/calibration axes.
+                Flags any skill with score > 0.7 for immediate kaizen.",
+  cronExpr: "0 9 * * *",       // 9:00 AM daily
+  timezone: "America/Chicago",  // or user's timezone
+  agentId: "<current-agent-id>",
+  taskPrompt: "Run Autonomous Watchtower Protocol (kaizen skill Phase -1). 
+              Scan all installed skills with 4-axis health scoring. 
+              Store watchtower report in durable memory. 
+              Flag any skill with composite score > 0.7. 
+              If any HARD candidates (score > 0.8): begin Phase 0 kaizen on the highest-scoring skill.",
+  taskSystemInstruction: "You are the Kaizen Watchtower. Your ONLY task is to run the Autonomous Watchtower Protocol as defined in the kaizen skill. Do NOT engage in conversation. Produce a structured Watchtower Report and persist it.",
+  enabled: true,
+  runtime: { maxDurationMs: 300000, maxTurns: 20, concurrencyPolicy: "skip" },
+  delivery: { suppressSuccessNotification: true, notifyOnFailure: true }
+})
+```
+
+### Weekly Deep Scan
+
+```
+cronjob(action="create", job={
+  name: "kaizen-deep-scan-weekly",
+  description: "Weekly deep scan: full cross-skill dependency audit. 
+                Reads every installed SKILL.md, builds dependency graph, 
+                checks every cross-reference for version drift.",
+  cronExpr: "0 10 * * 1",      // 10:00 AM every Monday
+  timezone: "America/Chicago",
+  agentId: "<current-agent-id>",
+  taskPrompt: "Run a DEEP kaizen scan: read ALL installed skill SKILL.md files. 
+              Build the full skill dependency graph. 
+              Check every cross-reference for version drift. 
+              Update the calibration register for any skill > 30 days without kaizen. 
+              Report: 'Deep Scan: N skills, M drift events, K stale references.'",
+  enabled: true,
+  runtime: { maxDurationMs: 600000, maxTurns: 40, concurrencyPolicy: "skip" },
+  delivery: { suppressSuccessNotification: false, notifyOnFailure: true }
+})
+```
+
+### Retrospective Sweep
+
+```
+cronjob(action="create", job={
+  name: "kaizen-retrospective-sweep",
+  description: "Weekly sweep of session retrospectives. 
+                Aggregates heuristic accumulation, identifies top 3 most-fragile skills, 
+                updates Watchtower scores with accumulated incident data.",
+  cronExpr: "0 18 * * 5",      // 6:00 PM every Friday
+  timezone: "America/Chicago",
+  agentId: "<current-agent-id>",
+  taskPrompt: "Run Session Retrospective sweep: aggregate all heuristic/anti-pattern memories 
+              from the past week. Update Watchtower scores for affected skills. 
+              Identify the top 3 most-fragile skills. 
+              Report: 'Retrospective Sweep: N patterns accumulated, top 3 fragile skills: [list].'",
+  enabled: true,
+  runtime: { maxDurationMs: 300000, maxTurns: 15, concurrencyPolicy: "skip" },
+  delivery: { suppressSuccessNotification: false, notifyOnFailure: true }
+})
+```
+
+## Incident-to-Fix Pipeline (AUTOMATIC)
+
+When a session fails because a skill was wrong, the pipeline auto-routes the
+failure into a kaizen candidate.
+
+### Pipeline Flow
+
+```
+Session Failure → Session Retrospective detects failure pattern
+                       │
+                       ▼
+              Heuristic Accumulation stores anti-pattern in durable memory
+                       │
+                       ▼
+              Watchtower INCIDENT-AXIS score increments for affected skill
+                       │
+                       ▼
+              Next Watchtower scan flags skill if INCIDENT-AXIS > 0.5
+                       │
+                       ▼
+              Auto-triggered kaizen (Phase 0-5) if score > 0.8
+                       │
+                       ▼
+              Continuous Monitoring (Phase 6) verifies fix across +1/+2/+3 sessions
+```
+
+### Pipeline Gate
+
+- If the same failure pattern recurs **after** a kaizen fix: escalate severity.
+  HARD finding → IMMEDIATE re-kaizen with escalated HARD priority.
+- If the same failure pattern appears in a **different** session: this is a
+  systemic issue, not a one-off. Flag as `[SYSTEMIC-PATTERN]` and kaizen ALL
+  skills that reference the failing tool/endpoint, not just the one that failed.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Correct |
@@ -316,42 +797,44 @@ If only 1 reviewer slot exists:
 | Reactive-only kaizen — never scanning for drift | Run the proactive forecast protocol at least monthly, or after any major ecosystem change. Skills rot silently. |
 | Treating the forecast as an optional "nice to have" | Forecast-driven gap detection (like the research skill v2.31 Forecast Integration Map) finds improvements that reactive kaizen never would. It's not optional — it's how you avoid accumulating technical debt. |
 | Not storing kaizen outcomes in durable memory | Every kaizen closeout writes to `memory_remember(task_outcome)`. Future sessions need to know what was changed and why. |
-| **Kaizening a skill without first checking its history log** | Read `.kaizen_history` or `kaizen-history.json` first — duplicate kaizen on unchanged code is wasted effort. |
-| **Running kaizen without `update_plan` tracking** | Use `update_plan` from Phase 0 through Phase 5 — untracked kaizen is unauditable kaizen. |
-| **Treating subagent truncation as successful audit completion** | Truncated subagent output = subagent did not complete. Fall back to direct parent-agent audit per Subagent Failure Handling section. |
-| **Skipping `memory_recall` before starting kaizen** | Check for prior kaizen sessions in durable memory — a skill kaizened 2 hours ago with no intervening changes does not need a re-kaizen. |
-| **Never scheduling proactive kaizen** | Use `cronjob` to run monthly `kaizen --batch` scans — skills rot silently without scheduled vigilance. |
-| **No calibration register after kaizen closeout** | Register dated fragility predictions per the Calibration Register section — so future agents know what to watch for.
+| Kaizening a skill without first checking its history log | Read `.kaizen_history` or `kaizen-history.json` first — duplicate kaizen on unchanged code is wasted effort. |
+| Running kaizen without `update_plan` tracking | Use `update_plan` from Phase 0 through Phase 5 — untracked kaizen is unauditable kaizen. |
+| Treating subagent truncation as successful audit completion | Truncated subagent output = subagent did not complete. Fall back to direct parent-agent audit per Subagent Failure Handling section. |
+| Skipping `memory_recall` before starting kaizen | Check for prior kaizen sessions in durable memory — a skill kaizened 2 hours ago with no intervening changes does not need a re-kaizen. |
+| Never scheduling proactive kaizen | Use `cronjob` to run daily Watchtower scans — skills rot silently without scheduled vigilance. |
+| No calibration register after kaizen closeout | Register dated fragility predictions per the Calibration Register section — so future agents know what to watch for. |
+| **Skipping Autonomous Watchtower at session start** | Phase -1 Watchtower scan is MANDATORY at every session start when the kaizen skill is loaded. The 30 seconds it takes prevents hours of debugging stale references. |
+| **Skipping Session Retrospective at session end** | Phase R retrospective is MANDATORY at every session end. A session with 15 tool failures that doesn't produce a retrospective is a lost learning opportunity. |
+| **Not registering fixes in Continuous Monitoring** | Every kaizen fix MUST enter Phase 6 monitoring. A fix that's never verified is indistinguishable from a fix that was never applied. |
+| **Discovering the same anti-pattern twice without escalating** | If the Session Retrospective finds a pattern that was already documented in durable memory, escalate — the prior fix didn't hold. |
+| **Watchtower INCIDENT-AXIS at 0 because session failures weren't tagged to a skill** | Every tool failure in a session retrospective MUST be tagged to the skill that owns the tool usage. Unattributed failures are invisible to the Watchtower. |
+| **Dependency graph is stale (manual, not auto-maintained)** | The Watchtower rebuilds the dependency graph on every scan. Never trust a dependency graph that's more than one session old. |
+| **Conversation summary mentions "kaizen on X" but the .kaizen_history wasn't updated** | Phase 5 closeout MUST update .kaizen_history. The conversation summary is human-readable; the history log is machine-verifiable. |
+| **Heuristic stored without skill ownership tag** | Every heuristic/anti-pattern in durable memory MUST include a `<skill-name>:` prefix so the Watchtower can attribute it for INCIDENT-AXIS scoring. |
+| **cronjob kaizen tasks created but never monitored for failure** | Check cronjob history weekly. A failing Watchtower cron that silently 404s for 30 days is worse than no Watchtower at all — it creates a false sense of security. |
+| **Skill installed by DeepChat but not added to gitignore allowlist** | The `.gitignore` has an explicit allowlist (ADR-026). When DeepChat installs a new skill (xlsx, skill-creator, windows-command-patterns, etc.), sync it to `.gitignore` in the same turn. As of 2026-07-31, 14 of 28 installed skills (50%) were gitignored — their kaizen histories and scripts exist on disk but are invisible to the git repo. Run `skill_list` vs `git ls-files -- */SKILL.md` cross-reference as part of the Watchtower scan. |
 
 ## Cross-Skill Integration
 
-| Skill | Load at Phase | Purpose |
-|:------|:-------------|:--------|
+| Skill / Tool | Load at Phase | Purpose |
+|:-------------|:-------------|:--------|
 | `skill-creator` | Phase 0 (if creating a new skill) | Skill structure, progressive disclosure patterns |
 | `git-github` | Phase 5 (closeout, if skill lives in a repo) | Conventional commits for kaizen changes |
 | `knowledge` | Phase 5 (closeout) | KG/D1 logging of skill state changes |
-| `memory-management` | Phase 5 (closeout) | Durable memory for kaizen outcomes |
+| `memory-management` | Phase 5 (closeout), Phase R (retrospective) | Durable memory for kaizen outcomes, heuristic accumulation |
 | `update_plan` | Phase 0 (and all phases) | Progress tracking and auditability of kaizen execution |
-| `cronjob` | Phase 5 (closeout, optional) | Schedule recurring proactive kaizen audits |
-
-## Version
-
-Current: **v1.1** (kaizen — self-kaizen, 2026-07-30)
-
-This is the first version of the kaizen skill. It was created in direct
-response to the research skill v2.31 kaizen session, which demonstrated
-the value of:
-
-1. **Proactive gap detection** (the Forecast Integration Map was not a
-   user-requested fix — it emerged from architectural analysis)
-2. **Parallel red-team review** (3 subagents found different classes of
-   issues; no single reviewer would have caught all of them)
-3. **Forecast-driven kaizen** (the user explicitly praised the "seamless
-   weaving" of forecasting into research and wanted it as a model for
-   future improvements)
-
-The research skill v2.31 kaizen is the canonical case study embedded in the
-Proactive Kaizen section above.
+| `cronjob` | Phase 5 (closeout), Phase -1 (Watchtower scheduling) | Schedule recurring Watchtower scans, deep audits, retrospective sweeps |
+| `query_graph` | Phase 5 (KG feedback loop), Phase -1 (dependency graph) | Cross-skill impact tracing, DEPENDS_ON edge maintenance |
+| `search_conversations` | Phase -1 (Watchtower incident mining), Phase R (retrospective) | Conversation history mining for skill failure patterns |
+| `get_conversation_history` | Phase R (retrospective deep-dive) | Deep-dive into incident conversations |
+| `skill_view` | Phase 0 (cross-reference verification) | Live-verify referenced skill versions |
+| `skill_list` | Phase -1 (Watchtower scan) | Enumerate all installed skills for health scoring |
+| `memory_recall` | Phase 0, Phase -1, Phase R | Pre-flight checks, Watchtower incident mining, retrospective |
+| `memory_remember` | Phase 5, Phase R | Durable memory for outcomes, heuristics, anti-patterns |
+| `tape_info` | Phase 0, Phase R | Session context, retrospective data |
+| `tape_anchors` | Phase 0, Phase R | Handoff context, kaizen anchors |
+| `tape_search` | Phase R (retrospective) | Mine session tape for failure patterns |
+| `tape_handoff` | Phase 5 | Durable session handoff with kaizen outcomes |
 
 ## Kaizen History Log (MANDATORY per-skill tracking)
 
@@ -372,6 +855,7 @@ the skill directory. Format:
       "hard_findings": 0,
       "soft_findings": 5,
       "design_findings": 4,
+      "watchtower_triggered": false,
       "summary": "Initial creation. Red-team: 5 parallel subagents + direct parent-agent audit."
     }
   ]
@@ -383,6 +867,12 @@ already fixed, what remains open, and whether the skill is on a predictable
 improvement trajectory. A skill with no history log is indistinguishable
 from one that has never been audited.
 
+**New fields (v1.2):**
+- `watchtower_triggered`: boolean — was this kaizen triggered by Autonomous Watchtower?
+- `retrospective_triggered`: boolean — was this kaizen triggered by Session Retrospective?
+- `monitoring_status`: "active" | "clean" | "regression" | "resolved" — Phase 6 monitoring state
+- `watchtower_score`: number — composite Watchtower score at time of kaizen trigger
+
 ## Calibration Register (DESIGN — forward-looking fragility predictions)
 
 For skills in an active ecosystem, the kaizen closeout produces fragility
@@ -391,9 +881,38 @@ dated, falsifiable claims about skill drift risk.
 
 ```
 [CHECK: 2026-08-30] Kaizen skill will need update because:
-- Cross-Skill Integration references research v2.31 — if research reaches
-  v3.0, the canonical case study claim may become misleading.
-- Subagent slot availability may change — the 5-adversary framework assumes
-  5 reviewer slots exist.
-Likelihood: [MODERATE] — research skill is actively evolving.
+- The Autonomous Watchtower and Session Retrospective protocols are new (v1.2);
+  their first real-world usage may reveal gaps in trigger thresholds or scoring.
+- The cronjob protocol references concrete cron expressions and agent IDs that
+  must be tuned to the user's timezone and agent configuration.
+- The research skill (currently v2.34) is actively evolving; the canonical
+  case study claim may need updating when research reaches v3.0.
+Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
+
+```
+[CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
+score > 0.7 within 45 days, given:
+- 28 installed skills, many with cross-references
+- Research skill is at v2.34 with 13+ version banners — high drift surface area
+- Cloudflare MCP servers may versions-shift independently
+Likelihood: [HIGH] — large skill ecosystem with active development.
+```
+
+```
+[CHECK: 2026-09-30] At least one Session Retrospective will have surfaced
+a pattern that was already in durable memory but not yet acted upon,
+validating the Heuristic Accumulation → Watchtower escalation pipeline.
+Likelihood: [MODERATE] — depends on session volume and failure rate.
+```
+
+## Version
+
+Current: **v1.2.1** (kaizen — sync-kaizen, gitignore allowlist gap fix, 2026-07-31)
+
+## DeepChat Runtime Context
+- Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
+- Relative paths mentioned by this skill are relative to the skill root unless stated otherwise.
+- When this skill needs script execution, prefer `skill_run` over `exec`.
+- No bundled scripts detected for this skill.
+- Do not guess script paths or change directories to locate skill files.

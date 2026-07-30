@@ -41,7 +41,6 @@
 !/frontend-design/
 !/git-github/
 !/knowledge/
-!/qnfo-agent/
 !/research/
 !/system/
 
@@ -52,6 +51,25 @@
 !/email-composer/
 !/kaizen/
 !/qnfo-core/
+
+# ============================================================================
+# STEP 3c: DeepChat-installed skills (managed by skill installer, synced 2026-07-31)
+# ============================================================================
+!/algorithmic-art/
+!/deepchat-settings/
+!/doc-coauthoring/
+!/docx/
+!/git-commit/
+!/infographic-syntax-creator/
+!/mcp-builder/
+!/memory-management/
+!/pdf/
+!/pptx/
+!/skill-creator/
+!/test-skill/
+!/web-artifacts-builder/
+!/windows-command-patterns/
+!/xlsx/
 
 # ============================================================================
 # STEP 3b: Allow DeepChat skill-load path (prompts/skills/ mirrors root skills)
