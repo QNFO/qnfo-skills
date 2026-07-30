@@ -1,6 +1,6 @@
 ---
 name: system
-description: **SESSION STARTUP: load qnfo-agent first via skill_view('qnfo-agent'), then system via skill_view('system').** DeepChat application configuration, skill ecosystem management, and desktop automation -- settings and preferences (theme, language, font, model config), MCP server configuration, skill creation/deployment/sync, skill lifecycle management, skill location hygiene, session initialization (/init prompt), and Computer Use tools for desktop GUI automation (launch apps, click, type, inspect windows).
+description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
 version: "2.3"
 triggers: ["settings", "preferences", "theme", "language", "font", "config", "DeepChat settings", "MCP config", "skill", "create skill", "new skill", "update skill", "deploy skill", "sync skill", "skill lifecycle", "skill hygiene", "skill locations", "duplicate skills", "stale skills", "Kaizen", "system update", "improve", "desktop", "app", "GUI", "automate", "click", "type", "window", "Computer Use", "CUA", "launch", "screen", "screenshot", "process", "notepad", "calculator", "browser app", "desktop app"]
 related: ["cloudflare"]
@@ -31,7 +31,7 @@ self_sufficient: true
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. Skill sync is not "done"
 > until all 3 layers (disk/GitHub/R2) are independently re-read back in
-> the same turn â€” a script's exit code alone does not prove GitHub or R2
+> the same turn Ã¢â‚¬â€ a script's exit code alone does not prove GitHub or R2
 > actually received the content.
 
 > **Merges 3:** deepchat-config + skill-management + computer-use
@@ -49,7 +49,7 @@ update_plan([
 
 ---
 
-## Canonical Skill Locations (MANDATORY â€” v2.2)
+## Canonical Skill Locations (MANDATORY Ã¢â‚¬â€ v2.2)
 
 ### Single Source of Truth
 
@@ -70,15 +70,15 @@ update_plan([
 
 ### What Constitutes a "Skill"
 
-A skill is **NOT just SKILL.md** â€” it includes all supplemental files:
+A skill is **NOT just SKILL.md** Ã¢â‚¬â€ it includes all supplemental files:
 
 ```
 <skill-name>/
-â”œâ”€â”€ SKILL.md          (required â€” the skill definition)
-â”œâ”€â”€ scripts/          (optional â€” utility scripts the skill invokes)
-â”œâ”€â”€ references/       (optional â€” supporting reference docs)
-â”œâ”€â”€ templates/        (optional â€” file templates the skill instantiates)
-â””â”€â”€ assets/           (optional â€” static assets)
+Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ SKILL.md          (required Ã¢â‚¬â€ the skill definition)
+Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ scripts/          (optional Ã¢â‚¬â€ utility scripts the skill invokes)
+Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ references/       (optional Ã¢â‚¬â€ supporting reference docs)
+Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ templates/        (optional Ã¢â‚¬â€ file templates the skill instantiates)
+Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ assets/           (optional Ã¢â‚¬â€ static assets)
 ```
 
 **Sync operations MUST include ALL files**, not just SKILL.md. Use `skill-sync.js` which walks the entire directory tree.
@@ -86,8 +86,8 @@ A skill is **NOT just SKILL.md** â€” it includes all supplemental files:
 ### GitHub Dual-Remote (Intentional Mirroring)
 
 The local repo has TWO remotes configured:
-- `origin` â†’ `https://github.com/QNFO/qnfo-skills.git` (primary)
-- `rwnq8` â†’ `https://github.com/rwnq8/qnfo-skills.git` (mirror)
+- `origin` Ã¢â€ â€™ `https://github.com/QNFO/qnfo-skills.git` (primary)
+- `rwnq8` Ã¢â€ â€™ `https://github.com/rwnq8/qnfo-skills.git` (mirror)
 
 This is **intentional redundancy**, not duplication. Both repos should have identical HEAD commits. After every push:
 ```powershell
@@ -97,7 +97,7 @@ git push rwnq8 master
 
 ---
 
-## Skill Hygiene Enforcement (MANDATORY â€” v2.2)
+## Skill Hygiene Enforcement (MANDATORY Ã¢â‚¬â€ v2.2)
 
 ### Pre-Session Gate
 
@@ -112,7 +112,7 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
 - `2` = Version conflicts, manual resolution required
 - `3` = Script error
 
-**If exit code â‰  0, DO NOT proceed with skill modifications until resolved.**
+**If exit code Ã¢â€°Â  0, DO NOT proceed with skill modifications until resolved.**
 
 ### Stale Location Cleanup Protocol
 
@@ -171,15 +171,15 @@ Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | Conve
 
 ---
 
-## Tool-Call Execution Mandate (Anti-Phantom Gate â€” MANDATORY)
+## Tool-Call Execution Mandate (Anti-Phantom Gate Ã¢â‚¬â€ MANDATORY)
 
 Claiming a setting is "changed", a skill is "deployed"/"synced", or a
 desktop action is "done" without an invoked tool call showing evidence in
-this turn is a PHANTOM CLAIM (`qnfo-agent` Â§9.11 Rule 14) â€” BLOCKED.
+this turn is a PHANTOM CLAIM (`qnfo-agent` Ã‚Â§9.11 Rule 14) Ã¢â‚¬â€ BLOCKED.
 
-1. **Settings changes** â€” call the actual `deepchat_settings_*` tool and confirm the returned value matches the requested change; do not assert a setting changed without the tool's confirmed return value.
-2. **Skill deploy/sync** â€” a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `Test-Path` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) â€” compare content, not just presence.
-3. **Desktop automation** â€” after any click/type/launch action, call `get_window_state` again and show the resulting UI state; do not claim an action succeeded from the dispatch call's return alone.
+1. **Settings changes** Ã¢â‚¬â€ call the actual `deepchat_settings_*` tool and confirm the returned value matches the requested change; do not assert a setting changed without the tool's confirmed return value.
+2. **Skill deploy/sync** Ã¢â‚¬â€ a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `Test-Path` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) Ã¢â‚¬â€ compare content, not just presence.
+3. **Desktop automation** Ã¢â‚¬â€ after any click/type/launch action, call `get_window_state` again and show the resulting UI state; do not claim an action succeeded from the dispatch call's return alone.
 4. If any of the 3 sync layers cannot be re-verified in this turn, say `[NOT-VERIFIED: layer X unconfirmed]` instead of "synced"/"deployed"/"done".
 
 ---
@@ -355,7 +355,7 @@ get_window_state({pid: 1234, window_id: 5678})
 ### The Problem (KIF-25: Skill Auto-Loading Weak Link)
 
 DeepChat shows only 8 skills in the system prompt. The **24-Skill Trigger Table**
-(which enables autonomous skill discovery) is inside qnfo-agent's body â€” but
+(which enables autonomous skill discovery) is inside qnfo-agent's body Ã¢â‚¬â€ but
 qnfo-agent must be explicitly loaded via `skill_view` for the table to be active.
 Without loading qnfo-agent first, the LLM cannot discover which skill to use.
 
@@ -451,10 +451,10 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
 - [ ] `health_report()` returns all checks passing
 - [ ] No skill has external file references (self-sufficiency)
 - [ ] No skill has fewer than 15 trigger keywords
-- [ ] **4-D Gate:** Critical assets verified across â‰¥4 distribution stores
-- [ ] **Worker fleet:** â‰¤7 Workers (consolidation pattern enforced), 0 orphaned Workers
+- [ ] **4-D Gate:** Critical assets verified across Ã¢â€°Â¥4 distribution stores
+- [ ] **Worker fleet:** Ã¢â€°Â¤7 Workers (consolidation pattern enforced), 0 orphaned Workers
 - [ ] **R2 hygiene:** No `qnfo/qnfo/` double-prefix paths in qnfo bucket
 
 ---
 
-*system v2.3 â€” DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
+*system v2.3 Ã¢â‚¬â€ DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
