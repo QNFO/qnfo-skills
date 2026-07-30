@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage Bayesian cascade with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
-triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "Bayesian", "EV ranking", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage structured forecast protocol with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.26"
+version: "2.30"
 priority: 1
 platform: all
 autonomous: true
@@ -41,7 +41,68 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.25 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification)
+# RESEARCH -- v2.30 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification)
+
+> **v2.30 UPDATE (2026-07-30, genre cross-reference kaizen):** Added genre
+> classification cross-reference to Phase 5 Pre-Publication Requirements.
+> Certainty calibration and Professional Publication Standards apply to Genre A
+> (Epistemic Content) only. For Genre B (Commercial/Marketing), the protocol is
+> MODIFIED per qnfo-core 0.1: no inline [speculative] labels, use Forward-Looking
+> Statements footer and dagger footnotes instead. Cross-reference: qnfo-core v1.1 0.1,
+> frontend-design v2.2 (Landing Page Content Gate).
+>
+> **v2.29 UPDATE (2026-07-30, methodology-invisibility principle):**
+> Research outputs (papers, PDFs, abstracts) must NOT brand methodology.
+> The reader should see good analysis, not protocol signage. Added
+> PUBLICATION PRINCIPLE to Phase 4 header: never write "Stage 2 Assumption
+> Audit found..." — write "Underlying this candidate are three critical
+> assumptions." The method should be invisible in the prose.
+
+> **v2.28 UPDATE (2026-07-30, Phase 4 mandatory + trigger cleanup kaizen):**
+> Per user directive, the structured forecast protocol is now MANDATORY for
+> ALL research projects, not an optional add-on gated behind trigger keywords.
+> Architectural changes:
+> 9. Phase 4 is now **mandatory for all projects** — scope scales to project size
+>    (a single-result paper runs a lighter version; a paradigm forecast runs
+>    the full 9-stage protocol). Trigger-gating keywords (`"deep dive"`,
+>    `"paradigm forecast"`, `"maximize EVs"`) are REMOVED from the Phase 4
+>    header; Phase 4 now simply states "Runs for ALL projects."
+> 10. Frontmatter triggers: `"Bayesian"` and `"EV ranking"` removed from the
+>     trigger words array — these are dead keywords from v1 that should no
+>     longer cause skill activation.
+> 11. Frontmatter description: "9-stage Bayesian cascade" → "9-stage structured
+>     forecast protocol."
+> 12. Anti-patterns: the duplicate "Use Likelihood-Span Sensitivity (Stage 4,
+>     KIF-31 upgrade)" row replaced with "Use Judgment Sensitivity Analysis
+>     (Stage 4, v2.27)."
+> 13. Version bumped: 2.26 → 2.28 (frontmatter `version` field + heading).
+
+> **v2.27 UPDATE (2026-07-30, Bayesian Cascade retirement kaizen):**
+> Per user directive, the "9-Stage Bayesian Cascade" is RETIRED and replaced
+> with a "Structured Forecast Protocol." Key changes:
+> 1. Phase 4 renamed from "9-Stage Bayesian Cascade" to "Structured Forecast
+>    Protocol" — with an explicit METHODOLOGY NOTE declaring that this is NOT
+>    a Bayesian computation but a structured judgment exercise.
+> 2. EV = P × I / √t formula RETIRED. Candidate ranking is now qualitative
+>    with uncertainty ranges and explicit anchor reference classes. No
+>    false-precision numbers (1.17, 0.71, 0.32) are produced.
+> 3. Stage 1: "high-EV shifts" → "highest-impact paradigm-shift candidates"
+>    with qualitative scoring.
+> 4. Stage 4: "Likelihood-Span Sensitivity Analysis" → "Judgment Sensitivity
+>    Analysis" — tests qualitative ranking robustness under perturbation,
+>    does NOT compute numeric EVs.
+> 5. Stage 6: "Optimal Portfolio Allocation / Kelly-like" → "Research Effort
+>    Allocation" — effort heuristics based on qualitative ranking, not
+>    pseudo-optimal bets.
+> 6. Stage 8: "Adversarial Review" → "Cross-Review" — honest disclosure that
+>    the reviewer is a same-model subagent, not independent inter-rater
+>    reliability.
+> 7. All remaining "Bayesian cascade" references scrubbed from execute_plan,
+>    v2.23 banner, Stage -1 gate description, and anti-patterns table.
+> 8. Existing calibration register (Stage 5) and calibration pillars (Stage -1)
+>    are retained — these are genuinely useful and honest methodology.
+> Cross-reference: Measurement Stratigraphy paper v2.0 which applies this
+> protocol in its `structured-forecast-protocol-v2.md` artifact.
 
 > **v2.24 UPDATE (2026-07-26, KIF-30 — mandatory PDF inclusion in Zenodo):**
 > Added **HARD GATE P5.PDF (KIF-30)** to §5 Zenodo Upload — ALL PDFs MUST be
@@ -64,7 +125,7 @@ self_sufficient: true
 > Biology, Sociology) with Core Dynamic, Cross-Domain Lexicon, Domain Translations
 > (Lexicon/Instance/Ramification each), Synthesis Consilience, and Research
 > Integration. Wired into Phase 2 (Lexicon terms → parallel literature search),
-> Phase 4 (Synthesis → Bayesian cascade), and Phase 5 (Lexicon table in paper).
+> Phase 4 (Synthesis → structured forecast protocol), and Phase 5 (Lexicon table in paper).
 > Anti-patterns added for domain siloing, ad hoc analogies, single-domain
 > literature search, and consilience claims without a unification principle.
 > See `kaizen-skill-fixes` v1.4 §H for the fix design document. The full UCT-v2
@@ -316,7 +377,7 @@ update_plan([
   {"step": "Phase 1: Due Diligence -- query KG + D1 + Vectorize + external sources", "status": "pending"},
   {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
   {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
-  {"step": "Phase 4: Deep Research -- 9-stage Bayesian cascade (if paradigm forecast triggered)", "status": "pending"},
+  {"step": "Phase 4: Deep Research -- structured forecast protocol (if paradigm forecast triggered)", "status": "pending"},
   {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
   {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
   {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
@@ -757,20 +818,39 @@ print(f"Unused BibTeX entries: {len(unused)} -- {', '.join(sorted(unused))}")
 
 ---
 
-## Phase 4: Deep Research -- 9-Stage Bayesian Cascade
+## Phase 4: Deep Research & Structured Forecast (MANDATORY for all projects)
 
-**Triggered by:** "deep dive", "paradigm forecast", "forecast", "long-range research", "maximize EVs".
+**Runs for ALL projects.** The scope scales: a single-result paper runs a lighter
+version (assumptions enumerated, uncertainty ranges, sensitivity check, at least one
+calibration prediction); a paradigm forecast runs the full 9-stage protocol.
+
+**PUBLICATION PRINCIPLE (MANDATORY):** In research outputs — papers, PDFs,
+abstracts, presentations — do NOT name the methodology. Do not write "We applied
+a Structured Forecast Protocol" or "per Stage 4 sensitivity analysis." The reader
+should see good analysis, not methodology signage. Bury the method in the prose:
+- Instead of "Stage 2 Assumption Audit found..." write "Underlying this candidate are
+  three critical assumptions: ..."
+- Instead of "Qualitative Ranking from the forecast protocol" write "We assess the
+  candidates comparatively: ..."
+- Instead of "per the Calibration Register" write "We register the following
+  dated, falsifiable predictions: ..."
+- Instead of "red-teamed by five adversary positions" write "We examined challenges
+  from multiple adversarial perspectives: ..."
+The artifact file (`structured-forecast-protocol-v2.md`) documents the full analysis
+method — cite it as a supplementary reference, not as a branded protocol.
+
+**METHODOLOGY NOTE (v2.27):** This protocol is a structured judgment exercise — NOT a Bayesian computation. No formal Bayesian updating from data occurs. The probability numbers below are the analyst's structured judgments, loosely anchored to imperfect historical reference classes. They have wide uncertainty bands and must not be mistaken for empirically derived quantities. The protocol's primary value is in the **discipline it imposes**: making assumptions explicit, challenging each candidate, and registering dated, falsifiable predictions. The ranking output is qualitative with subjective probability ranges — not a computed expected value. The EV = P × I / √t formula used in prior versions is RETIRED; portfolio allocation is now based on qualitative ranking and judgment, not pseudo-optimal Kelly bets.
 
 ### Stage -1: Likelihood Calibration Protocol (HARD GATE, KIF-31)
 
 **GATE:** Every P(E|H) or P(E|¬H) likelihood value > 0.80 assigned in Stage 2
 MUST trace to at least one empirical calibration pillar BEFORE it enters the
-Bayesian cascade.  Likelihoods assigned without an anchor are "well-quantified
+structured forecast protocol.  Likelihoods assigned without an anchor are "well-quantified
 noise" — precise decimals communicating false quantitative precision for
 what are fundamentally directionally informed human intuitions.  9 stages of
-arithmetic on uncalibrated numbers produce EV rankings that reflect optimism
-bias, not reality, and Stage 6's Kelly-like allocation then bets *real
-resources* on compounded intuitions.
+arithmetic on uncalibrated numbers produces rankings that reflect optimism
+bias, not reality, and Stage 6's effort allocation then commits *real
+resources* based on compounded intuitions.
 
 **Calibration Pillars (at least one required per likelihood > 0.80):**
 
@@ -789,7 +869,7 @@ resources* on compounded intuitions.
    `artifacts/likelihood-calibration.md` using the template below.
 2. Run calibration training (≥20-question confidence interval quiz).
    Measure Brier score.  If Brier > 0.15, apply the overconfidence adjustment
-   factor to ALL likelihoods > 0.80 in this cascade.
+   factor to ALL likelihoods > 0.80 in this protocol.
 3. Delegate the same assumptions to a REVIEWER subagent for independent
    assignment.  If divergence > 0.15 on any assumption, use the more
    conservative value and flag the disagreement in the calibration report.
@@ -797,7 +877,7 @@ resources* on compounded intuitions.
    is **capped at 0.80** and labeled `[CALIBRATION-CAP: no empirical pillar
    for P > 0.80]`.
 5. Calibration training is **mandatory** the first time any proposal passes
-   through the full 9-stage cascade.  Subsequent proposals by the same agent
+   through the full 9-stage protocol.  Subsequent proposals by the same agent
    may reuse the same calibration score if the training was completed within
    the same session or < 7 days prior.
 
@@ -833,16 +913,16 @@ Brier score: {value}  |  Overconfidence error: {value}  |  Adjustment factor: {v
 4. `artifacts/likelihood-calibration.md` is committed before any Stage 2
    assumption table is populated.
 
-**Integration with the cascade:** Calibrated likelihoods from Stage -1 are
+**Integration with the protocol:** Calibrated likelihoods from Stage -1 are
 the *only* values that enter Stage 2's Enabling Assumptions Table.  Raw
 (pre-calibration) values are recorded for transparency in the calibration
-report but never flow into the cascade arithmetic.  Stage 4 sensitivity
+report but never flow into the protocol's judgment framework.  Stage 4 sensitivity
 analysis (see below) operates on the calibrated values and their documented
 spans.
 
 **Relationship to Stage 5 Calibration Register:** Stage -1 calibrates the
-*inputs* to the cascade (the likelihoods).  Stage 5 calibrates the *outputs*
-of the cascade (the predictions).  Both are required — calibrating inputs
+*inputs* to the protocol (the likelihood judgments).  Stage 5 calibrates the *outputs*
+of the protocol (the predictions).  Both are required — calibrating inputs
 without tracking outputs, or tracking outputs without calibrated inputs, is
 each a half-measure that leaves the other half unverified.
 
@@ -850,7 +930,7 @@ each a half-measure that leaves the other half unverified.
 Map the field. Identify key research questions, active paradigms, methodological approaches. Produce domain topology map.
 
 ### Stage 1: Paradigm-Shift Candidate Identification
-Identify high-EV shifts. Score candidates on: probability, impact, timeline, testability, dependency chain. Produce EV-ranked candidate list.
+Identify highest-impact paradigm-shift candidates. Score candidates qualitatively on: probability (subjective, anchored to reference classes), impact (1-10 scale), timeline to mainstream, testability, and dependency chain. Produce a qualitatively ranked candidate list with uncertainty ranges and anchor reference classes explicitly stated. Do NOT compute an EV = P × I / √t — this formula is retired as of v2.27.
 
 ### Stage 2: Assumption Audit (MANDATORY -- 3 outputs)
 1. **Enabling Assumptions Table:** For each candidate, enumerate all assumptions with confidence ratings. Use the assumption audit template.
@@ -865,48 +945,46 @@ Identify high-EV shifts. Score candidates on: probability, impact, timeline, tes
 4. **Scaling Pessimist:** "Can't scale past N"
 5. **Resource Realist:** "Would cost $Y and take Z years -- nobody will fund it"
 
-### Stage 4: Likelihood-Span Sensitivity Analysis (KIF-31 upgrade)
+### Stage 4: Judgment Sensitivity Analysis (v2.27 rewrite)
 
-**Rationale:** The prior "±20% sensitivity" instruction was methodologically
-invalid — it perturbed a number whose baseline had no empirical meaning,
-analyzing precision around an arbitrary point rather than accuracy around a
-range.  This replaces it with span-based sensitivity driven by the Stage -1
-calibration pillars, which define a meaningful lower and upper bound for
-each likelihood.
+**Rationale:** The prior "Likelihood-Span Sensitivity Analysis" computed EVs from
+subjective judgments and an arbitrary √t discount, producing false-precision numbers
+(1.17, 0.71, 0.32) from armchair estimates. This replaces it with honest qualitative
+robustness analysis — testing whether the QUALITATIVE ranking (A > B > C) survives
+plausible perturbations of the analyst's judgments.
 
 For each candidate:
 
-1. **Likelihood-Span Sensitivity:** For each calibrated likelihood from
-   Stage -1, move it to its documented **lower bound** and **upper bound**,
-   recomputing EV at each extreme.  The span is defined by the calibration
-   pillar that anchored the value:
-   - Empirical Base Rate → [baseRate × 0.5, baseRate × 2.0]
-   - Reference Class → [refClassMin, refClassMax] from the 3+ historical
-     cases
-   - Calibrated Subjective Confidence → [calibrated − Brier, calibrated +
-     Brier]
-   - Unconditionally Known Prior → [prior − σ, prior + σ] where σ is the
-     prior's reported uncertainty
-   - [CALIBRATION-CAP]'d values (capped at 0.80 with no pillar) → [0.50,
-     1.00] as the broadest defensible span — a span narrower than this
-     implies knowledge you have already admitted you lack
-2. **Halve-priors:** Cut all optimistic priors by 50%, recompute (retained
-   from prior version — this is a different stress test than span
-   sensitivity)
-3. **Correlation stress-test:** Assume worst-case correlation between
-   assumptions whose calibration pillars are the same type (e.g., two
-   assumptions both anchored only to subjective confidence share the same
-   overconfidence bias — treat them as perfectly correlated in the
-   pessimistic direction)
-4. **Output:** Tornado chart of assumption sensitivities with spans,
-   EV ranges annotated with which pillar drives each span, and a
-   side-by-side comparison table:
+1. **Judgment Span Perturbation:** Identify the judgment's documented uncertainty range
+   (from Stage -1 calibration pillars). Test:
+   - **Pessimistic scenario:** All judgments moved to their lower bounds
+   - **Optimistic scenario:** All judgments moved to their upper bounds
+   Does the qualitative ranking hold across both extremes? If the ranking reverses
+   in EITHER extreme, flag the reversal explicitly — the ranking is NOT robust.
+
+2. **Skeptical-priors stress test:** Halve all optimistic priors (retained from prior
+   version — this tests whether the ranking survives if the analyst is systematically
+   overconfident). If halving priors changes the ranking, the analyst is likely
+   overconfident.
+
+3. **Dependency correlation stress-test:** For candidates with shared prerequisites
+   (e.g., B requires A; C requires A and B), test the correlated-failure scenario:
+   if Candidate A fails, how severely do B and C degrade? Flag any cascade risk.
+
+4. **Output:** Qualitative robustness statement:
    ```
-   | Candidate | Raw EV (uncalibrated) | Calibrated EV | EV Range [lower, upper] |
+   Ranking: A > B > C
+   Robustness: [ROBUST] | [CONDITIONAL: <which perturbation flips it>] | [FRAGILE: <which perturbations flip it>]
+   Pessimistic ranking: [A > B > C] or [reordered]
+   Optimistic ranking: [A > B > C] or [reordered]
+   Halved-priors ranking: [A > B > C] or [reordered]
+   Key fragility: <the assumption whose perturbation most easily flips the ranking>
    ```
-   The EV ranking shift between raw and calibrated is a mandatory disclosure
-   — if a candidate drops from #1 to #4 after calibration, that is the most
-   important finding of the sensitivity analysis.
+
+**IMPORTANT:** Do NOT compute numerical EVs (e.g., 1.17, 0.71, 0.32). The EV formula
+(P × I / √t) is retired. If a prior cascade artifact still uses EV numbers, flag it
+as `[V1-LEGACY: EV numbers are false-precision artifacts from v1 Bayesian Cascade —
+replace with qualitative ranking per v2.27]`.
 
 ### Stage 5: Calibration Register (MANDATORY, KIF-32 strength-weighted)
 
@@ -936,18 +1014,30 @@ provenance visible to future readers — a prediction that failed despite a
 STRONG likelihood anchor is a more interesting disconfirmation than one that
 failed on a WEAK anchor.
 
-### Stage 6: Optimal Portfolio Allocation
-Resource allocation across candidates using EV ranking:
-1. Rank all candidates by EV_cascade
-2. Allocate budget proportionally (Kelly-like: bet proportional to EV advantage)
-3. Anti-fragility floor: minimum allocation to hedge pessimistic paths
-4. **Output:** Portfolio allocation table with justifications
+### Stage 6: Research Effort Allocation
+
+Resource allocation across candidates using qualitative ranking:
+1. Rank all candidates by qualitative judgment (from Stage 1)
+2. Allocate effort proportionally to ranking position, not to a computed EV
+   (no EV formula exists as of v2.27)
+3. Maintain a 10% hedge allocation for unknown candidates (anti-fragility floor)
+4. **Output:** Research effort allocation table with qualitative justifications
+
+**Important:** These percentages are research-effort heuristics, not Kelly-criterion
+optimal bets. The domain is too uncertain for formal portfolio optimization. Do NOT
+label them "Kelly-like" or compute them from EV ratios.
 
 ### Stage 7: Strategic Memo
 Synthesize into a publication-ready strategic memo: executive summary, key findings, ranked recommendations, risk assessment, resource allocation.
 
-### Stage 8: Adversarial Review
-Independent reviewer (REVIEWER subagent) challenges every claim. Did the analysis miss a paradigm? Did it overfit to the current literature? Are the EV estimates well-calibrated?
+### Stage 8: Cross-Review
+
+A structured review by a REVIEWER subagent. **Important honesty note:** the reviewer
+is a subagent of the SAME underlying model — this is a consistency and blind-spot
+check, NOT independent inter-rater reliability in a statistical sense. The reviewer
+challenges: Did the analysis miss a paradigm? Did it overfit to the current literature?
+Are the judgment estimates consistent and well-reasoned? Are anchoring biases (e.g.,
+hammer-sees-nail in the analyst's domain of expertise) identified and flagged?
 
 ---
 
@@ -955,6 +1045,8 @@ Independent reviewer (REVIEWER subagent) challenges every claim. Did the analysi
 
 ### Pre-Publication Requirements
 
+
+**Genre note (v2.30):** The certainty calibration, Professional Publication Standards, and inline labeling requirements in this section apply to Genre A (Epistemic Content - research papers, technical notes, investigation reports). For Genre B (Commercial/Marketing Content - landing pages, pitch decks, prospectuses), the certainty calibration protocol is MODIFIED per qnfo-core §0.1: no inline [speculative] labels on marketing pages; use a Forward-Looking Statements footer disclaimer and dagger footnotes for specific aspirational claims instead. For Genre C (Internal/Operations Content), only the banned-words and no-fabrication rules apply. See qnfo-core §0.1 for the full Genre Classification Protocol.
 #### YAML Frontmatter (MANDATORY)
 ```yaml
 ---
@@ -2306,12 +2398,13 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | No structural bridge between domains in the final paper | Publish the Cross-Domain Lexicon table + Synthesis Consilience paragraph as a dedicated section of the research output |
 | Consilience claimed without a unification principle | Synthesis Consilience MUST contain one invariant mechanism + one frontier question — otherwise flag `[CONSILIENCE-UNVERIFIED: no unifying meta-principle derived]` |
 | Forcing strained analogies on genuinely single-domain research | Mark `[CROSS-DOMAIN-NOT-APPLICABLE: no non-trivial structural isomorphisms found]` — absence of consilience is a valid result, not a failure |
-| Assigning precise numeric likelihoods (0.90, 0.75, 0.20) to cascade assumptions with ZERO empirical anchoring | Execute Stage -1 Likelihood Calibration Protocol (KIF-31) BEFORE Stage 2 — every P > 0.80 MUST have an empirical pillar (base rate, reference class, calibrated confidence, or known prior). Unanchored likelihoods > 0.80 are capped at 0.80 with [CALIBRATION-CAP] tag. |
-| Running ±20% sensitivity analysis on anchorless likelihoods, then presenting this as "validated" | Use Likelihood-Span Sensitivity (Stage 4, KIF-31 upgrade) — spans are defined by the calibration pillar type (base-rate range, reference-class min/max, Brier-error band). An anchorless likelihood at 0.80 uses [0.50, 1.00] — the widest and most honest span. |
+| Naming the methodology in research outputs (e.g., "per Stage 4 sensitivity analysis," citing protocol names or KIF tags in prose, "We applied a Structured Forecast Protocol") | Bury the method — write the ANALYSIS, not the process description. "Underlying this candidate are three critical assumptions" not "Stage 2 Assumption Audit found." The artifact file documents the full method for any reader who wants the details. |
+| Assigning precise numeric likelihoods (0.90, 0.75, 0.20) to forecast assumptions with ZERO empirical anchoring | Execute Stage -1 Likelihood Calibration Protocol (KIF-31) BEFORE Stage 2 — every P > 0.80 MUST have an empirical pillar (base rate, reference class, calibrated confidence, or known prior). Unanchored likelihoods > 0.80 are capped at 0.80 with [CALIBRATION-CAP] tag. |
+| Running ±20% sensitivity analysis on anchorless likelihoods, then presenting this as "validated" | Use Judgment Sensitivity Analysis (Stage 4, v2.27) — tests qualitative ranking under perturbation (pessimistic/optimistic/halved-priors/dependency-correlation) and produces a ROBUST/CONDITIONAL/FRAGILE statement. Do NOT compute numerical EVs. |
 | Outputting Stage 5 Calibration Register entries with [CHECK: 2030] tags but no indication of how strong the underlying likelihood evidence is | Every register entry MUST tag its likelihood-anchor provenance: [STRONG] (base rate / reference class / known prior) or [WEAK] (calibrated subjective / [CALIBRATION-CAP]). This makes the epistemic basis visible to future readers. |
-| Single-agent subjective confidence treated as objective probability, with no inter-rater verification | REVIEWER subagent independently assigns every likelihood — if divergence > 0.15, use the MORE CONSERVATIVE value and flag the disagreement in `artifacts/likelihood-calibration.md`. |
-| Running calibration training with no Brier-score awareness | Before cascading, complete a ≥20-question confidence-interval quiz. If Brier > 0.15, adjust all > 0.80 likelihoods downward by factor (1.0 − overconfidence_error). |
-| Presenting EV rankings without showing the shift from raw (uncalibrated) to calibrated | Mandatory side-by-side disclosure in Stage 4 output: Raw EV ranking vs Calibrated EV ranking. A candidate that drops from #1 to #4 after calibration is the most important finding of the analysis. |
+| Single-agent subjective confidence treated as objective probability, with no structured review | REVIEWER subagent (same model — consistency check, not independent verification) independently assigns every likelihood — if divergence > 0.15, use the MORE CONSERVATIVE value and flag the disagreement in `artifacts/likelihood-calibration.md`. Do NOT claim this is "inter-rater reliability" — it is a structured second-opinion check from the same underlying model. |
+| Running calibration training with no Brier-score awareness | Before executing the protocol, complete a ≥20-question confidence-interval quiz. If Brier > 0.15, adjust all > 0.80 likelihoods downward by factor (1.0 − overconfidence_error). |
+| Presenting rankings without showing the shift from raw (uncalibrated) to calibrated judgments | Mandatory side-by-side disclosure in Stage 4 output: Raw judgment ranking vs calibrated judgment ranking. A candidate that drops from #1 to #4 after calibration is the most important finding of the analysis. |
 | Editing source files in a temp git clone across multiple turns without committing each turn (KIF-32, v2.26) | **HARD GATE (cross-ref git-github v2.3):** clone → edit ALL files in one batch → commit → push → delete, ALL in one turn. Phase 5 PDF build/edit cycles are especially dangerous: the agent often edits → builds → discovers more issues → edits again across turns on the same clone. Deferring commit to a "final batch" guarantees data loss when the temp directory is cleaned between turns. Re-clone each turn from the remote to get the latest state. |
 | Assuming a temp clone's files survive across tool-call turns on Windows (v2.26) | `$env:TEMP` is volatile. System cleanup, session teardown, or storage-sense can evict files between turns. Never trust `Test-Path` results from a prior turn. |
 | Batched "final commit" of edits accumulated across multiple turns on a temp clone (v2.26) | Commit each turn's edits as an atomic unit with `git push`. A "final commit at the end" that was deferred for 3+ turns will find the repo directory empty and all edits lost. |

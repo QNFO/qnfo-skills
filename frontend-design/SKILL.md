@@ -1,7 +1,7 @@
 ---
 name: frontend-design
 description: ULTRA-CONSOLIDATED frontend, creative, and visual design -- UI design, web components, pages, dashboards, React components, HTML/CSS/Tailwind layouts, algorithmic art (p5.js with seeded randomness, flow fields, particles, generative patterns), data visualization (Tufte principles for data-ink ratio and chartjunk elimination, AntV infographic syntax), and BLING usability audits. Use for ANY visual, creative, or design output.
-version: "2.1"
+version: "2.2"
 triggers: ["UI", "design", "frontend", "page", "styling", "visual", "BLING", "web component", "dashboard", "React", "Tailwind", "shadcn", "HTML", "CSS", "landing page", "web app", "beautify", "poster", "art", "generative art", "algorithmic art", "creative coding", "p5.js", "flow field", "particle system", "seeded randomness", "visualization", "chart", "graph", "Tufte", "infographic", "data-ink", "chartjunk", "AntV", "D3", "SVG", "canvas", "WebGL", "data viz", "graphical integrity", "usability audit", "color", "typography", "spacing", "animation", "brand", "layout", "responsive", "accessibility"]
 related: ["cloudflare"]
 priority: 2
@@ -10,8 +10,15 @@ autonomous: false
 self_sufficient: true
 ---
 
-# FRONTEND -- v2.1 (Ultra-Consolidated Creative + Visual)
+# FRONTEND -- v2.2 (Ultra-Consolidated Creative + Visual)
 
+> **v2.2 UPDATE (2026-07-30, landing-page content gate):** Added QNFO/QWAV Landing Page
+> Content Gate (7-point governance checklist) under Web UI Design. Enforces qnfo-core 0.1
+> Genre B rules: Forward-Looking Statements footer, Pre-Commercial badge, no inline certainty
+> labels, dagger footnotes for aspirational claims, competitive comparison verification,
+> fabricated-number prohibition, 5th BLING question ("Is every claim verifiable?").
+> Cross-reference: qnfo-core v1.1 0.1.
+>
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. "Responsive", "accessible",
 > or "renders correctly" claims require an actual build/render check in
@@ -94,6 +101,46 @@ After every UI change, answer these 4 questions for EVERY element:
 
 Audit dimensions: typography, color, spacing, animation, brand distinctiveness, responsive behavior, accessibility baseline (WCAG 2.1 AA contrast minimums).
 
+
+### QNFO/QWAV Landing Page Content Gate (v1.0)
+
+When building or editing a QNFO/QWAV landing page (qwav.org, qnfo.org, ipatent.me, etc.),
+the following content-governance rules apply IN ADDITION to the standard design quality
+gates. These rules enforce qnfo-core §0.1 Genre B (Commercial/Marketing Content).
+
+1. **Forward-Looking Statements footer:** Verify a footer paragraph exists with text
+   similar to: *"This page describes an early-stage, pre-commercial technology platform.
+   Unless explicitly cited to published research, architectural specifications, performance
+   targets, and timeline projections are design goals and should not be relied upon as
+   guarantees."*
+
+2. **"Pre-Commercial" badge:** Verify it is prominent on product pages for unreleased
+   products. Recommended placement: near the hero heading or in the hero subtext.
+
+3. **No inline certainty labels:** Scan the HTML/markup for [speculative], [established],
+   [mainstream interpretation], [my conjecture], [debated], [not yet falsifiable],
+   or .certainty-label CSS classes. These are paper-level markup (Genre A) and do NOT
+   belong on landing pages (Genre B). If found, replace with Genre-B-appropriate signaling:
+   footnote disclaimers and dagger annotations.
+
+4. **Dagger footnotes:** Verify any aspirational technical claims (specific qubit counts,
+   gate fidelities, timeline projections) are linked to footnotes citing the best available
+   evidence. Example: "JPCUB targets 99.9% gate fidelity" with footnote: "Design target:
+   based on simulation results in [citation]. Not yet demonstrated in physical hardware."
+
+5. **Competitive comparison verification:** Every claim about a competitor's product or
+   capability must be traceable to a verifiable public source (press release, product page,
+   published benchmark). "IBM claims X" is a factual claim about IBM's claims, not about X
+   itself - ensure this distinction is clear in the markup.
+
+6. **No fabricated numbers:** Performance metrics, qubit counts, error rates must either:
+   (a) cite a published source, (b) be explicitly labeled as design targets, or (c) not
+   appear. Do NOT generate plausible-sounding numbers from training data.
+
+7. **BLING Usability Audit - 5th question (Genre B landing pages only):** After the standard
+   4 BLING questions, add: **"IS EVERY CLAIM VERIFIABLE?"** Can each specific technical or
+   performance claim be traced to a published source, a design document, or an explicit
+   "design target" label?
 ### Responsive Breakpoints
 ```css
 /* Mobile first */

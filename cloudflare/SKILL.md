@@ -10,8 +10,36 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.9 (17-MCP Coverage + MCP-Driven Operations, red-team verified, v2.8 no external IPFS)
+# CLOUDFLARE -- v3.11 (Kaizen: Level-of-Service Standards, Availability Audit, URL Health Monitoring)
 
+> **v3.11 UPDATE (2026-07-30, LoS codification kaizen):**
+> Codified formal **Level-of-Service (LoS) standards** across three tiers — Pages (P-S1..P-S5),
+> Workers (W-S1..W-S6), and DNS/Domains (D-S1..D-S7) — with severity ratings (CRITICAL/WARNING/INFO),
+> test protocols, remediation steps, and verification gates. Created **`scripts/availability-audit.js`**
+> (unified LoS auditor running all 18 standards in a single pass) and **`scripts/url-health-check.js`**
+> (quick HTTP probe of all 28 known QNFO public URLs). Added canonical standards document at
+> `references/level-of-service-standards.md`. See §Level-of-Service Standards below.
+
+> **v3.10 UPDATE (2026-07-30, live-incident red-team kaizen):**
+> Full infrastructure audit + live incident response on production QNFO outage.
+> **Root cause:** `qnfo-gateway` Worker silently lost D1/R2 bindings during a REST API
+> deploy, returning HTTP 500 on all data-dependent routes (papers.qnfo.org, legal.qnfo.org,
+> graph-api.qnfo.org, qnfo.org hub). **Fix:** redeployed via `npx wrangler deploy` from a
+> properly-configured `wrangler.toml` with all bindings declared. **Impact:** 4 public
+> domains down for ~30 minutes. Added 4 new anti-patterns covering:
+> 1. **KIF-50: Binding Loss During REST Deploy** — PUT to `/workers/scripts` without
+>    metadata silently drops ALL D1/R2/KV bindings. ALWAYS use wrangler deploy.
+> 2. **KIF-51: Account-Level Redirect Blocks Pages** — `http_request_redirect` rulesets
+>    at account level execute at position 5 in Rules Engine, before Workers (position 10).
+>    Custom domains that match a redirect rule will never reach Pages or Workers.
+>    Requires Dashboard manual intervention (API Tokens can't read/delete redirect rules).
+> 3. **KIF-52: Empty DNS Zones** — 3 of 12 active zones had 0 DNS records (qnfo.net,
+>    qnfo.uk, q-wave.tech). A zone with no records resolves to nothing. Infra audits
+>    must flag `dns_records count = 0` as CRITICAL and add CNAME + Worker route.
+> 4. **KIF-53: API-Only Workers Under Custom Domains** — `qnfo-ipatent` Worker returns
+>    404 for `/` but ipatent.me CNAME pointed at it. Route custom domains to Pages
+>    projects that serve HTML; keep Workers as API endpoints only.
+> All 4 FINDING-X entries closed. See `tape_handoff binding-loss-2026-07-30`.
 
 > **v3.9 UPDATE (2026-07-29, MCP-Driven Operations red-team + kaizen):**
 > Red-team audit of all skills/settings against the 17-MCP server fleet identified 7
@@ -134,6 +162,7 @@ update_plan([
   {"step": "Verify deployment health + DNS integrity + lifecycle state", "status": "pending"},
   {"step": "Audit: check for orphans, 522-RISK, CNAME chains, resource drift", "status": "pending"},
   {"step": "Core Distribution Gate: Verify GitHub, Zenodo, R2, D1/KG layers", "status": "pending"},
+  {"step": "LoS Availability Audit: run availability-audit.js or url-health-check.js", "status": "pending"},
 ])
 
 ---
@@ -153,7 +182,8 @@ CLAIMS per `qnfo-agent` §9.11 Rule 14 — BLOCKED.
 3. **R2 object** — `npx wrangler r2 object get <bucket>/<key> --remote` round-trip after every `put`; compare byte length or hash to the source file.
 4. **DNS record** — `GET /zones/{id}/dns_records` (or `dig`) after any create/update; confirm the record resolves as intended, not just that the API accepted the write.
 5. **Health/status endpoints** — actually call the endpoint (`curl`/`fetch`) and show the HTTP status + body; do not infer health from deploy success alone.
-6. If verification cannot be run in this turn, the response MUST read `[NOT-VERIFIED: <reason>]` — never "deployed", "fixed", "healthy", or "confirmed".
+6. **Data-dependent routes after deploy (KIF-50 Gate — MANDATORY)** — after ANY Worker deploy (even via wrangler), probe at least TWO distinct data-dependent routes (e.g., `/papers`, `/stats`, `/legal`) and confirm they return HTTP 200 with non-trivial body content. A passing `/health` endpoint is INSUFFICIENT evidence of binding health — `/health` typically doesn't touch D1/R2 bindings. A 500 with `"Cannot read properties of undefined (reading 'prepare')"` means a D1 binding is missing. If any data route fails this check, redeploy with correct bindings before claiming "deployed."
+7. If verification cannot be run in this turn, the response MUST read `[NOT-VERIFIED: <reason>]` — never "deployed", "fixed", "healthy", or "confirmed".
 
 ---
 
@@ -545,6 +575,95 @@ DMARC: TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com"
 
 ---
 
+## Level-of-Service Standards (v3.11 — MANDATORY audit framework)
+
+**Canonical document:** `references/level-of-service-standards.md`
+**Audit script:** `scripts/availability-audit.js`
+**Quick probe:** `scripts/url-health-check.js`
+
+Every QNFO Cloudflare asset is classified into one of three tiers and audited against
+18 standards covering Pages, Workers, and DNS/Domains. Standards are severity-rated:
+**CRITICAL** (public outage), **WARNING** (degraded), **INFO** (drift/noise).
+
+### Standards Quick Reference
+
+| ID | Layer | Standard | Severity | Test |
+|:---|:------|:---------|:---------|:-----|
+| P-S1 | Page | Root document reachable (200/301/302/401) | CRITICAL (T1) | `curl -sI https://{domain}/` |
+| P-S2 | Page | Zero 522-RISK (CNAME→pages.dev must be registered) | CRITICAL | Cross-ref DNS records vs Pages custom domains |
+| P-S3 | Page | Successful build within 30 days | WARNING | Check latest deployment stage+date |
+| P-S4 | Page | DNS resolution integrity | CRITICAL (T1) | `dig +short` → must return IPs |
+| P-S5 | Page | D1 traceability (`portfolio-state`) | INFO | SELECT from audit_pages table |
+| W-S1 | Worker | Health endpoint (`/health` or `/status`) | CRITICAL | `curl -s https://{worker}.q08.workers.dev/health` |
+| W-S2 | Worker | Binding integrity gate (≥2 data routes → 200) | CRITICAL (D1/R2) | Probe data-dependent routes post-deploy |
+| W-S3 | Worker | Active deployment within 90 days | WARNING | `wrangler deployments list` or builds MCP |
+| W-S4 | Worker | No unauthenticated `/debug/*` routes | CRITICAL | Probe `/debug/init`, `/debug/seed` → must 404 |
+| W-S5 | Worker | `.workers.dev` subdomain reachable | WARNING | Probe root URL |
+| W-S6 | Worker | Binding declaration consistency | WARNING | Cross-ref bindings vs source code |
+| D-S1 | DNS | Minimum 1 DNS record per zone (KIF-52) | CRITICAL | GET zones/{id}/dns_records → count > 0 |
+| D-S2 | DNS | Domain resolution (no NXDOMAIN) | CRITICAL | `dig +short` or DNS-over-HTTPS probe |
+| D-S3 | DNS | No CNAME chains (A→B→C.pages.dev) | WARNING | Resolve CNAME targets recursively |
+| D-S4 | DNS | No dead Worker CNAMEs | CRITICAL | Cross-ref CNAME targets vs workers_list |
+| D-S5 | DNS | No account-level redirect intercept (KIF-51) | CRITICAL (T1) | `curl -sv` → check Location header |
+| D-S6 | DNS | At least 1 proxied record per zone | INFO | Check `proxied: true` flag |
+| D-S7 | DNS | Worker route coverage | WARNING | Check zone-level workers/routes |
+
+### Availability Audit Workflow
+
+**Full audit (all layers, all standards):**
+```bash
+skill_run cloudflare scripts/availability-audit.js
+```
+Produces structured findings with severity, detail, and fix hints. Exit codes:
+- **0**: All pass
+- **1**: WARNING findings present
+- **2**: CRITICAL findings present
+
+**Quick URL health probe (HTTP only, no API token):**
+```bash
+skill_run cloudflare scripts/url-health-check.js
+```
+Probes all 28 known QNFO public URLs. Reports status, latency, body size.
+
+**Targeted audit:**
+```bash
+skill_run cloudflare scripts/availability-audit.js --tier workers
+skill_run cloudflare scripts/availability-audit.js --tier pages
+skill_run cloudflare scripts/availability-audit.js --tier dns
+skill_run cloudflare scripts/url-health-check.js --domain qnfo.org
+```
+
+**Machine-readable output:**
+```bash
+skill_run cloudflare scripts/availability-audit.js --json
+skill_run cloudflare scripts/url-health-check.js --json
+```
+
+### Post-Incident Protocol
+After any availability incident (binding loss, 522, redirect intercept, empty zone):
+
+1. **Run full audit:** `availability-audit.js` — identify all affected assets
+2. **Fix CRITICAL findings:** Binding redeploy → KIF-50. Empty zone fix → KIF-52. Redirect → KIF-51.
+3. **Verify fix:** Re-run `availability-audit.js` — all CRITICAL must be CLEAR
+4. **Probe URLs:** `url-health-check.js` — confirm all Tier-1 URLs return 200
+5. **Write tape handoff:** Document root cause, impact duration, fix applied, new anti-pattern if any
+6. **Update standards:** If a new failure mode was discovered, add a new standard to `level-of-service-standards.md`
+
+### Public URL Inventory (28 URLs across 19 domains)
+
+| Layer | Count | Examples |
+|:------|:------|:---------|
+| Tier-1 Gateway | 4 | qnfo.org, papers.qnfo.org, legal.qnfo.org, graph-api.qnfo.org |
+| Tier-1 Pages | 2 | qwav.org, qwav.tech |
+| Tier-1 Broken | 1 | ipatent.me (KIF-51 redirect) |
+| Tier-2 Workers | 7 | qnfo-gateway, qnfo-ai, qnfo-ipatent, qnfo-qwav, qnfo-memory-mcp, qnfo-lifecycle, qnfo-archive |
+| Tier-2 Pages | 5 | qnfo-publications, qwav, qnfo-hub, ipatent-me, ask-qwav |
+| Tier-3 Dormant | 8 | qnfo.net, qnfo.uk, q-wave.tech + qwav variants, empoweringchange.today |
+
+> **Full inventory and probe targets are in `scripts/url-health-check.js` — update that script when domains are added/removed.**
+
+---
+
 ## Infrastructure Audit (Full Ecosystem)
 
 ### D1 Databases
@@ -584,6 +703,16 @@ Detect CNAME chains: A -> B -> C.pages.dev
 #### Dead Worker Detection
 CNAME pointing to non-existent Worker.
 
+#### Empty Zone Detection (KIF-52 — MANDATORY)
+**During every infrastructure audit, query `GET /zones/{id}/dns_records?per_page=5` for EACH zone in the account.** If any zone returns `count=0`, flag it as CRITICAL and add a proxied CNAME + zone-level Worker route. An "active" zone with zero DNS records resolves to nothing — users see "server not found." 3 of 12 zones had this condition on 2026-07-30: qnfo.net, qnfo.uk, q-wave.tech.
+
+#### Account-Level Redirect / Intercept Detection (KIF-51)
+For every custom domain that returns HTTP 301/302 to an unexpected destination or HTTP 503 with a Cloudflare body:
+1. Run `curl -v https://domain/` — inspect the `Location:` header
+2. Check `GET /accounts/{id}/rulesets` for non-managed `http_request_redirect` rulesets
+3. Check `GET /zones/{id}/workers/routes` for misconfigured routes
+4. If the redirect destination is NOT Cloudflare infrastructure (e.g., Google Cloud Run), it's an account-level redirect rule that requires Dashboard intervention
+
 ### Lifecycle Pipeline
 
 | Worker | Purpose | Cron | Health Check |
@@ -613,6 +742,10 @@ CNAME pointing to non-existent Worker.
 | 522-RISK | 0 | 1+ | -- |
 | CNAME Chains | 0 | 1+ | -- |
 | DEAD-WORKER | 0 | 1+ | -- |
+| **LoS CRITICAL** | **0** | **1+** | **3+** |
+| **LoS WARNING** | **≤3** | **4-7** | **8+** |
+
+> **LoS baselines added v3.11:** After every `availability-audit.js` run, CRITICAL must be 0 and WARNING should be ≤3. Any drift from these baselines requires a post-incident protocol run. See `references/level-of-service-standards.md` for full standards definitions.
 
 ### DNS Zones (verified 2026-07-18)
 12 active zones: `empoweringchange.today`, `ipatent.me`, `q08.org`, `qnfo.net`, `qnfo.org`, `qnfo.uk`, `q-wave.tech`, `qwave.tech`, `qwav.net`, `qwav.org`, `qwav.tech`, `qwav.uk`. Growth from prior baseline (7) reflects legitimate qwav/ipatent product domain expansion, not drift.
@@ -772,3 +905,7 @@ When an MCP server call returns a success response, treat it with the same verif
 | Skipping `cloudflare-observability` during infrastructure audits in favor of REST/curl health checks | Observability MCP provides structured metrics (error rates, p50/p99 latency, invocation counts) that a raw `curl /health` cannot. Use it as the FIRST health check, not the last. |
 | Running DNS zone audits without `dns-analytics` | `dns-analytics` MCP shows actual query volumes and top queries per zone — a zone could have perfect DNS records but zero traffic (dead domain). `nslookup` alone misses this. |
 | Deploying Workers/Pages without checking `cloudflare-builds` for build confirmation | `cloudflare-builds` MCP is the canonical deploy-history source. Wrangler's `deploy` exit code confirms the REQUEST was accepted, not that the build pipeline succeeded and the artifact is serving. |
+| **KIF-50:** Deploying Workers via REST API PUT without binding metadata (2026-07-30 incident) | A `PUT /accounts/{id}/workers/scripts/{name}` without `metadata.bindings` silently drops ALL D1, R2, KV, and Vectorize bindings from the Worker. The Worker code still references `env.LIVING_PAPER`/`env.DB`/`env.QNFO_BUCKET` but they are `undefined` at runtime → HTTP 500. **ALWAYS use `npx wrangler deploy` from a `wrangler.toml`/`wrangler.jsonc` that declares EVERY binding.** After any deploy, verify ALL data-dependent routes return 200 (not just `/health`). Impact: 4 public domains down for ~30 min when gateway lost 3 bindings. |
+| **KIF-51:** Account-level `http_request_redirect` rulesets silently intercepting traffic before Pages/Workers (2026-07-30 finding) | The Cloudflare Rules Engine executes redirect phases at position 5, BEFORE Workers (position 10). If an account-level redirect ruleset matches a custom domain and redirects to an external URL, NO amount of DNS/PAGES configuration will help — the redirect wins first. API Tokens typically cannot read/modify/delete account-level redirect rulesets (they require Dashboard-level permissions). **Diagnose with `curl -v https://domain/`** — look for the `Location:` header and `CF-RAY` in the response. **Fix requires manual Cloudflare Dashboard → Manage Account → Configurations → Bulk Redirects/Single Redirects → delete the rule.** |
+| **KIF-52:** DNS zones with zero records flagged as "active" (2026-07-30 finding) | 3 of 12 active zones had 0 DNS records: qnfo.net, qnfo.uk, q-wave.tech. A zone with no A/AAAA/CNAME records resolves to nothing — 100% dead. **Every infrastructure audit MUST check `dns_records count` per zone and flag count=0 as CRITICAL.** Fix: add a proxied CNAME pointing to an active gateway Worker domain + a zone-level Worker route. DNS propagation takes minutes to hours. |
+| **KIF-53:** Custom domains CNAME'd to API-only Workers with no root handler (2026-07-30 finding) | `qnfo-ipatent` Worker returns `{error:"Not found"}` (404) for `/` but `ipatent.me` CNAME pointed at it. The Worker has handlers for `/health`, `/api/disclosures`, `/api/search` only. **If a custom domain's users expect HTML, the CNAME must point to a Pages project or a Worker that serves HTML.** API-only Workers should get subdomain routes (e.g., `api.ipatent.me`), not the apex domain. Found during red-team: ipatent-me.pages.dev serves a professional landing page (5,655 bytes) but ipatent.me was blocked by an account-level redirect (KIF-51) AND pointed at the wrong Worker. |
