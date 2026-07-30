@@ -7,18 +7,18 @@ Loaded on demand for specific communication scenarios.
 **When to use:** An external party invited you to something (competition, conference, collaboration) that doesn't align with QNFO/QWAV priorities. You want to say no without burning the bridge.
 
 **Structure:**
-1. **Thank them** — acknowledge the invitation and any specific effort they made
-2. **State the blocker honestly** — what doesn't align? Be specific, not vague
-3. **Position QNFO/QWAV correctly** — if they've misunderstood what you do, clarify briefly
-4. **Leave the door open** — specify what WOULD make you say yes next time
-5. **Preserve the relationship** — acknowledge the value of the connection itself
+1. **Thank them** â€” acknowledge the invitation and any specific effort they made
+2. **State the blocker honestly** â€” what doesn't align? Be specific, not vague
+3. **Position QNFO/QWAV correctly** â€” if they've misunderstood what you do, clarify briefly
+4. **Leave the door open** â€” specify what WOULD make you say yes next time
+5. **Preserve the relationship** â€” acknowledge the value of the connection itself
 
 **Tone:** Grateful, direct, professional. No apologies for having standards. No false hope.
 
 **Example (Shijiazhuang competition decline):**
-> Thank you for the detailed responses and your transparency about Hebei's fabrication capabilities — I genuinely appreciate the honest assessment.
+> Thank you for the detailed responses and your transparency about Hebei's fabrication capabilities â€” I genuinely appreciate the honest assessment.
 >
-> After reviewing the opportunity against QWAV's roadmap, I've concluded this competition isn't the right fit at this stage. QWAV builds next-generation computing systems using thermodynamic, optical, and neuromorphic substrates — this genuinely requires advanced fabrication infrastructure that Hebei doesn't currently have. It's not a platform or service layer on existing hardware; it's first-principles physical computation.
+> After reviewing the opportunity against QWAV's roadmap, I've concluded this competition isn't the right fit at this stage. QWAV builds next-generation computing systems using thermodynamic, optical, and neuromorphic substrates â€” this genuinely requires advanced fabrication infrastructure that Hebei doesn't currently have. It's not a platform or service layer on existing hardware; it's first-principles physical computation.
 >
 > I value the connection with your team and the Foreign Expert Administration Division. When Hebei develops semiconductor fabrication capabilities, or when opportunities arise that are aligned with fundamental physics research and honest computation (rather than the conventional platform-and-service model), I would be very interested.
 >
@@ -27,7 +27,7 @@ Loaded on demand for specific communication scenarios.
 **Anti-patterns to avoid:**
 - Pretending to be interested when you're not
 - Accepting just to be polite (costs real time, creates expectations)
-- Over-explaining — one clear reason is enough
+- Over-explaining â€” one clear reason is enough
 - "I'll consider it" when you've already decided no
 
 ## Pattern 2: Pitching QWAV to a Potential Partner
@@ -35,30 +35,38 @@ Loaded on demand for specific communication scenarios.
 **When to use:** Introducing QWAV's commercial thesis to an external party who could be a fabrication partner, investor, or collaborator.
 
 **Structure:**
-1. **Lead with the problem** — the $35B quantum computing industry has delivered zero viable machines
-2. **State QWAV's thesis** — the failure is epistemic, not engineering; the qubit model is wrong
-3. **Present the alternative** — Problem-Substrate Mapping, thermodynamic/optical/neuromorphic computing
-4. **Cite the work** — mention the Manifesto, the whitepaper (DOI), the deployed domains
-5. **State what you need** — fabrication partner, investment, collaboration
-6. **Anchor in JPCUB** — joules-per-solution as the honest metric
+1. **Lead with the problem** â€” the $35B quantum computing industry has delivered zero viable machines
+2. **State QWAV's thesis** â€” the failure is epistemic, not engineering; the qubit model is wrong
+3. **Present the alternative** â€” Problem-Substrate Mapping, thermodynamic/optical/neuromorphic computing
+4. **Cite the work** â€” mention the Manifesto, the whitepaper (DOI), the deployed domains
+5. **State what you need** â€” fabrication partner, investment, collaboration
+6. **Anchor in JPCUB** â€” joules-per-solution as the honest metric
 
 **Tone:** Confident, evidence-based, not salesy. Let the research speak. Avoid "revolutionary" or "game-changing."
 
 **Anti-patterns to avoid:**
 - Leading with QWAV before stating the problem
 - Making promissory claims ("will revolutionize computing")
-- Over-citing — one or two DOIs is enough for first contact
-- Sounding like a marketing pitch — this is physics, not narrative
+- Over-citing â€” one or two DOIs is enough for first contact
+- Sounding like a marketing pitch â€” this is physics, not narrative
 
 ## Pattern 3: Following Up Without Being Pushy
 
 **When to use:** A contact hasn't responded. You want to check in without applying pressure.
 
 **Structure:**
-1. **Reference the prior exchange** — remind them what you discussed
-2. **Add value** — share something new (a paper, a development, a relevant finding)
-3. **Low-pressure ask** — "no rush, just checking in"
-4. **Easy to respond** — ask a specific, answerable question
+
+**Worked Example — Shijiazhuang Competition Decline (Ice Geng, TechInBridge, 2026-07-30):**
+
+See SKILL.md Phase 2 for full analysis workflow. Key lessons from this session:
+- The sender field in Outlook displayed "Project" not "Ice" — always search broadly ("Talent") not by company name"- Ice's honest answer about Hebei's lack of fabrication capabilities was the correct signal — don't pivot to a weaker pitch
+- QWAV is NOT a platform/service evaluating other hardware. It builds computation from first principles.
+- The Manifesto's closing line anchors every business communication: "Computation is too important to be left to narrative production."
+- When declining: be direct, position QWAV correctly, specify what WOULD make a yes next time
+1. **Reference the prior exchange** â€” remind them what you discussed
+2. **Add value** â€” share something new (a paper, a development, a relevant finding)
+3. **Low-pressure ask** â€” "no rush, just checking in"
+4. **Easy to respond** â€” ask a specific, answerable question
 
 **Tone:** Light, helpful, patient. You're offering value, not demanding a response.
 
@@ -68,9 +76,9 @@ Loaded on demand for specific communication scenarios.
 
 **Structure:**
 1. **Thank them for reaching out**
-2. **State your filter upfront** — what criteria determine whether you engage
-3. **Ask specific threshold questions** — filter before committing time
-4. **Keep it brief** — don't invest significant time in first response
+2. **State your filter upfront** â€” what criteria determine whether you engage
+3. **Ask specific threshold questions** â€” filter before committing time
+4. **Keep it brief** â€” don't invest significant time in first response
 
 **Anti-patterns to avoid:**
 - Accepting a meeting/call before understanding the opportunity
@@ -91,10 +99,10 @@ Loaded on demand for specific communication scenarios.
 
 ## Banned in All Business Communication
 
-Per qnfo-agent §0.0 Research Integrity Mandate:
+Per qnfo-agent Â§0.0 Research Integrity Mandate:
 - Superlative claims without evidence
 - Marketing/sales tone
 - "Revolutionary," "game-changing," "unprecedented"
 - Promissory statements ("will enable," "will solve")
 - Unverifiable uniqueness claims
-- The banned word list: "reality," "fundamental," "essence," "truly," "deeply," "profoundly," "actually," "basically," "merely," "essentially," "obviously," "clearly" — unless operationally defined
+- The banned word list: "reality," "fundamental," "essence," "truly," "deeply," "profoundly," "actually," "basically," "merely," "essentially," "obviously," "clearly" â€” unless operationally defined

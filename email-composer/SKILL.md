@@ -18,8 +18,9 @@ description: Email triage, drafting, business communication. Use for inbox analy
 
 ### Phase 1: Discovery & Triage
 - Use Computer Use tools (`list_windows`, `get_window_state`, `click`, `type_text`) to navigate Outlook
-- Search using "Talent", "Project", or person's name — sender display names in Outlook often differ from the contact's actual name
-- For server-side search across all accounts: expand the "Current Mailbox" combobox → select "All Mailboxes" → submit search
+- **Critical search tip:** Sender display names in Outlook often differ from the contact's actual name (e.g., "Ice Geng" at TechInBridge may appear as "Project" in the From field). Always search using BROAD terms first ("Talent", "Project", or the person's first name), not the exact company name ("TalentBridge" may return zero results because the display name is "Project"). Only search for the recipient's personal name if the display name search fails.
+- **Server-side search:** For emails across all accounts or archived messages, expand the "Current Mailbox" combobox → select "All Mailboxes" → submit search. This reaches Exchange server-side storage, not just the local cache.
+- **Common pitfall:** Searching for "TalentBridge" when the actual sender display name is "Project" returns 0 results. Search for "Talent" or "ice@techinbridge.com" instead. The UIA tree will show the actual display name — verify after each search.
 - Triage: identify unread emails, categorize by urgency (bizdev opportunity, publication notice, infrastructure alert, spam)
 
 ### Phase 2: Analysis
