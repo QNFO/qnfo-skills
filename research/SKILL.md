@@ -1,6 +1,6 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage structured forecast protocol with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, no inline fragments on PostActionPayload), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (9-stage structured forecast protocol with calibration register), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
 version: "2.30"
@@ -41,8 +41,31 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.30 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification)
+# RESEARCH -- v2.31 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast Integration Map)
 
+> **v2.31 UPDATE (2026-07-30, kaizen clean + forecast integration audit):**
+> Comprehensive kaizen audit and red-team review. Changes:
+> 1. **execute_plan Phase 4:** "(if paradigm forecast triggered)" → "(mandatory, scope-scaled;
+>    produces forecast artifacts)" — resolves v2.28 contradiction.
+> 2. **Duplicate v2.22 banner REMOVED** — copy-paste artifact, two identical KIF-28 blocks.
+> 3. **Verification Gates PDF entry:** `_check_pdf.py` → `build-paper.py` — the former was deleted
+>    in v2.21 (KIF-27 consolidation).
+> 4. **Triplicated OSF anti-patterns DEDUPED** — 6 anti-pattern rows appeared 2-3× each; one copy kept.
+> 5. **Stale `createDraft` reference in anti-patterns:** `.createDraft` → `createPost` — `createDraft`
+>    was deprecated in v2.11.
+> 6. **Frontmatter description:** "no inline fragments on PostActionPayload" → "inline fragments
+>    on PostActionPayload union members for error handling" — the v2.13 retracted claim was still
+>    in the skill's primary triggering metadata.
+> 7. **Forecast Integration Map ADDED** — explicit cross-reference table showing how every
+>    Phase 4 Stage output feeds into Phases 1-8, making the "seamless weaving" of forecasting
+>    into research explicit and auditable.
+> 8. **Phase 5 PUBLICATION PRINCIPLE cross-reference ADDED** — methodology-invisibility principle
+>    now explicitly referenced at Phase 5 entry point, preventing agents from producing
+>    methodology-branded publication output.
+> Red-team review: 3 parallel subagents (methodology-invisibility, consistency, structural overload)
+> plus direct forensic audit. Zero blocking issues remaining.
+> Cross-reference: skill-creator v1.0 (progressive disclosure, <500 line target).
+>
 > **v2.30 UPDATE (2026-07-30, genre cross-reference kaizen):** Added genre
 > classification cross-reference to Phase 5 Pre-Publication Requirements.
 > Certainty calibration and Professional Publication Standards apply to Genre A
@@ -130,16 +153,6 @@ self_sufficient: true
 > literature search, and consilience claims without a unification principle.
 > See `kaizen-skill-fixes` v1.4 §H for the fix design document. The full UCT-v2
 > prompt is archived at `D:\Obsidian\notes\v1\2026\07\26\_26207185215.md`.
->
-> **v2.22 UPDATE (2026-07-26, KIF-28 — comprehensive encoding kaizen):**
-> Red-teamed KIF-28 closeout: Source File Encoding Integrity section and 7
-> encoding anti-pattern rows were claimed as added but did not exist on disk.
-> Added: (1) **Source File Encoding Integrity (HARD GATE)** — BOM, U+FFFD,
-> U+FFFF, Python encoding declarations, and PowerShell encoding checks all
-> mandatory before commit/publish; (2) 7 encoding anti-pattern rows; (3) BOM
-> stripped from this file; (4) U+FFFD/U+FFFF characters removed from the
-> verification code example (replaced with Python escape text). See `qnfo-agent`
-> v3.48 for complementary anti-pattern updates and KIF-28 registry entry.
 >
 > **v2.22 UPDATE (2026-07-26, KIF-28 — comprehensive encoding kaizen):**
 > Red-teamed KIF-28 closeout: Source File Encoding Integrity section and 7
@@ -377,7 +390,7 @@ update_plan([
   {"step": "Phase 1: Due Diligence -- query KG + D1 + Vectorize + external sources", "status": "pending"},
   {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
   {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
-  {"step": "Phase 4: Deep Research -- structured forecast protocol (if paradigm forecast triggered)", "status": "pending"},
+  {"step": "Phase 4: Deep Research -- structured forecast protocol (mandatory, scope-scaled; produces forecast artifacts)", "status": "pending"},
   {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
   {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
   {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
@@ -515,6 +528,33 @@ assume such files don't exist just because a glob search returns empty.
 | `git-github` (OSF addendum) | **2-5** (qualifying projects only) | OSF project creation, components, registration drafts, external file links |
 
 ---
+
+
+## Forecast Integration Map (MANDATORY reference)
+
+The Structured Forecast Protocol (Phase 4) is NOT an isolated phase — its outputs feed
+into every other phase of the research pipeline. This map makes the integration explicit
+so agents never treat forecasting as a standalone deliverable to be "checked off."
+
+| Forecast Output | Feeds Into | Integration Rule |
+|:----------------|:-----------|:-----------------|
+| **Stage 0: Domain Assessment** | Phase 1 (Due Diligence), Phase 2 (Literature) | Domain topology informs search queries and gap analysis |
+| **Stage 1: Candidate Ranking** | Phase 5 (Publication §Introduction) | Qualitative ranking drives the paper's narrative arc — "we assess the candidates comparatively" |
+| **Stage 2: Assumption Audit** | Phase 5 (Publication §Body) | Enabling/blocking assumptions become the paper's analytical backbone — "underlying this candidate are three critical assumptions" |
+| **Stage 3: Red-Team Challenge** | Phase 5 (Publication §Discussion) | Adversary positions become the paper's limitations section — "we examined challenges from multiple adversarial perspectives" |
+| **Stage 4: Judgment Sensitivity** | Phase 5 (Publication §Discussion) | Robustness statement informs the paper's confidence calibration — [ROBUST]/[CONDITIONAL]/[FRAGILE] |
+| **Stage 5: Calibration Register** | Phase 5 (Publication), Phase 8 (Distribution) | Dated, strength-weighted predictions become the paper's falsifiable claims — [STRONG]/[WEAK] anchors |
+| **Stage 6: Effort Allocation** | Phase 0 (Project Plan §Risk Register), Phase 5 (Publication §Future Work) | Informs resource prioritization and future-work recommendations |
+| **Stage 7: Strategic Memo** | Phase 5 (Publication §Abstract + Conclusion) | Executive synthesis becomes the paper's thesis statement |
+| **Stage 8: Cross-Review** | Phase 5 (Publication §Declarations) | Reviewer findings inform the "Use of Artificial Intelligence" declaration |
+| **Consilience Gate (KIF-29)** | Phase 1 → Phase 4 (Stage 1), Phase 2, Phase 5 | Synthesis Consilience becomes an additional Stage 1 candidate; Lexicon terms expand Phase 2 search queries; Cross-Domain table becomes a Phase 5 section |
+
+**Design principle:** Forecasting is not a separate "module" bolted onto research — it is the
+analytical engine that generates the paper's claims, structure, and falsifiable predictions.
+The agent should think of Phase 4 not as "now we do forecasting" but as "now we generate the
+substantive content that Phases 5-8 will publish." The PUBLICATION PRINCIPLE (Phase 4 header)
+enforces this: the reader sees good analysis, not methodology signage.
+
 
 ## Phase Closeout Protocol (MANDATORY -- every phase, for net-new projects with a dedicated repo)
 
@@ -1042,6 +1082,14 @@ hammer-sees-nail in the analyst's domain of expertise) identified and flagged?
 ---
 
 ## Phase 5: Publication Pipeline
+
+> **PUBLICATION PRINCIPLE (cross-ref Phase 4):** The methodology-invisibility rule from
+> Phase 4 applies to ALL Phase 5 outputs — papers, PDFs, and abstracts must present
+> analysis without methodology branding. See Phase 4 §PUBLICATION PRINCIPLE for the
+> canonical replacement table ("Stage 2 Assumption Audit found..." → "Underlying this
+> candidate are three critical assumptions..."). The Forecast Integration Map (above)
+> shows how every Stage output maps to a specific paper section.
+
 
 ### Pre-Publication Requirements
 
@@ -2341,7 +2389,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh â€” a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
 | `wrangler d1 execute <name> --remote` on a DB with no local wrangler.toml binding | Use the Cloudflare REST API directly with the UUID from `wrangler d1 list` instead of the CLI. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables | Use CHECK-THEN-WRITE (SELECT existence, then plain INSERT or plain UPDATE) instead of a combined upsert. |
-| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createDraft` mutation's own response instead â€” a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
+| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createPost` mutation instead â€” a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
 | No pre-flight checklist before due diligence | Run P1-P11 before Phase 1 begins |
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
@@ -2363,12 +2411,6 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Creating OSF project without Zenodo DOI backlink | Every OSF project description MUST include the Zenodo DOI. This is the primary discoverability bridge between platforms.
 | Submitting OSF registration with empty registration_responses | **HARD GATE:** Empty registration_responses is a STUB. NEVER submit. All ~30 template fields must be populated. |
 | Submitting OSF registration without explicit user approval | Use deepchat_question to present the full registration content before submission. OSF registrations are permanent and immutable. |
-| Creating OSF registrations then never closing them out | Every submitted registration must eventually be completed or withdrawn. Abandoned registrations are visible on the account and undermine credibility. Run periodic closeout audits. |
-| Creating OSF registrations for non-executable research | LLM-Executable Research Gate: no human subjects, no external resources, no IRB. If the protocol cannot be executed in this chat thread, link to Zenodo/GitHub only. |
-| Leaving draft registrations with partial registration_responses | If the research will not be completed and submitted, DELETE the draft. Partial stubs are a reputational risk. |
-| Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
-| Submitting OSF registration with empty registration_responses | **HARD GATE:** `registration_responses = {}` is a STUB. NEVER submit. All ~30 template fields must be populated. |
-| Submitting OSF registration without explicit user approval | Use `deepchat_question` to present the full registration content before submission. OSF registrations are permanent and immutable. |
 | Creating OSF registrations then never closing them out | Every submitted registration must eventually be completed or withdrawn. Abandoned registrations are visible on the account and undermine credibility. Run periodic closeout audits. |
 | Creating OSF registrations for non-executable research | LLM-Executable Research Gate: no human subjects, no external resources, no IRB. If the protocol cannot be executed in this chat thread, link to Zenodo/GitHub only. |
 | Leaving draft registrations with partial registration_responses | If the research will not be completed and submitted, DELETE the draft. Partial stubs are a reputational risk. |
@@ -2408,6 +2450,3 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Editing source files in a temp git clone across multiple turns without committing each turn (KIF-32, v2.26) | **HARD GATE (cross-ref git-github v2.3):** clone → edit ALL files in one batch → commit → push → delete, ALL in one turn. Phase 5 PDF build/edit cycles are especially dangerous: the agent often edits → builds → discovers more issues → edits again across turns on the same clone. Deferring commit to a "final batch" guarantees data loss when the temp directory is cleaned between turns. Re-clone each turn from the remote to get the latest state. |
 | Assuming a temp clone's files survive across tool-call turns on Windows (v2.26) | `$env:TEMP` is volatile. System cleanup, session teardown, or storage-sense can evict files between turns. Never trust `Test-Path` results from a prior turn. |
 | Batched "final commit" of edits accumulated across multiple turns on a temp clone (v2.26) | Commit each turn's edits as an atomic unit with `git push`. A "final commit at the end" that was deferred for 3+ turns will find the repo directory empty and all edits lost. |
-
-
-
