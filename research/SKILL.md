@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (Semantic Scholar, arXiv, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
-triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.34"
+version: "2.35"
 priority: 1
 platform: all
 autonomous: true
@@ -41,7 +41,26 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.34 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+# RESEARCH -- v2.35 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+
+> **v2.35 UPDATE (2026-07-31, keyless research API replacement kaizen):**
+> Per user directive, Semantic Scholar is REPLACED as the primary academic search
+> source. A session's Phase 1 due diligence lost 4 queries to HTTP 429 (rate
+> limited, key-gated) with zero data retrieved. Live verification this session
+> (jpcub-validation, all outputs saved to `artifacts/external-search/`):
+> **OpenAlex, Crossref, Zenodo records, and Europe PMC ALL returned HTTP 200
+> back-to-back with zero 429s — no API keys required.** OpenAlex is now the
+> PRIMARY academic index; Crossref (DOI registry), Zenodo records (search ALL
+> users' deposits, not just uploads), and Europe PMC are mandatory supplementary
+> sources. Added: (1) new Research API Rate-Limit Matrix section; (2) Zenodo
+> records search wired into Phase 2 — Zenodo is BOTH an upload target AND a
+> third-party deposit discovery source; (3) anti-pattern rows for Semantic
+> Scholar-as-primary and for skipping Zenodo deposit search; (4) frontmatter
+> triggers + description updated. Verified novelty example: exact term "JPCUB"
+> returns 0 in OpenAlex title search, 0 Crossref, 0 Europe PMC, and 2 Zenodo
+> hits that are BOTH the author's own deposits — a 5-source novelty confirmation
+> (arXiv + these 4). Cross-reference: memory "Semantic Scholar 429 — use hybrid
+> fallback strategy".
 
 > **v2.34 UPDATE (2026-07-30, kaizen):**
 > Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
@@ -671,7 +690,9 @@ avoids a rewritten-history remediation.
 - Report: "QNFO Cross-Reference: Found N related papers, M active projects"
 
 **(b) External Literature Search (MANDATORY):**
-- arXiv API, Semantic Scholar, web search
+- arXiv API, OpenAlex (PRIMARY academic index — keyless), Crossref (DOI registry — keyless),
+  Zenodo records API (`zenodo.org/api/records?q=...` — search OTHER users' deposits, keyless),
+  Europe PMC (keyless), web search
 - Deduplicate against QNFO papers from step (a)
 - Report: "External Literature: Found N papers (M core, K supporting, J background)"
 
@@ -689,7 +710,7 @@ QNFO's Vectorize index currently contains ONLY QNFO-internal papers. If a
 is NOT external corroboration -- it is the corpus searching itself. Any
 report claiming "confirmed by literature search" MUST distinguish:
 `[QNFO-INTERNAL: N hits, self-referential]` vs `[EXTERNAL: M hits from arXiv/
-Semantic Scholar/web]`. If external search step (b) was skipped or returned
+OpenAlex/Crossref/Zenodo/EuropePMC/web]`. If external search step (b) was skipped or returned
 zero results while internal search (a) returned nonzero, explicitly flag
 `[CONFIRMATION-BIAS-RISK: only internal corpus searched]` in the due
 diligence report -- do not silently present internal-only hits as validation.
@@ -815,17 +836,37 @@ diligence report -- do not silently present internal-only hits as validation.
 
 | Source | Method | Purpose |
 |:-------|:-------|:--------|
-| **Semantic Scholar API** | REST API with `fields=title,authors,year,abstract,externalIds` | Highest-quality academic results |
+| **OpenAlex API** | `https://api.openalex.org/works?search=<query>&per-page=N&mailto=<email>` — no key; add `mailto` for polite pool | PRIMARY academic index (~250M works, abstracts, DOIs, arXiv IDs, citation counts) |
+| **Zenodo records API** | `https://zenodo.org/api/records?q=<query>&size=N` — no key | **Search OTHER users' deposits** (datasets, software, papers) — Zenodo is a discovery source, not just an upload target |
+| **Crossref API** | `https://api.crossref.org/works?query=<query>&rows=N&mailto=<email>` — no key | DOI registry: verified metadata, journal articles, DOI-first dedup |
+| **Europe PMC API** | `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=<query>&format=json&pageSize=N` — no key | Life-sciences/health literature (PubMed Central + preprint aggregation) |
 | **arXiv API** | `http://export.arxiv.org/api/query?search_query=<query>` | Preprint search |
 | **Web search** | Browser (`load_url`) or `exec` with `curl` | Broader discovery |
 | **QNFO Vectorize** | `search_papers({query: \"...\", limit: 10})` | Existing QNFO corpus semantic search |
 | **QNFO Knowledge Graph** | `query_graph('query', {query: 'MATCH (p:Paper) WHERE ...'})` | Related QNFO concepts |
 
+### Research API Rate-Limit Matrix (v2.35 — VERIFIED 2026-07-31)
+
+| API | API Key | Rate-Limit Profile | Verdict |
+|:----|:--------|:-------------------|:--------|
+| **Semantic Scholar** | Optional (higher limits with key) | HTTP 429 under sustained load WITHOUT a key; session-verified failure | **RETIRED as primary** — do not block Phase 1/2 on it |
+| **OpenAlex** | **NONE** | Keyless; polite pool with `mailto` param; sustained back-to-back queries OK | **PRIMARY** — verified HTTP 200 ×6 back-to-back, 0 × 429 |
+| **Crossref** | **NONE** | Keyless; polite pool with `mailto` param; 50 req/s recommended ceiling | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×3 |
+| **Zenodo records** | **NONE** (search); token only for deposit writes | Keyless search, generous; 429 documented only as an error code, not observed | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×3 |
+| **Europe PMC** | **NONE** | Keyless; generous; no observed throttling | **SUPPLEMENT** — verified HTTP 200 ×3 |
+
+**Rule (v2.35):** If a search source returns 429 twice in a row, do NOT retry
+aggressively — switch to OpenAlex/Crossref/Zenodo/EuropePMC for that query and
+flag `[RATE-LIMIT-OVERRIDE: <source> 429, substituted <replacement>]` in the
+due diligence report. Semantic Scholar may be consulted opportunistically with
+its free tier but MUST NOT gate the pipeline. (Cross-ref: memory "Semantic
+Scholar 429 — use hybrid fallback strategy".)
+
 ### Deduplication Protocol
 1. Normalize DOIs (lowercase, strip `https://doi.org/` prefix)
 2. Normalize titles (lowercase, strip punctuation, normalize whitespace)
 3. Match by DOI exact, arXiv ID, or title similarity (>90% cosine)
-4. Flag duplicates, keep canonical source (Semantic Scholar preferred)
+4. Flag duplicates, keep canonical source (OpenAlex preferred; Crossref for DOI-first verification)
 5. Report: "Found N raw papers, M unique after deduplication"
 
 ### Classification Matrix
@@ -2308,15 +2349,22 @@ mutation {
 After posting, verify independently:
 
 ```python
-# Verify via channels list (no direct post-by-ID query confirmed available)
-query = {"query": f"""query {{
-  channels(input: {{ organizationId: "{org_id}" }}) {{
-    id name
-    posts(input: {{ status: SCHEDULED, limit: 3 }}) {{
-      id text status
-    }}
-  }}
-}}"""}
+# VERIFIED 2026-07-31: The GraphQL schema REJECTS `posts` as a field on
+# type `Channel` — "Cannot query field "posts" on type "Channel""
+# (GRAPHQL_VALIDATION_FAILED). The prior channels+posts subquery shape is
+# STALE and MUST NOT be used. There is no confirmed post-enumeration query
+# on the current schema. Verification alternatives:
+#   a) createPost mutation response: inline fragment on PostActionSuccess
+#      returns post { id } — this ID is the proof of acceptance.
+#   b) Manual dashboard check by the user for scheduled posts.
+# If posts were created via createPost and returned a post ID, that is the
+# primary verification signal; a subsequent failed enumeration query does
+# NOT disprove the post's existence.
+query = {"query": """query {
+  channels(input: { organizationId: "ORG_ID" }) {
+    id name service
+  }
+}"""}
 ```
 
 #### Token Protocol (v2.11 â€” REDUNDANT STORAGE MANDATORY)
@@ -2618,3 +2666,10 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Listing application domains without operational signatures (e.g., "this applies to quantum computing") | Every Stage 9 domain entry MUST articulate the specific change in practice — the operational signature. "Applies to X" is not an application; "changes how X is done by enabling Y" is. |
 | Backcasting only one discipline or one fork tier | Stage 10 is most informative with cross-discipline interactions. A single-discipline backcast misses the primary insight: "if A advanced but B didn't, X exists but Y doesn't." |
 | Using placeholder discipline names (Stratigraphy, Metrology, etc.) instead of the research's actual core disciplines | Stage 10's template uses generic placeholders. The agent MUST replace them with the actual core disciplines identified in Phase 1 due diligence. |
+| Treating "OK" tool output as "confirmed no results" without investigating (KIF-56) | Tool responses returning `"OK"` with no visible content (search_papers_enriched, query_graph, search_papers) MUST be investigated — check for offloaded files, re-run with different parameters, or flag as `[NOT-VERIFIED: tool output unreadable]`. Never treat as a finding. "OK" means "output status unknown," not "no results." |
+| Filling missing tool output with general knowledge dressed as search findings (KIF-56) | When search tools fail to return readable data (429 rate limit, 0-byte responses, offloaded output), the ONLY acceptable response is `[NOT-VERIFIED: <reason>]`. Never substitute general knowledge for search results. Specific paper names, years, and counts MUST NOT be asserted without a readable tool output file. |
+| Committing/tagging research artifacts without re-reading tool outputs that support each claim (KIF-57) | Pre-commit verification gate: re-read every tool output file cited in an artifact BEFORE git commit. A claim that cites `arxiv3.xml` but that file was never re-read in the same turn is an Anti-Phantom violation. Phase closeout MUST include independent re-verification of every cited finding.
+| Writing research artifact claims without citing a specific, readable tool output file (KIF-55) | Every factual claim in a research artifact MUST cite a specific, readable tool output file or source. "arxiv3.xml:24000" or "OpenAlex API response: HTTP 200 count=5" — never a bare assertion without provenance. |
+| Semantic Scholar as the PRIMARY academic search source (HTTP 429 under sustained load without a key — session-verified 2026-07-31, 4 queries lost) | Use OpenAlex as PRIMARY (keyless, verified HTTP 200 back-to-back); Crossref/Zenodo/EuropePMC as mandatory supplements. If Semantic Scholar 429s twice, substitute and flag `[RATE-LIMIT-OVERRIDE]`. |
+| External literature search that queries arXiv/web but NEVER searches Zenodo records for OTHER users' deposits | Zenodo is a discovery source, not just an upload target — always run `zenodo.org/api/records?q=<topic>&size=10` in Phase 2. Verified: exact term "JPCUB" → 0 third-party deposits (only the author's own 2), a 5-source novelty confirmation (arXiv + OpenAlex + Crossref + Europe PMC + Zenodo). |
+| Subagent output truncation treated as audit completion | When a research subagent reads the input files but its output is truncated before it produces findings, the parent agent MUST fall back to direct audit. The subagent reading a file is NOT evidence that it completed the audit. See kaizen skill §Subagent Failure Handling. |
