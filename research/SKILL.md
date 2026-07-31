@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.17, Buffer API v2.13). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.36, Buffer API v2.14). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.35"
+version: "2.36"
 priority: 1
 platform: all
 autonomous: true
@@ -41,7 +41,44 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.35 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+# RESEARCH -- v2.36 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+
+> **v2.36 UPDATE (2026-07-31, red-team kaizen):**
+> Red-team review: 5 parallel subagents attempted, 0 completed with full output (all
+> truncated); fell back to direct parent-agent 5-adversary audit (Accuracy, Completeness,
+> Dependency, Novelty, Status) per kaizen §Subagent Failure Handling.
+> HARD: 2. SOFT: 8. DESIGN: 4 (3 applied, 1 deferred).
+> Changes:
+> (1) [HARD] Appended v2.35/v2.36 entries to `.kaizen_history` — the v2.35 kaizen skipped
+>     the mandatory history log (Dependency Auditor, parent-agent).
+> (2) [HARD] Fixed dangling cross-ref "memory 'Semantic Scholar 429 — use hybrid fallback
+>     strategy'" — two memory_recall probes found no such durable memory; created the
+>     heuristic memory so the reference resolves (Dependency Auditor, parent-agent).
+> (3) [SOFT] Corrected Rate-Limit Matrix query counts to match evidence files (4 per API):
+>     OpenAlex ×6→×4, Crossref ×3→×4, Zenodo ×3→×4, Europe PMC ×3→×4 (Accuracy Auditor —
+>     verified against `artifacts/external-search/`, 16 query files + 3 doc files).
+> (4) [SOFT] Softened unverified Crossref "50 req/s recommended ceiling" → "documented
+>     guidance, not session-measured" (Accuracy Auditor — docs fetch showed no rate-limit
+>     statement).
+> (5) [SOFT] Anti-pattern "Query all 5 sources in parallel" → "all 8 sources" (Completeness
+>     Auditor — Phase 2 Multi-Source Search now lists 8 sources).
+> (6) [SOFT] Frontmatter description "(v2.17, Buffer API v2.13)" → "(v2.36, Buffer API
+>     v2.14)" (Status Auditor — stale metadata).
+> (7) [SOFT] New anti-pattern: novelty claims from fuzzy/tokenized search alone (Novelty
+>     Auditor — unquoted Zenodo q= OR-tokenizes: "JPCUB joules per computational unit"
+>     returned 311,162 vs quoted "\"JPCUB\"" returning 2).
+> (8) [DESIGN] Phase 2 Multi-Source Search: added evidence-saving instruction (save every
+>     API response to `artifacts/external-search/<api>_<query>.json` and cite the file for
+>     every count/DOI — KIF-55) (Novelty Auditor).
+> (9) [DESIGN] Rate-Limit Matrix Rule: added polite-pool etiquette (mailto param for
+>     OpenAlex/Crossref, ~0.4s sleep between queries) + exact-phrase vs tokenized search
+>     semantics (Novelty Auditor).
+> (10) [DESIGN] Added arXiv ~3s query-interval note (Completeness Auditor).
+> Deferred: (D1) standalone `scripts/research-api-search.py` — the Multi-Source Search
+> table already carries canonical URLs; deferred once per kaizen DESIGN policy, revisit
+> if a second project needs a reusable probe.
+> Cross-reference: kaizen v1.2.2 (calibration register research v2.34→v2.36),
+> jpcub-validation commit (due-diligence status-table count corrections).
 
 > **v2.35 UPDATE (2026-07-31, keyless research API replacement kaizen):**
 > Per user directive, Semantic Scholar is REPLACED as the primary academic search
@@ -845,22 +882,36 @@ diligence report -- do not silently present internal-only hits as validation.
 | **QNFO Vectorize** | `search_papers({query: \"...\", limit: 10})` | Existing QNFO corpus semantic search |
 | **QNFO Knowledge Graph** | `query_graph('query', {query: 'MATCH (p:Paper) WHERE ...'})` | Related QNFO concepts |
 
-### Research API Rate-Limit Matrix (v2.35 — VERIFIED 2026-07-31)
+### Research API Rate-Limit Matrix (v2.36 — VERIFIED 2026-07-31)
 
 | API | API Key | Rate-Limit Profile | Verdict |
 |:----|:--------|:-------------------|:--------|
 | **Semantic Scholar** | Optional (higher limits with key) | HTTP 429 under sustained load WITHOUT a key; session-verified failure | **RETIRED as primary** — do not block Phase 1/2 on it |
-| **OpenAlex** | **NONE** | Keyless; polite pool with `mailto` param; sustained back-to-back queries OK | **PRIMARY** — verified HTTP 200 ×6 back-to-back, 0 × 429 |
-| **Crossref** | **NONE** | Keyless; polite pool with `mailto` param; 50 req/s recommended ceiling | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×3 |
-| **Zenodo records** | **NONE** (search); token only for deposit writes | Keyless search, generous; 429 documented only as an error code, not observed | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×3 |
-| **Europe PMC** | **NONE** | Keyless; generous; no observed throttling | **SUPPLEMENT** — verified HTTP 200 ×3 |
+| **OpenAlex** | **NONE** | Keyless; polite pool with `mailto` param; sustained back-to-back queries OK | **PRIMARY** — verified HTTP 200 ×4 back-to-back, 0 × 429 |
+| **Crossref** | **NONE** | Keyless; polite pool with `mailto` param; documented ceiling ~50 req/s (guidance, not session-measured) | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×4 |
+| **Zenodo records** | **NONE** (search); token only for deposit writes | Keyless search, generous; 429 documented only as an error code, not observed | **MANDATORY SUPPLEMENT** — verified HTTP 200 ×4 |
+| **Europe PMC** | **NONE** | Keyless; generous; no observed throttling | **SUPPLEMENT** — verified HTTP 200 ×4 |
 
-**Rule (v2.35):** If a search source returns 429 twice in a row, do NOT retry
+**Rule (v2.36):** If a search source returns 429 twice in a row, do NOT retry
 aggressively — switch to OpenAlex/Crossref/Zenodo/EuropePMC for that query and
 flag `[RATE-LIMIT-OVERRIDE: <source> 429, substituted <replacement>]` in the
 due diligence report. Semantic Scholar may be consulted opportunistically with
-its free tier but MUST NOT gate the pipeline. (Cross-ref: memory "Semantic
-Scholar 429 — use hybrid fallback strategy".)
+its free tier but MUST NOT gate the pipeline. (Cross-ref: durable heuristic
+"Semantic Scholar 429 — use hybrid fallback strategy", created 2026-07-31.)
+
+**Polite-pool etiquette (v2.36):** add `&mailto=<email>` to OpenAlex and
+Crossref requests to enter the polite pool; keep ~0.4s between back-to-back
+queries. arXiv: keep ~3s between requests (documented interval, not measured).
+**Exact-phrase vs tokenized search (v2.36):** unquoted Zenodo `q=` queries
+OR-tokenize — `q=JPCUB joules per computational unit` returned total=311,162
+while quoted `q="JPCUB"` returned total=2 (the true novelty count). For
+exact-novelty checks use quoted phrases on Zenodo and
+`filter=title.search:TERM` on OpenAlex. (Evidence: `zenodo_jpcub.json` vs
+`zenodo_exact.json` in jpcub-validation artifacts.)
+
+**Evidence discipline (v2.36):** save every API response to
+`artifacts/external-search/<api>_<query>.json` and cite the file for every
+count/DOI claimed (KIF-55). Never report a count without its evidence file.
 
 ### Deduplication Protocol
 1. Normalize DOIs (lowercase, strip `https://doi.org/` prefix)
@@ -2582,7 +2633,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 ## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
-| Searching only one source | Query all 5 sources in parallel |
+| Searching only one source | Query all 8 sources in parallel (OpenAlex, Zenodo records, Crossref, Europe PMC, arXiv, web, Vectorize, KG) |
 | Skipping dedup | Run dedup, report counts before analysis |
 | Inventing citations | All citations must trace to real papers with DOIs |
 | Presenting post-hoc as prediction | Use "consistent with" not "predicted by" |
@@ -2672,4 +2723,5 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Writing research artifact claims without citing a specific, readable tool output file (KIF-55) | Every factual claim in a research artifact MUST cite a specific, readable tool output file or source. "arxiv3.xml:24000" or "OpenAlex API response: HTTP 200 count=5" — never a bare assertion without provenance. |
 | Semantic Scholar as the PRIMARY academic search source (HTTP 429 under sustained load without a key — session-verified 2026-07-31, 4 queries lost) | Use OpenAlex as PRIMARY (keyless, verified HTTP 200 back-to-back); Crossref/Zenodo/EuropePMC as mandatory supplements. If Semantic Scholar 429s twice, substitute and flag `[RATE-LIMIT-OVERRIDE]`. |
 | External literature search that queries arXiv/web but NEVER searches Zenodo records for OTHER users' deposits | Zenodo is a discovery source, not just an upload target — always run `zenodo.org/api/records?q=<topic>&size=10` in Phase 2. Verified: exact term "JPCUB" → 0 third-party deposits (only the author's own 2), a 5-source novelty confirmation (arXiv + OpenAlex + Crossref + Europe PMC + Zenodo). |
+| Declaring novelty from fuzzy/tokenized search results alone | Always run an exact-phrase check before claiming novelty: Zenodo `q="TERM"` (quoted) or OpenAlex `filter=title.search:TERM`. Unquoted Zenodo q= OR-tokenizes — "JPCUB joules per computational unit" returned total=311,162 vs quoted `"JPCUB"` returning total=2. Fuzzy totals are meaningless for novelty claims (v2.36). |
 | Subagent output truncation treated as audit completion | When a research subagent reads the input files but its output is truncated before it produces findings, the parent agent MUST fall back to direct audit. The subagent reading a file is NOT evidence that it completed the audit. See kaizen skill §Subagent Failure Handling. |

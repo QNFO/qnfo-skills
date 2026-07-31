@@ -68,7 +68,19 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
 > Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
 
-# KAIZEN v1.2.1 (Autonomous Continuous-Improvement Protocol)
+> **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
+> Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
+> HARD findings: 0 in this skill. SOFT: 2.
+> Changes:
+> (1) [SOFT] Calibration Register: "research (currently v2.34)" → "currently v2.36"
+>     (both entries) — Dependency Auditor, parent-agent. Historical banners left intact.
+> (2) [SOFT] Committed the pending v1.2.1 delta (rule #4 "Fall back immediately" +
+>     two anti-pattern rows: "Subagent reads input files..." and "Repeated polling...")
+>     that existed on disk but was never committed — the v1.2.1 banner claimed these
+>     changes; the commit history now matches the banner (Status Auditor, parent-agent).
+> Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
+
+# KAIZEN v1.2.2 (Autonomous Continuous-Improvement Protocol)
 
 ## Overview
 
@@ -274,6 +286,7 @@ When subagent_orchestrator outputs are truncated, the parent agent MUST:
 1. **Assume findings were lost** — truncated output is equivalent to "subagent did not complete." Do not treat partial output as a findings report.
 2. **Fall back to direct audit** — the parent agent reads the target skill directly and performs the audit dimensions itself. The explorer/reviewer roles are assigned as perspectives the parent agent adopts sequentially, not as subagent delegations that can silently fail.
 3. **Report the failure** — in the kaizen closeout banner, note: "N subagents attempted, M completed with full output; (N-M) fell back to direct parent-agent audit due to truncation."
+4. **Fall back immediately — do not poll repeatedly** — when a subagent's output shows file-reads but produces no findings beyond that, the signal is clear: truncation occurred. Fall back on the **second** tool call (first poll to confirm truncation pattern, then direct audit), not on the tenth. Repeated polling of stuck subagents wastes tool calls and delays the audit. A subagent that reads input files but produces zero findings by the second poll is a truncated subagent — pivot immediately.
 
 ## Kaizen Pipeline (Standard Execution)
 
@@ -813,6 +826,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **Heuristic stored without skill ownership tag** | Every heuristic/anti-pattern in durable memory MUST include a `<skill-name>:` prefix so the Watchtower can attribute it for INCIDENT-AXIS scoring. |
 | **cronjob kaizen tasks created but never monitored for failure** | Check cronjob history weekly. A failing Watchtower cron that silently 404s for 30 days is worse than no Watchtower at all — it creates a false sense of security. |
 | **Skill installed by DeepChat but not added to gitignore allowlist** | The `.gitignore` has an explicit allowlist (ADR-026). When DeepChat installs a new skill (xlsx, skill-creator, windows-command-patterns, etc.), sync it to `.gitignore` in the same turn. As of 2026-07-31, 14 of 28 installed skills (50%) were gitignored — their kaizen histories and scripts exist on disk but are invisible to the git repo. Run `skill_list` vs `git ls-files -- */SKILL.md` cross-reference as part of the Watchtower scan. |
+| **Subagent reads input files but parent treats file-read-only as "audit complete"** | When a subagent reads the target file but its output is truncated before it produces findings, the parent MUST fall back to direct audit. The subagent READING a file is NOT evidence that it COMPLETED the audit. The signal is: subagent reads input files in log → no findings produced → truncated. See §Subagent Failure Handling rule 4: fall back on the SECOND poll, not the tenth. |
+| **Repeated polling of subagents that produced zero findings** | When subagent output shows file-reads but no findings after the first poll, do NOT poll again. The subagent is truncated — polling again wastes tool calls. One poll confirms the truncation pattern. Fall back to direct audit immediately on the second tool call. |
 
 ## Cross-Skill Integration
 
@@ -885,7 +900,7 @@ dated, falsifiable claims about skill drift risk.
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
   must be tuned to the user's timezone and agent configuration.
-- The research skill (currently v2.34) is actively evolving; the canonical
+- The research skill (currently v2.36) is actively evolving; the canonical
   case study claim may need updating when research reaches v3.0.
 Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
@@ -894,7 +909,7 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
-- Research skill is at v2.34 with 13+ version banners — high drift surface area
+- Research skill is at v2.36 with many version banners — high drift surface area
 - Cloudflare MCP servers may versions-shift independently
 Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
@@ -908,7 +923,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.1** (kaizen — sync-kaizen, gitignore allowlist gap fix, 2026-07-31)
+Current: **v1.2.2** (kaizen — red-team dependency-drift fix, 2026-07-31)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
