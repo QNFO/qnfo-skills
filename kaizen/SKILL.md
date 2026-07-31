@@ -90,7 +90,17 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     changes; the commit history now matches the banner (Status Auditor, parent-agent).
 > Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
 
-# KAIZEN v1.2.3 (Autonomous Continuous-Improvement Protocol)
+# KAIZEN v1.3 (Autonomous Continuous-Improvement Protocol + Deferred-Item Gate)
+
+> **v1.3 UPDATE (2026-07-31, deferred-item enforcement):**
+> Added **Deferred-Item Gate** to Phase 5 Closeout (STEP 0, HARD, MANDATORY) — before
+> ANY closeout is declared successful, all deferred items from prior sessions and this
+> session MUST be executed via CLI/API/command-line, or documented with a blocker +
+> evidence + follow-up trigger. Closeout with unexecuted deferred items lacking blockers
+> is a FAILED closeout. Triggered by: cloudflare v3.12/v3.13 changes lost to a concurrent
+> git reset (uncommitted work wiped), and multi-session deferred-item accumulation
+> (branch merges, Buffer LinkedIn post, D1 VACUUM). Also added the matching anti-pattern row.
+> Cross-reference: cloudflare v3.13, windows-command-patterns v2.0.
 
 ## Overview
 
@@ -415,6 +425,25 @@ After all fixes applied:
    the closeout. Do not declare kaizen complete with unresolved HARD issues.
 
 ### Phase 5: Closeout
+
+**STEP 0 — DEFERRED-ITEM GATE (HARD, MANDATORY — added 2026-07-31):**
+Before ANY closeout is declared successful, the agent MUST audit all deferred items from
+prior sessions and this session:
+
+```
+1. memory_recall({query: "deferred OR pending OR not started OR remains"})
+2. Parse the session's own deferred items (anything marked DEFERRED/PENDING/BLOCKED)
+3. For EACH deferred item:
+   a. EXECUTE it now if possible (CLI/API/command-line only — no Dashboard, no manual UI)
+   b. If genuinely blocked, document EXACTLY why (missing credential, external dependency,
+      API limitation) with evidence, and set a concrete follow-up trigger
+4. If ANY deferred item remains unexecuted WITHOUT a documented blocker: CLOSEOUT IS BLOCKED.
+   Do not declare kaizen complete.
+```
+
+**GATE:** Closeout is successful ONLY when zero deferred items remain, OR every remaining
+item carries a documented blocker with an evidence trail and a follow-up trigger. A
+"deferred" list that survives a closeout without resolution is a FAILED closeout.
 
 ```
 1. VERSION BUMP: Increment the skill's version in the SKILL.md header
@@ -811,7 +840,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 | Anti-Pattern | Correct |
 |:-------------|:--------|
-| Skipping red-team review because "it's a simple update" | ALL kaizen includes red-team. A "simple" update that introduces a wrong version number in a cross-reference can silently break another skill. |
+| **Closing out with unresolved deferred items from prior sessions** | **HARD GATE (v1.3):** Before ANY closeout, run the Deferred-Item Gate (Phase 5 STEP 0) — memory_recall for deferred/pending items, execute every item that is executable via CLI/API/command-line, and document a blocker with evidence for anything genuinely stuck. A closeout with unexecuted deferred items that lack documented blockers is a FAILED closeout — the deferred list must be zero or fully evidenced. This rule exists because the 2026-07-31 session lost cloudflare v3.12/v3.13 kaizen changes to a concurrent `git pull --rebase` + `git reset` (uncommitted work wiped), and multiple prior sessions deferred items (branch merges, Buffer posts, D1 VACUUM) that silently accumulated. |
+| **Skipping red-team review because "it's a simple update"** | ALL kaizen includes red-team. A "simple" update that introduces a wrong version number in a cross-reference can silently break another skill. |
 | Running only 1-2 adversary roles because "the skill is small" | All 5 roles. A small skill can have all the same failure modes as a large one. |
 | Applying fixes without re-verifying with a fresh reviewer subagent | Phase 4 re-review is mandatory. The implementer's own verification is insufficient — the same agent that made the error is the worst auditor of its fix. |
 | Deferring DESIGN findings because "they're not critical" | DESIGN findings are architecture improvements — they prevent future HARD findings. Defer them once, but never twice. |
