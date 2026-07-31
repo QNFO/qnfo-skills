@@ -3,7 +3,7 @@ name: qnfo-core
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO Core — Governance Foundation (v1.2)
+# QNFO Core — Governance Foundation (v1.3)
 
 > **v1.2 UPDATE (2026-07-31, mojibake red-team kaizen):**
 > Added §0.2 UTF-8 Source Encoding Mandate (HARD GATE, NO EXCEPTIONS). Three consecutive
