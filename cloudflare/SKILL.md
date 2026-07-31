@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.8"
+version: "3.13"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,57 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.11 (Kaizen: Level-of-Service Standards, Availability Audit, URL Health Monitoring)
+# CLOUDFLARE -- v3.13 (Kaizen: No Dashboard + KIF-51 API Fix + KIF-60)
+
+> **v3.13 UPDATE (2026-07-31, no-dashboard kaizen):**
+> User mandate: NO Cloudflare Dashboard — no web UI, no manual browser login, no
+> human intervention for anything that CLI/API can do. Changes:
+> (1) [HARD] **KIF-51 FALSE CLAIM RETRACTED:** "API Tokens typically cannot read/modify/
+>     delete account-level redirect rulesets" was WRONG. Account-level rulesets ARE
+>     manageable via REST API (`GET/DELETE /accounts/{id}/rulesets`). The 2026-07-30
+>     incident was a token-permissions issue, not an API limitation.
+> (2) [HARD] Updated KIF-51 fix protocol: "manual Cloudflare Dashboard → delete the
+>     rule" → "DELETE /accounts/{id}/rulesets/{id}" with `Account:Rulesets:Edit` scope.
+> (3) [HARD] Added **KIF-60: Using Cloudflare Dashboard** — HARD BLOCK on all Dashboard
+>     operations. All operations MUST be CLI/API/command-line only. Every Dashboard
+>     action has an API equivalent.
+> (4) [HARD] Updated EXECUTION GATE: "NO DASHBOARD" added to the decision ladder.
+> (5) [HARD] Added step 5 (API deletion) to Account-Level Redirect detection protocol.
+> Cross-reference: KIF-51, KIF-60, windows-command-patterns v2.0.
+
+> **v3.12 UPDATE (2026-07-31, red-team kaizen — PowerShell gate + MCP-first execution):**
+> Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
+> parent-agent 5-adversary audit (Accuracy, Completeness, Dependency, Novelty, Status).
+> HARD findings: 4. SOFT findings: 4. DESIGN findings: 2.
+> Changes:
+> (1) [HARD] **EXECUTION GATE (KIF-59):** Added mandatory HARD GATE at skill top —
+>     PowerShell is FORBIDDEN for Cloudflare operations. Decision ladder: MCP tools FIRST,
+>     `npx wrangler` SECOND, Python REST API THIRD. PowerShell is NEVER acceptable.
+>     Rationale: 15+ documented PowerShell failures (UTF-8 corruption, quote mangling,
+>     `curl` alias breakage, `ConvertTo-Json` garbage). This gate prevents the exact
+>     incident that triggered this kaizen (Completeness Auditor, parent-agent).
+> (2) [HARD] Fixed `execute_plan` step 3: "wrangler CLI, REST API, Dashboard" →
+>     "MCP tools FIRST (workers_list, workers_get_worker, query_worker_observability,
+>     search_cloudflare_documentation), fallback wrangler CLI" — the old text was the
+>     ROOT CAUSE of the PowerShell incident (Accuracy Auditor, parent-agent).
+> (3) [HARD] Added anti-pattern KIF-59: "Using PowerShell for ANY Cloudflare operation"
+>     — HARD BLOCK with the full decision ladder (Completeness Auditor, parent-agent).
+> (4) [HARD] Bumped frontmatter `version: "3.8"` → `"3.12"` — the v3.11 kaizen didn't
+>     bump it (Status Auditor, parent-agent).
+> (5) [SOFT] Updated stale cross-refs: "research v2.25" → "research v2.38 (confirmed live
+>     2026-07-31)" in v3.9 banner (Dependency Auditor, parent-agent).
+> (6) [SOFT] Fixed Resource Baselines table: Vectorize Indexes 4→5 to match Vectorize
+>     section text (Status/Dependency Auditors, parent-agent).
+> (7) [SOFT] Added §MCP Server → Agent Tool Mapping — maps MCP server names to actual
+>     agent tool names (workers_list, query_worker_observability, etc.) so agents
+>     know exactly which tool to call (Completeness Auditor, parent-agent).
+> (8) [SOFT] Added MCP-first preference note to execute_plan comment area (Completeness
+>     Auditor, parent-agent).
+> (9) [DESIGN] Infrastructure Audit section: added MCP-first preamble (Novelty Auditor,
+>     parent-agent).
+> (10) [DESIGN] Reusable Scripts section: added MCP-first preference note (Novelty
+>     Auditor, parent-agent).
+> Cross-reference: kaizen v1.2.3, research v2.38, KIF-59.
 
 > **v3.11 UPDATE (2026-07-30, LoS codification kaizen):**
 > Codified formal **Level-of-Service (LoS) standards** across three tiers — Pages (P-S1..P-S5),
@@ -32,7 +82,7 @@ self_sufficient: true
 > 2. **KIF-51: Account-Level Redirect Blocks Pages** — `http_request_redirect` rulesets
 >    at account level execute at position 5 in Rules Engine, before Workers (position 10).
 >    Custom domains that match a redirect rule will never reach Pages or Workers.
->    Requires Dashboard manual intervention (API Tokens can't read/delete redirect rules).
+>    **Fix (v3.13):** Account-level rulesets ARE manageable via API — `GET /accounts/{id}/rulesets` to list, `DELETE /accounts/{id}/rulesets/{id}` to delete. The prior "API Tokens can't" claim was a permissions/scope issue, not an API limitation. NEVER use the Dashboard — use the REST API with a properly-scoped token (`Account:Rulesets:Edit`).
 > 3. **KIF-52: Empty DNS Zones** — 3 of 12 active zones had 0 DNS records (qnfo.net,
 >    qnfo.uk, q-wave.tech). A zone with no records resolves to nothing. Infra audits
 >    must flag `dns_records count = 0` as CRITICAL and add CNAME + Worker route.
@@ -58,7 +108,7 @@ self_sufficient: true
 > 3. **Updated Retrieval Sources** with `cloudflare-docs` MCP and `cloudflare-blog` MCP
 >    as preferred doc search channels.
 > 4. **New anti-patterns** for reaching for raw CLI/REST when an MCP server exists.
-> Companion kaizen updates: research skill v2.25 (Phases 1,6,7,8 MCP integration),
+> Companion kaizen updates: research skill v2.38 (Phases 1,6,7,8 MCP integration, confirmed live 2026-07-31),
 >    code skill v2.2 (MCP server deploy/verify workflow), knowledge skill v2.2
 >    (AutoRAG + AI Gateway references). See `tape_handoff mcp-driven-operations-2026-07-29`
 >    for full audit findings and skill delta map.
@@ -153,12 +203,29 @@ self_sufficient: true
 > **Related:** Always load with `qnfo-agent` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
 > **Full-Stack Mandate:** Evaluate Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN as ONE integrated platform. NEVER isolate components.
 
+---
+
+## EXECUTION GATE — MANDATORY, READ FIRST (v3.12, KIF-59)
+
+**HARD GATE: PowerShell is FORBIDDEN for Cloudflare operations. Period. No exceptions.**
+
+Use this decision ladder for EVERY Cloudflare operation:
+
+| Priority | Tool | When |
+|:---------|:-----|:-----|
+| **1st** | Cloudflare MCP tools (`workers_list`, `workers_get_worker`, `query_worker_observability`, `search_cloudflare_documentation`, etc.) | ALWAYS — these are auto-authenticated, structured, and cannot corrupt data |
+| **2nd** | `npx wrangler <cmd>` (via `exec`, NOT via PowerShell) | When MCP tools don't cover the specific operation |
+| **3rd** | Cloudflare REST API (Python `urllib.request` with `CLOUDFLARE_API_TOKEN` env var) | For D1 queries / R2 listings when wrangler hangs |
+| **NEVER** | PowerShell, `curl` (PowerShell alias), Cloudflare Dashboard (web UI), `Invoke-WebRequest`, `ConvertTo-Json` | PowerShell corrupts UTF-8; the Dashboard requires manual browser login and human interaction — ALL Cloudflare operations MUST be CLI/API/command-line only. Every Dashboard action has an API equivalent. See KIF-60. |
+
+**Why this gate exists:** PowerShell has caused 15+ documented tool-call failures in QNFO sessions (KIF-21, KIF-27, KIF-37, KIF-59) through: UTF-8 double-encoding (mojibake), inline `python -c` quote collisions, `curl` → `Invoke-WebRequest` alias breakage, `ConvertTo-Json` corruption of large D1 payloads, and `&&` chaining not supported. Every PowerShell invocation for Cloudflare is a trapped error waiting to happen. Use MCP tools, `npx wrangler`, or Python scripts — never PowerShell.
+
 ## execute_plan
 
 update_plan([
   {"step": "Identify service via decision trees below", "status": "pending"},
   {"step": "Check full-stack cross-service implications", "status": "pending"},
-  {"step": "Execute with Cloudflare-native tools (wrangler CLI, REST API, Dashboard)", "status": "pending"},
+  {"step": "Execute with MCP tools FIRST (workers_list, workers_get_worker, query_worker_observability, search_cloudflare_documentation), fallback wrangler CLI", "status": "pending"},
   {"step": "Verify deployment health + DNS integrity + lifecycle state", "status": "pending"},
   {"step": "Audit: check for orphans, 522-RISK, CNAME chains, resource drift", "status": "pending"},
   {"step": "Core Distribution Gate: Verify GitHub, Zenodo, R2, D1/KG layers", "status": "pending"},
@@ -711,7 +778,17 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 1. Run `curl -v https://domain/` — inspect the `Location:` header
 2. Check `GET /accounts/{id}/rulesets` for non-managed `http_request_redirect` rulesets
 3. Check `GET /zones/{id}/workers/routes` for misconfigured routes
-4. If the redirect destination is NOT Cloudflare infrastructure (e.g., Google Cloud Run), it's an account-level redirect rule that requires Dashboard intervention
+4. If the redirect destination is NOT Cloudflare infrastructure (e.g., Google Cloud Run), it's an account-level redirect rule — fix via API (step 5 below), NEVER via Dashboard
+5. **Delete the offending ruleset via API (NO DASHBOARD):**
+   ```bash
+   # List all account-level rulesets to find the offending one:
+   curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+     https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/rulesets
+   # Delete the ruleset containing the redirect:
+   curl -s -X DELETE -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+     https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/rulesets/{RULESET_ID}
+   ```
+   Alternatively, `PUT` to update the ruleset with the offending rule removed from the `rules` array (less destructive). Requires token scope: `Account:Rulesets:Edit`.
 
 ### Lifecycle Pipeline
 
@@ -734,7 +811,7 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 | D1 Databases | 6 | +/- 1 | +/- 2+ |
 | Workers | 7 | 8-9 | 10+ |
 | Pages Projects | 5 | 6-7 | 8+ |
-| Vectorize Indexes | 4 | +/- 1 | +/- 2+ |
+| Vectorize Indexes | 5 | +/- 1 | +/- 2+ |
 | R2 Buckets | 13 | +/- 1 | +/- 3+ |
 | Queues | 1 | +/- 1 | +/- 2+ |
 | KV Namespaces | 1 | +/- 1 | +/- 2+ |
@@ -796,6 +873,23 @@ Publication pipelines write D1 but KG seeding is session-dependent — drift acc
 ## MCP-Driven Operations (v3.9 — MANDATORY preference order)
 
 **HARD RULE:** When a Cloudflare MCP server exists for an operation, use it BEFORE falling back to raw `npx wrangler`, REST API, or `curl`. MCP servers provide structured, typed, auto-authenticated results — CLI/REST are error-prone (wrong account IDs, silent encoding issues, PowerShell quoting traps). Every QNFO operational domain is mapped below.
+
+### MCP Server → Agent Tool Mapping (v3.12)
+
+The deepchat agent has these Cloudflare MCP tools available directly — use them by name:
+
+| Agent Tool | Covers | Replaces |
+|:-----------|:-------|:---------|
+| `workers_list()` | List all Workers | `npx wrangler deploy list` / `GET /accounts/.../workers/scripts` |
+| `workers_get_worker(scriptName)` | Get Worker details | `GET /accounts/.../workers/scripts/{name}` |
+| `workers_get_worker_code(scriptName)` | Get Worker source code | Manual Dashboard code view |
+| `query_worker_observability(query, timeframe)` | Worker logs, metrics, invocation tracing | `curl /health` endpoint, `cloudflare-observability` MCP |
+| `search_cloudflare_documentation(query)` | Search Cloudflare docs | Web search, `cloudflare-docs` MCP |
+| `search_papers(query)` / `search_papers_enriched(query)` | Semantic paper search via Vectorize | Manual D1 queries |
+| `query_graph(endpoint, params)` | Knowledge graph queries | Manual Cypher/SQL |
+| `skill_run cloudflare scripts/<name>` | Run bundled skill scripts | Manual `exec` with hardcoded paths |
+
+For other Cloudflare MCP servers (bindings, builds, auditlogs, graphql, etc.), the agent accesses them through the configured `mcp-settings.json` OAuth connections — use them when their specific capabilities are needed.
 
 ### Operation → MCP Server Decision Matrix
 
@@ -898,6 +992,7 @@ When an MCP server call returns a success response, treat it with the same verif
 | Guessing D1/Zenodo/Workers/Buffer API request shapes from memory each session | Consult `references/d1-rest-api-schema.json`, `references/workers-deploy-metadata-schema.json` (this skill) and `../research/references/zenodo-deposit-schema.json`, `../research/references/buffer-graphql-schema.json` (research skill) BEFORE constructing the call. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables (HTTP 400) | Use `scripts/d1-safe-write.js` (CHECK-THEN-WRITE, never a combined upsert) — see `references/d1-rest-api-schema.json`. |
 | Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
+| **KIF-59: Using PowerShell for ANY Cloudflare operation (2026-07-31 incident)** | **HARD BLOCK.** PowerShell corrupts UTF-8, mangles quoting, aliases `curl` to `Invoke-WebRequest`, and `ConvertTo-Json` silently produces garbage. Use MCP tools (`workers_list`, `query_worker_observability`, etc.) FIRST, `npx wrangler` SECOND, REST API with Python THIRD. PowerShell is NEVER acceptable for Cloudflare operations — even `curl.exe` must be invoked directly (not via PowerShell which may intercept it). See §EXECUTION GATE for the full decision ladder. |
 | Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include all high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-observability`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, and `cloudflare-radar`. See §DeepChat MCP Server Coverage for the canonical list. |
 | Trusting that an MCP server is reachable without a live HTTP probe | Verify with `curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp` — 401 = live (auth required), 404/530 = not deployed. Never claim an MCP server "is working" from config validation alone. |
 | Using raw `npx wrangler` or REST API when an MCP server exists for that operation (KIF-49) | Consult §MCP-Driven Operations decision matrix FIRST. `cloudflare-observability` replaces `curl /health`. `cloudflare-builds` replaces `npx wrangler deployments list`. `cloudflare-auditlogs` replaces manual audit log REST queries. CLI/REST are FALLBACKS, not defaults. |
@@ -906,6 +1001,7 @@ When an MCP server call returns a success response, treat it with the same verif
 | Running DNS zone audits without `dns-analytics` | `dns-analytics` MCP shows actual query volumes and top queries per zone — a zone could have perfect DNS records but zero traffic (dead domain). `nslookup` alone misses this. |
 | Deploying Workers/Pages without checking `cloudflare-builds` for build confirmation | `cloudflare-builds` MCP is the canonical deploy-history source. Wrangler's `deploy` exit code confirms the REQUEST was accepted, not that the build pipeline succeeded and the artifact is serving. |
 | **KIF-50:** Deploying Workers via REST API PUT without binding metadata (2026-07-30 incident) | A `PUT /accounts/{id}/workers/scripts/{name}` without `metadata.bindings` silently drops ALL D1, R2, KV, and Vectorize bindings from the Worker. The Worker code still references `env.LIVING_PAPER`/`env.DB`/`env.QNFO_BUCKET` but they are `undefined` at runtime → HTTP 500. **ALWAYS use `npx wrangler deploy` from a `wrangler.toml`/`wrangler.jsonc` that declares EVERY binding.** After any deploy, verify ALL data-dependent routes return 200 (not just `/health`). Impact: 4 public domains down for ~30 min when gateway lost 3 bindings. |
-| **KIF-51:** Account-level `http_request_redirect` rulesets silently intercepting traffic before Pages/Workers (2026-07-30 finding) | The Cloudflare Rules Engine executes redirect phases at position 5, BEFORE Workers (position 10). If an account-level redirect ruleset matches a custom domain and redirects to an external URL, NO amount of DNS/PAGES configuration will help — the redirect wins first. API Tokens typically cannot read/modify/delete account-level redirect rulesets (they require Dashboard-level permissions). **Diagnose with `curl -v https://domain/`** — look for the `Location:` header and `CF-RAY` in the response. **Fix requires manual Cloudflare Dashboard → Manage Account → Configurations → Bulk Redirects/Single Redirects → delete the rule.** |
+| **KIF-51:** Account-level `http_request_redirect` rulesets silently intercepting traffic before Pages/Workers (2026-07-30 finding, FIXED v3.13) | The Cloudflare Rules Engine executes redirect phases at position 5, BEFORE Workers (position 10). **Diagnose with `curl -v https://domain/`** — look for `Location:` and `CF-RAY`. **Fix via API (NO DASHBOARD):** `GET /accounts/{id}/rulesets` to find the ruleset, then `DELETE /accounts/{id}/rulesets/{id}`. Requires token scope `Account:Rulesets:Edit`. The prior claim that API tokens couldn't manage these was a permissions issue, not an API limitation. |
 | **KIF-52:** DNS zones with zero records flagged as "active" (2026-07-30 finding) | 3 of 12 active zones had 0 DNS records: qnfo.net, qnfo.uk, q-wave.tech. A zone with no A/AAAA/CNAME records resolves to nothing — 100% dead. **Every infrastructure audit MUST check `dns_records count` per zone and flag count=0 as CRITICAL.** Fix: add a proxied CNAME pointing to an active gateway Worker domain + a zone-level Worker route. DNS propagation takes minutes to hours. |
 | **KIF-53:** Custom domains CNAME'd to API-only Workers with no root handler (2026-07-30 finding) | `qnfo-ipatent` Worker returns `{error:"Not found"}` (404) for `/` but `ipatent.me` CNAME pointed at it. The Worker has handlers for `/health`, `/api/disclosures`, `/api/search` only. **If a custom domain's users expect HTML, the CNAME must point to a Pages project or a Worker that serves HTML.** API-only Workers should get subdomain routes (e.g., `api.ipatent.me`), not the apex domain. Found during red-team: ipatent-me.pages.dev serves a professional landing page (5,655 bytes) but ipatent.me was blocked by an account-level redirect (KIF-51) AND pointed at the wrong Worker. |
+| **KIF-60: Using Cloudflare Dashboard (web UI / manual login) for ANY operation (2026-07-31 mandate)** | **HARD BLOCK.** The Cloudflare Dashboard requires web UI, manual browser login, and human interaction — all operations MUST be CLI/API/command-line only. Every Dashboard operation has an API equivalent: redirect rulesets → `GET/DELETE /accounts/{id}/rulesets`, Pages deploy → `npx wrangler pages deploy` or REST API, DNS management → `GET/POST /zones/{id}/dns_records`, Workers deploy → `npx wrangler deploy`. If an API endpoint doesn't exist for a specific operation, use the Cloudflare MCP server (`workers_list`, `query_worker_observability`, etc.) FIRST, then fall back to REST API. Dashboard is NEVER acceptable — the user shall not manually intervene in any operation that can be executed by CLI, API, or command line. |
