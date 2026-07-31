@@ -68,6 +68,16 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
 > Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
 
+> **v1.2.3 UPDATE (2026-07-31, calibration-drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 0. SOFT findings: 1.
+> Changes:
+> (1) [SOFT] Calibration Register: "research (currently v2.36)" → "currently v2.37"
+>     (both entries at lines ~903 and ~912) — research skill bumped v2.36→v2.37
+>     earlier today (KIF-58 kaizen); calibration register now matches live version
+>     (Dependency Auditor, parent-agent).
+> Cross-reference: research v2.37, kaizen v1.2.2.
+>
 > **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
 > Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
 > HARD findings: 0 in this skill. SOFT: 2.
@@ -80,7 +90,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     changes; the commit history now matches the banner (Status Auditor, parent-agent).
 > Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
 
-# KAIZEN v1.2.2 (Autonomous Continuous-Improvement Protocol)
+# KAIZEN v1.2.3 (Autonomous Continuous-Improvement Protocol)
 
 ## Overview
 
@@ -900,7 +910,7 @@ dated, falsifiable claims about skill drift risk.
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
   must be tuned to the user's timezone and agent configuration.
-- The research skill (currently v2.36) is actively evolving; the canonical
+- The research skill (currently v2.38) is actively evolving; the canonical
   case study claim may need updating when research reaches v3.0.
 Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
@@ -909,7 +919,7 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
-- Research skill is at v2.36 with many version banners — high drift surface area
+- Research skill is at v2.38 with many version banners — high drift surface area
 - Cloudflare MCP servers may versions-shift independently
 Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
@@ -923,7 +933,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.2** (kaizen — red-team dependency-drift fix, 2026-07-31)
+Current: **v1.2.3** (kaizen — calibration-drift fix, 2026-07-31)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.

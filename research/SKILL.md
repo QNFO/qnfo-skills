@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.36, Buffer API v2.14). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.36"
+version: "2.38"
 priority: 1
 platform: all
 autonomous: true
@@ -27,21 +27,51 @@ self_sufficient: true
 > (D1, R2, Workers) but gives zero guidance on using the 17 Cloudflare MCP servers
 > for deployment verification, observability, and dissemination. Added:
 > 1. Phase 1 (Due Diligence): `cloudflare-browser-mcp-server` for headless browser
->    web research; `cloudflare-blog` for relevant Cloudflare announcements.
+>  web research; `cloudflare-blog` for relevant Cloudflare announcements.
 > 2. Phase 6 (Deployment): MCP-driven deployment verification chain (`cloudflare-builds`
->    + `cloudflare-observability` + `cloudflare-bindings` + `cloudflare-auditlogs`)
->    as a HARD GATE after every D1/R2/Worker deployment.
+>  + `cloudflare-observability` + `cloudflare-bindings` + `cloudflare-auditlogs`)
+>  as a HARD GATE after every D1/R2/Worker deployment.
 > 3. Phase 7 (Dissemination): `cloudflare-radar` for domain ranking insights;
->    `cloudflare-docs` for SEO best-practice verification; `dex-analysis` for
->    papers.qnfo.org latency monitoring.
+>  `cloudflare-docs` for SEO best-practice verification; `dex-analysis` for
+>  papers.qnfo.org latency monitoring.
 > 4. Phase 8 (Core Distribution): Full 17-MCP verification chain as the mandatory
->    gate before setting status="published".
+>  gate before setting status="published".
 > 5. Cross-Skill Integration Checklist: added `cloudflare` skill load at Phase 6
->    (was already present) and reference to §MCP-Driven Operations decision matrix.
+>  (was already present) and reference to §MCP-Driven Operations decision matrix.
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.36 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting)
+# RESEARCH -- v2.38 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+
+> **v2.38 UPDATE (2026-07-31, slug-based naming + mojibake gate kaizen):**
+> Per user directive, all paper output files MUST use project-slug-based naming instead
+> of generic `paper.md`/`paper.pdf`. Changed all 25+ references across the skill:
+> `paper.md` → `<slug>.md`, `paper.pdf` → `<slug>.pdf`. Rationale: generic names cause
+> confusion when multiple paper repos share a temp directory. Added anti-pattern row.
+> Also added §0.2 UTF-8 Source Encoding Mandate cross-reference from qnfo-core v1.2 —
+> `scan-mojibake.py` must pass BEFORE any publication (HARD GATE). See qnfo-core v1.2
+> §0.2 for the full gate protocol and mojibake pattern reference table.
+>
+> **v2.37 UPDATE (2026-07-31, kaizen — KIF-58 cross-contamination incident):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status) following JPCUB/Computing-Machines cross-contamination incident.
+> HARD findings: 1. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] Added **HARD GATE P5.IDENTITY (KIF-58)** — cross-project paper identity
+>   verification before ANY Zenodo upload or GitHub cross-population: verify paper
+>   title matches target Zenodo concept, DOI belongs to concept chain, GitHub repo
+>   paper title matches, temp directory content validated, Zenodo bucket lock
+>   awareness. This gate blocks the exact failure mode where "Computing After
+>   Silicon" paper was uploaded to the JPCUB Zenodo concept and JPCUB content was
+>   pushed to the computing-machines repo (Accuracy + Completeness Auditors,
+>   parent-agent).
+> (2) [SOFT] Added 4 new anti-pattern rows: "Assuming temp-directory name identifies
+>   project," "Cross-populating Zenodo/GitHub without verifying paper identity,"
+>   "Publishing Zenodo deposit without verifying uploaded file contents," and
+>   "Cross-project paper confusion from handoff ambiguity" (Completeness +
+>   Dependency Auditors, parent-agent).
+> Cross-reference: kaizen v1.2.2, qnfo-core KIF-58, memory "Do not assume temporary
+> directory names identify the project."
 
 > **v2.36 UPDATE (2026-07-31, red-team kaizen):**
 > Red-team review: 5 parallel subagents attempted, 0 completed with full output (all
@@ -50,29 +80,29 @@ self_sufficient: true
 > HARD: 2. SOFT: 8. DESIGN: 4 (3 applied, 1 deferred).
 > Changes:
 > (1) [HARD] Appended v2.35/v2.36 entries to `.kaizen_history` — the v2.35 kaizen skipped
->     the mandatory history log (Dependency Auditor, parent-agent).
+>   the mandatory history log (Dependency Auditor, parent-agent).
 > (2) [HARD] Fixed dangling cross-ref "memory 'Semantic Scholar 429 — use hybrid fallback
->     strategy'" — two memory_recall probes found no such durable memory; created the
->     heuristic memory so the reference resolves (Dependency Auditor, parent-agent).
+>   strategy'" — two memory_recall probes found no such durable memory; created the
+>   heuristic memory so the reference resolves (Dependency Auditor, parent-agent).
 > (3) [SOFT] Corrected Rate-Limit Matrix query counts to match evidence files (4 per API):
->     OpenAlex ×6→×4, Crossref ×3→×4, Zenodo ×3→×4, Europe PMC ×3→×4 (Accuracy Auditor —
->     verified against `artifacts/external-search/`, 16 query files + 3 doc files).
+>   OpenAlex ×6→×4, Crossref ×3→×4, Zenodo ×3→×4, Europe PMC ×3→×4 (Accuracy Auditor —
+>   verified against `artifacts/external-search/`, 16 query files + 3 doc files).
 > (4) [SOFT] Softened unverified Crossref "50 req/s recommended ceiling" → "documented
->     guidance, not session-measured" (Accuracy Auditor — docs fetch showed no rate-limit
->     statement).
+>   guidance, not session-measured" (Accuracy Auditor — docs fetch showed no rate-limit
+>   statement).
 > (5) [SOFT] Anti-pattern "Query all 5 sources in parallel" → "all 8 sources" (Completeness
->     Auditor — Phase 2 Multi-Source Search now lists 8 sources).
+>   Auditor — Phase 2 Multi-Source Search now lists 8 sources).
 > (6) [SOFT] Frontmatter description "(v2.17, Buffer API v2.13)" → "(v2.36, Buffer API
->     v2.14)" (Status Auditor — stale metadata).
+>   v2.14)" (Status Auditor — stale metadata).
 > (7) [SOFT] New anti-pattern: novelty claims from fuzzy/tokenized search alone (Novelty
->     Auditor — unquoted Zenodo q= OR-tokenizes: "JPCUB joules per computational unit"
->     returned 311,162 vs quoted "\"JPCUB\"" returning 2).
+>   Auditor — unquoted Zenodo q= OR-tokenizes: "JPCUB joules per computational unit"
+>   returned 311,162 vs quoted "\"JPCUB\"" returning 2).
 > (8) [DESIGN] Phase 2 Multi-Source Search: added evidence-saving instruction (save every
->     API response to `artifacts/external-search/<api>_<query>.json` and cite the file for
->     every count/DOI — KIF-55) (Novelty Auditor).
+>   API response to `artifacts/external-search/<api>_<query>.json` and cite the file for
+>   every count/DOI — KIF-55) (Novelty Auditor).
 > (9) [DESIGN] Rate-Limit Matrix Rule: added polite-pool etiquette (mailto param for
->     OpenAlex/Crossref, ~0.4s sleep between queries) + exact-phrase vs tokenized search
->     semantics (Novelty Auditor).
+>   OpenAlex/Crossref, ~0.4s sleep between queries) + exact-phrase vs tokenized search
+>   semantics (Novelty Auditor).
 > (10) [DESIGN] Added arXiv ~3s query-interval note (Completeness Auditor).
 > Deferred: (D1) standalone `scripts/research-api-search.py` — the Multi-Source Search
 > table already carries canonical URLs; deferred once per kaizen DESIGN policy, revisit
@@ -104,13 +134,13 @@ self_sufficient: true
 > parent-agent audit (Subagent Failure Handling protocol invoked).
 > Changes:
 > (1) [SOFT] Removed stale `_verify_4d.py` reference in anti-patterns; replaced with
->     Core Distribution Gate description (Accuracy Auditor, parent-agent).
+>   Core Distribution Gate description (Accuracy Auditor, parent-agent).
 > (2) [SOFT] Clarified `_citation_audit.py` in Verification Gates as a reusable inline
->     pattern, not a standalone script (Accuracy Auditor, parent-agent).
+>   pattern, not a standalone script (Accuracy Auditor, parent-agent).
 > (3) [SOFT] Fixed v2.33 banner miscount: "9 HARD issues" → "9 issues (3 HARD, 6 SOFT)"
->     with per-fix severity tags (Status Auditor, parent-agent).
+>   with per-fix severity tags (Status Auditor, parent-agent).
 > (4) [SOFT] Fixed v2.33 banner item 6: "10-stage pipeline" → "11-stage pipeline
->     (Stages -1 through 10)" (Status Auditor, parent-agent).
+>   (Stages -1 through 10)" (Status Auditor, parent-agent).
 > Deferred: (D1) cronjob integration for scheduled calibration register/literature checks,
 > (D2) subagent_orchestrator for Phase 2 parallel literature searches, (D3) tape_handoff
 > for phase-to-phase session continuity, (D4) cross-skill version reference live verification
@@ -125,15 +155,15 @@ self_sufficient: true
 > (workspace path mismatch), 1 partial; fell back to direct parent-agent audit.
 > Changes:
 > 1. **Stage 9: Practical Applications Extension** — maps each forecast candidate/era
->    onto concrete application domains (computation, AI, measurement, communication,
->    economics, etc.) with falsifiable claims and calibration register entries.
+>  onto concrete application domains (computation, AI, measurement, communication,
+>  economics, etc.) with falsifiable claims and calibration register entries.
 > 2. **Stage 10: Counterfactual Backcasting** — systematic backcasting across target
->    disciplines with tiered historical forks (Tier 1: ~20yr, Tier 2: ~60yr,
->    Tier 3: ~120yr, Tier 4: alternate axioms). Produces "counterfactual technology
->    stack" tables and calibration register entries.
+>  disciplines with tiered historical forks (Tier 1: ~20yr, Tier 2: ~60yr,
+>  Tier 3: ~120yr, Tier 4: alternate axioms). Produces "counterfactual technology
+>  stack" tables and calibration register entries.
 > 3. **Forecast Integration Map** — new Stage 9 and 10 rows added.
 > 4. **Verification Gates** — two new gates: Practical Applications Extension (SOFT)
->    and Counterfactual Backcasting (SOFT).
+>  and Counterfactual Backcasting (SOFT).
 > 5. **Anti-Patterns** — 4 new rows for missing Stages 9 and 10.
 > 6. **Design principle paragraph** — updated to reference the full 11-stage pipeline (Stages -1 through 10).
 > 7. **Frontmatter description** — "9-stage" → "11-stage structured forecast protocol."
@@ -146,22 +176,22 @@ self_sufficient: true
 > **v2.31 UPDATE (2026-07-30, kaizen clean + forecast integration audit):**
 > Comprehensive kaizen audit and red-team review. Changes:
 > 1. **execute_plan Phase 4:** "(if paradigm forecast triggered)" → "(mandatory, scope-scaled;
->    produces forecast artifacts)" — resolves v2.28 contradiction.
+>  produces forecast artifacts)" — resolves v2.28 contradiction.
 > 2. **Duplicate v2.22 banner REMOVED** — copy-paste artifact, two identical KIF-28 blocks.
 > 3. **Verification Gates PDF entry:** `_check_pdf.py` → `build-paper.py` — the former was deleted
->    in v2.21 (KIF-27 consolidation).
+>  in v2.21 (KIF-27 consolidation).
 > 4. **Triplicated OSF anti-patterns DEDUPED** — 6 anti-pattern rows appeared 2-3× each; one copy kept.
 > 5. **Stale `createDraft` reference in anti-patterns:** `.createDraft` → `createPost` — `createDraft`
->    was deprecated in v2.11.
+>  was deprecated in v2.11.
 > 6. **Frontmatter description:** "no inline fragments on PostActionPayload" → "inline fragments
->    on PostActionPayload union members for error handling" — the v2.13 retracted claim was still
->    in the skill's primary triggering metadata.
+>  on PostActionPayload union members for error handling" — the v2.13 retracted claim was still
+>  in the skill's primary triggering metadata.
 > 7. **Forecast Integration Map ADDED** — explicit cross-reference table showing how every
->    Phase 4 Stage output feeds into Phases 1-8, making the "seamless weaving" of forecasting
->    into research explicit and auditable.
+>  Phase 4 Stage output feeds into Phases 1-8, making the "seamless weaving" of forecasting
+>  into research explicit and auditable.
 > 8. **Phase 5 PUBLICATION PRINCIPLE cross-reference ADDED** — methodology-invisibility principle
->    now explicitly referenced at Phase 5 entry point, preventing agents from producing
->    methodology-branded publication output.
+>  now explicitly referenced at Phase 5 entry point, preventing agents from producing
+>  methodology-branded publication output.
 > Red-team review: 3 parallel subagents (methodology-invisibility, consistency, structural overload)
 > plus direct forensic audit. Zero blocking issues remaining.
 > Cross-reference: skill-creator v1.0 (progressive disclosure, <500 line target).
@@ -186,18 +216,18 @@ self_sufficient: true
 > ALL research projects, not an optional add-on gated behind trigger keywords.
 > Architectural changes:
 > 9. Phase 4 is now **mandatory for all projects** — scope scales to project size
->    (a single-result paper runs a lighter version; a paradigm forecast runs
->    the full 9-stage protocol). Trigger-gating keywords (`"deep dive"`,
->    `"paradigm forecast"`, `"maximize EVs"`) are REMOVED from the Phase 4
->    header; Phase 4 now simply states "Runs for ALL projects."
+>  (a single-result paper runs a lighter version; a paradigm forecast runs
+>  the full 9-stage protocol). Trigger-gating keywords (`"deep dive"`,
+>  `"paradigm forecast"`, `"maximize EVs"`) are REMOVED from the Phase 4
+>  header; Phase 4 now simply states "Runs for ALL projects."
 > 10. Frontmatter triggers: `"Bayesian"` and `"EV ranking"` removed from the
->     trigger words array — these are dead keywords from v1 that should no
->     longer cause skill activation.
+>   trigger words array — these are dead keywords from v1 that should no
+>   longer cause skill activation.
 > 11. Frontmatter description: "9-stage Bayesian cascade" → "9-stage structured
->     forecast protocol."
+>   forecast protocol."
 > 12. Anti-patterns: the duplicate "Use Likelihood-Span Sensitivity (Stage 4,
->     KIF-31 upgrade)" row replaced with "Use Judgment Sensitivity Analysis
->     (Stage 4, v2.27)."
+>   KIF-31 upgrade)" row replaced with "Use Judgment Sensitivity Analysis
+>   (Stage 4, v2.27)."
 > 13. Version bumped: 2.26 → 2.28 (frontmatter `version` field + heading).
 > **Note:** v2.27 was a retroactive kaizen applied AFTER v2.28, inserted between v2.26 and v2.28 in the banner chronology. The "2.26 → 2.28" bump reflects the version state at the time v2.28 was created.
 
@@ -205,26 +235,26 @@ self_sufficient: true
 > Per user directive, the "9-Stage Bayesian Cascade" is RETIRED and replaced
 > with a "Structured Forecast Protocol." Key changes:
 > 1. Phase 4 renamed from "9-Stage Bayesian Cascade" to "Structured Forecast
->    Protocol" — with an explicit METHODOLOGY NOTE declaring that this is NOT
->    a Bayesian computation but a structured judgment exercise.
+>  Protocol" — with an explicit METHODOLOGY NOTE declaring that this is NOT
+>  a Bayesian computation but a structured judgment exercise.
 > 2. EV = P × I / √t formula RETIRED. Candidate ranking is now qualitative
->    with uncertainty ranges and explicit anchor reference classes. No
->    false-precision numbers (1.17, 0.71, 0.32) are produced.
+>  with uncertainty ranges and explicit anchor reference classes. No
+>  false-precision numbers (1.17, 0.71, 0.32) are produced.
 > 3. Stage 1: "high-EV shifts" → "highest-impact paradigm-shift candidates"
->    with qualitative scoring.
+>  with qualitative scoring.
 > 4. Stage 4: "Likelihood-Span Sensitivity Analysis" → "Judgment Sensitivity
->    Analysis" — tests qualitative ranking robustness under perturbation,
->    does NOT compute numeric EVs.
+>  Analysis" — tests qualitative ranking robustness under perturbation,
+>  does NOT compute numeric EVs.
 > 5. Stage 6: "Optimal Portfolio Allocation / Kelly-like" → "Research Effort
->    Allocation" — effort heuristics based on qualitative ranking, not
->    pseudo-optimal bets.
+>  Allocation" — effort heuristics based on qualitative ranking, not
+>  pseudo-optimal bets.
 > 6. Stage 8: "Adversarial Review" → "Cross-Review" — honest disclosure that
->    the reviewer is a same-model subagent, not independent inter-rater
->    reliability.
+>  the reviewer is a same-model subagent, not independent inter-rater
+>  reliability.
 > 7. All remaining "Bayesian cascade" references scrubbed from execute_plan,
->    v2.23 banner, Stage -1 gate description, and anti-patterns table.
+>  v2.23 banner, Stage -1 gate description, and anti-patterns table.
 > 8. Existing calibration register (Stage 5) and calibration pillars (Stage -1)
->    are retained — these are genuinely useful and honest methodology.
+>  are retained — these are genuinely useful and honest methodology.
 > Cross-reference: Measurement Stratigraphy paper v2.0 which applies this
 > protocol in its `structured-forecast-protocol-v2.md` artifact.
 
@@ -270,45 +300,45 @@ self_sufficient: true
 > and `scripts/build-pdf.py` -- three scripts patched incrementally across
 > 4 kaizen passes, including one wrong detour. Replaced with ONE script:
 > `scripts/build-paper.py` (preprocess + build + verify, UTF-8 forced on
-> all file I/O to prevent mojibake -- see `qnfo-agent` Â§8.7). Usage:
-> `python scripts/build-paper.py paper.md`. Independently re-verified
+> all file I/O to prevent mojibake -- see `qnfo-agent` §8.7). Usage:
+> `python scripts/build-paper.py <slug>.md`. Independently re-verified
 > against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
 > U+FFFF across 16 pages, checked with a separate verification script
 > (never trust the build tool's own success claim).
 
-> **v2.20 UPDATE (2026-07-26, KIF-26 v3 â€” comprehensive preprocessor fix):**
+> **v2.20 UPDATE (2026-07-26, KIF-26 v3 — comprehensive preprocessor fix):**
 > The v2.19 "holistic unicode-math" approach was WRONG. `unicode-math` only
 > applies to characters INSIDE `$...$`. Unicode math in prose uses the text
 > font, which lacks glyphs. `unicode-latex-preprocess.py` v3.0 is the correct
-> solution with: subscript/superscript GROUPING (10â»Â¹Â²â° â†’ `$^{-120}$`),
+> solution with: subscript/superscript GROUPING (10⁻¹²⁰ → `$^{-120}$`),
 > adjacent digits, sqrt patterns, Mathematical Alphanumeric Symbols block,
 > post-processing for subscript bracing. Verified: Zenodo 21597495 = ZERO
-> errors. The `build-pdf.py` wrapper is DEPRECATED â€” use the preprocessor
+> errors. The `build-pdf.py` wrapper is DEPRECATED — use the preprocessor
 > directly with standard pandoc.
 
-> **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution â€” KIF-26 v2):**
+> **v2.19 UPDATE (2026-07-26, holistic PDF Unicode solution — KIF-26 v2):**
 > The v2.18 dictionary-based `unicode-latex-preprocess.py` was a band-aid.
-> Dictionaries can never be comprehensive â€” there are thousands of Unicode
+> Dictionaries can never be comprehensive — there are thousands of Unicode
 > math symbols. The CORRECT solution: configure XeLaTeX to use fonts that
 > HAVE the glyphs. New pipeline:
-> 1. `scripts/build-pdf.py` â€” uses `unicode-math` package + `STIX Two Math`
->    font, which has complete Unicode mathematical symbol coverage
-> 2. `templates/qnfo-xelatex-unicode.yaml` â€” Pandoc defaults file
-> 3. `scripts/check-pdf.py` â€” mandatory verification gate
+> 1. `scripts/build-pdf.py` — uses `unicode-math` package + `STIX Two Math`
+>  font, which has complete Unicode mathematical symbol coverage
+> 2. `templates/qnfo-xelatex-unicode.yaml` — Pandoc defaults file
+> 3. `scripts/check-pdf.py` — mandatory verification gate
 > The old `unicode-latex-preprocess.py` is DEPRECATED. With the correct font
 > configuration, Unicode symbols render directly without conversion.
 > Verified: "Measure-Theoretic Artifacts" paper builds with ZERO errors.
 
-> **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate â€” KIF-26):**
+> **v2.18 UPDATE (2026-07-26, PDF rendering HARD BLOCK gate — KIF-26):**
 > Red-teamed a published Zenodo PDF (21595214) with 135 U+FFFD replacement
 > characters. Root cause: `unicode-latex-preprocess.py` v1.0 only handled
-> numeric subscripts (â‚€-â‚‰) but physics papers use letter subscripts
-> (â‚ â‚‘ â‚’ â‚“ â‚• â‚– â‚— â‚˜ â‚™ â‚š â‚› â‚œ) for â„šâ‚š, vâ‚š(x), etc. Also missing: Ä§ (h-bar),
-> â„“ (script ell), ð”¸ (blackboard A for adeles), and superscript letters.
+> numeric subscripts (₀-₉) but physics papers use letter subscripts
+> (ₐ ₑ ₒ ₓ ₕ ₖ ₗ ₘ ₙ ₚ ₛ ₜ) for ℚₚ, vₚ(x), etc. Also missing: ħ (h-bar),
+> ℓ (script ell), 𝔸 (blackboard A for adeles), and superscript letters.
 > Fix: `unicode-latex-preprocess.py` v2.0 adds ALL subscript/superscript
 > letters + physics symbols; `check-pdf.py` v2.0 is now a MANDATORY
 > PRE-PUBLICATION GATE (exit code 1 = MUST NOT PUBLISH). The PDF build
-> pipeline is now: preprocess â†’ pandoc â†’ **check-pdf.py HARD GATE** â†’ upload.
+> pipeline is now: preprocess → pandoc → **check-pdf.py HARD GATE** → upload.
 > A PDF that fails `check-pdf.py` MUST NOT be published to Zenodo or any
 > public distribution channel.
 
@@ -332,7 +362,7 @@ self_sufficient: true
 > copyediting bar every QNFO publication must clear -- this is the
 > "would a peer reviewer at Foundations of Physics / PRA / NJP accept this
 > without a desk rejection for presentation quality" bar, independent of
-> and in addition to the Physics Writing Standards (`qnfo-agent` Â§7,
+> and in addition to the Physics Writing Standards (`qnfo-agent` §7,
 > content-integrity) and Publication Language Gate (internal-language
 > scrubbing) that already existed. Validated end-to-end: rebuilt *The
 > Macroscopic Boundary Problem in Quantum Reconstructions* on the new
@@ -346,7 +376,7 @@ self_sufficient: true
 > `upload_type`/`publication_type` string-field fallback) and
 > **`references/buffer-graphql-schema.json`** (canonical Buffer GraphQL
 > schema consolidated from the scattered Phase 7 prose below). Added
-> **`scripts/zenodo-resource-type-fix.py`** â€” tries known-working metadata
+> **`scripts/zenodo-resource-type-fix.py`** — tries known-working metadata
 > shapes in order and verifies persistence via re-GET instead of guessing.
 > Consult these reference files BEFORE constructing any Zenodo/Buffer API
 > call. See `qnfo-agent` KIF-20.
@@ -354,15 +384,15 @@ self_sufficient: true
 > **v2.15 UPDATE (2026-07-24, PQS epistemic bias kaizen):** Added three new
 > HARD gates from the PQS AI-Evaluation Audit session:
 > - **Institutional Status Neutrality Gate (KIF-16):** Strip institutional
->   metadata before evaluating claims; use epistemic categories (`[UNFALSIFIABLE]`,
->   `[CONTRADICTS ESTABLISHED EVIDENCE]`, `[UNTESTED]`, `[CONTESTED]`) not
->   social categories ("fringe", "pseudoscience"); open science is real science.
+>  metadata before evaluating claims; use epistemic categories (`[UNFALSIFIABLE]`,
+>  `[CONTRADICTS ESTABLISHED EVIDENCE]`, `[UNTESTED]`, `[CONTESTED]`) not
+>  social categories ("fringe", "pseudoscience"); open science is real science.
 > - **AI Convergence Bias Disclosure (KIF-17):** When 2+ AI systems converge
->   on dismissing a claim, flag explicitly â€” convergence may reflect shared
->   training-data bias, not independent validation.
+>  on dismissing a claim, flag explicitly — convergence may reflect shared
+>  training-data bias, not independent validation.
 > - **Mandatory Symmetry Template (KIF-18):** Every literature review MUST
->   include both "Supporting" AND "Constraining" sections; document structure
->   enforces epistemic balance.
+>  include both "Supporting" AND "Constraining" sections; document structure
+>  enforces epistemic balance.
 > User statement archived: "OPEN SCIENCE IS CHANGING INSTITUTIONAL GATEKEEPERS,
 > AND PUBLIC ACCESS ALWAYS WINS." Cross-references `qnfo-agent` v3.38 and
 > `kaizen-skill-fixes` v1.3.
@@ -379,7 +409,7 @@ self_sufficient: true
 > bare, undiagnostic `__typename`. The v2.13 `Unknown type "PostActionSuccess"`
 > error that led to the false claim was caused by fragmenting on a
 > **non-existent** type name (`Post`) in an earlier attempt, not by any
-> actual GraphQL union restriction â€” a schema-shape mistake mis-generalized
+> actual GraphQL union restriction — a schema-shape mistake mis-generalized
 > into a false rule. `scripts/buffer-post.py` bumped to v1.1 with the
 > corrected mutation (requests `message` on every error variant, `post.id`
 > on success) and tested live for both the success and
@@ -392,62 +422,62 @@ self_sufficient: true
 > repeated Buffer/D1/IPFS failures):** Root-caused and permanently fixed three
 > classes of failure from a single session:
 > 1. **Buffer token was stale in this very skill file.** The hardcoded
->    `1/7feabe69e3c8a6544ee3c20e8b21c2aa` value below was WRONG/EXPIRED and
->    caused ~10 failed Buffer API calls (401/404) before the user supplied a
->    screenshot of the actual valid key (Buffer Personal Access Token,
->    prefix `14Ky`, created 2026-06-21, 7 scopes). **Skills MUST NOT hardcode
->    live secret values that can silently go stale** -- see the corrected
->    Buffer section below, which now stores the token ONLY in
->    `%USERPROFILE%\buffer\token` and instructs verification via a live GET
->    before any POST, exactly like the Zenodo Credential Protocol already
->    mandates. Endpoint is `https://api.bufferapp.com/1.0/graphql.json`
->    (confirmed live) -- `createDraft` mutation works, but there is NO
->    `drafts` query on this schema (attempting one returns 404 "endpoint
->    not found" -- this is normal, not a fault; do not misdiagnose it as a
->    broken token).
+>  `1/7feabe69e3c8a6544ee3c20e8b21c2aa` value below was WRONG/EXPIRED and
+>  caused ~10 failed Buffer API calls (401/404) before the user supplied a
+>  screenshot of the actual valid key (Buffer Personal Access Token,
+>  prefix `14Ky`, created 2026-06-21, 7 scopes). **Skills MUST NOT hardcode
+>  live secret values that can silently go stale** -- see the corrected
+>  Buffer section below, which now stores the token ONLY in
+>  `%USERPROFILE%\buffer\token` and instructs verification via a live GET
+>  before any POST, exactly like the Zenodo Credential Protocol already
+>  mandates. Endpoint is `https://api.bufferapp.com/1.0/graphql.json`
+>  (confirmed live) -- `createDraft` mutation works, but there is NO
+>  `drafts` query on this schema (attempting one returns 404 "endpoint
+>  not found" -- this is normal, not a fault; do not misdiagnose it as a
+>  broken token).
 > 2. **D1 REST API account ID was wrong.** Using an incorrect Cloudflare
->    account ID against `POST /accounts/{id}/d1/database/{uuid}/query`
->    produces a misleading 401/404 that looks like a scope problem but is
->    actually a wrong-account-ID problem. `npx wrangler whoami` prints the
->    correct account ID directly from the live `CLOUDFLARE_API_TOKEN` --
->    ALWAYS run this first, never hardcode or guess the account ID.
->    Additionally, `wrangler d1 execute <name> --remote` FAILS with
->    "Couldn't find a D1 DB with name/binding" unless that name is bound in
->    a local `wrangler.toml`/`wrangler.jsonc` -- for databases with no local
->    binding (common for shared infra DBs like `living-paper`), use the
->    Cloudflare REST API directly with the UUID from `wrangler d1 list`
->    (or `GET /accounts/{id}/d1/database`), not the `d1 execute` CLI.
+>  account ID against `POST /accounts/{id}/d1/database/{uuid}/query`
+>  produces a misleading 401/404 that looks like a scope problem but is
+>  actually a wrong-account-ID problem. `npx wrangler whoami` prints the
+>  correct account ID directly from the live `CLOUDFLARE_API_TOKEN` --
+>  ALWAYS run this first, never hardcode or guess the account ID.
+>  Additionally, `wrangler d1 execute <name> --remote` FAILS with
+>  "Couldn't find a D1 DB with name/binding" unless that name is bound in
+>  a local `wrangler.toml`/`wrangler.jsonc` -- for databases with no local
+>  binding (common for shared infra DBs like `living-paper`), use the
+>  Cloudflare REST API directly with the UUID from `wrangler d1 list`
+>  (or `GET /accounts/{id}/d1/database`), not the `d1 execute` CLI.
 > 3. **D1 `ON CONFLICT` upsert on the `living-paper.papers` table returned
->    HTTP 400.** The table has FTS5 shadow tables/triggers (`papers_fts`,
->    `papers_fts_data`, etc.) that can make `ON CONFLICT DO UPDATE` behave
->    unpredictably. Fix: `SELECT` to check existence first, then choose a
->    plain `INSERT` (no `ON CONFLICT`) or a plain `UPDATE` -- never a
->    combined upsert on this table. A single successful INSERT reports
->    `changes` > 1 because of FTS trigger fan-out; that is expected, not a
->    duplicate-row bug.
+>  HTTP 400.** The table has FTS5 shadow tables/triggers (`papers_fts`,
+>  `papers_fts_data`, etc.) that can make `ON CONFLICT DO UPDATE` behave
+>  unpredictably. Fix: `SELECT` to check existence first, then choose a
+>  plain `INSERT` (no `ON CONFLICT`) or a plain `UPDATE` -- never a
+>  combined upsert on this table. A single successful INSERT reports
+>  `changes` > 1 because of FTS trigger fan-out; that is expected, not a
+>  duplicate-row bug.
 > 4. **All non-Cloudflare/non-native IPFS pinning services (Filebase,
->    Pinata, Lighthouse, web3.storage, w3up) are DEPRECATED as of this
->    version and MUST NOT be used or referenced as an action item.** Per
->    explicit product direction: IPFS distribution for QNFO publications
->    uses ONLY (a) Cloudflare R2 as the durable byte-store, (b) a locally
->    computed CIDv1 (sha2-256, raw codec, base32) for content-addressing
->    with no third-party pinning dependency, and (c) Cloudflare DNS
->    DNSLink TXT records (`_dnslink.<slug>.qnfo.org` -> `dnslink=/ipfs/<CID>`)
->    as the sole naming/distribution layer -- verified via
->    `nslookup -type=TXT _dnslink.<slug>.qnfo.org` and (once propagated)
->    `https://dweb.link/ipns/<slug>.qnfo.org` or `https://cloudflare-ipfs.com`.
->    Every prior "Filebase primary / Lighthouse secondary" instruction in
->    this skill is now VOID -- see the rewritten IPFS section below.
+>  Pinata, Lighthouse, web3.storage, w3up) are DEPRECATED as of this
+>  version and MUST NOT be used or referenced as an action item.** Per
+>  explicit product direction: IPFS distribution for QNFO publications
+>  uses ONLY (a) Cloudflare R2 as the durable byte-store, (b) a locally
+>  computed CIDv1 (sha2-256, raw codec, base32) for content-addressing
+>  with no third-party pinning dependency, and (c) Cloudflare DNS
+>  DNSLink TXT records (`_dnslink.<slug>.qnfo.org` -> `dnslink=/ipfs/<CID>`)
+>  as the sole naming/distribution layer -- verified via
+>  `nslookup -type=TXT _dnslink.<slug>.qnfo.org` and (once propagated)
+>  `https://dweb.link/ipns/<slug>.qnfo.org` or `https://cloudflare-ipfs.com`.
+>  Every prior "Filebase primary / Lighthouse secondary" instruction in
+>  this skill is now VOID -- see the rewritten IPFS section below.
 > 5. **PowerShell inline `python -c "..."` is now a HARD BLOCK, not just an
->    anti-pattern note.** This exact session lost >15 tool calls to
->    `SyntaxError: unterminated string literal` / `The '<' operator is
->    reserved` from inline quoting collisions between PowerShell's parser
->    and Python string literals containing `"`, `<`, `>`, or JSON braces.
->    The `write` -> `exec <file>.py` -> delete pattern (kaizen fix B1,
->    already documented below) is MANDATORY for any Python beyond a
->    zero-quote one-liner -- treat any `python -c` call containing a
->    quote character, an angle bracket, or a dict/JSON literal as
->    guaranteed to fail and write a file first without even attempting it.
+>  anti-pattern note.** This exact session lost >15 tool calls to
+>  `SyntaxError: unterminated string literal` / `The '<' operator is
+>  reserved` from inline quoting collisions between PowerShell's parser
+>  and Python string literals containing `"`, `<`, `>`, or JSON braces.
+>  The `write` -> `exec <file>.py` -> delete pattern (kaizen fix B1,
+>  already documented below) is MANDATORY for any Python beyond a
+>  zero-quote one-liner -- treat any `python -c` call containing a
+>  quote character, an angle bracket, or a dict/JSON literal as
+>  guaranteed to fail and write a file first without even attempting it.
 
 > **v2.9 UPDATE (2026-07-21, Zenodo credential incident):** Added the
 > **Zenodo Credential Protocol** section (in Phase 5, immediately before
@@ -471,9 +501,9 @@ self_sufficient: true
 > web3.storage, w3up, etc.) are out of scope for QNFO publications. Use
 > ONLY Cloudflare R2 + locally-computed CIDv1 + Cloudflare DNS DNSLink.
 
-> **v2.6 UPDATE (2026-07-20, kaizen audit):** Added `scripts/unicode-latex-preprocess.py` (fixes XeLaTeX Unicode-glyph and `keywords:`-field build failures -- A1/A2), `scripts/check-pdf.py` (PyMuPDF preflight + file-lock-safe replace -- B4/B5), `scripts/credential-scan.py` (pre-commit + pre-publish token leak scanner -- A4/C1/D2) wired into the Phase Closeout Protocol STEP 0.5 and the Publication Language Gate, `templates/gitignore-research-project-template.txt` for new project repos, a PROVENANCE-BUNDLE.zip hard gate before Zenodo upload (A3), `.zenodo_versions.json` version-chain tracking convention (C2), a Vectorize confirmation-bias disclosure requirement (C3), a multi-pinner IPFS fallback order Pinataâ†’Filebaseâ†’Lighthouse (C4), documented Windows/PowerShell anti-patterns for inline `python -c`, `&&` chaining, and `curl` aliasing (B1/B2/B3), a YAML `---` delimiter conflict check (D3), an auto-discover related_identifiers KG query step (D4), a tag-backfill check in Phase Closeout (D1), and an Obsidian/external-path source material limitation note (C5/D5).
+> **v2.6 UPDATE (2026-07-20, kaizen audit):** Added `scripts/unicode-latex-preprocess.py` (fixes XeLaTeX Unicode-glyph and `keywords:`-field build failures -- A1/A2), `scripts/check-pdf.py` (PyMuPDF preflight + file-lock-safe replace -- B4/B5), `scripts/credential-scan.py` (pre-commit + pre-publish token leak scanner -- A4/C1/D2) wired into the Phase Closeout Protocol STEP 0.5 and the Publication Language Gate, `templates/gitignore-research-project-template.txt` for new project repos, a PROVENANCE-BUNDLE.zip hard gate before Zenodo upload (A3), `.zenodo_versions.json` version-chain tracking convention (C2), a Vectorize confirmation-bias disclosure requirement (C3), a multi-pinner IPFS fallback order Pinata→Filebase→Lighthouse (C4), documented Windows/PowerShell anti-patterns for inline `python -c`, `&&` chaining, and `curl` aliasing (B1/B2/B3), a YAML `---` delimiter conflict check (D3), an auto-discover related_identifiers KG query step (D4), a tag-backfill check in Phase Closeout (D1), and an Obsidian/external-path source material limitation note (C5/D5).
 
-> **v2.5 UPDATE (2026-07-19): Added OSF Project Registration (Phase 5.5) for major research with falsifiable predictions. Added P11 (OSF GATE-CONDITIONAL) to Pre-Flight checklist. OSF policy: all resources public by default, API-only automation, external links (Zenodo/GitHub/IPFS) replace file uploads ï¿½ NEVER require manual browser interaction.
+> **v2.5 UPDATE (2026-07-19): Added OSF Project Registration (Phase 5.5) for major research with falsifiable predictions. Added P11 (OSF GATE-CONDITIONAL) to Pre-Flight checklist. OSF policy: all resources public by default, API-only automation, external links (Zenodo/GitHub/IPFS) replace file uploads NEVER require manual browser interaction.
 
 > **v2.4 UPDATE's R2-Immediate-Write + Per-Turn Checkpoint Protocol (per-turn R2 sync, phase-end GitHub push + Zenodo version, session/project-conclusion IPFS pin + social promotion for FINAL deliverables only).
 
@@ -486,40 +516,40 @@ self_sufficient: true
 ## execute_plan
 
 update_plan([
-  {"step": "Phase 0: Project Initialization -- repo, scaffold, WBS, core claim lock", "status": "pending"},
-  {"step": "Pre-Flight: Run P1-P11 checklist -- HARD gates must pass before Phase 1", "status": "pending"},
-  {"step": "Phase 1: Due Diligence -- query KG + D1 + Vectorize + external sources", "status": "pending"},
-  {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
-  {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
-  {"step": "Phase 4: Deep Research -- structured forecast protocol (mandatory, scope-scaled; produces forecast artifacts)", "status": "pending"},
-  {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
-  {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
-  {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
-  {"step": "Phase 8: Core Distribution -- GitHub push + tag, Zenodo new-version, R2 archive sync, D1/KG records, DNSLink (optional)", "status": "pending"},
+ {"step": "Phase 0: Project Initialization -- repo, scaffold, WBS, core claim lock", "status": "pending"},
+ {"step": "Pre-Flight: Run P1-P11 checklist -- HARD gates must pass before Phase 1", "status": "pending"},
+ {"step": "Phase 1: Due Diligence -- query KG + D1 + Vectorize + external sources", "status": "pending"},
+ {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
+ {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
+ {"step": "Phase 4: Deep Research -- structured forecast protocol (mandatory, scope-scaled; produces forecast artifacts)", "status": "pending"},
+ {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
+ {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
+ {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
+ {"step": "Phase 8: Core Distribution -- GitHub push + tag, Zenodo new-version, R2 archive sync, D1/KG records, DNSLink (optional)", "status": "pending"},
 ])
 
 **Note:** Phase 0 and the Pre-Flight checklist apply to net-new, long-lived research projects (new repo, new WBS). For a single paper/update within an existing project, skip directly to Phase 1.
 
 ---
 
-## Tool-Call Execution Mandate (Anti-Phantom Gate â€” MANDATORY, 2026-07-21)
+## Tool-Call Execution Mandate (Anti-Phantom Gate — MANDATORY, 2026-07-21)
 
 This skill already carries extensive per-phase verification gates (BibTeX
 audit, PDF rendering check, DOI resolution, papers-server HTTP 200, etc.).
 This section is the umbrella rule they all serve: **no remote publication
-action â€” Zenodo deposit, GitHub push/tag/release, R2 upload, D1
-living-paper insert, OSF registration, Buffer post â€” may be reported as
+action — Zenodo deposit, GitHub push/tag/release, R2 upload, D1
+living-paper insert, OSF registration, Buffer post — may be reported as
 successful without an INDEPENDENT re-query of the live state in the SAME
 turn.** An API's immediate `"success": true`/`201 Created` response is the
-FIRST signal, not the LAST â€” it confirms the request was accepted, not
+FIRST signal, not the LAST — it confirms the request was accepted, not
 that the artifact is durably live and correct.
 
-1. **Zenodo** â€” never report "published" from the create/publish API response alone. Wait for indexing, then verify via `curl -sI https://doi.org/10.5281/zenodo.<id>` returning HTTP 200 (not the Zenodo API's own state field).
-2. **Git push** â€” verify via an independent GitHub API query (`GET /repos/{owner}/{repo}/commits/{sha}`) or `git ls-remote origin <branch>`, not the local push exit code alone.
-3. **R2 upload** â€” download the file back (`wrangler r2 object get ... --remote`) and compare size/hash to the source.
-4. **D1 living-paper / KG inserts** â€” re-run a `SELECT`/`/neighbors` query and show the row/edge actually present.
-5. **OSF registrations** â€” confirm via `GET /v2/registrations/{id}/` showing the real `date_registered`/`pending_registration_approval` state, never assert "registered" from the POST response body alone.
-6. **Any claim this session already reported success on** â€” if closing out or continuing a prior session's claim, re-verify live state before repeating the claim; a prior turn's phantom claim propagates if not re-checked (see memory: never trust a remote action as successful without confirming actual server-side state).
+1. **Zenodo** — never report "published" from the create/publish API response alone. Wait for indexing, then verify via `curl -sI https://doi.org/10.5281/zenodo.<id>` returning HTTP 200 (not the Zenodo API's own state field).
+2. **Git push** — verify via an independent GitHub API query (`GET /repos/{owner}/{repo}/commits/{sha}`) or `git ls-remote origin <branch>`, not the local push exit code alone.
+3. **R2 upload** — download the file back (`wrangler r2 object get ... --remote`) and compare size/hash to the source.
+4. **D1 living-paper / KG inserts** — re-run a `SELECT`/`/neighbors` query and show the row/edge actually present.
+5. **OSF registrations** — confirm via `GET /v2/registrations/{id}/` showing the real `date_registered`/`pending_registration_approval` state, never assert "registered" from the POST response body alone.
+6. **Any claim this session already reported success on** — if closing out or continuing a prior session's claim, re-verify live state before repeating the claim; a prior turn's phantom claim propagates if not re-checked (see memory: never trust a remote action as successful without confirming actual server-side state).
 7. If live re-verification cannot be run in this turn, the response MUST read `[NOT-VERIFIED: reason]` instead of "published"/"deployed"/"live"/"confirmed".
 
 ---
@@ -533,13 +563,13 @@ that the artifact is durably live and correct.
 Standard directory scaffold:
 ```
 <project-slug>/
-â”œâ”€â”€ README.md
-â”œâ”€â”€ PROJECT-PLAN.md
-â”œâ”€â”€ .gitignore
-â”œâ”€â”€ docs/            # Source documents, prior work
-â”œâ”€â”€ artifacts/       # Literature reviews, gate memos, test results
-â”œâ”€â”€ notebooks/       # Working notes, calculation notebooks
-â””â”€â”€ releases/        # Versioned Zenodo-ready bundles
+├── README.md
+├── PROJECT-PLAN.md
+├── .gitignore
+├── docs/      # Source documents, prior work
+├── artifacts/    # Literature reviews, gate memos, test results
+├── notebooks/    # Working notes, calculation notebooks
+└── releases/    # Versioned Zenodo-ready bundles
 ```
 
 Git init on feature branch (NEVER main/master). Create GitHub repo via `gh repo create`.
@@ -551,20 +581,20 @@ scripts frequently contain hardcoded tokens during development), `.env`,
 the qnfo-skills allowlist repo -- it needs its own permissive `.gitignore`,
 not the skills repo's default-deny one.
 
-**REPO-TARGET GATE (HARD, MANDATORY â€” check before `git init`/`git tag`/`gh repo create`):**
+**REPO-TARGET GATE (HARD, MANDATORY — check before `git init`/`git tag`/`gh repo create`):**
 ```
-git remote -v   # or: git -C <target-dir> remote -v
+git remote -v  # or: git -C <target-dir> remote -v
 ```
 Verify the remote/working directory is the project's OWN repo
-(`QNFO/<project-name>` or `QNFO/qnfo-research`) â€” **NEVER `QNFO/qnfo-skills`.**
+(`QNFO/<project-name>` or `QNFO/qnfo-research`) — **NEVER `QNFO/qnfo-skills`.**
 `qnfo-skills` is a skills-only repo (ADR-026) and its tags/releases are
 reserved for skill versioning, never research project phases. This check
 applies to every step in this skill that creates a git tag, commit, or
-GitHub Release â€” not just Phase 0. Verify the repo target FRESH each time;
+GitHub Release — not just Phase 0. Verify the repo target FRESH each time;
 do not assume a prior verification still holds after switching directories,
 subagent delegation, or a long session. **A single misdirected `git tag` or
 `gh release create` inside qnfo-skills is a policy violation that requires
-full remediation (backup + delete + audit) â€” see ADR-026 Incident 3.**
+full remediation (backup + delete + audit) — see ADR-026 Incident 3.**
 
 ### 0.2 Project Plan and WBS
 
@@ -572,7 +602,7 @@ Write `PROJECT-PLAN.md` with: Charter, Phases with WBS, Milestones with gate cri
 
 ### 0.3 Core Claim Lock
 
-If project audits/evaluates a claim: restate in logically valid, falsifiable terms. Document original AND reformulation if original had errors. Lock in `PROJECT-PLAN.md Â§1.2`.
+If project audits/evaluates a claim: restate in logically valid, falsifiable terms. Document original AND reformulation if original had errors. Lock in `PROJECT-PLAN.md §1.2`.
 
 ### 0.4 Knowledge Graph / Memory Seed
 
@@ -604,12 +634,12 @@ assume such files don't exist just because a glob search returns empty.
 | **P3** | Directory structure created? (`docs/`, `artifacts/`, `notebooks/`, `releases/`) | HARD | Directory listing shows all 4 dirs |
 | **P4** | `PROJECT-PLAN.md` written with charter, WBS, milestones, deliverables, risks? | HARD | All 6 sections populated; no placeholder text |
 | **P5** | `README.md` written with project overview? | SOFT | File exists with name, status, quick start |
-| **P6** | Core claim reformulated and locked (if applicable)? | HARD | `PROJECT-PLAN.md Â§1.2` contains locked, logically valid formulation |
+| **P6** | Core claim reformulated and locked (if applicable)? | HARD | `PROJECT-PLAN.md §1.2` contains locked, logically valid formulation |
 | **P7** | `.gitignore` present? | SOFT | File exists covering IDE, OS, build artifacts |
 | **P8** | Phase 0 committed, tagged, and pushed? | HARD | `git tag -l 'v0.1*'` returns tag; `git log -1 --oneline` shows Phase 0 commit |
 | **P9** | Project logged to Knowledge Graph / working memory? | SOFT | Memory recall returns project entry |
 | **P10** | Cross-skill integration checklist reviewed? | SOFT | All relevant skills loaded per integration table |
-| **P11** | OSF project created for qualifying research? (MAJOR projects ONLY â€” skip for exploratory studies, single papers, or minor updates) | SOFT-CONDITIONAL | OSF API: project public, components linked to Zenodo/GitHub, registration drafts created. File upload via API NOT supported â€” use external links (Zenodo DOI, GitHub raw) instead. NEVER require manual browser interaction. ALL OSF resources must be public. |
+| **P11** | OSF project created for qualifying research? (MAJOR projects ONLY — skip for exploratory studies, single papers, or minor updates) | SOFT-CONDITIONAL | OSF API: project public, components linked to Zenodo/GitHub, registration drafts created. File upload via API NOT supported — use external links (Zenodo DOI, GitHub raw) instead. NEVER require manual browser interaction. ALL OSF resources must be public. |
 
 **If any HARD gate fails:** BLOCK research launch. Fix the gap and re-run.
 
@@ -686,15 +716,15 @@ will otherwise reject the push after the fact -- catching it pre-commit
 avoids a rewritten-history remediation.
 
 ```
-1. COMMIT:  git add <phase-artifacts> ; python <research-skill-path>/scripts/credential-scan.py --staged ; git commit -m "ACTION:CREATE FILE: <files> RATIONALE: Phase N complete"
-2. TAG:     git tag v<major>.<minor>-<phase-slug> -m "Phase N: <description>"
-3. PUSH:    git push origin <feature-branch> --tags
-4. VERIFY:  git log -1 --oneline && git branch --show-current && git status --short
-5. LOG:     memory_remember(content="Phase N completed. Deliverables: <list>.")
-6. TAG-BACKFILL-CHECK (kaizen fix D1): git tag -l 'v*'  # confirm ALL prior
-   phase tags exist -- a missing tag from an earlier phase (e.g. Phase 0's
-   v0.1-phase0 never created) should be discovered and backfilled NOW, not
-   discovered later during an audit.
+1. COMMIT: git add <phase-artifacts> ; python <research-skill-path>/scripts/credential-scan.py --staged ; git commit -m "ACTION:CREATE FILE: <files> RATIONALE: Phase N complete"
+2. TAG:   git tag v<major>.<minor>-<phase-slug> -m "Phase N: <description>"
+3. PUSH:  git push origin <feature-branch> --tags
+4. VERIFY: git log -1 --oneline && git branch --show-current && git status --short
+5. LOG:   memory_remember(content="Phase N completed. Deliverables: <list>.")
+6. TAG-BACKFILL-CHECK (kaizen fix D1): git tag -l 'v*' # confirm ALL prior
+  phase tags exist -- a missing tag from an earlier phase (e.g. Phase 0's
+  v0.1-phase0 never created) should be discovered and backfilled NOW, not
+  discovered later during an audit.
 ```
 *(Windows PowerShell note -- kaizen fix B2: use `;` to chain commands, not
 `&&`. `cmd /c "cmd1 && cmd2"` also works but breaks on inner quoting; prefer
@@ -728,8 +758,8 @@ avoids a rewritten-history remediation.
 
 **(b) External Literature Search (MANDATORY):**
 - arXiv API, OpenAlex (PRIMARY academic index — keyless), Crossref (DOI registry — keyless),
-  Zenodo records API (`zenodo.org/api/records?q=...` — search OTHER users' deposits, keyless),
-  Europe PMC (keyless), web search
+ Zenodo records API (`zenodo.org/api/records?q=...` — search OTHER users' deposits, keyless),
+ Europe PMC (keyless), web search
 - Deduplicate against QNFO papers from step (a)
 - Report: "External Literature: Found N papers (M core, K supporting, J background)"
 
@@ -761,14 +791,14 @@ diligence report -- do not silently present internal-only hits as validation.
 2. **Evaluate substance directly.** Extract the claim. Identify what evidence would support it. Identify what evidence would falsify it. Search for both.
 
 3. **Never use "fringe" or "pseudoscience" as a classification.** These are social categories, not epistemic ones. Use instead:
-   - `[UNFALSIFIABLE]` â€” no conceivable observation would disconfirm this
-   - `[CONTRADICTS ESTABLISHED EVIDENCE: <specific evidence>]` â€” name the evidence
-   - `[UNTESTED]` â€” falsifiable but no relevant experiments exist
-   - `[CONTESTED: <specific debate>]` â€” active scientific disagreement exists
+  - `[UNFALSIFIABLE]` — no conceivable observation would disconfirm this
+  - `[CONTRADICTS ESTABLISHED EVIDENCE: <specific evidence>]` — name the evidence
+  - `[UNTESTED]` — falsifiable but no relevant experiments exist
+  - `[CONTESTED: <specific debate>]` — active scientific disagreement exists
 
 4. **Open science is real science.** Zenodo, SSRN, ResearchGate, arXiv, and personal websites are legitimate publication channels. Many paradigm-shifting papers (Einstein 1905, Bell 1964, Aspect 1982) were initially self-published or preprinted. Lack of traditional peer review is NOT a heuristic for unreliability.
 
-**GATE:** If any investigation document contains the words "fringe," "pseudoscience," "crank," or "crackpot" without an accompanying `[CONTRADICTS ESTABLISHED EVIDENCE: <specific>]` citation â†’ BLOCKED. Revise to use epistemic categories, not social categories.
+**GATE:** If any investigation document contains the words "fringe," "pseudoscience," "crank," or "crackpot" without an accompanying `[CONTRADICTS ESTABLISHED EVIDENCE: <specific>]` citation → BLOCKED. Revise to use epistemic categories, not social categories.
 
 ### AI Convergence Bias Disclosure (KIF-17, HARD when triggered)
 
@@ -777,12 +807,12 @@ diligence report -- do not silently present internal-only hits as validation.
 1. **Convergence is NOT validation.** If Claude, Gemini, GPT, and other AI systems all converge on the same evaluation of a claim, this does NOT constitute independent confirmation. All large language models share overlapping training data (web text, academic papers, Wikipedia) that encodes "mainstream consensus" as the default position.
 
 2. **Flag convergence explicitly.** If 2+ AI evaluations agree on dismissing a claim, append:
-   ```
-   [AI-CONVERGENCE-WARNING: Multiple AI systems converged on this evaluation.
-   This may reflect shared training-data priors rather than independent analysis.
-   AI systems systematically underweight paradigm-challenging claims because
-   "mainstream consensus" is overrepresented in training corpora.]
-   ```
+  ```
+  [AI-CONVERGENCE-WARNING: Multiple AI systems converged on this evaluation.
+  This may reflect shared training-data priors rather than independent analysis.
+  AI systems systematically underweight paradigm-challenging claims because
+  "mainstream consensus" is overrepresented in training corpora.]
+  ```
 
 3. **Do not treat AI dismissal as authoritative.** An AI saying "this contradicts Bell's theorem" is a STARTING POINT for investigation, not a CONCLUSION. Verify: Does the claim actually contradict Bell's theorem, or does it invoke a known loophole (measurement independence, superdeterminism, retrocausality)? AI systems often oversimplify technical debates.
 
@@ -808,9 +838,9 @@ diligence report -- do not silently present internal-only hits as validation.
 ## Cross-Domain Lexicon
 | Source Term | Physics | CS | CogSci | InfoTheory | Biology | Sociology |
 |:------------|:--------|:---|:-------|:-----------|:--------|:----------|
-| [term 1]    | ... | ... | ... | ... | ... | ... |
-| [term 2]    | ... | ... | ... | ... | ... | ... |
-| [term 3]    | ... | ... | ... | ... | ... | ... |
+| [term 1]  | ... | ... | ... | ... | ... | ... |
+| [term 2]  | ... | ... | ... | ... | ... | ... |
+| [term 3]  | ... | ... | ... | ... | ... | ... |
 
 ## Domain Translations
 ### Physics
@@ -950,7 +980,7 @@ constrain, limit, or contradict the claim being investigated. Include DOIs.
 This section MUST NOT be empty or contain only hedging language.]
 ```
 
-**GATE:** If a literature review contains a "Supporting" section but no "Constraining" section (or vice versa) â†’ BLOCKED. Epistemic symmetry is structural, not optional.
+**GATE:** If a literature review contains a "Supporting" section but no "Constraining" section (or vice versa) → BLOCKED. Epistemic symmetry is structural, not optional.
 
 **Anti-pattern:** "The literature is broadly supportive, with some minor caveats" is NOT a constraining section. Name specific constraining evidence or explicitly state `[NO CONSTRAINING EVIDENCE FOUND IN SEARCH: <search terms used>]`.
 
@@ -978,9 +1008,9 @@ Extract citations from paper markdown using regex patterns:
 import re, sys
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
-    paper = f.read()
+  paper = f.read()
 with open(sys.argv[2], 'r', encoding='utf-8') as f:
-    bib = f.read()
+  bib = f.read()
 
 # Extract all citation keys from paper
 paper_cites = set(re.findall(r'@(\w+)', paper))
@@ -1010,13 +1040,13 @@ abstracts, presentations — do NOT name the methodology. Do not write "We appli
 a Structured Forecast Protocol" or "per Stage 4 sensitivity analysis." The reader
 should see good analysis, not methodology signage. Bury the method in the prose:
 - Instead of "Stage 2 Assumption Audit found..." write "Underlying this candidate are
-  three critical assumptions: ..."
+ three critical assumptions: ..."
 - Instead of "Qualitative Ranking from the forecast protocol" write "We assess the
-  candidates comparatively: ..."
+ candidates comparatively: ..."
 - Instead of "per the Calibration Register" write "We register the following
-  dated, falsifiable predictions: ..."
+ dated, falsifiable predictions: ..."
 - Instead of "red-teamed by five adversary positions" write "We examined challenges
-  from multiple adversarial perspectives: ..."
+ from multiple adversarial perspectives: ..."
 The artifact file (`structured-forecast-protocol-v2.md`) documents the full analysis
 method — cite it as a supplementary reference, not as a branded protocol.
 
@@ -1026,9 +1056,9 @@ method — cite it as a supplementary reference, not as a branded protocol.
 
 **GATE:** Every P(E|H) or P(E|¬H) likelihood value > 0.80 assigned in Stage 2
 MUST trace to at least one empirical calibration pillar BEFORE it enters the
-structured forecast protocol.  Likelihoods assigned without an anchor are "well-quantified
+structured forecast protocol. Likelihoods assigned without an anchor are "well-quantified
 noise" — precise decimals communicating false quantitative precision for
-what are fundamentally directionally informed human intuitions.  9 stages of
+what are fundamentally directionally informed human intuitions. 9 stages of
 arithmetic on uncalibrated numbers produces rankings that reflect optimism
 bias, not reality, and Stage 6's effort allocation then commits *real
 resources* based on compounded intuitions.
@@ -1046,21 +1076,21 @@ resources* based on compounded intuitions.
 **Protocol (run BEFORE Stage 2 assumption audit):**
 
 1. For every assumption that will receive a P(E|H) > 0.80, identify which
-   calibration pillar(s) apply.  Document the anchor in
-   `artifacts/likelihood-calibration.md` using the template below.
+  calibration pillar(s) apply. Document the anchor in
+  `artifacts/likelihood-calibration.md` using the template below.
 2. Run calibration training (≥20-question confidence interval quiz).
-   Measure Brier score.  If Brier > 0.15, apply the overconfidence adjustment
-   factor to ALL likelihoods > 0.80 in this protocol.
+  Measure Brier score. If Brier > 0.15, apply the overconfidence adjustment
+  factor to ALL likelihoods > 0.80 in this protocol.
 3. Delegate the same assumptions to a REVIEWER subagent for independent
-   assignment.  If divergence > 0.15 on any assumption, use the more
-   conservative value and flag the disagreement in the calibration report.
+  assignment. If divergence > 0.15 on any assumption, use the more
+  conservative value and flag the disagreement in the calibration report.
 4. Any raw likelihood > 0.80 that CANNOT be anchored to an empirical pillar
-   is **capped at 0.80** and labeled `[CALIBRATION-CAP: no empirical pillar
-   for P > 0.80]`.
+  is **capped at 0.80** and labeled `[CALIBRATION-CAP: no empirical pillar
+  for P > 0.80]`.
 5. Calibration training is **mandatory** the first time any proposal passes
-   through the full protocol.  Subsequent proposals by the same agent
-   may reuse the same calibration score if the training was completed within
-   the same session or < 7 days prior.
+  through the full protocol. Subsequent proposals by the same agent
+  may reuse the same calibration score if the training was completed within
+  the same session or < 7 days prior.
 
 **Required output: `artifacts/likelihood-calibration.md`**
 
@@ -1076,34 +1106,34 @@ resources* based on compounded intuitions.
 | ... | ... | ... | ... | ... |
 
 ## Calibration Training Results
-Brier score: {value}  |  Overconfidence error: {value}  |  Adjustment factor: {value}
+Brier score: {value} | Overconfidence error: {value} | Adjustment factor: {value}
 
 ## Inter-Rater Reliability
 | Assumption | Agent Value | Reviewer Value | Divergence | Resolution |
 |:-----------|:------------|:---------------|:-----------|:-----------|
-| H1 E1      | 0.90 (raw)  | 0.72           | 0.18       | Conservative (0.72) used |
+| H1 E1   | 0.90 (raw) | 0.72      | 0.18    | Conservative (0.72) used |
 ```
 
 **HARD GATE checks before Stage 2 may proceed:**
 1. Every raw likelihood > 0.80 has a documented empirical pillar — or is
-   capped at 0.80 with the `[CALIBRATION-CAP]` tag.
-2. Calibration training Brier score recorded.  If > 0.15, the adjustment
-   factor has been applied to all > 0.80 likelihoods.
+  capped at 0.80 with the `[CALIBRATION-CAP]` tag.
+2. Calibration training Brier score recorded. If > 0.15, the adjustment
+  factor has been applied to all > 0.80 likelihoods.
 3. Inter-rater reliability report exists (REVIEWER subagent assigned every
-   assumption independently).
+  assumption independently).
 4. `artifacts/likelihood-calibration.md` is committed before any Stage 2
-   assumption table is populated.
+  assumption table is populated.
 
 **Integration with the protocol:** Calibrated likelihoods from Stage -1 are
-the *only* values that enter Stage 2's Enabling Assumptions Table.  Raw
+the *only* values that enter Stage 2's Enabling Assumptions Table. Raw
 (pre-calibration) values are recorded for transparency in the calibration
-report but never flow into the protocol's judgment framework.  Stage 4 sensitivity
+report but never flow into the protocol's judgment framework. Stage 4 sensitivity
 analysis (see below) operates on the calibrated values and their documented
 spans.
 
 **Relationship to Stage 5 Calibration Register:** Stage -1 calibrates the
-*inputs* to the protocol (the likelihood judgments).  Stage 5 calibrates the *outputs*
-of the protocol (the predictions).  Both are required — calibrating inputs
+*inputs* to the protocol (the likelihood judgments). Stage 5 calibrates the *outputs*
+of the protocol (the predictions). Both are required — calibrating inputs
 without tracking outputs, or tracking outputs without calibrated inputs, is
 each a half-measure that leaves the other half unverified.
 
@@ -1137,30 +1167,30 @@ plausible perturbations of the analyst's judgments.
 For each candidate:
 
 1. **Judgment Span Perturbation:** Identify the judgment's documented uncertainty range
-   (from Stage -1 calibration pillars). Test:
-   - **Pessimistic scenario:** All judgments moved to their lower bounds
-   - **Optimistic scenario:** All judgments moved to their upper bounds
-   Does the qualitative ranking hold across both extremes? If the ranking reverses
-   in EITHER extreme, flag the reversal explicitly — the ranking is NOT robust.
+  (from Stage -1 calibration pillars). Test:
+  - **Pessimistic scenario:** All judgments moved to their lower bounds
+  - **Optimistic scenario:** All judgments moved to their upper bounds
+  Does the qualitative ranking hold across both extremes? If the ranking reverses
+  in EITHER extreme, flag the reversal explicitly — the ranking is NOT robust.
 
 2. **Skeptical-priors stress test:** Halve all optimistic priors (retained from prior
-   version — this tests whether the ranking survives if the analyst is systematically
-   overconfident). If halving priors changes the ranking, the analyst is likely
-   overconfident.
+  version — this tests whether the ranking survives if the analyst is systematically
+  overconfident). If halving priors changes the ranking, the analyst is likely
+  overconfident.
 
 3. **Dependency correlation stress-test:** For candidates with shared prerequisites
-   (e.g., B requires A; C requires A and B), test the correlated-failure scenario:
-   if Candidate A fails, how severely do B and C degrade? Flag any cascade risk.
+  (e.g., B requires A; C requires A and B), test the correlated-failure scenario:
+  if Candidate A fails, how severely do B and C degrade? Flag any cascade risk.
 
 4. **Output:** Qualitative robustness statement:
-   ```
-   Ranking: A > B > C
-   Robustness: [ROBUST] | [CONDITIONAL: <which perturbation flips it>] | [FRAGILE: <which perturbations flip it>]
-   Pessimistic ranking: [A > B > C] or [reordered]
-   Optimistic ranking: [A > B > C] or [reordered]
-   Halved-priors ranking: [A > B > C] or [reordered]
-   Key fragility: <the assumption whose perturbation most easily flips the ranking>
-   ```
+  ```
+  Ranking: A > B > C
+  Robustness: [ROBUST] | [CONDITIONAL: <which perturbation flips it>] | [FRAGILE: <which perturbations flip it>]
+  Pessimistic ranking: [A > B > C] or [reordered]
+  Optimistic ranking: [A > B > C] or [reordered]
+  Halved-priors ranking: [A > B > C] or [reordered]
+  Key fragility: <the assumption whose perturbation most easily flips the ranking>
+  ```
 
 **IMPORTANT:** Do NOT compute numerical EVs (e.g., 1.17, 0.71, 0.32). The EV formula
 (P × I / √t) is retired. If a prior cascade artifact still uses EV numbers, flag it
@@ -1180,15 +1210,15 @@ Likelihood-Anchor: {which Stage -1 pillar was used? Empirical Base Rate | Refere
 Strength: [STRONG] | [WEAK]
 Status: [PENDING]
 Post-hoc risk: {what language a post-hoc rationalizer would use if this
-                prediction fails}
+        prediction fails}
 ```
 
 **Strength tags:**
 - **[STRONG]:** Likelihood anchored by Empirical Base Rate, Reference Class,
-  or Known Prior — an external, verifiable, non-subjective pillar.
+ or Known Prior — an external, verifiable, non-subjective pillar.
 - **[WEAK]:** Likelihood anchored only by Calibrated Subjective Confidence
-  or [CALIBRATION-CAP]'d — internal to the agent, even if calibration
-  training reduced the bias.
+ or [CALIBRATION-CAP]'d — internal to the agent, even if calibration
+ training reduced the bias.
 
 This prevents post-hoc rationalization AND makes the prediction's epistemic
 provenance visible to future readers — a prediction that failed despite a
@@ -1200,7 +1230,7 @@ failed on a WEAK anchor.
 Resource allocation across candidates using qualitative ranking:
 1. Rank all candidates by qualitative judgment (from Stage 1)
 2. Allocate effort proportionally to ranking position, not to a computed EV
-   (no EV formula exists as of v2.27)
+  (no EV formula exists as of v2.27)
 3. Maintain a 10% hedge allocation for unknown candidates (anti-fragility floor)
 4. **Output:** Research effort allocation table with qualitative justifications
 
@@ -1238,30 +1268,30 @@ theoretical and ensures every prediction has a practical face.
 **Protocol:**
 
 1. **Domain Mapping:** For each top-ranked forecast candidate (from Stage 1),
-   identify 2-5 concrete application domains. The domains must be recognizable
-   by practitioners — computation, AI/ML, measurement/metrology, communication,
-   cryptography/security, energy, medicine, economics/finance, cognitive
-   science, robotics, materials science, etc. If the candidate has no plausible
-   practical application in any domain, flag it as `[PURELY THEORETICAL]` and
-   note that its calibration timeline should be extended accordingly.
+  identify 2-5 concrete application domains. The domains must be recognizable
+  by practitioners — computation, AI/ML, measurement/metrology, communication,
+  cryptography/security, energy, medicine, economics/finance, cognitive
+  science, robotics, materials science, etc. If the candidate has no plausible
+  practical application in any domain, flag it as `[PURELY THEORETICAL]` and
+  note that its calibration timeline should be extended accordingly.
 
 2. **Operational Signature:** For each candidate-domain pair, articulate the
-   *operational signature* — the specific change in how practitioners work
-   that the candidate enables. Example: "Era 10 (Contextual Enclosure) →
-   quantum error correction: every error syndrome carries a context tag
-   $(C, \Delta)$, making the cocycle condition a verifiable hardware check."
+  *operational signature* — the specific change in how practitioners work
+  that the candidate enables. Example: "Era 10 (Contextual Enclosure) →
+  quantum error correction: every error syndrome carries a context tag
+  $(C, \Delta)$, making the cocycle condition a verifiable hardware check."
 
 3. **Falsifiable Claims:** For each candidate-domain pair, produce at least
-   one falsifiable claim that is testable in that domain.
+  one falsifiable claim that is testable in that domain.
 
 4. **Calibration Register Entries:** Register at least one dated, strength-weighted
-   prediction per domain cluster. These supplement Stage 5's general predictions
-   with domain-specific falsifiable anchors.
+  prediction per domain cluster. These supplement Stage 5's general predictions
+  with domain-specific falsifiable anchors.
 
 5. **Cross-Domain Consilience:** If the Cross-Domain Consilience Gate (KIF-29)
-   was triggered in Phase 1, cross-reference the Stage 9 domain mapping against
-   the consilience audit's 6-domain translations. Flag any domain where the
-   forecast's practical application contradicts or enriches the consilience.
+  was triggered in Phase 1, cross-reference the Stage 9 domain mapping against
+  the consilience audit's 6-domain translations. Flag any domain where the
+  forecast's practical application contradicts or enriches the consilience.
 
 **Output:** A "Practical Applications Extension" document (stored in
 `artifacts/`) with: domain mapping table, operational signatures, domain-specific
@@ -1287,37 +1317,37 @@ available today, and what historical forks could have produced them?
 
 This is a counterfactual exercise that serves three functions:
 (a) It stress-tests the forecast by asking "what would have to be true for
-    this to already exist?" — revealing hidden timeline assumptions.
+  this to already exist?" — revealing hidden timeline assumptions.
 (b) It identifies *actionable near-term forks* — Tier 1 forks that could
-    have been achieved with a ~20-year research reprioritization.
+  have been achieved with a ~20-year research reprioritization.
 (c) It generates *calibration register entries* for the backcast claims,
-    providing a second independent set of falsifiable predictions.
+  providing a second independent set of falsifiable predictions.
 
 **Protocol:**
 
 1. **Target Discipline Identification:** Identify the core disciplines the
-   research depends on. State the current state and the "target state."
+  research depends on. State the current state and the "target state."
 
 2. **Tiered Fork Classification:**
 
-   | Tier | Description | Temporal Distance |
-   |:-----|:------------|:------------------|
-   | **Tier 1** | Single research program reprioritized ~20 years ago | 2000s fork → impacts by 2020s |
-   | **Tier 2** | Coordinated advancement across 2-3 disciplines | 1960s fork → impacts by 2000s |
-   | **Tier 3** | Incompatible mathematical foundations required | 1900s fork → impacts by 1980s |
-   | **Tier 4** | The axioms themselves differ | Indefinite |
+  | Tier | Description | Temporal Distance |
+  |:-----|:------------|:------------------|
+  | **Tier 1** | Single research program reprioritized ~20 years ago | 2000s fork → impacts by 2020s |
+  | **Tier 2** | Coordinated advancement across 2-3 disciplines | 1960s fork → impacts by 2000s |
+  | **Tier 3** | Incompatible mathematical foundations required | 1900s fork → impacts by 1980s |
+  | **Tier 4** | The axioms themselves differ | Indefinite |
 
 3. **Counterfactual Technology Stack:** For each discipline × tier, describe
-   the counterfactual technology. Be specific: name, capability, enabling fork.
+  the counterfactual technology. Be specific: name, capability, enabling fork.
 
 4. **Summary Table:** Map every Discipline × Tier → Counterfactual Technology.
 
 5. **Calibration Register Entries:** Register at least one dated prediction
-   per backcast tier — reverse predictions: "If Tier N fork had occurred, we
-   would observe X by now."
+  per backcast tier — reverse predictions: "If Tier N fork had occurred, we
+  would observe X by now."
 
 6. **Near-Term Fork Recommendations:** Tier 1 forks become actionable
-   recommendations for the paper's Future Work section.
+  recommendations for the paper's Future Work section.
 
 **Output:** A "Counterfactual Backcasting" document (stored in `artifacts/`)
 with: target discipline assessment, tiered fork classification, counterfactual
@@ -1356,7 +1386,7 @@ title: "Paper Title"
 author: "Author Name"
 date: "YYYY-MM-DD"
 license: "QNFO Unified License Agreement (QNFO-ULA)"
-doi: "10.5281/zenodo.XXXXXXXXX"  # Placeholder, replaced after Zenodo upload
+doi: "10.5281/zenodo.XXXXXXXXX" # Placeholder, replaced after Zenodo upload
 status: "draft" | "published"
 ---
 ```
@@ -1368,7 +1398,7 @@ misinterpret as a second frontmatter block. Before building, count `---`
 occurrences on their own line at column 0:
 ```bash
 # Windows: write this to _yaml_check.py, then `python _yaml_check.py`; never inline python -c
-# Build-paper.py handles this automatically -- prefer: python scripts/build-paper.py paper.md
+# Build-paper.py handles this automatically -- prefer: python scripts/build-paper.py <slug>.md
 python _yaml_check.py
 ```
 Where `_yaml_check.py` contains:
@@ -1391,7 +1421,7 @@ Scan for ALL of:
 - **STYLE:** Straight quotes in body, bare Unicode math outside $...$, generation artifacts -> BLOCKING
 - **CREDENTIAL LEAKS (kaizen fix D2):** `cfat_[a-zA-Z0-9_]{20,}`, `ghp_[a-zA-Z0-9]{36}`, `sk-[a-zA-Z0-9]{20,}`, `AKIA[0-9A-Z]{16}`, `Bearer [A-Za-z0-9._-]{20,}` -> BLOCKING. Run `scripts/credential-scan.py paper.md` as part of this gate, not just at git-commit time -- a token could be pasted into the paper body itself, which is a worse leak than a script file since it gets published to Zenodo/IPFS permanently.
 
-#### Physics Writing Standards (18-point -- see qnfo-agent Â§7)
+#### Physics Writing Standards (18-point -- see qnfo-agent §7)
 All 18 points apply. Minimum: certainty calibration on every non-textbook claim, falsifiability conditions on speculative claims, banned word operational definitions.
 
 #### Self-Evaluation Rubric
@@ -1412,7 +1442,7 @@ peer reviewer at a serious journal (Foundations of Physics, Physical Review
 A, New Journal of Physics, Quantum, or equivalent) would expect, such that
 the submission is judged on its scientific merits and is NOT desk-rejected
 or flagged for unprofessional presentation. This is a DISTINCT gate from
-the Physics Writing Standards (`qnfo-agent` Â§7, content-integrity: banned
+the Physics Writing Standards (`qnfo-agent` §7, content-integrity: banned
 words, certainty labels, falsifiability) and the Publication Language Gate
 (internal-language/credential scrubbing) -- both of those govern *what is
 said*; this gate governs *how professionally it reads*. A paper can pass
@@ -1422,89 +1452,89 @@ both of those gates and still fail this one if it reads like a draft.
 full research article):**
 1. Title -- concise, informative, no acronyms undefined at first use.
 2. Abstract -- 150-250 words (Springer Nature convention; adjust per
-   target journal), self-contained, no undefined abbreviations, no
-   citations unless the target journal explicitly permits them.
+  target journal), self-contained, no undefined abbreviations, no
+  citations unless the target journal explicitly permits them.
 3. Keywords -- 4-6 terms suitable for indexing.
 4. Introduction -- states the problem, situates it in the literature,
-   states the paper's contribution and structure (a "roadmap" paragraph
-   naming each subsequent section is expected in physics/math papers).
+  states the paper's contribution and structure (a "roadmap" paragraph
+  naming each subsequent section is expected in physics/math papers).
 5. Body sections -- decimal numbering, no more than 3 heading levels
-   (Springer Nature convention), one clear argument thread per section.
+  (Springer Nature convention), one clear argument thread per section.
 6. Conclusion -- restates contribution, is honest about limitations,
-   does NOT introduce new citations or claims not defended in the body.
+  does NOT introduce new citations or claims not defended in the body.
 7. Declarations -- all 9 subsections per the template README (Funding,
-   Conflicts of Interest, Ethics, Consent, Author Contributions, Data/
-   Materials/Code Availability, Use of Artificial Intelligence).
+  Conflicts of Interest, Ethics, Consent, Author Contributions, Data/
+  Materials/Code Availability, Use of Artificial Intelligence).
 8. Bibliography -- every entry cited in text, no orphan/unused entries,
-   consistent citation style throughout (numbered XOR author-year, never
-   mixed).
+  consistent citation style throughout (numbered XOR author-year, never
+  mixed).
 
 **Tone and prose requirements:**
 - **Formal, third-person or first-person-plural ("we argue", "we show"),
-  never first-person-singular ("I think") in the body text** -- singular
-  first person is acceptable only in author-contribution/declaration
-  statements about the author personally.
+ never first-person-singular ("I think") in the body text** -- singular
+ first person is acceptable only in author-contribution/declaration
+ statements about the author personally.
 - **No hedging filler** ("it could perhaps be argued that", "in some
-  sense") -- state the claim, then qualify it with an explicit certainty
-  label per the Physics Writing Standards, not with vague hedge-words.
+ sense") -- state the claim, then qualify it with an explicit certainty
+ label per the Physics Writing Standards, not with vague hedge-words.
 - **No rhetorical questions in the body text** of a research article
-  (acceptable sparingly in a Discussion section framing an open problem,
-  but the default is declarative prose).
+ (acceptable sparingly in a Discussion section framing an open problem,
+ but the default is declarative prose).
 - **No contractions** ("doesn't", "it's") -- expand to full form.
 - **Active voice preferred** over passive, except where passive is the
-  disciplinary convention (e.g., describing an experimental procedure:
-  "the sample was prepared").
+ disciplinary convention (e.g., describing an experimental procedure:
+ "the sample was prepared").
 - **Consistent tense**: present tense for established facts and the
-  paper's own ongoing argument ("Section 3 shows..."), past tense for
-  prior work's specific findings ("Hardy derived...").
+ paper's own ongoing argument ("Section 3 shows..."), past tense for
+ prior work's specific findings ("Hardy derived...").
 - **No AI-generated-sounding transitional filler** ("It is important to
-  note that", "In conclusion, it can be seen that", "Moreover, it is
-  worth mentioning") -- these read as generation artifacts and are a
-  Publication Language Gate concern as well as a tone concern. Replace
-  with direct statements.
+ note that", "In conclusion, it can be seen that", "Moreover, it is
+ worth mentioning") -- these read as generation artifacts and are a
+ Publication Language Gate concern as well as a tone concern. Replace
+ with direct statements.
 
 **Copyediting checklist (run before every publication, no exceptions):**
 - [ ] Zero spelling errors (run a spell-check pass; do not rely on
-      LaTeX/pandoc to catch these).
+   LaTeX/pandoc to catch these).
 - [ ] Zero grammar errors -- subject-verb agreement, correct article use
-      (a/an/the), correct preposition use throughout.
+   (a/an/the), correct preposition use throughout.
 - [ ] Consistent hyphenation/compound-word conventions within the paper
-      (e.g., "state-of-the-art" always hyphenated when adjectival, never
-      "state of the art" and "state-of-the-art" mixed).
+   (e.g., "state-of-the-art" always hyphenated when adjectival, never
+   "state of the art" and "state-of-the-art" mixed).
 - [ ] Consistent capitalization of technical terms (e.g., "Hilbert space"
-      not sometimes "Hilbert Space").
+   not sometimes "Hilbert Space").
 - [ ] Curly quotes and em-dashes in body prose (`` `` '' `` / `---` in
-      LaTeX source), never straight quotes or double-hyphens in rendered
-      output.
+   LaTeX source), never straight quotes or double-hyphens in rendered
+   output.
 - [ ] No orphaned section headers (a heading immediately followed by
-      another heading with no body text between them).
+   another heading with no body text between them).
 - [ ] No repeated words ("the the"), doubled spaces, or trailing
-      whitespace artifacts from find-replace operations.
+   whitespace artifacts from find-replace operations.
 - [ ] Every acronym defined at first use, used consistently thereafter
-      (Springer Nature Instructions for Authors requirement, verified
-      live 2026-07-25).
+   (Springer Nature Instructions for Authors requirement, verified
+   live 2026-07-25).
 - [ ] Every figure/table has a caption, is referenced from body text at
-      least once, and captions do not simply repeat the section text.
+   least once, and captions do not simply repeat the section text.
 - [ ] Every equation that is referenced elsewhere in the paper has a
-      `\label{}`/`\ref{}` pair, not a hardcoded equation number.
+   `\label{}`/`\ref{}` pair, not a hardcoded equation number.
 - [ ] Reference list entries are complete (author, title, venue, year,
-      DOI where available) and formatted identically to each other
-      (same punctuation/ordering pattern for every entry of the same
-      type -- journal article, book, preprint, etc.).
+   DOI where available) and formatted identically to each other
+   (same punctuation/ordering pattern for every entry of the same
+   type -- journal article, book, preprint, etc.).
 
 **Self-review protocol (MANDATORY before declaring a paper publication-ready):**
 1. Read the paper start to finish as a hostile peer reviewer would --
-   flag any sentence that would draw a reviewer comment about clarity,
-   rigor, or presentation, not just correctness.
+  flag any sentence that would draw a reviewer comment about clarity,
+  rigor, or presentation, not just correctness.
 2. Read the Abstract in isolation -- does it stand alone as a complete
-   summary without the reader needing the rest of the paper?
+  summary without the reader needing the rest of the paper?
 3. Read only the section headings in sequence -- do they form a
-   coherent narrative arc on their own?
+  coherent narrative arc on their own?
 4. Check that no paragraph is a single run-on sentence and no section
-   is a single paragraph longer than roughly half a page.
+  is a single paragraph longer than roughly half a page.
 5. Confirm the Declarations section is complete per the checklist above
-   -- an incomplete Declarations section is itself a professional-
-   quality failure independent of the science.
+  -- an incomplete Declarations section is itself a professional-
+  quality failure independent of the science.
 
 **GATE:** A publication that fails ANY item in the structural,
 tone/prose, or copyediting checklists above is NOT publication-ready,
@@ -1516,27 +1546,27 @@ then re-run this checklist, before proceeding to PDF build and upload.
 **BEFORE any build, commit, or publish operation on markdown source files:**
 
 1. **Zero BOM (Byte Order Mark):** No `.md`, `.py`, `.js`, `.tex`, or `.bib` file
-   shall contain a UTF-8 BOM (U+FEFF). BOM silently breaks: Pandoc frontmatter
-   parsing, YAML libraries, `git diff` display, and some spell-checkers.
-   Verify: first 3 bytes of the file MUST NOT be `ï»¿`.
+  shall contain a UTF-8 BOM (U+FEFF). BOM silently breaks: Pandoc frontmatter
+  parsing, YAML libraries, `git diff` display, and some spell-checkers.
+  Verify: first 3 bytes of the file MUST NOT be ``.
 
 2. **Zero U+FFFD (REPLACEMENT CHARACTER):** This character means "bytes were
-   decoded with the wrong encoding" -- it is ALWAYS a corruption signal, never
-   intentional content. Any file containing U+FFFD MUST NOT be committed or
-   published.
+  decoded with the wrong encoding" -- it is ALWAYS a corruption signal, never
+  intentional content. Any file containing U+FFFD MUST NOT be committed or
+  published.
 
 3. **Zero U+FFFF (NONCHARACTER):** This noncharacter appears in PDFs when a
-   font lacks a glyph, but it must NEVER appear in source markdown. Its presence
-   in a source file means a prior encoding corruption event is still propagating.
+  font lacks a glyph, but it must NEVER appear in source markdown. Its presence
+  in a source file means a prior encoding corruption event is still propagating.
 
 4. **All Python scripts: `# -*- coding: utf-8 -*-` on line 1 or 2** (after
-   shebang). Every `open()` call for text files MUST specify `encoding='utf-8'`
-   explicitly -- Python's default on Windows is `locale.getpreferredencoding()`
-   (cp1252), which SILENTLY produces wrong characters without any exception.
+  shebang). Every `open()` call for text files MUST specify `encoding='utf-8'`
+  explicitly -- Python's default on Windows is `locale.getpreferredencoding()`
+  (cp1252), which SILENTLY produces wrong characters without any exception.
 
 5. **All PowerShell commands that interact with files: use `-Encoding UTF8`.**
-   `Get-Content` without `-Encoding` defaults to the system codepage and will
-   silently corrupt UTF-8 content.
+  `Get-Content` without `-Encoding` defaults to the system codepage and will
+  silently corrupt UTF-8 content.
 
 **Pre-commit verification scan** (write to file via `write` tool, then execute — never inline `python -c`):
 ```bash
@@ -1548,22 +1578,22 @@ python _fffd_scan.py
 ```python
 import sys, os
 for root, dirs, files in os.walk('.'):
-    for fn in files:
-        if any(fn.endswith(e) for e in ('.md','.py','.js','.tex','.bib','.json','.yaml','.yml')):
-            fp = os.path.join(root, fn)
-            with open(fp, 'rb') as f:
-                data = f.read()
-            issues = []
-            if data[:3] == b'ï»¿':
-                issues.append('BOM')
-            text = data.decode('utf-8', errors='replace')
-            if '\\ufffd' in text:
-                issues.append('U+FFFD')
-            if '\\uffff' in text:
-                issues.append('U+FFFF')
-            if issues:
-                print(f'{fp}: {" / ".join(issues)}')
-                sys.exit(1)
+  for fn in files:
+    if any(fn.endswith(e) for e in ('.md','.py','.js','.tex','.bib','.json','.yaml','.yml')):
+      fp = os.path.join(root, fn)
+      with open(fp, 'rb') as f:
+        data = f.read()
+      issues = []
+      if data[:3] == b'':
+        issues.append('BOM')
+      text = data.decode('utf-8', errors='replace')
+      if '\\ufffd' in text:
+        issues.append('U+FFFD')
+      if '\\uffff' in text:
+        issues.append('U+FFFF')
+      if issues:
+        print(f'{fp}: {" / ".join(issues)}')
+        sys.exit(1)
 print('ENCODING GATE: PASS')
 ```
 **GATE:** If the pre-commit scan exits non-zero, BLOCK the git commit.
@@ -1597,7 +1627,7 @@ papers built on `svjour3` should be migrated to `sn-jnl.cls` at the next
 substantive revision.
 
 **For Markdown-native publications** (papers authored and maintained as
-`paper.md` rather than `paper.tex` -- e.g., most QNFO working papers prior
+`<slug>.md` rather than `paper.tex` -- e.g., most QNFO working papers prior
 to journal submission), continue using Pandoc+XeLaTeX per the pipeline
 below. Convert to the Springer Nature LaTeX template at the point of
 formal journal submission, or immediately if the target venue requires
@@ -1610,40 +1640,42 @@ rendering errors. This replaces three previously fragmented scripts
 DELETED as of v2.21).
 
 ```bash
-python scripts/build-paper.py paper.md
+python scripts/build-paper.py <slug>.md
 # or with explicit output path:
-python scripts/build-paper.py paper.md --output paper.pdf
+python scripts/build-paper.py <slug>.md --output <slug>.pdf
 ```
 
+> **Slug-based naming (v2.38):** Paper files MUST use the project slug, NOT generic `paper.md`/`paper.pdf` names. For project `computing-machines`, the files are `computing-machines.md` and `computing-machines.pdf`. This prevents confusion when multiple paper repos are cloned in the same temp directory. Generic `paper.md` naming is an anti-pattern (see Anti-Patterns table).
+
 This single command:
-1. Reads `paper.md` with UTF-8 forced (never trust ambient/locale encoding
-   on Windows -- see `qnfo-agent` Â§8.7 PowerShell UTF-8 Encoding Protocol)
+1. Reads `<slug>.md` with UTF-8 forced (never trust ambient/locale encoding
+  on Windows -- see `qnfo-agent` §8.7 PowerShell UTF-8 Encoding Protocol)
 2. Converts every Unicode math character in prose (outside existing
-   `$...$`/`$$...$$` spans) to its LaTeX equivalent, WRAPPED in `$...$` so
-   XeLaTeX activates the math font for that span -- this is mandatory
-   because `unicode-math` + a comprehensive math font (STIX Two Math, etc.)
-   was tested live and does NOT make bare Unicode math symbols render
-   correctly in prose text; the math font only activates inside math mode
+  `$...$`/`$$...$$` spans) to its LaTeX equivalent, WRAPPED in `$...$` so
+  XeLaTeX activates the math font for that span -- this is mandatory
+  because `unicode-math` + a comprehensive math font (STIX Two Math, etc.)
+  was tested live and does NOT make bare Unicode math symbols render
+  correctly in prose text; the math font only activates inside math mode
 3. Groups consecutive subscript/superscript characters into a single
-   `_{...}`/`^{...}` block (naive one-character-at-a-time conversion
-   produces INVALID LaTeX -- "Double superscript" errors)
+  `_{...}`/`^{...}` block (naive one-character-at-a-time conversion
+  produces INVALID LaTeX -- "Double superscript" errors)
 4. Builds the PDF via `pandoc --pdf-engine=xelatex`
 5. Verifies the output PDF has zero U+FFFD/U+FFFF characters and zero
-   empty pages -- exit code 1 if verification fails, PDF MUST NOT publish
+  empty pages -- exit code 1 if verification fails, PDF MUST NOT publish
 
 Exit codes: `0` = publication-ready, `1` = build or verification failed
 (do not publish), `2` = missing dependency or bad invocation.
 
 **Prior approaches, retracted:**
 - v2.18 (KIF-26): dictionary-based conversion with an incomplete character
-  table (only numeric subscripts, missing letter subscripts/superscripts) --
-  fixed by comprehensive table in `build-paper.py`, not superseded.
+ table (only numeric subscripts, missing letter subscripts/superscripts) --
+ fixed by comprehensive table in `build-paper.py`, not superseded.
 - v2.19 (KIF-26 v2): claimed loading `unicode-math` + `STIX Two Math` font
-  would make Unicode math symbols render correctly directly in prose text
-  without needing `$...$` wrapping. **TESTED LIVE AND FALSE** -- `unicode-math`
-  only activates the math font INSIDE math mode; prose text uses the
-  running text font, which lacks these glyphs regardless of which math
-  font is loaded.
+ would make Unicode math symbols render correctly directly in prose text
+ without needing `$...$` wrapping. **TESTED LIVE AND FALSE** -- `unicode-math`
+ only activates the math font INSIDE math mode; prose text uses the
+ running text font, which lacks these glyphs regardless of which math
+ font is loaded.
 
 **NEVER use reportlab or HTML fallbacks for publication-grade PDFs.**
 
@@ -1657,12 +1689,12 @@ used directly in the source rather than relying on the preprocessor's
 
 ### R2 Archive (MANDATORY -- every publication)
 
-Every publication's source (paper.md), rendered PDF (paper.pdf), and provenance bundle
+Every publication's source (<slug>.md), rendered PDF (<slug>.pdf), and provenance bundle
 (PROVENANCE-BUNDLE.zip) MUST be uploaded to Cloudflare R2 immediately after Zenodo publishing.
 
 ```bash
-npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.md --file=paper.md --remote
-npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/paper.pdf --file=paper.pdf --remote
+npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/<slug>.md --file=<slug>.md --remote
+npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/<slug>.pdf --file=<slug>.pdf --remote
 ```
 
 ### DNSLink (OPTIONAL -- read-only IPFS resolution)
@@ -1679,7 +1711,7 @@ published to Zenodo, R2, or any public distribution channel.
 As of v2.21, this verification is built INTO `scripts/build-paper.py` --
 it is not a separate step. Running:
 ```bash
-python scripts/build-paper.py paper.md
+python scripts/build-paper.py <slug>.md
 ```
 performs preprocessing, the pandoc/xelatex build, AND verification in one
 invocation. Exit code `0` = publication-ready (proceed to Zenodo/R2
@@ -1700,9 +1732,9 @@ the sole canonical entry point regardless.
 
 **GATE:** ONLY for major research programs with significant predictions and falsifiable claims. Do NOT register exploratory projects, single papers within existing programs, or minor updates. If the project doesn't make testable, falsifiable predictions with calibration registers, skip this section.
 
-**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction. Registration drafts, full form completion (all ~30 schema fields), subject taxonomy assignment, and final registration submission are ALL 100% achievable via the OSF v2 API (verified live 2026-07-20, registration `kj6ar` created via pure API calls, HTTP 201). Only file uploads specifically require Waterbutler (cookie-based sessions) â€” for those, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway) instead. Do not conflate the file-upload limitation with the registration/form-completion capability â€” they are different OSF subsystems with different constraints. See "OSF Registration â€” Full API Automation Protocol" below.
+**POLICY:** ALL OSF resources MUST be public. NEVER expect or request manual browser interaction. Registration drafts, full form completion (all ~30 schema fields), subject taxonomy assignment, and final registration submission are ALL 100% achievable via the OSF v2 API (verified live 2026-07-20, registration `kj6ar` created via pure API calls, HTTP 201). Only file uploads specifically require Waterbutler (cookie-based sessions) — for those, link to external canonical sources (Zenodo DOI, GitHub tree, IPFS gateway) instead. Do not conflate the file-upload limitation with the registration/form-completion capability — they are different OSF subsystems with different constraints. See "OSF Registration — Full API Automation Protocol" below.
 
-**HARD GATE: LLM-Executable Research** â€” OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations â€” link to Zenodo/GitHub instead.
+**HARD GATE: LLM-Executable Research** — OSF registration is ONLY valid for research that can be fully executed by this LLM agent within ONE chat thread, with NO human subjects, NO external resources (lab equipment, personnel, institutional partnerships), and NO IRB requirement. All data must be publicly available or computable from first principles. If the research involves human participants, lab equipment, funding applications, or any resource not immediately available in the current session, do NOT create OSF registrations — link to Zenodo/GitHub instead.
 
 **Qualifying research types:**
 - Automated data analysis of publicly available datasets
@@ -1722,13 +1754,13 @@ the sole canonical entry point regardless.
 - Any research requiring institutional partnerships or funding applications
 - NUMERATA Phase 2 experiments (N=324 human subjects, N=60 child participants, IRB required)
 
-**BONA FIDE REGISTRATION REQUIREMENTS (MANDATORY â€” never create incomplete stubs):**
+**BONA FIDE REGISTRATION REQUIREMENTS (MANDATORY — never create incomplete stubs):**
 
 Every OSF registration MUST:
-1. **Populate ALL ~30 structured fields** â€” the OSF Preregistration template includes hypothesis, design plan, sampling plan, variables, analysis plan, and falsification criteria. ALL must be populated via `registration_responses` as a JSON object with values for every required question. Empty `registration_responses = {}` is a STUB â€” NEVER submit a stub. Never submit what you cannot fully populate.
-2. **Require explicit user approval** â€” use `deepchat_question` to present the complete registration text (all populated fields) and ask: "Submit this as an OSF Preregistration? This is a permanent, timestamped, immutable record. Once submitted, it cannot be edited or deleted." Only submit if user explicitly confirms.
-3. **Track followup** â€” after submission, store the registration ID, DOI, and submission timestamp in D1/KG with status "registered." Set a reminder for the declared data collection/completion target date. This is a COMMITMENT â€” failing to close out is a negative reputational signal.
-4. **Close out registration** â€” when research completes: (a) return to the OSF registration URL, (b) add a comment or results section, (c) formally complete or withdraw the registration, (d) update D1/KG status to "completed" or "withdrawn." A registration that is submitted and never closed out is an abandoned commitment â€” a detectable pattern of abandoned registrations on an OSF account undermines credibility.
+1. **Populate ALL ~30 structured fields** — the OSF Preregistration template includes hypothesis, design plan, sampling plan, variables, analysis plan, and falsification criteria. ALL must be populated via `registration_responses` as a JSON object with values for every required question. Empty `registration_responses = {}` is a STUB — NEVER submit a stub. Never submit what you cannot fully populate.
+2. **Require explicit user approval** — use `deepchat_question` to present the complete registration text (all populated fields) and ask: "Submit this as an OSF Preregistration? This is a permanent, timestamped, immutable record. Once submitted, it cannot be edited or deleted." Only submit if user explicitly confirms.
+3. **Track followup** — after submission, store the registration ID, DOI, and submission timestamp in D1/KG with status "registered." Set a reminder for the declared data collection/completion target date. This is a COMMITMENT — failing to close out is a negative reputational signal.
+4. **Close out registration** — when research completes: (a) return to the OSF registration URL, (b) add a comment or results section, (c) formally complete or withdraw the registration, (d) update D1/KG status to "completed" or "withdrawn." A registration that is submitted and never closed out is an abandoned commitment — a detectable pattern of abandoned registrations on an OSF account undermines credibility.
 
 **Registration Closeout Protocol:**
 ```python
@@ -1746,7 +1778,7 @@ Every OSF registration MUST:
 
 ```python
 # 1. Authenticate
-TOKEN = "<OSF_PERSONAL_ACCESS_TOKEN>"  # Stored in .osf_token, OSF_TOKEN env var, keys.json, Windows CM
+TOKEN = "<OSF_PERSONAL_ACCESS_TOKEN>" # Stored in .osf_token, OSF_TOKEN env var, keys.json, Windows CM
 HEADERS = {"Authorization": "Bearer " + TOKEN, "Content-Type": "application/vnd.api+json"}
 
 # 2. Create project (ALWAYS public)
@@ -1755,14 +1787,14 @@ Body: {"data": {"type": "nodes", "attributes": {"title": "...", "category": "pro
 
 # 3. Create components (one per experiment/task)
 POST https://api.osf.io/v2/nodes/{project_id}/children/
-Body: {"data": {"type": "nodes", "attributes": {"title": "Experiment N...", "category": "data", "public": true, "description": "ðŸ“¦ Canonical files: [Zenodo DOI] | [GitHub tree URL] | [IPFS gateway]"}}}
+Body: {"data": {"type": "nodes", "attributes": {"title": "Experiment N...", "category": "data", "public": true, "description": "📦 Canonical files: [Zenodo DOI] | [GitHub tree URL] | [IPFS gateway]"}}}
 
-# 4. Add external links to descriptions (REQUIRED â€” replaces file uploads)
+# 4. Add external links to descriptions (REQUIRED — replaces file uploads)
 PATCH https://api.osf.io/v2/nodes/{node_id}/
 Body: {"data": {"type": "nodes", "id": "{node_id}", "attributes": {"description": "..." + String.fromCodePoint(0x1F4E6) + " Files: " + zenodo_doi + " | " + github_tree_url + " | " + ipfs_gateway}}}
 
 # 5. Create draft registrations (one per experiment)
-GET https://api.osf.io/v2/schemas/registrations/  # Find schema ID for "OSF Preregistration"
+GET https://api.osf.io/v2/schemas/registrations/ # Find schema ID for "OSF Preregistration"
 POST https://api.osf.io/v2/nodes/{component_id}/draft_registrations/
 Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships": {"branched_from": {"data": {"type": "nodes", "id": "{cid}"}}, "registration_schema": {"data": {"type": "schemas", "id": "697b72f611a8e98484c6139b"}}}}}
 
@@ -1770,9 +1802,9 @@ Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships"
 # 7. Verify: all nodes public, all descriptions contain external links, registration drafts created
 ```
 
-#### OSF File Upload â€” NOT SUPPORTED via API
+#### OSF File Upload — NOT SUPPORTED via API
 
-**Waterbutler requires cookie-based browser sessions.** Do NOT attempt file upload via API â€” it will fail. Do NOT request manual browser interaction. Instead:
+**Waterbutler requires cookie-based browser sessions.** Do NOT attempt file upload via API — it will fail. Do NOT request manual browser interaction. Instead:
 
 - Link to Zenodo DOI (canonical published version with all files)
 - Link to GitHub tree URL (source code, analysis scripts, protocols)
@@ -1780,50 +1812,50 @@ Body: {"data": {"type": "draft_registrations", "attributes": {}, "relationships"
 
 The OSF project becomes a **discovery hub** pointing to canonical storage, not a file host.
 
-#### OSF Registration â€” Full API Automation Protocol (CORRECTED 2026-07-20)
+#### OSF Registration — Full API Automation Protocol (CORRECTED 2026-07-20)
 
-**Prior guidance in this section was WRONG and has been retracted.** The entire registration workflow â€” schema discovery, field population, subject taxonomy, final submission â€” is achievable via API with ZERO browser interaction. Verified live: registration `kj6ar` created 2026-07-20T12:48:47Z via pure API calls, HTTP 201.
+**Prior guidance in this section was WRONG and has been retracted.** The entire registration workflow — schema discovery, field population, subject taxonomy, final submission — is achievable via API with ZERO browser interaction. Verified live: registration `kj6ar` created 2026-07-20T12:48:47Z via pure API calls, HTTP 201.
 
-**Step 1 â€” Discover real schema keys (NEVER assume `q1`/`q2` format):**
+**Step 1 — Discover real schema keys (NEVER assume `q1`/`q2` format):**
 ```python
 r = requests.get(f'https://api.osf.io/v2/schemas/registrations/{SCHEMA_ID}/schema_blocks/?page[size]=100', headers=H)
 # Real keys look like '344-2', '344-47', etc. Walk blocks tracking the preceding
 # question-label to build a {key: label} map. Only required=True keys are mandatory.
 ```
 
-**Step 2 â€” For select-type fields, get EXACT verbatim option text:**
+**Step 2 — For select-type fields, get EXACT verbatim option text:**
 ```python
 # API rejects any option text that doesn't match the schema's display_text VERBATIM.
 # Walk schema_blocks from the select-input key forward, collecting select-input-option
 # blocks until the next non-option block type.
 ```
 
-**Step 3 â€” Populate ALL fields in one PATCH:**
+**Step 3 — Populate ALL fields in one PATCH:**
 ```python
 patch = {'data': {'id': draft_id, 'type': 'draft_registrations',
-                   'attributes': {'registration_responses': responses}}}
+          'attributes': {'registration_responses': responses}}}
 r = requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', headers=H, json=patch)
 # 200 = success. 400 "must be one of the provided options" = re-check Step 2 exact text.
 ```
 
-**Step 4 â€” MANDATORY subject taxonomy (registration 400s without this):**
+**Step 4 — MANDATORY subject taxonomy (registration 400s without this):**
 ```python
 # Subjects require a root->leaf chain, set on the DRAFT (flat list), not the node
 # (which uses list-of-lists). These are SEPARATE relationships.
-chain = []  # build via GET /v2/subjects/{id}/ walking .relationships.parent.data.id to null
+chain = [] # build via GET /v2/subjects/{id}/ walking .relationships.parent.data.id to null
 patch = {'data': {'id': draft_id, 'type': 'draft_registrations', 'attributes': {'subjects': chain}}}
 requests.patch(f'https://api.osf.io/v2/draft_registrations/{draft_id}/', headers=H, json=patch)
 ```
 
-**Step 5 â€” Submit:**
+**Step 5 — Submit:**
 ```python
 reg_data = {'data': {'type': 'registrations', 'attributes': {
-    'draft_registration': draft_id, 'registration_choice': 'immediate'}}}
+  'draft_registration': draft_id, 'registration_choice': 'immediate'}}}
 r = requests.post(f'https://api.osf.io/v2/nodes/{NODE_ID}/registrations/', headers=H, json=reg_data)
 # HTTP 201 = SUCCESS, fully immutable, date_registered timestamp set.
 ```
 
-**Understanding `pending_registration_approval: true` after success:** This is NOT a manual-review queue â€” OSF confirmed via API error "OSF Registries is an unmoderated provider." It is OSF's mandatory email-confirmation anti-hijacking gate (like 2FA), applied uniformly to ALL registrations regardless of creation method, resolved only by the account holder clicking the emailed confirmation link. Report this precisely: "Registration submitted (HTTP 201, ID `{id}`). Pending only the account holder's email confirmation â€” OSF's standard anti-hijacking safeguard, not a data-entry step."
+**Understanding `pending_registration_approval: true` after success:** This is NOT a manual-review queue — OSF confirmed via API error "OSF Registries is an unmoderated provider." It is OSF's mandatory email-confirmation anti-hijacking gate (like 2FA), applied uniformly to ALL registrations regardless of creation method, resolved only by the account holder clicking the emailed confirmation link. Report this precisely: "Registration submitted (HTTP 201, ID `{id}`). Pending only the account holder's email confirmation — OSF's standard anti-hijacking safeguard, not a data-entry step."
 
 **Never again claim** "requires browser interaction" for registration/form completion. That was false. Only file uploads (Waterbutler) have this limitation.
 
@@ -1837,20 +1869,20 @@ DELETE https://api.osf.io/v2/nodes/{node_id}/
 GET https://api.osf.io/v2/users/me/nodes/
 ```
 
-### Zenodo Credential Protocol (MANDATORY â€” read before ANY Zenodo API call)
+### Zenodo Credential Protocol (MANDATORY — read before ANY Zenodo API call)
 
 **Incident record (2026-07-20/21):** A session spent an entire multi-hour
 block diagnosing repeated `{"status":403,"message":"Permission denied."}`
 errors as "the token has read-only scope" / "the token is dead" across
 ~15 different curl/PowerShell/Python attempts, tried sandbox endpoints,
-query-param auth, multipart uploads, and different Content-Type headers â€”
+query-param auth, multipart uploads, and different Content-Type headers —
 none of which was the actual problem. The real root cause: the token had
 been read from a **truncated terminal display** (`Get-ChildItem env:`
 showing `ZENODO_TOKEN = BkLOVH2EDBcc...` with only the prefix visible) and
 then **manually retyped/reconstructed** by guessing the suffix from a
 separate truncated output, producing a 59-character string that was
 subtly wrong versus the real 60-character token. Zenodo returns the exact
-same generic 403 for "wrong token" as for "right token, wrong scope" â€”
+same generic 403 for "wrong token" as for "right token, wrong scope" —
 the two failure modes are **indistinguishable by symptom alone**.
 
 **THE RULE:** Never hardcode, retype, or reconstruct a Zenodo (or any)
@@ -1859,20 +1891,20 @@ environment variable directly in code:
 
 ```python
 import os
-TOKEN = os.environ.get('ZENODO_TOKEN')   # Python â€” correct
+TOKEN = os.environ.get('ZENODO_TOKEN')  # Python — correct
 ```
 ```powershell
-$env:ZENODO_TOKEN                         # PowerShell â€” correct, pass through directly
+$env:ZENODO_TOKEN             # PowerShell — correct, pass through directly
 ```
 
 **NEVER do this:**
 ```python
-TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g'  # WRONG â€” hand-copied from truncated output
+TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g' # WRONG — hand-copied from truncated output
 ```
 
 If a token must be inspected for debugging, print ONLY its length
-(`len(token)`) and confirm that length matches expectations â€” never print
-the full value (credential-leak risk per `qnfo-agent` Â§Publication
+(`len(token)`) and confirm that length matches expectations — never print
+the full value (credential-leak risk per `qnfo-agent` §Publication
 Language Gate) and never re-derive the value from a partial print.
 
 **Diagnostic script (run FIRST on any Zenodo 403):**
@@ -1881,9 +1913,9 @@ python <research-skill-path>/scripts/zenodo-token-check.py
 ```
 This tests read (`GET /deposit/depositions`), write (`POST` a probe
 deposit), and metadata-write (`PUT` on that probe), then cleans up the
-probe deposit. It distinguishes "token has no write scope â€” generate a
+probe deposit. It distinguishes "token has no write scope — generate a
 new one with `deposit:write` + `deposit:actions` scopes" from "token
-works fine, the problem is elsewhere in this call" â€” collapsing what was
+works fine, the problem is elsewhere in this call" — collapsing what was
 previously ~15 exploratory tool calls into one.
 
 **Required token scopes** (generate at
@@ -1896,7 +1928,7 @@ https://zenodo.org/account/settings/applications/):
 | `user:email` | Allow access to email address (read-only) |
 
 **Publish pipeline scripts** (replace ad hoc inline `python -c` snippets
-or hand-written one-off scripts â€” see kaizen fix B1 on why inline
+or hand-written one-off scripts — see kaizen fix B1 on why inline
 multi-line Python via `-c` is itself an anti-pattern on Windows):
 ```bash
 python <research-skill-path>/scripts/zenodo-create-upload.py <bundle.zip> [--newversion <deposit_id>]
@@ -1907,12 +1939,12 @@ python <research-skill-path>/scripts/zenodo-metadata-publish.py --metadata-file 
 GET-verify-before-`actions/newversion` pattern as the C2 version-chain fix
 below). `zenodo-metadata-publish.py` sets metadata, publishes, and
 verifies the DOI resolves live via `doi.org` + `zenodo.org/api/records`
-before declaring success â€” never trust the tool's immediate return value
+before declaring success — never trust the tool's immediate return value
 alone (see the "General principle" memory: verify server-side state
 independently for every remote publish action).
 
 **Metadata gotcha:** Zenodo's REST API requires an `upload_type` (or
-`resource_type`) field in metadata â€” omitting it produces
+`resource_type`) field in metadata — omitting it produces
 `HTTP 400 {"errors":[{"field":"metadata.resource_type","messages":["Missing data for required field."]}]}`
 on the `actions/publish` call specifically (metadata PUT itself succeeds
 with 200, making this easy to miss until the publish step). Common
@@ -1929,7 +1961,7 @@ is unreadable to human consumers on zenodo.org. Before ANY Zenodo upload:
 1. All papers MUST be rendered to publication-quality PDFs via `scripts/build-paper.py`
 2. ALL rendered PDFs MUST be confirmed present locally (`Test-Path` for every `.pdf`)
 3. ALL rendered PDFs MUST be uploaded individually to the Zenodo deposit — in addition to
-   the PROVENANCE-BUNDLE.zip that contains the source markdown
+  the PROVENANCE-BUNDLE.zip that contains the source markdown
 4. The PDF rendering pipeline ensures zero U+FFFD/U+FFFF errors (see §PDF Building)
 5. This gate applies to both brand-new deposits AND new versions of existing deposits
 
@@ -1944,7 +1976,7 @@ human-readable artifact. The markdown is the machine-readable source. Both are r
 
 **HARD GATE (kaizen fix A3):** `PROVENANCE-BUNDLE.zip` MUST be built and
 verified BEFORE any Zenodo upload begins -- not added ad hoc during the
-upload step. The bundle MUST contain: `paper.md`, `paper.pdf`,
+upload step. The bundle MUST contain: `<slug>.md`, `<slug>.pdf`,
 `PROJECT-PLAN.md`, `README.md`, all `artifacts/*.md`, all `docs/*.md`.
 Verify before upload:
 ```bash
@@ -1956,8 +1988,13 @@ python _check_bundle.py
 import zipfile, sys
 z = zipfile.ZipFile('PROVENANCE-BUNDLE.zip')
 names = z.namelist()
-required = ['paper.md', 'paper.pdf']
-missing = [r for r in required if not any(r in n for n in names)]
+# Check for slug-based filenames (not generic paper.md)
+required_prefixes = ['.md', '.pdf']
+has_md = any(n.endswith('.md') and 'PROJECT-PLAN' not in n and 'README' not in n for n in names)
+has_pdf = any(n.endswith('.pdf') for n in names)
+missing = []
+if not has_md: missing.append('slug.md')
+if not has_pdf: missing.append('slug.pdf')
 print('Bundle contents:', names)
 sys.exit(1 if missing else 0)
 ```
@@ -1965,18 +2002,30 @@ If this check is not run and passed, the Zenodo deposit is INCOMPLETE even
 if `actions/publish` succeeds -- missing provenance is a silent failure, not
 a hard error, so it must be caught here.
 
+**HARD GATE P5.IDENTITY (KIF-58, MANDATORY — 2026-07-31): CROSS-PROJECT PAPER IDENTITY VERIFICATION.**
+
+Before ANY file upload to Zenodo OR any cross-population of files between Zenodo and GitHub:
+
+1. **Verify paper title matches target Zenodo concept.** Read the paper's YAML `title:` field. Compare against the target Zenodo deposit's `title` field (via `GET /api/deposit/depositions/{id}`). They MUST match exactly. A title mismatch means the wrong paper is being uploaded.
+2. **Verify paper DOI belongs to the target concept.** The paper's YAML `doi:` MUST belong to the same concept DOI as the target Zenodo deposit. If the paper references a different concept DOI, it belongs to a different project.
+3. **Verify GitHub repo paper identity (REPO-TARGET GATE extension).** Before pushing files to any GitHub repo in the context of a Zenodo upload, verify the repo's existing `paper.md` YAML `title:` matches the paper being pushed. ADR-026's REPO-TARGET GATE (check `git remote -v`) is necessary but NOT sufficient — it confirms the repo URL, not the paper identity. A repo can be the correct target URL but contain the wrong paper.
+4. **Verify temp directory content (KIF-32 extension).** If working from a temp directory, NEVER assume the directory name identifies the project. Read `paper.md` YAML frontmatter (`title:` + `doi:`) before using its contents for upload or cross-population.
+5. **Zenodo bucket lock awareness.** A published Zenodo deposit CANNOT have its files deleted or overwritten (HTTP 403 "Bucket is locked for modifications"). Verify file contents before `actions/publish` — once published, wrong files are permanently tainted in that version DOI.
+
+**GATE:** If any of checks 1-4 fail, BLOCK the upload/cross-population. A Zenodo deposit with wrong paper content is a PERMANENT contamination. This gate prevents the exact failure mode seen in the 2026-07-31 JPCUB-vs-Computing-Machines cross-contamination incident where "Computing After Silicon" paper files (31,785 bytes) were uploaded to the JPCUB Zenodo concept (21715609), and JPCUB paper content was pushed to the computing-machines GitHub repo. Cross-reference: KIF-58, memory "Do not assume temporary directory names identify the project."
+
 #### 1. Create Deposit
 ```python
 POST https://zenodo.org/api/deposit/depositions
 Headers: Authorization: Bearer <ZENODO_TOKEN>
-Body: {}  # Empty metadata to create draft
+Body: {} # Empty metadata to create draft
 ```
 
 #### 2. Upload Files
 ```python
 PUT https://zenodo.org/api/deposit/depositions/{id}/files
-Files: paper.md, paper.pdf, PROVENANCE-BUNDLE.zip, README.md,
-       ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
+Files: <slug>.md, <slug>.pdf, PROVENANCE-BUNDLE.zip, README.md,
+    ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
 ```
 **GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
 present in the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
@@ -1987,16 +2036,16 @@ be remediated before publishing. See HARD GATE P5.PDF (KIF-30) above.
 ```python
 PUT https://zenodo.org/api/deposit/depositions/{id}
 Body: {
-    "title": "...",
-    "creators": [{"name": "..."}],
-    "description": "...",
-    "access_right": "open",
-    "license": "CC-BY-4.0",
-    "related_identifiers": [
-        {"relation": "isNewVersionOf", "identifier": "10.5281/zenodo.PREVIOUS"},
-        {"relation": "isSupplementedBy", "identifier": "https://github.com/..."},
-        {"relation": "cites", "identifier": "10.5281/zenodo.CITED"}
-    ]
+  "title": "...",
+  "creators": [{"name": "..."}],
+  "description": "...",
+  "access_right": "open",
+  "license": "CC-BY-4.0",
+  "related_identifiers": [
+    {"relation": "isNewVersionOf", "identifier": "10.5281/zenodo.PREVIOUS"},
+    {"relation": "isSupplementedBy", "identifier": "https://github.com/..."},
+    {"relation": "cites", "identifier": "10.5281/zenodo.CITED"}
+  ]
 }
 ```
 **Auto-discover related QNFO papers (kaizen fix D4):** before hand-writing
@@ -2016,7 +2065,7 @@ POST https://zenodo.org/api/deposit/depositions/{id}/actions/publish
 #### 5. Verify
 ```bash
 # Windows: use curl.exe (not PowerShell alias) and write Python to file, never pipe to python -c
-curl.exe -sI https://doi.org/10.5281/zenodo/{id}  # Must return HTTP 200
+curl.exe -sI https://doi.org/10.5281/zenodo/{id} # Must return HTTP 200
 curl.exe -s https://zenodo.org/api/records/{id} -o _zenodo_record.json
 python _verify_zenodo.py
 ```
@@ -2024,7 +2073,7 @@ python _verify_zenodo.py
 ```python
 import json
 with open('_zenodo_record.json', 'r', encoding='utf-8') as f:
-    r = json.load(f)
+  r = json.load(f)
 print('DOI:', r.get('doi'))
 print('Related:', len(r.get('related_identifiers', [])))
 ```
@@ -2038,11 +2087,11 @@ Zenodo's concept-DOI/version-DOI split is easy to get wrong: calling
 HTTP 403. Maintain a tracking file at the project root:
 ```json
 {
-  "concept_doi": "10.5281/zenodo.XXXXXXX",
-  "latest_deposit_id": "YYYYYYY",
-  "versions": [
-    {"doi": "10.5281/zenodo.XXXXXXX", "deposit_id": "YYYYYYY", "tag": "v1.0", "published_at": "2026-07-20"}
-  ]
+ "concept_doi": "10.5281/zenodo.XXXXXXX",
+ "latest_deposit_id": "YYYYYYY",
+ "versions": [
+  {"doi": "10.5281/zenodo.XXXXXXX", "deposit_id": "YYYYYYY", "tag": "v1.0", "published_at": "2026-07-20"}
+ ]
 }
 ```
 Before calling `actions/newversion`, ALWAYS verify with a GET first:
@@ -2057,7 +2106,7 @@ the latest deposit ID", preventing the fragmented-citation-record failure
 mode where a disconnected new deposit gets created because the correct ID
 was lost or misremembered.
 
-#### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent Â§8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
+#### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent §8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
 
 At every session or phase conclusion for a project with an existing Zenodo
 deposit, create a NEW VERSION rather than a disconnected upload:
@@ -2134,9 +2183,9 @@ URL = f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/d1/database/{DB}
 HEADERS = {'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json'}
 
 def d1_query(sql, params=None):
-    body = json.dumps({'sql': sql, 'params': params or []})
-    req = urllib.request.Request(URL, data=body.encode(), headers=HEADERS)
-    return json.loads(urllib.request.urlopen(req).read())
+  body = json.dumps({'sql': sql, 'params': params or []})
+  req = urllib.request.Request(URL, data=body.encode(), headers=HEADERS)
+  return json.loads(urllib.request.urlopen(req).read())
 ```
 
 **Step 4 -- CHECK-THEN-WRITE, never a combined upsert on `papers`:**
@@ -2146,16 +2195,16 @@ exists = d1_query("SELECT COUNT(*) as c FROM papers WHERE slug = ?", [slug])['re
 
 # 2a. If not present: plain INSERT (no ON CONFLICT)
 if not exists:
-    d1_query(
-        "INSERT INTO papers (slug, title, body_md, abstract, authors, doi, status, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [slug, title, body_md, abstract, authors, doi, status, version]
-    )
+  d1_query(
+    "INSERT INTO papers (slug, title, body_md, abstract, authors, doi, status, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    [slug, title, body_md, abstract, authors, doi, status, version]
+  )
 # 2b. If present: plain UPDATE
 else:
-    d1_query(
-        "UPDATE papers SET body_md = ?, doi = ?, status = ?, version = ? WHERE slug = ?",
-        [body_md, doi, status, version, slug]
-    )
+  d1_query(
+    "UPDATE papers SET body_md = ?, doi = ?, status = ?, version = ? WHERE slug = ?",
+    [body_md, doi, status, version, slug]
+  )
 ```
 Note the column is `body_md`, not `body` -- verify column names with
 `SELECT name FROM sqlite_master WHERE type='table' AND name='papers'`
@@ -2172,13 +2221,13 @@ assert rows, "INSERT/UPDATE did not persist -- do not report success"
 
 **Step 6 -- verify papers-server actually serves it:**
 ```bash
-curl -sI https://papers.qnfo.org/papers/<slug>/  # Both with and without trailing slash resolved as of 2026-07-30; trailing slash is canonical
+curl -sI https://papers.qnfo.org/papers/<slug>/ # Both with and without trailing slash resolved as of 2026-07-30; trailing slash is canonical
 ```
 
 ### Papers-Server Worker Verification
 ```bash
 # Windows: use curl.exe and write Python to file, never pipe to python -c
-curl.exe -sI https://papers.qnfo.org/papers/<slug>/  # Must return HTTP 200
+curl.exe -sI https://papers.qnfo.org/papers/<slug>/ # Must return HTTP 200
 curl.exe -s https://papers.qnfo.org/papers/<slug>/ -o _papers_check.html
 python _papers_verify.py <slug>
 ```
@@ -2186,15 +2235,15 @@ python _papers_verify.py <slug>
 ```python
 import sys
 with open('_papers_check.html', 'r', encoding='utf-8') as f:
-    c = f.read()
+  c = f.read()
 print('MathJax:', 'MathJax' in c)
 print('Size:', len(c))
 ```
 
 ### R2 Archive
 ```bash
-npx wrangler r2 object put releases/<YYYY>/<MM>/<slug>/paper.md --file=paper.md --remote
-npx wrangler r2 object put releases/<YYYY>/<MM>/<slug>/paper.pdf --file=paper.pdf --remote
+npx wrangler r2 object put releases/<YYYY>/<MM>/<slug>/<slug>.md --file=<slug>.md --remote
+npx wrangler r2 object put releases/<YYYY>/<MM>/<slug>/<slug>.pdf --file=<slug>.pdf --remote
 ```
 
 ### Knowledge Graph Seed
@@ -2210,16 +2259,16 @@ This gate replaces single-source verification with a cross-MCP verification chai
 **Verification chain (execute in order, ALL must pass before declaring deployment complete):**
 
 ```
-1. cloudflare-builds      → confirm deploy/push succeeded, get build ID + timestamp
+1. cloudflare-builds   → confirm deploy/push succeeded, get build ID + timestamp
 2. cloudflare-observability → confirm Worker is receiving healthy invocations (0 errors)
-3. cloudflare-bindings    → verify declared wrangler.jsonc bindings match actual runtime
-4. cloudflare-auditlogs   → confirm deploy action appears in account audit trail
+3. cloudflare-bindings  → verify declared wrangler.jsonc bindings match actual runtime
+4. cloudflare-auditlogs  → confirm deploy action appears in account audit trail
 ```
 
 **For D1/R2-only changes (no Worker deploy):**
 ```
-1. cloudflare             → re-query the D1 row or R2 object to confirm write persisted
-2. cloudflare-auditlogs   → confirm the write action is recorded
+1. cloudflare       → re-query the D1 row or R2 object to confirm write persisted
+2. cloudflare-auditlogs  → confirm the write action is recorded
 ```
 
 **Gate criteria:**
@@ -2241,41 +2290,41 @@ See `cloudflare` skill v3.9 §MCP-Driven Operations for the full decision matrix
 
 ### SEO Audit (MANDATORY before declaring publication complete)
 
-1. **robots.txt** â€” verify at root of papers.qnfo.org: allows crawling, points to sitemap
-2. **sitemap.xml** â€” all paper pages listed with lastmod dates
-3. **llms.txt** â€” machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
-4. **Meta tags** â€” `citation_title`, `citation_author`, `citation_doi`, `citation_date`
-5. **Structured data** â€” Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
-6. **Open Graph** â€” `og:title`, `og:description`, `og:type` (article), `og:url`
+1. **robots.txt** — verify at root of papers.qnfo.org: allows crawling, points to sitemap
+2. **sitemap.xml** — all paper pages listed with lastmod dates
+3. **llms.txt** — machine-readable paper index for AI crawlers at papers.qnfo.org/llms.txt
+4. **Meta tags** — `citation_title`, `citation_author`, `citation_doi`, `citation_date`
+5. **Structured data** — Schema.org `ScholarlyArticle` with `@id`, `headline`, `author`, `datePublished`, `identifier` (DOI)
+6. **Open Graph** — `og:title`, `og:description`, `og:type` (article), `og:url`
 
-### Buffer Social Media (v2.11 â€” COMPLETE REWRITE, 2026-07-21)
+### Buffer Social Media (v2.11 — COMPLETE REWRITE, 2026-07-21)
 
 > **v2.11 BUFFER MIGRATION:** The legacy `api.bufferapp.com/1.0/graphql.json` endpoint
 > and `createDraft` mutation are **DEPRECATED** as of 2026-07-21. All Buffer API calls
 > now use `https://api.buffer.com` with the `createPost` mutation. Verified live
 > with 3-channel posting (Twitter, LinkedIn, Bluesky) for the Informational Universe
-> paper. Old channel IDs are stale â€” ALWAYS discover live IDs via the channels query
+> paper. Old channel IDs are stale — ALWAYS discover live IDs via the channels query
 > below; never hardcode them.
 
 #### Endpoint & Auth
 
 ```
-URL:     https://api.buffer.com/graphql   (also works at bare https://api.buffer.com â€” both resolve)
-Auth:    Authorization: Bearer <token>
-Method:  POST with JSON GraphQL body
-Legacy:  api.bufferapp.com/1.0/graphql.json â†’ 404 (DOMAIN DEPRECATED)
+URL:   https://api.buffer.com/graphql  (also works at bare https://api.buffer.com — both resolve)
+Auth:  Authorization: Bearer <token>
+Method: POST with JSON GraphQL body
+Legacy: api.bufferapp.com/1.0/graphql.json → 404 (DOMAIN DEPRECATED)
 ```
 
-#### Buffer 401 Diagnostic Protocol (MANDATORY â€” v2.12, 2026-07-21)
+#### Buffer 401 Diagnostic Protocol (MANDATORY — v2.12, 2026-07-21)
 
 **INCIDENT (2026-07-21):** A session diagnosed a working Buffer Personal Access
 Token (43 chars, suffix `14Ky`, all 7 scopes active, created 2026-06-21) as
 "stale/expired" after a single `urllib.request` call returned HTTP 401, delaying
-dissemination by an entire session. The token was NEVER the problem â€” a transient
+dissemination by an entire session. The token was NEVER the problem — a transient
 or request-format issue caused the 401, and the endpoint `https://api.buffer.com`
 with the GraphQL query below works perfectly. **The token was subsequently
 confirmed live in the SAME session with the SAME endpoint, SAME token value,
-and SAME query â€” the original 401 was a false alarm.**
+and SAME query — the original 401 was a false alarm.**
 
 **THE RULE: NEVER diagnose a Buffer 401 as "stale token" without running
 the endpoint-discovery diagnostic FIRST. A single 401 from a single call
@@ -2285,44 +2334,44 @@ is INSUFFICIENT EVIDENCE to declare a token dead.**
 
 ```python
 import urllib.request, json, os
-TOKEN = os.environ.get('BUFFER_TOKEN')  # NEVER hand-copy
+TOKEN = os.environ.get('BUFFER_TOKEN') # NEVER hand-copy
 
 endpoints = [
-    ('GraphQL api.buffer.com', 'POST',
-     'https://api.buffer.com',
-     json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
-     {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
-    ('GraphQL api.buffer.com/graphql', 'POST',
-     'https://api.buffer.com/graphql',
-     json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
-     {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
+  ('GraphQL api.buffer.com', 'POST',
+   'https://api.buffer.com',
+   json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
+   {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
+  ('GraphQL api.buffer.com/graphql', 'POST',
+   'https://api.buffer.com/graphql',
+   json.dumps({"query": "query { account { organizations { id } } }"}).encode(),
+   {'Authorization': f'Bearer {TOKEN}', 'Content-Type': 'application/json'}),
 ]
 for label, method, url, body, headers in endpoints:
-    try:
-        req = urllib.request.Request(url, data=body, headers=headers, method=method)
-        resp = urllib.request.urlopen(req, timeout=15)
-        print(f'OK {label}: HTTP {resp.getcode()}')
-    except urllib.error.HTTPError as e:
-        print(f'FAIL {label}: HTTP {e.code}')
-    except Exception as e:
-        print(f'FAIL {label}: {e}')
+  try:
+    req = urllib.request.Request(url, data=body, headers=headers, method=method)
+    resp = urllib.request.urlopen(req, timeout=15)
+    print(f'OK {label}: HTTP {resp.getcode()}')
+  except urllib.error.HTTPError as e:
+    print(f'FAIL {label}: HTTP {e.code}')
+  except Exception as e:
+    print(f'FAIL {label}: {e}')
 ```
 
 **Decision tree:**
-- GraphQL at `api.buffer.com` returns 200 â†’ token works, proceed with posting
-- GraphQL at `api.buffer.com` returns 401 â†’ try `api.buffer.com/graphql`
-- Both GraphQL endpoints return 401 â†’ token is genuinely stale, regenerate
-- **Never try REST endpoints** (`api.bufferapp.com/1/*`) for diagnosis â€”
-  Buffer Personal Access Tokens are GraphQL-only; REST returns 401
-  `"Public API tokens are not accepted for REST API access"` even for
-  valid tokens, producing a FALSE diagnostic
+- GraphQL at `api.buffer.com` returns 200 → token works, proceed with posting
+- GraphQL at `api.buffer.com` returns 401 → try `api.buffer.com/graphql`
+- Both GraphQL endpoints return 401 → token is genuinely stale, regenerate
+- **Never try REST endpoints** (`api.bufferapp.com/1/*`) for diagnosis —
+ Buffer Personal Access Tokens are GraphQL-only; REST returns 401
+ `"Public API tokens are not accepted for REST API access"` even for
+ valid tokens, producing a FALSE diagnostic
 
 **This protocol MUST be run before any "stale token" diagnosis.** If it
 passes, and the posting attempt still fails with 401, the problem is with
 the request format (GraphQL query syntax, escaping, channel ID, text length)
-â€” NOT the token.
+— NOT the token.
 
-#### Channel Discovery (MANDATORY â€” run before any post)
+#### Channel Discovery (MANDATORY — run before any post)
 
 Never hardcode channel IDs. Always discover them live:
 
@@ -2343,10 +2392,10 @@ req = urllib.request.Request('https://api.buffer.com', data=json.dumps(query).en
 channels = json.loads(urllib.request.urlopen(req).read())['data']['channels']
 
 for c in channels:
-    print(f"  {c['service']}: {c['name']} -> {c['id']}")
+  print(f" {c['service']}: {c['name']} -> {c['id']}")
 ```
 
-**Verified live channel IDs (2026-07-21 â€” ALWAYS re-discover, do not trust this table):**
+**Verified live channel IDs (2026-07-21 — ALWAYS re-discover, do not trust this table):**
 
 | Platform | channelId | Profile |
 |:---------|:----------|:--------|
@@ -2354,44 +2403,44 @@ for c in channels:
 | LinkedIn | `6a170337c687a22dd430685f` | rowan-quni |
 | Bluesky | `6a01d129090476fb9909d885` | Rowan Brad Quni-Gudzinas |
 
-#### Post Creation (Buffer GraphQL â€” v2.13, 2026-07-22)
+#### Post Creation (Buffer GraphQL — v2.13, 2026-07-22)
 
 **Mutation:** `createPost` (replaces deprecated `createDraft`)
 
 ```graphql
 mutation {
-  createPost(input: {
-    channelId: "<liveIdFromDiscovery>",
-    text: "<post text>",
-    schedulingType: automatic,     # REQUIRED enum: automatic | notification
-    mode: addToQueue,              # REQUIRED enum: addToQueue | shareNow | shareNext | customScheduled
-    assets: [],                    # REQUIRED non-null list â€” always pass [] (empty list)
-    saveToDraft: false             # optional: true = draft mode
-  }) {
-    __typename                     # MANDATORY â€” PostActionPayload is a UNION
-  }
+ createPost(input: {
+  channelId: "<liveIdFromDiscovery>",
+  text: "<post text>",
+  schedulingType: automatic,   # REQUIRED enum: automatic | notification
+  mode: addToQueue,       # REQUIRED enum: addToQueue | shareNow | shareNext | customScheduled
+  assets: [],          # REQUIRED non-null list — always pass [] (empty list)
+  saveToDraft: false       # optional: true = draft mode
+ }) {
+  __typename           # MANDATORY — PostActionPayload is a UNION
+ }
 }
 ```
 
-**CRITICAL RULES (v2.14 â€” 2026-07-22, corrected):**
-1. NEVER use `createDraft` â€” it no longer exists. Use `createPost`.
+**CRITICAL RULES (v2.14 — 2026-07-22, corrected):**
+1. NEVER use `createDraft` — it no longer exists. Use `createPost`.
 2. **The `assets` field is NON_NULL and REQUIRED.** Always pass `assets: []` (empty list). Omitting it causes `InvalidInputError`.
-3. **Inline fragments on `PostActionPayload` DO WORK â€” v2.13's claim otherwise was FALSE and is retracted.** `PostActionPayload` is a real GraphQL union and its members (`PostActionSuccess`, `InvalidInputError`, `UnauthorizedError`, `UnexpectedError`, `NotFoundError`, `LimitReachedError`, `RestProxyError` â€” confirmed via `__type(name: "PostActionPayload") { possibleTypes { name } }`) ARE valid inline-fragment targets. The v2.13 error (`Unknown type "PostActionSuccess"`) was caused by fragmenting on a NON-existent type name (e.g. `Post`), not by a union limitation. **Always request `message` inside every error-variant fragment and `post { id }` inside `PostActionSuccess`** â€” querying only `__typename` throws away the single most useful piece of debugging information Buffer provides (e.g. the exact "10 scheduled posts out of 10 allowed" queue-limit text). See `scripts/buffer-post.py` v1.1 for the corrected, verified-live mutation.
-4. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED. The `notification` enum value exists in the schema but does NOT work for posting â€” use `automatic`.
-5. Twitter text limit: ~280 characters AFTER URL shortening (Buffer shortens URLs to ~23 chars, so raw text including URL can be up to ~410 chars). Bluesky limit: ~300 characters raw text. Violations return `InvalidInputError` with an exact message inside `data.createPost` (via the `... on InvalidInputError { message }` fragment) â€” read it rather than guessing.
+3. **Inline fragments on `PostActionPayload` DO WORK — v2.13's claim otherwise was FALSE and is retracted.** `PostActionPayload` is a real GraphQL union and its members (`PostActionSuccess`, `InvalidInputError`, `UnauthorizedError`, `UnexpectedError`, `NotFoundError`, `LimitReachedError`, `RestProxyError` — confirmed via `__type(name: "PostActionPayload") { possibleTypes { name } }`) ARE valid inline-fragment targets. The v2.13 error (`Unknown type "PostActionSuccess"`) was caused by fragmenting on a NON-existent type name (e.g. `Post`), not by a union limitation. **Always request `message` inside every error-variant fragment and `post { id }` inside `PostActionSuccess`** — querying only `__typename` throws away the single most useful piece of debugging information Buffer provides (e.g. the exact "10 scheduled posts out of 10 allowed" queue-limit text). See `scripts/buffer-post.py` v1.1 for the corrected, verified-live mutation.
+4. `schedulingType: automatic` and `mode: addToQueue` are both REQUIRED. The `notification` enum value exists in the schema but does NOT work for posting — use `automatic`.
+5. Twitter text limit: ~280 characters AFTER URL shortening (Buffer shortens URLs to ~23 chars, so raw text including URL can be up to ~410 chars). Bluesky limit: ~300 characters raw text. Violations return `InvalidInputError` with an exact message inside `data.createPost` (via the `... on InvalidInputError { message }` fragment) — read it rather than guessing.
 6. Endpoint is `https://api.buffer.com/graphql` (preferred). The bare `https://api.buffer.com` also works. Legacy endpoint `https://api.bufferapp.com/1.0/graphql.json` returns 404.
 7. **All enum values MUST be unquoted GraphQL identifiers** (e.g., `automatic` not `"automatic"`). Quoting them as strings causes `Enum "SchedulingType" cannot represent non-enum value`.
-8. **`LimitReachedError` is a genuine account-level constraint (e.g. "10 scheduled posts out of 10 allowed"), not an agent/script failure.** It requires the human user to clear their Buffer queue or upgrade their plan â€” do not retry, do not treat as a bug to fix, and disclose it plainly as `[BLOCKED: account queue limit, user action required]` rather than a phantom "posted" claim.
+8. **`LimitReachedError` is a genuine account-level constraint (e.g. "10 scheduled posts out of 10 allowed"), not an agent/script failure.** It requires the human user to clear their Buffer queue or upgrade their plan — do not retry, do not treat as a bug to fix, and disclose it plainly as `[BLOCKED: account queue limit, user action required]` rather than a phantom "posted" claim.
 
 #### Post Deletion
 
 ```graphql
 mutation {
-  deletePost(input: { id: "<postId>" }) {
-    __typename
-    ... on DeletePostSuccess { id }
-    ... on VoidMutationError { message }
-  }
+ deletePost(input: { id: "<postId>" }) {
+  __typename
+  ... on DeletePostSuccess { id }
+  ... on VoidMutationError { message }
+ }
 }
 ```
 
@@ -2405,29 +2454,29 @@ After posting, verify independently:
 # (GRAPHQL_VALIDATION_FAILED). The prior channels+posts subquery shape is
 # STALE and MUST NOT be used. There is no confirmed post-enumeration query
 # on the current schema. Verification alternatives:
-#   a) createPost mutation response: inline fragment on PostActionSuccess
-#      returns post { id } — this ID is the proof of acceptance.
-#   b) Manual dashboard check by the user for scheduled posts.
+#  a) createPost mutation response: inline fragment on PostActionSuccess
+#   returns post { id } — this ID is the proof of acceptance.
+#  b) Manual dashboard check by the user for scheduled posts.
 # If posts were created via createPost and returned a post ID, that is the
 # primary verification signal; a subsequent failed enumeration query does
 # NOT disprove the post's existence.
 query = {"query": """query {
-  channels(input: { organizationId: "ORG_ID" }) {
-    id name service
-  }
+ channels(input: { organizationId: "ORG_ID" }) {
+  id name service
+ }
 }"""}
 ```
 
-#### Token Protocol (v2.11 â€” REDUNDANT STORAGE MANDATORY)
+#### Token Protocol (v2.11 — REDUNDANT STORAGE MANDATORY)
 
 Token is a Buffer Personal Access Token, 43 characters, suffix `14Ky`.
 
 **Required storage locations (ALL 4-5 MUST exist, never rely on one):**
-1. `%USERPROFILE%\buffer\token` â€” primary file
-2. `%USERPROFILE%\.buffer_token` â€” fallback file
-3. `%USERPROFILE%\keys.json` â€” `buffer_token` key in JSON doc
+1. `%USERPROFILE%\buffer\token` — primary file
+2. `%USERPROFILE%\.buffer_token` — fallback file
+3. `%USERPROFILE%\keys.json` — `buffer_token` key in JSON doc
 4. Environment variable `BUFFER_TOKEN` (session)
-5. Environment variable `BUFFER_TOKEN` (user â€” set via `[Environment]::SetEnvironmentVariable`)
+5. Environment variable `BUFFER_TOKEN` (user — set via `[Environment]::SetEnvironmentVariable`)
 
 **Token format:** 43 chars, random alphanumeric + underscores, suffix `14Ky`.
 
@@ -2439,7 +2488,7 @@ resp = json.loads(urllib.request.urlopen(req).read())
 # HTTP 200 + valid org_id = token works. 403/401 = dead token.
 ```
 
-**Token regeneration:** Go to https://buffer.com â†’ Settings â†’ API Access Tokens. Overwrite ALL 4-5 storage locations with the new value immediately.
+**Token regeneration:** Go to https://buffer.com → Settings → API Access Tokens. Overwrite ALL 4-5 storage locations with the new value immediately.
 
 #### Red-Team / Anti-Patterns for Buffer
 
@@ -2448,17 +2497,17 @@ resp = json.loads(urllib.request.urlopen(req).read())
 | `createDraft` mutation | `createPost` (v2.11 migration) |
 | `api.bufferapp.com/1.0/graphql.json` endpoint | `https://api.buffer.com/graphql` |
 | Hardcoded channel IDs | Discover live via channels query |
-| Querying only `__typename` without `message` on error fragments | Request `message` inside every error-variant fragment (`InvalidInputError`, `LimitReachedError`, etc.) â€” it contains the exact actionable reason (v2.14 fix) |
-| Claiming "inline fragments don't work on PostActionPayload" | FALSE (v2.13 error) â€” fragments DO work; the real bug was fragmenting on a non-existent type name like `Post` instead of a real union member (v2.14 fix, verified live) |
-| Omitting `assets: []` in input | `assets` is NON_NULL required â€” always pass `assets: []` |
+| Querying only `__typename` without `message` on error fragments | Request `message` inside every error-variant fragment (`InvalidInputError`, `LimitReachedError`, etc.) — it contains the exact actionable reason (v2.14 fix) |
+| Claiming "inline fragments don't work on PostActionPayload" | FALSE (v2.13 error) — fragments DO work; the real bug was fragmenting on a non-existent type name like `Post` instead of a real union member (v2.14 fix, verified live) |
+| Omitting `assets: []` in input | `assets` is NON_NULL required — always pass `assets: []` |
 | Quoting enum values like `"automatic"` | Unquoted GraphQL identifiers: `automatic` (v2.13 fix) |
-| Using `schedulingType: notification` | Use `automatic` â€” `notification` exists in schema but doesn't work |
+| Using `schedulingType: notification` | Use `automatic` — `notification` exists in schema but doesn't work |
 | Single token location | 4-5 redundant locations |
 | Diagnosing 404 as "token dead" | 404 from legacy endpoint = endpoint deprecated, not token |
-| Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol â€” test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
-| Twitter text > 280 chars after URL-shorten | Trim raw text to â‰¤410 chars (Buffer shortens URLs to ~23 chars) |
-| Diagnosing "stale token" from truncated PowerShell output | ALWAYS read token via Python `open().read().strip()` â€” PowerShell `Get-Content` can return stale/cached values |
-| Treating `LimitReachedError` as an agent bug and retrying indefinitely | It's a genuine account-level queue cap (e.g. 10/10 scheduled posts) â€” disclose as `[BLOCKED: account queue limit]`, do not retry, requires user to clear queue or upgrade plan (v2.14) |
+| Diagnosing Buffer 401 as "stale token" without diagnostic | Run Buffer 401 Diagnostic Protocol — test GraphQL at `api.buffer.com` first; a single HTTP 401 is INSUFFICIENT evidence to declare a token dead |
+| Twitter text > 280 chars after URL-shorten | Trim raw text to ≤410 chars (Buffer shortens URLs to ~23 chars) |
+| Diagnosing "stale token" from truncated PowerShell output | ALWAYS read token via Python `open().read().strip()` — PowerShell `Get-Content` can return stale/cached values |
+| Treating `LimitReachedError` as an agent bug and retrying indefinitely | It's a genuine account-level queue cap (e.g. 10/10 scheduled posts) — disclose as `[BLOCKED: account queue limit]`, do not retry, requires user to clear queue or upgrade plan (v2.14) |
 
 #### Post Format
 ```
@@ -2469,7 +2518,7 @@ Abstract: <1-2 sentence summary>
 Hashtags: #QNFO #Research <domain-specific tags>
 ```
 
-### IPFS Distribution â€” Cloudflare + DNSLink ONLY (v2.10, MANDATORY method)
+### IPFS Distribution — Cloudflare + DNSLink ONLY (v2.10, MANDATORY method)
 
 **All third-party pinning services are deprecated (see v2.10 banner).**
 The canonical, permanent QNFO IPFS distribution method is three steps,
@@ -2481,22 +2530,22 @@ content-addressing itself; write a `.py` file, never inline per kaizen B1):**
 import hashlib
 
 def compute_cidv1(filepath):
-    """CIDv1: raw codec (0x55) + sha2-256 multihash, base32-encoded (RFC4648, lowercase, no padding)."""
-    with open(filepath, 'rb') as f:
-        content = f.read()
-    digest = hashlib.sha256(content).digest()
-    cidv1_bytes = bytes([0x01, 0x55, 0x12, 0x20]) + digest  # cidv1 + raw + sha2-256 + 32-byte len
-    alphabet = 'abcdefghijklmnopqrstuvwxyz234567'
-    bits, value, result = 0, 0, 'b'
-    for byte in cidv1_bytes:
-        value = (value << 8) | byte
-        bits += 8
-        while bits >= 5:
-            bits -= 5
-            result += alphabet[(value >> bits) & 0x1f]
-    if bits > 0:
-        result += alphabet[(value << (5 - bits)) & 0x1f]
-    return result
+  """CIDv1: raw codec (0x55) + sha2-256 multihash, base32-encoded (RFC4648, lowercase, no padding)."""
+  with open(filepath, 'rb') as f:
+    content = f.read()
+  digest = hashlib.sha256(content).digest()
+  cidv1_bytes = bytes([0x01, 0x55, 0x12, 0x20]) + digest # cidv1 + raw + sha2-256 + 32-byte len
+  alphabet = 'abcdefghijklmnopqrstuvwxyz234567'
+  bits, value, result = 0, 0, 'b'
+  for byte in cidv1_bytes:
+    value = (value << 8) | byte
+    bits += 8
+    while bits >= 5:
+      bits -= 5
+      result += alphabet[(value >> bits) & 0x1f]
+  if bits > 0:
+    result += alphabet[(value << (5 - bits)) & 0x1f]
+  return result
 ```
 
 **Step 2 -- Upload the durable byte-store to Cloudflare R2 (the CID is a
@@ -2518,11 +2567,11 @@ req = urllib.request.Request(f'{BASE}/zones?name=qnfo.org', headers={'Authorizat
 zone_id = json.loads(urllib.request.urlopen(req).read())['result'][0]['id']
 
 body = json.dumps({
-    'type': 'TXT',
-    'name': f'_dnslink.{subdomain}',
-    'content': f'dnslink=/ipfs/{cid}',
-    'ttl': 3600,
-    'comment': f'DNSLink for {label}'
+  'type': 'TXT',
+  'name': f'_dnslink.{subdomain}',
+  'content': f'dnslink=/ipfs/{cid}',
+  'ttl': 3600,
+  'comment': f'DNSLink for {label}'
 })
 req = urllib.request.Request(f'{BASE}/zones/{zone_id}/dns_records', data=body.encode(), headers=HEADERS)
 urllib.request.urlopen(req)
@@ -2545,7 +2594,7 @@ silently omitting the check.
 distributed IPFS network in the traditional sense (no Filecoin deal, no
 third-party pinning service holding a copy). R2 is the actual durable
 store; the CID + DNSLink give it IPFS-compatible addressing and discovery.
-This is an intentional simplification per product direction (2026-07-21) â€”
+This is an intentional simplification per product direction (2026-07-21) —
 do not add a third-party pinning step back in without an explicit new
 instruction to do so.
 
@@ -2557,7 +2606,7 @@ GET https://web.archive.org/save/https://papers.qnfo.org/papers/<slug>
 
 ### Publication URL Verification
 ```bash
-curl -sI https://papers.qnfo.org/papers/<slug>/  # Must return HTTP 200
+curl -sI https://papers.qnfo.org/papers/<slug>/ # Must return HTTP 200
 ```
 
 ## Phase 8: Core Distribution Stack (MANDATORY)
@@ -2579,22 +2628,22 @@ All distribution dimensions are satisfied by the core QNFO infrastructure:
 ### Pipeline
 ```
 Publication Ready (Phase 5 PDF + Phase 6 D1/R2)
-    |
-    |-- GitHub:  git add, git commit, git push --tags (public repo)
-    |-- Zenodo:  create new version deposit, upload PDF+md+bundle, publish
-    |-- R2:      npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/ --remote
-    |-- D1/KG:   INSERT/UPDATE living-paper + sync Knowledge Graph
-    |-- DNSLink (OPTIONAL): _dnslink.<slug>.qnfo.org -> /ipfs/<CID>
-    |-- Internet Archive: submit papers.qnfo.org URL
+  |
+  |-- GitHub: git add, git commit, git push --tags (public repo)
+  |-- Zenodo: create new version deposit, upload PDF+md+bundle, publish
+  |-- R2:   npx wrangler r2 object put qnfo-releases/releases/<YYYY>/<MM>/<slug>/ --remote
+  |-- D1/KG:  INSERT/UPDATE living-paper + sync Knowledge Graph
+  |-- DNSLink (OPTIONAL): _dnslink.<slug>.qnfo.org -> /ipfs/<CID>
+  |-- Internet Archive: submit papers.qnfo.org URL
 ```
 
 ### DNSLink (OPTIONAL -- convenience layer)
 ```bash
-curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records"   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"   -d '{"type":"TXT","name":"_dnslink.{subdomain}","content":"dnslink=/ipfs/{CID}","ttl":1}'
+curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records"  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"  -d '{"type":"TXT","name":"_dnslink.{subdomain}","content":"dnslink=/ipfs/{CID}","ttl":1}'
 ```
 
 ### Deployment Workflow
-1. Confirm content exists (body_md in D1 or paper.md in R2)
+1. Confirm content exists (body_md in D1 or <slug>.md in R2)
 2. Run Phase 5 (Publication: PDF, Zenodo DOI) + Phase 6 (Deploy: D1/R2)
 3. Push to GitHub with version tag, create GitHub Release with DOI link
 4. Upload all artifacts to R2 (canonical durable host)
@@ -2602,12 +2651,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 6. (OPTIONAL) Create DNSLink TXT record if an IPFS CID is available
 7. Submit Internet Archive snapshot
 8. **MCP-DRIVEN VERIFICATION (v2.25 — HARD GATE):** Run the cross-MCP chain from Phase 6 §MCP-Driven Deployment Verification:
-   - `cloudflare-builds` → deploy confirmation
-   - `cloudflare-observability` → Worker metrics, error rates
-   - `cloudflare-bindings` → binding integrity
-   - `cloudflare-auditlogs` → deploy action recorded
-   - `dns-analytics` → DNS query volumes (if custom domain)
-   - `dex-analysis` → end-user latency verification
+  - `cloudflare-builds` → deploy confirmation
+  - `cloudflare-observability` → Worker metrics, error rates
+  - `cloudflare-bindings` → binding integrity
+  - `cloudflare-auditlogs` → deploy action recorded
+  - `dns-analytics` → DNS query volumes (if custom domain)
+  - `dex-analysis` → end-user latency verification
 9. Verify: papers.qnfo.org returns HTTP 200, DOI resolves, R2 content round-trips
 
 ## Verification Gates
@@ -2617,7 +2666,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Due Diligence** | KG + D1 + 2+ external sources queried | Query output with counts |
 | **Classification** | All papers classified as core/supporting/background/reject | Classification table |
 | **Citation** | All citations trace to real papers, BibTeX verified | `_citation_audit.py` output (reusable inline pattern from Phase 3 — write to file, execute, then delete) |
-| **Publication Language** | Zero internal language in paper.md | Scan output: 0 hits |
+| **Publication Language** | Zero internal language in <slug>.md | Scan output: 0 hits |
 | **PDF** | PDF renders without Unicode errors | `build-paper.py` exit code 0 |
 | **DOI** | Zenodo record resolves, cross-references correct | `curl -sI https://doi.org/...` |
 | **Deployment** | papers-server URL HTTP 200, D1 entry exists with slug/doi | curl output + wrangler D1 query |
@@ -2646,17 +2695,17 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
 | Publishing without D1/KG records | Log `doi`, `r2_path` in D1 living-paper + Knowledge Graph Paper node |
-| Skipping 4-D verification | All 4 core distribution layers (GitHub, Zenodo, R2, D1/KG) must be independently verified before status â†’ "published" |
+| Skipping 4-D verification | All 4 core distribution layers (GitHub, Zenodo, R2, D1/KG) must be independently verified before status → "published" |
 | Using ANY third-party IPFS pinning service (Filebase/Pinata/Lighthouse/w3up/web3.storage) | DEPRECATED as of v2.10 -- use ONLY Cloudflare R2 (durable store) + locally-computed CIDv1 + Cloudflare DNS DNSLink (naming). No third-party pinner. |
 | Hardcoding a live secret VALUE (token/key) inside a skill file | Store only the FILE PATH where the secret lives (e.g. `%USERPROFILE%\buffer\token`); read it live every time. A hardcoded value in a skill file will silently go stale and cause a debugging session exactly like the 2026-07-21 Buffer incident. |
-| Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh â€” a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
+| Guessing/hardcoding a Cloudflare account ID or D1 database UUID | Always run `npx wrangler whoami` (account ID) and `npx wrangler d1 list` (database UUIDs) fresh — a wrong ID produces a misleading 401/404 indistinguishable from a real permission problem. |
 | `wrangler d1 execute <name> --remote` on a DB with no local wrangler.toml binding | Use the Cloudflare REST API directly with the UUID from `wrangler d1 list` instead of the CLI. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables | Use CHECK-THEN-WRITE (SELECT existence, then plain INSERT or plain UPDATE) instead of a combined upsert. |
-| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createPost` mutation instead â€” a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
+| Treating a Buffer GraphQL 404 on an unsupported query (e.g. bulk `drafts`) as a dead token | Verify via the `createPost` mutation instead — a `404 endpoint not found` on a DIFFERENT query is a schema-shape issue, not an auth issue. |
 | Skipping Phase 0 for a net-new long-lived project | HARD GATE -- scaffold repo, WBS, PROJECT-PLAN.md before Phase 1 |
 | No pre-flight checklist before due diligence | Run P1-P11 before Phase 1 begins |
 | No phase closeout (commit/tag/push/verify/log) | 5-step Phase Closeout Protocol at every phase end |
-| No risk register at project init | â‰¥5 risks logged at Phase 0 using the risk register template |
+| No risk register at project init | ≥5 risks logged at Phase 0 using the risk register template |
 | No deliverable registry | All deliverables tracked with paths and archival targets from Phase 0 |
 | Creating a research phase tag/release inside `qnfo-skills` | `git remote -v` REPO-TARGET GATE before every tag/commit/release (ADR-026 Incident 3) |
 | Assuming a "clean branch" audit is sufficient | Tags and GitHub Releases are independent refs -- audit `git tag -l` and `gh release list` separately, they survive a branch force-push |
@@ -2664,11 +2713,11 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Creating a disconnected new Zenodo deposit for each phase | Use Zenodo's `actions/newversion` API to keep phase snapshots under one concept DOI (ADR-028) |
 | Social-promoting every internal WBS phase transition | Reserve Buffer/social posts for FINAL public deliverables only, not interim phase closeouts |
 | OSF registration for minor/exploratory projects | GATE-CONDITIONAL: OSF ONLY for major research with significant predictions and falsifiable claims. Skip for single papers, exploratory studies, or minor updates. |
-| Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) â€” not after. The registrations timestamp the pre-data-collection hypotheses. |
-| Attempting OSF file upload via API | Waterbutler requires cookie sessions â€” Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. (Registration/form completion has NO such limitation â€” that is 100% API-automatable; only file uploads need Waterbutler.) |
-| Claiming OSF registration form completion "requires browser interaction" | FALSE â€” corrected 2026-07-20. Discover real schema keys via `/schema_blocks/` (format `344-N`, not `q1`/`q2`), populate via PATCH, set subject taxonomy chain, submit via POST â€” all API, HTTP 201 confirmed live (registration `kj6ar`). |
+| Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) — not after. The registrations timestamp the pre-data-collection hypotheses. |
+| Attempting OSF file upload via API | Waterbutler requires cookie sessions — Bearer tokens cannot upload. Use external links to Zenodo DOI + GitHub tree + IPFS instead. (Registration/form completion has NO such limitation — that is 100% API-automatable; only file uploads need Waterbutler.) |
+| Claiming OSF registration form completion "requires browser interaction" | FALSE — corrected 2026-07-20. Discover real schema keys via `/schema_blocks/` (format `344-N`, not `q1`/`q2`), populate via PATCH, set subject taxonomy chain, submit via POST — all API, HTTP 201 confirmed live (registration `kj6ar`). |
 | OSF tokens in only one location | Store OSF tokens redundantly: %USERPROFILE%\\.osf_token, OSF_TOKEN env var, keys.json, Windows Credential Manager, GitHub secrets. Follow the pattern used by Cloudflare/Zenodo/Buffer tokens. |
-| OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` â†’ `attributes.public === true`. |
+| OSF nodes set to private | ALL OSF nodes MUST be public by default. Verify with `GET /v2/nodes/{id}/` → `attributes.public === true`. |
 | Not documenting OSF ID mappings | Maintain a mapping of project/component/draft IDs in PROJECT-PLAN.md. These IDs are needed for API updates and cross-referencing. |
 | OSF descriptions without external links | Every node description MUST contain links to the canonical file locations (Zenodo DOI, GitHub tree, IPFS). OSF is the discovery hub, not the file host. |
 | Creating OSF project without Zenodo DOI backlink | Every OSF project description MUST include the Zenodo DOI. This is the primary discoverability bridge between platforms.
@@ -2684,7 +2733,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2 — SUPERSEDED by KIF-27) | Strip it -- `scripts/build-paper.py` does this automatically (preprocess stage). It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
-| Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` â€” tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
+| Guessing Zenodo `metadata.resource_type` shape from memory each session (silently fails to persist as a string, rejected as an object on newversion drafts) | Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` — tries known-working variants in order with re-GET verification. See `references/zenodo-deposit-schema.json` and `qnfo-agent` KIF-20. |
 | Reconstructing Buffer GraphQL mutation shape from scattered prose each session | Consult `references/buffer-graphql-schema.json` for the single canonical schema (endpoint, auth, channel discovery, createPost input fields, union response handling). |
 | Using the legacy `svjour3`/`svjour.cls` package for new LaTeX papers | Retired -- use `sn-jnl.cls` (Springer Nature's unified template, embedded at `templates/springer-nature-latex/`) as the mandatory default. |
 | Placing a `.bst` bibliography style file in a `bst/` subdirectory relative to `paper.tex` | `bibtex` does not search subdirectories by default -- copy the needed `.bst` alongside `paper.tex`/`refs.bib` before running `bibtex`. |
@@ -2725,3 +2774,8 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | External literature search that queries arXiv/web but NEVER searches Zenodo records for OTHER users' deposits | Zenodo is a discovery source, not just an upload target — always run `zenodo.org/api/records?q=<topic>&size=10` in Phase 2. Verified: exact term "JPCUB" → 0 third-party deposits (only the author's own 2), a 5-source novelty confirmation (arXiv + OpenAlex + Crossref + Europe PMC + Zenodo). |
 | Declaring novelty from fuzzy/tokenized search results alone | Always run an exact-phrase check before claiming novelty: Zenodo `q="TERM"` (quoted) or OpenAlex `filter=title.search:TERM`. Unquoted Zenodo q= OR-tokenizes — "JPCUB joules per computational unit" returned total=311,162 vs quoted `"JPCUB"` returning total=2. Fuzzy totals are meaningless for novelty claims (v2.36). |
 | Subagent output truncation treated as audit completion | When a research subagent reads the input files but its output is truncated before it produces findings, the parent agent MUST fall back to direct audit. The subagent reading a file is NOT evidence that it completed the audit. See kaizen skill §Subagent Failure Handling. |
+| **Using generic `paper.md`/`paper.pdf` filenames instead of slug-based naming** | Paper files MUST use the project slug: `<slug>.md` and `<slug>.pdf`. For `computing-machines`, this is `computing-machines.md` and `computing-machines.pdf`. Generic names cause confusion when multiple paper repos share a temp directory, and make it impossible to identify a paper from its filename alone. Update `build-paper.py` calls, R2 paths, Zenodo uploads, and provenance bundles accordingly. |
+| **Assuming a temp-directory name identifies the project** | NEVER assume a temp directory name maps to the correct project. ALWAYS read `<slug>.md` YAML frontmatter (`title:` + `doi:`) before using file contents for upload or cross-population. A directory named `computing-machines` may contain a completely different paper (KIF-58 cross-contamination incident, 2026-07-31). |
+| **Cross-populating files between Zenodo and GitHub without verifying paper identity** | Before pushing files to ANY GitHub repo in the context of a Zenodo upload, verify the repo's existing `paper.md` YAML `title:` matches the paper being uploaded to Zenodo. A paper title mismatch means you've found the wrong repo — even if the repo name seems related (KIF-58). |
+| **Publishing a Zenodo deposit without verifying file contents match the intended paper** | After uploading files but BEFORE `actions/publish`, download the uploaded `paper.md` from the deposit and verify its YAML `title:` matches the target Zenodo concept. Zenodo bucket lock means wrong files are PERMANENTLY tainted in that version DOI (KIF-58). |
+| **Cross-project paper confusion from handoff ambiguity** | When a session handoff mentions a paper and a DOI but does NOT specify the GitHub repo, query all QNFO repos, find the paper by title, and verify the repo before any cross-population. A handoff that references "paper.md" and a Zenodo DOI is ambiguous — the paper could live in any of multiple QNFO repos (KIF-58). |

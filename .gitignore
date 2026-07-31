@@ -121,3 +121,5 @@
 
 # DeepChat internal tracking files (not QNFO artifacts)
 **/.lastActivity
+*.mojibake.bak  
+*.guard.bak  

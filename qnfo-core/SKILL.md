@@ -3,8 +3,21 @@ name: qnfo-core
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO Core — Governance Foundation (v1.1)
+# QNFO Core — Governance Foundation (v1.2)
 
+> **v1.2 UPDATE (2026-07-31, mojibake red-team kaizen):**
+> Added §0.2 UTF-8 Source Encoding Mandate (HARD GATE, NO EXCEPTIONS). Three consecutive
+> sessions deferred the computing-machines mojibake fix as a SOFT issue while the paper
+> continued rendering corrupted `â€"` characters on papers.qnfo.org. Root cause: LLM output
+> sometimes produces UTF-8 double-encoded characters (`â€"` for `–`, `â€œ` for `"`, etc.)
+> that poison every downstream system (D1, Zenodo PDFs, GitHub repos, search indexes).
+> Added: (1) §0.2 mandate — ALL text must pass `scan-mojibake.py` before commit/publish/
+> insert; (2) mojibake pattern reference table; (3) integration points for research,
+> git-github, kaizen, email-composer; (4) `scripts/scan-mojibake.py` for automated
+> detection + repair; (5) mojibake anti-pattern in §0.1 table. Priority Stack updated
+> to include Source Encoding Integrity as a NEVER-VIOLATE item. See also: research
+> v2.37 KIF-28, 2026-07-31 computing-machines mojibake incident (session bnFYPqN).
+>
 > **v1.1 UPDATE (2026-07-30, genre classification kaizen):** Added §0.1 Content Genre
 > Classification — three-tier certainty signaling protocol (Genre A: Epistemic, Genre B:
 > Commercial/Marketing, Genre C: Internal/Operations). This resolves the tension between
@@ -106,9 +119,72 @@ Before beginning work on a QNFO/QWAV deliverable:
 | Using "Pre-Commercial" as a substitute for epistemic labeling | "Pre-Commercial" is business stage, `[speculative]` is epistemic status — they serve different purposes. Genre B uses the business-stage label + footer disclaimer instead of inline epistemic labels. |
 | Defaulting to Genre C for everything "internal" | Project plans shared externally (investors, partners) are Genre B, not Genre C |
 | Over-applying Genre A certainty labels to Genre B content | Landing pages with yellow `[speculative]` badges are visually self-sabotaging and genre-inappropriate — use Genre B footer + dagger footnotes |
+| **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for `â€"`, `â€™`, `â€œ`, `â€`, `â„¢`, `â€˜`, `â€¢`, `â€"`, `â€¦`, `Ã` patterns BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
+
+## §0.2 UTF-8 SOURCE ENCODING MANDATE (HARD GATE — NO EXCEPTIONS)
+
+**Effective: 2026-07-31. Applies to ALL QNFO/QWAV text production, ALL genres (A/B/C), ALL output channels: markdown files, D1 body_md, Zenodo metadata, Buffer posts, handoffs, skill files, everything.**
+
+### Rule (Ironclad)
+
+ALL text produced by the agent MUST pass a mojibake scan before being committed, published, or stored in any durable system. This is a HARD GATE — no workaround, no deferral, no "it's probably fine."
+
+### What Is Mojibake
+
+UTF-8 double-encoding: when UTF-8 bytes (e.g., `0xE2 0x80 0x93` for en-dash `–`) are interpreted as CP1252 characters and re-encoded as UTF-8. The result renders as `â€"` instead of `–`. This poisons every downstream system: D1, papers.qnfo.org, Zenodo PDFs, GitHub repos, search indexes.
+
+**Common mojibake patterns (ALL are corruption signals):**
+| Pattern | Correct Character |
+|:--------|:------------------|
+| `â€"` | `—` (em-dash, U+2014) |
+| `â€"` | `–` (en-dash, U+2013) |
+| `â€™` | `'` (right single quote, U+2019) |
+| `â€œ` | `"` (left double quote, U+201C) |
+| `â€` | `"` (right double quote, U+201D) |
+| `â€˜` | `'` (left single quote, U+2018) |
+| `â€¢` | `•` (bullet, U+2022) |
+| `â€¦` | `…` (ellipsis, U+2026) |
+| `â„¢` | `™` (trademark, U+2122) |
+| `Ã<XX>` | Various Latin-1 accented chars |
+
+### Gate Protocol (MANDATORY — run before EVERY commit/pubish/insert)
+
+```
+1. Write the text content to a temporary file
+2. Run: python <qnfo-core-skill-path>/scripts/scan-mojibake.py <file> [--fix]
+3. If scan-mojibake.py exits non-zero → HARD BLOCK:
+   - DO NOT commit to git
+   - DO NOT insert into D1
+   - DO NOT upload to Zenodo
+   - DO NOT publish to papers.qnfo.org
+4. If --fix was used, re-read the fixed file and continue
+5. If scan-mojibake.py exits zero → PASS, proceed
+```
+
+### Integration Points
+
+| Skill | Where | What |
+|:------|:------|:------|
+| `research` | Phase 5 Publication Language Gate | Scan paper.md + BibTeX before build |
+| `research` | Phase 6 D1 Insert Gate | Scan body_md before `INSERT INTO papers` |
+| `research` | Phase Closeout STEP 0.5 | Run after `credential-scan.py` |
+| `git-github` | Pre-commit Gate | Run before every `git commit` |
+| `kaizen` | Watchtower Scan | Check all SKILL.md files for mojibake |
+| `email-composer` | Before sending | Scan email body |
+| **All skills that produce text** | Before ANY durable write | Scan |
+
+### Why This Gate Exists
+
+The 2026-07-31 computing-machines mojibake incident: three consecutive sessions (2026-07-30 original, kaizen v1.2.3 closeout, and today's session) all deferred the "mojibake fix" as a SOFT issue. Meanwhile, the paper continued rendering corrupted text on papers.qnfo.org with `â€"` characters visible to all readers. A SOFT gate is toothless — by the time mojibake reaches D1 or Zenodo, it has already poisoned multiple downstream systems. This gate is HARD because the cost of missing it is 3+ layers of distributed corruption.
+
+**No exceptions.** If text contains `â€"` or any listed pattern, it is CORRUPT. Fix it before it propagates.
+
+### Scanner Script
+
+See `scripts/scan-mojibake.py` in this skill's root directory. The script scans for all known mojibake hex patterns and exits non-zero if any are found. Use `--fix` for automatic repair.
 
 ## §0.5 PRIORITY STACK
-1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims
+1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims, **Source Encoding Integrity (§0.2)**
 2. STRONG PREFERENCE: Accuracy, Evidence Quality, Source Traceability
 3. DEFAULT: Structured Output, Tone, Publication Standards
 4. NICE TO HAVE: Engagement, Brevity
