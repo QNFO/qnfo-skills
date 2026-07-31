@@ -78,6 +78,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     (Dependency Auditor, parent-agent).
 > Cross-reference: research v2.37, kaizen v1.2.2.
 
+> **v1.2.5 UPDATE (2026-07-31, kaizen — LinkedIn MCP session retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 0 in this skill. SOFT: 3.
+> Changes:
+> (1) [SOFT] Calibration Register: added dated prediction for the new `linkedin-mcp`
+>     skill (auth-session validity) — Dependency Auditor, parent-agent.
+> (2) [SOFT] Cross-Skill Integration table: added `linkedin-mcp` (v1.0) row — loaded
+>     for LinkedIn operations; cross-referenced from windows-command-patterns v2.1
+>     (S1.6 detached-process pattern is the canonical launcher for the auto-login
+>     script). Completeness Auditor.
+> (3) [SOFT] Anti-pattern table: added "LINKEDIN_COOKIE is inert in linkedin-mcp-tools
+>     v2.0.3 — do not paste cookies expecting auth; use the persistent-profile --login
+>     flow" (from session 8BNPmK0gJf). Status Auditor.
+> Cross-reference: research v2.38, windows-command-patterns v2.1, linkedin-mcp v1.0.
+
 > **v1.2.4 UPDATE (2026-07-31, deferred-items closeout gate):**
 > Red-team: direct parent-agent 5-adversary audit. HARD findings: 1 (closeout protocol
 > allowed declaring success with unresolved deferred items). SOFT findings: 1.
@@ -918,6 +933,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **Skill installed by DeepChat but not added to gitignore allowlist** | The `.gitignore` has an explicit allowlist (ADR-026). When DeepChat installs a new skill (xlsx, skill-creator, windows-command-patterns, etc.), sync it to `.gitignore` in the same turn. As of 2026-07-31, 14 of 28 installed skills (50%) were gitignored — their kaizen histories and scripts exist on disk but are invisible to the git repo. Run `skill_list` vs `git ls-files -- */SKILL.md` cross-reference as part of the Watchtower scan. |
 | **Subagent reads input files but parent treats file-read-only as "audit complete"** | When a subagent reads the target file but its output is truncated before it produces findings, the parent MUST fall back to direct audit. The subagent READING a file is NOT evidence that it COMPLETED the audit. The signal is: subagent reads input files in log → no findings produced → truncated. See §Subagent Failure Handling rule 4: fall back on the SECOND poll, not the tenth. |
 | **Repeated polling of subagents that produced zero findings** | When subagent output shows file-reads but no findings after the first poll, do NOT poll again. The subagent is truncated — polling again wastes tool calls. One poll confirms the truncation pattern. Fall back to direct audit immediately on the second tool call. |
+| **Pasting LinkedIn cookies expecting MCP auth to work** | In linkedin-mcp-tools v2.0.3, `LINKEDIN_COOKIE` is schema-only and never injected (zero addCookies/cookieSet calls). Use the persistent-profile `--login` flow and set `LINKEDIN_PROFILE_DIR`. See `linkedin-mcp` skill. |
+| **Starting long-running browser/login processes via plain exec** | Exec-session reaping kills them (KIF-12). Use the S1.6 detached-process pattern from windows-command-patterns v2.1. |
 
 ## Cross-Skill Integration
 
@@ -934,6 +951,7 @@ Session Failure → Session Retrospective detects failure pattern
 | `get_conversation_history` | Phase R (retrospective deep-dive) | Deep-dive into incident conversations |
 | `skill_view` | Phase 0 (cross-reference verification) | Live-verify referenced skill versions |
 | `skill_list` | Phase -1 (Watchtower scan) | Enumerate all installed skills for health scoring |
+| `linkedin-mcp` | Phase 5 (closeout), LinkedIn ops | LinkedIn MCP operations — auth via persistent profile, 22 tools, credential redundancy |
 | `memory_recall` | Phase 0, Phase -1, Phase R | Pre-flight checks, Watchtower incident mining, retrospective |
 | `memory_remember` | Phase 5, Phase R | Durable memory for outcomes, heuristics, anti-patterns |
 | `tape_info` | Phase 0, Phase R | Session context, retrospective data |
@@ -1005,6 +1023,14 @@ Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
 
 ```
+[CHECK: 2026-08-07] LinkedIn MCP auth session will still be valid (cookie-based
+session persists days-weeks in the profile dir; first re-auth may require
+--login with CAPTCHA/2FA). Watch for: `--status` reporting logged out, or
+CLOUDFLARE_BLOCKED in tool errors.
+Likelihood: [HIGH] — fresh session, profile warm.
+```
+
+```
 [CHECK: 2026-09-30] At least one Session Retrospective will have surfaced
 a pattern that was already in durable memory but not yet acted upon,
 validating the Heuristic Accumulation → Watchtower escalation pipeline.
@@ -1013,7 +1039,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.4** (kaizen — calibration-drift fix, 2026-07-31)
+Current: **v1.2.5** (kaizen — LinkedIn MCP session retrospective, 2026-07-31)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.

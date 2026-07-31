@@ -70,6 +70,7 @@
 !/web-artifacts-builder/
 !/windows-command-patterns/
 !/xlsx/
+!/linkedin-mcp/
 
 # ============================================================================
 # STEP 3b: Allow DeepChat skill-load path (prompts/skills/ mirrors root skills)

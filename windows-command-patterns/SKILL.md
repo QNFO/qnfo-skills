@@ -1,10 +1,32 @@
 ---
 name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DEPRECATED (LAST RESORT only). Use this skill to understand PowerShell's failure modes and when Python cannot be used.
-version: "2.0"
+version: "2.1"
 ---
 
-# Windows Command Execution — Python-First Protocol (v2.0)
+# Windows Command Execution — Python-First Protocol (v2.1)
+
+> **v2.1 UPDATE (2026-07-31, kaizen — LinkedIn MCP session):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 1. SOFT findings: 3.
+> Changes:
+> (1) [HARD] S1.4 + Quick Reference recommended `Set-Content -Encoding UTF8` for last-resort
+>     writes — but PS 5.1 writes a UTF-8 BOM with it, fatally breaking Node.js shebang scripts
+>     (`SyntaxError: Invalid or unexpected token`). Hit 2026-07-31 writing linkedin-auto-login.js.
+>     Replaced with `[System.IO.File]::WriteAllText(p, s, [Text.UTF8Encoding]::new($false))`.
+>     Use the write tool (clean UTF-8) or Python for JS/Python/shell scripts. (Accuracy Auditor,
+>     parent-agent).
+> (2) [SOFT] Added S1.6 DETACHED PROCESS PATTERN — long-running ops (browser launches, MCP
+>     servers, downloads > harness yield window) get killed when the exec session times out.
+>     Use `[System.Diagnostics.Process]` with `BeginOutputReadLine` + `Register-ObjectEvent`
+>     to write to a log file and survive independently. (Completeness Auditor, parent-agent).
+> (3) [SOFT] Added `Start-Process "npx"` failure mode — npx is a .cmd batch file, not .exe;
+>     "not a valid Win32 application". Use `cmd /c npx ...` or `npx.cmd` explicitly.
+> (4) [SOFT] Added `node --check` syntax gate before running any written JS file — catches
+>     BOM/shebang corruption and edit errors before execution.
+> (5) [SOFT] Added anti-pattern rows: Set-Content BOM write, Start-Process on .cmd, exec-session
+>     kill of long-running processes.
+> Cross-reference: kaizen v1.2.4, linkedin-mcp skill (new, v1.0).
 
 > **v2.0 UPDATE (2026-07-31): COMPLETE REWRITE — PowerShell Deprecation Mandate.**
 > The prior v1.x skill taught how to COPE with PowerShell's failures (KIF-05/06/07/09
@@ -140,6 +162,31 @@ Multi-pipe, multi-variable, JSON-parsing PowerShell one-liners fail for STRUCTUR
 reasons (quote collapse, scoping, pipeline quirks) that NO escaping can fix. WRITE
 A PYTHON FILE instead of a .ps1 file.
 
+### KIF-10: Set-Content BOM Write (2026-07-31)
+
+`Set-Content -Encoding UTF8` / `Out-File -Encoding UTF8` on PowerShell 5.1 writes a
+UTF-8 **BOM** (EF BB BF). A BOM at byte 0 is a fatal error for Node.js shebang
+scripts: `#!/usr/bin/env node` → `SyntaxError: Invalid or unexpected token`.
+Hit while writing linkedin-auto-login.js — the script crashed on launch until
+rewritten via the write tool (clean UTF-8). **Never use Set-Content/Out-File for
+script files. Use the write tool or Python; if PS is forced, use
+`[IO.File]::WriteAllText(p, s, [Text.UTF8Encoding]::new($false))`.**
+
+### KIF-11: Start-Process on .cmd Shims (2026-07-31)
+
+`Start-Process -FilePath "npx"` fails with "not a valid Win32 application" —
+npx, git, uvx, pip are `.cmd`/`.bat` shims, not `.exe`. Use `cmd /c npx ...`,
+`Start-Process cmd.exe -ArgumentList '/c','npx ...'`, or resolve the real exe
+(`node.exe C:\...\cli.js`).
+
+### KIF-12: Exec-Session Process Reaping (2026-07-31)
+
+Long-running processes started via `exec` (foreground auto-background OR
+`background:true`) are killed when the harness reaps the session — even with a
+long `timeoutMs`. A 4-minute login poll or MCP browser session dies mid-flight.
+**Use the S1.6 DETACHED PROCESS PATTERN** (System.Diagnostics.Process +
+Register-ObjectEvent → log file) for anything expected to run > ~60s.
+
 ### ENCODING CORRUPTION (MOST DANGEROUS)
 
 `Get-Content` and `Out-File` on Windows DEFAULT TO THE SYSTEM CODEPAGE (CP1252),
@@ -203,13 +250,21 @@ with open(path, 'w', encoding='utf-8') as f:    # write
 
 ```powershell
 # PowerShell (LAST RESORT ONLY — FORCE encoding)
-Get-Content path -Encoding UTF8                  # read
-Set-Content path -Encoding UTF8 -Value ...       # write
-[System.IO.File]::ReadAllText(path, [System.Text.UTF8Encoding]::new($false))  # read
-[System.IO.File]::WriteAllText(path, ..., [System.Text.UTF8Encoding]::new($false))  # write (NO BOM)
+Get-Content path -Encoding UTF8                  # read (PS 7+: utf8; PS 5.1: ReadAllText safer)
+[System.IO.File]::ReadAllText(path, [System.Text.UTF8Encoding]::new($false))  # read (NO BOM expected)
+[System.IO.File]::WriteAllText(path, content, [System.Text.UTF8Encoding]::new($false))  # write (NO BOM)
 ```
 
-**The `$false` parameter in `[System.Text.UTF8Encoding]::new($false)` means NO BOM.**
+**NEVER use `Set-Content -Encoding UTF8` / `Out-File -Encoding UTF8` to WRITE files.** On
+Windows PowerShell 5.1 these write a UTF-8 **BOM** (bytes EF BB BF). A BOM at byte 0 is a
+fatal error for Node.js shebang scripts (`#!/usr/bin/env node` → `SyntaxError: Invalid or
+unexpected token`), breaks YAML frontmatter, and corrupts diffs. This exact failure was hit
+2026-07-31 while writing `linkedin-auto-login.js` via PowerShell — the script crashed on
+start with a BOM SyntaxError. **Use the write tool (clean UTF-8) or Python for JS/Python/
+shell scripts. If PowerShell is truly forced, use `[System.IO.File]::WriteAllText` with
+`UTF8Encoding($false)` as shown above.**
+
+The `$false` parameter in `[System.Text.UTF8Encoding]::new($false)` means NO BOM.
 A BOM (byte order mark, U+FEFF) silently breaks Pandoc frontmatter, YAML parsing,
 and some git diffs. Always use `$false` (no BOM) unless the target system explicitly
 requires a BOM.
@@ -231,12 +286,79 @@ encoding failure.
 
 ---
 
+## S1.6 DETACHED PROCESS PATTERN (long-running ops)
+
+**Problem:** Any `exec`/background command running longer than the harness yield
+window gets its session killed — the process tree is reaped when the exec session
+ends. This silently kills browser launches, MCP servers, downloads, and logins
+mid-flight (hit 2026-07-31: LinkedIn `--login` Chrome window + auto-login script
+died twice at the harness timeout; 4-minute poll loops cannot survive).
+
+**Solution:** Start the process as a **detached `System.Diagnostics.Process`** with
+async output readers that write to a log file. The process survives the exec
+session; poll the log file afterwards.
+
+```powershell
+# CANONICAL DETACHED PROCESS PATTERN (write to .ps1 or run as script block)
+$logFile = "$env:TEMP\my-task.log"
+Remove-Item $logFile -ErrorAction SilentlyContinue
+$psi = New-Object System.Diagnostics.ProcessStartInfo
+$psi.FileName = "node.exe"                       # real exe, NOT npx/.cmd
+$psi.Arguments = "`"C:\path\to\script.js`""
+$psi.UseShellExecute = $false
+$psi.RedirectStandardOutput = $true
+$psi.RedirectStandardError = $true
+$psi.CreateNoWindow = $true
+$psi.Environment["MY_ENV_VAR"] = "value"
+$proc = [System.Diagnostics.Process]::Start($psi)
+$proc.Id | Set-Content "$env:TEMP\my-task.pid"   # remember PID for later checks
+$proc.BeginOutputReadLine()
+$proc.BeginErrorReadLine()
+Register-ObjectEvent -InputObject $proc -EventName OutputDataReceived -Action {
+    $line = $Event.SourceEventArgs.Data
+    if ($line) { Add-Content "$env:TEMP\my-task.log" "[stdout] $line" }
+} | Out-Null
+Register-ObjectEvent -InputObject $proc -EventName ErrorDataReceived -Action {
+    $line = $Event.SourceEventArgs.Data
+    if ($line) { Add-Content "$env:TEMP\my-task.log" "[stderr] $line" }
+} | Out-Null
+```
+
+**Rules:**
+- `FileName` MUST be a real `.exe` (`node.exe`, `python.exe`, `cmd.exe`). `npx`,
+  `git`, `uvx` are `.cmd`/`.bat` shims — `Start-Process "npx"` fails with
+  "not a valid Win32 application". Use `cmd /c npx ...` or the full `node.exe`
+  path to the CLI entry.
+- Poll progress via `Get-Content $logFile` and process aliveness via
+  `Get-Process -Id (Get-Content $pidFile)`.
+- Monitor Chrome/browser windows via `Get-Process chrome | Where-Object
+  MainWindowTitle` — a title change (e.g. login page → "Feed | LinkedIn") is a
+  reliable completion signal.
+
+---
+
+## S1.7 NODE.JS FILE GATE
+
+Before running ANY written `.js` file, verify syntax:
+
+```
+node --check C:\path\to\script.js
+```
+
+This catches BOM corruption (PowerShell `Set-Content -Encoding UTF8` writes a BOM
+that makes `#!/usr/bin/env node` throw `SyntaxError: Invalid or unexpected token`),
+shebang issues, and edit damage — before a wasted launch attempt. Exit code 0 =
+clean. Also prefer the `write` tool over PowerShell for script files: it writes
+clean UTF-8 with no BOM.
+
+---
+
 ## QUICK REFERENCE
 
 | Task | PRIMARY (Python) | LAST RESORT (PowerShell) |
 |:-----|:-----------------|:-------------------------|
 | File read | `open(p, encoding='utf-8').read()` | `Get-Content p -Encoding UTF8` |
-| File write | `open(p, 'w', encoding='utf-8').write(...)` | `Set-Content p -Encoding UTF8` |
+| File write | `open(p, 'w', encoding='utf-8').write(...)` | `[IO.File]::WriteAllText(p, s, [Text.UTF8Encoding]::new($false))` (never `Set-Content -Encoding UTF8` — BOM) |
 | JSON parse | `json.loads(text)` | `ConvertFrom-Json` (in .ps1 file ONLY) |
 | HTTP GET | `urllib.request.urlopen(url)` | `Invoke-RestMethod` |
 | Regex search | `re.findall(pattern, text)` | `Select-String -Pattern '...'` |
@@ -245,13 +367,15 @@ encoding failure.
 | Complex task | Write a .py file | Write a .ps1 file |
 | Windows registry | N/A | `Get-ItemProperty` (last resort) |
 
-## SELF-CHECK BEFORE EXECUTING (v2.0)
+## SELF-CHECK BEFORE EXECUTING (v2.1)
 
 1. **Is this a Python operation?** → Write .py file, use `exec python`. DONE.
 2. **Is this a native executable?** → `exec curl.exe`, `exec git`, `exec pandoc`. DONE.
 3. **Is this a cmd-native operation?** → `exec cmd /c "..."`. DONE.
-4. **Is this genuinely impossible without PowerShell?** → OK, write .ps1 file, use ps-safe-exec.ps1.
-5. **If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>`: ABORT.** Write a Python file instead.
+4. **Is this a long-running operation (>60s)?** → Use S1.6 DETACHED PROCESS PATTERN.
+5. **Am I writing a JS/Python script?** → Use the `write` tool (clean UTF-8), then `node --check` / `python -m py_compile` before running.
+6. **Is this genuinely impossible without PowerShell?** → OK, write .ps1 file, use ps-safe-exec.ps1, and NEVER `Set-Content -Encoding UTF8` for writes (BOM).
+7. **If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>`: ABORT.** Write a Python file instead.
 
 **Python is not a fallback. Python is the DEFAULT.**
 
