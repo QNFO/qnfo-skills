@@ -1,308 +1,266 @@
 ---
 name: windows-command-patterns
-description: Windows PowerShell error prevention. KIF-05/06/07/09 enforcement via ps-lint.ps1 and ps-safe-exec.ps1. Activate before any exec, grep, or Select-String on Windows.
+description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DEPRECATED (LAST RESORT only). Use this skill to understand PowerShell's failure modes and when Python cannot be used.
+version: "2.0"
 ---
 
-# Windows Command Execution Patterns — v1.2 (Permanent Instruction Layer + Active Tools)
+# Windows Command Execution — Python-First Protocol (v2.0)
 
-> **v1.1 UPDATE (2026-07-29):** Added `scripts/ps-lint.ps1` (KIF-05/06/07/09 pre-flight validator) and `scripts/ps-safe-exec.ps1` (lint-then-execute wrapper that BLOCKS bad commands). These tools eliminate the "execute first, fail later" anti-pattern — 100% of KIF-05/06/07 errors are now caught BEFORE exec. Added mandatory **Pre-Flight Protocol** below.
-
-## execute_plan
-
-**HARD GATE (v1.2, 2026-07-31): If PowerShell has failed with a $variable error in this
-session, ALL subsequent PowerShell MUST go through a .ps1 file. No exceptions, no
-"maybe this time it'll work." The pattern is: inline PowerShell → $variable eaten
-→ syntax error → rewrite as .ps1 file. Skip directly to .ps1 file.**
-
-Before EVERY `exec` call that contains PowerShell (or could be misinterpreted as PS):
-
-update_plan([
-  {"step": "HARD-CHECK: Has this session had a PS $variable parse error? If YES: write .ps1 file. STOP.", "status": "pending"},
-  {"step": "SELF-CHECK: Does command contain $ (beyond simple $env:), &, ||, &&, regex in double-quotes, {.Property}, or >2 pipes?", "status": "pending"},
-  {"step": "If ANY pattern found: ABORT — write .ps1 file. KIF-09 is not a suggestion.", "status": "pending"},
-  {"step": "Only if command is 100% single-statement, zero-variable, zero-pipe: execute inline", "status": "pending"},
-])
-
----
-
-## MANDATORY Pre-Flight Protocol (v1.1 — DO NOT SKIP)
-
-**This is the permanent fix layer.** Before ANY `exec` call on Windows:
-
-### Step 1: Check if any KIF pattern is present
-Scan your command for these red flags:
-- `&` (not followed by `$`, `{`, `"`, or `'` — then it's a separator, not a call operator)
-- `||` or `&&` (Unix operators — invalid in PS)
-- Double-quoted regex containing `|`, `(`, `)`, `{`, `}`, `$`, `^`, or `\`
-- `E={.Property}` in a calculated property (missing `$_`)
-- `>2` pipe stages, `$var =`, `ConvertFrom-Json`, or `@{N=/E=}` in a one-liner
-
-### Step 2: Run ps-lint.ps1 on the command
-```powershell
-# BEFORE executing, validate:
-skill_run windows-command-patterns scripts/ps-lint.ps1 --args '-Command','<your command here>'
-
-# Or via exec:
-exec powershell -NoProfile -File "C:\Users\LENOVO\.deepchat\skills\windows-command-patterns\scripts\ps-lint.ps1" -Command '<your command>'
-```
-
-### Step 3: Interpret results
-| Exit Code | Meaning | Action |
-|:----------|:--------|:-------|
-| 0 | PASS — no issues | Safe to execute |
-| 1 | WARN — KIF-09 complexity flag | Consider .ps1 file; proceed at your discretion |
-| 2 | FAIL — KIF-05/06/07 HARD BLOCK | **ABORT.** Fix the command. The suggested fix in the output is correct. |
-
-### Step 4: If blocked, use ps-safe-exec.ps1 as a wrapper
-```powershell
-# This will lint first, then execute ONLY if clean:
-exec powershell -NoProfile -File "C:\Users\LENOVO\.deepchat\skills\windows-command-patterns\scripts\ps-safe-exec.ps1" -Command '<fixed command>'
-
-# Strict mode (blocks KIF-09 too):
-exec powershell -NoProfile -File "C:\Users\LENOVO\.deepchat\skills\windows-command-patterns\scripts\ps-safe-exec.ps1" -Command '<command>' -Strict
-```
-
-### Step 5: If ps-lint says "write a .ps1 file" — DO IT
-KIF-09 is not a soft suggestion. Multi-pipe/variable/JSON one-liners fail for structural reasons (quote collapse, scoping, pipeline quirks) that NO amount of escaping can fix. Write the script, save to disk, execute with `-File`.
+> **v2.0 UPDATE (2026-07-31): COMPLETE REWRITE — PowerShell Deprecation Mandate.**
+> The prior v1.x skill taught how to COPE with PowerShell's failures (KIF-05/06/07/09
+> patterns, `ps-lint.ps1`, `ps-safe-exec.ps1`). As of v2.0, the correct approach is
+> to AVOID PowerShell entirely except as a genuine last resort. Python is the PRIMARY
+> execution environment for ALL operations on this system. The v1.x KIF patterns are
+> retained below as reference documentation on "why PowerShell fails" — they are NOT
+> a recommendation to keep using PowerShell with workarounds.
+>
+> **Root-cause incidents driving this deprecation:**
+> - 2026-07-31: Resume v3.3 PDF had 275 U+FFFF errors from PowerShell `Get-Content`
+>   silently reading UTF-8 as CP1252, producing mojibake (`a+"` instead of `--`)
+> - 2026-07-31: computing-machines/paper.md had 42 CP1252 double-encoded dashes
+>   committed to GitHub — same root cause
+> - 2026-07-28: Session e4layp9 lost 10+ tool calls to PowerShell KIF-05/06/07/09
+>   failures (quote collapse, $variable eating, regex-pipe ambiguity)
+> - 2026-07-21: D1 body_md insert corrupted via PowerShell JSON escaping
+>
+> **The cumulative cost of PowerShell on Windows exceeds every other tooling failure
+> pattern combined.** Python is installed. Python is reliable. Use Python.
 
 ---
 
-## KIF-05: SHELL MISMATCH — Unix/cmd Operators in PowerShell
+## S1.0 PYTHON-FIRST MANDATE (HARD GATE — NO EXCEPTIONS)
 
-### BANNED: `&` for command chaining
-In PowerShell, `&` is the call/invoke operator, NOT a command separator.
+**Python is the PRIMARY execution environment for ALL operations on this system.**
 
-**FAILED** (session e4layp9):
-```powershell
-wmic os get Caption /format:list & systeminfo | findstr "Memory"
-# Error: "The ampersand (&) character is not allowed"
+Before ANY `exec` call:
+
 ```
-**CORRECT:**
-```powershell
-wmic os get Caption /format:list; systeminfo | Select-String "Memory"
-```
-
-### BANNED: `||` and `&&` (Unix OR/AND)
-PowerShell does not support `||` or `&&`.
-
-**FAILED** (session e4layp9):
-```powershell
-dir /s /b "C:\path" 2>nul || echo "Not found"
-# Error: "The token '||' is not a valid statement separator"
-```
-**CORRECT:**
-```powershell
-# Option A: cmd /c wrapper
-cmd /c "dir /s /b C:\path 2>nul || echo Not found"
-
-# Option B: PS native
-$result = Get-ChildItem -Path "C:\path" -Recurse -ErrorAction SilentlyContinue
-if (-not $result) { Write-Host "Not found" }
+DECISION TREE:
+1. Can this be done with Python? → YES (99%+ of cases) → Write to .py file, exec python
+2. Is this a pure system-administration task that Python genuinely cannot do?
+   → Consider cmd.exe / CMD directly
+3. Is this a Windows-native API call that ONLY PowerShell can reach?
+   → PowerShell is LAST RESORT — use ps-safe-exec.ps1 with -Strict, write to .ps1 file
 ```
 
-### BANNED: `^` as escape character in PowerShell
-`^` is cmd.exe's escape character. PowerShell uses `` ` `` (backtick).
+### The Python Pattern (CANONICAL for ALL operations)
 
-**FAILED** (session e4layp9):
-```powershell
-powershell -Command ^& { Get-Content ... }
-# Error: "The ampersand (&) character is not allowed"
 ```
-**CORRECT:**
-```powershell
-powershell -NoProfile -Command "Get-Content ..."
+Step 1: write tool → C:\Users\LENOVO\AppData\Local\Temp\_script.py
+Step 2: exec python C:\Users\LENOVO\AppData\Local\Temp\_script.py
+Step 3: exec cmd /c "del C:\Users\LENOVO\AppData\Local\Temp\_script.py"
 ```
 
-**ps-lint detection:** Flags `&` not followed by `$`, `{`, `"`, or `'`; always flags `||` and `&&`.
+**NEVER use `python -c "..."` via `exec` on Windows.** The PowerShell parser intercepts
+single-quotes, double-quotes, angle brackets, dollar signs, and curly braces in the
+Python string before Python ever sees it. Write to a file first. ALWAYS.
+
+### What Python Replaces
+
+| Operation | OLD (PowerShell) | NEW (Python) |
+|:----------|:-----------------|:-------------|
+| File content read | `Get-Content file.md` | `open('file.md','r',encoding='utf-8').read()` |
+| File content write | `Set-Content / Out-File` | `open('file.md','w',encoding='utf-8').write(...)` |
+| JSON parse | `ConvertFrom-Json` | `json.loads(...)` |
+| HTTP request | `Invoke-WebRequest / curl.exe` | `urllib.request` or `requests` |
+| Regex search | `Select-String -Pattern '(a|b)'` | `re.findall(r'(a|b)', text)` |
+| String replace | `-replace / .Replace()` | `text.replace(old, new)` |
+| Directory listing | `Get-ChildItem / ls` | `os.listdir(path)` |
+| File existence | `Test-Path` | `os.path.exists(path)` |
+| Environment var | `$env:VAR` | `os.environ.get('VAR')` |
+| Git operations | `git -C path ...` | `subprocess.run(['git','-C',path,...])` |
+| D1 queries | Inline JSON via PS | Python script with `urllib.request` |
+| PDF building | Pandoc via PS | Python script → `subprocess.run(['pandoc',...])` |
+
+### Why PowerShell Fails (Reference — NOT a Recommendation)
+
+The following patterns are DOCUMENTED here for reference only. They explain WHY
+PowerShell is deprecated. Do NOT attempt to work around them — use Python instead.
 
 ---
 
-## KIF-06: QUOTE LAYER COLLAPSE — Regex `|` Becomes PowerShell Pipe
+## S1.1 WHEN POWERSHELL IS GENUINELY THE ONLY OPTION (LAST RESORT)
 
-**THIS IS THE #1 MOST RECURRING FAILURE (4+ occurrences per session).**
+PowerShell is acceptable ONLY in these narrow circumstances, and ONLY when a Python
+equivalent has been explicitly confirmed impossible:
 
-### BANNED: Double-quoted regex with `|` alternation
-Inside double quotes, PowerShell interprets `|` as the pipeline operator, even inside `-Pattern` arguments.
+1. **Windows registry access** — `Get-ItemProperty`, `Set-ItemProperty`
+2. **Windows service management** — `Get-Service`, `Start-Service`, `Stop-Service`
+3. **WMI/CIM queries** — `Get-CimInstance`, `Get-WmiObject`
+4. **Active Directory operations** — `Get-ADUser`, etc.
+5. **AppX package management** — `Get-AppxPackage`, `Add-AppxPackage`
+6. **PowerShell-specific modules** — PSDsc, PSRemoting, Exchange Online
 
-**FAILED** (session e4layp9 — 4 times):
-```powershell
-Select-String -Path "file.json" -Pattern "(theme|fontSize|sound)"
-Get-Content "file.json" | Select-String -Pattern "\"(theme|fontSize)\""
-# Error: "The term 'theme' is not recognized as the name of a cmdlet"
+**Even in these cases:**
+- Use a .ps1 file (NEVER inline `powershell -Command "..."`)
+- Use `ps-safe-exec.ps1 -Strict` as the wrapper
+- Document WHY Python wasn't suitable
+
+### The .ps1 Pattern (Last Resort Only)
+
 ```
-
-**CORRECT:**
-```powershell
-# ALWAYS use SINGLE-QUOTED strings for regex patterns
-Select-String -Path "file.json" -Pattern '(theme|fontSize|sound)'
-Get-Content "file.json" | Select-String -Pattern '"(theme|fontSize)"'
+Step 1: write tool → C:\Users\LENOVO\AppData\Local\Temp\_task.ps1
+Step 2: exec powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\LENOVO\AppData\Local\Temp\_task.ps1"
+Step 3: Delete the .ps1 file
 ```
-
-**Rule:** If your regex contains `|`, `(`, `)`, `{`, `}`, `$`, `^`, or `\` — use single quotes. Single-quoted strings in PowerShell are LITERAL.
-
-### BANNED: `cmd /c findstr` with complex quoting
-Triple-double-quotes cause "missing terminator" errors.
-
-**FAILED** (session e4layp9):
-```cmd
-cmd /c "findstr /C:"""theme"" /C:"""fontSize""" file.json"
-```
-
-**CORRECT:** Always use `Select-String` instead of `findstr`.
-```powershell
-Select-String -Path "file.json" -Pattern 'theme|fontSize'
-```
-
-**ps-lint detection:** Flags any `-Pattern "..."`, `Select-String "..."`, `-replace "..."` where the double-quoted string contains `|`. Also flags generic `"(group1|group2)"` patterns.
 
 ---
 
-## KIF-07: PIPELINE VARIABLE OMISSION — Missing `$_`
+## S1.2 POWERSHELL FAILURE MODES (Reference — Why Python Wins)
 
-### BANNED: `.Property` without `$_` in script blocks
-In `ForEach-Object { }` and `Select-Object @{E={ }}` blocks, reference the current pipeline object as `$_`.
+### KIF-05: Shell Mismatch
 
-**FAILED** (session e4layp9 — 2 times):
-```powershell
-Get-PSDrive C | Select-Object @{N='Used';E={[math]::Round(.Used/1GB,1)}}
-# Error: "Missing ')' in method call" / "Unexpected token '.Used/1GB'"
-```
+PowerShell uses `&` as the call/invoke operator, NOT a command separator. `||` and `&&`
+do not exist. `^` is NOT an escape character (backtick is).
 
-**CORRECT:**
-```powershell
-Get-PSDrive C | Select-Object @{N='Used';E={[math]::Round($_.Used/1GB,1)}}
-```
+| Wrong | Error |
+|:------|:------|
+| `cmd1 & cmd2` | "The ampersand (&) character is not allowed" |
+| `cmd1 || cmd2` | "The token '||' is not a valid statement separator" |
+| `powershell -Command ^& { ... }` | "The ampersand (&) character is not allowed" |
 
-### BANNED: `; |` (semicolon immediately before pipe)
-**CORRECT:** Remove the semicolon — pipe directly from the previous command.
+### KIF-06: Regex Pipe Collapse
 
-**ps-lint detection:** Flags `E={.Property` pattern (dot-property without `$_`).
+Inside PowerShell double-quoted strings, `|` is the pipeline operator. Any regex
+containing `|` inside double quotes is silently reinterpreted as a PowerShell pipe.
 
----
+| Wrong (double-quoted regex) | Correct (Python) |
+|:----------------------------|:-----------------|
+| `Select-String -Pattern "(a|b)"` | `re.findall(r'(a|b)', text)` |
+| `-replace "(old|new)", "x"` | `re.sub(r'(old|new)', 'x', text)` |
 
-## KIF-08: TOOL SCOPE VIOLATION — grep/glob Outside Workspace
+### KIF-07: Pipeline Variable Omission ($_ eaten)
 
-### BANNED: `grep` and `glob` for paths outside the workspace
-Workspace is `C:\Users\LENOVO\AppData\Local\Programs\DeepChat`. `AppData\Roaming\DeepChat` and `.deepchat` are OUTSIDE.
+`.Property` without `$_` in PS script blocks silently fails. Python has no equivalent
+ambiguity — `obj.property` always works.
 
-**FAILED** (session e4layp9):
-```
-grep "C:\Users\LENOVO\AppData\Roaming\DeepChat" → "path outside allowed directories"
-glob "C:\Users\LENOVO\.deepchat" → "path scope must be inside the workspace"
-```
+### KIF-09: Complex One-Liner Fragility
 
-**CORRECT:** Use `exec` with PowerShell for external paths.
-```powershell
-exec powershell -Command "Get-ChildItem -Path 'C:\Users\LENOVO\AppData\Roaming\DeepChat' -Filter '*.json' -Recurse"
-exec powershell -Command "Get-ChildItem -Path 'C:\Users\LENOVO\.deepchat' -Recurse | Select-String 'pattern'"
-```
+Multi-pipe, multi-variable, JSON-parsing PowerShell one-liners fail for STRUCTURAL
+reasons (quote collapse, scoping, pipeline quirks) that NO escaping can fix. WRITE
+A PYTHON FILE instead of a .ps1 file.
 
-**Workspace-ONLY:** `grep`, `glob`
-**Any-path:** `read`, `write`, `edit`, `exec`
+### ENCODING CORRUPTION (MOST DANGEROUS)
 
----
+`Get-Content` and `Out-File` on Windows DEFAULT TO THE SYSTEM CODEPAGE (CP1252),
+NOT UTF-8. Any file containing Unicode characters (em dashes, curly quotes,
+Greek letters, math symbols, degree signs) is SILENTLY CORRUPTED with NO error
+raised. The corruption propagates to git commits, D1 inserts, Zenodo uploads,
+and PDFs. This single failure mode has caused more damage than all other
+PowerShell issues combined.
 
-## KIF-09: COMPLEX ONE-LINER FRAGILITY — Script-First Rule
-
-### BANNED: Complex PS one-liners through exec
-If your command has **ANY** of the following, write a `.ps1` file instead:
-- More than 2 pipe stages
-- Regex patterns with `|` alternation
-- Variable assignments (`$x = ...`)
-- Calculated properties (`@{N=;E={}}`)
-- Mixed quoting (single + double quotes)
-- JSON parsing with `ConvertFrom-Json`
-
-**FAILED** (session e4layp9 — 8 of 10 failures):
-- `Get-PSDrive | Select @{...}` (missing `$_`)
-- `Get-Content | Select-String '(a|b)' | ForEach` (regex `|` → PS pipe)
-- `$content = Get-Content; $obj = ConvertFrom-Json; $obj.prop` (scoping failures)
-
-**CORRECT PATTERN:**
-```powershell
-# Step 1: Write script to temp file via write tool
-# Target: C:\Users\LENOVO\AppData\Local\Temp\my_script.ps1
-
-# Step 2: Execute
-exec powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\LENOVO\AppData\Local\Temp\my_script.ps1"
-```
-
-**Inside the .ps1 file (example):**
-```powershell
-$content = Get-Content 'C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json' -Raw
-$obj = ConvertFrom-Json $content
-$obj | Select-Object -Property language, theme, soundEnabled, copyWithCotEnabled
-```
-
-**Why:** The .ps1 file is a SINGLE interpretation layer. No nested quote escaping between exec, cmd, and PowerShell.
-
-**ps-lint detection:** Flags pipe count >2, variable assignments, `ConvertFrom-Json`, calculated properties, mixed quoting. In `-Strict` mode, these become HARD FAILS.
+**ABSOLUTE RULE: Never use Get-Content / Out-File for text files containing any
+character outside ASCII. Use Python open(path, encoding='utf-8') instead.**
 
 ---
 
-## Bundled Tools
+## S1.3 EXEC COMMAND PATTERNS
 
-### `scripts/ps-lint.ps1` — Pre-Flight Validator
-Validates a PowerShell command against all KIF patterns. Returns structured output.
-```powershell
-# Check a command before executing:
-skill_run windows-command-patterns scripts/ps-lint.ps1 --args '-Command','Select-String -Pattern "(a|b)" file.txt'
-# → FAIL: KIF-06 regex in double quotes
+### Python (PRIMARY — use for ALL operations)
 
-# JSON output for programmatic use:
-skill_run windows-command-patterns scripts/ps-lint.ps1 --args '-Command','Get-ChildItem | Select Name,Length','-Json'
-# → {"severity":"PASS","issues":[],"command":"...","timestamp":"..."}
-
-# Strict mode (KIF-09 warnings become errors):
-skill_run windows-command-patterns scripts/ps-lint.ps1 --args '-Command','<cmd>','-Strict'
+```
+exec python C:\path\to\script.py
+exec python C:\path\to\script.py arg1 arg2
 ```
 
-### `scripts/ps-safe-exec.ps1` — Lint-Then-Execute Wrapper
-Validates THEN executes. If KIF-05/06/07 detected, BLOCKS execution entirely.
-```powershell
-# Safe execution (lint first, execute only if clean):
-skill_run windows-command-patterns scripts/ps-safe-exec.ps1 --args '-Command','Get-ChildItem | Select -First 5'
+### Native executables (USE DIRECTLY, not through PowerShell)
 
-# Validate only (no execution):
-skill_run windows-command-patterns scripts/ps-safe-exec.ps1 --args '-Command','<cmd>','-NoExecute'
-
-# Strict mode (blocks KIF-09 too):
-skill_run windows-command-patterns scripts/ps-safe-exec.ps1 --args '-Command','<cmd>','-Strict'
 ```
+exec curl.exe -s https://api.example.com
+exec git -C C:\path status
+exec npx wrangler d1 list
+exec pandoc input.md -o output.pdf --pdf-engine=xelatex
+```
+
+### CMD (for cmd-native operations)
+
+```
+exec cmd /c "dir /s /b C:\path"
+exec cmd /c "git add -A && git commit -m 'message' && git push"
+```
+
+### PowerShell (LAST RESORT — documented for reference only)
+
+```
+# NEVER inline:
+exec powershell -NoProfile -Command "..."  ← BANNED for anything beyond Get-ChildItem C:\
+
+# ALWAYS use .ps1 file:
+exec powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\LENOVO\AppData\Local\Temp\_task.ps1"
+```
+
+---
+
+## S1.4 ENCODING PROTOCOL (UNCONDITIONAL)
+
+Every text file operation on this system MUST use explicit UTF-8 encoding:
+
+```python
+# Python (CORRECT — ALWAYS use this)
+with open(path, 'r', encoding='utf-8') as f:    # read
+with open(path, 'w', encoding='utf-8') as f:    # write
+```
+
+```powershell
+# PowerShell (LAST RESORT ONLY — FORCE encoding)
+Get-Content path -Encoding UTF8                  # read
+Set-Content path -Encoding UTF8 -Value ...       # write
+[System.IO.File]::ReadAllText(path, [System.Text.UTF8Encoding]::new($false))  # read
+[System.IO.File]::WriteAllText(path, ..., [System.Text.UTF8Encoding]::new($false))  # write (NO BOM)
+```
+
+**The `$false` parameter in `[System.Text.UTF8Encoding]::new($false)` means NO BOM.**
+A BOM (byte order mark, U+FEFF) silently breaks Pandoc frontmatter, YAML parsing,
+and some git diffs. Always use `$false` (no BOM) unless the target system explicitly
+requires a BOM.
+
+---
+
+## S1.5 PRE-COMMIT GATE
+
+Before EVERY git commit, run the system-wide mojibake scanner:
+
+```
+python C:\Users\LENOVO\.deepchat\pre-commit-mojibake-scan.py
+```
+
+This detects BOM, U+FFFD, U+FFFF, and CP1252 double-encoding patterns. Any failure
+is a HARD BLOCK on the commit. This gate exists because the resume v3.3 PDF and
+computing-machines paper.md were both corrupted by the exact same PowerShell
+encoding failure.
 
 ---
 
 ## QUICK REFERENCE
 
-| Task | Correct | Wrong |
-|---|---|---|
-| Command chaining | `cmd1; cmd2` | `cmd1 & cmd2` |
-| Error-dependent exec | `cmd /c "cmd1 \|\| cmd2"` | `cmd1 \|\| cmd2` |
-| Regex search PS | `Select-String -Pattern '(a\|b)'` | `Select-String -Pattern "(a\|b)"` |
-| Search outside workspace | `exec powershell -Command "ls \| sls 'p'"` | `grep "p" C:\path` |
-| Disk GB calc | `{$_.Used/1GB}` | `{.Used/1GB}` |
-| JSON parse | Write a .ps1 file | Inline `ConvertFrom-Json` one-liner |
-| Complex command | Write a .ps1 file | Multi-pipe one-liner through exec |
+| Task | PRIMARY (Python) | LAST RESORT (PowerShell) |
+|:-----|:-----------------|:-------------------------|
+| File read | `open(p, encoding='utf-8').read()` | `Get-Content p -Encoding UTF8` |
+| File write | `open(p, 'w', encoding='utf-8').write(...)` | `Set-Content p -Encoding UTF8` |
+| JSON parse | `json.loads(text)` | `ConvertFrom-Json` (in .ps1 file ONLY) |
+| HTTP GET | `urllib.request.urlopen(url)` | `Invoke-RestMethod` |
+| Regex search | `re.findall(pattern, text)` | `Select-String -Pattern '...'` |
+| Dir listing | `os.listdir(path)` | `Get-ChildItem path` |
+| Git operations | `subprocess.run(['git',...])` | `git -C path ...` (via exec) |
+| Complex task | Write a .py file | Write a .ps1 file |
+| Windows registry | N/A | `Get-ItemProperty` (last resort) |
 
-## SELF-CHECK BEFORE EXECUTING (v1.2 HARDENED)
+## SELF-CHECK BEFORE EXECUTING (v2.0)
 
-**?? RULE ZERO (v1.2): IF ANY POWERSHELL COMMAND HAS FAILED WITH A $VARIABLE ERROR IN THIS SESSION, ALL SUBSEQUENT POWERSHELL GOES THROUGH .PS1 FILES. NO EXCEPTIONS. RE-ATTEMPTING INLINE POWERSHELL AFTER A PROVEN FAILURE IS A HARD ANTI-PATTERN.**
+1. **Is this a Python operation?** → Write .py file, use `exec python`. DONE.
+2. **Is this a native executable?** → `exec curl.exe`, `exec git`, `exec pandoc`. DONE.
+3. **Is this a cmd-native operation?** → `exec cmd /c "..."`. DONE.
+4. **Is this genuinely impossible without PowerShell?** → OK, write .ps1 file, use ps-safe-exec.ps1.
+5. **If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>`: ABORT.** Write a Python file instead.
 
-0. **Has this session had $variable parse errors?** -> **STOP. Write a .ps1 file. ALWAYS.**
-1. Uses `$` (beyond simple `$env:VAR`)? -> STOP, write a .ps1 file.
-3. Regex pattern uses double quotes? -> STOP, switch to single quotes.
-4. Script block uses `.Property` without `$_`? -> STOP, add `$_` (in .ps1 file).
-5. Using grep/glob for AppData/.deepchat? -> STOP, use exec + PowerShell.
-6. More than 1 pipe or uses any variable assignment? -> STOP, write a .ps1 file.
-7. **If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`: ABORT.**
+**Python is not a fallback. Python is the DEFAULT.**
 
-**The .ps1 file pattern:** `write` tool -> `exec powershell -NoProfile -ExecutionPolicy Bypass -File "<path>"` -> done. Three tool calls but ZERO failures. Faster than 5+ failed inline attempts.
-
+---
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\windows-command-patterns`.
 - Relative paths mentioned by this skill are relative to the skill root unless stated otherwise.
 - When this skill needs script execution, prefer `skill_run` over `exec`.
 - Bundled runnable scripts:
-  - `scripts/ps-lint.ps1` — KIF-05/06/07/09 pre-flight validator (v1.1)
-  - `scripts/ps-safe-exec.ps1` — lint-then-execute wrapper (v1.1)
+  - `scripts/ps-lint.ps1` — DEPRECATED as of v2.0 (reference only, do not load)
+  - `scripts/ps-safe-exec.ps1` — LAST RESORT wrapper (use only when Python is impossible)

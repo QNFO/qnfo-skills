@@ -119,7 +119,7 @@ Before beginning work on a QNFO/QWAV deliverable:
 | Using "Pre-Commercial" as a substitute for epistemic labeling | "Pre-Commercial" is business stage, `[speculative]` is epistemic status — they serve different purposes. Genre B uses the business-stage label + footer disclaimer instead of inline epistemic labels. |
 | Defaulting to Genre C for everything "internal" | Project plans shared externally (investors, partners) are Genre B, not Genre C |
 | Over-applying Genre A certainty labels to Genre B content | Landing pages with yellow `[speculative]` badges are visually self-sabotaging and genre-inappropriate — use Genre B footer + dagger footnotes |
-| **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for `â€"`, `â€™`, `â€œ`, `â€`, `â„¢`, `â€˜`, `â€¢`, `â€"`, `â€¦`, `Ã` patterns BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
+| **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for CP1252 double-encoded hex patterns (0xE2 0x80 0x93/0x94/0x98/0x99/0x9C/0x9D/0xA2/0xA6, 0xE2 0x84 0xA2, 0xC3 0x8x) BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
 
 ## §0.2 UTF-8 SOURCE ENCODING MANDATE (HARD GATE — NO EXCEPTIONS)
 
@@ -136,16 +136,16 @@ UTF-8 double-encoding: when UTF-8 bytes (e.g., `0xE2 0x80 0x93` for en-dash `–
 **Common mojibake patterns (ALL are corruption signals):**
 | Pattern | Correct Character |
 |:--------|:------------------|
-| `â€"` | `—` (em-dash, U+2014) |
-| `â€"` | `–` (en-dash, U+2013) |
-| `â€™` | `'` (right single quote, U+2019) |
-| `â€œ` | `"` (left double quote, U+201C) |
-| `â€` | `"` (right double quote, U+201D) |
-| `â€˜` | `'` (left single quote, U+2018) |
-| `â€¢` | `•` (bullet, U+2022) |
-| `â€¦` | `…` (ellipsis, U+2026) |
-| `â„¢` | `™` (trademark, U+2122) |
-| `Ã<XX>` | Various Latin-1 accented chars |
+| `0xE2 0x80 0x94` | `—` (em-dash, U+2014) — appears as garbled chars |
+| `0xE2 0x80 0x93` | `–` (en-dash, U+2013) — appears as garbled chars |
+| `0xE2 0x80 0x99` | `'` (right single quote, U+2019) — appears as garbled chars |
+| `0xE2 0x80 0x9C` | `"` (left double quote, U+201C) — appears as garbled chars |
+| `0xE2 0x80 0x9D` | `"` (right double quote, U+201D) — appears as garbled chars |
+| `0xE2 0x80 0x98` | `'` (left single quote, U+2018) — appears as garbled chars |
+| `0xE2 0x80 0xA2` | `•` (bullet, U+2022) — appears as garbled chars |
+| `0xE2 0x80 0xA6` | `…` (ellipsis, U+2026) — appears as garbled chars |
+| `0xE2 0x84 0xA2` | `™` (trademark, U+2122) — appears as garbled chars |
+| `0xC3 0x<XX>` | Various Latin-1 accented chars — appears as garbled chars |
 
 ### Gate Protocol (MANDATORY — run before EVERY commit/pubish/insert)
 
@@ -184,10 +184,91 @@ The 2026-07-31 computing-machines mojibake incident: three consecutive sessions 
 See `scripts/scan-mojibake.py` in this skill's root directory. The script scans for all known mojibake hex patterns and exits non-zero if any are found. Use `--fix` for automatic repair.
 
 ## §0.5 PRIORITY STACK
-1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims, **Source Encoding Integrity (§0.2)**
+1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims, **Source Encoding Integrity (§0.2)**, **Python-First Execution (§0.6)**
 2. STRONG PREFERENCE: Accuracy, Evidence Quality, Source Traceability
 3. DEFAULT: Structured Output, Tone, Publication Standards
 4. NICE TO HAVE: Engagement, Brevity
+
+## §0.6 PYTHON-FIRST EXECUTION MANDATE (HARD GATE — NO EXCEPTIONS)
+
+**Effective: 2026-07-31. Applies to ALL QNFO/QWAV operations, ALL skills, ALL tasks.**
+
+### Rule (Ironclad)
+
+**Python is the PRIMARY execution environment for ALL operations on this system.
+PowerShell is DEPRECATED and may ONLY be used as an absolute LAST RESORT when
+Python is genuinely impossible (Windows registry, service management, AD, AppX).**
+
+### Decision Protocol (before ANY `exec` call)
+
+```
+1. Can this be done with Python? → YES (99%+ of cases)
+   → Write to .py file → exec python <file>.py → DONE
+2. Is this a native executable (curl.exe, git, pandoc, npx)?
+   → exec <executable> <args> → DONE
+3. Is this a cmd-native operation (dir, type, copy, del)?
+   → exec cmd /c "<command>" → DONE
+4. NONE of the above work?
+   → PowerShell, but ONLY via .ps1 file. NEVER inline powershell -Command "..."
+```
+
+### Why This Mandate Exists
+
+The 2026-07-31 resume portfolio mojibake incident is the canonical case:
+PowerShell `Get-Content` silently read UTF-8 source files as CP1252, double-encoding
+every non-ASCII character. The corrupted text was committed to GitHub, rendered into
+a 29-page PDF with 275 U+FFFF glyph-miss errors, and published to Zenodo
+(10.5281/zenodo.21725453) as a supposedly professional resume. A SECOND incident
+(computing-machines/paper.md, 42 double-encoded dashes committed to GitHub) was
+discovered during the systemic audit. The root cause in both cases was identical:
+PowerShell's default encoding (CP1252) ≠ UTF-8, and the corruption is SILENT — no
+error, no warning, just garbled characters that propagate through every downstream
+system.
+
+**The cumulative cost of PowerShell failures on this system (KIF-05/06/07/09 parse
+errors, encoding corruption, quote collapse, $variable eating) exceeds every other
+tooling failure pattern combined. Python is installed. Python is reliable. Python
+uses UTF-8 by default. Use Python.**
+
+### Integration Points
+
+| Skill | Where | What |
+|:------|:------|:------|
+| `windows-command-patterns` | §1.0 | Python-First Decision Tree, encoding protocol |
+| `research` | Phase 5 PDF Building | Use `build-paper.py` (Python, UTF-8 explicit) |
+| `research` | Phase 6 D1 Insert | Python script with `urllib.request`, not PS inline |
+| `git-github` | All operations | `exec git ...` directly, or Python `subprocess.run` |
+| **All skills** | Before ANY `exec` | Run the §1.0 decision tree. PS = LAST RESORT |
+
+### Pre-Commit Gate
+
+Before EVERY git commit in ANY QNFO repository:
+
+```
+python C:\Users\LENOVO\.deepchat\pre-commit-mojibake-scan.py
+```
+
+**No exceptions.** This gate exists because the resume v3.3 PDF and computing-machines
+paper.md were both corrupted by the exact same PowerShell encoding failure. If the
+scanner exits non-zero, the commit is BLOCKED.
+
+### PowerShell Usage (Last Resort Only)
+
+PowerShell may ONLY be used when ALL of the following conditions are met:
+1. A Python equivalent has been explicitly confirmed impossible
+2. The task falls into a Windows-native category (registry, services, WMI, AD, AppX)
+3. The command is written to a `.ps1` file (NEVER inline)
+4. `ps-safe-exec.ps1 -Strict` is used as the wrapper
+5. The reason for using PowerShell is documented in the commit/session
+
+**If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>` in the command: ABORT. Write a Python file instead.**
+
+### Self-Check (before every `exec`)
+
+1. Python? → .py file
+2. Native executable? → direct exec
+3. cmd? → cmd /c
+4. PowerShell? → PROVE Python can't do it first. If yes: .ps1 file only.
 
 ## §3 DUE DILIGENCE PROTOCOL — KG-First Discovery Gate
 
