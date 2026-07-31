@@ -77,6 +77,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     earlier today (KIF-58 kaizen); calibration register now matches live version
 >     (Dependency Auditor, parent-agent).
 > Cross-reference: research v2.37, kaizen v1.2.2.
+
+> **v1.2.4 UPDATE (2026-07-31, deferred-items closeout gate):**
+> Red-team: direct parent-agent 5-adversary audit. HARD findings: 1 (closeout protocol
+> allowed declaring success with unresolved deferred items). SOFT findings: 1.
+> Changes:
+> (1) [HARD] Added **Deferred-Items Closeout Gate (Phase 5, MANDATORY)** — a kaizen
+>     closeout is NOT successful if any deferred item remains unresolved. Every session
+>     that defers items MUST either (a) resolve them before closeout, or (b) explicitly
+>     re-classify them as a NEW session task with a continuation handoff — never silently
+>     leave them "deferred" while declaring "closeout successful." The gate audits the
+>     session's deferred list and blocks the closeout declaration if anything is open.
+> (2) [HARD] Added **Deferred-Items Audit Protocol (Phase 5 step 0)** — before the
+>     closeout declaration, enumerate all items deferred during the session, attempt
+>     resolution, and only then declare closeout. If resolution fails due to external
+>     blocker (rate limit, missing credential), the closeout MUST state
+>     `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` — never "successful."
+> (3) [SOFT] Added anti-pattern row: "Declaring closeout successful with unresolved
+>     deferred items" (Status Auditor, parent-agent).
+> Cross-reference: research v2.38, qnfo-core v1.3, windows-command-patterns v2.0.
 >
 > **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
 > Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
@@ -467,6 +486,36 @@ item carries a documented blocker with an evidence trail and a follow-up trigger
 9. MONITORING REGISTRY: Register this fix in the Continuous Monitoring
    registry for Phase 6 follow-up.
 ```
+
+### Phase 5 Step 0: Deferred-Items Closeout Gate (HARD GATE — MANDATORY)
+
+**Effective: 2026-07-31 (v1.2.4). A kaizen closeout is NOT successful if any
+deferred item remains unresolved.**
+
+Before declaring any closeout "successful," execute the Deferred-Items Audit:
+
+```
+1. ENUMERATE: list every item deferred during the session (deferred fixes,
+   blocked tasks, pending verifications, waiting credentials/rate-limits).
+2. ATTEMPT RESOLUTION: for each item, attempt to resolve it NOW. Do not
+   assume "it will be handled next session."
+3. CLASSIFY each item as:
+   - RESOLVED: completed and verified in this session
+   - EXTERNAL-BLOCK: genuinely blocked by an external condition (rate limit,
+     missing credential, service outage) that cannot be cleared this session
+   - UNRESOLVED: could be resolved but was not
+4. DECLARE:
+   - ALL items RESOLVED → closeout is "successful" ✅
+   - Any EXTERNAL-BLOCK → closeout MUST read:
+     `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason> — retry scheduled]`
+     and produce a continuation handoff for the next session.
+   - Any UNRESOLVED → closeout is BLOCKED. Resolve now, or re-classify as
+     EXTERNAL-BLOCK with evidence, or the closeout is a FAILURE.
+```
+
+**Anti-pattern:** declaring "closeout successful" while a deferred item list
+exists anywhere in the session. The word "deferred" and the word "successful"
+are mutually exclusive in a closeout declaration.
 
 ### Phase 6: Continuous Monitoring Registration (MANDATORY after every kaizen closeout)
 
@@ -862,6 +911,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **Discovering the same anti-pattern twice without escalating** | If the Session Retrospective finds a pattern that was already documented in durable memory, escalate — the prior fix didn't hold. |
 | **Watchtower INCIDENT-AXIS at 0 because session failures weren't tagged to a skill** | Every tool failure in a session retrospective MUST be tagged to the skill that owns the tool usage. Unattributed failures are invisible to the Watchtower. |
 | **Dependency graph is stale (manual, not auto-maintained)** | The Watchtower rebuilds the dependency graph on every scan. Never trust a dependency graph that's more than one session old. |
+| **Declaring closeout successful with unresolved deferred items** | **HARD GATE (v1.2.4):** every closeout runs the Deferred-Items Audit first. "Deferred" and "successful" are mutually exclusive in a closeout declaration. External blockers (rate limits, missing credentials) must be declared `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` with a continuation handoff — never silently deferred while claiming success. |
 | **Conversation summary mentions "kaizen on X" but the .kaizen_history wasn't updated** | Phase 5 closeout MUST update .kaizen_history. The conversation summary is human-readable; the history log is machine-verifiable. |
 | **Heuristic stored without skill ownership tag** | Every heuristic/anti-pattern in durable memory MUST include a `<skill-name>:` prefix so the Watchtower can attribute it for INCIDENT-AXIS scoring. |
 | **cronjob kaizen tasks created but never monitored for failure** | Check cronjob history weekly. A failing Watchtower cron that silently 404s for 30 days is worse than no Watchtower at all — it creates a false sense of security. |
@@ -963,7 +1013,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.3** (kaizen — calibration-drift fix, 2026-07-31)
+Current: **v1.2.4** (kaizen — calibration-drift fix, 2026-07-31)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
