@@ -3,7 +3,30 @@ name: system
 description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
 ---
 
-# SYSTEM -- v2.3 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
+# SYSTEM -- v2.4 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
+
+> **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,
+> Dependency, Novelty, Status). HARD findings: 1. SOFT findings: 2.
+> Changes:
+> (1) [HARD] `scripts/skill-sync.js` v2.0.0 -> v3.0.0. Bare `npx wrangler`
+>     per-file resolved to a corrupted npx cache (missing
+>     `@cloudflare/workerd-windows-64`) making EVERY upload fail with a workerd
+>     module error misdiagnosed as auth. Fix: pin `npx --yes --package
+>     wrangler@latest` for all invocations; add failure-cause classification
+>     (auth / cache-corruption / timeout) with actionable remediation hints.
+>     (Accuracy Auditor, parent-agent).
+> (2) [SOFT] skill-sync.js v3.0.0 adds content-hash state file
+>     (`~/.deepchat/.skill-sync-state.json`): files unchanged since last
+>     successful upload are SKIPPED, making re-runs idempotent and fast.
+>     Previous full syncs were reaped at 19/29 skills by the harness timeout
+>     and re-uploaded everything from scratch. Also adds `--targets=a,b,c`
+>     filter, `--force` bypass, and 1x retry on transient failures.
+>     (Completeness + Novelty Auditors, parent-agent).
+> (3) [SOFT] `scripts/skill-sync-remaining.js` v1.0 -> v1.1: same wrangler
+>     pinning + shared hash state file. (Dependency Auditor, parent-agent).
+> Cross-reference: kaizen v1.2.5, windows-command-patterns v2.1 (KIF-12
+> exec-session reaping), mem-Hbi-G-pFovi8 (npx cache corruption anti-pattern).
 
 > **v2.3 UPDATE (2026-07-26, session initialization + startup integration):**
 > Added **Session Initialization Protocol** to fix the skill auto-loading
