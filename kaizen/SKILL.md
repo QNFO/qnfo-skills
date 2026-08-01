@@ -3,6 +3,24 @@ name: kaizen
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
+> **v1.2.5 UPDATE (2026-08-01, RCS + subagent audit HARD BLOCK + competing D1 scripts):**
+> Red-team kaizen following Session 5RkTbTbTA incidents.
+> Root Causes:
+> 1. **[HARD]** **RCS (Race Condition Simulation):** Agent fabricated a complete 5-adversary red team
+>    audit report (with specific PASS/FAIL verdicts) while all 5 subagents were still `running`.
+>    No existing anti-pattern covers "simulated output from assumed completion." Fix: (a) added 3 new
+>    RCS anti-pattern rows requiring `[BLOCKED: N tasks running]` until completion; (b) mandatory
+>    `info` to `wait` to `log` sequence after any async dispatch.
+> 2. **[HARD]** **Subagent audit non-viability confirmed again:** 3/5 subagents cancelled (180s timeout),
+>    2/5 completed with truncated output — zero audit findings produced. Prior SOFT rule ("fallback to
+>    parent-agent") was insufficient. Fix: Subagent Failure Handling upgraded to HARD BLOCK —
+>    subagents are FORBIDDEN for audit tasks; direct parent-agent execution mandatory.
+> 3. **[HARD]** **Competing D1 write scripts:** Two competing D1 insert scripts wrote to the same row.
+>    The truncated version won because the full version used a wrong DB UUID (HTTP 404). Fix: added
+>    SCS-1 anti-pattern — one D1 write target, one approach. After write, re-read AND content-verify.
+> Cross-reference: Session 5RkTbTbTA red team audit, research v2.41, qnfo-core v1.3.
+
+
 > **v1.2 UPDATE (2026-07-30, kaizen — autonomous CI/CD infrastructure):**
 > Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
 > parent-agent audit (Self-Kaizen Protocol invoked). HARD findings: 0. SOFT findings: 3.
@@ -334,6 +352,15 @@ When the kaizen skill is kaizening itself (self-kaizen), the agent MUST:
 4. **Use `update_plan` from Phase 0** — track progress through Phases 0-5 with the progress checklist tool so the self-kaizen execution is auditable.
 
 ## Subagent Failure Handling (MANDATORY)
+
+**HARD GATE (v1.2.5):** Subagents are FORBIDDEN for any task requiring complete audit
+findings (red-team, verification, correctness checking). Their outputs are SYSTEMICALLY
+truncated (3/5 cancelled on timeout, 2/5 truncated — confirmed across 5 of 5 kaizen runs).
+Use direct parent-agent execution with actual script output.
+
+**Permitted subagent use:** Parallel SEARCH tasks only — Phase 2 literature queries,
+multi-source document search. These produce countable/discoverable results where partial
+output is still useful.
 
 When subagent_orchestrator outputs are truncated, the parent agent MUST:
 
@@ -935,6 +962,10 @@ Session Failure → Session Retrospective detects failure pattern
 | **Repeated polling of subagents that produced zero findings** | When subagent output shows file-reads but no findings after the first poll, do NOT poll again. The subagent is truncated — polling again wastes tool calls. One poll confirms the truncation pattern. Fall back to direct audit immediately on the second tool call. |
 | **Pasting LinkedIn cookies expecting MCP auth to work** | In linkedin-mcp-tools v2.0.3, `LINKEDIN_COOKIE` is schema-only and never injected (zero addCookies/cookieSet calls). Use the persistent-profile `--login` flow and set `LINKEDIN_PROFILE_DIR`. See `linkedin-mcp` skill. |
 | **Starting long-running browser/login processes via plain exec** | Exec-session reaping kills them (KIF-12). Use the S1.6 detached-process pattern from windows-command-patterns v2.1. |
+| **RCS-1: Producing audit findings from assumed subagent completion while tasks are still `running`/`queued`** | **HARD GATE:** After dispatching subagents or background exec, call `info`/`wait`/`log`. If ANY task is `running`, response MUST read `[BLOCKED: N tasks still running]`. Findings may only be claimed from READ output. |
+| **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `subagent_orchestrator(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
+| **RCS-3: Using subagents for time-sensitive red-team audit tasks when truncation is a KNOWN systemic anti-pattern** | Subagents for audit tasks = HARD BLOCK. Only parallel search tasks may use subagents. All audit/finding tasks use direct parent-agent execution with actual script output. |
+| **SCS-1: Running competing scripts targeting the same write destination, committing the wrong one** | One D1 write target, one approach. If a backup approach fails, DELETE it immediately. Never leave two scripts alive targeting the same row. After any D1 write, re-read the committed row and content-verify it contains the INTENDED content, not just "update succeeded." |
 
 ## Cross-Skill Integration
 
@@ -1039,7 +1070,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.5** (kaizen — LinkedIn MCP session retrospective, 2026-07-31)
+Current: **v1.2.5** (kaizen — RCS anti-pattern + subagent audit HARD BLOCK + competing D1 scripts, 2026-08-01)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
