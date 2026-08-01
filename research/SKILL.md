@@ -41,7 +41,63 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.41 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+# RESEARCH -- v2.43 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate + Numeracy Gates)
+
+> **v2.43 UPDATE (2026-08-02, kaizen — Zenodo bucket-URL rule + upload endpoint fix):**
+> Reactive kaizen following the ODR v1.5 Zenodo upload block (session 3YzGvuFkUK, 2026-08-02).
+> Root cause: the SKILL.md "2. Upload Files" section documented the WRONG file-upload endpoint —
+> `PUT /api/deposit/depositions/{id}/files/{file}` — which agents translated into ad-hoc
+> constructed URLs (e.g. `/api/files/{deposit_id}`). Zenodo's storage backend returns HTTP 500
+> for these paths because the deposit ID is NOT the bucket UUID. The canonical script
+> `scripts/zenodo-create-upload.py` was already correct (`upload_file` uses `f'{bucket_url}/{name}'`
+> with the bucket URL returned by `create_deposit` from `links.bucket`); only the prose guidance
+> was wrong.
+> Changes:
+> (1) [HARD] Added **BUCKET URL RULE** to "2. Upload Files" — the upload endpoint MUST be
+>   extracted from the deposit record's `links.bucket` field (UUID path); NEVER constructed
+>   manually. Manual construction returns HTTP 500.
+> (2) [HARD] Corrected the documented upload-path examples in "2. Upload Files" — the
+>   deprecated wrong path is flagged and replaced with `PUT {links.bucket}/{filename}`.
+> (3) [HARD] Added anti-pattern row: "Constructing the Zenodo file-upload URL manually instead
+>   of extracting links.bucket" with the full incident root-cause and fix reference.
+> (4) [SOFT] Cross-referenced `scripts/zenodo-create-upload.py` as the canonical upload
+>   implementation to follow, not ad-hoc inline scripts.
+> Red-team: direct parent-agent audit per kaizen v1.2.5 HARD GATE (no subagents).
+> Cross-reference: kaizen v1.3.0, ODR v1.5 (DOI 10.5281/zenodo.21750975), zenodo-create-upload.py.
+
+> **v2.42 UPDATE (2026-08-02, kaizen — numeracy gates + look-elsewhere expansion):**
+> Reactive kaizen per user directive: "EXECUTE KAIZEN UPDATE TO AUDIT FOR AND REMEDIATE
+> LOOK-ELSEWHERE AND NUMEROLOGY/DATA-FITTING ISSUES/VIOLATIONS WHEN CONDUCTING RESEARCH."
+> Triggered by full-session red-team audit of ACRP-04 / Koide analysis that surfaced
+> 7 findings including: 9,138σ unreproducible (best: 8,943σ), cross-paper numerical
+> inconsistency (99.8% vs 99.85%), 0.050% overdetermined lepton closure error, Koide Q
+> miscalculated (0.02% → 0.00289%), and §6 adelic factorization identified as untested
+> Class 2 numerology.
+> Changes:
+> (1) [HARD] **BP-4 Cross-Paper Numerical Consistency Gate** — when multiple QNFO papers cite
+>   the same number, values MUST agree within rounding. Blocks cross-paper drift.
+> (2) [HARD] **BP-5 Overdetermined System Verification Gate** — when N ratios claimed from
+>   M<N independent quantities, internal closure error must be computed and reported.
+> (3) [HARD] **BP-6 Derived-Quantity Recompute Gate** — any quantity derived from claimed
+>   primary results must be recomputed from first principles before being cited as evidence.
+> (4) [HARD] **BP-7 Sigma/Error Propagation Audit Gate** — every σ must trace to a specific
+>   cited uncertainty source; two conflicting uncertainty values in one paper = BLOCKED.
+> (5) [DESIGN] **BP-8 Numerology Claim Classification** — 5-class typology (Dense-Approximant,
+>   Ratio-Factorization, Index-Selection, Transcendental, Pattern-in-Noise) with per-class
+>   required gates. Closes the §6/§7.2 selective-gate-application gap.
+> (6) [SOFT] **BP-9 Audit-the-Auditor Gate** — audit papers critiquing numerical accuracy
+>   must self-audit via BP-1 through BP-7 before publication.
+> (7) [HARD] **BP-10 Independent-Recompute Gate** — before citing any paper's numerical
+>   claim as evidence, recompute it in the current session with independent implementation.
+> (8) [DESIGN] **Numeracy Red Flags Checklist** — 14-signal quick-scan (🚩) for pre-publication
+>   numerical claim screening. 0 🚩→proceed; 1-2→investigate; 3+→HARD BLOCK.
+> (9) [SOFT] **9 new anti-pattern rows** covering: unreproducible audit numbers, conflicting
+>   uncertainty values, overdetermined closure, derived-quantity errors, cross-paper
+>   inconsistency, selective gate application, untraceable sigma sources, skipped
+>   recomputation, and post-hoc tolerance selection.
+> Red-team: direct parent-agent 5-adversary audit (Accuracy/Completeness/Dependency/Novelty/
+> Status). All findings integrated. Zero blocking issues remaining after remediation.
+> Cross-reference: kaizen v1.2.5, ACRP-04 (DOI 10.5281/zenodo.21748008), session 747X9msNaKJP47-DGVSrn.
 
 > **v2.41 UPDATE (2026-08-01, kaizen — Zenodo preview file designation):**
 > Reactive kaizen per user directive: "UPDATE ZENODO SKILL TO DESIGNATE A PREVIEW
@@ -1457,6 +1513,106 @@ project has core disciplines — identify them from Phase 1 due diligence.
 7. **Reference:** ACRP-04 (DOI 10.5281/zenodo.21727479) is the canonical execution.
 8. Output: `artifacts/density-gate.md`. Absent on qualifying claim → REJECTED.
 
+#### BP-4 Cross-Paper Numerical Consistency Gate `[HARD — v2.42]`
+
+**MANDATORY when multiple QNFO publications cite the same numerical result.** Before publishing ANY paper that cites a number also appearing in another QNFO paper, reconcile the values.
+
+1. Identify the shared number (e.g., P(all-9-fit) = 99.8% in ACRP-04, "99.85%" in Adelic v4.0).
+2. Recompute the number independently in the current session.
+3. If the values disagree beyond trivial rounding (±0.1pp for percentages, ±1 for small σ values), BLOCK until resolved.
+4. Output: `artifacts/cross-paper-consistency.md` with per-number reconciliation.
+5. **Why this gate:** ACRP-04 reports P(all-9-fit) = 0.998 (99.8%); Adelic v4.0 §7.2 disclosure reports "99.85%." Both reference the same Monte Carlo (seed 20260731). A shared null-model result MUST be consistent across all papers that cite it.
+
+#### BP-5 Overdetermined System Verification Gate `[HARD — v2.42]`
+
+**MANDATORY when a paper claims N fitted ratios from M < N independent quantities.** The N fits are mathematically overdetermined — they cannot all be simultaneously exact.
+
+1. Identify the independent quantities (e.g., m_μ/m_e and m_τ/m_e; m_τ/m_μ is their ratio).
+2. Compute the closure error for each derived ratio.
+3. Report: "Closure error: X%. Claimed tolerance: Y%. Status: [CONSISTENT] / [INCONSISTENT]."
+4. If INCONSISTENT → the fits are not a consistent parameter set. Acknowledge as a limitation.
+5. Output: `artifacts/overdetermined-closure.md`.
+6. **Why this gate:** The 3 lepton 5-smooth fits have 0.050% internal closure error. The framework's ~0.11% tolerance absorbs this, but it means the ratios are not simultaneously exact 5-smooth numbers.
+
+#### BP-6 Derived-Quantity Recompute Gate `[HARD — v2.42]`
+
+**MANDATORY when reporting any quantity derived from claimed primary results** (e.g., Koide Q-value from mass fits, cross-ratio from independent fits). Never assume claimed numbers are component-accurate.
+
+1. Recompute from the primary claimed numbers using exact rational arithmetic where possible.
+2. If the derived quantity is used as evidence, the recomputation MUST be from first principles — not by trusting the paper's own computation.
+3. Output: recomputed value, method, and any discrepancy from prior reports.
+4. **Why this gate:** My initial analysis claimed 5-smooth Koide Q deviates from 2/3 by "0.02%." Independent recomputation yields 0.00289% — a factor of ~7× error. The qualitative argument survived, but the quantitative claim required correction.
+
+#### BP-7 Sigma/Error Propagation Audit Gate `[HARD — v2.42]`
+
+**MANDATORY for every reported sigma deviation, confidence interval, or error-bound claim.** Every σ must trace to a specific, cited uncertainty source with documented propagation method.
+
+1. **Source traceability:** "9,138σ" → must cite: PDG edition, specific table, exact value ± uncertainty, best-fit computation, and propagation formula (Δ/σ).
+2. **Single-source rule:** If the same quantity appears with TWO different uncertainty values in the same paper, the paper carries a self-contradiction. BLOCK until reconciled.
+3. **Rounding disclosure:** If the reported σ differs from the recomputed value, document the discrepancy. An audit paper auditing arithmetic errors cannot carry an unreproducible headline number.
+4. Output: `artifacts/sigma-traceability.md`.
+5. **Why this gate:** ACRP-04's 9,138σ figure does not reproduce under any combination of its own cited uncertainties or PDG 2024 Live (best: 8,943σ). The paper's two uncertainty values produce σ=4,114 and σ=8,227 — neither equals 9,138.
+
+#### BP-8 Numerology Claim Classification `[DESIGN — v2.42]`
+
+**MANDATORY before publication of any number-theoretic approximation claim.** Classify into one of five structural types, each triggering specific required gates:
+
+| Class | Definition | Required Gates |
+|:------|:-----------|:---------------|
+| **Dense-Approximant** | Claims dense set S approximates values V to ε% | BP-3 (density gate) + BP-5 (overdetermined closure) |
+| **Ratio-Factorization** | Claims ratio R=N/D is significant because N,D factor nicely | BP-3 adapted: null model for random ratios in same range |
+| **Index-Selection** | Claims integer exponents (a,b,c) have physical meaning due to smallness | BP-3 adapted: test if random targets need larger exponents |
+| **Transcendental** | Claims π/e/φ approximates a physical quantity | Pre-registered tolerance + falsifiable precision prediction |
+| **Pattern-in-Noise** | Claims pattern discovered post-hoc in existing data | HARD BLOCK: not evidence. Pre-register on new data. |
+
+**Why this gate:** ACRP-04 tested §7.2 (Class 1: Dense-Approximant). §6 (adelic factorization 976/919) is Class 2 (Ratio-Factorization) and has NOT undergone any density gate audit. Without this classification, structurally identical numerology claims in the same paper escape scrutiny.
+
+#### BP-9 Audit-the-Auditor Gate `[SOFT — v2.42]`
+
+**MANDATORY before publishing any audit paper that criticizes another paper's numerical accuracy.**
+
+1. **Self-audit:** Run ALL of BP-1 through BP-7 on the AUDIT PAPER ITSELF before publication.
+2. **Sigma recomputation:** Every σ value reported by the audit must be independently recomputed.
+3. **Cross-check with live data:** Re-fetch current PDG values — don't assume the audit's values are current.
+4. **Disclose any discrepancy:** If the audit's headline numbers don't reproduce, correct them or disclose with `[SELF-AUDIT: number X does not reproduce; best reconstruction Y]`.
+5. **Why this gate:** ACRP-04's most prominent numerical claim (9,138σ) does not reproduce under any combination of cited uncertainties or PDG 2024 Live.
+
+#### BP-10 Independent-Recompute Gate `[HARD — v2.42]`
+
+**MANDATORY before citing any paper's numerical claim as evidence in new research.** "Cited in a paper" ≠ "independently verified."
+
+1. Before treating a p-value, σ, percentage, or fit as established, recompute it in the current session.
+2. For Monte Carlo results: run an independent implementation with a different seed. Verify consistency within sampling noise.
+3. For PDG-dependent values: re-fetch PDG Live — do not assume the paper's PDG values are current.
+4. If recomputation is not feasible, flag `[NOT-VERIFIED: independent recomputation blocked by <reason>]` and do NOT cite as "established."
+5. Output: ephemeral verification script + result log in `artifacts/independent-recompute/`.
+6. **Why this gate:** Two sessions cited ACRP-04's p=0.116 without running the Monte Carlo. The number is correct (this session independently confirmed p=0.1193), but trusting it without verification is an Anti-Phantom violation. Recomputation cost is negligible (~30 seconds for 50k-trial MC) vs. cost of propagating a wrong number.
+
+---
+
+### Numeracy Red Flags Checklist (v2.42)
+
+**MANDATORY quick-scan BEFORE publishing or citing any numerical claim.** Any 🚩 hit → investigate before proceeding. This is a signal-detection checklist, not a substitution for the full gates above.
+
+| 🚩 | Signal | Gate | Canonical Instance |
+|:--|:-------|:-----|:-------------------|
+| 🚩 | Two conflicting values for same quantity in same paper | BP-7 | ACRP-04: m_μ/m_e unc=1e-5 vs 5e-6 |
+| 🚩 | Sigma/percentage without cited uncertainty source | BP-7 | "9,138σ" — untraceable to specific PDG ed. |
+| 🚩 | Cross-paper inconsistency for same numerical result | BP-4 | 99.8% (ACRP-04) vs 99.85% (v4.0) |
+| 🚩 | Overdetermined system claimed as independent fits | BP-5 | 3 lepton ratios, 2 DoF, 0.050% closure |
+| 🚩 | Derived quantity cited without independent recomputation | BP-6 | Koide Q "0.02%" → actual: 0.00289% |
+| 🚩 | Dense approximating set without density gate | BP-3 | 5-smooth, rationals, Diophantine approximants |
+| 🚩 | Structurally similar claims with selective gate application | BP-8 | §7.2 tested but §6 (same class) not |
+| 🚩 | "Within X%" tolerance never pre-registered | BP-3 | Post-hoc tolerance = extra look-elsewhere DoF |
+| 🚩 | False-precision in p-values/percentages | BP-10 | "0.116" (3 sig figs) from MC (SE ~0.002) |
+| 🚩 | p-value/σ reported without independent recomputation | BP-10 | Trusting paper claims without re-run |
+| 🚩 | Post-hoc pattern discovery presented as evidence | BP-8 Class 5 | Pattern found AFTER data inspection |
+| 🚩 | Exponent/search bounds selected post-hoc | BP-3 | B=14 selected after seeing data — 2nd DoF |
+| 🚩 | Single-seed Monte Carlo without seed-sensitivity check | BP-10 | Seed 20260731; no alt seed tested |
+| 🚩 | Audit paper with its own unreproducible headline number | BP-9 | ACRP-04's 9,138σ vs recomputed 8,943σ |
+
+**Usage:** 0 🚩 → proceed. 1-2 🚩 → investigate, document, then proceed. 3+ 🚩 → HARD BLOCK: systemic numerical issues.
+
 **Genre note (v2.30):** The certainty calibration, Professional Publication Standards, and inline labeling requirements in this section apply to Genre A (Epistemic Content - research papers, technical notes, investigation reports). For Genre B (Commercial/Marketing Content - landing pages, pitch decks, prospectuses), the certainty calibration protocol is MODIFIED per qnfo-core §0.1: no inline [speculative] labels on marketing pages; use a Forward-Looking Statements footer disclaimer and dagger footnotes for specific aspirational claims instead. For Genre C (Internal/Operations Content), only the banned-words and no-fabrication rules apply. See qnfo-core §0.1 for the full Genre Classification Protocol.
 #### YAML Frontmatter (MANDATORY)
 ```yaml
@@ -1567,6 +1723,21 @@ full research article):**
  paper's own ongoing argument ("Section 3 shows..."), past tense for
  prior work's specific findings ("Hardy derived...").
 - **No AI-generated-sounding transitional filler** ("It is important to
+   note that", "In conclusion, it can be seen that", "Moreover, it is worth
+   mentioning") — these read as generation artifacts and are a Publication
+   Language Gate concern as well as a tone concern. Replace
+   with direct statements.
+
+- **All physics formulas must use dimensionless Planck units ($\hbar = c = G = k_B = 1$)**
+   per the Ostrowski Dimensionless Mandate (qnfo-core §0.7). Dimensional formulas
+   (e.g., $S \leq 2\pi k_B R E / (\hbar c)$) implicitly privilege the Archimedean
+   ($\infty$) place. Required: every dimensional formula MUST be accompanied by its
+   dimensionless equivalent AND an Ostrowski rationale. Well-known formulas
+   (Landauer's $E \geq k_B T \ln 2$) may present both forms — "In conventional
+   dimensional form: $E \geq k_B T \ln 2$. In dimensionless Planck units: $E \geq T \ln 2$,
+   where both $E$ and $T$ are pure numbers whose completions exist at every place
+   per Ostrowski's theorem." See also: *Non-Anthropocentric Natural Units*
+   (DOI: 10.5281/zenodo.21480756). ("It is important to
  note that", "In conclusion, it can be seen that", "Moreover, it is
  worth mentioning") -- these read as generation artifacts and are a
  Publication Language Gate concern as well as a tone concern. Replace
@@ -2307,13 +2478,25 @@ third-party aggregators. Upload files in this EXACT priority order:
 HARD GATE P5.PDF; do not skip the PDF requirement): fall back to README.md as the
 preview, uploading it first. If neither PDF nor README exists, use `<slug>.md`.
 
+**BUCKET URL RULE (v2.43, HARD):** The file upload endpoint is the deposit's **bucket URL**, extracted from the deposit record's `links.bucket` field — a UUID path (`https://zenodo.org/api/files/{uuid}`). NEVER construct the upload URL manually (e.g. `/api/files/{deposit_id}`) — the deposit ID is NOT the bucket UUID and manual construction returns HTTP 500 on upload. Procedure:
+```python
+# 1. Extract the REAL bucket URL from the deposit record
+r = requests.get(f'https://zenodo.org/api/deposit/depositions/{id}', headers=headers)
+bucket = r.json()['links']['bucket']   # e.g. https://zenodo.org/api/files/6f8a4407-...
+# 2. Upload to bucket_url + '/' + filename (NOT /api/files/{deposit_id})
+requests.put(f'{bucket}/{filename}', headers=headers, data=open(path,'rb'))
+```
+This is the canonical pattern already implemented in `scripts/zenodo-create-upload.py` (`upload_file` uses `f'{bucket_url}/{name}'` with the bucket URL returned by `create_deposit`). Follow the script, not the deprecated path below.
+
 ```python
 # Upload the PREVIEW FILE FIRST, then remaining files in order
-PUT https://zenodo.org/api/deposit/depositions/{id}/files/<slug>.pdf    # ALWAYS first
-PUT https://zenodo.org/api/deposit/depositions/{id}/files/README.md      # second
-PUT https://zenodo.org/api/deposit/depositions/{id}/files/<slug>.md      # third
-PUT https://zenodo.org/api/deposit/depositions/{id}/files/PROVENANCE-BUNDLE.zip  # fourth
-PUT https://zenodo.org/api/deposit/depositions/{id}/files/<artifact>.pdf # remaining
+# DEPRECATED WRONG PATH (returns HTTP 500): PUT /api/deposit/depositions/{id}/files/<file>
+# CORRECT: PUT {links.bucket}/{filename} — see BUCKET URL RULE above
+PUT https://zenodo.org/api/files/{bucket_uuid}/<slug>.pdf    # ALWAYS first (PREVIEW)
+PUT https://zenodo.org/api/files/{bucket_uuid}/README.md      # second
+PUT https://zenodo.org/api/files/{bucket_uuid}/<slug>.md      # third
+PUT https://zenodo.org/api/files/{bucket_uuid}/PROVENANCE-BUNDLE.zip  # fourth
+PUT https://zenodo.org/api/files/{bucket_uuid}/<artifact>.pdf # remaining
 ```
 
 **GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
@@ -3011,6 +3194,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Assuming a "clean branch" audit is sufficient | Tags and GitHub Releases are independent refs -- audit `git tag -l` and `gh release list` separately, they survive a branch force-push |
 | Project files existing ONLY on local disk across a turn boundary | R2-Immediate-Write mandate (ADR-028) -- upload every project artifact to R2 in the SAME turn it's created/edited, never deferred to closeout |
 | Creating a disconnected new Zenodo deposit for each phase | Use Zenodo's `actions/newversion` API to keep phase snapshots under one concept DOI (ADR-028) |
+| Constructing the Zenodo file-upload URL manually (e.g. `/api/files/{deposit_id}` or `/api/deposit/depositions/{id}/files/{file}`) instead of extracting `links.bucket` from the deposit record | **HARD (v2.43):** The upload endpoint is the deposit's bucket URL — `GET /api/deposit/depositions/{id}` → `links.bucket` (a UUID path like `https://zenodo.org/api/files/{uuid}`). The deposit ID is NOT the bucket UUID; manual construction returns HTTP 500 on upload. Root cause of the ODR v1.5 upload block (2026-08-02): the SKILL.md previously documented the wrong `PUT /api/deposit/depositions/{id}/files/{file}` path, leading agents to construct URLs that Zenodo's storage backend rejects. Follow `scripts/zenodo-create-upload.py` (`upload_file` uses `f'{bucket_url}/{name}'` with the bucket URL from `create_deposit`), never an ad-hoc constructed path. |
 | Social-promoting every internal WBS phase transition | Reserve Buffer/social posts for FINAL public deliverables only, not interim phase closeouts |
 | OSF registration for minor/exploratory projects | GATE-CONDITIONAL: OSF ONLY for major research with significant predictions and falsifiable claims. Skip for single papers, exploratory studies, or minor updates. |
 | Waiting until after publication to create OSF project | Create OSF project during Phase 2 (experimental design) or Phase 4 (deep research) — not after. The registrations timestamp the pre-data-collection hypotheses. |
@@ -3081,6 +3265,15 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Using generic `paper.md`/`paper.pdf` filenames instead of slug-based naming** | Paper files MUST use the project slug: `<slug>.md` and `<slug>.pdf`. For `computing-machines`, this is `computing-machines.md` and `computing-machines.pdf`. Generic names cause confusion when multiple paper repos share a temp directory, and make it impossible to identify a paper from its filename alone. Update `build-paper.py` calls, R2 paths, Zenodo uploads, and provenance bundles accordingly. |
 | **Assuming a temp-directory name identifies the project** | NEVER assume a temp directory name maps to the correct project. ALWAYS read `<slug>.md` YAML frontmatter (`title:` + `doi:`) before using file contents for upload or cross-population. A directory named `computing-machines` may contain a completely different paper (KIF-58 cross-contamination incident, 2026-07-31). |
 | **Cross-populating files between Zenodo and GitHub without verifying paper identity** | Before pushing files to ANY GitHub repo in the context of a Zenodo upload, verify the repo's existing `paper.md` YAML `title:` matches the paper being uploaded to Zenodo. A paper title mismatch means you've found the wrong repo — even if the repo name seems related (KIF-58). |
+| **Publishing an audit paper with an unreproducible headline number (v2.42)** | BP-9: Before publishing any audit, run BP-1 through BP-7 on the audit itself. ACRP-04's most prominent numerical claim (9,138σ) does not reproduce under any combination of its own cited uncertainties or PDG 2024 Live (best: 8,943σ). An audit that finds arithmetic errors cannot carry its own. |
+| **Two conflicting uncertainty values for the same quantity in the same paper (v2.42)** | BP-7 Single-Source Rule: If m_μ/m_e appears as "±0.00001" in §3.5 prose and "206.76828(5)" in §4 table notation, the paper carries a self-contradiction. Resolve before publication. |
+| **Claiming N fitted ratios from M < N independent quantities without checking internal closure (v2.42)** | BP-5: 3 lepton ratios from 2 independent DoF produces 0.050% closure error. Report the error; if it exceeds the claimed tolerance, the fits are not a consistent parameter set. |
+| **Reporting a derived quantity without recomputing from first principles (v2.42)** | BP-6: Koide Q "0.02%" claimed from 5-smooth fits; actual recomputation: 0.00289% — factor of ~7× error. A 30-second recomputation catches this. |
+| **Cross-paper numerical inconsistency for the same Monte Carlo result (v2.42)** | BP-4: ACRP-04 reports P(all-9-fit)=99.8%; Adelic v4.0 reports 99.85%. Both reference seed 20260731. Shared null-model results MUST match across all papers that cite them. |
+| **Density gate applied to one numerology claim but not a structurally identical one (v2.42)** | BP-8: §7.2 mass ratios (Class 1: Dense-Approximant) were tested by ACRP-04. §6 adelic factorization 976/919 (Class 2: Ratio-Factorization) has NOT been tested. Selective gate application = confirmation bias. |
+| **Reporting sigma deviations without citing the specific uncertainty source and propagation method (v2.42)** | BP-7: Every σ must state: PDG edition, specific table, exact value ± uncertainty, and propagation formula (Δ/σ). "9,138σ" sources to nothing traceable. |
+| **Treating independent recomputation as optional for paper claims cited in new research (v2.42)** | BP-10: "Cited in a paper" ≠ "independently verified." Before treating a p-value/σ/fit as established, recompute it with a different seed. The cost (~30s for 50k MC trials) is negligible vs. cost of propagating wrong numbers. |
+| **Post-hoc tolerance selection presented as a pre-registered prediction (v2.42)** | BP-3: The "within 0.29%" threshold was the maximum observed deviation AFTER fitting — it was not pre-registered. This is an additional look-elsewhere degree of freedom. Pre-register tolerances before computation. |
 | **Publishing a Zenodo deposit without verifying file contents match the intended paper** | After uploading files but BEFORE `actions/publish`, download the uploaded `paper.md` from the deposit and verify its YAML `title:` matches the target Zenodo concept. Zenodo bucket lock means wrong files are PERMANENTLY tainted in that version DOI (KIF-58). |
 | **Uploading files to Zenodo in arbitrary order without designating a preview file** | Upload `<slug>.pdf` FIRST — Zenodo uses the first file as the landing-page preview/thumbnail. Priority: PDF > README.md > `<slug>.md` > bundle > remaining artifacts. Verify via `GET /deposit/depositions/{id}/files` that `files[0].filename` is the PDF (GATE P5.PREVIEW, v2.41). |
 | **Cross-project paper confusion from handoff ambiguity** | When a session handoff mentions a paper and a DOI but does NOT specify the GitHub repo, query all QNFO repos, find the paper by title, and verify the repo before any cross-population. A handoff that references "paper.md" and a Zenodo DOI is ambiguous — the paper could live in any of multiple QNFO repos (KIF-58). |

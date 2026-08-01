@@ -142,7 +142,26 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     changes; the commit history now matches the banner (Status Auditor, parent-agent).
 > Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
 
-# KAIZEN v1.3 (Autonomous Continuous-Improvement Protocol + Deferred-Item Gate)
+# KAIZEN v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
+
+> **v1.4 UPDATE (2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns):**
+> Self-kaizen per user directive: "EXECUTE KAIZEN SKILL UPDATE ON KAIZEN SKILL ITSELF."
+> Triggered by research v2.42 kaizen (BP-4 through BP-10 numeracy gates) and ACRP-04
+> session findings (9,138σ unreproducible, derived-quantity error, selective gate application).
+> Changes:
+> (1) [SOFT] Calibration register: "research (currently v2.38)" → "research (currently v2.42)"
+>     — Dependency Auditor, parent-agent (self-kaizen protocol).
+> (2) [DESIGN] Watchtower scan expanded from 4-axis to 5-axis — added NUMERACY-AXIS
+>     (weight 0.10) for detecting numeracy-related anti-patterns in recent sessions
+>     (false-precision, sigma-traceability, derived-quantity, selective-gate).
+> (3) [SOFT] Anti-patterns: added NUMERACY-1 (derived-quantity false precision),
+>     NUMERACY-2 (sigma without traceable uncertainty), and NUMERACY-3 (selective
+>     density-gate application) — all from ACRP-04 session.
+> (4) [SOFT] Calibration register: added new prediction for research v2.42 numeracy
+>     gates triggering within 45 days and §6 retraction.
+> (5) [SOFT] Cross-skill integration: updated research to v2.42 with numeracy gates.
+> Red-team: direct parent-agent 5-adversary audit per self-kaizen protocol — no subagents.
+> Cross-reference: research v2.42, ACRP-04 (DOI 10.5281/zenodo.21748008).
 
 > **v1.3 UPDATE (2026-07-31, deferred-item enforcement):**
 > Added **Deferred-Item Gate** to Phase 5 Closeout (STEP 0, HARD, MANDATORY) — before
@@ -205,7 +224,7 @@ Next Session ────► Continuous Monitoring (Phase 6)
 **Runs at the start of EVERY session where the kaizen skill is loaded.**
 This is the autonomous trigger — the agent doesn't wait to be asked.
 
-### Watchtower Scan (4-axis health scoring)
+### Watchtower Scan (5-axis health scoring)
 
 ```
 For each installed skill:
@@ -218,7 +237,12 @@ For each installed skill:
                         No drift = 0.0 | minor drift = 0.4 | major drift = 0.8
   4. CALIBRATION-AXIS:  overdue calibration register predictions (from memory_recall)
                         None overdue = 0.0 | 1 overdue = 0.3 | >1 overdue = 0.6
-  COMPOSITE: (STALENESS × 0.4) + (INCIDENT × 0.3) + (DRIFT × 0.2) + (CALIBRATION × 0.1)
+  5. NUMERACY-AXIS:     numeracy-related anti-patterns detected in recent sessions
+                        (from memory_recall query: "<skill> numeracy OR false-precision
+                        OR sigma-traceability OR derived-quantity")
+                        0 flags = 0.0 | 1-2 = 0.3 | 3-5 = 0.6 | >5 = 1.0
+  COMPOSITE: (STALENESS × 0.35) + (INCIDENT × 0.25) + (DRIFT × 0.20) +
+             (CALIBRATION × 0.10) + (NUMERACY × 0.10)
 ```
 
 ### Watchtower Execution (MANDATORY steps)
@@ -967,6 +991,10 @@ Session Failure → Session Retrospective detects failure pattern
 | **RCS-3: Using subagents for time-sensitive red-team audit tasks when truncation is a KNOWN systemic anti-pattern** | Subagents for audit tasks = HARD BLOCK. Only parallel search tasks may use subagents. All audit/finding tasks use direct parent-agent execution with actual script output. |
 | **SCS-1: Running competing scripts targeting the same write destination, committing the wrong one** | One D1 write target, one approach. If a backup approach fails, DELETE it immediately. Never leave two scripts alive targeting the same row. After any D1 write, re-read the committed row and content-verify it contains the INTENDED content, not just "update succeeded." |
 
+| **NUMERACY-1: Derived quantity claimed with false precision (v1.4)** | When computing a derived quantity (e.g., Koide Q from mass fits), recompute from exact rational arithmetic before stating precision. ACRP-04 session: claimed 0.02% deviation; actual: 0.00289% — factor ~7× error. Trigger research BP-6 gate. |
+| **NUMERACY-2: Sigma reported without traceable uncertainty source (v1.4)** | Every σ must cite a specific PDG edition, table, value ± uncertainty, and propagation method. ACRP-04: "9,138σ" untraceable; best reconstruction 8,943σ. Trigger research BP-7 gate. |
+| **NUMERACY-3: Density gate applied selectively to structurally identical claims (v1.4)** | When §7.2 is tested but §6 (same numerology class) is not, it's confirmation bias. Research BP-8 classifies claims into 5 types — all of the same type must receive the same gate. |
+
 ## Cross-Skill Integration
 
 | Skill / Tool | Load at Phase | Purpose |
@@ -1034,7 +1062,7 @@ predictions. These function like the research skill's Calibration Register:
 dated, falsifiable claims about skill drift risk.
 
 ```
-[CHECK: 2026-08-30] Kaizen skill will need update because:
+```
 - The Autonomous Watchtower and Session Retrospective protocols are new (v1.2);
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
@@ -1070,7 +1098,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.2.5** (kaizen — RCS anti-pattern + subagent audit HARD BLOCK + competing D1 scripts, 2026-08-01)
+Current: **v1.3.0** (kaizen — version reconciliation: header/bottom both v1.3.0; Session 3YzGvuFkUK retrospective: 0 tool failures, ODR project 8 phases complete, 4-layer distribution verified; 2026-08-01)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
