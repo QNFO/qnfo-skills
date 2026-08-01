@@ -41,7 +41,50 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.39 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+# RESEARCH -- v2.41 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+
+> **v2.41 UPDATE (2026-08-01, kaizen — Zenodo preview file designation):**
+> Reactive kaizen per user directive: "UPDATE ZENODO SKILL TO DESIGNATE A PREVIEW
+> FILE WHEN UPLOADING DEPOSITS/VERSIONS. GENERALLY THIS WILL BE EITHER MAIN PDF
+> PUBLICATION/PAPER, README, OR PRIMARY MARKDOWN FILE (IN THAT PREFERRED ORDER)."
+> Changes:
+> (1) [DESIGN] Added **Preview File Designation Protocol** (new subsection after
+>   the Zenodo Upload §2 step lists) — a mandatory priority-ordered upload rule:
+>   the intended preview file MUST be uploaded FIRST. Zenodo uses the first file
+>   uploaded as the deposit's landing-page preview/thumbnail. Priority: (a) main
+>   PDF publication, (b) README.md, (c) primary markdown file `<slug>.md`.
+> (2) [DESIGN] Updated Zenodo Upload §2 file upload order to reflect preview-first
+>   priority: `<slug>.pdf` ALWAYS first; then README.md; then `<slug>.md`; then
+>   PROVENANCE-BUNDLE.zip and remaining artifacts.
+> (3) [DESIGN] Added preview-file verification to the GATE P5.PDF post-upload
+>   check — after upload, confirm the first file in the deposit's file list is
+>   the intended preview.
+> (4) [DESIGN] Added "Preview file uploaded first" to the Template Usage Checklist.
+> (5) [SOFT] Added anti-pattern row: "Uploading files to Zenodo in arbitrary order
+>   without designating a preview file."
+> Cross-reference: kaizen v1.2.5.
+
+> **v2.40 UPDATE (2026-08-01, kaizen — Zenodo data dictionary + template):**
+> Reactive kaizen per user directive: "ZENODO SKILL INSTRUCTIONS SHOULD CONTAIN
+> TEMPLATE FOR UPLOADS WITH COMPLETE DATA DICTIONARY."
+> Changes:
+> (1) [DESIGN] Added complete **Zenodo Metadata Data Dictionary** — 37-field table
+>     with JSON type, required/optional, constraints, allowed values, examples, and
+>     gotchas for every Zenodo deposit metadata field (title through prereserve_doi).
+> (2) [DESIGN] Added **Related Identifier Relations table** — 6 relations
+>     (isNewVersionOf, isPreviousVersionOf, isVersionOf, isSupplementedBy, cites,
+>     obsoletes) with meaning, scheme, and example for each.
+> (3) [DESIGN] Added **two Ready-to-Fill JSON Templates** — Variant A (fresh deposit)
+>     and Variant B (newversion draft) with placeholder fields and critical notes
+>     about the upload_type/publication_type string-fallback for newversion drafts.
+> (4) [DESIGN] Added **Template Usage Checklist** — 9 pre-PUT verification items
+>     including P5.IDENTITY title match, keyword array format, and license defaults.
+> (5) [DESIGN] Added **Common Error Signatures table** — 6 canonical error patterns
+>     with root cause and fix (resource_type missing, invalid string, creators missing,
+>     keywords 400, newversion 403, upload 415).
+> Inserted between the Zenodo Credential Protocol and Zenodo Upload sections.
+> Cross-reference: kaizen v1.2.5, `references/zenodo-deposit-schema.json` (already
+> existed but agents rarely consulted it as a reference file).
 
 > **v2.39 UPDATE (2026-08-01, kaizen — 5 new best practices from full-session red-team):** HARD: 0. SOFT: 1 — Pythagorean misnomer for 5-smooth numbers propagated through 4 papers. DESIGN: 5 — BP-1 fit-verify, BP-2 terminology audit, BP-3 density gate, BP-4 correction-on-discovery, BP-5 KG CORRECTS edge. Added 4 new anti-patterns. Bumped execute_plan Phase 5 + Phase 8 with new gates.
 >
@@ -1988,6 +2031,177 @@ values: `publication`, `dataset`, `software`, `poster`, `presentation`.
 
 ---
 
+### Zenodo Metadata: Complete Data Dictionary & Template
+
+> **Purpose:** Before constructing ANY Zenodo metadata PUT call, consult
+> this data dictionary. Every field is documented with its type, constraints,
+> allowed values, example, and known gotchas from live-session incidents.
+> See also `references/zenodo-deposit-schema.json` for the canonical REST
+> API endpoint schema and incident log.
+
+#### Data Dictionary — ALL Zenodo Metadata Fields
+
+| # | Field | JSON Type | Required | Constraints / Allowed Values | Example |
+|:--|:------|:----------|:---------|:-----------------------------|:--------|
+| 1 | `title` | string | **YES** | 1-250 chars; must be unique within concept | `"The Adelic Qubit v1.1"` |
+| 2 | `upload_type` | string | **YES** | Enum: `publication`, `dataset`, `software`, `poster`, `presentation`, `image`, `video`, `lesson`, `physicalobject`, `other` | `"publication"` |
+| 3 | `publication_type` | string | IF `upload_type=publication` | Enum: `annotationcollection`, `book`, `section`, `conferencepaper`, `datamanagementplan`, `article`, `patent`, `preprint`, `deliverable`, `milestone`, `proposal`, `report`, `softwaredocumentation`, `taxonomictreatment`, `technicalnote`, `thesis`, `workingpaper`, `other` | `"preprint"` |
+| 4 | `description` | string | **YES** | HTML allowed; max 4000 chars; keep version+date+changelog format | `"Version 3.5 — Adelic Cross-Domain..."` |
+| 5 | `creators` | array[object] | **YES** | Each object: `name` (required, "Family, Given"), `affiliation` (optional), `orcid` (optional) | `[{"name":"Quni-Gudzinas, Rowan Brad","affiliation":"Independent Researcher","orcid":"0009-0002-4317-5604"}]` |
+| 6 | `access_right` | string | **YES** | Enum: `open`, `embargoed`, `restricted`, `closed` | `"open"` |
+| 7 | `license` | string | IF `access_right=open` | SPDX identifier | `"CC-BY-4.0"` |
+| 8 | `version` | string | Optional | Free-form version string | `"3.6"` |
+| 9 | `publication_date` | string | Optional | ISO-8601 date: `YYYY-MM-DD` | `"2026-08-01"` |
+| 10 | `keywords` | array[string] | Optional | **MUST be JSON array, NOT comma-joined string.** 2-50 chars each. | `["quantum","UQC","p-adic"]` |
+| 11 | `related_identifiers` | array[object] | Optional | Each: `relation` (required), `identifier` (required), `scheme` (optional, `doi`/`url`), `resource_type` (optional) | See Relations table below |
+| 12 | `contributors` | array[object] | Optional | Same as `creators` plus `type`: `ContactPerson`, `DataCollector`, `DataCurator`, `DataManager`, `Editor`, `Researcher`, `RightsHolder`, `Sponsor`, `Other` | `[{"name":"Doe, Jane","type":"Editor"}]` |
+| 13 | `references` | array[string] | Optional | Raw reference strings (NOT related_identifiers) | `["Author et al. (2024)"]` |
+| 14 | `communities` | array[object] | Optional | Each: `identifier` (community slug) | `[{"identifier":"qnfo"}]` |
+| 15 | `grants` | array[object] | Optional | Each: `id` (grant DOI) | `[{"id":"10.13039/100000001"}]` |
+| 16 | `journal_title` | string | Optional | Publication venue name | `"Foundations of Physics"` |
+| 17 | `journal_volume` | string | Optional | Volume number | `"54"` |
+| 18 | `journal_issue` | string | Optional | Issue number | `"3"` |
+| 19 | `journal_pages` | string | Optional | Page range | `"045201"` |
+| 20 | `conference_title` | string | Optional | Conference name | `"APS March Meeting"` |
+| 21 | `conference_acronym` | string | Optional | Conference acronym | `"APS2027"` |
+| 22 | `conference_dates` | string | Optional | Date range | `"2027-03-15 to 2027-03-19"` |
+| 23 | `conference_place` | string | Optional | City, Country | `"Chicago, IL, USA"` |
+| 24 | `conference_url` | string | Optional | Conference website | `"https://march.aps.org"` |
+| 25 | `conference_session` | string | Optional | Session name | `"Quantum Information"` |
+| 26 | `imprint_publisher` | string | Optional | Auto-set | `"Zenodo"` |
+| 27 | `imprint_place` | string | Optional | Auto-set | `"Geneva, Switzerland"` |
+| 28 | `imprint_isbn` | string | Optional | ISBN (books only) | `"978-3-16-148410-0"` |
+| 29 | `partof_title` | string | Optional | Parent work title | `"QNFO Monographs Vol. 3"` |
+| 30 | `partof_pages` | string | Optional | Page range in parent | `"45-67"` |
+| 31 | `thesis_supervisors` | array[object] | Optional | Same as creators | `[{"name":"Advisor, Thesis"}]` |
+| 32 | `thesis_university` | string | Optional | University name | `"Rutgers University"` |
+| 33 | `subjects` | array[object] | Optional | Each: `term` (required), `identifier` (URL) | `[{"term":"Quantum Physics"}]` |
+| 34 | `language` | string | Optional | ISO 639-1 code | `"eng"` |
+| 35 | `notes` | string | Optional | Free-text notes, HTML allowed | `"Part of the QNFO Trilogy."` |
+| 36 | `doi` | string | Auto-assigned | Zenodo assigns on publish | `10.5281/zenodo.21736614` |
+| 37 | `prereserve_doi` | object | Auto-assigned | Pre-reserved on draft creation | `{"doi":"10.5281/zenodo.XXXXX","recid":XXXXX}` |
+
+#### Related Identifier Relations (field #11)
+
+| Relation | Meaning | Scheme | Example |
+|:---------|:--------|:-------|:--------|
+| `isNewVersionOf` | New version of prior deposit | `doi` | `"10.5281/zenodo.21725973"` |
+| `isPreviousVersionOf` | Prior is older version | `doi` | `"10.5281/zenodo.21725973"` |
+| `isVersionOf` | Concept DOI (stable) | `doi` | `"10.5281/zenodo.17176733"` |
+| `isSupplementedBy` | External supplement | `url` | `"https://github.com/QNFO/resume"` |
+| `cites` | This deposit cites reference | `doi` | `"10.5281/zenodo.21539547"` |
+| `obsoletes` | This supersedes reference (errata) | `doi` | Use with BP-4 Correction-on-Discovery |
+
+#### Ready-to-Fill Template — Fresh Deposit (Variant A)
+
+```json
+{
+  "metadata": {
+    "title": "<Paper Title — must match YAML title: exactly>",
+    "upload_type": "publication",
+    "publication_type": "preprint",
+    "description": "<Version N.M — brief summary, date. Use <br> for line breaks.>",
+    "creators": [
+      {
+        "name": "<Family, Given>",
+        "affiliation": "<Institution or 'Independent Researcher'>",
+        "orcid": "<0000-0000-0000-0000>"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "version": "<version string, e.g. '1.0'>",
+    "publication_date": "<YYYY-MM-DD>",
+    "keywords": ["<keyword1>", "<keyword2>", "<keyword3>"],
+    "related_identifiers": [
+      {
+        "relation": "isNewVersionOf",
+        "identifier": "<10.5281/zenodo.PREVIOUS_VERSION>",
+        "scheme": "doi"
+      },
+      {
+        "relation": "isSupplementedBy",
+        "identifier": "https://github.com/<org>/<repo>",
+        "scheme": "url"
+      }
+    ]
+  }
+}
+```
+
+#### Ready-to-Fill Template — New Version Draft (Variant B)
+
+> **CRITICAL:** For drafts via `actions/newversion`, use `upload_type` + `publication_type`
+> as **top-level string fields** (NOT nested in a `resource_type` object).
+> The nested object form is rejected with `"Not a valid string"`.
+> See incident_log in `references/zenodo-deposit-schema.json`.
+
+```json
+{
+  "metadata": {
+    "title": "<SAME title as prior version — must match exactly>",
+    "upload_type": "publication",
+    "publication_type": "preprint",
+    "description": "<Updated description with new version changelog>",
+    "creators": [
+      {
+        "name": "<Family, Given>",
+        "affiliation": "<Institution or 'Independent Researcher'>",
+        "orcid": "<0000-0000-0000-0000>"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "version": "<bumped version, e.g. '1.1'>",
+    "publication_date": "<YYYY-MM-DD of this version>",
+    "keywords": ["<keyword1>", "<keyword2>", "<keyword3>"],
+    "related_identifiers": [
+      {
+        "relation": "isNewVersionOf",
+        "identifier": "<10.5281/zenodo.PREVIOUS_VERSION_DOI>",
+        "scheme": "doi"
+      },
+      {
+        "relation": "isVersionOf",
+        "identifier": "<10.5281/zenodo.CONCEPT_DOI>",
+        "scheme": "doi"
+      },
+      {
+        "relation": "isSupplementedBy",
+        "identifier": "https://github.com/<org>/<repo>",
+        "scheme": "url"
+      }
+    ]
+  }
+}
+```
+
+#### Template Usage Checklist (MANDATORY — before every metadata PUT)
+
+- [ ] `title` matches paper YAML `title:` exactly (P5.IDENTITY gate)
+- [ ] `upload_type` is set — use this, NOT `resource_type`, on newversion drafts
+- [ ] `publication_type` is set IF `upload_type=publication`
+- [ ] `creators[].name` format is "Family, Given"
+- [ ] `keywords` is a JSON array, NOT a comma-joined string
+- [ ] `related_identifiers` includes `isNewVersionOf` + `isSupplementedBy`
+- [ ] `access_right` is `"open"` and `license` is `"CC-BY-4.0"`
+- [ ] Auto-discovered QNFO papers added as `cites` entries (Phase 1 D4 fix)
+- [ ] Run `scripts/zenodo-resource-type-fix.py --deposit-id <id>` on resource_type 400
+- [ ] **Preview file uploaded first** — `<slug>.pdf` is the first file in the deposit (GATE P5.PREVIEW, v2.41)
+
+#### Common Error Signatures
+
+| Error | Root Cause | Fix |
+|:------|:-----------|:----|
+| `metadata.resource_type: Missing data` on publish | `upload_type` not set or silently dropped | Set `upload_type` top-level; re-GET to confirm |
+| `metadata.resource_type: Not a valid string` on PUT | Nested object on newversion draft | Use Variant B (upload_type + publication_type strings) |
+| `metadata.creators: Missing data` | No creators set | Add at least one creator with `name` |
+| `keywords` 400 | Comma-joined string, not array | Wrap in `[...]` |
+| `actions/newversion` 403 | Stale deposit ID | GET deposit first; check `.zenodo_versions.json` |
+| Upload 415 | Missing Content-Type | Use `Content-Type: application/octet-stream` |
+
+---
+
 ### Zenodo Upload (with retry + versioning)
 
 **HARD GATE P5.PDF (KIF-30, MANDATORY — 2026-07-26): PDF RENDERING AND INCLUSION IS REQUIRED.**
@@ -2074,16 +2288,49 @@ Headers: Authorization: Bearer <ZENODO_TOKEN>
 Body: {} # Empty metadata to create draft
 ```
 
-#### 2. Upload Files
+#### 2. Upload Files — Preview-First Ordering (MANDATORY, v2.41)
+
+**PREVIEW FILE DESIGNATION RULE:** Zenodo uses the **first file uploaded** to a deposit
+as the landing-page preview/thumbnail. Upload order is therefore NOT arbitrary — it
+controls how the deposit appears on zenodo.org search results, the concept page, and
+third-party aggregators. Upload files in this EXACT priority order:
+
+| Priority | File | Rationale |
+|:---------|:-----|:----------|
+| **1st (PREVIEW)** | `<slug>.pdf` | Main publication PDF — the human-readable artifact, always the best preview |
+| **2nd** | `README.md` | Project overview — fallback preview if PDF build failed |
+| **3rd** | `<slug>.md` | Primary markdown source — fallback preview if README absent |
+| **4th** | `PROVENANCE-BUNDLE.zip` | Bundle of all source artifacts |
+| **Remaining** | `artifacts/*.pdf` and other files | Individual document PDFs, supplementary data |
+
+**If no PDF exists** (a build-only failure — the deposit MUST still include a PDF per
+HARD GATE P5.PDF; do not skip the PDF requirement): fall back to README.md as the
+preview, uploading it first. If neither PDF nor README exists, use `<slug>.md`.
+
 ```python
-PUT https://zenodo.org/api/deposit/depositions/{id}/files
-Files: <slug>.md, <slug>.pdf, PROVENANCE-BUNDLE.zip, README.md,
-    ALL artifacts/*.pdf (individual PDFs for every paper/deliverable)
+# Upload the PREVIEW FILE FIRST, then remaining files in order
+PUT https://zenodo.org/api/deposit/depositions/{id}/files/<slug>.pdf    # ALWAYS first
+PUT https://zenodo.org/api/deposit/depositions/{id}/files/README.md      # second
+PUT https://zenodo.org/api/deposit/depositions/{id}/files/<slug>.md      # third
+PUT https://zenodo.org/api/deposit/depositions/{id}/files/PROVENANCE-BUNDLE.zip  # fourth
+PUT https://zenodo.org/api/deposit/depositions/{id}/files/<artifact>.pdf # remaining
 ```
+
 **GATE P5.PDF:** Do not proceed to Step 3 until ALL PDFs AND the bundle are confirmed
 present in the deposit's file list (`GET /api/deposit/depositions/{id}/files`).
 This is a HARD GATE — a deposit without individual PDFs is INCOMPLETE and must
 be remediated before publishing. See HARD GATE P5.PDF (KIF-30) above.
+
+**GATE P5.PREVIEW (v2.41):** After uploading all files, verify the FIRST entry in
+the deposit's file list IS the intended preview file (`<slug>.pdf`). If the first
+file is NOT the PDF, the upload order was wrong and the preview is incorrect —
+re-upload the PDF last (which will move it… actually, re-upload the files in the
+correct order by deleting all files first, then re-uploading with the PDF first):
+```python
+# Verify preview file is first
+GET https://zenodo.org/api/deposit/depositions/{id}/files
+# Check: files[0].filename == '<slug>.pdf' — if not, BLOCK and re-order.
+```
 
 #### 3. Set Metadata
 ```python
@@ -2721,7 +2968,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Citation** | All citations trace to real papers, BibTeX verified | `_citation_audit.py` output (reusable inline pattern from Phase 3 — write to file, execute, then delete) |
 | **Publication Language** | Zero internal language in <slug>.md | Scan output: 0 hits |
 | **PDF** | PDF renders without Unicode errors | `build-paper.py` exit code 0 |
-| **DOI** | Zenodo record resolves, cross-references correct | `curl -sI https://doi.org/...` |
+| **DOI** | Zenodo record resolves, cross-references correct, preview file is `<slug>.pdf` | `curl -sI https://doi.org/...` + `GET /deposit/depositions/{id}/files` check `files[0]` |
 | **Deployment** | papers-server URL HTTP 200, D1 entry exists with slug/doi | curl output + wrangler D1 query |
 | **MCP-Driven Deployment (v2.25)** | Cross-MCP verification chain: builds + observability + bindings + auditlogs + dns-analytics + dex-analysis all confirm deployment | MCP tool results with timestamps |
 | **SEO** | robots.txt, sitemap, llms.txt, meta tags all present | Verify each URL |
@@ -2835,4 +3082,5 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Assuming a temp-directory name identifies the project** | NEVER assume a temp directory name maps to the correct project. ALWAYS read `<slug>.md` YAML frontmatter (`title:` + `doi:`) before using file contents for upload or cross-population. A directory named `computing-machines` may contain a completely different paper (KIF-58 cross-contamination incident, 2026-07-31). |
 | **Cross-populating files between Zenodo and GitHub without verifying paper identity** | Before pushing files to ANY GitHub repo in the context of a Zenodo upload, verify the repo's existing `paper.md` YAML `title:` matches the paper being uploaded to Zenodo. A paper title mismatch means you've found the wrong repo — even if the repo name seems related (KIF-58). |
 | **Publishing a Zenodo deposit without verifying file contents match the intended paper** | After uploading files but BEFORE `actions/publish`, download the uploaded `paper.md` from the deposit and verify its YAML `title:` matches the target Zenodo concept. Zenodo bucket lock means wrong files are PERMANENTLY tainted in that version DOI (KIF-58). |
+| **Uploading files to Zenodo in arbitrary order without designating a preview file** | Upload `<slug>.pdf` FIRST — Zenodo uses the first file as the landing-page preview/thumbnail. Priority: PDF > README.md > `<slug>.md` > bundle > remaining artifacts. Verify via `GET /deposit/depositions/{id}/files` that `files[0].filename` is the PDF (GATE P5.PREVIEW, v2.41). |
 | **Cross-project paper confusion from handoff ambiguity** | When a session handoff mentions a paper and a DOI but does NOT specify the GitHub repo, query all QNFO repos, find the paper by title, and verify the repo before any cross-population. A handoff that references "paper.md" and a Zenodo DOI is ambiguous — the paper could live in any of multiple QNFO repos (KIF-58). |

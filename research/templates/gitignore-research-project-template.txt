@@ -5,6 +5,11 @@
 # ============================================================================
 
 # --- Ephemeral / JIT scratch scripts (NEVER durable, may contain tokens) ---
+# These are temporary helpers from the write→exec→delete convention
+# (see windows-command-patterns skill §8.11 / research skill kaizen fix B1).
+# REPRODUCIBILITY SCRIPTS that must be tracked MUST NOT use the _ prefix —
+# name them verify-*.py, check-*.py, density-gate.py, etc.
+# Verifiable == committed. Untracked == unreproducible.
 _*.py
 _*.js
 _*.sh
