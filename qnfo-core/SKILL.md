@@ -28,8 +28,8 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > **v1.2 UPDATE (2026-07-31, mojibake red-team kaizen):**
 > Added §0.2 UTF-8 Source Encoding Mandate (HARD GATE, NO EXCEPTIONS). Three consecutive
 > sessions deferred the computing-machines mojibake fix as a SOFT issue while the paper
-> continued rendering corrupted `â€"` characters on papers.qnfo.org. Root cause: LLM output
-> sometimes produces UTF-8 double-encoded characters (`â€"` for `–`, `â€œ` for `"`, etc.)
+> continued rendering corrupted `0xE2 0x80 0x9C` characters on papers.qnfo.org. Root cause: LLM output
+> sometimes produces UTF-8 double-encoded characters (`0xE2 0x80 0x9C` for `–`, `0xE2 0x80 0x9C` for `"`, etc.)
 > that poison every downstream system (D1, Zenodo PDFs, GitHub repos, search indexes).
 > Added: (1) §0.2 mandate — ALL text must pass `scan-mojibake.py` before commit/publish/
 > insert; (2) mojibake pattern reference table; (3) integration points for research,
@@ -151,7 +151,7 @@ ALL text produced by the agent MUST pass a mojibake scan before being committed,
 
 ### What Is Mojibake
 
-UTF-8 double-encoding: when UTF-8 bytes (e.g., `0xE2 0x80 0x93` for en-dash `–`) are interpreted as CP1252 characters and re-encoded as UTF-8. The result renders as `â€"` instead of `–`. This poisons every downstream system: D1, papers.qnfo.org, Zenodo PDFs, GitHub repos, search indexes.
+UTF-8 double-encoding: when UTF-8 bytes (e.g., `0xE2 0x80 0x93` for en-dash `–`) are interpreted as CP1252 characters and re-encoded as UTF-8. The result renders as `0xE2 0x80 0x9C` instead of `–`. This poisons every downstream system: D1, papers.qnfo.org, Zenodo PDFs, GitHub repos, search indexes.
 
 **Common mojibake patterns (ALL are corruption signals):**
 | Pattern | Correct Character |
@@ -195,9 +195,9 @@ UTF-8 double-encoding: when UTF-8 bytes (e.g., `0xE2 0x80 0x93` for en-dash `–
 
 ### Why This Gate Exists
 
-The 2026-07-31 computing-machines mojibake incident: three consecutive sessions (2026-07-30 original, kaizen v1.2.3 closeout, and today's session) all deferred the "mojibake fix" as a SOFT issue. Meanwhile, the paper continued rendering corrupted text on papers.qnfo.org with `â€"` characters visible to all readers. A SOFT gate is toothless — by the time mojibake reaches D1 or Zenodo, it has already poisoned multiple downstream systems. This gate is HARD because the cost of missing it is 3+ layers of distributed corruption.
+The 2026-07-31 computing-machines mojibake incident: three consecutive sessions (2026-07-30 original, kaizen v1.2.3 closeout, and today's session) all deferred the "mojibake fix" as a SOFT issue. Meanwhile, the paper continued rendering corrupted text on papers.qnfo.org with `0xE2 0x80 0x9C` characters visible to all readers. A SOFT gate is toothless — by the time mojibake reaches D1 or Zenodo, it has already poisoned multiple downstream systems. This gate is HARD because the cost of missing it is 3+ layers of distributed corruption.
 
-**No exceptions.** If text contains `â€"` or any listed pattern, it is CORRUPT. Fix it before it propagates.
+**No exceptions.** If text contains `0xE2 0x80 0x9C` or any listed pattern, it is CORRUPT. Fix it before it propagates.
 
 ### Scanner Script
 
