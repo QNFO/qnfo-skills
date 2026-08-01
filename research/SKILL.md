@@ -41,9 +41,10 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.38 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+# RESEARCH -- v2.39 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
 
-> **v2.38 UPDATE (2026-07-31, slug-based naming + mojibake gate kaizen):**
+> **v2.39 UPDATE (2026-08-01, kaizen — 5 new best practices from full-session red-team):** HARD: 0. SOFT: 1 — Pythagorean misnomer for 5-smooth numbers propagated through 4 papers. DESIGN: 5 — BP-1 fit-verify, BP-2 terminology audit, BP-3 density gate, BP-4 correction-on-discovery, BP-5 KG CORRECTS edge. Added 4 new anti-patterns. Bumped execute_plan Phase 5 + Phase 8 with new gates.
+>
 > Per user directive, all paper output files MUST use project-slug-based naming instead
 > of generic `paper.md`/`paper.pdf`. Changed all 25+ references across the skill:
 > `paper.md` → `<slug>.md`, `paper.pdf` → `<slug>.pdf`. Rationale: generic names cause
@@ -522,10 +523,10 @@ update_plan([
  {"step": "Phase 2: Literature Search -- 5 parallel sources, dedup, classify core/supporting/background/reject", "status": "pending"},
  {"step": "Phase 3: Citation Management -- extract citations, verify BibTeX, auto-generate missing DOIs", "status": "pending"},
  {"step": "Phase 4: Deep Research -- structured forecast protocol (mandatory, scope-scaled; produces forecast artifacts)", "status": "pending"},
- {"step": "Phase 5: Publication -- format paper, build PDF (Pandoc+XeLaTeX), Zenodo upload with DOI", "status": "pending"},
+  {"step": "Phase 5: Publication — format paper, build PDF, BP-1 fit-verify, BP-2 terminology audit, BP-3 density gate, Zenodo upload with DOI", "status": "pending"},
  {"step": "Phase 6: Deploy -- D1 living-paper insert, papers-server Worker verification", "status": "pending"},
  {"step": "Phase 7: Disseminate -- SEO audit, Buffer social media, papers.qnfo.org verification", "status": "pending"},
- {"step": "Phase 8: Core Distribution -- GitHub push + tag, Zenodo new-version, R2 archive sync, D1/KG records, DNSLink (optional)", "status": "pending"},
+  {"step": "Phase 8: Core Distribution — GitHub push + tag, Zenodo new-version, R2 archive sync, D1/KG records, BP-4/BP-5 correction protocol (if erratum)", "status": "pending"},
 ])
 
 **Note:** Phase 0 and the Pre-Flight checklist apply to net-new, long-lived research projects (new repo, new WBS). For a single paper/update within an existing project, skip directly to Phase 1.
@@ -1378,6 +1379,41 @@ project has core disciplines — identify them from Phase 1 due diligence.
 ### Pre-Publication Requirements
 
 
+#### BP-1 Fit-Verify Gate (Numerical Claim Verification Before Zenodo) `[HARD — v2.39]`
+
+**MANDATORY before any Zenodo upload involving a numerical table, triple, or fit.**
+
+1. Write an independent Python recomputation script that computes every claimed value directly from the stated formula/triple.
+2. The script MUST: (a) compute every claimed value; (b) report the EXACT computed vs paper's claimed value; (c) flag any discrepancy > 0.01%.
+3. Output → `artifacts/fit-verify.txt`. Exit 0 = all claims match → proceed. Exit 1 = BLOCKED — fix the table.
+4. For search-based fits: confirm the claimed triple IS optimal under stated bounds (non-optimal = gate failure).
+5. **Why this gate:** Cross-Domain v3.2 §7.2 had 2 arithmetic errors (m_τ/m_μ = 0.2624 not 16.80; m_h/m_e = 239.15 not 244,888 — and 244,888 not 3-smooth) + 5 non-optimal triples. Published "verified." A 30-second recomputation would have caught all errors pre-publication.
+
+#### BP-2 Terminology Audit Gate (Field-Specific Term Verification) `[HARD — v2.39]`
+
+**MANDATORY for ALL publications.** Every field-specific term → check standard definition (Wikipedia/MathWorld/nLab).
+
+1. Identify every field-specific term that is NOT a standard common noun.
+2. For each: check the closest standard definition.
+3. If no match: NEW coinage → explicitly define in §1.
+4. If matches BUT paper uses differently → BLOCKED. Rename to correct term.
+5. If matches with SAME definition: PASS.
+6. Output: `artifacts/terminology-audit.md` with per-term verdicts.
+7. **Why this gate:** "Pythagorean semigroup" for {2^a·3^b·5^c} = misnomer. These are 5-smooth (Hamming) numbers. Pythagorean numbers satisfy a²+b²=c². Every integer ≥3 is a leg of some Pythagorean triple, so "Pythagorean number" is not a distinguishing property. The misnomer originated in Cross-Domain v3.2 §7.2 and propagated into 4 published papers. A 60-second Wikipedia check would have prevented this.
+
+#### BP-3 Density Gate (Approximating Claims Must Pass Null Model) `[HARD — v2.39]`
+
+**MANDATORY when a paper claims "set S approximates values V to within ε%" and S is dense in ℝ⁺ (rationals, 5-smooth numbers, Diophantine approximants, etc.).**
+
+1. Construct null model: draw N random targets from realistic prior (log-uniform over observed range).
+2. Perform the SAME fit procedure as the claim (search space, exponent bounds, algorithm).
+3. Report: median null error, P(null best-fit ≤ observed max), P(all-n-values simultaneously fit).
+4. Look-elsewhere correction: global p-value with trials factor × search space.
+5. **GATE:** p_global > 0.05 → MUST report `[CONSISTENT WITH LOOK-ELSEWHERE ARTIFACT]`. Passing is a BOUNDED NUMEROLOGICAL RISK, not a discovery.
+6. If p_global ≤ 0.05 → claim carries `[LOOK-ELSEWHERE GATE: PASSED]` with exact p-value.
+7. **Reference:** ACRP-04 (DOI 10.5281/zenodo.21727479) is the canonical execution.
+8. Output: `artifacts/density-gate.md`. Absent on qualifying claim → REJECTED.
+
 **Genre note (v2.30):** The certainty calibration, Professional Publication Standards, and inline labeling requirements in this section apply to Genre A (Epistemic Content - research papers, technical notes, investigation reports). For Genre B (Commercial/Marketing Content - landing pages, pitch decks, prospectuses), the certainty calibration protocol is MODIFIED per qnfo-core §0.1: no inline [speculative] labels on marketing pages; use a Forward-Looking Statements footer disclaimer and dagger footnotes for specific aspirational claims instead. For Genre C (Internal/Operations Content), only the banned-words and no-fabrication rules apply. See qnfo-core §0.1 for the full Genre Classification Protocol.
 #### YAML Frontmatter (MANDATORY)
 ```yaml
@@ -2001,6 +2037,23 @@ sys.exit(1 if missing else 0)
 If this check is not run and passed, the Zenodo deposit is INCOMPLETE even
 if `actions/publish` succeeds -- missing provenance is a silent failure, not
 a hard error, so it must be caught here.
+
+**BP-4 Correction-on-Discovery Protocol `[DESIGN — v2.39]`**
+
+When an error is discovered in a published paper, correct it in the SAME session:
+1. GitHub: add ERRATA.md with specific claim/error/correction/ACRP paper DOI.
+2. Zenodo: `actions/newversion` from latest deposit → set `obsoletes` related_identifier → SUPERSESSION NOTICE → publish.
+3. KG: create CORRECTS/SUPERSEDES edge via qnfo-gateway /sync.
+4. If source permanently lost: flag in KG with `corruption_flag: true`.
+
+**BP-5 KG Correction Edge Protocol `[DESIGN — v2.39]`**
+
+Every correction MUST create a KG edge — without it, the correction is invisible to KG-First Discovery:
+- Paper corrects claim: `CORRECTS` edge
+- New version fully replaces: `SUPERSEDES` edge
+- Error bounded but no new version: `OBSOLETES` edge
+Use qnfo-gateway `/sync` with edge contract: `{id, source_id, target_id, relationship_type, properties}`.
+Verify: `curl graph-api.qnfo.org/neighbors/<corrected-id>`.
 
 **HARD GATE P5.IDENTITY (KIF-58, MANDATORY — 2026-07-31): CROSS-PROJECT PAPER IDENTITY VERIFICATION.**
 
@@ -2768,6 +2821,10 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Using placeholder discipline names (Stratigraphy, Metrology, etc.) instead of the research's actual core disciplines | Stage 10's template uses generic placeholders. The agent MUST replace them with the actual core disciplines identified in Phase 1 due diligence. |
 | Treating "OK" tool output as "confirmed no results" without investigating (KIF-56) | Tool responses returning `"OK"` with no visible content (search_papers_enriched, query_graph, search_papers) MUST be investigated — check for offloaded files, re-run with different parameters, or flag as `[NOT-VERIFIED: tool output unreadable]`. Never treat as a finding. "OK" means "output status unknown," not "no results." |
 | Filling missing tool output with general knowledge dressed as search findings (KIF-56) | When search tools fail to return readable data (429 rate limit, 0-byte responses, offloaded output), the ONLY acceptable response is `[NOT-VERIFIED: <reason>]`. Never substitute general knowledge for search results. Specific paper names, years, and counts MUST NOT be asserted without a readable tool output file. |
+| **Fabricating research priorities from qualitative frameworks (E2 incident, v2.39)** | A named statistical test ("Cramér-von Mises") does not validate missing input data. E2 was listed as a #2 priority with specific data ("8 rung energy scales") that does not exist in any artifact — the measurement stratigraphy paper defines 7 mathematical eras without energy scales. The test name lent false authority to a fabricated priority. Same failure class as the Fabrication Incident (RESEARCH-CONTINUITY-REGISTRY.md §9). Gate: verify input data exists before listing a named experiment as a priority. |
+| **Adopting a paper's terminology (e.g., "Pythagorean semigroup") without checking standard math definitions** | BP-2: "Pythagorean semigroup" for {2^a·3^b·5^c} = misnomer — correct term is 5-smooth (Hamming/regular) numbers. The name alludes to the 3-4-5 triple (primes {2,3,5}) but brands a density property with false number-theoretic prestige. Every field-specific term must pass the Terminology Audit Gate. |
+| **Hand-rolling Zenodo urllib upload calls when canonical scripts exist** | Use `scripts/zenodo-create-upload.py` + `scripts/zenodo-metadata-publish.py` for ALL Zenodo operations. urllib `PUT` without Content-Type → HTTP 415 (4× this session). |
+| **Publishing approximating-numerology claims without a pre-registered density gate** | BP-3: If "X approximates Y to within Z%" and the approximating set is dense in ℝ⁺, a Monte Carlo null model with pre-registered tolerance is REQUIRED before publication. p>0.05 → report [CONSISTENT WITH LOOK-ELSEWHERE ARTIFACT]. v3.2 mass-ratio claim required expensive post-publication ACRP-04 audit. |
 | Committing/tagging research artifacts without re-reading tool outputs that support each claim (KIF-57) | Pre-commit verification gate: re-read every tool output file cited in an artifact BEFORE git commit. A claim that cites `arxiv3.xml` but that file was never re-read in the same turn is an Anti-Phantom violation. Phase closeout MUST include independent re-verification of every cited finding.
 | Writing research artifact claims without citing a specific, readable tool output file (KIF-55) | Every factual claim in a research artifact MUST cite a specific, readable tool output file or source. "arxiv3.xml:24000" or "OpenAlex API response: HTTP 200 count=5" — never a bare assertion without provenance. |
 | Semantic Scholar as the PRIMARY academic search source (HTTP 429 under sustained load without a key — session-verified 2026-07-31, 4 queries lost) | Use OpenAlex as PRIMARY (keyless, verified HTTP 200 back-to-back); Crossref/Zenodo/EuropePMC as mandatory supplements. If Semantic Scholar 429s twice, substitute and flag `[RATE-LIMIT-OVERRIDE]`. |
