@@ -10,7 +10,49 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.13 (Kaizen: No Dashboard + KIF-51 API Fix + KIF-60)
+# CLOUDFLARE -- v3.14 (Kaizen: Wrangler Environment Fix + R2 False-Negative Elimination + Workers Baseline Update)
+
+> **v3.14 UPDATE (2026-08-01, kaizen — wrangler environment + R2 verification false-negatives):**
+> Red-team: direct parent-agent 5-adversary audit of a full session's execution errors
+> (wrangler install EPERM, R2 "key does not exist" false negatives, R2 list pagination
+> false negative, R2 HEAD 405 misread, stale workers baseline). HARD findings: 4.
+> SOFT: 2. DESIGN: 1.
+> Changes:
+> (1) [HARD] **KIF-19 anti-pattern UPDATED:** Wrangler is NO LONGER "npx-only, never
+>     globally installed." As of 2026-08-01 wrangler **4.118.0 IS globally installed**
+>     at `C:\Users\LENOVO\npm-global\node_modules\wrangler\bin\wrangler.js` with a
+>     persistent PATH entry. The old npx-cached 4.114.0 copy was CORRUPT (truncated
+>     download → SyntaxError at cli.js:81194), which is why npx tried to re-fetch and
+>     hung. The correct availability test is `wrangler --version` (now on PATH) or
+>     `node scripts/wrangler-check.js` (Accuracy Auditor, parent-agent).
+> (2) [HARD] Added **§Wrangler Environment Setup (PERMANENT FIX)** — documents the
+>     root cause of the EPERM block (npm prefix pointed at admin-only
+>     `C:\Program Files\DeepChat\resources\app.asar.unpacked\runtime\node`) and the
+>     permanent fix (`npm config set prefix C:\Users\LENOVO\npm-global`, absolute
+>     paths in `~/.npmrc` — NEVER `%VAR%` syntax which npm treats literally, plus
+>     persistent PATH via setx). Also added the `%VAR%`-literal gotcha: `.npmrc`
+>     does NOT expand Windows `%VAR%` — use absolute paths or `${VAR}` (Completeness
+>     Auditor, parent-agent).
+> (3) [HARD] R2 CLI docs: added **`--remote` MANDATORY note** — wrangler v4 `r2 object`
+>     commands default to LOCAL storage; without `--remote` a live object returns
+>     `"The specified key does not exist."` (false negative). Every R2 read/verify
+>     MUST pass `--remote` (Accuracy Auditor, parent-agent).
+> (4) [HARD] R2 REST listing: added **pagination note** — default page size is 20
+>     objects; pass `&limit=1000` and follow `cursor` for full listings. The old
+>     snippet returned 20 objects and produced a false "resume NOT in bucket"
+>     conclusion (Completeness Auditor, parent-agent).
+> (5) [SOFT] R2 REST verification: added **HEAD-405 note** — R2 object API does NOT
+>     support HEAD (returns 405, misread as "not found"); use GET and compare
+>     Content-Length or hash (Accuracy Auditor, parent-agent).
+> (6) [SOFT] Workers baseline 7 → **8** — live `workers_list` MCP returned 8 incl.
+>     `qnfo-gateway-production` (created 2026-07-31, modified_on 2026-07-31T12:36Z).
+>     Baseline row updated; treat any future count ≠ 8 as drift (Status Auditor,
+>     parent-agent).
+> (7) [DESIGN] Added anti-pattern rows: R2 object GET without `--remote`, R2 REST
+>     listing without pagination, R2 HEAD-for-verification, literal `%VAR%` in
+>     `.npmrc` (Novelty Auditor, parent-agent).
+> Cross-reference: windows-command-patterns v2.2, kaizen v1.2.5, research v2.40,
+> memory "Wrangler PERMANENTLY resolved on this machine (2026-08-01)".
 
 > **v3.13 UPDATE (2026-07-31, no-dashboard kaizen):**
 > User mandate: NO Cloudflare Dashboard — no web UI, no manual browser login, no
@@ -331,8 +373,43 @@ qnfo-legal   ─┘
 ---
 
 ## Reusable Scripts (Copy-Paste into any execution context)
+
+### Wrangler Environment Setup (PERMANENT FIX — v3.14)
+
+**Root cause of the 2026-08-01 EPERM block:** npm's `prefix` pointed at
+`C:\Program Files\DeepChat\resources\app.asar.unpacked\runtime\node` — an
+admin-only directory. Any `npm install -g <pkg>` failed with
+`EPERM: operation not permitted, mkdir`. The npx-cached wrangler 4.114.0 was
+ALSO corrupt (truncated download → `SyntaxError` at cli.js:81194), so npx tried
+to re-fetch 4.118.0 fresh and hung on network.
+
+**Permanent fix (already applied 2026-08-01 — verify before assuming):**
+```bash
+# 1. Redirect npm prefix + cache to USER-writable dirs (absolute paths!):
+npm config set prefix "C:\Users\LENOVO\npm-global"
+npm config set cache  "C:\Users\LENOVO\AppData\Local\npm-cache"
+#    → writes ~/.npmrc. NEVER use %VAR% syntax — npm treats it as a LITERAL
+#      directory name (created a stray "%USERPROFILE%" folder in cwd once).
+# 2. Install wrangler to the user prefix (no admin needed):
+npm install -g wrangler
+# 3. Persist PATH (registry HKCU\Environment via setx):
+setx Path "%Path%;C:\Users\LENOVO\npm-global"
+# 4. Verify:
+wrangler --version            # → 4.118.0
+wrangler whoami               # → account quniverse (edb167b78c9fb901ea5bca3ce58ccc4b)
+```
+Invocation paths (all equivalent):
+- `wrangler <cmd>` — PATH-registered shim at `C:\Users\LENOVO\npm-global\wrangler.cmd`
+- `node C:\Users\LENOVO\npm-global\node_modules\wrangler\bin\wrangler.js <cmd>` — explicit
+
+**Availability test (never trust `npm ls -g` or `where` alone):** run
+`wrangler --version` directly. If not found, check BOTH `C:\Users\LENOVO\npm-global`
+(global v4.118.0) AND `%LOCALAPPDATA%\npm-cache\_npx\*\node_modules\wrangler`
+(npx-cached — delete and re-install if corrupt).
+
 ### R2 CLI Syntax (wrangler v4+)
-**CRITICAL:** wrangler v4 uses `{bucket}/{key}` as a single positional argument:
+**CRITICAL:** wrangler v4 uses `{bucket}/{key}` as a single positional argument AND
+**defaults to LOCAL storage** — for live objects you MUST pass `--remote`:
 ```bash
 # CORRECT (v4+):
 npx wrangler r2 object get qnfo-releases/path/to/file.md --remote --pipe
@@ -340,11 +417,23 @@ npx wrangler r2 object put qnfo-releases/path/to/file.md --file=local.md --remot
 
 # WRONG (v3 and earlier, removed in v4):
 npx wrangler r2 object get qnfo-releases "path/to/file.md" --remote --pipe  # FAILS
+
+# FALSE NEGATIVE (v4.118.0 — do NOT do this):
+npx wrangler r2 object get qnfo-releases/path/to/file.md --pipe   # WITHOUT --remote
+#   → "The specified key does not exist." even though the object EXISTS.
+#   Default is LOCAL simulation storage. ALWAYS pass --remote for live reads.
 ```
-The `r2 object list` subcommand was removed in wrangler v4. Use the REST API for listings:
+The `r2 object list` subcommand was removed in wrangler v4. Use the REST API for
+listings — **and paginate** (default page size is 20 objects!):
 ```bash
-curl -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"   "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/r2/buckets/{BUCKET}/objects?prefix={PREFIX}"
+# First page (20 objects — may be a FALSE "empty" if the target is beyond page 1):
+curl -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/r2/buckets/{BUCKET}/objects?prefix={PREFIX}&limit=1000"
+# Follow result.cursor for the next page until absent.
 ```
+**R2 object verification — use GET, not HEAD:** the R2 object API does NOT
+support HEAD (returns HTTP 405, which was misread as "not found" in a session).
+Use GET and compare `Content-Length` (or MD5 of body) to the local source.
 
 
 
@@ -745,8 +834,9 @@ see `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md`. Any future count
 an audit-trail row is drift.)
 
 ### Workers
-Baseline: 7 (post-consolidation 2026-07-18).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
+Baseline: 8 (updated 2026-08-01 — live `workers_list` MCP returned 8 incl.
+`qnfo-gateway-production`, created 2026-07-31; treat any future count ≠ 8 as drift).
+**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
 
 ### Pages
 Baseline: 5 projects (post-consolidation 2026-07-17: `qnfo-publications`, `qwav`, `qnfo-hub`, `ipatent-me`, `ask-qwav`).
@@ -988,7 +1078,7 @@ When an MCP server call returns a success response, treat it with the same verif
 | Vectorize binding declared in wrangler config but never called in fetch handler (dead binding masked by LIKE/stub fallback) | Read full Worker source and cross-reference every declared binding name against actual usage in handler code. Found 2026-07-18 in both `qnfo-ipatent` (`/api/search` literal stub despite populated 1024-dim `DISCLOSURES_VZ` index) and `qnfo-qwav` (`/ask` used SQL `LIKE` despite unused `QWAV_VZ` binding to 768-dim `qwav-research-v2` index). Fix: embed query via Workers AI (matching the index's original embedding model), `.query()` the Vectorize index, keep LIKE only as a fallback when AI/Vectorize is unavailable. |
 | Restoring a production D1 database via Time Travel without first exporting a full row/table snapshot of ANY concurrent writes to R2 | Before any Time Travel restore, run `SELECT *` (explicit column list, avoid FTS5 tables which break `d1 export`) and upload the JSON to R2 as a safety net. Verified 2026-07-18: C-01 living-paper restore preceded by snapshot to `qnfo-backups/living-paper/pre-restore-snapshot-*.json`; post-restore diff confirmed zero data loss. |
 | Using external IPFS pinning services (REMOVED v3.2) | All external pinning (Pinata, Filebase, Lighthouse, Arweave) deprecated. Core stack: R2+D1+Workers+DNS. DNSLink is optional. |
-| Concluding "wrangler is not installed" from `npm ls -g wrangler`, a bare `where wrangler` miss, or a Python `subprocess.run()` PATH failure (KIF-19) | Run `node scripts/wrangler-check.js` — the ONLY sufficient test is `npx wrangler --version` + `npx wrangler whoami` executed directly via `exec`. Wrangler is invoked exclusively via `npx`, never globally installed. |
+| Concluding "wrangler is not installed" from `npm ls -g wrangler`, a bare `where wrangler` miss, or a Python `subprocess.run()` PATH failure (KIF-19) | Run `wrangler --version` directly (PATH-registered since 2026-08-01: `C:\Users\LENOVO\npm-global`) or `node scripts/wrangler-check.js`. The only sufficient test is `wrangler --version` + `wrangler whoami` executed directly. Note: wrangler 4.118.0 IS now globally installed at the user prefix; an npx-cached 4.114.0 copy was found corrupt (truncated download → SyntaxError) — check both locations and delete-and-reinstall corrupt caches. |
 | Guessing D1/Zenodo/Workers/Buffer API request shapes from memory each session | Consult `references/d1-rest-api-schema.json`, `references/workers-deploy-metadata-schema.json` (this skill) and `../research/references/zenodo-deposit-schema.json`, `../research/references/buffer-graphql-schema.json` (research skill) BEFORE constructing the call. |
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables (HTTP 400) | Use `scripts/d1-safe-write.js` (CHECK-THEN-WRITE, never a combined upsert) — see `references/d1-rest-api-schema.json`. |
 | Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
@@ -1005,3 +1095,7 @@ When an MCP server call returns a success response, treat it with the same verif
 | **KIF-52:** DNS zones with zero records flagged as "active" (2026-07-30 finding) | 3 of 12 active zones had 0 DNS records: qnfo.net, qnfo.uk, q-wave.tech. A zone with no A/AAAA/CNAME records resolves to nothing — 100% dead. **Every infrastructure audit MUST check `dns_records count` per zone and flag count=0 as CRITICAL.** Fix: add a proxied CNAME pointing to an active gateway Worker domain + a zone-level Worker route. DNS propagation takes minutes to hours. |
 | **KIF-53:** Custom domains CNAME'd to API-only Workers with no root handler (2026-07-30 finding) | `qnfo-ipatent` Worker returns `{error:"Not found"}` (404) for `/` but `ipatent.me` CNAME pointed at it. The Worker has handlers for `/health`, `/api/disclosures`, `/api/search` only. **If a custom domain's users expect HTML, the CNAME must point to a Pages project or a Worker that serves HTML.** API-only Workers should get subdomain routes (e.g., `api.ipatent.me`), not the apex domain. Found during red-team: ipatent-me.pages.dev serves a professional landing page (5,655 bytes) but ipatent.me was blocked by an account-level redirect (KIF-51) AND pointed at the wrong Worker. |
 | **KIF-60: Using Cloudflare Dashboard (web UI / manual login) for ANY operation (2026-07-31 mandate)** | **HARD BLOCK.** The Cloudflare Dashboard requires web UI, manual browser login, and human interaction — all operations MUST be CLI/API/command-line only. Every Dashboard operation has an API equivalent: redirect rulesets → `GET/DELETE /accounts/{id}/rulesets`, Pages deploy → `npx wrangler pages deploy` or REST API, DNS management → `GET/POST /zones/{id}/dns_records`, Workers deploy → `npx wrangler deploy`. If an API endpoint doesn't exist for a specific operation, use the Cloudflare MCP server (`workers_list`, `query_worker_observability`, etc.) FIRST, then fall back to REST API. Dashboard is NEVER acceptable — the user shall not manually intervene in any operation that can be executed by CLI, API, or command line. |
+| **R2 object get/put/delete WITHOUT `--remote` (v3.14, 2026-08-01)** | Wrangler v4 `r2 object` commands default to LOCAL storage. Without `--remote`, a live object read returns `"The specified key does not exist."` — a FALSE NEGATIVE that led to a "resume not in R2" misdiagnosis. ALWAYS pass `--remote` for live storage operations; use `--local` only for simulation. |
+| **R2 REST listing without pagination (v3.14, 2026-08-01)** | The object-list API returns **20 objects per page by default**. A script that fetches one page and checks for a key beyond page 1 produces a false "NOT FOUND" conclusion. Pass `&limit=1000` and follow `result.cursor` until absent. |
+| **R2 object verification via HEAD (v3.14, 2026-08-01)** | The R2 object API does NOT support HEAD — it returns HTTP 405, which a verification script misread as "not found". Use GET and compare `Content-Length` (or MD5 of the body) against the local source. |
+| **Literal `%VAR%` in `.npmrc` / npm config values (v3.14, 2026-08-01)** | npm config files do NOT expand Windows `%VAR%` — the string is used LITERALLY, creating a stray `%USERPROFILE%` directory. Use absolute paths (`C:\Users\LENOVO\npm-global`) or `${VAR}` syntax in `.npmrc`. |

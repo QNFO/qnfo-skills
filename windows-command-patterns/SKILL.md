@@ -1,10 +1,35 @@
 ---
 name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DEPRECATED (LAST RESORT only). Use this skill to understand PowerShell's failure modes and when Python cannot be used.
-version: "2.1"
+version: "2.2"
 ---
 
-# Windows Command Execution — Python-First Protocol (v2.1)
+# Windows Command Execution — Python-First Protocol (v2.2)
+
+> **v2.2 UPDATE (2026-08-01, kaizen — f-string dict-subscript signature + config-file %VAR% gotcha):**
+> Red-team: direct parent-agent 5-adversary audit of a session that lost ~8 tool calls
+> to inline `python -c` failures and 1 stray-directory incident. HARD findings: 2. SOFT: 1.
+> Changes:
+> (1) [HARD] Added **KIF-13: inline `python -c` with f-string DICT SUBSCRIPTS**
+>     (`f'...{data["key"]}...'`) — the nested double-quotes inside the f-string
+>     collide with PowerShell's outer-quote parsing, producing
+>     `SyntaxError: unterminated string literal` / `Unexpected token '{'`.
+>     This specific signature recurred ~8× in one session (`.zenodo_versions.json`
+>     updates, JSON printouts). It is a SPECIFIC sub-pattern of the existing
+>     B1/KIF-37 `python -c` block — the safe alternative is ALWAYS write-to-file
+>     then `exec python file.py`, or single-quote JSON keys in f-strings
+>     (`data['key']`) only when the outer shell context is a real POSIX shell,
+>     NEVER under PowerShell (Accuracy + Completeness Auditors, parent-agent).
+> (2) [HARD] Added **KIF-14: Windows `%VAR%` is NOT expanded in config files**
+>     (`.npmrc`, `.env`, YAML) — npm config treats `%USERPROFILE%\npm-global` as a
+>     LITERAL directory name and created a stray `%USERPROFILE%` folder in cwd.
+>     Only `cmd.exe`/`set` expand `%VAR%`; config-file parsers use absolute paths
+>     or `${VAR}`. ALWAYS write absolute paths into `.npmrc`/config files
+>     (Completeness Auditor, parent-agent).
+> (3) [SOFT] Quick Reference: added `python -c` dict-subscript row + `%VAR%`-in-config
+>     row to the SELF-CHECK list (Novelty Auditor, parent-agent).
+> Cross-reference: cloudflare v3.14 (wrangler env fix uses absolute paths),
+> kaizen v1.2.5, research v2.40.
 
 > **v2.1 UPDATE (2026-07-31, kaizen — LinkedIn MCP session):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
@@ -129,6 +154,31 @@ Step 3: Delete the .ps1 file
 ---
 
 ## S1.2 POWERSHELL FAILURE MODES (Reference — Why Python Wins)
+
+### KIF-13: Inline python -c with f-string DICT SUBSCRIPTS (2026-08-01)
+
+`python -c "print(f'OK: {len(data[\"versions\"])}')"` — nested double-quotes inside
+an f-string collide with PowerShell's outer-quote parsing. This exact pattern
+failed **~8 times in one session** (`SyntaxError: unterminated string literal` /
+`Unexpected token '{'`), every time on JSON-print or dict-lookup one-liners.
+
+| Wrong (PowerShell + f-string double quotes) | Correct |
+|:-------------------------------------------|:--------|
+| `python -c "print(f'OK: {data[\"key\"]}')"` | Write `_check.py` via write tool → `exec python _check.py` |
+| `python -c 'import json; print(json.dumps(x))'` (nested quotes) | Same — write to file first |
+
+**Rule:** ANY `python -c` containing an f-string with `["..."]` subscript, a dict
+literal, or nested quotes is GUARANTEED to fail under PowerShell. Write the script
+to a `_*.py` file and `exec python` it. This is a hard sub-pattern of B1/KIF-37.
+
+### KIF-14: Windows %VAR% NOT expanded in config files (2026-08-01)
+
+`cmd.exe` and `set` expand `%VAR%`, but **config-file parsers do not**. Writing
+`prefix=%USERPROFILE%\npm-global` into `~/.npmrc` (via `npm config set`) created a
+stray directory literally named `%USERPROFILE%` in the current working directory —
+npm used the string verbatim. `.npmrc`, `.env`, YAML, and JSON config values must
+use **absolute paths** (`C:\Users\LENOVO\npm-global`) or `${VAR}` syntax (some
+parsers). NEVER `%VAR%` in config files.
 
 ### KIF-05: Shell Mismatch
 
@@ -365,6 +415,8 @@ clean UTF-8 with no BOM.
 | Dir listing | `os.listdir(path)` | `Get-ChildItem path` |
 | Git operations | `subprocess.run(['git',...])` | `git -C path ...` (via exec) |
 | Complex task | Write a .py file | Write a .ps1 file |
+| f-string with dict subscript in `python -c` | Write `_*.py` → `exec python _*.py` (KIF-13) | N/A — guaranteed failure under PowerShell |
+| `%VAR%` in `.npmrc`/`.env`/config files | Absolute path or `${VAR}` (KIF-14) | `cmd /c set` expands `%VAR%`; config parsers DON'T |
 | Windows registry | N/A | `Get-ItemProperty` (last resort) |
 
 ## SELF-CHECK BEFORE EXECUTING (v2.1)
@@ -376,6 +428,8 @@ clean UTF-8 with no BOM.
 5. **Am I writing a JS/Python script?** → Use the `write` tool (clean UTF-8), then `node --check` / `python -m py_compile` before running.
 6. **Is this genuinely impossible without PowerShell?** → OK, write .ps1 file, use ps-safe-exec.ps1, and NEVER `Set-Content -Encoding UTF8` for writes (BOM).
 7. **If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>`: ABORT.** Write a Python file instead.
+8. **If you are about to type `python -c "..."` with an f-string containing `["..."]` (dict subscript) or a JSON literal: ABORT** (KIF-13). The nested double-quotes collide with PowerShell. Write `_*.py` and exec it.
+9. **If you are about to write `%VAR%` into `.npmrc`/`.env`/YAML/JSON config: ABORT** (KIF-14). Config parsers don't expand `%VAR%` — use absolute paths or `${VAR}`.
 
 **Python is not a fallback. Python is the DEFAULT.**
 
