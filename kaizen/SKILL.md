@@ -144,6 +144,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 # KAIZEN v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
 
+> **v1.4.1 UPDATE (2026-08-02, kaizen — ZENODO-1..5 anti-patterns + calibration drift fix):**
+> Reactive kaizen from carry-forward session (ODR v2.1 + Cross-Domain v4.1). Direct parent-agent
+> 5-adversary audit per self-kaizen protocol — no subagents. HARD: 0 in this skill. SOFT: 1.
+> Changes:
+> (1) [SOFT] Anti-patterns: added ZENODO-1 (global record IDs — existence != identity, 21748026),
+>   ZENODO-2 (newversion-draft-exists 400 files.enabled — follow links.latest_draft, never
+>   parallel newversion, ODR 21751722/21752136), ZENODO-3 (in-flight unsubmitted-draft
+>   coordination), ZENODO-4 (D1 body_md sync from published file, not stale local copy),
+>   ZENODO-5 (working-memory DOIs are phantoms until live-verified — ODR 21753142 was
+>   unrelated content). (Completeness + Accuracy Auditors, parent-agent).
+> (2) [SOFT] Calibration register: research v2.38 -> v2.44 (both entries) — Dependency Auditor,
+>   parent-agent.
+> (3) [SOFT] Version section reconciled v1.3.0 -> v1.4.0 (Status Auditor, parent-agent).
+> Cross-reference: research v2.44 (Zenodo draft-collision gates), ODR v2.1
+> (10.5281/zenodo.21752136), Cross-Domain v4.1 (10.5281/zenodo.21754016).
+
 > **v1.4 UPDATE (2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns):**
 > Self-kaizen per user directive: "EXECUTE KAIZEN SKILL UPDATE ON KAIZEN SKILL ITSELF."
 > Triggered by research v2.42 kaizen (BP-4 through BP-10 numeracy gates) and ACRP-04
@@ -993,7 +1009,13 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **NUMERACY-1: Derived quantity claimed with false precision (v1.4)** | When computing a derived quantity (e.g., Koide Q from mass fits), recompute from exact rational arithmetic before stating precision. ACRP-04 session: claimed 0.02% deviation; actual: 0.00289% — factor ~7× error. Trigger research BP-6 gate. |
 | **NUMERACY-2: Sigma reported without traceable uncertainty source (v1.4)** | Every σ must cite a specific PDG edition, table, value ± uncertainty, and propagation method. ACRP-04: "9,138σ" untraceable; best reconstruction 8,943σ. Trigger research BP-7 gate. |
-| **NUMERACY-3: Density gate applied selectively to structurally identical claims (v1.4)** | When §7.2 is tested but §6 (same numerology class) is not, it's confirmation bias. Research BP-8 classifies claims into 5 types — all of the same type must receive the same gate. |
+| **NUMERACY-3: Density gate applied selectively to structurally identical claims (v
+| **OSTROWSKI-1: Using dimensional physics formulas without dimensionless natural-number equivalents** | **HARD GATE (qnfo-core §0.7):** All physics formulas in QNFO publications MUST use dimensionless Planck units ($\hbar = c = G = k_B = 1$) with pure number quantities. Dimensional forms (e.g., $S \leq 2\pi k_B R E / (\hbar c)$) implicitly privilege the Archimedean ($\infty$) place. Even well-known formulas (Landauer's $E \geq k_B T \ln 2$, Bekenstein bound) must present their dimensionless form ($E \geq T \ln 2$, $\mathcal{I} \leq 2\pi R E / \ln 2$) alongside or in place of the dimensional form, with an Ostrowski rationale. |1.4)** | When §7.2 is tested but §6 (same numerology class) is not, it's confirmation bias. Research BP-8 classifies claims into 5 types — all of the same type must receive the same gate. |
+| **ZENODO-1: Treating a Zenodo record ID as proof of paper identity (v1.4)** | Zenodo record IDs are GLOBAL (shared across all users). A record ID that was 404 can later be claimed by an unrelated third-party deposit (21748026: 404 during a phantom-check, later occupied by an unrelated archive). NEVER verify "the DOI exists" — verify TITLE + CREATOR match. Existence at an ID is not identity. See research v2.44. |
+| **ZENODO-2: Calling `actions/newversion` when a draft already exists (v1.4)** | HTTP 400 `files.enabled: Please remove all files first` = a newversion draft ALREADY exists for the deposit (prior call or concurrent session). Follow `links.latest_draft` and complete that draft — never create a parallel newversion (ODR: deposit 21751722, draft 21752136). See research v2.44. |
+| **ZENODO-3: Publishing without checking for in-flight unsubmitted drafts (v1.4)** | Before ANY publish/newversion, check `/api/deposit/depositions?q=<title>` for `state=="unsubmitted"`. A recently-modified unsubmitted draft is a CONCURRENT session's in-flight work — coordinate, do not collide. A stale one can be completed or discarded. See research v2.44. |
+| **ZENODO-4: D1 body_md synced from a stale local copy after publish (v1.4)** | After publishing a corrected newversion, sync D1 `body_md` from the ACTUAL PUBLISHED FILE, not the local pre-edit copy. Cross-Domain: D1 held 47,134 chars with the old wrong table while published was 49,515 corrected. Verify `LENGTH(body_md)` ≈ published file size. See research v2.44. |
+| **ZENODO-5: Trusting a working-memory DOI without live verification (v1.4)** | A DOI recorded in working memory can be a phantom or misidentified (ODR v2.4 recorded as 10.5281/zenodo.21753142 — that ID is unrelated third-party content; the real chain is 10.5281/zenodo.21749884→21752136). Before citing ANY DOI from memory or a handoff, resolve it live and verify title+creator. See research v2.44 + kaizen v1.4 session 2026-08-02. |
 
 ## Cross-Skill Integration
 
@@ -1067,7 +1089,7 @@ dated, falsifiable claims about skill drift risk.
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
   must be tuned to the user's timezone and agent configuration.
-- The research skill (currently v2.38) is actively evolving; the canonical
+- The research skill (currently v2.44) is actively evolving; the canonical
   case study claim may need updating when research reaches v3.0.
 Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
@@ -1076,7 +1098,7 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
-- Research skill is at v2.38 with many version banners — high drift surface area
+- Research skill is at v2.44 with many version banners — high drift surface area
 - Cloudflare MCP servers may versions-shift independently
 Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
@@ -1098,7 +1120,7 @@ Likelihood: [MODERATE] — depends on session volume and failure rate.
 
 ## Version
 
-Current: **v1.3.0** (kaizen — version reconciliation: header/bottom both v1.3.0; Session 3YzGvuFkUK retrospective: 0 tool failures, ODR project 8 phases complete, 4-layer distribution verified; 2026-08-01)
+Current: **v1.4.0** (kaizen — 5-axis Watchtower + numeracy anti-patterns; Session jo4ZZeY90p30AcN carry-forward kaizen: research skill v2.44 anti-patterns for Zenodo draft-collision, global record IDs, D1 body_md sync; 2026-08-02)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.

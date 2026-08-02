@@ -3,7 +3,7 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.38"
+version: "2.44"
 priority: 1
 platform: all
 autonomous: true
@@ -41,7 +41,32 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.43 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate + Numeracy Gates)
+# RESEARCH -- v2.44 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+
+> **v2.44 UPDATE (2026-08-02, kaizen — Zenodo draft-collision + global-ID + D1-sync gates):**
+> Reactive kaizen from the carry-forward session (ODR v2.1 + Cross-Domain v4.1 execution).
+> Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE (no subagents).
+> HARD findings: 4. SOFT: 1.
+> Changes:
+> (1) [HARD] Common Error Signatures: added `actions/newversion` 400 `files.enabled:
+>   Please remove all files first` — means a newversion draft ALREADY EXISTS; follow
+>   `links.latest_draft` and complete it, never create a parallel newversion (ODR
+>   incident: deposit 21751722, draft 21752136, 2026-08-02).
+> (2) [HARD] Zenodo Versioning section: added mandatory PRE-CHECK — query
+>   `/api/deposit/depositions?q=<title>` for `state=="unsubmitted"` drafts BEFORE any
+>   newversion/publish; a recently-modified unsubmitted draft is a CONCURRENT session's
+>   in-flight work — coordinate, do not collide.
+> (3) [HARD] Anti-patterns: 4 new rows — "Treating a Zenodo record ID as proof of
+>   paper identity" (record IDs are GLOBAL; a 404 ID can later be claimed by a
+>   third party — 21748026; verify TITLE+CREATOR, not existence), "Calling
+>   actions/newversion twice because a draft already exists", "Publishing without
+>   checking for in-flight unsubmitted drafts", "Syncing D1 body_md from a stale
+>   local copy after publish" (Cross-Domain: D1 47,134 chars old table vs published
+>   49,515 corrected — re-download from the new record).
+> (4) [SOFT] Frontmatter `version` reconciled 2.38 → 2.44 (had drifted from live
+>   header v2.43 — Status Auditor).
+> Cross-reference: kaizen v1.4, ODR v2.1 (10.5281/zenodo.21752136), Cross-Domain v4.1
+> (10.5281/zenodo.21754016).
 
 > **v2.43 UPDATE (2026-08-02, kaizen — Zenodo bucket-URL rule + upload endpoint fix):**
 > Reactive kaizen following the ODR v1.5 Zenodo upload block (session 3YzGvuFkUK, 2026-08-02).
@@ -2369,6 +2394,7 @@ values: `publication`, `dataset`, `software`, `poster`, `presentation`.
 | `metadata.creators: Missing data` | No creators set | Add at least one creator with `name` |
 | `keywords` 400 | Comma-joined string, not array | Wrap in `[...]` |
 | `actions/newversion` 403 | Stale deposit ID | GET deposit first; check `.zenodo_versions.json` |
+| `actions/newversion` 400 `files.enabled: Please remove all files first` | A newversion draft ALREADY EXISTS for this deposit (previous newversion call created it, or a concurrent session left one unsubmitted) | Do NOT call newversion again. GET the deposit and follow `links.latest_draft` to the existing draft; complete it (delete stale files → upload correct files → set metadata → publish). If the draft is a stale leftover, DELETE its files first, then reuse it. Creating a parallel newversion fragments the version chain (2026-08-02 ODR incident: deposit 21751722, draft 21752136). |
 | Upload 415 | Missing Content-Type | Use `Content-Type: application/octet-stream` |
 
 ---
@@ -2590,6 +2616,22 @@ mode where a disconnected new deposit gets created because the correct ID
 was lost or misremembered.
 
 #### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent §8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
+
+**PRE-CHECK (HARD, 2026-08-02): BEFORE calling `actions/newversion`, check for an
+existing unsubmitted draft.** A prior newversion call (or a concurrent session) may
+have already created a draft for this deposit. Calling `actions/newversion` again
+returns HTTP 400 `files.enabled: Please remove all files first`. Detection:
+```python
+# 0. Check for existing unsubmitted drafts (authenticated deposit API)
+GET /api/deposit/depositions?q=<title>&size=25
+# Look for any hit with state == "unsubmitted" — that IS the draft to complete.
+# If found, skip the newversion POST entirely and use that draft's ID.
+#   - If its files are stale: DELETE them, upload correct files, set metadata, publish.
+#   - If it is a concurrent session's in-flight work (recently modified): do NOT
+#     touch it — coordinate instead. (2026-08-02 ODR incident: deposit 21751722,
+#     concurrent draft 21752136 left unsubmitted since 08-01T23:26Z.)
+```
+Then proceed with the normal flow:
 
 At every session or phase conclusion for a project with an existing Zenodo
 deposit, create a NEW VERSION rather than a disconnected upload:
@@ -3277,3 +3319,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Publishing a Zenodo deposit without verifying file contents match the intended paper** | After uploading files but BEFORE `actions/publish`, download the uploaded `paper.md` from the deposit and verify its YAML `title:` matches the target Zenodo concept. Zenodo bucket lock means wrong files are PERMANENTLY tainted in that version DOI (KIF-58). |
 | **Uploading files to Zenodo in arbitrary order without designating a preview file** | Upload `<slug>.pdf` FIRST — Zenodo uses the first file as the landing-page preview/thumbnail. Priority: PDF > README.md > `<slug>.md` > bundle > remaining artifacts. Verify via `GET /deposit/depositions/{id}/files` that `files[0].filename` is the PDF (GATE P5.PREVIEW, v2.41). |
 | **Cross-project paper confusion from handoff ambiguity** | When a session handoff mentions a paper and a DOI but does NOT specify the GitHub repo, query all QNFO repos, find the paper by title, and verify the repo before any cross-population. A handoff that references "paper.md" and a Zenodo DOI is ambiguous — the paper could live in any of multiple QNFO repos (KIF-58). |
+| **Treating a Zenodo record ID as proof of paper identity (2026-08-02)** | Zenodo record IDs are GLOBAL (shared across all users and deposits). A record ID that was 404 yesterday can be claimed by an unrelated third-party deposit tomorrow (21748026: 404 during ACRP-07 phantom-check, later occupied by an unrelated Chinese-language book archive). NEVER verify "the DOI exists" — verify TITLE + CREATOR match. Existence at an ID is not identity. |
+| **Calling `actions/newversion` twice because a draft already exists (2026-08-02)** | HTTP 400 `files.enabled: Please remove all files first` = a newversion draft already exists for this deposit. Follow `links.latest_draft` and complete that draft instead of creating a parallel one (ODR incident: deposit 21751722, draft 21752136). |
+| **Publishing to Zenodo without checking for in-flight unsubmitted drafts (2026-08-02)** | Before ANY publish/newversion, run the unsubmitted-draft pre-check (`GET /api/deposit/depositions?q=<title>` and filter `state=="unsubmitted"`). A recently-modified unsubmitted draft is a CONCURRENT SESSION's in-flight work — do not collide with it; coordinate. A stale one (older than a session) can be completed or discarded. |
+| **Syncing D1 `body_md` from a stale local copy after a Zenodo publish (2026-08-02)** | After publishing a corrected newversion, sync D1 `body_md` from the ACTUAL PUBLISHED FILE (re-download from the new record), not the local pre-edit copy. Cross-Domain incident: D1 body was 47,134 chars with the old wrong mass-ratio table while the published v4.0 file was 49,515 chars corrected — the D1 record silently diverged. Verify `LENGTH(body_md)` ≈ published file size. |
