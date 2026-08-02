@@ -6,6 +6,13 @@ description: Guide the agent to recall, remember, and route durable learning int
 
 # Memory Management
 
+> **STALE AGENT.DB CACHE (2026-08-02):** When DeepChat skills fail to load after
+> restart despite valid YAML/frontmatter, suspect a stale agent.db cache rather
+> than file errors. A process restart alone may not clear the indexer cache —
+> use the deferred restart: `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py"`.
+> See system skill §Auto-Restart Protocol.
+
+
 Use this skill when a task may produce durable learning or when the user asks you to recall, remember, continue earlier work, preserve an exact statement, capture a reusable procedure, or handle a recurring need.
 
 ## Recall

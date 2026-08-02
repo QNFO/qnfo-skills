@@ -514,3 +514,45 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
 ---
 
 *system v2.3 — DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
+
+
+## Auto-Restart Protocol (2026-08-02) — DeepChat quit + restart when needed
+
+DeepChat builds its skill index from `agent.db` at **startup only**. Skills
+created, deleted, or bulk-modified on disk stay invisible / phantom / stale
+until a restart. (memory: new skill invisible until restart; deleted platform
+skills auto-restore; stale agent.db cache masquerades as frontmatter errors.)
+
+**AGENT SAFETY (MANDATORY):** Never kill DeepChat mid-turn — it terminates the
+agent and loses session state. Use the DEFERRED restart path below.
+
+### Scripts (system skill)
+
+| Script | Purpose |
+|:-------|:--------|
+| `scripts/schedule-restart.py` | **AGENT-SAFE**: register a one-shot delayed task that restarts DeepChat after the session ends. `python schedule-restart.py --delay 60` (default 60s). |
+| `scripts/restart-deepchat.py` | Graceful quit (WM_CLOSE) + wait + relaunch. For **user/manual** restarts, or when DeepChat is closed. `python restart-deepchat.py --grace 20 --force`. |
+| `scripts/cancel-restart.py` | Cancel a pending deferred restart. `python cancel-restart.py`. |
+
+### When to trigger a restart
+
+| Condition | Action |
+|:----------|:-------|
+| NEW skill created | `schedule-restart.py --delay 60`, tell user "restarting in 60s to load new skill" |
+| Skill DELETED | `schedule-restart.py`, then re-delete any auto-restored platform skill after relaunch |
+| Bulk skill edits (kaizen) | `schedule-restart.py --delay 60` |
+| Skills fail to load despite valid YAML | suspect stale agent.db cache → `schedule-restart.py` (memory: restart clears indexer cache) |
+| agent.db / DIPS locked | cannot checkpoint live; restart clears WAL — schedule it, do NOT force |
+
+### Manual restart (user)
+
+```
+python "%USERPROFILE%\.deepchat\skills\system\scripts\restart-deepchat.py"
+```
+
+### Verify after restart
+
+1. `skill_list` — confirm the new/modified skill appears, deleted skill gone.
+2. `skill_view <name>` — confirm SKILL.md loads with current version.
+3. If a platform-default skill was auto-restored, re-delete it (memory: platform
+   auto-restores deleted defaults; must be re-deleted after purge).

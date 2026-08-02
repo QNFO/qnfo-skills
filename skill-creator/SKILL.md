@@ -11,7 +11,13 @@ license: Complete terms in LICENSE.txt
 > added kaizen integration note in Step 6 (Iterate).
 > Cross-reference: kaizen v1.2 for quality audit post-creation.
 
-# Skill Creator â€” v1.1
+# Skill Creator
+
+> **RESTART REQUIRED after creating a new skill (2026-08-02):** DeepChat indexes
+> skills at startup only — a newly created skill is invisible until restart.
+> Run `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py" --delay 60`
+> (deferred, agent-safe) OR ask the user to restart. See system skill §Auto-Restart Protocol.
+ â€” v1.1
 
 This skill provides guidance for creating effective skills.
 

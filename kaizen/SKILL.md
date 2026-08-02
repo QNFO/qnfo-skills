@@ -187,7 +187,13 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
+# KAIZEN
+
+> **RESTART AFTER BULK SKILL EDITS (2026-08-02):** After editing multiple
+> SKILL.md files in a kaizen pass, schedule a deferred restart so DeepChat
+> rebuilds its skill index: `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py" --delay 60`.
+> See system skill §Auto-Restart Protocol.
+ v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
 
 
 

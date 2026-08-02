@@ -286,6 +286,14 @@ Orchestrator running all 7 phases in sequence: audit → dynamic service analysi
 10. **KIF-50 (2026-07-29 red-team): Budget laptop comprehensive tuner.** No single script covered all budget-laptop optimizations end-to-end. Created `budget_laptop_tune.py`: read-only system audit (RAM, disk, services, VBS, visual effects, agent.db, startup, top processes) with severity-rated recommendations; non-admin auto-apply (power plan, transparency, config cleanup); admin queue (hibernation, VBS/HVCI, defender exclusions, dynamic service disable, AppX removal). Run `python budget_laptop_tune.py` for audit; `--apply` to execute non-admin + queue admin. `apply_budget_opts.py` is the fast-path variant. VACUUM confirmed working with DeepChat live (WAL/SHM locks harmless).
 11. **KIF-51 (2026-07-29 red-team): analyze_agent_db.py column bug + thin_client allowlist gap.** Red-team audit discovered: (a) `analyze_agent_db.py` used `COUNT(te.id)` but `deepchat_tape_entries` has no `id` column (composite key), causing OperationalError; plus undefined variable `tape_count` instead of `count`. Fixed: `COUNT(*)` + correct variable. (b) `thin_client.py` flagged `.gitattributes` and `d1-cache.json` as UNKNOWN FILE in `.deepchat` root. Fixed: added both to `OPERATIONAL_FILES`. Post-kaizen: all scripts exit 0, red-team audit ALL CLEAN.
 
+
+> **RESTART AFTER SKILL PURGE (2026-08-02):** DeepChat auto-restores deleted
+> platform-default skills — they must be re-deleted AFTER a restart, and the
+> restart is required for the purge to register in agent.db. Schedule deferred:
+> `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py" --delay 60`,
+> then re-delete auto-restored platform skills post-relaunch.
+> See system skill §Auto-Restart Protocol.
+
 ## Post-Cleanup Verification
 
 After running cleanup, always verify:
