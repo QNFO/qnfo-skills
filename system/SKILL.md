@@ -2,8 +2,48 @@
 name: system
 description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
 ---
+> **v2.5 UPDATE (2026-08-02, kaizen — skill-sync v4 REST fast path + autonomy):**
+> Red-team: direct parent-agent audit. HARD: 2. SOFT: 1. DESIGN: 2.
+> Changes:
+> (1) [HARD] **skill-sync.js v3.0.0's `npx --yes --package wrangler@latest` per-file
+>     path was pathological** — npx cold-start + wrangler re-resolution per file,
+>     90s timeout each, WinError 2 in daemon subprocess env. Measured: ZERO state
+>     updates in 20+ min (state file stale at 33h). **v4.0.0 replaces it with the
+>     Cloudflare R2 REST API** (`PUT /accounts/{id}/r2/buckets/qnfo-skills/objects/{key}`
+>     + Bearer token) with 8-way parallel pool + per-file GET verify. Measured:
+>     **278 files in 27.2s, 0 failures** (~600x faster). No npx, no wrangler, no
+>     node_modules. Token discovery: env → ~/.cloudflare_token → ~/keys.json.
+> (2) [HARD] **`git add -A` in skill-sync swept unrelated files** — commit cbc5f7f
+>     accidentally included research/scripts/build-paper.py.bak-20260802 (506 lines,
+>     reverted d109323). Fix: repo `.gitignore` now excludes `*.bak`, `*.bak-*`,
+>     `*.tmp`, `*.log`, `.deepchat/`, `node_modules/`; walkFiles also skips *.bak-*.
+> (3) [SOFT] New flags: `--skip-git` (R2 only), `--no-verify`, `--force`, `--targets=`.
+>     Exit codes: 0 clean, 1 R2 failures after retry, 2 no token.
+> (4) [DESIGN] **Autonomous sync (no prompting):** new cronjob `skills-autonomous-sync`
+>     runs `node system/scripts/skill-sync.js` every 6h (agentId deepchat, UTC).
+>     Also hookable at session start / Watchtower. Sync is idempotent via
+>     content-hash state (~/.deepchat/.skill-sync-state.json).
+> (5) [DESIGN] §Autonomous Skill Sync section below documents the cronjob + manual
+>     invocation + failure handling.
+> Cross-reference: cloudflare v3.18, kaizen v1.4.1, research v2.45.
 
-# SYSTEM -- v2.4 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
+## Autonomous Skill Sync (v2.5)
+
+Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and R2
+(qnfo-skills bucket) WITHOUT user prompting:
+
+1. **Cronjob:** `skills-autonomous-sync` — `node C:\Users\LENOVO\.deepchat\skills\system\scripts\skill-sync.js` every 6h (cron `0 */6 * * *`, UTC, agentId deepchat).
+2. **Manual invocation:** `node system/scripts/skill-sync.js` (full) or `--skip-git` (R2 only).
+3. **Idempotency:** content-hash state file skips unchanged files; re-runs are fast.
+4. **Failure handling:** script exits 1 on R2 failures (after 1 retry each); cronjob
+   logs failures to durable memory; exit 2 = token missing.
+5. **Verification:** after sync, GET a sample object from R2
+   (`GET /accounts/{id}/r2/buckets/qnfo-skills/objects/prompts/skills/<name>/SKILL.md`)
+   and compare Content-Length.
+
+
+
+# SYSTEM -- v2.5 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
 
 > **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,

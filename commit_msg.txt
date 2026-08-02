@@ -1,0 +1,14 @@
+feat(bloat-cleanup): v2.6 kaizen - budget laptop tuner, VACUUM success, KIF-50
+
+KIF-50: budget_laptop_tune.py — comprehensive system audit + auto-apply
+non-admin (power plan, transparency, config .bak) + admin queue
+(hibernation, VBS/HVCI, defender, service disable, AppX).
+
+apply_budget_opts.py — fast-path apply + queue variant.
+
+Session 2026-07-29 results:
+- agent.db: 5.44 GB -> 1.38 GB (-75%, VACUUM worked live)
+- 527->143 sessions, 488K rows deleted, 89K FTS orphans cleaned
+- C: drive: 20.2->22.9 GB free (+2.7 GB)
+- Transparency OFF, Power High Perf, Visual FX Best Perf
+- 5 admin operations queued for watcher processing
