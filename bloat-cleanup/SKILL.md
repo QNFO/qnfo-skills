@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 3.0
+version: 3.1
 triggers:
 - cleanup
 - bloatware
@@ -14,6 +14,77 @@ triggers:
 - free RAM
 - optimize Windows
 ---
+
+> **v3.1 UPDATE (2026-08-02, kaizen — Thin-Client Enforcement Protocol):**
+> Red-team: KIF-32 thin-client mandate audit found local-only files (stale git clones,
+> unarchived research deliverables, ephemeral build scripts) surviving session closeout
+> in violation of "local files are never canonical." This version adds enforcement gates:
+> (1) [HARD] **Thin-Client Enforcement Protocol** — post-closeout scan that flags every
+>   file present ONLY locally (not in canonical git, not in R2). Files must be synced
+>   to canonical + deleted locally, or user-approved as permanent ephemeral workspace.
+> (2) [HARD] **Pre-Closeout Scan** — list all local-only files by category (stale clones,
+>   unarchived deliverables, orphaned git repos, temp scripts). Any category > 0 = BLOCK.
+> (3) [HARD] **Mandatory Cleanup Gate** — after R2 archive confirmation (SHA-256 verified
+>   round-trip), delete ALL local copies of archived project files per KIF-32. No
+>   lingering local copies of published papers, art configurations, or research deliverables.
+> (4) [SOFT] **Stale Clone Detection** — any git clone whose HEAD differs from origin
+>   master → flag as thin-client violation. Delete after confirming origin has the work.
+> (5) [DESIGN] Canonical case: D:\qnfo-skills — a 5.1MB git clone of QNFO/qnfo-skills
+>   with diverged HEAD (160f9da vs canonical e7b7f9c, 5 commits behind), stale prompts/
+>   skills/ layout, missing kaizen/ directory. Survived multiple session closeouts as
+>   a local-only artifact until force-deleted via bloat-cleanup v3.1 enforcement.
+
+## Thin-Client Enforcement Protocol (NEW — HARD, KIF-32)
+
+**Per mandate: LOCAL FILES ARE NEVER CANONICAL.** The canonical source of truth is the
+GitHub repository (git) + Cloudflare R2 (durable backup). Any file that exists ONLY
+locally — not in git, not in R2 — is a thin-client violation.
+
+### Pre-Closeout Scan (HARD — blocks closeout)
+
+Before ANY session closeout or research phase completion, enumerate ALL local-only files:
+
+1. **Git repositories** — `git status`, `git log`, `git ls-remote` on every local git dir.
+   Flag any clone whose HEAD differs from origin/master (stale clone violation).
+2. **Project directories** — scan all known project roots (D:\ODR, C:\Users\...\Documents\GitHub,
+   C:\Users\...\.deepchat\artifacts) for files NOT tracked in git or synced to R2.
+3. **Research deliverables** — papers, PDFs, notebooks, datasets that are published on
+   Zenodo but still exist locally.
+4. **Ephemeral scripts** — build helpers, audit scripts, merge scripts that served their
+   purpose in a completed session.
+5. **Orphaned git repos** — clones in temp directories, stale checkouts.
+
+| Category | Action |
+|:---------|:-------|
+| Stale clone (diverged HEAD) | Confirm origin has the work → delete local clone |
+| Unarchived deliverable | R2 archive + SHA verify → delete local copy |
+| Orphaned git repo | Push to remote or confirm already-pushed → delete |
+| Ephemeral script | Served its purpose → delete (already in git history if committed) |
+| Permanent ephemeral workspace | User must explicitly approve — flag as [THIN-CLIENT-EXEMPT] |
+
+### Mandatory Cleanup Gate (HARD)
+
+After the pre-closeout scan completes:
+1. **Sync all deliverable artifacts to R2** — papers (.md, .pdf, .html), notebooks,
+   datasets — to `qnfo-releases/releases/<YYYY>/<MM>/<slug>/`.
+2. **Verify R2 round-trip** — SHA-256 must match between local and R2 object.
+3. **Delete local copies** of ALL R2-verified files. R2 IS the canonical storage.
+4. **Verify post-cleanup** — re-run scan, confirm zero local-only files in the
+   archive target paths.
+
+**GATE:** If any paper/deliverable/repo remains local-only after closeout → HARD BLOCK.
+Session must not be declared complete until the scan passes.
+
+### Anti-Patterns (NEW rows for thin-client enforcement)
+
+| Anti-Pattern | Fix |
+|:-------------|:----|
+| **Stale git clone surviving multiple session closeouts** | Pre-closeout scan → `git fetch` + `git log --oneline -1` → compare to `git ls-remote origin master`. If diverged: delete clone. Canonical case: D:\qnfo-skills (5.1MB, HEAD 160f9da vs canonical e7b7f9c, 5 commits behind, survived 3+ sessions). |
+| **Published research paper still on local disk** | Zenodo DOI published → R2 archive qnfo-releases/ → SHA verify → `os.remove()` local copy. Paper is published; local copy is a thin-client violation. |
+| **Ephemeral build/audit scripts left in artifacts directory** | After session complete: delete `_*.py` build helpers, audit runners, merge scripts. Deliverables (papers, skill updates) are archived separately. |
+| **Closing a session with local-only files not synced to canonical layer** | Run Pre-Closeout Scan. Zero local-only files before declaring complete. |
+| **Trusting file existence as proof of canonical status** | File existence ≠ canonical. Check git (`git ls-files`, `git log`) and R2 (`GET /objects/{key}`). File must exist in at least one canonical layer OR be ephemeral. |
+
 
 > **v3.0 UPDATE (2026-08-02, kaizen — lossy-vs-acceptable criteria + unified scope):**
 > Red-team: user audit of the research v2.46 de-bloat (2,022→531 lines, 75% reduction)
