@@ -3,7 +3,7 @@ name: research
 description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.44"
+version: "2.45"
 priority: 1
 platform: all
 autonomous: true
@@ -41,9 +41,29 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.44 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate)
+# RESEARCH -- v2.45 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate + GATE P5.CLEAN)
 
-> **v2.44 UPDATE (2026-08-02, kaizen — Zenodo draft-collision + global-ID + D1-sync gates):**
+> **v2.45 UPDATE (2026-08-02, kaizen — newversion file-inheritance + preview + D1 slug drift):**
+> Reactive kaizen per user directive following D1/D2/D3 errata publishing session.
+> Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE (no subagents).
+> HARD findings: 1. SOFT findings: 2.
+> Changes:
+> (1) [HARD] **GATE P5.CLEAN:** `actions/newversion` copies ALL files from the source deposit
+>   into the new draft. If old files are not deleted before uploading, they persist and can
+>   become the preview file — evidenced in this session where ACRP-04 v1.3's preview became
+>   `ERRATA.md` (1KB) instead of the intended PDF (80KB), and ACRP-06 v1.1's preview was the
+>   `.md` source file instead of the PDF. After every `actions/newversion`, MANDATORILY
+>   enumerate and DELETE ALL files before uploading fresh files in preview-first order.
+>   Updated Zenodo Versioning step 2 with explicit GET→DELETE→PUT workflow.
+> (2) [SOFT] Anti-patterns: added "Assuming actions/newversion creates a clean draft" (GATE
+>   P5.CLEAN, 2026-08-02) and "D1 living-paper slug drifted after terminology correction"
+>   (2026-08-02 — ACRP-04 slug changed from `pythagorean-semigroup-audit` to
+>   `acrp04-five-smooth-audit` after BP-2 correction; D1 query by old slug returned zero).
+> (3) [SOFT] Session heuristic: PowerShell `python -c` with quotes/dicts/regex (kaizen B1)
+>   recurred 4-6 times this session despite being a documented anti-pattern. Escalating
+>   severity note — consider a HARD runtime gate that blocks `python -c` if the command
+>   contains `"`, `{`, or `(` (deferred — requires DeepChat tool-level enforcement).
+> Cross-reference: kaizen v1.4.1, ACRP-04 v1.3 (10.5281/zenodo.21754151), session KR56igk6tirRGs0kA4r8w.
 > Reactive kaizen from the carry-forward session (ODR v2.1 + Cross-Domain v4.1 execution).
 > Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE (no subagents).
 > HARD findings: 4. SOFT: 1.
@@ -2640,9 +2660,13 @@ deposit, create a NEW VERSION rather than a disconnected upload:
 POST https://zenodo.org/api/deposit/depositions/{existing_id}/actions/newversion
 # Response includes a "latest_draft" link -> extract new draft deposit ID
 
-# 2. Upload the updated files to the NEW draft (remove stale files first if replacing)
-DELETE https://zenodo.org/api/deposit/depositions/{new_id}/files/{stale_file_id}
-PUT https://zenodo.org/api/deposit/depositions/{new_id}/files
+# 2. MANDATORY: DELETE ALL stale files BEFORE uploading new ones (GATE P5.CLEAN, v2.45)
+#    actions/newversion copies old files from the source deposit — they persist
+#    and can become the wrong preview file. DELETE them all first.
+GET https://zenodo.org/api/deposit/depositions/{new_id}/files  # enumerate
+for file in response.json():
+  DELETE https://zenodo.org/api/deposit/depositions/{new_id}/files/{file['id']}
+# THEN upload the full fresh set in preview-first order (PDF, README, slug.md, bundle, REST)
 
 # 3. Update metadata (bump version string, e.g. "1.0" -> "1.1")
 PUT https://zenodo.org/api/deposit/depositions/{new_id}
@@ -3323,3 +3347,5 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Calling `actions/newversion` twice because a draft already exists (2026-08-02)** | HTTP 400 `files.enabled: Please remove all files first` = a newversion draft already exists for this deposit. Follow `links.latest_draft` and complete that draft instead of creating a parallel one (ODR incident: deposit 21751722, draft 21752136). |
 | **Publishing to Zenodo without checking for in-flight unsubmitted drafts (2026-08-02)** | Before ANY publish/newversion, run the unsubmitted-draft pre-check (`GET /api/deposit/depositions?q=<title>` and filter `state=="unsubmitted"`). A recently-modified unsubmitted draft is a CONCURRENT SESSION's in-flight work — do not collide with it; coordinate. A stale one (older than a session) can be completed or discarded. |
 | **Syncing D1 `body_md` from a stale local copy after a Zenodo publish (2026-08-02)** | After publishing a corrected newversion, sync D1 `body_md` from the ACTUAL PUBLISHED FILE (re-download from the new record), not the local pre-edit copy. Cross-Domain incident: D1 body was 47,134 chars with the old wrong mass-ratio table while the published v4.0 file was 49,515 chars corrected — the D1 record silently diverged. Verify `LENGTH(body_md)` ≈ published file size. |
+| **Assuming `actions/newversion` creates a clean draft — old files from prior versions persist and can become the wrong preview file (GATE P5.CLEAN, 2026-08-02)** | **HARD (v2.45):** `actions/newversion` copies ALL files from the source deposit. If those files are not deleted before uploading new ones, they remain in the draft and can appear BEFORE the new PDF in the file list — making an old 798-byte `PROVENANCE-BUNDLE.zip` or a new `ERRATA.md` the preview instead of the 80KB PDF. After newversion, enumerate all files via `GET /deposit/depositions/{id}/files`, DELETE every one, THEN upload fresh files in preview-first order (PDF first). |
+| **D1 living-paper slug drifted after terminology correction — Zenodo filename ≠ D1 slug (2026-08-02)** | After BP-2 terminology corrections that rename paper files (e.g., `pythagorean-semigroup-audit` → `acrp04-five-smooth-audit`), verify the D1 `papers` table slug still matches the Zenodo filename. Use `SELECT slug, title FROM papers WHERE title LIKE '%<keyword>%'` to find the right row if slugs diverge. In this session, the D1 slug was `acrp04-five-smooth-audit` but the old `pythagorean-semigroup-audit` search returned zero results. |
