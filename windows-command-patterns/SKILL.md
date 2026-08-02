@@ -1,12 +1,32 @@
 ---
 name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DEPRECATED (LAST RESORT only). Use this skill to understand PowerShell's failure modes and when Python cannot be used.
-version: "2.2"
+version: "2.3"
 ---
 
-# Windows Command Execution — Python-First Protocol (v2.2)
+# Windows Command Execution — Python-First Protocol (v2.3)
 
-> **v2.2 UPDATE (2026-08-01, kaizen — f-string dict-subscript signature + config-file %VAR% gotcha):**
+> **v2.3 UPDATE (2026-08-02, kaizen — MANDATORY PRE-FLIGHT GATE + python -c escalation):**
+> Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE. AUTO-TRIGGERED
+> by Watchtower INCIDENT-AXIS 0.6 (python -c failures accumulated across 4+ sessions despite
+> documented anti-patterns in KIF-13, SELF-CHECK #8, and the Python-First Mandate).
+> HARD findings: 0 in this skill. DESIGN findings: 1.
+> Root cause: the anti-pattern documentation is comprehensive but AGENTS DON'T CHECK IT before
+> sending `exec python -c`. The SELF-CHECK list at the bottom of the skill is read LAST, after
+> the agent has already sent 10+ failing `python -c` calls. Fix: **S0.0 MANDATORY PRE-FLIGHT GATE**
+> inserted BEFORE S1.0 — a HARD, unskippable 4-item checklist that runs BEFORE EVERY exec command.
+> Positioned at the very top of the skill so it's the FIRST thing an agent reads when loading
+> this skill, not the last. The checklist ABORTS any `python -c` with quotes/dicts/f-strings
+> before the exec tool call is dispatched.
+> Changes:
+> (1) [DESIGN] Added S0.0 MANDATORY PRE-FLIGHT GATE — 4-item checklist positioned BEFORE S1.0
+>     (the Python-First Mandate). Item 1: "Does the command contain python -c? → ABORT."
+>     Item 2: "Does it use &&, ||, &? → ABORT." Item 3: "Does it contain nested quotes? → ABORT."
+>     Item 4: "Can I write a .py file instead? → YES (99%+). Do that."
+>     This gate is read FIRST on skill activation, making it impossible to miss.
+> Cross-reference: kaizen v1.4.1 (Watchtower auto-trigger protocol), research v2.45 (GATE P5.CLEAN
+> deferred python -c escalation as EXTERNAL-BLOCK — this v2.3 fix is the skill-level counterpart;
+> the true permanent fix requires DeepChat tool-level enforcement, deferred but documented).
 > Red-team: direct parent-agent 5-adversary audit of a session that lost ~8 tool calls
 > to inline `python -c` failures and 1 stray-directory incident. HARD findings: 2. SOFT: 1.
 > Changes:
@@ -72,6 +92,19 @@ version: "2.2"
 >
 > **The cumulative cost of PowerShell on Windows exceeds every other tooling failure
 > pattern combined.** Python is installed. Python is reliable. Use Python.
+
+---
+
+## S0.0 MANDATORY PRE-FLIGHT GATE (v2.3 — HARD, NO EXCEPTIONS)
+
+**Run this checklist in your head BEFORE EVERY `exec` call. This is NOT optional.**
+
+1. **Does the command string contain `python -c`?** → **ABORT.** Write a `_*.py` file via the `write` tool, then `exec python _*.py`. No exceptions. This includes ALL `python -c` calls — even single-line ones with no apparent quotes. The Windows PowerShell parser can silently corrupt: double-quotes, single-quotes, angle brackets, dollar signs, curly braces, and dict literals in the Python string before Python ever sees it. KIF-13 documents the specific f-string dict-subscript signature (`f'...{data["key"]}...'`) that failed ~8× in one session. S0.0 catches it BEFORE dispatch.
+2. **Does the command use `&&`, `||`, or `&` as separators?** → **ABORT.** PowerShell treats `&&`/`||` as invalid statement separators. Use `;` to chain commands, or run separate `exec` calls. For `cmd.exe` native chaining, use `exec cmd /c "cmd1 && cmd2"`.
+3. **Does it contain `"` (double quote) inside an outer `"..."` string?** → **ABORT.** The outer quotes will be stripped by the shell parser before the inner content reaches the target. Write to a `.py` or `.ps1` file instead.
+4. **Can I write a `.py` file instead?** → YES (99%+ of cases). Skip the mental gymnastics. Write your Python to a file via the `write` tool, `exec python` it, and delete it. This is always correct.
+
+**GATE:** If ANY of items 1-3 return YES, the exec call is BLOCKED. Do not attempt it. Write to file.
 
 ---
 
