@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 2.7
+version: 3.0
 triggers:
 - cleanup
 - bloatware
@@ -14,6 +14,106 @@ triggers:
 - free RAM
 - optimize Windows
 ---
+
+> **v3.0 UPDATE (2026-08-02, kaizen — lossy-vs-acceptable criteria + unified scope):**
+> Red-team: user audit of the research v2.46 de-bloat (2,022→531 lines, 75% reduction)
+> challenged: "how is it possible to lose 1,500 lines and retain all functionality?"
+> Answer: a skill is TWO content classes — executable protocol (must never shrink) and
+> accumulated metadata (safe to reduce). This version codifies the distinction as a
+> mandatory pre-de-bloat classifier:
+> (1) [HARD] **Bloat Reduction Techniques taxonomy** — 7 techniques (Collapse, Remove,
+>   Relocate, Archive, Merge, Compress, Supersede) with per-technique loss profile.
+> (2) [HARD] **Lossy vs Acceptable criteria** — two-class, five-criterion classifier.
+>   ACCEPTABLE (zero-information-loss): Redundancy, Supersession, Historical narrative,
+>   Encoded lessons, Relocatable reference. LOSSY (positive information, MUST retain):
+>   Live constants, Live gates/checklists, Current tool wiring, Recent anti-patterns,
+>   Canonical cases.
+> (3) [HARD] **Unified scope** — the criteria apply identically to filesystem bloat
+>   (OS/disk/caches/services) AND skill bloat (SKILL.md directories, contents,
+>   instructions). Same techniques, same loss classifier, same gates.
+> (4) [SOFT] **Behavior-preservation audit gate** — before declaring ANY de-bloat
+>   complete, verify every live constant/endpoint/gate/wiring survives verbatim.
+>   Missing item = lossy, restore it. Canonical pattern: _behavior_audit.py
+>   (research v2.46 audit: 48/49 active, 1 correctly-superseded, 0 lost).
+> (5) [DESIGN] Conditional-entropy framing — bloat = content whose conditional entropy
+>   is ZERO given the rest of the document (reconstructible or superseded); entropy =
+>   unique information nothing else carries. Removing entropy = data loss.
+
+## Bloat Reduction Techniques (NEW — HARD)
+
+| # | Technique | Operation | Loss Profile | Example |
+|:--|:----------|:----------|:-------------|:--------|
+| T1 | **Collapse** | N→1 consolidation | Zero IF consolidated content preserved | 22 version banners → 1 |
+| T2 | **Remove** | Delete dead content | Zero IF supersession confirmed | Deleted-script references |
+| T3 | **Relocate** | Move to references/ | Zero IF pointer resolves | 37-field Zenodo dictionary |
+| T4 | **Archive** | Move to deploy/history/ | Zero at storage; execution-time loss possible if referenced content was needed live | Full v2.45 research |
+| T5 | **Merge** | Deduplicate | Zero IF merged text retains full content | 4× Anti-Phantom → 1 umbrella |
+| T6 | **Compress** | Shorten prose | POTENTIALLY LOSSY — narrative only, never constants/instructions | Copyediting |
+| T7 | **Supersede** | Replace with newer | Zero + improvement IF new content complete | XeLaTeX → build-pdf-pro.py |
+
+## Lossy vs Acceptable Criteria (NEW — HARD)
+
+### ACCEPTABLE — zero-information-loss, safe to reduce
+
+| Criterion | Definition | Test |
+|:----------|:-----------|:-----|
+| **Redundancy** | Content duplicated ≥2× in same document | Remove N-1 copies; information preserved elsewhere |
+| **Supersession** | Explicitly replaced by newer content | Old content is wrong guidance if followed |
+| **Historical narrative** | Changelog/version banners, not instructions | No agent behavior depends on it |
+| **Encoded lessons** | Anti-patterns whose corrective behavior is now a live gate | The gate is the living instruction |
+| **Relocatable reference** | Data better as a file than inline | Pointer resolves to preserved content |
+
+### LOSSY — positive information, MUST retain
+
+| Criterion | Definition | Violation Example |
+|:----------|:-----------|:-----------------|
+| **Live constants** | Endpoints, scopes, error strings, paths (verbatim) | Removing an API endpoint from active guidance |
+| **Live gates/checklists** | Anything that BLOCKS an action | Deleting a HARD gate |
+| **Current tool wiring** | Script paths, canonical pipeline | Removing build-pdf-pro.py reference |
+| **Recent anti-patterns** | Failure modes last 12 months, still active | Archiving a live warning |
+| **Canonical cases** | "Why this gate exists" narratives for ambiguity | Dropping the Compton-BT silo case |
+
+**OPERATIONAL TEST:** line count is the wrong metric. Behavior preservation is the test:
+1. Constant audit — every live constant survives verbatim?
+2. Gate audit — every HARD gate present?
+3. Phase/instruction audit — every executable step runnable from the active file?
+4. Recovery path — full prior version archived for reconstruction?
+
+**GATE:** if any live constant/gate/wiring is missing from the active file → LOSSY, restore before declaring de-bloat complete.
+
+## Unified Scope (NEW — HARD)
+
+The criteria apply to BOTH:
+
+**A. Filesystem bloat** (v1.0-v2.8 scope): OS bloatware, disk clutter, caches, vampire processes, services, npm caches. Techniques: Remove (T2), Archive (T4), Merge (T5).
+
+**B. Skill bloat** (v2.0+ scope): SKILL.md directories, contents, and instructions.
+- Directories: orphaned skill dirs, stale scripts, duplicate references
+- Contents: version banners, duplicate mandates, historical pipelines, anti-pattern graveyards, oversized spec tables
+- Instructions: superseded tooling, deleted-script references, deprecated endpoints
+- Techniques: all 7 apply (Collapse T1, Remove T2, Relocate T3, Archive T4, Merge T5, Compress T6, Supersede T7)
+
+**Same classifier, same gates, both scopes.**
+
+## Behavior-Preservation Audit Gate (NEW — SOFT)
+
+Before declaring ANY de-bloat complete:
+1. Enumerate every live constant, gate, endpoint, script path, and error string in the PRE-de-bloat version.
+2. Check each survives verbatim in the POST-de-bloat version.
+3. Any missing item → classify: Acceptable (superseded/relocated/encoded) or Lossy (restore).
+4. Only when 100% of live items are present or provably-superseded → de-bloat complete.
+5. Evidence: audit script output saved to artifacts/ (canonical pattern: _behavior_audit.py → 48/49 active, 1 correctly-superseded, 0 lost).
+
+## execute_plan (v3.0 update)
+
+update_plan([
+  {"step": "Scan bloat (filesystem + skills): measure bloat_ratio, enumerate live constants/gates", "status": "pending"},
+  {"step": "Classify each reduction target: Acceptable (5 criteria) vs Lossy (5 criteria)", "status": "pending"},
+  {"step": "Apply techniques: Collapse/Remove/Relocate/Archive/Merge/Compress/Supersede", "status": "pending"},
+  {"step": "Run behavior-preservation audit — 100% live items present or provably-superseded", "status": "pending"},
+  {"step": "Archive full prior version, sync to R2, verify round-trip", "status": "pending"},
+])
+
 
 > **v2.9 UPDATE (2026-08-02, kaizen — Skill-Space De-Bloat extension):**
 > Adds the Skill-Space De-Bloat protocol for SKILL.md files themselves (distinct from
