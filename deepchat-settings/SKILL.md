@@ -10,6 +10,15 @@ allowedTools:
   - deepchat_settings_open
 ---
 
+
+> **v1.1 UPDATE (2026-08-02, kaizen — restart automation):**
+> [HARD] Settings changes that require a DeepChat reload are now applied via
+> the restart helper: `python "<system>\scripts\restart-deepchat.py" --reason "settings changed"`.
+> DeepChat scans settings at startup only — some changes (theme, fonts, MCP
+> config) are invisible until restart. Always schedule a restart after a
+> material settings change. Cross-reference: system v2.6.
+
+
 # DeepChat Settings Modification Skill
 
 Use this skill to safely change DeepChat *application* settings during a conversation.

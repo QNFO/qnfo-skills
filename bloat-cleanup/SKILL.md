@@ -16,6 +16,14 @@ triggers:
 ---
 
 
+> **v2.8 UPDATE (2026-08-02, kaizen — restart automation):**
+> [HARD] agent_db_prune --vacuum requires DeepChat CLOSED. Use the restart
+> helper to close + relaunch: `python "<system>\scripts\restart-deepchat.py" --delay 5 --reason "agent.db VACUUM"`.
+> Also after pruning the agent DB, schedule a restart so the skill index is
+> rebuilt. Cross-reference: system v2.6, memory-management v1.1.
+
+
+
 > **v2.7 UPDATE (2026-08-02, kaizen — PowerShell deprecation + deep-bloat audit):**
 > [HARD] **POWERSHELL DEPRECATION (user mandate).** All 5 .ps1 scripts
 > (admin_watcher, trigger_admin, manage_watcher, quick_optimize, system_tune)

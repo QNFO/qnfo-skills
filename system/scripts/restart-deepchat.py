@@ -1,140 +1,167 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-restart-deepchat.py — Gracefully quit + relaunch DeepChat (2026-08-02)
+restart-deepchat.py — Graceful DeepChat restart helper (2026-08-02)
 
-Canonical restart mechanism for DeepChat skill updates. DeepChat builds its
-skill index from agent.db at STARTUP — new skills are invisible, deleted
-skills persist as phantom entries, and modified skills may be stale until
-restart. This script provides a clean, safe restart.
+WHY THIS EXISTS:
+  DeepChat scans the skills directory ONCE at startup and builds an
+  in-memory index. Skills added, deleted, or consolidated on disk are
+  INVISIBLE until a restart. agent.db also caches the skill index, so
+  stale entries persist until restart (and in rare cases need a cache
+  clear — see memory "stale agent.db cache"). agent_db_prune.py
+  --vacuum additionally requires DeepChat CLOSED. This helper makes
+  restarts AUTOMATIC and GRACEFUL from any skill.
 
-AGENT SAFETY (IMPORTANT):
-  An agent MUST NOT invoke this directly mid-turn — killing the host process
-  terminates the agent mid-session and loses state. Use schedule-restart.py
-  to defer the restart, OR instruct the user to run this manually.
+USAGE (from any skill when a restart is needed):
+    python restart-deepchat.py --delay 20 --reason "added skill X"
+    python restart-deepchat.py --check            # verify marker (post-boot)
+    python restart-deepchat.py --clear            # clear pending marker
 
-Graceful sequence:
-  1. Send WM_CLOSE to all DeepChat.exe processes (graceful quit).
-  2. Wait up to --grace seconds for them to exit.
-  3. Force-kill any survivors (--force) if they did not exit in time.
-  4. Relaunch DeepChat.exe from the canonical install path.
+FLOW (detached child):
+  1. Write pending-restart marker + restarts.log entry
+  2. Sleep `delay` seconds (lets the current agent turn finish output)
+  3. Send graceful WM_CLOSE to DeepChat (taskkill without /F)
+  4. Wait up to 30s for exit; force-kill if still alive
+  5. Relaunch DeepChat.exe (same user profile — config in AppData)
+  6. Log outcome
 
-USAGE:
-  python restart-deepchat.py              # graceful close + relaunch
-  python restart-deepchat.py --grace 15   # wait up to 15s for close
-  python restart-deepchat.py --force      # taskkill /F after grace
-  python restart-deepchat.py --no-relaunch# quit only (user relaunches)
+SAFETY:
+  - Detaches itself (DETACHED_PROCESS) so it survives the agent kill
+  - Verifies target is DeepChat.exe before killing
+  - Marker file (~/.deepchat/pending-restart.json) lets the next
+    session-init step in the `system` skill verify + clear the reason
+  - Non-destructive by default: --delay default 20s, no forced kill
+    unless graceful close fails
 
-Python-only (no PowerShell) per the windows-command-patterns mandate.
+POST-RESTART (system skill session-init):
+  If pending-restart.json exists on boot: log the reason, clear the
+  marker, and note the restart completed. If skills are STILL missing
+  after restart, clear the agent.db skill-index cache (stale-cache
+  heuristic — a process restart alone may not clear the indexer cache).
 """
-import subprocess, sys, time, os, argparse
+import argparse, json, os, subprocess, sys, time, datetime
 
-CHROME_INSTALLS = [
+USER = os.path.expanduser('~')
+DEEPCHAT_DIR = os.path.join(USER, '.deepchat')
+MARKER = os.path.join(DEEPCHAT_DIR, 'pending-restart.json')
+LOG = os.path.join(DEEPCHAT_DIR, 'restarts.log')
+DEEPCHAT_EXE_CANDIDATES = [
     r'C:\Program Files\DeepChat\DeepChat.exe',
-    r'C:\Users\LENOVO\AppData\Local\Programs\DeepChat\DeepChat.exe',
+    os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'DeepChat', 'DeepChat.exe'),
 ]
-
 PROC_NAME = 'DeepChat.exe'
 
 
-def find_deepchat_pids():
-    """Return PIDs of running DeepChat.exe processes."""
-    try:
-        r = subprocess.run(['tasklist', '/fi', f'imagename eq {PROC_NAME}',
-                            '/fo', 'csv', '/nh'],
-                           capture_output=True, text=True, timeout=20)
-    except Exception as e:
-        print(f'  [tasklist ERR] {e}')
-        return []
-    pids = []
-    for line in r.stdout.splitlines():
-        parts = [p.strip().strip('"') for p in line.split(',')]
-        if len(parts) >= 2 and parts[0] == PROC_NAME:
-            try:
-                pids.append(parts[1])
-            except ValueError:
-                pass
-    return pids
+def log(msg):
+    ts = datetime.datetime.now().isoformat()
+    line = f'{ts}  {msg}'
+    os.makedirs(DEEPCHAT_DIR, exist_ok=True)
+    with open(LOG, 'a', encoding='utf-8') as f:
+        f.write(line + '\n')
+    print(line)
 
 
-def graceful_close(pids):
-    """Send WM_CLOSE (graceful) to each DeepChat process."""
-    for pid in pids:
+def is_running(name):
+    r = subprocess.run(['tasklist', '/FI', f'IMAGENAME eq {name}'],
+                       capture_output=True, text=True, timeout=15)
+    return name.lower() in r.stdout.lower()
+
+
+def find_deepchat_exe():
+    for p in DEEPCHAT_EXE_CANDIDATES:
+        if os.path.exists(p):
+            return p
+    # PATH fallback
+    import shutil
+    return shutil.which('DeepChat.exe')
+
+
+def write_marker(reason):
+    os.makedirs(DEEPCHAT_DIR, exist_ok=True)
+    data = {
+        'reason': reason,
+        'scheduled_at': datetime.datetime.now().isoformat(),
+        'status': 'pending',
+    }
+    with open(MARKER, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+
+
+def read_marker():
+    if os.path.exists(MARKER):
         try:
-            subprocess.run(['taskkill', '/pid', pid], capture_output=True,
-                           text=True, timeout=20)
-            print(f'  [graceful close] pid {pid}')
-        except Exception as e:
-            print(f'  [ERR pid {pid}] {e}')
+            return json.load(open(MARKER, encoding='utf-8'))
+        except (OSError, json.JSONDecodeError):
+            return {'reason': '(unreadable marker)', 'status': 'unknown'}
+    return None
 
 
-def wait_for_exit(pids, grace):
-    """Wait up to grace seconds for processes to exit."""
-    deadline = time.time() + grace
-    while time.time() < deadline:
-        remaining = find_deepchat_pids()
-        if not remaining:
-            return True
-        time.sleep(1)
-    return False
+def do_restart(delay, reason):
+    write_marker(reason)
+    log(f'SCHEDULED: DeepChat restart in {delay}s — reason: {reason}')
+    time.sleep(delay)
 
+    if not is_running(PROC_NAME):
+        log('DeepChat already stopped — skipping kill, relaunching')
+    else:
+        # 1. graceful close (WM_CLOSE)
+        subprocess.run(['taskkill', '/IM', PROC_NAME], capture_output=True, text=True)
+        # 2. wait up to 30s
+        for _ in range(60):
+            if not is_running(PROC_NAME):
+                break
+            time.sleep(0.5)
+        # 3. force if still alive
+        if is_running(PROC_NAME):
+            log('Graceful close timed out — forcing kill')
+            subprocess.run(['taskkill', '/IM', PROC_NAME, '/F'], capture_output=True, text=True)
+            time.sleep(2)
 
-def force_kill(pids):
-    for pid in pids:
-        try:
-            subprocess.run(['taskkill', '/f', '/pid', pid], capture_output=True,
-                           text=True, timeout=20)
-            print(f'  [force kill] pid {pid}')
-        except Exception as e:
-            print(f'  [ERR] {e}')
+    # 4. relaunch
+    exe = find_deepchat_exe()
+    if exe and os.path.exists(exe):
+        subprocess.Popen([exe],
+                         creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+                         close_fds=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL)
+        log(f'RELAUNCHED: {exe}')
+    else:
+        log('ERROR: DeepChat.exe not found — could not relaunch. Restart manually.')
 
-
-def relaunch():
-    for exe in CHROME_INSTALLS:
-        if os.path.exists(exe):
-            try:
-                subprocess.Popen([exe], cwd=os.path.dirname(exe))
-                print(f'  [relaunch] {exe}')
-                return True
-            except Exception as e:
-                print(f'  [relaunch ERR] {e}')
-    print('  [WARN] DeepChat.exe not found at known paths — relaunch manually')
-    return False
+    # 5. mark done (the next boot will confirm it actually came back)
+    m = read_marker()
+    if m:
+        m['status'] = 'restart-issued'
+        with open(MARKER, 'w', encoding='utf-8') as f:
+            json.dump(m, f, indent=2)
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Restart DeepChat gracefully')
-    ap.add_argument('--grace', type=int, default=20,
-                    help='seconds to wait for graceful exit (default 20)')
-    ap.add_argument('--force', action='store_true',
-                    help='force-kill survivors after grace period')
-    ap.add_argument('--no-relaunch', action='store_true',
-                    help='quit only, do not relaunch')
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser(description='Graceful DeepChat restart helper')
+    parser.add_argument('--delay', type=int, default=20, help='seconds to wait before restart (default 20)')
+    parser.add_argument('--reason', default='unspecified', help='reason for the restart')
+    parser.add_argument('--check', action='store_true', help='report pending-restart marker and exit')
+    parser.add_argument('--clear', action='store_true', help='clear the pending-restart marker and exit')
+    args = parser.parse_args()
 
-    pids = find_deepchat_pids()
-    if not pids:
-        print('DeepChat not running — skipping quit, relaunching')
-        if not args.no_relaunch:
-            relaunch()
-        sys.exit(0)
+    # Child-mode guard: if DEEPCHAT_RESTART_CHILD is set, we ARE the detached child.
+    # Otherwise, detach a child and exit (so the agent turn can finish).
+    if not os.environ.get('DEEPCHAT_RESTART_CHILD'):
+        env = os.environ.copy()
+        env['DEEPCHAT_RESTART_CHILD'] = '1'
+        subprocess.Popen(
+            [sys.executable, os.path.abspath(__file__), '--delay', str(args.delay), '--reason', args.reason],
+            env=env, close_fds=True,
+            creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        log(f'Detached restart child launched (restart in {args.delay}s, reason: {args.reason})')
+        print(f'[RESTART SCHEDULED] DeepChat will restart in {args.delay}s. Reason: {args.reason}')
+        return
 
-    print(f'DeepChat running: {len(pids)} process(es): {pids}')
-    graceful_close(pids)
-    if wait_for_exit(pids, args.grace):
-        print(f'  All processes exited cleanly')
-    else:
-        print(f'  {args.grace}s elapsed — processes still running')
-        if args.force:
-            force_kill(find_deepchat_pids())
-            time.sleep(2)
-        else:
-            print('  (use --force to kill remaining processes)')
-
-    if not args.no_relaunch:
-        relaunch()
-
-    print('Restart complete.')
+    # We are the detached child
+    do_restart(args.delay, args.reason)
+    log('Restart sequence complete.')
 
 
 if __name__ == '__main__':

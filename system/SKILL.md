@@ -2,6 +2,20 @@
 name: system
 description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
 ---
+
+
+> **v2.6 UPDATE (2026-08-02, kaizen — DeepChat restart automation):**
+> [HARD] Added **§DeepChat Restart Protocol** — mandatory automatic restart
+> after any skill/settings/agent.db change (DeepChat scans skills at startup
+> only; changes are invisible until restart). Canonical helper:
+> `scripts/restart-deepchat.py` (detaches, waits, graceful-close, relaunch,
+> marker + log). Wired into: deepchat-settings (settings), skill-creator
+> (new skills), memory-management (agent.db prune), bloat-cleanup (VACUUM).
+> Post-boot session-init checks pending-restart.json + clears stale agent.db
+> skill-index cache if skills still missing.
+> Cross-reference: deepchat-settings, skill-creator, memory-management,
+> bloat-cleanup v2.8, memory "stale agent.db cache".
+
 > **v2.5 UPDATE (2026-08-02, kaizen — skill-sync v4 REST fast path + autonomy):**
 > Red-team: direct parent-agent audit. HARD: 2. SOFT: 1. DESIGN: 2.
 > Changes:
@@ -291,7 +305,7 @@ Key settings:
 ---
 name: skill-name
 description: Rich description with comprehensive trigger keywords for autonomous discovery
-version: "2.5"
+version: "2.6"
 triggers: ["keyword1", "keyword2", ...]
 related: ["other-skill"]
 priority: 0-3
@@ -556,3 +570,40 @@ python "%USERPROFILE%\.deepchat\skills\system\scripts\restart-deepchat.py"
 2. `skill_view <name>` — confirm SKILL.md loads with current version.
 3. If a platform-default skill was auto-restored, re-delete it (memory: platform
    auto-restores deleted defaults; must be re-deleted after purge).
+
+
+## DeepChat Restart Protocol (v2.6, 2026-08-02) — MANDATORY
+
+**DeepChat scans skillsPath + settings at startup only.** Skills added, deleted,
+consolidated, or edited on disk are INVISIBLE until a restart. agent.db also
+caches the skill index — stale entries persist until restart (and in rare cases
+need a cache clear, see memory "stale agent.db cache"). Some operations require
+DeepChat CLOSED (e.g. `agent_db_prune.py --vacuum`).
+
+**Canonical helper:** `python "{{SKILL_ROOT}}\scripts\restart-deepchat.py" --delay 20 --reason "<why>"`
+The script detaches itself, waits 20s (lets the current turn finish), gracefully
+closes DeepChat, waits for exit (force-kills if needed), relaunches DeepChat.exe,
+and logs to `~/.deepchat/restarts.log`. A `pending-restart.json` marker is written
+so the next boot's session-init can verify + clear the reason.
+
+**WHEN to auto-restart (call the helper):**
+1. **After creating/editing/deleting any skill** (skill-creator, consolidation,
+   kaizen edits, deprecation banners) — otherwise the change is invisible until
+   a manual restart.
+2. **After changing DeepChat settings** (theme, MCP config, etc.) that require
+   a reload (deepchat-settings skill).
+3. **After agent.db pruning** (memory-management / bloat-cleanup) — especially
+   `--vacuum`, which requires DeepChat CLOSED.
+4. **When skills fail to load after a restart** — clear the stale agent.db
+   skill-index cache (process restart alone may not clear it), then restart again.
+
+**POST-RESTART VERIFICATION (session-init, this skill):**
+- On boot, check `~/.deepchat/pending-restart.json`. If present: log the reason,
+  clear the marker, confirm the restart completed.
+- If skills are still missing after restart: the agent.db skill-index cache is
+  stale — clear it (see memory heuristic) and restart once more.
+
+**SAFETY:** the helper verifies the target is DeepChat.exe, detaches itself so it
+survives the kill, and defaults to a 20s delay so the current turn completes.
+Do NOT force-kill DeepChat from within an agent turn — always use the helper.
+

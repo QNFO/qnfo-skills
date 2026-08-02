@@ -4,6 +4,14 @@ version: "1.0"
 description: Guide the agent to recall, remember, and route durable learning into Memory, Skills, Scheduled Tasks, or Tape.
 ---
 
+
+> **v1.1 UPDATE (2026-08-02, kaizen — restart after prune):**
+> [HARD] agent.db pruning / VACUUM changes the skill index. Schedule a restart
+> after any prune so DeepChat re-reads the DB: `python "<system>\scripts\restart-deepchat.py" --reason "agent.db pruned"`.
+> `--vacuum` specifically requires DeepChat CLOSED — the helper handles the
+> close/relaunch sequence. Cross-reference: system v2.6, bloat-cleanup v2.8.
+
+
 # Memory Management
 
 > **STALE AGENT.DB CACHE (2026-08-02):** When DeepChat skills fail to load after

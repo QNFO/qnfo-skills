@@ -4,6 +4,15 @@ version: "1.1"
 description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends the agent's capabilities with specialized knowledge, workflows, or tool integrations.
 license: Complete terms in LICENSE.txt
 ---
+
+
+> **v1.2 UPDATE (2026-08-02, kaizen — restart on skill create):**
+> [HARD] New/edited skills are INVISIBLE until DeepChat restarts (it scans
+> skillsPath at startup only). After creating or materially editing a skill,
+> schedule a restart: `python "<system>\scripts\restart-deepchat.py" --reason "created/updated skill <name>"`.
+> This makes the skill visible to skill_list/skill_view in the next session.
+> Cross-reference: system v2.6.
+
 > **v1.1 UPDATE (2026-07-30, kaizen):**
 > Red-team audit: direct parent-agent 5-adversary review.
 > HARD: added version header + .kaizen_history. SOFT: generalized "Claude" â†’ "the agent"
