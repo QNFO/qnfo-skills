@@ -1089,7 +1089,7 @@ dated, falsifiable claims about skill drift risk.
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
   must be tuned to the user's timezone and agent configuration.
-- The research skill (currently v2.44) is actively evolving; the canonical
+- The research skill (currently v2.45) is actively evolving; the canonical
   case study claim may need updating when research reaches v3.0.
 Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
@@ -1098,7 +1098,7 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
-- Research skill is at v2.44 with many version banners — high drift surface area
+- Research skill is at v2.45 with many version banners — high drift surface area
 - Cloudflare MCP servers may versions-shift independently
 Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
