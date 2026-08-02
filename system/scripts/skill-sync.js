@@ -4,6 +4,15 @@
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.6 (2026-08-02, kaizen — chunk check-ignore call; Windows cmd line limit)
+ * v4.0.5 (2026-08-02, kaizen — normalize git paths to forward slashes; check-ignore sep mismatch)
+ * v4.0.4 (2026-08-02, kaizen — check-ignore arg form; --stdin no-op on Windows)
+ * v4.0.3 (2026-08-02, kaizen — git add ignored-file filter)
+ * v4.0.2 (2026-08-02, kaizen — R2 GET-cache verify fix)
+ *   - verify via PUT response result.size; R2 GET is edge-cached (HIT stale body)
+ * v4.0.1 (2026-08-02, kaizen — git-scope HARD fix): git commit now adds EXACTLY the
+ *   walkFiles output (identical to R2 upload set) + .gitignore + skill-sync.js itself.
+ *   `git add -A` swept strays twice (cbc5f7f .bak; 2d54bd3 .wrangler/__pycache__/.lastActivity).
  * v4.0.0 (2026-08-02, kaizen — REST fast path + autonomy):
  *   - HARD FIX: replaced `npx --yes --package wrangler@latest` per-file (pathological:
  *     npx cold-start per file, wrangler re-resolution, 90s timeout each, WinError 2 in
@@ -27,7 +36,7 @@
  *     skipped, idempotent re-runs.
  *   - --targets filter, per-file retry, failure cause classification.
  *
- * @version 4.0.0
+ * @version 4.0.6
  * @date 2026-08-02
  */
 
@@ -82,6 +91,8 @@ function walkFiles(dir, base) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name.startsWith('.')) continue;                 // hidden (incl. .kaizen_history)
     if (/\.bak(?:-\d{8})?$/i.test(entry.name)) continue;       // backup files (v4)
+    if (entry.name === '__pycache__') continue;               // py build cache
+    if (entry.isFile() && entry.name.endsWith('.pyc')) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out = out.concat(walkFiles(full, base));
     else out.push(path.relative(base, full).replace(/\\/g, '/'));
@@ -102,16 +113,16 @@ async function r2Put(key, localPath) {
   if (!resp.ok) return { ok: false, cause: `HTTP ${resp.status}` };
   const d = await resp.json().catch(() => ({}));
   if (!d.success) return { ok: false, cause: (d.errors || []).map(e => e.message).join(',') || 'r2:success=false' };
+  // v4.0.2: verify via the PUT response's echoed size (R2 result.size) — NOT a follow-up
+  // GET. The R2 object GET goes through an edge cache (CF-Cache-Status: HIT can return
+  // a STALE body: measured 9,316B after PUT stored 11,047B; Cache-Control request
+  // headers don't bypass it; ?query cache-bust returns 404). The PUT response's
+  // result.size is the authoritative byte count of what R2 stored.
+  const stored = parseInt(d.result && d.result.size, 10);
+  if (Number.isFinite(stored) && stored !== stat.size) {
+    return { ok: false, cause: `size-mismatch stored=${stored} local=${stat.size}` };
+  }
   return { ok: true, size: stat.size };
-}
-
-async function r2Verify(key, size) {
-  const resp = await fetch(`${API}/accounts/${ACCOUNT}/r2/buckets/${BUCKET}/objects/${encodeURIComponent(key)}`, {
-    headers: { 'Authorization': `Bearer ${TOKEN}` },
-  });
-  if (!resp.ok) return false;
-  const buf = await resp.arrayBuffer();
-  return buf.byteLength === size;
 }
 
 // simple concurrency pool
@@ -150,11 +161,53 @@ async function pool(items, worker, concurrency) {
   if (!TOKEN) { console.error('✗ CLOUDFLARE_API_TOKEN not found (env, ~/.cloudflare_token, ~/keys.json)'); process.exit(2); }
   console.log('✓ Token found (REST path — no npx/wrangler)');
 
-  // 1. Git sync (scoped: .gitignore protects *.bak-*; add skill dirs + root docs + system/scripts)
+  // skills enumeration (needed by BOTH git sync and R2 sync — declare before git)
+  const skills = fs.readdirSync(skillsRoot, { withFileTypes: true })
+    .filter(d => d.isDirectory() && !d.name.startsWith('.') && fs.existsSync(path.join(skillsRoot, d.name, 'SKILL.md')))
+    .map(d => d.name)
+    .filter(s => !targets || targets.includes(s))
+    .sort();
+
+  // 1. Git sync — v4.0.1 (HARD fix): commit EXACTLY the files being R2-synced.
+  //    `git add -A` swept unrelated strays twice (cbc5f7f .bak-20260802; 2d54bd3
+  //    .wrangler/__pycache__/.lastActivity/stray PDFs). Now we git-add the precise
+  //    walkFiles output (same set as R2 upload) + root .gitignore, so the git
+  //    commit and R2 upload are identical by construction.
   if (!skipGit) {
     console.log('--- Git sync ---');
     try {
-      execSync('git add -A', { cwd: skillsRoot, stdio: 'pipe' });
+      const gitAddPaths = [];
+      for (const skill of skills) {
+        const skillDir = path.join(skillsRoot, skill);
+        for (const rel of walkFiles(skillDir)) {
+          gitAddPaths.push(path.join(skill, rel).replace(/\\/g, '/'));  // forward slashes for git
+        }
+      }
+      const gi = path.join(skillsRoot, '.gitignore');
+      if (fs.existsSync(gi)) gitAddPaths.push('.gitignore');
+      gitAddPaths.push('system/scripts/skill-sync.js');
+      // Filter out gitignored files (e.g. *.log history files) so `git add` doesn't
+      // fail on "paths are ignored by your .gitignore" (v4.0.3). Batch via check-ignore.
+      // v4.0.6: chunk the check-ignore call (50/chunk like git add) — passing all
+      // ~280 paths at once exceeded the Windows 8191-char command-line limit, making
+      // execSync throw and the catch keep every path (git add then failed on ignored
+      // *.log). check-ignore arg form prints ignored paths; --stdin is a no-op on Windows.
+      const ignored = new Set();
+      for (let i = 0; i < gitAddPaths.length; i += 50) {
+        const chunk = gitAddPaths.slice(i, i + 50);
+        try {
+          const ci = execSync(['git', 'check-ignore', '--', ...chunk].join(' '), {
+            cwd: skillsRoot, stdio: 'pipe',
+          }).toString().split(/\r?\n/).filter(Boolean);
+          ci.forEach(x => ignored.add(x.replace(/\\/g, '/')));
+        } catch (e) { /* chunk has no ignored files (exit 1) or other — keep chunk */ }
+      }
+      const nonIgnored = gitAddPaths.filter(p => !ignored.has(p));
+      // chunk args to avoid Windows command-line length limits
+      for (let i = 0; i < nonIgnored.length; i += 50) {
+        const chunk = nonIgnored.slice(i, i + 50);
+        execSync(['git', 'add', '--', ...chunk].join(' '), { cwd: skillsRoot, stdio: 'pipe' });
+      }
       try {
         execSync('git commit -m "ACTION:SYNC FILES: skills/* RATIONALE: automated skill-sync.js v4 run -- propagate local SKILL.md/script edits to git history"', { cwd: skillsRoot, stdio: 'pipe' });
         console.log('✓ Git commit created');
@@ -169,11 +222,6 @@ async function pool(items, worker, concurrency) {
   // 2. R2 sync
   console.log('\n--- R2 sync ---');
   const state = loadState();
-  const skills = fs.readdirSync(skillsRoot, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith('.') && fs.existsSync(path.join(skillsRoot, d.name, 'SKILL.md')))
-    .map(d => d.name)
-    .filter(s => !targets || targets.includes(s))
-    .sort();
 
   console.log(`Found ${skills.length} skills to sync${force ? ' (--force: ignoring cached hashes)' : ''}`);
 
@@ -195,7 +243,7 @@ async function pool(items, worker, concurrency) {
   const failureCauses = {};
 
   await pool(jobs, async (job) => {
-    const res = await r2Put(job.key, job.full);
+    let res = await r2Put(job.key, job.full);
     if (!res.ok) {
       // one retry for transient failures
       const r2 = await r2Put(job.key, job.full);
@@ -204,10 +252,7 @@ async function pool(items, worker, concurrency) {
         failureCauses[job.key] = r2.cause || 'unknown';
         return;
       }
-    }
-    if (verify) {
-      const ok = await r2Verify(job.key, res.size);
-      if (!ok) { failed++; failureCauses[job.key] = 'verify-failed'; return; }
+      res = r2;  // use retry's size for verification
     }
     state.files[job.key] = job.hash;
     uploaded++;
