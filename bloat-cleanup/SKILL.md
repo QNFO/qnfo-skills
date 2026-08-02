@@ -15,6 +15,69 @@ triggers:
 - optimize Windows
 ---
 
+> **v2.9 UPDATE (2026-08-02, kaizen — Skill-Space De-Bloat extension):**
+> Adds the Skill-Space De-Bloat protocol for SKILL.md files themselves (distinct from
+> OS/disk bloat). Canonical case: research skill v2.45→v2.46 (2,022→531 lines, 75%
+> reduction, core pipeline preserved, bloat_ratio ~0.60→~0.05). Bloat categories:
+> version banners (>3 → collapse), deleted-script refs (>0 → remove), duplicate mandates
+> (>1 copy → umbrella), historical pipelines (>1 gen → HISTORY.md), anti-pattern rows
+> (>50 → trim to 12 months), specification tables (>1 page → references/ file).
+> bloat_ratio formula: (banner_lines + deleted_ref_lines + duplicate_mandate_lines +
+> historical_pipeline_lines + archived_antipattern_rows×3) / total_lines. Threshold >0.30
+> → de-bloat required. De-bloat removes ONLY non-executable metadata; executable pipeline
+> (phases, gates, protocols) preserved byte-for-byte. Archive full prior version to
+> deploy/history/ before replacing SKILL.md. Sync de-bloated skill to R2 + verify round-trip.
+
+## Skill-Space De-Bloat (NEW — HARD)
+
+### Bloat Categories & Thresholds
+
+| Category | Threshold | Research v2.45 case | Remediation |
+|:---------|:----------|:--------------------|:------------|
+| Version banners | >3 | 22 (~400 lines) | Collapse to latest + 1-line prior link → HISTORY.md |
+| Deleted-script refs | >0 | 5 scripts | Remove; cross-ref living scripts only |
+| Duplicate mandates | >1 copy | 4× Anti-Phantom Gate | 1 umbrella section + per-phase cross-refs |
+| Historical pipelines | >1 gen | 3 PDF pipelines | Retire to HISTORY.md; keep canonical only |
+| Anti-pattern rows | >50 | ~80 | Trim to last 12 months; archive rest |
+| Specification tables | >1 page | 37-field Zenodo dict | Move to references/ file |
+| Executable protocol | — | ~800 lines core | KEEP — never remove executable pipeline |
+
+### De-Bloat Protocol
+
+1. Measure: compute bloat_ratio per formula below.
+2. Categorize: map every non-executable line to a bloat category.
+3. Remediate: collapse/remove/archive per table above.
+4. Verify: re-measure; target bloat_ratio < 0.30; executable core intact.
+5. Archive: write deploy/history/ with full prior content.
+6. Sync: version-bump + R2 upload (`qnfo/prompts/skills/<name>/SKILL.md`).
+7. Verify round-trip: download from R2, compare hash.
+
+### bloat_ratio Formula (DESIGN)
+
+```
+bloat_ratio = (version_banner_lines + deleted_ref_lines + duplicate_mandate_lines
+               + historical_pipeline_lines + archived_antipattern_rows×3) / total_lines
+```
+Threshold: >0.30 → de-bloat required. Research v2.45: ~0.60 (bloated) → v2.46: ~0.05 (clean).
+
+### Canonical Case — Research Skill v2.45→v2.46 (2026-08-02)
+
+| Metric | v2.45 (before) | v2.46 (after) | Δ |
+|:-------|:---------------|:--------------|:--|
+| Total lines | 2,022 | 531 | **-75%** |
+| Version banners | 22 | 1 | -21 |
+| Anti-pattern rows | ~80 | 21 | -59 |
+| Deleted-script refs | 5 | 0 | -5 |
+| Duplicate mandates | 4× | 1× | -3 |
+| bloat_ratio | ~0.60 | ~0.05 | -0.55 |
+| Core pipeline | ~800 lines | ~800 lines | **0 (intact)** |
+| KIF-29 HARD upgrade | absent | present | +1 gate |
+
+**Lesson:** De-bloat removes ONLY non-executable metadata. The executable pipeline
+(Phases 0-8, gates, protocols) is preserved byte-for-byte. Version history moves to
+deploy/history/, never deleted.
+
+
 
 > **v2.8 UPDATE (2026-08-02, kaizen — restart automation):**
 > [HARD] agent_db_prune --vacuum requires DeepChat CLOSED. Use the restart
