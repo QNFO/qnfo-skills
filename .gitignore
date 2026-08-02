@@ -4,6 +4,17 @@
 *.tmp
 *.log
 
-# Local state
+# Local state / caches
 .deepchat/
 node_modules/
+.wrangler/
+__pycache__/
+*.pyc
+.lastActivity
+.commit_msg*
+*.wrangler/
+
+# Stray temp files in repo root
+commit_msg*.txt
+probe_*.py
+*.offload
