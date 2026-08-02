@@ -322,7 +322,7 @@ exec python C:\path\to\script.py arg1 arg2
 exec curl.exe -s https://api.example.com
 exec git -C C:\path status
 exec npx wrangler d1 list
-exec pandoc input.md -o output.pdf --pdf-engine=xelatex
+exec python build-pdf-pro.py input.md output.pdf --title "..."  # canonical pipeline (MathJax-SVG)
 ```
 
 ### CMD (for cmd-native operations)

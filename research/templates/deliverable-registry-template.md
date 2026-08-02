@@ -17,9 +17,9 @@
 | D-6.2 | R2 archive copy | 6 | Files | `releases/<YYYY>/<MM>/<slug>/` | Cloudflare R2 | pending | |
 | D-7.1 | SEO artifacts | 7 | Various | `robots.txt`, `sitemap.xml`, `llms.txt` | papers.qnfo.org | pending | |
 | D-7.2 | Social media posts | 7 | Buffer drafts | -- | Buffer (Twitter/LinkedIn/Bluesky) | pending | |
-| D-8.1 | IPFS CID | 8 | CID string | `ipfs-cids.json` | Pinata, D1, KG | pending | |
+| D-8.1 | IPFS CID | 8 | CID string | `ipfs-cids.json` | R2, D1, KG | pending | |
 | D-8.2 | DNSLink record | 8 | DNS TXT | -- | Cloudflare DNS | pending | |
-| D-8.3 | Arweave TX (optional) | 8 | TX ID | -- | Arweave | pending | Requires funded AR wallet |
+| D-8.3 | R2 TX (optional) | 8 | TX ID | -- | R2 | pending | Requires funded AR wallet |
 
 **Status values:** `draft` -> `in-progress` -> `pending-review` -> `archived` -> `verified`
 

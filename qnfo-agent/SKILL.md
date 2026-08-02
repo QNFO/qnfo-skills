@@ -606,7 +606,7 @@ At the close of every project phase (Phase 0, 1, 2, ... in the WBS):
 
 When a project or major deliverable reaches its final/publication form:
 1. All of the above (per-turn + phase-end) must already be satisfied — this step does NOT substitute for them
-2. Build final-form PDF (Pandoc+XeLaTeX per §7) and upload to the Zenodo deposit alongside the source markdown
+2. Build final-form PDF (via `build-pdf-pro.py`, the canonical MathJax-SVG pipeline) and upload to the Zenodo deposit alongside the source markdown
 3. Pin the PDF to IPFS; record the CID
 4. Promote via social media per the `research` skill's Buffer integration (dissemination is expected for final public deliverables, not for interim working artifacts)
 

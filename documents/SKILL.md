@@ -200,7 +200,7 @@ Each `##` becomes a new slide. Lists become bullet points. Tables become formatt
 | **Create** | Generate new PDF from scratch | Add pages -> draw text/images -> save |
 
 ### Limitations
-- **NOT for publication-grade builds.** Use `research` skill for Pandoc+XeLaTeX PDFs.
+- **NOT for publication-grade builds.** Use `research` skill + `build-pdf-pro.py` (canonical MathJax-SVG pipeline).
 - Scanned PDFs need OCR for text extraction (not included -- handle as images).
 - Complex formatting (multi-column, floating elements) may not extract perfectly.
 - Encrypted/DRM PDFs cannot be processed.
@@ -239,7 +239,7 @@ generating a PDF directly from this skill.
 | Creating documents without verification | Always Test-Path + check content |
 | Losing formulas during .xlsx edits | Use formula-preserving edit paths |
 | Wrong file extension | Match: .docx/.pptx/.xlsx/.csv/.pdf |
-| Using this skill for publication PDFs | Use `research` skill for Pandoc+XeLaTeX, or the Springer Nature LaTeX template (`sn-jnl.cls`) for LaTeX-native journal papers |
+| Using this skill for publication PDFs | Use `research` skill + `build-pdf-pro.py` (canonical), or Springer Nature LaTeX template (`sn-jnl.cls`) for LaTeX-native journal papers |
 | Cross-skill document confusion | Documents -> R2 archive -> Papers (via research pipeline) |
 | Delivering a .docx/.pptx/.xlsx with informal tone, contractions, or AI-generated-sounding filler phrasing | Apply the same Professional Publication Standards bar as research papers (see above) -- format does not exempt content from the professional-quality gate |
 \n\n## R2 Archival Script\n`js\n// _r2_archive.js — Archive any document to R2 for durable storage\nconst TOKEN = process.env.CLOUDFLARE_API_TOKEN;\nconst ACCOUNT = '...';\nconst BUCKET = 'qnfo';\nconst KEY = 'documents/filename.ext';\nconst content = '...'; // file content\n\nawait fetch('https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + '/r2/buckets/' + BUCKET + '/objects/' + encodeURIComponent(KEY), {\n  method: 'PUT',\n  headers: { 'Authorization': 'Bearer ' + TOKEN },\n  body: content\n});\n// Verify: GET same URL returns 200 with content\n// Alt: npx wrangler r2 object put qnfo/{KEY} --file {path} --remote\n`

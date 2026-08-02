@@ -256,7 +256,7 @@ uses UTF-8 by default. Use Python.**
 | Skill | Where | What |
 |:------|:------|:------|
 | `windows-command-patterns` | §1.0 | Python-First Decision Tree, encoding protocol |
-| `research` | Phase 5 PDF Building | Use `build-paper.py` (Python, UTF-8 explicit) |
+| `research` | Phase 5 PDF Building | Use `build-pdf-pro.py` (MathJax-SVG -> puppeteer CDP, canonical 2026-08-02) |
 | `research` | Phase 6 D1 Insert | Python script with `urllib.request`, not PS inline |
 | `git-github` | All operations | `exec git ...` directly, or Python `subprocess.run` |
 | **All skills** | Before ANY `exec` | Run the §1.0 decision tree. PS = LAST RESORT |

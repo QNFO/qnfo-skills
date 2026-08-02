@@ -19,7 +19,7 @@ param(
 
 $QueueDir = 'C:\Users\LENOVO\.deepchat\admin_queue'
 $SkillDir = 'C:\Users\LENOVO\.deepchat\skills\bloat-cleanup\scripts'
-$DC_EXE = 'C:\Users\LENOVO\AppData\Local\Programs\DeepChat\DeepChat.exe'
+$DC_EXE = 'C:\Program Files\DeepChat\DeepChat.exe'
 
 if (-not (Test-Path $QueueDir)) { New-Item -ItemType Directory -Path $QueueDir -Force | Out-Null }
 

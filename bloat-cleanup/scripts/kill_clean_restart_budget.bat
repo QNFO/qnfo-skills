@@ -6,7 +6,7 @@
 :: ============================================================
 
 set "SKILL_DIR=%~dp0.."
-set "DC_EXE=C:\Users\LENOVO\AppData\Local\Programs\DeepChat\DeepChat.exe"
+set "DC_EXE=C:\Program Files\DeepChat\DeepChat.exe"
 set "QUEUE_DIR=%USERPROFILE%\.deepchat\admin_queue"
 
 echo.

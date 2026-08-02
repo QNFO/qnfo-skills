@@ -67,9 +67,7 @@ def main():
         (os.path.join(user, "AppData", "Roaming", "discord", "Cache"), "Discord Cache"),
     ]
 
-    # TexLive docs/source
     for d in ["doc", "source"]:
-        cleanable.append((os.path.join(r"c:\texlive\2025\texmf-dist", d), f"TexLive {d}/"))
 
     # Crash dumps
     for p in [r"C:\Windows\Minidump", r"C:\Windows\MEMORY.DMP",

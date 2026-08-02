@@ -1,6 +1,6 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; MathJax-SVG + CDP (build-pdf-pro.py) for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
 version: "2.45"
@@ -446,7 +446,7 @@ self_sufficient: true
 > 4 kaizen passes, including one wrong detour. Replaced with ONE script:
 > `scripts/build-paper.py` (preprocess + build + verify, UTF-8 forced on
 > all file I/O to prevent mojibake -- see `qnfo-agent` §8.7). Usage:
-> `python scripts/build-paper.py <slug>.md`. Independently re-verified
+> `python build-pdf-pro.py <slug>.md <slug>.pdf --title "..."`. Independently re-verified
 > against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
 > U+FFFF across 16 pages, checked with a separate verification script
 > (never trust the build tool's own success claim).
@@ -1678,7 +1678,7 @@ misinterpret as a second frontmatter block. Before building, count `---`
 occurrences on their own line at column 0:
 ```bash
 # Windows: write this to _yaml_check.py, then `python _yaml_check.py`; never inline python -c
-# Build-paper.py handles this automatically -- prefer: python scripts/build-paper.py <slug>.md
+# build-pdf-pro.py handles this automatically -- prefer: python build-pdf-pro.py <slug>.md <slug>.pdf
 python _yaml_check.py
 ```
 Where `_yaml_check.py` contains:
@@ -1897,6 +1897,13 @@ Zenodo archives, D1 inserts, and all downstream distribution channels.
 A single U+FFFD in source can survive through Pandoc, XeLaTeX, Zenodo,
 and IPFS, producing a permanently corrupted public artifact.
 
+> **RETIRED (2026-08-02): XeLaTeX + build-paper.py pipeline is SUPERSEDED.**
+> TeX Live was uninstalled (all engines removed). The canonical PDF pipeline is
+> **`build-pdf-pro.py`** (MathJax-SVG -> puppeteer CDP, STIX fonts, page numbers) —
+> see the ODR repo. The sections below are retained as historical audit trail only.
+> **DO NOT invoke xelatex/pdflatex/build-paper.py** — they no longer exist on this
+> machine. Use: `python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Title>"`.
+
 ### PDF Building
 
 **DEFAULT TEMPLATE (MANDATORY, 2026-07-25): the Springer Nature LaTeX
@@ -1923,21 +1930,33 @@ substantive revision.
 
 **For Markdown-native publications** (papers authored and maintained as
 `<slug>.md` rather than `paper.tex` -- e.g., most QNFO working papers prior
-to journal submission), continue using Pandoc+XeLaTeX per the pipeline
-below. Convert to the Springer Nature LaTeX template at the point of
+to journal submission), use the MathJax-SVG + CDP pipeline (ODR repo `build-pdf-pro.py`: pandoc `--mathjax` -> HTML -> MathJax SVG -> headless Chrome print-to-PDF) -- the mandated publication process since 2026-08-02 (XeLaTeX retired, TeX Live uninstalled). See MATHJAX_CDP_PDF_BUILD.md in the ODR repo. The legacy XeLaTeX pipeline below is SUPERSEDED and retained for LaTeX-native submissions only. Convert to the Springer Nature LaTeX template at the point of
 formal journal submission, or immediately if the target venue requires
 LaTeX source at all revision stages.
 
-**CANONICAL SOLUTION (v2.21, KIF-27):** A single script does everything:
-preprocess Unicode math to LaTeX math mode, build the PDF, and verify zero
-rendering errors. This replaces three previously fragmented scripts
-(`unicode-latex-preprocess.py`, `check-pdf.py`, `build-pdf.py` -- all
-DELETED as of v2.21).
+**SUPERSEDED (2026-08-02) — XeLaTeX route DEPRECATED:** The pipeline below
+(`build-paper.py` + Pandoc/XeLaTeX) is RETIRED. TeX Live was uninstalled
+2026-08-02 — xelatex no longer exists on the canonical QNFO machine. Use the
+**MathJax-SVG + CDP pipeline** (`build-pdf-pro.py` in the ODR repo, or the
+papers.qnfo.org gateway worker) for all Markdown-native PDFs. See
+`MATHJAX_CDP_PDF_BUILD.md` (ODR repo) for the consolidated process. The
+section below is retained for historical record and legacy LaTeX-native work only.
+
+**LEGACY (v2.21, KIF-27 — retained for LaTeX-native submissions only):** The
+old single-script approach preprocessed Unicode math to LaTeX math mode, built
+the PDF, and verified zero rendering errors. It replaced three fragmented
+scripts (`unicode-latex-preprocess.py`, `check-pdf.py`, `build-pdf.py` -- all
+DELETED as of v2.21). For LaTeX-native (`.tex`) submissions to journals that
+require LaTeX source, use the Springer Nature `sn-jnl.cls` template directly
+via `pdflatex` (see the template README). Do NOT use this route for
+Markdown-native papers.
 
 ```bash
-python scripts/build-paper.py <slug>.md
-# or with explicit output path:
-python scripts/build-paper.py <slug>.md --output <slug>.pdf
+# LEGACY route — build-paper.py was DEPRECATED and its pipeline retired (2026-08-02).
+# TeX Live is UNINSTALLED — xelatex/pdflatex/build-paper.py do not exist on this machine.
+# Canonical pipeline for ALL Markdown-native papers:
+python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Paper Title>"
+# LaTeX-native journal submission: reinstall TeX Live, then use sn-jnl.cls + pdflatex.
 ```
 
 > **Slug-based naming (v2.38):** Paper files MUST use the project slug, NOT generic `paper.md`/`paper.pdf` names. For project `computing-machines`, the files are `computing-machines.md` and `computing-machines.pdf`. This prevents confusion when multiple paper repos are cloned in the same temp directory. Generic `paper.md` naming is an anti-pattern (see Anti-Patterns table).
@@ -1954,12 +1973,15 @@ This single command:
 3. Groups consecutive subscript/superscript characters into a single
   `_{...}`/`^{...}` block (naive one-character-at-a-time conversion
   produces INVALID LaTeX -- "Double superscript" errors)
-4. Builds the PDF via `pandoc --pdf-engine=xelatex`
+4. Builds the PDF via the canonical MathJax-SVG pipeline (headless Chrome print-to-PDF, STIX fonts)
 5. Verifies the output PDF has zero U+FFFD/U+FFFF characters and zero
   empty pages -- exit code 1 if verification fails, PDF MUST NOT publish
 
-Exit codes: `0` = publication-ready, `1` = build or verification failed
-(do not publish), `2` = missing dependency or bad invocation.
+Exit codes (legacy build-paper.py only): `0` = publication-ready, `1` =
+build or verification failed (do not publish), `2` = missing dependency or
+bad invocation. For the canonical MathJax-CDP pipeline, use
+`build-pdf-pro.py` which verifies 0 U+FFFD/0 PUA/0 icon-fonts/0 Times
+fallback before exit 0.
 
 **Prior approaches, retracted:**
 - v2.18 (KIF-26): dictionary-based conversion with an incomplete character
@@ -2006,7 +2028,7 @@ published to Zenodo, R2, or any public distribution channel.
 As of v2.21, this verification is built INTO `scripts/build-paper.py` --
 it is not a separate step. Running:
 ```bash
-python scripts/build-paper.py <slug>.md
+python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Paper Title>"
 ```
 performs preprocessing, the pandoc/xelatex build, AND verification in one
 invocation. Exit code `0` = publication-ready (proceed to Zenodo/R2
@@ -3239,7 +3261,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | No falsifiability conditions | Every speculative claim: "This would be disconfirmed if..." |
 | Zenodo without retry | Retry 3x with exponential backoff; recover existing drafts |
 | Missing cross-references in Zenodo | related_identifiers for prior versions + cited papers + GitHub |
-| HTML PDF fallback | Pandoc+XeLaTeX ONLY for publication-grade PDFs |
+| HTML PDF fallback | MathJax-SVG + CDP ONLY for publication-grade PDFs (XeLaTeX retired 2026-08-02) |
 | Buffer GraphQL with $var format | Use INLINE parameters -- Buffer silently drops $variables |
 | Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
@@ -3279,7 +3301,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
 | `python -c "..."` inline scripts on Windows (kaizen fix B1) | Nested double-quotes in f-strings collide with `python -c "..."` outer quotes; Windows escaping of `\n`, dict literals, and Unicode breaks silently. `write` the script to a `_*.py` file first, `exec` it, then delete -- never inline for anything beyond a one-liner with zero quotes/dicts/regex. |
 | `curl` on Windows PowerShell (kaizen fix B3) | PowerShell aliases `curl` to `Invoke-WebRequest`, which has different flags (`-s` is not recognized) and fails. Use `curl.exe` explicitly (the real binary, bypassing the alias). Never pipe to inline `python -c` — write Python to file first per KIF-37 §8.11. |
-| Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `scripts/build-paper.py` before every Pandoc+XeLaTeX build -- see PDF Building section above (v2.21+). |
+| Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `build-pdf-pro.py` before every PDF build (XeLaTeX/build-paper.py retired 2026-08-02) -- see PDF Building section above (v2.21+). |
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2 — SUPERSEDED by KIF-27) | Strip it -- `scripts/build-paper.py` does this automatically (preprocess stage). It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |

@@ -33,9 +33,6 @@ CLEANABLE_PATHS = [
     "{local}\\PC Manager Store",
     "{roaming}\\discord\\Cache",
     
-    # TexLive (safe: doc + source only)
-    r"c:\texlive\2025\texmf-dist\doc",
-    r"c:\texlive\2025\texmf-dist\source",
     
     # Crash dumps
     r"C:\Windows\Minidump",
