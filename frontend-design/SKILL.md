@@ -1,7 +1,7 @@
 ---
 name: frontend-design
 description: ULTRA-CONSOLIDATED frontend, creative, and visual design -- UI design, web components, pages, dashboards, React components, HTML/CSS/Tailwind layouts, algorithmic art (p5.js with seeded randomness, flow fields, particles, generative patterns), data visualization (Tufte principles for data-ink ratio and chartjunk elimination, AntV infographic syntax), and BLING usability audits. Use for ANY visual, creative, or design output.
-version: "2.2"
+version: "2.3"
 triggers: ["UI", "design", "frontend", "page", "styling", "visual", "BLING", "web component", "dashboard", "React", "Tailwind", "shadcn", "HTML", "CSS", "landing page", "web app", "beautify", "poster", "art", "generative art", "algorithmic art", "creative coding", "p5.js", "flow field", "particle system", "seeded randomness", "visualization", "chart", "graph", "Tufte", "infographic", "data-ink", "chartjunk", "AntV", "D3", "SVG", "canvas", "WebGL", "data viz", "graphical integrity", "usability audit", "color", "typography", "spacing", "animation", "brand", "layout", "responsive", "accessibility"]
 related: ["cloudflare"]
 priority: 2
@@ -9,8 +9,17 @@ platform: all
 autonomous: false
 self_sufficient: true
 ---
+> **v2.3 UPDATE (2026-08-02, kaizen — Cloudflare tool discoverability):**
+> Ephemeral-memory mandate: memories are NOT permanent. This skill deploys to
+> Cloudflare Pages/R2/Workers — instructions MUST name the actual agent tools.
+> Deploy verification: `workers_list` (confirm Worker/Pages exists), live `curl`
+> probe of the deployed URL (200 + body), `search_cloudflare_documentation` for
+> Pages/R2 limits. See cloudflare skill §Skill Cross-Reference v3.18 for the full
+> tool map. NEVER rely on durable memory for Cloudflare operational state.
+> Cross-reference: cloudflare v3.18.
 
-# FRONTEND -- v2.2 (Ultra-Consolidated Creative + Visual)
+
+# FRONTEND -- v2.3 (Ultra-Consolidated Creative + Visual)
 
 > **v2.2 UPDATE (2026-07-30, landing-page content gate):** Added QNFO/QWAV Landing Page
 > Content Gate (7-point governance checklist) under Web UI Design. Enforces qnfo-core 0.1

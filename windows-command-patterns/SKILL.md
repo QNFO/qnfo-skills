@@ -1,10 +1,29 @@
 ---
 name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DEPRECATED (LAST RESORT only). Use this skill to understand PowerShell's failure modes and when Python cannot be used.
-version: "2.3"
+version: "2.4"
 ---
+> **v2.4 UPDATE (2026-08-02, kaizen — PS-CURL-ESCAPE-1 anti-pattern + CF discoverability):**
+> Red-team: direct parent-agent audit. User mandate: memories are EPHEMERAL — rules
+> must live in skills. HARD: 0. SOFT: 2. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **PS-CURL-ESCAPE-1: PowerShell `curl -d` with double-quoted JSON silently
+>     strips the body to `{}`** (Content-Length: 2). Windows PowerShell parses `-d "{"query":...}"`
+>     and passes only `{}` to curl → Workers respond "Missing query" / 400. Migrated from
+>     durable memory (ephemeral). FIX: use a Python script file (`urllib.request` with
+>     `json.dumps` + `{'User-Agent':'Mozilla/5.0'}`) or `--data-raw` with proper escaping;
+>     NEVER construct JSON bodies in PowerShell inline `-c` or `-d` strings.
+> (2) [SOFT] Inline `python -c` with nested quotes/braces fails in PowerShell (ScriptBlock/
+>     Array-index parse errors). FIX: write the script to a temp file (`write` tool) then
+>     `python <file>` — the documented workaround for all `python -c` quote collisions.
+> (3) [DESIGN] Added Cloudflare tool discoverability pointer: when verification of D1/R2/
+>     Worker state is needed, use the agent tools `workers_list`, `query_worker_observability`,
+>     `search_cloudflare_documentation` (see cloudflare skill §Skill Cross-Reference v3.18)
+>     — never rely on memory for Cloudflare operational state.
+> Cross-reference: cloudflare v3.18, kaizen v1.4.1.
 
-# Windows Command Execution — Python-First Protocol (v2.3)
+
+# Windows Command Execution — Python-First Protocol (v2.4)
 
 > **v2.3 UPDATE (2026-08-02, kaizen — MANDATORY PRE-FLIGHT GATE + python -c escalation):**
 > Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE. AUTO-TRIGGERED

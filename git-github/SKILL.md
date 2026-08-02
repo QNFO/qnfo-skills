@@ -9,8 +9,17 @@ platform: all
 autonomous: false
 self_sufficient: true
 ---
+> **v2.4 UPDATE (2026-08-02, kaizen — Cloudflare tool discoverability):**
+> Ephemeral-memory mandate: memories are NOT permanent — skill instructions must name
+> the actual agent tools. GitHub-D1 Sync (this skill) touches Cloudflare D1 via
+> `query_graph` and `workers_list` for verification. For any D1/Worker/R2 state
+> verification, use the agent tools `query_graph(endpoint, params)` and
+> `workers_list` (see cloudflare skill §Skill Cross-Reference v3.18). Never rely
+> on durable memory for Cloudflare operational state.
+> Cross-reference: cloudflare v3.18.
 
-# GIT-GITHUB -- v2.3 (Ultra-Consolidated VC + PM)
+
+# GIT-GITHUB -- v2.4 (Ultra-Consolidated VC + PM)
 
 > **v2.3 UPDATE (2026-07-29, KIF-32 thin-client temp-volatility incident):**
 > Added **TEMP Volatility & Same-Turn Commit Mandate (HARD GATE)** below.

@@ -1,7 +1,7 @@
 ---
 name: documents
 description: Create, edit, and analyze all document formats -- Word (.docx) with formatting and tracked changes, PowerPoint (.pptx) presentations from outlines, Excel (.xlsx/.csv/.tsv) spreadsheets with formulas and analysis, and PDF manipulation (form filling, merge, split, text/table extraction). For publication-grade LaTeX PDF builds, use the research skill.
-version: "2.3"
+version: "2.4"
 triggers: ["docx", "Word", "document", "PowerPoint", "presentation", "slides", "Excel", "spreadsheet", "CSV", "TSV", "xlsx", "pptx", "PDF", "form", "fill form", "merge PDF", "split PDF", "extract PDF", "table extraction", "tracked changes", "comments", "speaker notes", "formula", "chart", "pivot table", "data analysis", "import", "export", "office", "formatting", "styles", "headers", "footers"]
 related: ["research"]
 priority: 2
@@ -9,8 +9,17 @@ platform: local
 autonomous: false
 self_sufficient: true
 ---
+> **v2.4 UPDATE (2026-08-02, kaizen — Cloudflare tool discoverability):**
+> Ephemeral-memory mandate: memories are NOT permanent. This skill archives to
+> R2 (r2-archive.js) — instructions MUST name the actual agent tools. R2 archive
+> verification: `workers_list` (confirm R2 bucket exists via account state) or
+> `search_cloudflare_documentation` for R2 API; see cloudflare skill
+> §Skill Cross-Reference v3.18. NEVER rely on durable memory for Cloudflare
+> operational state.
+> Cross-reference: cloudflare v3.18.
 
-# DOCUMENTS -- v2.3 (Office + PDF + 4-D Export)
+
+# DOCUMENTS -- v2.4 (Office + PDF + 4-D Export)
 
 > **v2.3 UPDATE (2026-07-25, professional-standard kaizen):** Added the
 > **Professional Publication Standards (Cross-Skill Mandate)** section

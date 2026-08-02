@@ -53,3 +53,13 @@ Before finishing a non-trivial task, check whether there is one durable lesson t
 6. Is this actually a reusable procedure for `skill_manage` or a recurring need for Scheduled Tasks rather than Memory?
 
 Remember only the smallest durable conclusion. Leave raw process in Tape.
+
+> **UPDATE (2026-08-02): MCP-OFFLOAD-1 — QNFO MCP tools (search_papers, query_graph,
+> resolve_paper_id, search_memories, recall_facts, memory_recall) often return "OK"
+> with results offloaded to unreadable files.** Do NOT treat "OK" as evidence of
+> retrieved content. For verification-critical lookups, prefer direct probes
+> (Python urllib + browser UA against live endpoints) or cross-check via the
+> cloudflare skill's agent tool map. Also: DeepChat memories are EPHEMERAL —
+> critical rules belong in SKILL.md; memory is for session outcomes, not authority.
+> Cross-reference: cloudflare v3.18, kaizen v1.4.1.
+

@@ -155,9 +155,9 @@ GREEK = {
 
 SYMBOLS = {
     # Operators / relations (Mathematical Operators block, U+2200-22FF)
-    '\u221e': r'\infty', '\u2211': r'\sum', '\u220f': r'\prod', '\u222b': r'\int ',
+    '\u221e': r'\infty', '\u2211': r'\sum', '\u220f': r'\prod', '\u222b': r'\int',
     '\u222c': r'\iint', '\u222d': r'\iiint', '\u222e': r'\oint',
-    '\u2207': r'\nabla ', '\u2202': r'\partial ', '\u00b1': r'\pm', '\u2213': r'\mp',
+    '\u2207': r'\nabla', '\u2202': r'\partial', '\u00b1': r'\pm', '\u2213': r'\mp',
     '\u2248': r'\approx', '\u2260': r'\neq', '\u2264': r'\leq', '\u2265': r'\geq',
     '\u226a': r'\ll', '\u226b': r'\gg', '\u2261': r'\equiv', '\u223c': r'\sim',
     '\u2243': r'\simeq', '\u2245': r'\cong', '\u221d': r'\propto',
@@ -176,12 +176,12 @@ SYMBOLS = {
     '\u2208': r'\in', '\u2209': r'\notin', '\u220b': r'\ni',
     '\u2282': r'\subset', '\u2283': r'\supset', '\u2286': r'\subseteq', '\u2287': r'\supseteq',
     # Arithmetic
-    '\u00d7': r'\times', '\u00f7': r'\div', '\u2212': '-', '\u00b7': r'\cdot', '\u2217': r'\ast',
+    '\u00d7': r'\times', '\u00f7': r'\div', '\u00b7': r'\cdot', '\u2217': r'\ast',
     '\u2218': r'\circ', '\u2219': r'\bullet',
     '\u2295': r'\oplus', '\u2296': r'\ominus', '\u2297': r'\otimes', '\u2298': r'\oslash',
-    '\u2299': r'\odot ', '\u22c5': r'\cdot',
+    '\u2299': r'\odot', '\u22c5': r'\cdot',
     # Brackets
-    '\u27e8': r'\langle ', '\u27e9': r'\rangle ',
+    '\u27e8': r'\langle', '\u27e9': r'\rangle',
     '\u230a': r'\lfloor', '\u230b': r'\rfloor', '\u2308': r'\lceil', '\u2309': r'\rceil',
     # Blackboard bold (Letterlike Symbols block, U+2100-214F, plus U+1D538 in
     # Mathematical Alphanumeric Symbols for characters with no legacy codepoint)
@@ -190,7 +190,7 @@ SYMBOLS = {
     '\u2119': r'\mathbb{P}',
     '\U0001D538': r'\mathbb{A}',  # blackboard A (no legacy codepoint exists)
     # Physics symbols
-    '\u0127': r'\hbar ', '\u210f': r'\hbar ', '\u2113': r'\ell',
+    '\u0127': r'\hbar', '\u210f': r'\hbar', '\u2113': r'\ell',
     '\u212b': r'\text{\AA}', '\u2126': r'\Omega',
     # Script letters (Letterlike Symbols block)
     '\u2112': r'\mathcal{L}', '\u2110': r'\mathcal{I}', '\u2131': r'\mathcal{F}',
@@ -271,155 +271,6 @@ def _split_math_spans(text):
     return parts
 
 
-
-def convert_math_unicode(segment):
-    """Normalize raw Unicode math characters INSIDE an existing $...$ / $$...$$
-    span to LaTeX commands. Applied to math segments in preprocess().
-
-    Handles (2026-08-02 red-team / v2.6 expansion findings):
-      - Raw hbar U+210F / U+0127            -> \\hbar
-      - Raw nabla U+2207, partial U+2202    -> \\nabla, \\partial
-      - Raw sqrt U+221A                      -> \\sqrt{...} (simple forms)
-      - Raw integral U+222B / sum / prod    -> \\int, \\sum, \\prod
-      - Raw angle brackets U+27E8/27E9      -> \\langle / \\rangle
-      - Raw box U+25A1                       -> \\Box
-      - Raw arrows U+2192, relations, times -> \\to, \\times, \\approx...
-      - Precomposed tilde letters            -> \\tilde{X}
-        (U+1EBC Ẽ, U+1E7C Ṽ, U+1E7D ṽ, U+0168 Ũ, U+00F1 ñ, U+1E50)
-      - Combining tilde U+0303, macron U+0304, circumflex U+0302 on any
-        letter/greek -> \\tilde{}\\bar{}\\hat{} (grouped by base char)
-    Idempotent: existing LaTeX macros and plain ASCII pass through.
-    """
-    if not segment or not re.search(r'[^\x00-\x7f]', segment):
-        return segment  # fast path: pure ASCII (LaTeX) -- untouched
-
-    s = segment
-
-    # --- single-char symbol map (math font glyphs Latin Modern Math lacks) ---
-    symbol_map = {
-        '\u210f': r'\hbar ', '\u0127': r'\hbar ',      # ℏ, ħ
-        '\u2207': r'\nabla ',                          # ∇
-        '\u2202': r'\partial ',                        # ∂
-        '\u222b': r'\int ',                            # ∫
-        '\u2211': r'\sum',                            # ∑
-        '\u220f': r'\prod',                           # ∏
-        '\u27e8': r'\langle ', '\u27e9': r'\rangle ',  # ⟨ ⟩
-        '\u25a1': r'\Box ',                            # □
-        '\u2192': r'\to ',                            # →
-        '\u2190': r'\leftarrow ',                     # ←
-        '\u2194': r'\leftrightarrow ',               # ↔
-        '\u2260': r'\neq ',                           # ≠
-        '\u2264': r'\leq ',                           # ≤
-        '\u2265': r'\geq ',                           # ≥
-        '\u226a': r'\ll ', '\u226b': r'\gg ',        # ≪ ≫
-        '\u2248': r'\approx ',                        # ≈
-        '\u221d': r'\propto ',                        # ∝
-        '\u22c5': r'\cdot ',                          # ⋅
-        '\u00d7': r'\times ',                         # ×
-        '\u00b1': r'\pm ',                            # ±
-        '\u221e': r'\infty ',
-    '\u2212': '-',             # U+2212 mathematical minus -> ASCII
-                         # ∞
-        '\u2609': r'\odot ',                           # ☉
-        '\u211b': r'\mathcal{R}',                     # ℛ
-        '\u2112': r'\mathcal{L}',                     # ℒ
-        '\u00bd': r'\tfrac{1}{2}',                    # ½
-    }
-    for ch, rep in symbol_map.items():
-        if ch in s:
-            s = s.replace(ch, rep)
-
-    # --- precomposed tilde letters -> \tilde{X} ---
-    tilde_precomp = {
-        '\u1ebc': 'E', '\u1e7c': 'V', '\u1e7d': 'v',
-        '\u0168': 'U', '\u00f1': 'n', '\u1e50': 'E',
-        '\u1e44': 'N', '\u1e45': 'n', '\u1ef8': 'Y', '\u1ef9': 'y',
-        '\u00e3': 'a', '\u0128': 'I', '\u1ebc': 'E',   # ã Ĩ Ẽ
-
-    }
-    for ch, base in tilde_precomp.items():
-        if ch in s:
-            s = s.replace(ch, r'\tilde{' + base + '}')
-
-    # --- combining marks on base char -> \tilde/\bar/\hat{base} ---
-    # Process by iterating and merging base + combining into one macro.
-    combining_map = {'\u0303': r'\tilde', '\u0304': r'\bar', '\u0302': r'\hat'}
-    out = []
-    i = 0
-    while i < len(s):
-        ch = s[i]
-        if i + 1 < len(s) and s[i + 1] in combining_map:
-            base = ch
-            mark = s[i + 1]
-            cmd = combining_map[mark]
-            # Skip if base already looks like a LaTeX macro (avoid mangling)
-            if base == '\\':
-                out.append(ch)
-                i += 1
-                continue
-            out.append(cmd + '{' + base + '}')
-            i += 2
-        else:
-            out.append(ch)
-            i += 1
-    s = ''.join(out)
-
-    # --- Mathematical Alphanumeric Symbols (U+1D400-U+1D7FF) ---
-    # These italic/bold math letters in math mode trigger xdvipdfmx
-    # 'bad native font flag' errors. Map to plain ASCII (LaTeX handles style).
-    def _strip_math_alnum(seg):
-        out = []
-        for ch in seg:
-            o = ord(ch)
-            if 0x1D400 <= o <= 0x1D7FF:
-                # Mathematical Alphanumeric -> base ASCII/Greek
-                # Letters: offset 0x1D400 = A; map block by block
-                if 0x1D400 <= o <= 0x1D419:  # A-Z bold
-                    out.append(chr(ord('A') + (o - 0x1D400)))
-                elif 0x1D41A <= o <= 0x1D433:  # a-z bold
-                    out.append(chr(ord('a') + (o - 0x1D41A)))
-                elif 0x1D434 <= o <= 0x1D44D:  # A-Z italic
-                    out.append(chr(ord('A') + (o - 0x1D434)))
-                elif 0x1D44E <= o <= 0x1D467:  # a-z italic
-                    out.append(chr(ord('a') + (o - 0x1D44E)))
-                elif 0x1D468 <= o <= 0x1D481:  # A-Z bold italic
-                    out.append(chr(ord('A') + (o - 0x1D468)))
-                elif 0x1D482 <= o <= 0x1D49B:  # a-z bold italic
-                    out.append(chr(ord('a') + (o - 0x1D482)))
-                elif 0x1D49C <= o <= 0x1D4CF:  # script letters (partial)
-                    out.append(' ')
-                elif 0x1D538 <= o <= 0x1D56B:  # double-struck A-Z partial
-                    out.append(' ')
-                elif 0x1D7CE <= o <= 0x1D7D7:  # digits 0-9 bold
-                    out.append(chr(ord('0') + (o - 0x1D7CE)))
-                elif 0x1D7D8 <= o <= 0x1D7E1:  # digits 0-9 double-struck
-                    out.append(chr(ord('0') + (o - 0x1D7D8)))
-                elif 0x1D7E2 <= o <= 0x1D7EB:  # digits 0-9 sans
-                    out.append(chr(ord('0') + (o - 0x1D7E2)))
-                elif 0x1D7EC <= o <= 0x1D7F5:  # digits 0-9 sans bold
-                    out.append(chr(ord('0') + (o - 0x1D7EC)))
-                elif 0x1D7F6 <= o <= 0x1D7FF:  # digits 0-9 mono
-                    out.append(chr(ord('0') + (o - 0x1D7F6)))
-                else:
-                    out.append(' ')  # unmapped math-alphanumeric
-            else:
-                out.append(ch)
-        return ''.join(out)
-    s = _strip_math_alnum(s)
-
-    # --- raw sqrt: U+221A already replaced above to \sqrt{}, now fix \sqrt{}(x)
-    # --- merge any '\sqrt{}(' into '\sqrt{' ... handled by caller's grouping
-    # --- fix accidental merged macros like \hbarc -> \hbar c ---
-    s = re.sub(r'\\hbarc', r'\\hbar c', s)
-    s = re.sub(r'\\hbar([A-Za-zωνΩ])', r'\\hbar \1', s)
-    s = re.sub(r'\\times([0-9])', r'\\times \1', s)
-    s = re.sub(r'\\approx([0-9])', r'\\approx \1', s)
-    s = re.sub(r'\\lefteq', r'\\leq ', s)
-    s = re.sub(r'\\geq', r'\\geq ', s)
-    return s
-
-
-
 def convert_prose_unicode(segment):
     """Convert Unicode math characters in a NON-math segment to LaTeX,
     wrapping each contiguous run in $...$. Subscript/superscript runs are
@@ -428,32 +279,6 @@ def convert_prose_unicode(segment):
     "10⁻¹²⁰" must become "10$^{-120}$", never "10$^{-}^{1}^{2}^{0}$"."""
     subs, sups, greek, syms = set(SUBSCRIPTS), set(SUPERSCRIPTS), set(GREEK), set(SYMBOLS)
     convertible = subs | sups | greek | syms
-    # Precomposed tilde letters -> $\tilde{X}$ (math font lacks these glyphs)
-    precomposed_tilde = {
-        '\u00e3': 'a', '\u0128': 'I', '\u1ebc': 'E',
-        '\u1e7c': 'V', '\u1e7d': 'v', '\u0168': 'U',
-        '\u00f1': 'n', '\u1e44': 'N', '\u1e45': 'n',
-        '\u1ef8': 'Y', '\u1ef9': 'y', '\u1e50': 'E',
-    }
-    for _ch, _base in precomposed_tilde.items():
-        if _ch in segment:
-            segment = segment.replace(_ch, '$\\tilde{' + _base + '}$')
-    # Combining tilde U+0303 on a base letter (prose): x̃ -> $\tilde{x}$
-    _comb_tilde = '̃'
-    if _comb_tilde in segment:
-        _out = []
-        _i = 0
-        while _i < len(segment):
-            if _i + 1 < len(segment) and segment[_i + 1] == _comb_tilde:
-                _base = segment[_i]
-                _out.append('$\\tilde{' + _base + '}$')
-                _i += 2
-            else:
-                _out.append(segment[_i])
-                _i += 1
-        segment = ''.join(_out)
-
-
     math_adjacent = set('0123456789')  # bare digits next to a math run join it
 
     out, buf, i, n = [], [], 0, len(segment)
@@ -550,7 +375,7 @@ def preprocess(source_path):
 
     segments = _split_math_spans(body)
     new_body = ''.join(
-        seg if (not is_math and seg.strip().startswith('$')) else (convert_math_unicode(seg) if is_math else convert_prose_unicode(seg)) for seg, is_math in segments
+        seg if is_math else convert_prose_unicode(seg) for seg, is_math in segments
     )
     result = header + new_body
 

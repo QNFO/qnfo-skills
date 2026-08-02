@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.15"
+version: "3.18"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,55 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.16 (Kaizen: workers.dev route remediation + AI binding format + 1101 misdiagnosis)
+# CLOUDFLARE -- v3.18 (Kaizen: memory-to-skill migration + CF tool discoverability)
+
+> **v3.18 UPDATE (2026-08-02, kaizen — memory-to-skill migration + CF tool discoverability):**
+> Red-team: direct parent-agent audit (user mandate: DeepChat memories are EPHEMERAL —
+> critical operational rules MUST live in SKILL.md, not durable memory).
+> HARD: 0. SOFT: 3. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **HARDCODED-HEALTH-1: Worker health endpoints that hardcode binding names
+>     (e.g. `d1: "living-paper"`) produce false-positive health checks.** `/health` MUST
+>     verify at runtime with `!!env.BINDING_NAME` (e.g. `ai: !!env.AI`) — never echo the
+>     expected name as a string. Case: qnfo-qwav reported `d1:"living-paper"` while
+>     `env.LIVING_PAPER` was undefined at runtime ("Cannot read properties of undefined
+>     (reading 'prepare')"). Migrated from durable memory (ephemeral) into this skill.
+> (2) [SOFT] **CF-WAF-1: Cloudflare WAF blocks non-browser user-agents (urllib default).**
+>     When testing Worker endpoints with Python, ALWAYS pass
+>     `headers={'User-Agent':'Mozilla/5.0'}`; without it urllib gets HTTP 403.
+>     To read error bodies: catch `urllib.error.HTTPError` and call `e.read().decode()`
+>     — this surfaces the real Worker error (e.g. 1101 body, "Cannot read properties...").
+>     Migrated from durable memory (ephemeral).
+> (3) [SOFT] **MCP-OFFLOAD-1: QNFO MCP tools (search_papers, query_graph, etc.) return
+>     "OK" with results offloaded** — offload files may not be readable in-session.
+>     For verification of infra claims, use DIRECT probes (Python urllib with browser UA
+>     against the live Worker endpoint) instead of relying solely on MCP tool output.
+> (4) [DESIGN] Added **§Skill Cross-Reference: Cloudflare Tool/Resource Discoverability**
+>     — a map of which skills touch Cloudflare resources and how to discover the right
+>     MCP agent tools (below). Every skill that references D1/R2/Vectorize/Pages/Workers
+>     MUST name the actual agent tool (`workers_list`, `query_worker_observability`,
+>     `search_cloudflare_documentation`, `search_papers`, `query_graph`) in its
+>     instructions, per the ephemeral-memory mandate.
+> Cross-reference: kaizen v1.4.1, memory-management, windows-command-patterns v2.4,
+> git-github v2.4, frontend-design v2.3, documents v2.4.
+
+> **v3.17 UPDATE (2026-08-02, kaizen — STALE-AUDIT-1 anti-pattern + red-team v2 validation):**
+> Red-team: direct parent-agent audit of session bWLdtP54lAjqfblr2cUKH.
+> HARD: 0. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [SOFT] **STALE-AUDIT-1: Auditing Cloudflare infra WITHOUT checking `workers_list`
+>     modified_on timestamps first** — produces findings that can be fully invalidated by
+>     remediation that landed minutes earlier. Case: v1 audit (same session) found qnfo-qwav
+>     dead (ai:false) and webhook 1101 — but both Workers had been redeployed ~30 min prior
+>     (qnfo-paper-indexer 04:28:57Z, qnfo-qwav 04:30:59Z, workers_dev=true). Red-team v2
+>     re-verified: qnfo-qwav /health now reports ai:true, vector search returns 0.75-0.90
+>     scores on 4/4 queries, webhook returns 200 for real slugs (24 chunks). Fix: ALWAYS
+>     call `workers_list` and check modified_on BEFORE trusting any infra-state claim;
+>     findings older than the latest deployment are provisional. This complements KIF-61
+>     (the 1101 root cause was DNS NXDOMAIN route, NOT missing AI binding — confirmed
+>     by red-team v2: 1101 now fires ONLY for non-existent slugs, cosmetic 500-vs-404).
+> (2) [SOFT] Duplicate v3.16 entry removed from `.kaizen_history` (Status Auditor).
+> Cross-reference: kaizen v1.4.1, session OL00bCz3AJlaz_NjUi4eS (v3.16), KIF-61.
 
 > **v3.16 UPDATE (2026-08-02, kaizen — autonomous P0 remediation session):**
 > Red-team: direct parent-agent audit of session OL00bCz3AJlaz_NjUi4eS.
@@ -1148,6 +1196,47 @@ When an MCP server call returns a success response, treat it with the same verif
 
 ---
 
+## Skill Cross-Reference: Cloudflare Tool/Resource Discoverability (v3.18)
+
+**Ephemeral-memory mandate (2026-08-02):** DeepChat memories are NOT permanent.
+Every skill that references Cloudflare resources MUST name the actual agent tools
+for discovery and verification — never assume the agent will recall them from memory.
+
+### Agent Tool Names (canonical — use these exact names in skill instructions)
+
+| Agent Tool | Covers | Use when |
+|:-----------|:-------|:---------|
+| `workers_list` | Enumerate all Workers + modified_on timestamps | ANY infra audit (STALE-AUDIT-1 gate) |
+| `workers_get_worker(scriptName)` | Worker details | Single-worker inspection |
+| `workers_get_worker_code(scriptName)` | Worker source | Verify handler actually uses a binding |
+| `query_worker_observability(query, timeframe)` | Logs, metrics, invocations | Health verification post-deploy |
+| `observability_keys` / `observability_values` | Log field discovery | Building observability queries |
+| `search_cloudflare_documentation(query)` | Cloudflare docs | Limits, API reference, config schema |
+| `migrate_pages_to_workers_guide` | Pages→Workers migration | Migration tasks |
+| `search_papers` / `search_papers_enriched` | Vectorize semantic search | Paper retrieval (MCP layer) |
+| `query_graph(endpoint, params)` | Knowledge Graph | KG queries |
+| `get_paper_context(slug)` | D1 paper body | Paper body retrieval |
+| `resolve_paper_id(id)` | DOI→slug cross-resolve | Identity resolution |
+
+### Skill → Cloudflare Resource Map (which skills touch what)
+
+| Skill | Cloudflare Resources | Tool Names Required | Status |
+|:------|:--------------------|:--------------------|:-------|
+| `cloudflare` (this skill) | All (Workers, D1, R2, Vectorize, Pages, DNS) | All agent tools above | ✅ v3.18 |
+| `research` | D1 living-paper, R2 releases, papers-server Worker, Zenodo | search_papers, query_graph, workers_list | ✅ v2.45 (verify) |
+| `knowledge` | D1 qnfo-graph, Vectorize, graph-api.qnfo.org | query_graph, search_memories, recall_facts | ✅ v2.2 (verify) |
+| `system` | Skills R2 bucket (qnfo-skills), skill-sync.js | workers_list (sync target) | ✅ v2.4 |
+| `code` / `mcp-builder` | Workers deploys (MCP servers) | workers_list, workers_get_worker | ✅ (verify) |
+| `git-github` | GitHub-D1 sync (GitHub is canonical, D1 is mirror) | workers_list, query_graph | ⬅ v2.3 needs pointer |
+| `frontend-design` | Pages deploys, R2 static assets | workers_list, search_cloudflare_documentation | ⬅ v2.2 needs pointer |
+| `documents` | R2 archive (r2-archive.js) | search_cloudflare_documentation, workers_list | ⬅ v2.3 needs pointer |
+| `windows-command-patterns` | D1 writes (Python-first, no PowerShell) | workers_list (verification) | ⬅ v2.3 needs pointer |
+| `linkedin-mcp` | (incidental — session persistence only) | — | no action |
+
+**Verification rule:** any skill claiming "synced to R2" / "deployed to Workers" / "D1 updated"
+MUST reference the verification tool (`workers_list`, `query_worker_observability`, or the
+live Worker endpoint probe) in its own instructions — not rely on the agent remembering.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Fix |
@@ -1196,3 +1285,9 @@ When an MCP server call returns a success response, treat it with the same verif
 | **Concluding the token lacks Workers Scripts:Edit from a REST 9106 bindings error (2026-08-02)** | `GET /accounts/{id}/workers/scripts/{name}/bindings` returned 9106 while `wrangler deploy` with the same CLOUDFLARE_API_TOKEN succeeded. The bindings sub-endpoint has a different auth path. NEVER trust a single REST 9106 as proof of missing scope — test `wrangler deploy` directly before declaring a blocker. |
 | **Using `wrangler routes list` (removed in v4.118.0)** | Returns "Unknown arguments: routes, list". Route management in wrangler v4 is via wrangler.toml `workers_dev`/`routes` keys or the zone-level REST API. Use `wrangler pages project list` for Pages discovery (verified 2026-08-02: 5 projects — qwav, qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). |
 | **Misattributing a non-Cloudflare outage to Cloudflare (2026-08-02)** | ipatent.me: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app → 500 on Google Cloud Run. The CF layer is healthy; the 500 is the GCP backend. Always trace the full redirect chain (`curl -sI` + follow Location) before declaring "Cloudflare issue". |
+| **STALE-AUDIT-1: Auditing infra without checking `workers_list` modified_on timestamps (2026-08-02)** | Findings can be invalidated by remediation that landed minutes earlier. Case: v1 audit reported qnfo-qwav dead (ai:false) + webhook 1101, but both Workers were redeployed ~30 min prior (04:28/04:30Z, workers_dev=true). Red-team v2 re-verified: ai:true, vector search 0.75-0.90, webhook 200 for real slugs. **Fix: call `workers_list` and check modified_on BEFORE trusting any infra-state claim; treat findings older than the latest deployment as provisional.** Pairs with KIF-61 (1101 root cause = DNS NXDOMAIN route, not AI binding). |
+
+| **HARDCODED-HEALTH-1: Health endpoint hardcodes binding names (2026-08-02)** | `/health` MUST verify bindings at runtime with `!!env.BINDING_NAME` (e.g. `ai: !!env.AI`), NEVER echo the expected name as a string (`d1: "living-paper"`). Case: qnfo-qwav reported d1:"living-paper" while env.LIVING_PAPER was undefined → "Cannot read properties of undefined (reading 'prepare')" on /ask. Fix: `bindings: { d1: !!env.LIVING_PAPER ? "living-paper" : null, ai: !!env.AI, ai_search: !!env.QNFO_SEARCH }`. |
+| **CF-WAF-1: Python urllib blocked by Cloudflare WAF without browser UA (2026-08-02)** | ALWAYS pass `headers={'User-Agent':'Mozilla/5.0'}` when probing Worker endpoints from Python. Default urllib UA → HTTP 403. To read the real error body, catch `urllib.error.HTTPError` and `e.read().decode()` — surfaces 1101 text, "Cannot read properties...", etc. |
+| **MCP-OFFLOAD-1: Trusting MCP tool "OK" output for infra verification (2026-08-02)** | QNFO MCP tools (search_papers, query_graph, resolve_paper_id) often return "OK" with results offloaded to unreadable files. For INFRA state claims, verify with DIRECT probes (Python urllib + browser UA against the live Worker endpoint) — do not treat MCP "OK" as evidence of resource state. |
+| **Relying on durable memory for critical Cloudflare operational rules (2026-08-02)** | DeepChat memories are EPHEMERAL (may be purged). Critical rules (KIF-*, anti-patterns, endpoint maps, binding formats) MUST be embedded in this SKILL.md. Memory is for session outcomes, not operational authority. Migrate any rule found only in memory into this skill. |
