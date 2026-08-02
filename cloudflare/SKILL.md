@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.18"
+version: "3.19"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,29 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.18 (Kaizen: memory-to-skill migration + CF tool discoverability)
+# CLOUDFLARE -- v3.19 (Kaizen: MCP OAuth loopback protocol — no default browser)
+
+> **v3.19 UPDATE (2026-08-02, kaizen — MCP OAuth loopback protocol; NO default browser):**
+> Red-team: direct parent-agent audit after the Cloudflare Observability MCP OAuth fix.
+> HARD: 1. SOFT: 0. DESIGN: 1.
+> Changes:
+> (1) [HARD] **NEVER repeatedly open the external/default browser for MCP or Cloudflare
+>     OAuth flows. Do NOT use the default browser for OAuth consent.** The 2026-08-02
+>     Observability MCP OAuth fix initially looped the default browser (frustrating,
+>     laborious). Correct autonomous flow (§MCP OAuth Loopback Fix below): recover the
+>     PKCE verifier + client_id from `~/.mcp-auth/mcp-remote-<ver>/<hash>_client_info.json`
+>     + `_code_verifier.txt`; start a listener on the registered redirect port with
+>     AUTO-EXCHANGE inside the listener process; open the auth URL ONCE in the session
+>     browser (YoBrowser/CDP) — the session browser is often NOT logged in, and if the
+>     flow cannot complete headlessly, STOP and report the blocker; do not spawn more
+>     browser windows.
+> (2) [DESIGN] Added **§MCP OAuth Loopback Fix** — the full recover→listen→auto-exchange→
+>     cache protocol, including the two failure modes found live: (a) code expires in
+>     <60s so exchange MUST happen inside the listener process, never a separate tool
+>     call; (b) session browser may lack the Cloudflare login while the default browser
+>     has it — resolve by completing consent headlessly or reporting the blocker.
+> Cross-reference: memory "MCP OAuth loopback fix pattern", kaizen v1.4.1,
+> observability.mcp.cloudflare.com/mcp (workers-observability v0.5.2).
 
 > **v3.18 UPDATE (2026-08-02, kaizen — memory-to-skill migration + CF tool discoverability):**
 > Red-team: direct parent-agent audit (user mandate: DeepChat memories are EPHEMERAL —
@@ -430,6 +452,45 @@ curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp
 - **401** = endpoint live, auth required (normal for OAuth servers)
 - **404/530** = endpoint not deployed or DNS not propagated
 - **200** = public endpoint (docs, radar)
+
+### MCP OAuth Loopback Fix (v3.19 — MANDATORY protocol)
+
+**When an MCP server OAuth flow fails with ZodError (`code`/`scope` undefined) after consent
+was granted, the problem is the LOOPBACK callback, not the consent.** The browser consented,
+Cloudflare redirected to `http://localhost:<port>/oauth/callback`, but no listener was up at
+callback time → the authorization code expired before exchange → the client reports a parse
+error. Confirmed live 2026-08-02 on `observability.mcp.cloudflare.com/mcp`.
+
+**User mandate (HARD): NEVER open the external/default browser repeatedly for OAuth.**
+Do NOT use the default browser for consent. One session-browser attempt max; if the flow
+can't complete, STOP and report the blocker.
+
+**Autonomous fix protocol (no default browser):**
+
+1. **Recover OAuth state** from the mcp-remote cache (`~/.mcp-auth/mcp-remote-<ver>/`):
+   - `<hash>_client_info.json` → `client_id`, `redirect_uris[0]` (e.g. `http://localhost:22875/oauth/callback`)
+   - `<hash>_code_verifier.txt` → PKCE verifier
+   - `<hash>` = MD5 of the MCP server URL (e.g. `https://observability.mcp.cloudflare.com/mcp`)
+2. **Fetch discovery doc** (RFC 8414): `GET https://<server>/.well-known/oauth-authorization-server`
+   → `token_endpoint`, `authorization_endpoint`. Cloudflare's observability server:
+   `https://observability.mcp.cloudflare.com/token`.
+3. **Start a local listener** on the registered redirect port (`oauth_listener.py` pattern)
+   with **AUTO-EXCHANGE inside the listener process** — the code exchange MUST happen in the
+   same process as the callback (zero latency). A separate tool-call exchange ALWAYS fails:
+   codes expire in <60s (`invalid_grant: Grant not found or authorization code expired`).
+4. **Open the auth URL ONCE in the SESSION browser (YoBrowser/CDP)**. If the session browser
+   is not logged into Cloudflare (redirects to `dash.cloudflare.com/login`), do NOT loop —
+   STOP and report: consent requires a logged-in browser session.
+5. **Cache the token** to `<hash>_token.json` in the same mcp-remote dir (format:
+   `{access_token, token_type, expires_in, scope, refresh_token}`). Verify with
+   `POST /mcp` `initialize` → HTTP 200 (`serverInfo.name`, `version`).
+6. **Agent-level MCP tools may still time out** until the host app re-initializes the MCP
+   connection — that is an app-level reconnect, not an OAuth problem.
+
+**Failure modes (both confirmed live 2026-08-02):**
+- **Expired code**: manual exchange in a separate tool call → `invalid_grant`. Fix: auto-exchange in listener.
+- **Session browser not logged in**: YoBrowser lacks the Cloudflare session → login redirect.
+  Fix: stop and report; never spawn the default browser.
 
 ---
 
