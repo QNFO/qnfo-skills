@@ -1,5 +1,6 @@
 ---
 name: qnfo-agent
+version: "3.61"
 description: MUST LOAD FIRST via skill_view. Activates 24-skill trigger table, safety, discovery. Core QNFO identity v3.61: Research Integrity, EXECUTE MODE, KIF-01 to KIF-45.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: qnfo-core
+version: "1.4.1"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 

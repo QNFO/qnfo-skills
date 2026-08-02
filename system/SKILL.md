@@ -291,7 +291,7 @@ Key settings:
 ---
 name: skill-name
 description: Rich description with comprehensive trigger keywords for autonomous discovery
-version: "1.0"
+version: "2.5"
 triggers: ["keyword1", "keyword2", ...]
 related: ["other-skill"]
 priority: 0-3

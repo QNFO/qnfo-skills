@@ -1,8 +1,51 @@
 ---
 name: kaizen
+version: "1.4.1"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
+> **v1.4.1 UPDATE (2026-08-02, kaizen — ZENODO-1..5 anti-patterns + calibration drift fix):**
+> Reactive kaizen from carry-forward session (ODR v2.1 + Cross-Domain v4.1). Direct parent-agent
+> 5-adversary audit per self-kaizen protocol — no subagents. HARD: 0 in this skill. SOFT: 1.
+> Changes:
+> (1) [SOFT] Anti-patterns: added ZENODO-1 (global record IDs — existence != identity, 21748026),
+>   ZENODO-2 (newversion-draft-exists 400 files.enabled — follow links.latest_draft, never
+>   parallel newversion, ODR 21751722/21752136), ZENODO-3 (in-flight unsubmitted-draft
+>   coordination), ZENODO-4 (D1 body_md sync from published file, not stale local copy),
+>   ZENODO-5 (working-memory DOIs are phantoms until live-verified — ODR 21753142 was
+>   unrelated content). (Completeness + Accuracy Auditors, parent-agent).
+> (2) [SOFT] Calibration register: research v2.38 -> v2.44 (both entries) — Dependency Auditor,
+>   parent-agent.
+> (3) [SOFT] Version section reconciled v1.3.0 -> v1.4.0 (Status Auditor, parent-agent).
+> Cross-reference: research v2.44 (Zenodo draft-collision gates), ODR v2.1
+> (10.5281/zenodo.21752136), Cross-Domain v4.1 (10.5281/zenodo.21754016).
+> **v1.4 UPDATE (2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns):**
+> Self-kaizen per user directive: "EXECUTE KAIZEN SKILL UPDATE ON KAIZEN SKILL ITSELF."
+> Triggered by research v2.42 kaizen (BP-4 through BP-10 numeracy gates) and ACRP-04
+> session findings (9,138σ unreproducible, derived-quantity error, selective gate application).
+> Changes:
+> (1) [SOFT] Calibration register: "research (currently v2.38)" → "research (currently v2.42)"
+>     — Dependency Auditor, parent-agent (self-kaizen protocol).
+> (2) [DESIGN] Watchtower scan expanded from 4-axis to 5-axis — added NUMERACY-AXIS
+>     (weight 0.10) for detecting numeracy-related anti-patterns in recent sessions
+>     (false-precision, sigma-traceability, derived-quantity, selective-gate).
+> (3) [SOFT] Anti-patterns: added NUMERACY-1 (derived-quantity false precision),
+>     NUMERACY-2 (sigma without traceable uncertainty), and NUMERACY-3 (selective
+>     density-gate application) — all from ACRP-04 session.
+> (4) [SOFT] Calibration register: added new prediction for research v2.42 numeracy
+>     gates triggering within 45 days and §6 retraction.
+> (5) [SOFT] Cross-skill integration: updated research to v2.42 with numeracy gates.
+> Red-team: direct parent-agent 5-adversary audit per self-kaizen protocol — no subagents.
+> Cross-reference: research v2.42, ACRP-04 (DOI 10.5281/zenodo.21748008).
+> **v1.3 UPDATE (2026-07-31, deferred-item enforcement):**
+> Added **Deferred-Item Gate** to Phase 5 Closeout (STEP 0, HARD, MANDATORY) — before
+> ANY closeout is declared successful, all deferred items from prior sessions and this
+> session MUST be executed via CLI/API/command-line, or documented with a blocker +
+> evidence + follow-up trigger. Closeout with unexecuted deferred items lacking blockers
+> is a FAILED closeout. Triggered by: cloudflare v3.12/v3.13 changes lost to a concurrent
+> git reset (uncommitted work wiped), and multi-session deferred-item accumulation
+> (branch merges, Buffer LinkedIn post, D1 VACUUM). Also added the matching anti-pattern row.
+> Cross-reference: cloudflare v3.13, windows-command-patterns v2.0.
 > **v1.2.5 UPDATE (2026-08-01, RCS + subagent audit HARD BLOCK + competing D1 scripts):**
 > Red-team kaizen following Session 5RkTbTbTA incidents.
 > Root Causes:
@@ -19,8 +62,77 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >    The truncated version won because the full version used a wrong DB UUID (HTTP 404). Fix: added
 >    SCS-1 anti-pattern — one D1 write target, one approach. After write, re-read AND content-verify.
 > Cross-reference: Session 5RkTbTbTA red team audit, research v2.41, qnfo-core v1.3.
-
-
+> **v1.2.5 UPDATE (2026-07-31, kaizen — LinkedIn MCP session retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 0 in this skill. SOFT: 3.
+> Changes:
+> (1) [SOFT] Calibration Register: added dated prediction for the new `linkedin-mcp`
+>     skill (auth-session validity) — Dependency Auditor, parent-agent.
+> (2) [SOFT] Cross-Skill Integration table: added `linkedin-mcp` (v1.0) row — loaded
+>     for LinkedIn operations; cross-referenced from windows-command-patterns v2.1
+>     (S1.6 detached-process pattern is the canonical launcher for the auto-login
+>     script). Completeness Auditor.
+> (3) [SOFT] Anti-pattern table: added "LINKEDIN_COOKIE is inert in linkedin-mcp-tools
+>     v2.0.3 — do not paste cookies expecting auth; use the persistent-profile --login
+>     flow" (from session 8BNPmK0gJf). Status Auditor.
+> Cross-reference: research v2.38, windows-command-patterns v2.1, linkedin-mcp v1.0.
+> **v1.2.4 UPDATE (2026-07-31, deferred-items closeout gate):**
+> Red-team: direct parent-agent 5-adversary audit. HARD findings: 1 (closeout protocol
+> allowed declaring success with unresolved deferred items). SOFT findings: 1.
+> Changes:
+> (1) [HARD] Added **Deferred-Items Closeout Gate (Phase 5, MANDATORY)** — a kaizen
+>     closeout is NOT successful if any deferred item remains unresolved. Every session
+>     that defers items MUST either (a) resolve them before closeout, or (b) explicitly
+>     re-classify them as a NEW session task with a continuation handoff — never silently
+>     leave them "deferred" while declaring "closeout successful." The gate audits the
+>     session's deferred list and blocks the closeout declaration if anything is open.
+> (2) [HARD] Added **Deferred-Items Audit Protocol (Phase 5 step 0)** — before the
+>     closeout declaration, enumerate all items deferred during the session, attempt
+>     resolution, and only then declare closeout. If resolution fails due to external
+>     blocker (rate limit, missing credential), the closeout MUST state
+>     `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` — never "successful."
+> (3) [SOFT] Added anti-pattern row: "Declaring closeout successful with unresolved
+>     deferred items" (Status Auditor, parent-agent).
+> Cross-reference: research v2.38, qnfo-core v1.3, windows-command-patterns v2.0.
+>
+> **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
+> Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
+> HARD findings: 0 in this skill. SOFT: 2.
+> Changes:
+> (1) [SOFT] Calibration Register: "research (currently v2.34)" → "currently v2.36"
+>     (both entries) — Dependency Auditor, parent-agent. Historical banners left intact.
+> (2) [SOFT] Committed the pending v1.2.1 delta (rule #4 "Fall back immediately" +
+>     two anti-pattern rows: "Subagent reads input files..." and "Repeated polling...")
+>     that existed on disk but was never committed — the v1.2.1 banner claimed these
+>     changes; the commit history now matches the banner (Status Auditor, parent-agent).
+> Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
+> **v1.2.3 UPDATE (2026-07-31, calibration-drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 0. SOFT findings: 1.
+> Changes:
+> (1) [SOFT] Calibration Register: "research (currently v2.36)" → "currently v2.37"
+>     (both entries at lines ~903 and ~912) — research skill bumped v2.36→v2.37
+>     earlier today (KIF-58 kaizen); calibration register now matches live version
+>     (Dependency Auditor, parent-agent).
+> Cross-reference: research v2.37, kaizen v1.2.2.
+> **v1.2.1 UPDATE (2026-07-31, sync-kaizen — gitignore allowlist gap):**
+> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
+> Novelty, Status). HARD findings: 1. SOFT findings: 1.
+> Changes:
+> (1) [HARD] .gitignore ADR-026 allowlist missing 14 of 28 installed skills (50%).
+>     Removed dead `!/qnfo-agent/` entry. Added 14 DeepChat-installed skills to
+>     allowlist: algorithmic-art, deepchat-settings, doc-coauthoring, docx, git-commit,
+>     infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx,
+>     skill-creator, web-artifacts-builder, windows-command-patterns, xlsx.
+>     This unblocked xlsx v1.1 kaizen (recalc.py) and skill-creator v1.1 kaizen files
+>     from git obscurity — they existed on disk but were invisible to the repo.
+> (2) [SOFT] Added anti-pattern: "Skill installed by DeepChat but not added to
+>     gitignore allowlist" — `skill_list` vs `git ls-files` cross-reference as
+>     Watchtower scan step (Accuracy + Completeness Auditors, parent-agent).
+> Confirmed: cronjob "No provider configured" anti-pattern from v1.2 — all 3 existing
+> cronjobs (Daily System Verification, QNFO Secrets Rotation, Calibration Register Audit)
+> fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
+> Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
 > **v1.2 UPDATE (2026-07-30, kaizen — autonomous CI/CD infrastructure):**
 > Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
 > parent-agent audit (Self-Kaizen Protocol invoked). HARD findings: 0. SOFT findings: 3.
@@ -67,127 +179,18 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.34 (confirmed live), self-kaizen protocol now includes
 > autonomous CI/CD infrastructure.
 
-> **v1.2.1 UPDATE (2026-07-31, sync-kaizen — gitignore allowlist gap):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 1. SOFT findings: 1.
-> Changes:
-> (1) [HARD] .gitignore ADR-026 allowlist missing 14 of 28 installed skills (50%).
->     Removed dead `!/qnfo-agent/` entry. Added 14 DeepChat-installed skills to
->     allowlist: algorithmic-art, deepchat-settings, doc-coauthoring, docx, git-commit,
->     infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx,
->     skill-creator, web-artifacts-builder, windows-command-patterns, xlsx.
->     This unblocked xlsx v1.1 kaizen (recalc.py) and skill-creator v1.1 kaizen files
->     from git obscurity — they existed on disk but were invisible to the repo.
-> (2) [SOFT] Added anti-pattern: "Skill installed by DeepChat but not added to
->     gitignore allowlist" — `skill_list` vs `git ls-files` cross-reference as
->     Watchtower scan step (Accuracy + Completeness Auditors, parent-agent).
-> Confirmed: cronjob "No provider configured" anti-pattern from v1.2 — all 3 existing
-> cronjobs (Daily System Verification, QNFO Secrets Rotation, Calibration Register Audit)
-> fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
-> Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
 
-> **v1.2.3 UPDATE (2026-07-31, calibration-drift fix):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 0. SOFT findings: 1.
-> Changes:
-> (1) [SOFT] Calibration Register: "research (currently v2.36)" → "currently v2.37"
->     (both entries at lines ~903 and ~912) — research skill bumped v2.36→v2.37
->     earlier today (KIF-58 kaizen); calibration register now matches live version
->     (Dependency Auditor, parent-agent).
-> Cross-reference: research v2.37, kaizen v1.2.2.
 
-> **v1.2.5 UPDATE (2026-07-31, kaizen — LinkedIn MCP session retrospective):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 0 in this skill. SOFT: 3.
-> Changes:
-> (1) [SOFT] Calibration Register: added dated prediction for the new `linkedin-mcp`
->     skill (auth-session validity) — Dependency Auditor, parent-agent.
-> (2) [SOFT] Cross-Skill Integration table: added `linkedin-mcp` (v1.0) row — loaded
->     for LinkedIn operations; cross-referenced from windows-command-patterns v2.1
->     (S1.6 detached-process pattern is the canonical launcher for the auto-login
->     script). Completeness Auditor.
-> (3) [SOFT] Anti-pattern table: added "LINKEDIN_COOKIE is inert in linkedin-mcp-tools
->     v2.0.3 — do not paste cookies expecting auth; use the persistent-profile --login
->     flow" (from session 8BNPmK0gJf). Status Auditor.
-> Cross-reference: research v2.38, windows-command-patterns v2.1, linkedin-mcp v1.0.
 
-> **v1.2.4 UPDATE (2026-07-31, deferred-items closeout gate):**
-> Red-team: direct parent-agent 5-adversary audit. HARD findings: 1 (closeout protocol
-> allowed declaring success with unresolved deferred items). SOFT findings: 1.
-> Changes:
-> (1) [HARD] Added **Deferred-Items Closeout Gate (Phase 5, MANDATORY)** — a kaizen
->     closeout is NOT successful if any deferred item remains unresolved. Every session
->     that defers items MUST either (a) resolve them before closeout, or (b) explicitly
->     re-classify them as a NEW session task with a continuation handoff — never silently
->     leave them "deferred" while declaring "closeout successful." The gate audits the
->     session's deferred list and blocks the closeout declaration if anything is open.
-> (2) [HARD] Added **Deferred-Items Audit Protocol (Phase 5 step 0)** — before the
->     closeout declaration, enumerate all items deferred during the session, attempt
->     resolution, and only then declare closeout. If resolution fails due to external
->     blocker (rate limit, missing credential), the closeout MUST state
->     `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` — never "successful."
-> (3) [SOFT] Added anti-pattern row: "Declaring closeout successful with unresolved
->     deferred items" (Status Auditor, parent-agent).
-> Cross-reference: research v2.38, qnfo-core v1.3, windows-command-patterns v2.0.
->
-> **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
-> Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
-> HARD findings: 0 in this skill. SOFT: 2.
-> Changes:
-> (1) [SOFT] Calibration Register: "research (currently v2.34)" → "currently v2.36"
->     (both entries) — Dependency Auditor, parent-agent. Historical banners left intact.
-> (2) [SOFT] Committed the pending v1.2.1 delta (rule #4 "Fall back immediately" +
->     two anti-pattern rows: "Subagent reads input files..." and "Repeated polling...")
->     that existed on disk but was never committed — the v1.2.1 banner claimed these
->     changes; the commit history now matches the banner (Status Auditor, parent-agent).
-> Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
+
+
+
+
 
 # KAIZEN v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
 
-> **v1.4.1 UPDATE (2026-08-02, kaizen — ZENODO-1..5 anti-patterns + calibration drift fix):**
-> Reactive kaizen from carry-forward session (ODR v2.1 + Cross-Domain v4.1). Direct parent-agent
-> 5-adversary audit per self-kaizen protocol — no subagents. HARD: 0 in this skill. SOFT: 1.
-> Changes:
-> (1) [SOFT] Anti-patterns: added ZENODO-1 (global record IDs — existence != identity, 21748026),
->   ZENODO-2 (newversion-draft-exists 400 files.enabled — follow links.latest_draft, never
->   parallel newversion, ODR 21751722/21752136), ZENODO-3 (in-flight unsubmitted-draft
->   coordination), ZENODO-4 (D1 body_md sync from published file, not stale local copy),
->   ZENODO-5 (working-memory DOIs are phantoms until live-verified — ODR 21753142 was
->   unrelated content). (Completeness + Accuracy Auditors, parent-agent).
-> (2) [SOFT] Calibration register: research v2.38 -> v2.44 (both entries) — Dependency Auditor,
->   parent-agent.
-> (3) [SOFT] Version section reconciled v1.3.0 -> v1.4.0 (Status Auditor, parent-agent).
-> Cross-reference: research v2.44 (Zenodo draft-collision gates), ODR v2.1
-> (10.5281/zenodo.21752136), Cross-Domain v4.1 (10.5281/zenodo.21754016).
 
-> **v1.4 UPDATE (2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns):**
-> Self-kaizen per user directive: "EXECUTE KAIZEN SKILL UPDATE ON KAIZEN SKILL ITSELF."
-> Triggered by research v2.42 kaizen (BP-4 through BP-10 numeracy gates) and ACRP-04
-> session findings (9,138σ unreproducible, derived-quantity error, selective gate application).
-> Changes:
-> (1) [SOFT] Calibration register: "research (currently v2.38)" → "research (currently v2.42)"
->     — Dependency Auditor, parent-agent (self-kaizen protocol).
-> (2) [DESIGN] Watchtower scan expanded from 4-axis to 5-axis — added NUMERACY-AXIS
->     (weight 0.10) for detecting numeracy-related anti-patterns in recent sessions
->     (false-precision, sigma-traceability, derived-quantity, selective-gate).
-> (3) [SOFT] Anti-patterns: added NUMERACY-1 (derived-quantity false precision),
->     NUMERACY-2 (sigma without traceable uncertainty), and NUMERACY-3 (selective
->     density-gate application) — all from ACRP-04 session.
-> (4) [SOFT] Calibration register: added new prediction for research v2.42 numeracy
->     gates triggering within 45 days and §6 retraction.
-> (5) [SOFT] Cross-skill integration: updated research to v2.42 with numeracy gates.
-> Red-team: direct parent-agent 5-adversary audit per self-kaizen protocol — no subagents.
-> Cross-reference: research v2.42, ACRP-04 (DOI 10.5281/zenodo.21748008).
 
-> **v1.3 UPDATE (2026-07-31, deferred-item enforcement):**
-> Added **Deferred-Item Gate** to Phase 5 Closeout (STEP 0, HARD, MANDATORY) — before
-> ANY closeout is declared successful, all deferred items from prior sessions and this
-> session MUST be executed via CLI/API/command-line, or documented with a blocker +
-> evidence + follow-up trigger. Closeout with unexecuted deferred items lacking blockers
-> is a FAILED closeout. Triggered by: cloudflare v3.12/v3.13 changes lost to a concurrent
-> git reset (uncommitted work wiped), and multi-session deferred-item accumulation
-> (branch merges, Buffer LinkedIn post, D1 VACUUM). Also added the matching anti-pattern row.
-> Cross-reference: cloudflare v3.13, windows-command-patterns v2.0.
 
 ## Overview
 

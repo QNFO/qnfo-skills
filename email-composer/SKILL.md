@@ -1,7 +1,7 @@
 ---
 name: email-composer
 description: Email triage, drafting, business communication. Use for inbox analysis, drafting responses, bizdev outreach, declining/pitching, QNFO/QWAV-aligned correspondence.
-version: v1.1
+version: 1.1
 kif_tags: [KIF-03, KIF-05, KIF-32]
 ---
 
