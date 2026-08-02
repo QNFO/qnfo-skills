@@ -97,3 +97,5 @@ try {
     Write-Host "[ERROR] $($_.Exception.Message)" -ForegroundColor Red
     exit 3
 }
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

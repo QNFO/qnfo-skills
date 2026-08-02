@@ -231,3 +231,5 @@ if ($logLines.Count -gt $MAX_LOG_LINES) {
 Get-ChildItem -Path $QueueDir -Filter "*.done" | 
     Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-2) } |
     Remove-Item -Force -ErrorAction SilentlyContinue
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

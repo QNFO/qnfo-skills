@@ -72,3 +72,5 @@ if ($ConfigClean) {
     }
     Write-Host "  Cleaned $cleaned .bak files ($([math]::Round($freed/1024,0)) KB)" -ForegroundColor Green
 }
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+# ============================================================
+# DEPRECATED (2026-08-02) — SUPERSEDED BY build-pdf-pro.py
+# ============================================================
+# This XeLaTeX route FAILS on Unicode-math papers:
+#   - pandoc+xelatex: 230-391 "Missing character" warnings
+#     (Latin Modern lacks mu/chi/phi/Q/subscripts glyphs)
+#   - unicode-math via -V header-includes: ignored by template
+#   - unicode->latex conversion: "Missing } inserted" crash on
+#     papers that already contain $...$ math
+# USE INSTEAD: build-pdf-pro.py (MathJax-SVG -> puppeteer CDP) —
+# the mandated single publication pipeline. See the ODR repo
+# MATHJAX_CDP_PDF_BUILD.md for the consolidated process.
+# Kept only for legacy LaTeX-native work (Springer Nature .tex).
+# ============================================================
+
 build-paper.py -- THE SINGLE, CANONICAL build script for QNFO papers (v1.0, KIF-27)
 
 WHY THIS FILE EXISTS (root-cause consolidation, 2026-07-26):

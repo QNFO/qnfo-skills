@@ -148,3 +148,5 @@ Write-Host ('  Signal:   ' + $signalPath)
 Write-Host '  Processing within 60s...'
 Write-Host ''
 Write-Host 'Check: trigger_admin.ps1 -Status' -ForegroundColor DarkGray
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

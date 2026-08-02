@@ -162,3 +162,5 @@ if ($Json) {
 }
 
 exit $(if ($severity -eq "PASS") { 0 } elseif ($severity -eq "WARN") { 1 } else { 2 })
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

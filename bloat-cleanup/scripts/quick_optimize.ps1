@@ -113,3 +113,5 @@ if (-not $DryRun) {
     $db = "$roaming\app_db\agent.db"
     if (Test-Path $db) { Write-Host "  agent.db: $([math]::Round((Get-Item $db).Length/1GB,2)) GB" }
 }
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

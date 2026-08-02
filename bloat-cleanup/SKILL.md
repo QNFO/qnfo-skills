@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 2.6
+version: 2.7
 triggers:
 - cleanup
 - bloatware
@@ -14,6 +14,31 @@ triggers:
 - free RAM
 - optimize Windows
 ---
+
+
+> **v2.7 UPDATE (2026-08-02, kaizen — PowerShell deprecation + deep-bloat audit):**
+> [HARD] **POWERSHELL DEPRECATION (user mandate).** All 5 .ps1 scripts
+> (admin_watcher, trigger_admin, manage_watcher, quick_optimize, system_tune)
+> carry DEPRECATED banners — PowerShell is RETIRED from QNFO operations
+> (Python-first only, cloudflare KIF-59). Windows PowerShell 5.1 remains ONLY
+> as system component + agent exec runtime. PowerShell 7 (pwsh) uninstalled.
+> Admin-required ops (service disable, AppX, Defender exclusions, DNS) route
+> through Python scripts with admin-queue messaging.
+> [SOFT] **AGENT DB PRUNE — LIVE MEMORY SAFEGUARD.** Dry-run on a production
+> 1.8 GB agent.db returned "No unpinned sessions older than 7 days" — the DB
+> is LIVE AGENT MEMORY (12,353 agent_memory rows), NOT pruneable history.
+> DO NOT force --max-age-days/--target-db-size-gb on an active agent.db.
+> Only session/turn history is pruneable. VACUUM requires DeepChat closed.
+> [SOFT] **HIDDEN DATA STORES.** .wrangler/ in skills tree is gitignored
+> (0.0 MB, Cloudflare cache) — harmless. skills .git benefits from `git gc`
+> (35.5 -> 9.9 MB). Stale AppData/Roaming/.deepchat/skills (8 outdated)
+> confirmed GONE. system/SKILL.md lives ONLY at .deepchat/skills/system/.
+> [SOFT] **MCP CLEANUP.** Buffer MCP token in mcp-settings.json was STALE
+> (HTTP 401, ...6JGD vs documented ...14Ky) — fixed + backup. LinkedIn MCP
+> stores LINKEDIN_PASSWORD + LINKEDIN_COOKIE plaintext (documented linkedin-mcp
+> pattern) — rotate if config exposure is a concern.
+> Cross-reference: windows-command-patterns v2.4, cloudflare v3.19, research v2.45.
+
 
 # Bloat Cleanup
 

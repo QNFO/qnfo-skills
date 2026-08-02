@@ -98,3 +98,5 @@ if ($Stop) {
     if ($LASTEXITCODE -eq 0) { Write-Host 'Watcher removed' -ForegroundColor Green }
     else { Write-Host 'Could not remove (may need UAC). Run setup_admin_watcher.bat as Admin' -ForegroundColor Yellow }
 }
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

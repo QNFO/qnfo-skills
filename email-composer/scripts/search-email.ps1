@@ -69,3 +69,5 @@ foreach ($store in $ns.Stores) {
 
 Write-Output ""
 Write-Output "Done."
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt

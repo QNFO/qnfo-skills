@@ -50,3 +50,5 @@ try {
     Write-Output "ERROR: $_"
     Write-Output $_.ScriptStackTrace
 }
+
+# DEPRECATED 2026-08-02: PowerShell retired. Python-first only. See bloat-cleanup DEPRECATED-POWERSHELL-README.txt
