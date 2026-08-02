@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.13"
+version: "3.15"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-agent", "research"]
 priority: 1
@@ -10,7 +10,53 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.14 (Kaizen: Wrangler Environment Fix + R2 False-Negative Elimination + Workers Baseline Update)
+# CLOUDFLARE -- v3.16 (Kaizen: workers.dev route remediation + AI binding format + 1101 misdiagnosis)
+
+> **v3.16 UPDATE (2026-08-02, kaizen — autonomous P0 remediation session):**
+> Red-team: direct parent-agent audit of session OL00bCz3AJlaz_NjUi4eS.
+> HARD: 4. SOFT: 2. DESIGN: 1.
+> Changes:
+> (1) [HARD] **KIF-61: Workers WITHOUT `workers_dev = true` have NO public HTTP route**
+>     — webhook/health endpoints return DNS NXDOMAIN (curl exit 1), misread as HTTP 1101.
+>     Root cause of the qnfo-paper-indexer webhook failure: NOT a missing AI binding
+>     (binding WAS present — `wrangler deploy --dry-run` proved it). Fix: add
+>     `workers_dev = true` to wrangler.toml + `wrangler deploy`. Verified live:
+>     https://qnfo-paper-indexer.q08.workers.dev and https://qnfo-qwav.q08.workers.dev.
+> (2) [HARD] **AI binding format: `[[ai]]` (array of tables), NOT `[ai]` (single table)**
+>     — `[ai]` fails config validation with "The field `ai` should be an object but got
+>     [{\"binding\":\"AI\"}]". Both qnfo-paper-indexer and qnfo-qwav deployed with `[[ai]]`;
+>     qnfo-qwav /health then reported `ai: true` (previously false → D1 LIKE fallback).
+> (3) [HARD] **REST bindings endpoint 9106 ≠ token lacks Workers permission** — `GET
+>     /accounts/{id}/workers/scripts/{name}/bindings` returned 9106 "Authentication failed
+>     (status: 400)" while `wrangler deploy` (same CLOUDFLARE_API_TOKEN) succeeded. The
+>     REST bindings sub-endpoint has a different auth requirement; NEVER conclude "token
+>     lacks Workers Scripts:Edit" from a single REST 9106 — test `wrangler deploy` directly.
+> (4) [HARD] **`wrangler routes list` REMOVED in v4.118.0** — returns "Unknown arguments:
+>     routes, list". Route management is via wrangler.toml `workers_dev`/`routes` or API.
+> (5) [SOFT] `wrangler pages project list` — canonical Pages discovery (5 projects: qwav,
+>     qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). cfpe-dashboard.pages.dev down =
+>     project NEVER existed (not a runtime issue).
+> (6) [SOFT] ipatent.me chain: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app
+>     → 500 (Google Cloud Run backend). NOT a Cloudflare issue — GCP side.
+> (7) [DESIGN] Added §Workers.dev Route Enablement protocol (below).
+> Cross-reference: qnfo-paper-indexer (created 2026-08-01), qnfo-qwav v2.0-cors-fixed,
+> memory "Walking Cat v_p^max", LoS W-S5.
+
+> **v3.15 UPDATE (2026-08-02, kaizen — Workers baseline + paper auto-indexing):**
+> Reactive kaizen triggered by session dc5191VzXRICu4vd_cIEo — full paper Vectorize
+> reindexing + automation layer deployed.
+> Red-team: direct parent-agent 5-adversary audit. HARD: 0. SOFT: 3. DESIGN: 1.
+> Changes:
+> (1) [SOFT] Workers baseline 8 → 9. Fleet: +`qnfo-paper-indexer` (auto-indexes
+>     all 233 paper full-text bodies into `qwav-research-v2` Vectorize; cron every
+>     30 min + webhook for real-time; D1 + PAPER_VZ + AI bindings).
+> (2) [SOFT] Resource Baselines: Workers Expected 7→9, Warning 8-11→10-11,
+>     Critical 10+→12+.
+> (3) [SOFT] Cronjob count: +1 "Paper Vectorize Auto-Indexer" (every 4h backup).
+>     Scheduler running, 8 enabled jobs.
+> (4) [DESIGN] Cross-reference: qnfo-paper-indexer Worker at
+>     qnfo-paper-indexer.q08.workers.dev (/health, /count, /index?offset=N,
+>     /webhook?slug=XXX, /cron/debug).
 
 > **v3.14 UPDATE (2026-08-01, kaizen — wrangler environment + R2 verification false-negatives):**
 > Red-team: direct parent-agent 5-adversary audit of a full session's execution errors
@@ -406,6 +452,52 @@ Invocation paths (all equivalent):
 `wrangler --version` directly. If not found, check BOTH `C:\Users\LENOVO\npm-global`
 (global v4.118.0) AND `%LOCALAPPDATA%\npm-cache\_npx\*\node_modules\wrangler`
 (npx-cached — delete and re-install if corrupt).
+
+### Workers.dev Route Enablement (KIF-61 — v3.16)
+
+**A Worker without `workers_dev = true` in its wrangler.toml has NO public HTTP
+route.** Its `.workers.dev` URL returns DNS NXDOMAIN (curl exit code 1), and any
+webhook/health probe misreads this as a binding failure or HTTP 1101. Cron-only
+Workers are reachable ONLY through their `scheduled` handler — never via HTTP.
+
+**Diagnosis order for a "webhook 1101" / "worker unreachable" report:**
+1. `curl -s https://<worker>.q08.workers.dev/health` — if exit code 1 (NXDOMAIN),
+   the Worker has no workers.dev route. This is a CONFIG gap, not a binding gap.
+2. `wrangler deploy --dry-run` (from a dir containing the worker JS) — prints the
+   LIVE binding set. If `env.AI`/`env.PAPER_VZ`/`env.LIVING_PAPER` are listed, the
+   bindings are NOT the problem. (2026-08-02: this proved qnfo-paper-indexer's AI
+   binding was present all along.)
+3. Fix: add `workers_dev = true` to wrangler.toml, `wrangler deploy`.
+
+**Canonical minimal wrangler.toml (both QNFO index/search Workers):**
+```toml
+name = "<worker-name>"
+main = "<worker-name>.js"
+compatibility_date = "2026-08-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "LIVING_PAPER"
+database_name = "living-paper"
+database_id = "70a58cb3-b2cd-498d-877f-ecca86859a22"
+
+[[vectorize]]
+binding = "PAPER_VZ"      # or QWAV_VZ for qnfo-qwav
+index_name = "qwav-research-v2"
+
+[[ai]]
+binding = "AI"            # ARRAY form [[ai]] — NOT [ai] single-table
+```
+
+**AI binding format (v3.16):** use `[[ai]]` (array of tables). `[ai]` (single table)
+fails with `The field "ai" should be an object but got [{"binding":"AI"}]`.
+Verify materialization via `/health` — qnfo-qwav reports `ai: true` only after the
+`[[ai]]` deploy (previously `ai: false` → D1 LIKE fallback).
+
+**Known live workers.dev URLs (verified 2026-08-02):**
+- `https://qnfo-paper-indexer.q08.workers.dev` — /health, /count, /index?offset=N,
+  /webhook?slug=XXX, /cron/debug (cron: every 30 min, 233 papers, 0 errors)
+- `https://qnfo-qwav.q08.workers.dev` — /health (ai: true), /ask, /ai/ask, /ai/search
 
 ### R2 CLI Syntax (wrangler v4+)
 **CRITICAL:** wrangler v4 uses `{bucket}/{key}` as a single positional argument AND
@@ -834,9 +926,9 @@ see `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md`. Any future count
 an audit-trail row is drift.)
 
 ### Workers
-Baseline: 8 (updated 2026-08-01 — live `workers_list` MCP returned 8 incl.
-`qnfo-gateway-production`, created 2026-07-31; treat any future count ≠ 8 as drift).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
+Baseline: 9 (updated 2026-08-02 — live `workers_list` MCP returned 9 incl.
+`qnfo-paper-indexer`, created 2026-08-01; treat any future count ≠ 9 as drift).
+**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; cron every 30 min + webhook for real-time; v1.0, 2026-08-01), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
 
 ### Pages
 Baseline: 5 projects (post-consolidation 2026-07-17: `qnfo-publications`, `qwav`, `qnfo-hub`, `ipatent-me`, `ask-qwav`).
@@ -899,7 +991,7 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 | Resource | Expected | Warning | Critical |
 |:---------|:--------|:--------|:---------|
 | D1 Databases | 6 | +/- 1 | +/- 2+ |
-| Workers | 7 | 8-9 | 10+ |
+| Workers | 9 | 10-11 | 12+ |
 | Pages Projects | 5 | 6-7 | 8+ |
 | Vectorize Indexes | 5 | +/- 1 | +/- 2+ |
 | R2 Buckets | 13 | +/- 1 | +/- 3+ |
@@ -1099,3 +1191,8 @@ When an MCP server call returns a success response, treat it with the same verif
 | **R2 REST listing without pagination (v3.14, 2026-08-01)** | The object-list API returns **20 objects per page by default**. A script that fetches one page and checks for a key beyond page 1 produces a false "NOT FOUND" conclusion. Pass `&limit=1000` and follow `result.cursor` until absent. |
 | **R2 object verification via HEAD (v3.14, 2026-08-01)** | The R2 object API does NOT support HEAD — it returns HTTP 405, which a verification script misread as "not found". Use GET and compare `Content-Length` (or MD5 of the body) against the local source. |
 | **Literal `%VAR%` in `.npmrc` / npm config values (v3.14, 2026-08-01)** | npm config files do NOT expand Windows `%VAR%` — the string is used LITERALLY, creating a stray `%USERPROFILE%` directory. Use absolute paths (`C:\Users\LENOVO\npm-global`) or `${VAR}` syntax in `.npmrc`. |
+| **KIF-61: Deploying a Worker without `workers_dev = true` and expecting HTTP/webhook access (2026-08-02)** | Cron-only or route-less Workers have NO public HTTP route — `.workers.dev` returns DNS NXDOMAIN (curl exit 1), misread as HTTP 1101 or a binding failure. Fix: `workers_dev = true` in wrangler.toml + `wrangler deploy`. Diagnose with `curl -s https://<worker>.q08.workers.dev/health` FIRST, then `wrangler deploy --dry-run` to read the live binding set. Root cause of the qnfo-paper-indexer webhook failure — the AI binding was present all along. |
+| **Using `[ai]` (single table) for Workers AI binding in wrangler.toml (2026-08-02)** | Fails config validation: `The field "ai" should be an object but got [{"binding":"AI"}]`. Use `[[ai]]` (array of tables). Verify materialization via the Worker's `/health` endpoint (`ai: true`). |
+| **Concluding the token lacks Workers Scripts:Edit from a REST 9106 bindings error (2026-08-02)** | `GET /accounts/{id}/workers/scripts/{name}/bindings` returned 9106 while `wrangler deploy` with the same CLOUDFLARE_API_TOKEN succeeded. The bindings sub-endpoint has a different auth path. NEVER trust a single REST 9106 as proof of missing scope — test `wrangler deploy` directly before declaring a blocker. |
+| **Using `wrangler routes list` (removed in v4.118.0)** | Returns "Unknown arguments: routes, list". Route management in wrangler v4 is via wrangler.toml `workers_dev`/`routes` keys or the zone-level REST API. Use `wrangler pages project list` for Pages discovery (verified 2026-08-02: 5 projects — qwav, qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). |
+| **Misattributing a non-Cloudflare outage to Cloudflare (2026-08-02)** | ipatent.me: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app → 500 on Google Cloud Run. The CF layer is healthy; the 500 is the GCP backend. Always trace the full redirect chain (`curl -sI` + follow Location) before declaring "Cloudflare issue". |
