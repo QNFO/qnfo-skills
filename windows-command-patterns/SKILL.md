@@ -25,8 +25,12 @@ version: "2.3"
 >     Item 4: "Can I write a .py file instead? → YES (99%+). Do that."
 >     This gate is read FIRST on skill activation, making it impossible to miss.
 > Cross-reference: kaizen v1.4.1 (Watchtower auto-trigger protocol), research v2.45 (GATE P5.CLEAN
-> deferred python -c escalation as EXTERNAL-BLOCK — this v2.3 fix is the skill-level counterpart;
-> the true permanent fix requires DeepChat tool-level enforcement, deferred but documented).
+> deferred python -c escalation as EXTERNAL-BLOCK — now RESOLVED: the system-level PATH interceptor
+> at %USERPROFILE%\safe-python\python.cmd + qa_check.py blocks ALL python -c calls containing quotes,
+> braces, dict(), angle-brackets, or inline API calls BEFORE Python receives them. Safe -c calls
+> (simple print(), import-only) pass through transparently. Non-c calls (python script.py, python -m,
+> python --version) are never intercepted. PATH registered at USER-level registry position 0; takes
+> effect in new terminal sessions after logout/login or DeepChat restart.)
 > Red-team: direct parent-agent 5-adversary audit of a session that lost ~8 tool calls
 > to inline `python -c` failures and 1 stray-directory incident. HARD findings: 2. SOFT: 1.
 > Changes:
