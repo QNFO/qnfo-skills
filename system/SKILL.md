@@ -1,6 +1,6 @@
 ---
 name: system
-description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
+description: "SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation."
 ---
 
 
@@ -507,9 +507,10 @@ skill_view("system")       # Load skill management
 **Option C: Task-Specific Loading**
 When you know which skill you need:
 ```
-skill_view("research")     # For papers/Zenodo/literature
-skill_view("cloudflare")   # For Workers/R2/D1/infra
-skill_view("code-review")  # For code quality/security
+skill_view("research")             # For papers/Zenodo/literature
+skill_view("cloudflare")           # For Workers/R2/D1/infra
+skill_view("code")                 # For code quality/security (merged code-review + mcp-builder)
+skill_view("execution-mandate")    # For execution protocols + subagent orchestration
 ```
 
 ### Verification
