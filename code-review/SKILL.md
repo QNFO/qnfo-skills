@@ -12,10 +12,19 @@ self_sufficient: true
 
 > **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Every CRITICAL finding must cite a specific line number. After review, the reviewer red-teams its own findings (could any be false positives?).
 
-# CODE REVIEW SKILL — v2.1
+# CODE REVIEW SKILL — v2.2 (DEPRECATED — merged into `code`)
 
-> **On-demand skill.** Load via `skill_view('code-review')` for comprehensive code analysis.
-> **Precedence:** Use `code-review` for reviewing existing code. Use `code` for writing new code.
+> **DEPRECATED (2026-08-03):** This skill has been MERGED into the `code` skill (v2.2).
+> The `code` skill now handles all code review AND MCP server building in one ultra-consolidated skill.
+> All review checklists (6 domains: Security, Type Safety, Error Handling, Concurrency,
+> Cloudflare-Native, Performance) are now maintained in the `code` skill.
+> **Use `code` instead — this skill is retained for backwards compatibility only.**
+>
+> ---
+> ## FORWARD TO `code`
+> Load `skill_view("code")` for the active code review + MCP builder pipeline.
+> See `code` skill v2.2 §Review Checklist for the 6-domain framework.
+> ---
 
 ---
 

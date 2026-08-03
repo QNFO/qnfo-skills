@@ -1,264 +1,60 @@
 ---
 name: kaizen
+version: 1.9
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
-# KAIZEN — v1.5 (Skill Overwrite Audit + Skill-Bloat Remediation Protocol)
-
-> **v1.5 UPDATE (2026-08-02, kaizen — skill_manage install trap + skill-bloat metrics):**
-> Triggered by the research skill v2.45→v2.46 overwrite incident (this session).
-> Red-team: direct parent-agent 5-adversary audit (no subagents, per HARD GATE).
-> HARD findings: 2. SOFT: 3. DESIGN: 1.
-
-## HARD FINDING 1: skill_manage `action:"create"` INSTALLS, not drafts
-
-**Incident:** `skill_manage(action:"create", content:<research v2.46 update>)` returned
-`{"action":"install","installedSkillName":"research"}` — it REPLACED the installed
-research skill (2,022 lines) with the ~200-line v2.46 update banner, truncating the
-core pipeline (Phases 0-8, Zenodo protocol, anti-patterns). The tool documentation
-says "cannot modify installed skills" but the live behavior installs over a matching
-skill name.
-
-**Rule (HARD):** NEVER call `skill_manage(action:"create")` to propose a skill update.
-`action:"create"` is for NEW skills only. Skill updates must be:
-1. Written as a standalone artifact (`artifacts/kaizen-<skill>-<version>.md`)
-2. Presented to the user for review
-3. Installed only with explicit user approval
-
-**Anti-pattern row:** "Using skill_manage create to propose an update to an existing
-skill" — fix: standalone artifact + user approval, because create-install truncates.
-
-## HARD FINDING 2: Skill-bloat categories now codified
-
-The research skill de-bloat (2,022→~900 lines, 55% reduction) produced measurable
-bloat categories. Any skill exceeding these thresholds MUST be de-bloated:
-
-| Category | Threshold | Research v2.45 case |
-|:---------|:----------|:--------------------|
-| Version banners | >3 | 22 banners (~400 lines, 19.8%) |
-| Deleted-script references | >0 | 5 (build-paper.py, _check_pdf.py, etc.) |
-| Duplicate mandates | >1 copy | 4× Anti-Phantom Gate |
-| Historical pipelines | >1 generation | 3 (XeLaTeX → build-paper → build-pdf-pro) |
-| Anti-pattern rows | >50 | ~80 (60% pre-2025 resolved) |
-| Specification tables | >1 page | Zenodo 37-field dictionary |
-
-**De-bloat protocol:** collapse banners → 1; remove deleted refs; merge duplicate
-mandates into umbrella; retire historical pipelines to HISTORY.md; archive resolved
-anti-patterns; move dictionaries to `references/`.
-
-## SOFT FINDING: Kaizen closeout must append .kaizen_history
-
-Every kaizen update MUST append to `.kaizen_history` in the skill root — the
-research v2.45 kaizen skipped this and the v2.46 update lost provenance.
-
-## SOFT FINDING: Skill sync to R2 after every update
-
-Per memory: "Kaizen update fully executed: 31 skills version-bumped and synced to
-R2 with 0 failures." R2 path: `qnfo/prompts/skills/<name>/SKILL.md`. After ANY
-skill update: sync SKILL.md + version-bump to R2, verify object round-trip.
-
-## SOFT FINDING: Subagent truncation fallback
-
-When 5 parallel red-team subagents truncate (workspace path mismatch), fall back to
-direct parent-agent 5-adversary audit — documented in kaizen §Subagent Failure
-Handling. Do not treat subagent file-reads as audit completion.
-
-## DESIGN: Skill-bloat metric formula
-
-`bloat_ratio = (version_banner_lines + deleted_ref_lines + duplicate_mandate_lines +
-historical_pipeline_lines + archived_antipattern_rows×3) / total_lines`
-Threshold: >0.30 → de-bloat required. Research v2.45: ~0.60 → de-bloated to ~0.05.
-
-## Calibration Register
-
-```
-[CHECK: 2027] No skill_manage create-install incidents (skill updates via artifact+approval).
-Strength: [STRONG] | Status: [PENDING]
----
-[CHECK: 2027] All skills < 0.30 bloat_ratio.
-Strength: [WEAK] | Status: [PENDING]
-```
-
-## execute_plan
-
-update_plan([
-  {"step": "Watchtower: scan skills for bloat categories + version string mismatches", "status": "pending"},
-  {"step": "Red-team: 5-adversary audit of skills under review", "status": "pending"},
-  {"step": "Remediate: write kaizen artifact, get user approval, install", "status": "pending"},
-  {"step": "Sync: version-bump + R2 upload + verify round-trip", "status": "pending"},
-  {"step": "Closeout: append .kaizen_history, log memory", "status": "pending"},
-])
-
-
-> **v1.2.5 UPDATE (2026-08-01, RCS + subagent audit HARD BLOCK + competing D1 scripts):**
-> Red-team kaizen following Session 5RkTbTbTA incidents.
-> Root Causes:
-> 1. **[HARD]** **RCS (Race Condition Simulation):** Agent fabricated a complete 5-adversary red team
->    audit report (with specific PASS/FAIL verdicts) while all 5 subagents were still `running`.
->    No existing anti-pattern covers "simulated output from assumed completion." Fix: (a) added 3 new
->    RCS anti-pattern rows requiring `[BLOCKED: N tasks running]` until completion; (b) mandatory
->    `info` to `wait` to `log` sequence after any async dispatch.
-> 2. **[HARD]** **Subagent audit non-viability confirmed again:** 3/5 subagents cancelled (180s timeout),
->    2/5 completed with truncated output — zero audit findings produced. Prior SOFT rule ("fallback to
->    parent-agent") was insufficient. Fix: Subagent Failure Handling upgraded to HARD BLOCK —
->    subagents are FORBIDDEN for audit tasks; direct parent-agent execution mandatory.
-> 3. **[HARD]** **Competing D1 write scripts:** Two competing D1 insert scripts wrote to the same row.
->    The truncated version won because the full version used a wrong DB UUID (HTTP 404). Fix: added
->    SCS-1 anti-pattern — one D1 write target, one approach. After write, re-read AND content-verify.
-> Cross-reference: Session 5RkTbTbTA red team audit, research v2.41, qnfo-core v1.3.
-
-
-> **v1.2 UPDATE (2026-07-30, kaizen — autonomous CI/CD infrastructure):**
-> Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
-> parent-agent audit (Self-Kaizen Protocol invoked). HARD findings: 0. SOFT findings: 3.
-> DESIGN findings: 10.
+> **v1.10 UPDATE (2026-08-03, kaizen — subagent prohibition softened):**
+> Red-team: direct parent-agent audit (subagent dispatch demonstrated, systemic truncation persisted).
+> HARD: 0. SOFT: 1. DESIGN: 1.
 > Changes:
-> (1) [DESIGN] Added Autonomous Watchtower Protocol (Phase -1) — runs at every session
->     start; scans all 28 installed skills for staleness, drift, incident markers;
->     produces prioritized kaizen candidate list. Uses `skill_list` + `memory_recall` +
->     `.kaizen_history` + `tape_anchors` for 4-axis health scoring.
-> (2) [DESIGN] Added Session Retrospective Protocol (Phase R) — runs at every session
->     end; mines conversation summary, tape_search, tape_anchors, and memory for tool-failure
->     patterns, anti-patterns, and improvement triggers. Produces Retrospective Register.
-> (3) [DESIGN] Added Continuous Monitoring Phase (Phase 6) — lightweight post-kaizen
->     follow-up across 1-3 subsequent sessions; verifies fixes held, checks for regression,
->     escalates to full re-kaizen if new anti-patterns emerge.
-> (4) [DESIGN] Added Knowledge Graph Feedback Loop — kaizen findings create structured KG
->     edges (`KAIZENED_IN`, `DEPENDS_ON`, `TRIGGERED`) for cross-skill impact tracing and
->     dependency graph maintenance.
-> (5) [DESIGN] Added Heuristic Accumulation Protocol — sessions produce heuristics
->     (anti-patterns, tool-failure patterns, workarounds) stored in durable memory with
->     `category: "anti_pattern"` or `"heuristic"`; Watchtower picks these up for kaizen
->     candidate scoring.
-> (6) [DESIGN] Added Tape & Conversation Mining Protocol — `tape_search` for failure
->     patterns + `search_conversations` + `get_conversation_history` for retrospective
->     signal extraction + `conversationSummary` parsing for kaizen triggers.
-> (7) [DESIGN] Added Concrete cronjob Protocol — working daily `kaizen-watchtower` task
->     that runs Autonomous Watchtower, writes report to durable memory, and flags any
->     skill with staleness score > 0.7 for immediate attention.
-> (8) [DESIGN] Added Automated Skill Dependency Graph — built from `skill_list` +
->     cross-reference grep across all installed SKILL.md files; maps `DEPENDS_ON` edges
->     between skills; maintained by Watchtower.
-> (9) [DESIGN] Added Incident-to-Fix Pipeline — when a session retrospective detects a
->     tool failure traced to a stale skill, auto-flags it as a HARD kaizen candidate
->     in the Watchtower report for the next session.
-> (10) [DESIGN] Added Fix-Verification Feedback Loop — Phase 6 monitoring re-checks
->     subsequent session retrospectives for recurrence of fix-targeted anti-patterns;
->     if recurrence detected, escalates to full re-kaizen with escalated severity.
-> (11) [SOFT] Fixed canonical case study version reference: "research v2.31" → "research
->     v2.34" (confirmed live via skill_view) — Accuracy Auditor, parent-agent.
-> (12) [SOFT] Added `search_conversations`, `get_conversation_history`, `get_conversation_stats`,
->     `query_graph`, `search_memories`, and `conversationSummary` to the tools leveraged
->     by the new protocols — Novelty Auditor, parent-agent.
-> (13) [SOFT] Updated Cross-Skill Integration table with new Phase -1/R/6 entries.
-> Cross-reference: research v2.34 (confirmed live), self-kaizen protocol now includes
-> autonomous CI/CD infrastructure.
+> (1) [SOFT] Subagent Failure Handling HARD GATE softened: FORBIDDEN → tiered dispatch-with-fallback.
+>     Subagents are now permitted for all task types with mandatory fallback protocols.
+>     The tiered table replaces the v1.2.5 blanket prohibition. This resolves the direct
+>     contradiction with execution-mandate v2.3 which mandates reviewer subagent dispatch.
+> (2) [DESIGN] Cross-Skill Integration: added execution-mandate v2.3 for canonical subagent
+>     orchestration patterns. Both skills now cross-reference each other.
+> Cross-reference: execution-mandate v2.3, code v2.2.
 
-> **v1.2.1 UPDATE (2026-07-31, sync-kaizen — gitignore allowlist gap):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 1. SOFT findings: 1.
+
+# KAIZEN — v1.9 (GREP-SCOPE Remediation — workspace-scoped grep breaks skill scans)
+
+> **v1.9 UPDATE (2026-08-03, kaizen — GREP-SCOPE tool-failure remediation):**
+> Trigger: `grep` tool denied `Access denied - path outside allowed directories:
+> C:\Users\LENOVO\.deepchat\skills\...` — the grep tool is WORKSPACE-SCOPED
+> (C:\Program Files\DeepChat only) while skills live under `C:\Users\LENOVO\.deepchat\skills\`.
+> This breaks every protocol that instructs "grep the owning skill's SKILL.md" (Watchtower
+> MEMORY-DRIFT step, Dependency-Graph build protocol). Confirmed live in session
+> SHEfIEGiQvA2LI5xAPkon while kaizening research v2.49 + qnfo-core v1.5.
 > Changes:
-> (1) [HARD] .gitignore ADR-026 allowlist missing 14 of 28 installed skills (50%).
->     Removed dead `!/qnfo-agent/` entry. Added 14 DeepChat-installed skills to
->     allowlist: algorithmic-art, deepchat-settings, doc-coauthoring, docx, git-commit,
->     infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx,
->     skill-creator, web-artifacts-builder, windows-command-patterns, xlsx.
->     This unblocked xlsx v1.1 kaizen (recalc.py) and skill-creator v1.1 kaizen files
->     from git obscurity — they existed on disk but were invisible to the repo.
-> (2) [SOFT] Added anti-pattern: "Skill installed by DeepChat but not added to
->     gitignore allowlist" — `skill_list` vs `git ls-files` cross-reference as
->     Watchtower scan step (Accuracy + Completeness Auditors, parent-agent).
-> Confirmed: cronjob "No provider configured" anti-pattern from v1.2 — all 3 existing
-> cronjobs (Daily System Verification, QNFO Secrets Rotation, Calibration Register Audit)
-> fail silently. Prediction [CHECK: 2026-09-15] partially validated 45 days early.
-> Cross-reference: research v2.34, xlsx v1.1, skill-creator v1.1.
+> (1) [HARD] **GREP-SCOPE-1 anti-pattern + §Tool-Scope table added** — grep tool = workspace-only.
+>     For skill files use: `read` with offset pagination, `exec` python (open + in-memory
+>     search), or `skill_view` (full rendered content). NEVER call grep on
+>     `C:\Users\LENOVO\.deepchat\skills\**` — it returns Access denied, not results.
+> (2) [HARD] **Watchtower MEMORY-DRIFT step rewritten** (was "grep the owning skill's
+>     SKILL.md") → verified exec-python pattern.
+> (3) [HARD] **Dependency-Graph build protocol rewritten** (was "read SKILL.md, grep for
+>     cross-reference patterns") → read + python substring scan.
+> (4) [SOFT] Calibration register entry added.
+> Cross-reference: research v2.49 (P3.AUTHOR-GATE), qnfo-core v1.5, session
+> SHEfIEGiQvA2LI5xAPkon.
 
-> **v1.2.3 UPDATE (2026-07-31, calibration-drift fix):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 0. SOFT findings: 1.
-> Changes:
-> (1) [SOFT] Calibration Register: "research (currently v2.36)" → "currently v2.37"
->     (both entries at lines ~903 and ~912) — research skill bumped v2.36→v2.37
->     earlier today (KIF-58 kaizen); calibration register now matches live version
->     (Dependency Auditor, parent-agent).
-> Cross-reference: research v2.37, kaizen v1.2.2.
 
-> **v1.2.5 UPDATE (2026-07-31, kaizen — LinkedIn MCP session retrospective):**
-> Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness, Dependency,
-> Novelty, Status). HARD findings: 0 in this skill. SOFT: 3.
-> Changes:
-> (1) [SOFT] Calibration Register: added dated prediction for the new `linkedin-mcp`
->     skill (auth-session validity) — Dependency Auditor, parent-agent.
-> (2) [SOFT] Cross-Skill Integration table: added `linkedin-mcp` (v1.0) row — loaded
->     for LinkedIn operations; cross-referenced from windows-command-patterns v2.1
->     (S1.6 detached-process pattern is the canonical launcher for the auto-login
->     script). Completeness Auditor.
-> (3) [SOFT] Anti-pattern table: added "LINKEDIN_COOKIE is inert in linkedin-mcp-tools
->     v2.0.3 — do not paste cookies expecting auth; use the persistent-profile --login
->     flow" (from session 8BNPmK0gJf). Status Auditor.
-> Cross-reference: research v2.38, windows-command-patterns v2.1, linkedin-mcp v1.0.
-
-> **v1.2.4 UPDATE (2026-07-31, deferred-items closeout gate):**
-> Red-team: direct parent-agent 5-adversary audit. HARD findings: 1 (closeout protocol
-> allowed declaring success with unresolved deferred items). SOFT findings: 1.
-> Changes:
-> (1) [HARD] Added **Deferred-Items Closeout Gate (Phase 5, MANDATORY)** — a kaizen
->     closeout is NOT successful if any deferred item remains unresolved. Every session
->     that defers items MUST either (a) resolve them before closeout, or (b) explicitly
->     re-classify them as a NEW session task with a continuation handoff — never silently
->     leave them "deferred" while declaring "closeout successful." The gate audits the
->     session's deferred list and blocks the closeout declaration if anything is open.
-> (2) [HARD] Added **Deferred-Items Audit Protocol (Phase 5 step 0)** — before the
->     closeout declaration, enumerate all items deferred during the session, attempt
->     resolution, and only then declare closeout. If resolution fails due to external
->     blocker (rate limit, missing credential), the closeout MUST state
->     `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` — never "successful."
-> (3) [SOFT] Added anti-pattern row: "Declaring closeout successful with unresolved
->     deferred items" (Status Auditor, parent-agent).
-> Cross-reference: research v2.38, qnfo-core v1.3, windows-command-patterns v2.0.
->
-> **v1.2.2 UPDATE (2026-07-31, red-team dependency-drift fix):**
-> Red-team: direct parent-agent audit (kaizen red-team on research v2.35 → v2.36).
-> HARD findings: 0 in this skill. SOFT: 2.
-> Changes:
-> (1) [SOFT] Calibration Register: "research (currently v2.34)" → "currently v2.36"
->     (both entries) — Dependency Auditor, parent-agent. Historical banners left intact.
-> (2) [SOFT] Committed the pending v1.2.1 delta (rule #4 "Fall back immediately" +
->     two anti-pattern rows: "Subagent reads input files..." and "Repeated polling...")
->     that existed on disk but was never committed — the v1.2.1 banner claimed these
->     changes; the commit history now matches the banner (Status Auditor, parent-agent).
-> Cross-reference: research v2.36 (red-team kaizen, 2026-07-31).
-
-# KAIZEN v1.4 (5-Axis Watchtower + Numeracy Anti-Patterns)
-
-> **v1.4 UPDATE (2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns):**
-> Self-kaizen per user directive: "EXECUTE KAIZEN SKILL UPDATE ON KAIZEN SKILL ITSELF."
-> Triggered by research v2.42 kaizen (BP-4 through BP-10 numeracy gates) and ACRP-04
-> session findings (9,138σ unreproducible, derived-quantity error, selective gate application).
-> Changes:
-> (1) [SOFT] Calibration register: "research (currently v2.38)" → "research (currently v2.42)"
->     — Dependency Auditor, parent-agent (self-kaizen protocol).
-> (2) [DESIGN] Watchtower scan expanded from 4-axis to 5-axis — added NUMERACY-AXIS
->     (weight 0.10) for detecting numeracy-related anti-patterns in recent sessions
->     (false-precision, sigma-traceability, derived-quantity, selective-gate).
-> (3) [SOFT] Anti-patterns: added NUMERACY-1 (derived-quantity false precision),
->     NUMERACY-2 (sigma without traceable uncertainty), and NUMERACY-3 (selective
->     density-gate application) — all from ACRP-04 session.
-> (4) [SOFT] Calibration register: added new prediction for research v2.42 numeracy
->     gates triggering within 45 days and §6 retraction.
-> (5) [SOFT] Cross-skill integration: updated research to v2.42 with numeracy gates.
-> Red-team: direct parent-agent 5-adversary audit per self-kaizen protocol — no subagents.
-> Cross-reference: research v2.42, ACRP-04 (DOI 10.5281/zenodo.21748008).
-
-> **v1.3 UPDATE (2026-07-31, deferred-item enforcement):**
-> Added **Deferred-Item Gate** to Phase 5 Closeout (STEP 0, HARD, MANDATORY) — before
-> ANY closeout is declared successful, all deferred items from prior sessions and this
-> session MUST be executed via CLI/API/command-line, or documented with a blocker +
-> evidence + follow-up trigger. Closeout with unexecuted deferred items lacking blockers
-> is a FAILED closeout. Triggered by: cloudflare v3.12/v3.13 changes lost to a concurrent
-> git reset (uncommitted work wiped), and multi-session deferred-item accumulation
-> (branch merges, Buffer LinkedIn post, D1 VACUUM). Also added the matching anti-pattern row.
-> Cross-reference: cloudflare v3.13, windows-command-patterns v2.0.
+> **v1.2–v1.8 COLLAPSED HISTORY (13 banners, kaizen de-bloat 2026-08-03):**
+> Historical version banners collapsed into summary. Full content in skills-archive + git history.
+  - v1.8: 2026-08-03, kaizen — ODR v3.0 publication forensics
+  - v1.7: 2026-08-03, kaizen — memory-to-skill drift detection + 6-axis Watchtower
+  - v1.6: 2026-08-02, kaizen — ACRP infrastructure hardening
+  - v1.5: 2026-08-02, kaizen — skill_manage install trap + skill-bloat metrics
+  - v1.2.5: 2026-08-01, RCS + subagent audit HARD BLOCK + competing D1 scripts
+  - v1.2: 2026-07-30, kaizen — autonomous CI/CD infrastructure
+  - v1.2.1: 2026-07-31, sync-kaizen — gitignore allowlist gap
+  - v1.2.3: 2026-07-31, calibration-drift fix
+  - v1.2.5: 2026-07-31, kaizen — LinkedIn MCP session retrospective
+  - v1.2.4: 2026-07-31, deferred-items closeout gate
+  - v1.2.2: 2026-07-31, red-team dependency-drift fix
+  - v1.4: 2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns
+  - v1.3: 2026-07-31, deferred-item enforcement
 
 ## Overview
 
@@ -311,7 +107,7 @@ Next Session ────► Continuous Monitoring (Phase 6)
 **Runs at the start of EVERY session where the kaizen skill is loaded.**
 This is the autonomous trigger — the agent doesn't wait to be asked.
 
-### Watchtower Scan (5-axis health scoring)
+### Watchtower Scan (6-axis health scoring)
 
 ```
 For each installed skill:
@@ -328,13 +124,25 @@ For each installed skill:
                         (from memory_recall query: "<skill> numeracy OR false-precision
                         OR sigma-traceability OR derived-quantity")
                         0 flags = 0.0 | 1-2 = 0.3 | 3-5 = 0.6 | >5 = 1.0
-  COMPOSITE: (STALENESS × 0.35) + (INCIDENT × 0.25) + (DRIFT × 0.20) +
-             (CALIBRATION × 0.10) + (NUMERACY × 0.10)
+  6. MEMORY-DRIFT-AXIS: anti-patterns stored in durable memory (recall_facts category=anti_pattern)
+                        whose owning SKILL.md lacks the pattern text — memory-to-file drift.
+                        0 orphans = 0.0 | 1-2 = 0.3 | 3-5 = 0.6 | >5 = 1.0
+  COMPOSITE: (STALENESS × 0.32) + (INCIDENT × 0.22) + (DRIFT × 0.18) +
+             (CALIBRATION × 0.10) + (NUMERACY × 0.10) + (MEMORY-DRIFT × 0.08)
 ```
 
 ### Watchtower Execution (MANDATORY steps)
 
 ```
+0. memory_recall({query: "anti-pattern OR discovered in session"}) + 
+   recall_facts(category="anti_pattern") — enumerate ALL anti-patterns in durable memory
+   that name a skill. For each, search the owning skill's SKILL.md for that pattern text
+   via `exec python` (open(skill_path, encoding='utf-8') + substring scan) — the grep TOOL
+   is workspace-scoped and CANNOT read C:\Users\LENOVO\.deepchat\skills\** (GREP-SCOPE-1);
+   `read`-with-offset and `skill_view` are alternatives.
+   If absent from the skill file → MEMORY-DRIFT-AXIS score increment. This catches
+   patterns that the Session Retrospective → Memory pipeline handled but the
+   Memory → Skill migration pipeline missed (MEMORY-TO-SKILL-DRIFT anti-pattern).
 1. skill_list() — get all installed skills and their descriptions
 2. For EACH skill with score > 0.0:
    a. memory_recall({query: "<skill-name> kaizen failure incident"})
@@ -464,14 +272,29 @@ When the kaizen skill is kaizening itself (self-kaizen), the agent MUST:
 
 ## Subagent Failure Handling (MANDATORY)
 
-**HARD GATE (v1.2.5):** Subagents are FORBIDDEN for any task requiring complete audit
-findings (red-team, verification, correctness checking). Their outputs are SYSTEMICALLY
-truncated (3/5 cancelled on timeout, 2/5 truncated — confirmed across 5 of 5 kaizen runs).
-Use direct parent-agent execution with actual script output.
+**v1.10 UPDATE (2026-08-03):** Subagent prohibition softened. The execution-mandate
+skill (v2.3) provides the canonical subagent orchestration patterns: dispatch at every
+phase with tiered fallback (non-blocking advisory for Phases 0/1/4, blocking-with-fallback
+for Phases 2/3.5). The systemic truncation finding remains true — subagents ARE unreliable
+for complete output — but the correct response is NOT prohibition; it is **dispatch with
+mandatory fallback.** Every subagent dispatch for audit MUST include: (a) a fallback
+protocol (default: direct parent-agent audit), (b) a timeout, and (c) a non-blocking
+path for the parent to continue. See `execution-mandate` §Multi-Phase Subagent Orchestration
+for the full decision matrix.
 
-**Permitted subagent use:** Parallel SEARCH tasks only — Phase 2 literature queries,
-multi-source document search. These produce countable/discoverable results where partial
-output is still useful.
+**Tiered subagent usage (replaces v1.2.5 HARD GATE):**
+
+| Task Type | Subagent? | Mode | Fallback |
+|---|---|---|---|
+| **Complete audit findings** (red-team, verification) | YES — dispatch, wait, fall back | `parallel` | Direct parent-agent audit if ALL truncate |
+| **Partial audit** (explorer pre-scan, assumption challenge) | YES — non-blocking advisory | `parallel` | Skip if unavailable, log gap |
+| **Parallel search/exploration** | YES — primary use case | `parallel` | Parent runs sequential search |
+| **Implementation of independent components** | YES — with caution | `parallel` | Parent re-implements if output truncated |
+
+**Previously (v1.2.5, now RETIRED):** Subagents were FORBIDDEN for audit tasks.
+This prohibition created a contradiction with the execution-mandate skill (v2.2+)
+which MANDATES reviewer subagent dispatch. The tiered approach resolves this:
+dispatch subagents, expect truncation, always have a parent-agent fallback.
 
 When subagent_orchestrator outputs are truncated, the parent agent MUST:
 
@@ -843,7 +666,9 @@ The Automated Skill Dependency Graph (built by the Watchtower) maps all
 **Build protocol (Watchtower run):**
 ```
 1. skill_list() → get all skill paths
-2. For each skill: read SKILL.md, grep for cross-reference patterns:
+2. For each skill: read SKILL.md (or `skill_view`), then scan for cross-reference patterns
+   via `exec python` (open + substring scan — grep TOOL is workspace-scoped, cannot read
+   C:\Users\LENOVO\.deepchat\skills\** per GREP-SCOPE-1):
    - "See `X` skill vN.M"
    - "Load `X` for..."
    - "Cross-Skill Integration" table entries (excluding tools)
@@ -1067,6 +892,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **Declaring closeout successful with unresolved deferred items** | **HARD GATE (v1.2.4):** every closeout runs the Deferred-Items Audit first. "Deferred" and "successful" are mutually exclusive in a closeout declaration. External blockers (rate limits, missing credentials) must be declared `[CLOSEOUT-INCOMPLETE: <item> blocked by <reason>]` with a continuation handoff — never silently deferred while claiming success. |
 | **Conversation summary mentions "kaizen on X" but the .kaizen_history wasn't updated** | Phase 5 closeout MUST update .kaizen_history. The conversation summary is human-readable; the history log is machine-verifiable. |
 | **Heuristic stored without skill ownership tag** | Every heuristic/anti-pattern in durable memory MUST include a `<skill-name>:` prefix so the Watchtower can attribute it for INCIDENT-AXIS scoring. |
+| **MEMORY-TO-SKILL-DRIFT: Session retrospective discovers a pattern, stores it in memory, but NEVER migrates it into the owning skill's anti-pattern table (2026-08-03)** | **HARD GATE (v1.7):** After every session retrospective that stores a new anti-pattern (memory_remember category=anti_pattern), the agent MUST immediately migrate that pattern into the owning skill's SKILL.md anti-pattern table. Closing a retrospective without completing the memory→file migration is a BLOCKED closeout. Case: D1-BIND-1 and VECTORIZE-SILO-1 discovered in session bWLdtP54 (2026-08-02), stored as memories, but absent from cloudflare skill until v3.20 (next session). The Watchtower MEMORY-DRIFT-AXIS (step 0) now auto-detects orphan patterns at session start. |
 | **cronjob kaizen tasks created but never monitored for failure** | Check cronjob history weekly. A failing Watchtower cron that silently 404s for 30 days is worse than no Watchtower at all — it creates a false sense of security. |
 | **Skill installed by DeepChat but not added to gitignore allowlist** | The `.gitignore` has an explicit allowlist (ADR-026). When DeepChat installs a new skill (xlsx, skill-creator, windows-command-patterns, etc.), sync it to `.gitignore` in the same turn. As of 2026-07-31, 14 of 28 installed skills (50%) were gitignored — their kaizen histories and scripts exist on disk but are invisible to the git repo. Run `skill_list` vs `git ls-files -- */SKILL.md` cross-reference as part of the Watchtower scan. |
 | **Subagent reads input files but parent treats file-read-only as "audit complete"** | When a subagent reads the target file but its output is truncated before it produces findings, the parent MUST fall back to direct audit. The subagent READING a file is NOT evidence that it COMPLETED the audit. The signal is: subagent reads input files in log → no findings produced → truncated. See §Subagent Failure Handling rule 4: fall back on the SECOND poll, not the tenth. |
@@ -1077,10 +903,22 @@ Session Failure → Session Retrospective detects failure pattern
 | **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `subagent_orchestrator(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
 | **RCS-3: Using subagents for time-sensitive red-team audit tasks when truncation is a KNOWN systemic anti-pattern** | Subagents for audit tasks = HARD BLOCK. Only parallel search tasks may use subagents. All audit/finding tasks use direct parent-agent execution with actual script output. |
 | **SCS-1: Running competing scripts targeting the same write destination, committing the wrong one** | One D1 write target, one approach. If a backup approach fails, DELETE it immediately. Never leave two scripts alive targeting the same row. After any D1 write, re-read the committed row and content-verify it contains the INTENDED content, not just "update succeeded." |
+| **ZENODO-204: json.load() on empty DELETE response body** (v1.6) | Zenodo's DELETE file API returns HTTP 204 (No Content) with zero-length body. Always check `resp.code == 204` or `len(body) == 0` BEFORE `json.load()`. Canonical case: 2026-08-02 consilient-synthesis upload crashed on DELETE. |
+| **ZENODO-DRAFT-CONFLICT: newversion 400 files.enabled when a draft already exists with files** (v1.6) | Before `actions/newversion`, check `links.latest_draft`. If a draft exists with files, delete files first (or reuse the draft). Canonical case: 2026-08-02, three ACRP newversions stuck on leftover drafts. |
+| **ZENODO-METADATA-REQUIRED: partial metadata PUT rejected** (v1.6) | Zenodo validates the FULL metadata on PUT: `upload_type`+`publication_type`+`creators` are required even for newversion metadata updates. Send complete metadata or a PATCH, never a partial PUT. |
+| **PANDOC-PATH: `where pandoc` empty but binary exists at non-standard path** (v1.6) | Pandoc lives at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe` — NOT on PATH. Use the full path or add to PATH in build scripts. Never conclude "pandoc not installed" from a PATH lookup alone. |
+| **XHTML2PDF-CSS: `:not(:hover)` pseudo-selector crashes xhtml2pdf parser** (v1.6) | Strip `:not(...)`/`:hover` rules from pandoc-generated HTML before feeding xhtml2pdf: `re.sub(r':not\(:hover\)\s*{[^}]*}', '', html)`. Validated fallback: pandoc→HTML→strip CSS→xhtml2pdf (38,977-byte PDF, 6 papers built 2026-08-02). |
+| **SKILL-WRITE-EPERM: writing skill files to `C:\Program Files\DeepChat\` → EPERM** (v1.6) | Use `C:\Users\LENOVO\AppData\Local\Temp\` for all temp scripts/artifacts. Program Files is read-only for the agent. |
+| **SUBAGENT-WORKSPACE: subagent file paths differ from parent, breaking file resolution** (v1.6) | Subagents inherit the parent cwd but may resolve paths differently. Pass absolute paths in prompts, or use direct parent-agent execution for file-dependent audits (per v1.2.5 HARD GATE). |
 
+| **ZENODO-PUB-1: Publication state fabricated from plan memory (2026-08-03)** | Agent claimed "Zenodo completed (21755425)" but that ID belongs to a DIFFERENT paper (ODR v3.0), never executed in the current pipeline. Fix: publication state requires live `curl` record-ID re-query against the Zenodo API — never trust plan memory or prior-session narrative for publication status. Kaizen audits on publication flows MUST re-query live state. Cross-ref: research v2.48 P5.FRESH. |
+| **ZENODO-DUP-1: Duplicate deposit when paper YAML already has live DOI (2026-08-03)** | Pipeline created fresh deposit while YAML already held a live `doi:` address. Fix: kaizen audit on any Zenodo-publishing pipeline MUST check paper YAML `doi:` field BEFORE assuming a fresh deposit is needed. If YAML doi: exists AND resolves → BLOCK fresh deposit. Cross-ref: research v2.48 P5.DUPCHECK. Case: ODR v3.0 pipeline — 21761802 duplicate while canonical 21758752 was live. |
+| **CLAIM-VERIFY-1: File-identity claims made without checksums (2026-08-03)** | Agent claimed "byte-identical duplicate" for two Zenodo deposit files without producing checksums. User challenge forced forensic diff: documents differed by 9 bytes. Fix: ALL file-identity claims ("identical", "byte-identical", "same file", "unchanged") require SHA-256 or md5 checksum evidence. Narrative identity = UNVERIFIED. Kaizen audits MUST reject unverified identity claims as HARD findings. Case: ODR v3.0 forensic closeout. |
 | **NUMERACY-1: Derived quantity claimed with false precision (v1.4)** | When computing a derived quantity (e.g., Koide Q from mass fits), recompute from exact rational arithmetic before stating precision. ACRP-04 session: claimed 0.02% deviation; actual: 0.00289% — factor ~7× error. Trigger research BP-6 gate. |
 | **NUMERACY-2: Sigma reported without traceable uncertainty source (v1.4)** | Every σ must cite a specific PDG edition, table, value ± uncertainty, and propagation method. ACRP-04: "9,138σ" untraceable; best reconstruction 8,943σ. Trigger research BP-7 gate. |
 | **NUMERACY-3: Density gate applied selectively to structurally identical claims (v1.4)** | When §7.2 is tested but §6 (same numerology class) is not, it's confirmation bias. Research BP-8 classifies claims into 5 types — all of the same type must receive the same gate. |
+| **GREP-SCOPE-1: Calling the `grep` tool on skill files outside the workspace (2026-08-03)** | The `grep` TOOL is WORKSPACE-SCOPED — it denies `C:\Users\LENOVO\.deepchat\skills\**` with "Access denied - path outside allowed directories" (verified live in session SHEfIEGiQvA2LI5xAPkon). NEVER grep skill paths. Use: (a) `exec python` script — `open(path, encoding='utf-8').read()` + in-memory substring scan (works on any path); (b) `read` with offset/limit pagination; (c) `skill_view` for full rendered content. This is not a permission failure to work around — it is the tool's documented scope. |
+
 
 ## Cross-Skill Integration
 
@@ -1092,6 +930,7 @@ Session Failure → Session Retrospective detects failure pattern
 | `memory-management` | Phase 5 (closeout), Phase R (retrospective) | Durable memory for kaizen outcomes, heuristic accumulation |
 | `update_plan` | Phase 0 (and all phases) | Progress tracking and auditability of kaizen execution |
 | `cronjob` | Phase 5 (closeout), Phase -1 (Watchtower scheduling) | Schedule recurring Watchtower scans, deep audits, retrospective sweeps |
+| `execution-mandate` | Phase -1 (session start), all phases | Canonical subagent orchestration patterns, execution-first protocol, multi-phase subagent deployment matrix |
 | `query_graph` | Phase 5 (KG feedback loop), Phase -1 (dependency graph) | Cross-skill impact tracing, DEPENDS_ON edge maintenance |
 | `search_conversations` | Phase -1 (Watchtower incident mining), Phase R (retrospective) | Conversation history mining for skill failure patterns |
 | `get_conversation_history` | Phase R (retrospective deep-dive) | Deep-dive into incident conversations |
@@ -1177,15 +1016,33 @@ Likelihood: [HIGH] — fresh session, profile warm.
 ```
 
 ```
-[CHECK: 2026-09-30] At least one Session Retrospective will have surfaced
-a pattern that was already in durable memory but not yet acted upon,
-validating the Heuristic Accumulation → Watchtower escalation pipeline.
-Likelihood: [MODERATE] — depends on session volume and failure rate.
+[CHECK: 2026-09-01] MEMORY-DRIFT-AXIS will have caught at least one orphan anti-pattern
+(memory stored but not in skill file) within 30 days, given:
+- 7+ anti-patterns stored across sessions, some without skill migration
+- Cloudflare skill gap (D1-BIND-1, VECTORIZE-SILO-1) = first confirmed case
+- 145 conversations in the last 7 days = high session volume
+Likelihood: [HIGH] — proven gap already exists.
+```
+
+```
+[CHECK: 2026-10-01] CLAIM-VERIFY-1 will have flagged its first unverified
+file-identity claim within 60 days, given:
+- Publication pipelines regularly produce "identical" claims
+- Byte-for-byte identity is often assumed without checksum verification
+- 145 conversations in the last 7 days = high session volume with file operations
+Likelihood: [HIGH] — pattern already observed in R8ZWb04K session.
+```
+
+```
+[CHECK: 2026-12-01] No further "Access denied - path outside allowed directories"
+incidents on skill-path scans — all Watchtower/dependency-graph steps now use exec-python
+substring scans or skill_view instead of the workspace-scoped grep tool.
+Likelihood: [HIGH] — GREP-SCOPE-1 documented in v1.9 anti-pattern table.
 ```
 
 ## Version
 
-Current: **v1.3.0** (kaizen — version reconciliation: header/bottom both v1.3.0; Session 3YzGvuFkUK retrospective: 0 tool failures, ODR project 8 phases complete, 4-layer distribution verified; 2026-08-01)
+Current: **v1.10** (Subagent prohibition softened — tiered dispatch-with-fallback replaces v1.2.5 FORBIDDEN; execution-mandate v2.3 cross-referenced for canonical subagent orchestration patterns; cross-skill contradiction resolved; 2026-08-03)
 
 ## DeepChat Runtime Context
 - Skill root: `C:\Users\LENOVO\.deepchat\skills\kaizen`.
