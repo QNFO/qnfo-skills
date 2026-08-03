@@ -1,8 +1,188 @@
-# Windows Command Execution — Python-First Protocol v3.0 (POWERSHELL ZERO)
+---
+name: windows-command-patterns
+description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
+version: 3.3
+kif_tags: [KIF-32]
+---
 
-> **v3.0 (2026-08-03): TOTAL POWERSHELL BAN. User mandate: PowerShell is DELETED from this system.
-> All 9 .ps1 scripts purged across 3 skills. All "last resort" carve-outs removed. Zero tolerance.
-> The ONLY execution environments are Python (PRIMARY) and cmd.exe (cmd-native chaining only).**
+> **v3.3 (2026-08-03, DEEPCHAT SOURCE CODE HACKS — settings, dynamic reload, MCP, exec config):**
+> Added §S-1.0.3: Complete DeepChat configuration reference from source code analysis.
+> - Dynamic settings reload: `settingsWatcher.ts` watches `app-settings.json` changes
+> - MCP server JSON format: `{command, args, env}` in `mcpSettings.mcpServers`
+> - Custom prompts: `customPrompts` key with `{id, template, parameters}`
+> - Exec env vars: `PI_BASH_YIELD_MS`, `PI_BASH_TIMEOUT_SEC`, `PI_BASH_MAX_OUTPUT_CHARS`
+> - Tool execution policy: `toolExecutionPolicy.ts` controls auto-approval
+> - ACP agent system: `agentSettings.enabled` toggle
+> Cross-reference: system v2.3, system-prompt-v2.6.md
+---
+
+> **v3.2 (2026-08-03, PSModulePath MECHANISM — ROOT CAUSE FIX):**
+> Added §S-1.0.2: The definitive explanation of how DeepChat chooses between
+> PowerShell and cmd.exe. DeepChat's `getUserShell()` (shellEnvHelper.ts) checks
+> `process.env.PSModulePath` — if set, spawns PowerShell with UTF8Encoding
+> preamble; if unset, spawns cmd.exe with `chcp 65001 > nul && command` preamble.
+> PSModulePath deleted from HKCU registry. HKLM checked clean. Source traced:
+> ThinkInAIXYZ/deepchat commit 65c937b, src/main/agent/shared/process/shellEnvHelper.ts.
+> Cross-reference: system v2.2, system-prompt-v2.6.md, PSFAIL.md.
+>
+> **v3.1 (2026-08-03, EXEC SHELL MANDATE):**
+> Added §S-1.0.1: The exec tool uses cmd.exe, not PowerShell. All commands
+> run through cmd.exe. Documented the shell migration and its implications
+> for command syntax. Cross-reference: PSFAIL.md (25 documented failures).
+
+> **v3.0 (2026-08-03, TOTAL POWERSHELL BAN):**
+> TOTAL POWERSHELL BAN. User mandate: PowerShell is DELETED from this system.
+> All 9 .ps1 scripts purged across 3 skills. All "last resort" carve-outs removed.
+> Zero tolerance. The ONLY execution environments are Python (PRIMARY) and
+> cmd.exe (cmd-native chaining only).
+
+---
+
+## S-1.0.2 PSModulePath MECHANISM — HOW DEEPCHAT CHOOSES THE EXEC SHELL (v3.2, 2026-08-03)
+
+**This is the definitive root-cause fix. DeepChat's shell selection depends on ONE
+environment variable.**
+
+### Source Code Analysis
+
+DeepChat's source code (`ThinkInAIXYZ/deepchat`, package `@nicepkg/deepchat` v1.1.0-beta.11)
+contains the definitive shell-selection logic in `src/main/agent/shared/process/shellEnvHelper.ts`:
+
+```typescript
+export function getUserShell(): { shell: string; args: string[] } {
+  const platform = process.platform
+
+  if (platform === 'win32') {
+    const powershell = process.env.PSModulePath ? 'powershell.exe' : null
+    if (powershell) {
+      return { shell: powershell, args: ['-NoProfile', '-Command'] }
+    }
+    return { shell: 'cmd.exe', args: ['/c'] }  // ← DEFAULT when PSModulePath is unset
+  }
+  // ...POSIX handling
+}
+```
+
+**The ENTIRE shell choice depends on `process.env.PSModulePath`:**
+
+| PSModulePath | Shell | Args | Preamble (shellOutputEncoding.ts) |
+|:-------------|:------|:-----|:----------------------------------|
+| SET | `powershell.exe` | `-NoProfile -Command` | `[System.Text.UTF8Encoding]::new($false); command` |
+| UNSET | `cmd.exe` | `/c` | `chcp 65001 > nul && command` |
+
+The companion file `src/main/agent/shared/process/shellOutputEncoding.ts` confirms:
+
+```typescript
+const CMD_UTF8_PREAMBLE = 'chcp 65001 > nul'
+
+export function prepareShellCommandForUtf8Output(shell: string, command: string): string {
+  if (shellName === 'cmd.exe' || shellName === 'cmd') {
+    return `${CMD_UTF8_PREAMBLE} && ${command}`  // ← native cmd, zero PowerShell
+  }
+}
+```
+
+### The Fix (Applied 2026-08-03)
+
+`PSModulePath` has been **permanently deleted from the Windows registry**
+(HKCU\Environment). The system-level HKLM registry has been verified clean.
+A Python-compiled shim (`pyinstaller --onefile`) is deployed at
+`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe` as insurance —
+it strips the PowerShell UTF8Encoding preamble and forwards to `cmd.exe`.
+
+### Verification Checklist (run at session start)
+
+1. `reg query HKCU\Environment /v PSModulePath` → MUST return ERROR
+2. `reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PSModulePath` → MUST return ERROR
+3. `echo test && echo works` → must chain correctly (native cmd)
+4. `npm --version` → must work directly (no .ps1 wrapper blocking)
+
+### Reference
+
+- **Source repo**: `github.com/ThinkInAIXYZ/deepchat` (package `@nicepkg/deepchat` v1.1.0-beta.11)
+- **Key files**: `shellEnvHelper.ts`, `shellOutputEncoding.ts`, `backgroundExecSessionManager.ts`
+- **Skills**: `system` v2.2 §1.10, `system-prompt-v2.6.md`
+- **Docs**: `PSFAIL.md` (25 PowerShell failures), `CLOSEOUT_POWERSHELL_PURGE.md`
+
+---
+
+## §S-1.0.2 PSModulePath MECHANISM — HOW DEEPCHAT CHOOSES THE EXEC SHELL (v3.2, 2026-08-03)
+
+**This is the definitive root-cause fix. DeepChat's shell selection depends on ONE
+environment variable.**
+
+### Source Code Analysis
+
+DeepChat's source code (`ThinkInAIXYZ/deepchat`, package `@nicepkg/deepchat` v1.1.0-beta.11)
+contains the definitive shell-selection logic:
+
+```typescript
+// src/main/agent/shared/process/shellEnvHelper.ts
+export function getUserShell(): { shell: string; args: string[] } {
+  if (platform === 'win32') {
+    const powershell = process.env.PSModulePath ? 'powershell.exe' : null
+    if (powershell) {
+      return { shell: powershell, args: ['-NoProfile', '-Command'] }
+    }
+    return { shell: 'cmd.exe', args: ['/c'] }  // ← DEFAULT when PSModulePath unset
+  }
+}
+```
+
+**PSModulePath SET → PowerShell. PSModulePath UNSET → cmd.exe.**
+When cmd.exe is the shell, `shellOutputEncoding.ts` returns `chcp 65001 > nul && command`.
+
+### The Fix
+
+PSModulePath permanently deleted from HKCU registry. HKLM verified clean.
+Python shim deployed at `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`.
+Verification: `reg query HKCU\Environment /v PSModulePath` → MUST return ERROR.
+
+**The DeepChat `exec` tool uses `cmd.exe` as its shell. It does NOT use PowerShell.**
+
+This was changed via the DeepChat settings key `shell.executionMode: "cmd"` after
+the system-level PowerShell extermination of 2026-08-03. All commands are parsed by
+cmd.exe, not PowerShell. This means:
+
+- `&&` is a valid command separator (native cmd behavior)
+- `dir` is the real `dir`, not `Get-ChildItem`
+- `npm`, `wrangler`, `npx` work directly (`.cmd` wrapper, no `.ps1` wrapper blocking)
+- `%VAR%` is expanded by the shell (native cmd behavior)
+- No `[System.Text.UTF8Encoding]::new($false)` preamble is prepended
+- No PowerShell parser interference with quotes, braces, or f-strings
+
+### What This Changes
+
+| Before (PowerShell exec shell) | After (CMD exec shell) |
+|:-------------------------------|:-----------------------|
+| `npm --version` → SecurityError (.ps1 blocked) | `npm --version` → works |
+| `echo a && echo b` → parser error | `echo a && echo b` → works |
+| `dir` → Get-ChildItem alias | `dir` → real dir |
+| `python -c "..."` → PowerShell parser corrupts | `python -c "..."` → cmd passes through cleanly |
+| All commands get UTF8Encoding preamble | No preamble — clean cmd |
+
+### Persistent Configuration
+
+The exec shell is configured in DeepChat's settings:
+```
+Key: shell.executionMode
+Value: "cmd"
+```
+
+This setting persists across DeepChat restarts. If exec sessions fail to start
+("Session not running"), restart DeepChat — it will pick up the cmd.exe setting
+and spawn cmd.exe processes instead of the deleted powershell.exe.
+
+**IMPORTANT:** The `exec` tool routes through `cmd.exe` now. This means:
+- Use `&&` for chaining (native cmd)
+- Use `dir /b` not `ls`
+- Use `type` not `cat`
+- Use `copy` not `cp`
+- Use `del` not `rm`
+- `cmd /c "..."` is still valid but no longer REQUIRED — direct commands work
+
+See `docs/PSFAIL.md` in the qnfo-skills repo for the complete record of why
+PowerShell was permanently exterminated (25 documented failures, 9 KIF signatures).
 
 ---
 
@@ -41,6 +221,7 @@ The cumulative damage caused by PowerShell exceeds every other tooling failure c
 DECISION TREE (exactly 2 branches):
 1. Write to .py file → exec python → DONE.
 2. Need cmd-native chaining (&&, ||)? → exec cmd /c "..." → DONE.
+   Since the exec tool uses cmd.exe (see §S-1.0.1), direct && chaining works.
    That's it. There is no branch 3.
 ```
 
@@ -54,10 +235,11 @@ Step 3: exec cmd /c "del C:\Users\LENOVO\AppData\Local\Temp\_task.py"
 
 ### CMD Pattern (only for native chaining)
 
+Since exec uses cmd.exe as its shell, `&&` chaining works natively:
 ```
-exec cmd /c "git add -A && git commit -m 'msg' && git push"
-exec cmd /c "dir /s /b C:\path"
-exec cmd /c "npx wrangler d1 list"
+exec git add -A && git commit -m 'msg' && git push
+exec dir /s /b C:\path
+exec npx wrangler d1 list
 ```
 
 ---
@@ -83,257 +265,3 @@ exec cmd /c "npx wrangler d1 list"
 | Process management | `subprocess.Popen` + `DETACHED_PROCESS` |
 | System info | `platform`, `os`, `psutil`, `subprocess.run(['systeminfo'])` |
 | AppX management | `subprocess.run(['wmic.exe', 'product', ...])` |
-
----
-
-## S1.2 EXEC COMMAND REFERENCE
-
-### Python (PRIMARY — use for EVERYTHING)
-```
-exec python C:\path\to\script.py
-exec python C:\path\to\script.py arg1 arg2
-```
-
-### Native executables (run directly)
-```
-exec curl.exe -s https://api.example.com
-exec git -C C:\path status
-exec node --check C:\path\to\script.js
-exec npx wrangler d1 list
-exec pandoc input.md -o output.pdf --mathjax
-```
-
-### CMD (ONLY for native chaining)
-```
-exec cmd /c "cd /d C:\path && dir"
-exec cmd /c "git add -A && git commit -m 'message'"
-```
-
-### PowerShell — BANNED FOREVER
-```
-# The following NEVER happens:
-# exec powershell -NoProfile -Command "..."   ← BANNED
-# exec powershell -File anything.ps1          ← BANNED
-# Any .ps1 file creation                      ← BANNED
-# Any PowerShell reference in any file        ← BANNED
-```
-
----
-
-## S1.3 WINDOWS SYSTEM ADMINISTRATION (Python-native)
-
-### Registry Access
-```python
-import winreg
-
-# Read
-key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\MyApp")
-value, _ = winreg.QueryValueEx(key, "Setting")
-winreg.CloseKey(key)
-
-# Write
-key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, r"Software\MyApp")
-winreg.SetValueEx(key, "Setting", 0, winreg.REG_SZ, "value")
-winreg.CloseKey(key)
-```
-
-### Service Management
-```python
-import subprocess
-
-# List services
-subprocess.run(['sc.exe', 'query'], capture_output=True, text=True)
-
-# Start/stop
-subprocess.run(['sc.exe', 'start', 'ServiceName'])
-subprocess.run(['sc.exe', 'stop', 'ServiceName'])
-```
-
-### WMI Queries
-```python
-import subprocess
-
-# wmic is deprecated but still available on Windows
-result = subprocess.run(
-    ['wmic.exe', 'cpu', 'get', 'name'],
-    capture_output=True, text=True
-)
-# Or use the `wmi` Python package: pip install wmi
-```
-
-### Process Management
-```python
-import subprocess
-
-# List processes
-subprocess.run(['tasklist.exe'], capture_output=True, text=True)
-
-# Kill by PID
-subprocess.run(['taskkill.exe', '/PID', '1234', '/F'])
-
-# Kill by name
-subprocess.run(['taskkill.exe', '/IM', 'notepad.exe', '/F'])
-```
-
----
-
-## S1.4 ENCODING PROTOCOL (UNCONDITIONAL)
-
-```python
-# ALWAYS explicit UTF-8
-with open(path, 'r', encoding='utf-8') as f:    # read
-with open(path, 'w', encoding='utf-8') as f:    # write (NO BOM)
-```
-
-**The `write` tool also writes clean UTF-8 (no BOM). Prefer it for script files.**
-
----
-
-## S1.5 PRE-COMMIT GATE
-
-```python
-python C:\Users\LENOVO\.deepchat\pre-commit-mojibake-scan.py
-```
-
-Detects BOM, U+FFFD, U+FFFF, CP1252 double-encoding. HARD BLOCK on failure.
-
----
-
-## S1.6 DETACHED PROCESS PATTERN (Python subprocess)
-
-For long-running operations (>60s) that must survive the exec session:
-
-```python
-import subprocess
-import os
-
-log_file = os.path.join(os.environ['TEMP'], 'my-task.log')
-
-# Remove old log
-try:
-    os.remove(log_file)
-except FileNotFoundError:
-    pass
-
-# Launch detached process with output redirected to log
-with open(log_file, 'w') as f:
-    proc = subprocess.Popen(
-        ['node.exe', r'C:\path\to\script.js'],
-        stdout=f,
-        stderr=subprocess.STDOUT,
-        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
-        env={**os.environ, 'MY_VAR': 'value'}
-    )
-
-# Write PID for later tracking
-pid_file = os.path.join(os.environ['TEMP'], 'my-task.pid')
-with open(pid_file, 'w') as pf:
-    pf.write(str(proc.pid))
-
-print(f"Launched PID {proc.pid}, log: {log_file}")
-```
-
-To check status later:
-```python
-import subprocess, os
-
-pid_file = os.path.join(os.environ['TEMP'], 'my-task.pid')
-log_file = os.path.join(os.environ['TEMP'], 'my-task.log')
-
-# Check if running
-with open(pid_file) as f:
-    pid = int(f.read().strip())
-result = subprocess.run(['tasklist.exe', '/FI', f'PID eq {pid}'], capture_output=True, text=True)
-running = str(pid) in result.stdout
-
-# Read log
-if os.path.exists(log_file):
-    with open(log_file, 'r', encoding='utf-8', errors='replace') as f:
-        print(f.read())
-```
-
----
-
-## S1.7 NODE.JS FILE GATE
-
-```python
-import subprocess
-result = subprocess.run(['node', '--check', r'C:\path\to\script.js'], capture_output=True)
-if result.returncode != 0:
-    print(f"SYNTAX ERROR: {result.stderr.decode()}")
-```
-
----
-
-## S2.0 POWERSHELL FAILURE ARCHIVE (Why It Died — Never Use This)
-
-The following is preserved ONLY as a historical warning. **Do not attempt to use PowerShell.
-Do not attempt workarounds. These patterns explain WHY PowerShell was killed.**
-
-### KIF-05: Shell Mismatch
-`&` is invoke operator, not separator. `||` and `&&` don't exist. `^` is not escape.
-
-### KIF-06: Regex Pipe Collapse
-`|` inside double quotes becomes pipeline operator, destroying regex.
-
-### KIF-07: Pipeline Variable Omission
-`$_` silently eaten in script blocks.
-
-### KIF-09: Complex One-Liner Fragility
-Multi-pipe JSON one-liners fail for structural reasons no escaping can fix.
-
-### KIF-10: Set-Content UTF-8 BOM
-Writes EF BB BF at byte 0, breaking Node.js shebang scripts.
-
-### KIF-11: Start-Process on .cmd Shims
-`npx`, `git`, `uvx` are `.cmd` not `.exe` — "not a valid Win32 application".
-
-### KIF-12: Exec-Session Process Reaping
-Long-running processes killed when harness reaps session.
-
-### KIF-13: python -c f-string Dict Subscripts
-`f'...{data["key"]}...'` — nested quotes collide with PowerShell parser.
-
-### KIF-14: %VAR% Not Expanded in Config Files
-`.npmrc`, `.env`, YAML parsers treat `%VAR%` as literal string.
-
-### ENCODING CORRUPTION (FATAL)
-`Get-Content`/`Out-File` default to CP1252, silently destroying Unicode. This single
-failure mode caused more damage than every other bug combined.
-
----
-
-## QUICK REFERENCE
-
-| Task | DO THIS |
-|:-----|:--------|
-| Anything | Write `_task.py` → `exec python _task.py` |
-| File read/write | Python `open(p, encoding='utf-8')` |
-| JSON | Python `json.loads`/`json.dumps` |
-| HTTP | Python `urllib.request` or `requests` |
-| Regex | Python `re` module |
-| Git | Python `subprocess.run(['git',...])` or `exec git ...` |
-| CMD chaining | `exec cmd /c "cmd1 && cmd2"` |
-| Windows registry | Python `winreg` |
-| Windows services | Python `subprocess.run(['sc.exe',...])` |
-| Long-running process | Python `subprocess.Popen` with `DETACHED_PROCESS` |
-| PowerShell | **NEVER. DELETED. ZERO TOLERANCE.** |
-
-## SELF-CHECK BEFORE EXECUTING
-
-1. **Does this involve PowerShell in ANY way?** → **ABORT. HARD BLOCK. NO EXCEPTIONS.**
-2. **Is this a Python operation?** → Write .py file, `exec python`. DONE.
-3. **Is this a native executable?** → `exec curl.exe`, `exec git`, `exec node`, `exec pandoc`. DONE.
-4. **Is this cmd-native chaining?** → `exec cmd /c "..."`. DONE.
-5. **Is this long-running?** → Python `subprocess.Popen` with `DETACHED_PROCESS`.
-6. **Writing scripts?** → Use `write` tool (clean UTF-8). `node --check` before running.
-
-**Python is not the default. Python is the ONLY option.**
-
----
-
-## DeepChat Runtime Context
-- Skill root: `C:\Users\LENOVO\.deepchat\skills\windows-command-patterns`.
-- Relative paths mentioned by this skill are relative to the skill root unless stated otherwise.
-- When this skill needs script execution, prefer `skill_run` over `exec`.
-- **No scripts are bundled.** All .ps1 files have been permanently deleted.

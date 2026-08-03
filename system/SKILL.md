@@ -1,8 +1,23 @@
 ---
 name: system
-description: "SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation."
+description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec uses cmd.exe (PSModulePath deleted + Python shim v3). See EXEC-SHELL-FIX.md.
+version: 2.9
+kif_tags: [KIF-32]
 ---
 
+
+> **v2.9 UPDATE (2026-08-03, kaizen — RED-TEAM RECOVERY + EXEC SHELL MANDATE):**
+> Recovered from write-tool corruption (was 9,902 bytes with broken YAML). Restored
+> from git working copy (27,935 bytes) + re-applied session deltas. Added:
+> (1) [HARD] **EXEC SHELL MANDATE — cmd.exe via PSModulePath deletion + Python shim v3**
+>     at `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`. DeepChat's
+>     `getUserShell()` (shellEnvHelper.ts) picks PowerShell when `process.env.PSModulePath`
+>     is truthy, cmd.exe when unset. PSModulePath deleted from HKCU. Shim strips the
+>     3 UTF8Encoding preambles, forwards to cmd.exe. Full guide: EXEC-SHELL-FIX.md.
+> (2) [HARD] **EXEC-SHELL-FIX.md reference** — reproducible step-by-step recovery guide.
+> (3) [SOFT] Cross-reference: windows-command-patterns v3.3, deepchat-internals.md,
+>     SESSION_LOG_POWERSHELL_EXTERMINATION.md.
+> Red-team: direct parent-agent audit (subagent truncated — systemic). HARD: 2, SOFT: 1.
 
 > **v2.6 UPDATE (2026-08-02, kaizen — DeepChat restart automation):**
 > [HARD] Added **§DeepChat Restart Protocol** — mandatory automatic restart
@@ -57,7 +72,7 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 
 
 
-# SYSTEM -- v2.5 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init)
+# SYSTEM -- v2.9 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
 
 > **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,
@@ -507,10 +522,10 @@ skill_view("system")       # Load skill management
 **Option C: Task-Specific Loading**
 When you know which skill you need:
 ```
-skill_view("research")             # For papers/Zenodo/literature
-skill_view("cloudflare")           # For Workers/R2/D1/infra
-skill_view("code")                 # For code quality/security (merged code-review + mcp-builder)
-skill_view("execution-mandate")    # For execution protocols + subagent orchestration
+skill_view("research")     # For papers/Zenodo/literature
+skill_view("execution-mandate")  # For execution protocols + subagent orchestration
+skill_view("cloudflare")   # For Workers/R2/D1/infra
+skill_view("code-review")  # For code quality/security
 ```
 
 ### Verification
@@ -587,7 +602,7 @@ subprocess.run(
 
 ---
 
-*system v2.3 — DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, and desktop automation.*
+*system v2.9 — DeepChat configuration, skill ecosystem management, skill location hygiene, session initialization, desktop automation, and exec shell mandate.*
 
 
 ## Auto-Restart Protocol (2026-08-02) — DeepChat quit + restart when needed
@@ -667,3 +682,46 @@ so the next boot's session-init can verify + clear the reason.
 survives the kill, and defaults to a 20s delay so the current turn completes.
 Do NOT force-kill DeepChat from within an agent turn — always use the helper.
 
+
+## EXEC SHELL MANDATE — CMD.EXE ONLY (v2.9, 2026-08-03)
+
+**The DeepChat `exec` tool uses `cmd.exe`. It does NOT use PowerShell.**
+
+### Root Cause (Source-Level Fix)
+
+DeepChat's source (`ThinkInAIXYZ/deepchat`, package `@nicepkg/deepchat` v1.1.0-beta.11)
+in `src/main/agent/shared/process/shellEnvHelper.ts`:
+
+```typescript
+export function getUserShell(): { shell: string; args: string[] } {
+  if (platform === 'win32') {
+    const powershell = process.env.PSModulePath ? 'powershell.exe' : null
+    if (powershell) {
+      return { shell: powershell, args: ['-NoProfile', '-Command'] }
+    }
+    return { shell: 'cmd.exe', args: ['/c'] }  // ← WE WANT THIS
+  }
+}
+```
+
+**PSModulePath SET → PowerShell. PSModulePath UNSET → cmd.exe.**
+DeepChat bundles its own PS modules into `process.env.PSModulePath` at launch,
+so registry deletion alone is insufficient. **The fix is a Python shim v3 at
+`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`** that strips the 3
+UTF8Encoding preambles and forwards the real command to `cmd.exe /c`.
+
+**REPRODUCIBILITY:** Complete step-by-step guide (shim source, PyInstaller compile,
+winreg PATH fix — NEVER setx, verification, troubleshooting) at `EXEC-SHELL-FIX.md`
+in this skill's root directory. Recompile if lost:
+`pyinstaller --onefile --name powershell _ps_shim.py` (source in EXEC-SHELL-FIX.md).
+
+**Verification (session start):**
+1. `git --version` → shows `git version 2.49.0` (NOT empty exit-0 — empty means shim v2 bug)
+2. `echo test` → prints `test`
+3. `npm --version` → works directly (no .ps1 wrapper blocking)
+
+**CRITICAL:** If commands return exit 0 with NO output, the shim is v2 (eats commands).
+Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winreg REG_EXPAND_SZ.
+
+**Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
+`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.3 §S-1.0.2.
