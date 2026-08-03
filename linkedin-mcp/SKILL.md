@@ -39,26 +39,37 @@ Uses `autocomplete` attribute selectors because LinkedIn randomizes element IDs
 present). Launch as a DETACHED process (see windows-command-patterns S1.6) —
 the 4-minute poll loop dies if started via plain exec.
 
-```powershell
+```python
+import subprocess, os
+
+log_file = os.path.join(os.environ["TEMP"], "linkedin-auto-login.log")
+pid_file = os.path.join(os.environ["TEMP"], "linkedin-auto-login.pid")
+
+# Remove old artifacts
+for f in [log_file, pid_file]:
+    try:
+        os.remove(f)
+    except FileNotFoundError:
+        pass
+
 # Launch detached (survives exec session)
-$psi = New-Object System.Diagnostics.ProcessStartInfo
-$psi.FileName = "node.exe"
-$psi.Arguments = "`"C:\Users\LENOVO\.deepchat\scripts\linkedin-auto-login.js`""
-$psi.UseShellExecute = $false
-$psi.RedirectStandardOutput = $true
-$psi.RedirectStandardError = $true
-$psi.CreateNoWindow = $true
-$psi.Environment["LINKEDIN_EMAIL"] = "rowan.quni@outlook.com"
-$psi.Environment["LINKEDIN_PASSWORD"] = "REDACTED_READ_FROM_STORE"
-$proc = [System.Diagnostics.Process]::Start($psi)
-$proc.Id | Set-Content "$env:TEMP\linkedin-auto-login.pid"
-$proc.BeginOutputReadLine(); $proc.BeginErrorReadLine()
-Register-ObjectEvent -InputObject $proc -EventName OutputDataReceived -Action {
-  if ($Event.SourceEventArgs.Data) { Add-Content "$env:TEMP\linkedin-auto-login.log" $Event.SourceEventArgs.Data }
-} | Out-Null
-Register-ObjectEvent -InputObject $proc -EventName ErrorDataReceived -Action {
-  if ($Event.SourceEventArgs.Data) { Add-Content "$env:TEMP\linkedin-auto-login.log" $Event.SourceEventArgs.Data }
-} | Out-Null
+with open(log_file, "w") as lf:
+    proc = subprocess.Popen(
+        ["node.exe", r"C:\Users\LENOVO\.deepchat\scripts\linkedin-auto-login.js"],
+        stdout=lf,
+        stderr=subprocess.STDOUT,
+        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+        env={
+            **os.environ,
+            "LINKEDIN_EMAIL": "rowan.quni@outlook.com",
+            "LINKEDIN_PASSWORD": "REDACTED_READ_FROM_STORE",
+        },
+    )
+
+with open(pid_file, "w") as pf:
+    pf.write(str(proc.pid))
+
+print(f"Launched PID {proc.pid}, log: {log_file}")
 ```
 
 **Signals:** Chrome window title `login page → "Feed | LinkedIn"` = success;
@@ -164,7 +175,7 @@ the server a boot window before trusting whoami.
 
 ## Verification Sequence
 
-```powershell
+```bash
 # 1. Session state
 cmd /c "npx -y linkedin-mcp-tools@latest --status"   # expect "✅ logged in"
 

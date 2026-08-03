@@ -3,7 +3,7 @@ name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
 version: "2.2"
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
-related: ["qnfo-agent"]
+related: ["qnfo-core"]
 priority: 1
 platform: cloudflare
 autonomous: true
@@ -25,7 +25,7 @@ self_sufficient: true
 > in this turn.
 
 > **Merges 2:** knowledge-graph + memory-management
-> **Related:** Always load with `qnfo-agent` for Due Diligence Protocol (§3) -- KG-First Discovery Gate.
+> **Related:** Always load with `qnfo-core` for Due Diligence Protocol (§3) -- KG-First Discovery Gate.
 > **Cloudflare Full-Stack:** KG API runs on Cloudflare Workers. Memories persist in D1 + Vectorize (768-dim cosine). All knowledge infrastructure is Cloudflare-native.
 
 ## execute_plan
@@ -44,7 +44,7 @@ update_plan([
 
 Claiming a fact is "remembered", a KG edge is "seeded", or a D1 row is
 "stored" without an invoked tool call showing evidence in this turn is a
-PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+PHANTOM CLAIM (`qnfo-core` §9.11 Rule 14) — BLOCKED.
 
 1. **`remember_fact`** — after storing, re-run `recall_facts` or `search_memories` with a matching keyword/query and show the stored entry in the response, not just the write call's ack.
 2. **KG edge seeding** — after seeding, re-query `/neighbors/{entity}` and show neighbor count > 0; a POST/insert success response alone does not confirm the edge exists.
@@ -284,7 +284,7 @@ When discovering "what exists," query in this order:
 | **4. MCP: AutoRAG (automated RAG)** | `cloudflare-autorag-mcp-server` | Workers AI + Vectorize pipeline | Full RAG pipeline — indexing, embedding, retrieval (PREFERRED over manual Vectorize) |
 | **5. MCP: AI Gateway (query logging)** | `cloudflare-ai-gateway` | Gateway log search, prompt inspection | Trace AI queries, debug prompt/response patterns |
 | **6. R2 (file artifacts)** | wrangler R2 object get/list | `qnfo/` bucket | Canonical file storage (last resort for discovery) |
-| **7. Local filesystem** | `Get-ChildItem`, `glob`, `grep` | CWD | Ephemeral cache -- verify against R2 before trusting |
+| **7. Local filesystem** | `glob`, `grep`, `os.listdir` | CWD | Ephemeral cache -- verify against R2 before trusting |
 
 **Always query KG first.** Files on disk are an incomplete, stale subset. The KG is the single source of truth for ecosystem topology.
 

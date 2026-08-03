@@ -18,15 +18,29 @@
 - [ ] Local HEAD matches `rwnq8/master`
 
 **Commands:**
-```powershell
-cd $env:USERPROFILE\.deepchat\skills
-Test-Path .git                          # Should be True
-git remote -v                           # Should show origin + rwnq8
+```bash
+cd %USERPROFILE%\.deepchat\skills
 git status --short                      # Should be empty
+git remote -v                           # Should show origin + rwnq8
 git fetch --all
 git log -1 --oneline                    # Note HEAD commit
 git log -1 --oneline origin/master      # Should match
 git log -1 --oneline rwnq8/master       # Should match
+```
+
+Or verify with Python:
+```python
+import os, subprocess, pathlib
+
+skills_dir = os.path.expandvars(r"%USERPROFILE%\.deepchat\skills")
+git_dir = os.path.join(skills_dir, ".git")
+print(f".git present: {os.path.isdir(git_dir)}")
+
+result = subprocess.run(["git", "-C", skills_dir, "status", "--short"], capture_output=True, text=True)
+print(f"Working tree clean: {result.stdout.strip() == ''}")
+
+result = subprocess.run(["git", "-C", skills_dir, "remote", "-v"], capture_output=True, text=True)
+print(result.stdout)
 ```
 
 ---
@@ -41,17 +55,26 @@ git log -1 --oneline rwnq8/master       # Should match
 | `%APPDATA%\DeepChat\skills\` | **MUST BE EMPTY** |
 | `%LOCALAPPDATA%\DeepChat\skills\` | **MUST NOT EXIST** |
 
-**Commands:**
-```powershell
-Test-Path "$env:APPDATA\.deepchat\skills"        # Should be False
-Test-Path "$env:APPDATA\DeepChat\skills"         # Should be False or empty
-Test-Path "$env:LOCALAPPDATA\DeepChat\skills"    # Should be False
+**Commands (Python):**
+```python
+import os
+
+for path_var in [r"%APPDATA%\.deepchat\skills", r"%APPDATA%\DeepChat\skills", r"%LOCALAPPDATA%\DeepChat\skills"]:
+    full = os.path.expandvars(path_var)
+    exists = os.path.exists(full)
+    is_empty = exists and len(os.listdir(full)) == 0 if exists else True
+    print(f"{path_var}: exists={exists}, empty={is_empty}")
+    assert not exists or is_empty, f"STALE: {path_var}"
 ```
 
 **If stale locations exist:**
 1. Check for version conflicts (compare SKILL.md versions)
 2. Merge any valuable changes to canonical location
-3. Delete stale directory: `Remove-Item -Recurse -Force <path>`
+3. Delete stale directory:
+```python
+import shutil
+shutil.rmtree(path)  # Replace `path` with the stale directory
+```
 
 ---
 
@@ -59,10 +82,22 @@ Test-Path "$env:LOCALAPPDATA\DeepChat\skills"    # Should be False
 
 | Layer | Expected Count | Command |
 |:------|:---------------|:--------|
-| Local disk | 24+ | `(Get-ChildItem $env:USERPROFILE\.deepchat\skills -Directory \| Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") }).Count` |
-| GitHub (origin) | Same as local | `git ls-tree --name-only origin/master \| Measure-Object` |
-| GitHub (rwnq8) | Same as local | `git ls-tree --name-only rwnq8/master \| Measure-Object` |
-| R2 backup | Same as local | `npx wrangler r2 object list qnfo-skills --prefix=prompts/skills/ --remote \| Select-String "SKILL.md" \| Measure-Object` |
+| Local disk | 24+ | Python: count dirs with SKILL.md in skills root |
+| GitHub (origin) | Same as local | `git ls-tree --name-only origin/master` |
+| GitHub (rwnq8) | Same as local | `git ls-tree --name-only rwnq8/master` |
+| R2 backup | Same as local | `npx wrangler r2 object list ...` |
+
+**Python verification:**
+```python
+import os
+
+skills_dir = os.path.expandvars(r"%USERPROFILE%\.deepchat\skills")
+count = sum(1 for d in os.listdir(skills_dir)
+            if os.path.isdir(os.path.join(skills_dir, d))
+            and os.path.exists(os.path.join(skills_dir, d, "SKILL.md")))
+print(f"Skills on disk: {count}")
+assert count >= 24, f"Expected >=24 skills, found {count}"
+```
 
 ---
 
@@ -70,11 +105,19 @@ Test-Path "$env:LOCALAPPDATA\DeepChat\skills"    # Should be False
 
 Skills are NOT just SKILL.md — they include scripts, references, templates, and assets.
 
-**Check supplemental file counts:**
-```powershell
-Get-ChildItem -Path "$env:USERPROFILE\.deepchat\skills" -Recurse -File |
-  Where-Object { $_.Name -ne "SKILL.md" -and $_.FullName -notmatch "\\.git\\" } |
-  Measure-Object
+**Check supplemental file counts (Python):**
+```python
+import os
+
+skills_dir = os.path.expandvars(r"%USERPROFILE%\.deepchat\skills")
+count = 0
+for root, dirs, files in os.walk(skills_dir):
+    if ".git" in root:
+        continue
+    for f in files:
+        if f != "SKILL.md":
+            count += 1
+print(f"Supplemental files: {count}")
 ```
 
 **Expected supplemental files by skill:**
@@ -96,15 +139,35 @@ Get-ChildItem -Path "$env:USERPROFILE\.deepchat\skills" -Recurse -File |
 
 If the same skill exists in multiple locations with different versions:
 
-1. **Compare versions:**
-   ```powershell
-   Get-Content "<canonical>\<skill>\SKILL.md" | Select-String "version:"
-   Get-Content "<stale>\<skill>\SKILL.md" | Select-String "version:"
+1. **Compare versions (Python):**
+   ```python
+   import re
+
+   def get_version(path):
+       with open(path, encoding='utf-8') as f:
+           for line in f:
+               m = re.match(r'version:\s*(.+)', line)
+               if m:
+                   return m.group(1).strip()
+       return None
+
+   v1 = get_version(r"<canonical>\<skill>\SKILL.md")
+   v2 = get_version(r"<stale>\<skill>\SKILL.md")
+   print(f"Canonical: {v1}, Stale: {v2}")
    ```
 
-2. **Compare content:**
-   ```powershell
-   Compare-Object (Get-Content "<canonical>\<skill>\SKILL.md") (Get-Content "<stale>\<skill>\SKILL.md")
+2. **Compare content (Python):**
+   ```python
+   import difflib
+
+   with open("<canonical>\\<skill>\\SKILL.md", encoding='utf-8') as f:
+       canonical_lines = f.readlines()
+   with open("<stale>\\<skill>\\SKILL.md", encoding='utf-8') as f:
+       stale_lines = f.readlines()
+
+   diff = difflib.unified_diff(canonical_lines, stale_lines)
+   for line in diff:
+       print(line, end='')
    ```
 
 3. **Resolution rules:**
@@ -117,95 +180,36 @@ If the same skill exists in multiple locations with different versions:
 ## 6. R2 Backup Verification
 
 **Full sync command:**
-```powershell
-node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
+```bash
+node %USERPROFILE%\.deepchat\skills\system\scripts\skill-sync.js
 ```
 
-**Manual verification:**
-```powershell
+**Manual verification (Python):**
+```python
+import subprocess
+
 # List all R2 skill objects
-npx wrangler r2 object list qnfo-skills --prefix=prompts/skills/ --remote
+subprocess.run(["npx", "wrangler", "r2", "object", "list", "qnfo-skills",
+                "--prefix=prompts/skills/", "--remote"])
 
 # Verify specific skill content
-npx wrangler r2 object get qnfo-skills prompts/skills/qnfo-agent/SKILL.md --remote --file=- | Select-String "version:"
+subprocess.run(["npx", "wrangler", "r2", "object", "get", "qnfo-skills",
+                "prompts/skills/qnfo-agent/SKILL.md", "--remote", "--file=-"])
 ```
 
 ---
 
-## 7. Automated Audit Script
+## 7. Automated Health Check
 
-**Run the hygiene audit:**
-```powershell
-node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+**Run the full audit in one command:**
+```bash
+python %USERPROFILE%\.deepchat\skills\system\scripts\skill-audit.py
 ```
 
-**Exit codes:**
-- `0` = All clean
-- `1` = Stale locations found (cleanup needed)
-- `2` = Version conflicts (manual resolution needed)
-- `3` = Script error
-
-**JSON report:** `%USERPROFILE%\.deepchat\audit\skill-hygiene-latest.json`
-
----
-
-## 8. DeepChat Startup Integration
-
-**Option A: Windows Task Scheduler (Recommended)**
-
-Create a scheduled task that runs on user logon:
-```powershell
-$action = New-ScheduledTaskAction -Execute "node" -Argument "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
-$trigger = New-ScheduledTaskTrigger -AtLogOn
-$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
-Register-ScheduledTask -TaskName "DeepChat-SkillHygiene" -Action $action -Trigger $trigger -Principal $principal -Description "Audit skill locations on startup"
-```
-
-**Option B: DeepChat Plugin (Future)**
-
-If DeepChat adds plugin lifecycle hooks, register `skill-hygiene.js` as an `onStartup` handler.
-
-**Option C: Manual Pre-Session Check**
-
-At the start of any session involving skill modifications:
-```
-node $env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js
-```
-
----
-
-## 9. Enforcement Gates
-
-### Gate 1: Pre-Sync Gate
-Before any `git push` or R2 upload:
-- [ ] `skill-hygiene.js` exits with code 0
-- [ ] No uncommitted changes in canonical directory
-- [ ] All remotes fetched and in sync
-
-### Gate 2: Post-Sync Verification
-After any skill deployment:
-- [ ] Local file exists
-- [ ] GitHub commit visible
-- [ ] R2 object readable with matching content
-
-### Gate 3: Session Start Gate
-At the start of any skill-related session:
-- [ ] No stale locations exist
-- [ ] Canonical location is git-clean
-- [ ] Last audit < 24 hours old
-
----
-
-## 10. Anti-Patterns
-
-| Anti-Pattern | Detection | Fix |
-|:-------------|:----------|:----|
-| Duplicate skill directories | `skill-hygiene.js` exit code 1 | Delete stale locations |
-| SKILL.md-only sync | R2 missing scripts/templates | Use `skill-sync.js` which syncs ALL files |
-| Manual token copy | Truncated tokens cause auth failures | Always use `$env:TOKEN_NAME` directly |
-| Editing skills in stale location | Changes lost on next sync | Only edit in canonical location |
-| Forgetting rwnq8 remote | Mirror out of sync | `git push rwnq8 master` after every push |
-
----
-
-*skill-locations-audit.md v1.0 — 2026-07-26*
+Expected output:
+- All directories exist
+- No stale locations
+- Skill count >= 24 and matches across all layers
+- No version conflicts
+- R2 backup sync verified
+- All checks passed ✓

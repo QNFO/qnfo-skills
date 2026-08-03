@@ -1,6 +1,6 @@
 ---
 name: system
-description: SESSION STARTUP: load after qnfo-agent. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
+description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation.
 ---
 
 
@@ -85,10 +85,10 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 > **v2.3 UPDATE (2026-07-26, session initialization + startup integration):**
 > Added **Session Initialization Protocol** to fix the skill auto-loading
 > weak link (KIF-25). New components: (1) `/init` custom prompt that loads
-> qnfo-agent + system + runs skill-hygiene.js at session start, (2)
+> qnfo-core + system + runs skill-hygiene.js at session start, (2)
 > `deepchat-skill-hygiene.vbs` in Windows Startup folder for automatic
 > hygiene checks at logon, (3) `skill-loader.js` for generating skill
-> discovery summaries. The 24-Skill Trigger Table inside qnfo-agent is
+> discovery summaries. The 24-Skill Trigger Table inside qnfo-core is
 > now reliably accessible via the `/init` command.
 
 > **v2.2 UPDATE (2026-07-26, skill location hygiene):** Added the
@@ -160,9 +160,10 @@ The local repo has TWO remotes configured:
 - `rwnq8` → `https://github.com/rwnq8/qnfo-skills.git` (mirror)
 
 This is **intentional redundancy**, not duplication. Both repos should have identical HEAD commits. After every push:
-```powershell
-git push origin master
-git push rwnq8 master
+```python
+import subprocess
+subprocess.run(["git", "push", "origin", "master"], check=True)
+subprocess.run(["git", "push", "rwnq8", "master"], check=True)
 ```
 
 ---
@@ -172,8 +173,12 @@ git push rwnq8 master
 ### Pre-Session Gate
 
 Before any skill-related work, run the hygiene audit:
-```powershell
-node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+```python
+import subprocess, os
+subprocess.run(
+    ["node", os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-hygiene.js")],
+    check=True
+)
 ```
 
 **Exit codes:**
@@ -189,9 +194,16 @@ node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
 If stale locations are detected:
 
 1. **Check for version conflicts:**
-   ```powershell
-   Get-Content "<stale>\<skill>\SKILL.md" | Select-String "version:"
-   Get-Content "$env:USERPROFILE\.deepchat\skills\<skill>\SKILL.md" | Select-String "version:"
+   ```python
+   import os
+   from pathlib import Path
+
+   userprofile = os.environ["USERPROFILE"]
+   for f in [Path("<stale>", "<skill>", "SKILL.md"), Path(userprofile, ".deepchat", "skills", "<skill>", "SKILL.md")]:
+       if f.exists():
+           for line in f.read_text(encoding="utf-8").splitlines():
+               if "version:" in line:
+                   print(f"{f}: {line}")
    ```
 
 2. **If stale has newer/valuable changes:**
@@ -200,24 +212,35 @@ If stale locations are detected:
    - Then delete stale
 
 3. **Delete stale location:**
-   ```powershell
-   Remove-Item -Recurse -Force "<stale-path>"
+   ```python
+   import shutil
+   shutil.rmtree("<stale-path>", ignore_errors=True)
    ```
 
 4. **Re-run hygiene audit to confirm clean:**
-   ```powershell
-   node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+   ```python
+   import subprocess, os
+   result = subprocess.run(
+       ["node", os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-hygiene.js")],
+       check=False
+   )
    # Must exit with code 0
+   print(f"Exit code: {result.returncode}")
    ```
 
 ### DeepChat Startup Integration
 
 **Option A: Windows Task Scheduler (Recommended)**
-```powershell
-$action = New-ScheduledTaskAction -Execute "node" -Argument "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
-$trigger = New-ScheduledTaskTrigger -AtLogOn
-$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
-Register-ScheduledTask -TaskName "DeepChat-SkillHygiene" -Action $action -Trigger $trigger -Principal $principal -Description "Audit skill locations on startup"
+```python
+import subprocess, os
+skill_hygiene_path = os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-hygiene.js")
+subprocess.run([
+    "schtasks", "/create", "/tn", "DeepChat-SkillHygiene",
+    "/tr", f"node {skill_hygiene_path}",
+    "/sc", "onlogon",
+    "/it",
+    "/f"
+], check=True)
 ```
 
 **Option B: Manual Pre-Session Check**
@@ -225,8 +248,13 @@ At the start of any session involving skill modifications, the agent should run 
 
 **Option C: Audit Log Review**
 Check the latest audit report:
-```powershell
-Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | ConvertFrom-Json
+```python
+import json, os
+from pathlib import Path
+
+report_path = Path(os.environ["USERPROFILE"], ".deepchat", "audit", "skill-hygiene-latest.json")
+if report_path.exists():
+    print(json.dumps(json.loads(report_path.read_text(encoding="utf-8")), indent=2))
 ```
 
 ### Anti-Patterns (Skill Hygiene)
@@ -237,7 +265,7 @@ Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | Conve
 | SKILL.md-only sync | R2 missing scripts/templates | Use `skill-sync.js` for full sync |
 | Forgetting rwnq8 push | `git log rwnq8/master` behind | `git push rwnq8 master` |
 | Creating skills in AppData | `skill-hygiene.js` exit 1 | Only create in `%USERPROFILE%\.deepchat\skills\` |
-| Manual token copy | Truncated tokens cause auth | Use `$env:TOKEN_NAME` directly |
+| Manual token copy | Truncated tokens cause auth | Use `os.environ["TOKEN_NAME"]` directly |
 
 ---
 
@@ -245,10 +273,10 @@ Get-Content "$env:USERPROFILE\.deepchat\audit\skill-hygiene-latest.json" | Conve
 
 Claiming a setting is "changed", a skill is "deployed"/"synced", or a
 desktop action is "done" without an invoked tool call showing evidence in
-this turn is a PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+this turn is a PHANTOM CLAIM (`qnfo-core` §9.11 Rule 14) — BLOCKED.
 
 1. **Settings changes** — call the actual `deepchat_settings_*` tool and confirm the returned value matches the requested change; do not assert a setting changed without the tool's confirmed return value.
-2. **Skill deploy/sync** — a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `Test-Path` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) — compare content, not just presence.
+2. **Skill deploy/sync** — a `git push`/R2 `object put` script's exit code 0 is NOT sufficient. Independently re-read back all 3 layers in this turn: `os.path.exists` (disk), `git log -1 --oneline` on the skill's own commit (GitHub), AND `npx wrangler r2 object get qnfo-skills/prompts/skills/<name>/SKILL.md --remote` (R2) — compare content, not just presence.
 3. **Desktop automation** — after any click/type/launch action, call `get_window_state` again and show the resulting UI state; do not claim an action succeeded from the dispatch call's return alone.
 4. If any of the 3 sync layers cannot be re-verified in this turn, say `[NOT-VERIFIED: layer X unconfirmed]` instead of "synced"/"deployed"/"done".
 
@@ -333,7 +361,7 @@ update_plan([...])
 
 ### Design Principles
 1. **Self-sufficient:** No external file references. Embed ALL scripts, templates, and protocols inline.
-2. **Verifiable:** Every workflow step produces tool evidence (Test-Path, git log, exec output).
+2. **Verifiable:** Every workflow step produces tool evidence (os.path.exists, git log, exec output).
 3. **Chainable:** `related:` field lists subsidiary skills for auto-loading.
 4. **Discoverable:** `triggers:` contains comprehensive keyword arrays for autonomous pattern matching.
 5. **Concrete:** No vague instructions ("handle errors properly"). Specific, executable steps.
@@ -346,29 +374,41 @@ CREATE -> WRITE (SKILL.md with complete content) -> DEPLOY -> VERIFY -> MAINTAIN
 ### Deployment (3-Layer Sync)
 1. **Local disk:** Write to `%USERPROFILE%\.deepchat\skills\<name>\SKILL.md`
 2. **GitHub:** Commit and push to BOTH remotes:
-   ```powershell
-   git add -A
-   git commit -m "skill: <name> v<version>"
-   git push origin master
-   git push rwnq8 master
+   ```python
+   import subprocess
+   subprocess.run(["git", "add", "-A"], check=True)
+   subprocess.run(["git", "commit", "-m", "skill: <name> v<version>"], check=True)
+   subprocess.run(["git", "push", "origin", "master"], check=True)
+   subprocess.run(["git", "push", "rwnq8", "master"], check=True)
    ```
 3. **R2:** Upload ALL files (not just SKILL.md):
-   ```powershell
-   node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
+   ```python
+   import subprocess, os
+   subprocess.run(
+       ["node", os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-sync.js")],
+       check=True
+   )
    ```
 4. **Verify:** All layers have identical content
 
 ### Verification
-```powershell
+```python
+import subprocess, os
+from pathlib import Path
+
 # Check local
-Test-Path "$env:USERPROFILE\.deepchat\skills\<name>\SKILL.md"
+skill_path = Path(os.environ["USERPROFILE"], ".deepchat", "skills", "<name>", "SKILL.md")
+print(f"Local exists: {skill_path.exists()}")
 
 # Check GitHub (both remotes)
-git log -1 --oneline origin/master
-git log -1 --oneline rwnq8/master
+subprocess.run(["git", "log", "-1", "--oneline", "origin/master"], check=True)
+subprocess.run(["git", "log", "-1", "--oneline", "rwnq8/master"], check=True)
 
 # Check R2
-npx wrangler r2 object get qnfo-skills prompts/skills/<name>/SKILL.md --remote
+subprocess.run([
+    "npx", "wrangler", "r2", "object", "get", "qnfo-skills",
+    "prompts/skills/<name>/SKILL.md", "--remote"
+], check=True)
 ```
 
 ---
@@ -425,9 +465,9 @@ get_window_state({pid: 1234, window_id: 5678})
 ### The Problem (KIF-25: Skill Auto-Loading Weak Link)
 
 DeepChat shows only 8 skills in the system prompt. The **24-Skill Trigger Table**
-(which enables autonomous skill discovery) is inside qnfo-agent's body — but
-qnfo-agent must be explicitly loaded via `skill_view` for the table to be active.
-Without loading qnfo-agent first, the LLM cannot discover which skill to use.
+(which enables autonomous skill discovery) is inside qnfo-core's body — but
+qnfo-core must be explicitly loaded via `skill_view` for the table to be active.
+Without loading qnfo-core first, the LLM cannot discover which skill to use.
 
 ### The Solution
 
@@ -441,7 +481,7 @@ Three-layer automatic initialization:
 
 **Layer 2: /init Custom Prompt (User-Triggered)**
 - Type `/init` in DeepChat to initialize session
-- Executes: `skill_view("qnfo-agent")` + `skill_view("system")` + `skill-hygiene.js`
+- Executes: `skill_view("qnfo-core")` + `skill_view("system")` + `skill-hygiene.js`
 - Ensures 24-Skill Trigger Table is available for autonomous discovery
 - Added via `system/scripts/add-init-prompt.js`
 
@@ -456,11 +496,11 @@ Three-layer automatic initialization:
 ```
 /init
 ```
-This loads qnfo-agent + system and runs hygiene check.
+This loads qnfo-core + system and runs hygiene check.
 
 **Option B: Direct Skill Loading**
 ```
-skill_view("qnfo-agent")  # Load safety-net core with trigger table
+skill_view("qnfo-core")  # Load safety-net core with trigger table
 skill_view("system")       # Load skill management
 ```
 
@@ -473,15 +513,27 @@ skill_view("code-review")  # For code quality/security
 ```
 
 ### Verification
-```powershell
+```python
+import os, json
+from pathlib import Path
+
 # Check startup script exists
-Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\deepchat-skill-hygiene.vbs"
+startup_path = Path(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "deepchat-skill-hygiene.vbs")
+print(f"Startup script exists: {startup_path.exists()}")
 
 # Check /init prompt exists
-(Get-Content "$env:APPDATA\DeepChat\custom_prompts.json" | ConvertFrom-Json).PSObject.Properties | Where-Object { $_.Value.id -eq 'init-session' }
+prompts_path = Path(os.environ["APPDATA"], "DeepChat", "custom_prompts.json")
+if prompts_path.exists():
+    prompts = json.loads(prompts_path.read_text(encoding="utf-8"))
+    init_found = any(v.get("id") == "init-session" for v in prompts.values())
+    print(f"/init prompt exists: {init_found}")
 
 # Check startup log
-Get-Content "$env:USERPROFILE\.deepchat\audit\startup-hygiene.log" -Tail 5
+log_path = Path(os.environ["USERPROFILE"], ".deepchat", "audit", "startup-hygiene.log")
+if log_path.exists():
+    lines = log_path.read_text(encoding="utf-8").splitlines()
+    for line in lines[-5:]:
+        print(line)
 ```
 
 ---
@@ -489,16 +541,23 @@ Get-Content "$env:USERPROFILE\.deepchat\audit\startup-hygiene.log" -Tail 5
 ## Reusable Scripts
 
 ### Skill Hygiene Audit
-```powershell
-# Run before any skill work
-node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-hygiene.js"
+```python
+import subprocess, os
+result = subprocess.run(
+    ["node", os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-hygiene.js")],
+    check=False
+)
 # Exit 0 = clean, Exit 1 = stale locations, Exit 2 = version conflicts
+print(f"Exit code: {result.returncode}")
 ```
 
 ### Full Skill Sync (All Files)
-```powershell
-# Syncs ALL skill files (not just SKILL.md) to R2
-node "$env:USERPROFILE\.deepchat\skills\system\scripts\skill-sync.js"
+```python
+import subprocess, os
+subprocess.run(
+    ["node", os.path.join(os.environ["USERPROFILE"], ".deepchat", "skills", "system", "scripts", "skill-sync.js")],
+    check=True
+)
 ```
 
 ### Worker Fleet Audit

@@ -1,16 +1,39 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.19"
+version: "3.21"
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
-related: ["qnfo-agent", "research"]
+related: ["qnfo-core", "research"]
 priority: 1
 platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.19 (Kaizen: MCP OAuth loopback protocol — no default browser)
+# CLOUDFLARE -- v3.21 (ODR v3.0 Publication Forensics — R2 sync path allowlist)
+
+> **v3.21 UPDATE (2026-08-03, kaizen — ODR v3.0 session closeout C1):**
+> Red-team: direct parent-agent audit of session R8ZWb04K. HARD: 0. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [SOFT] **C1 — R2 sync path allowlist**: skill-update artifacts (kaizen proposals,
+>     remediation handoffs) MUST NOT be synced into production paper prefixes
+>     (`qnfo-releases/releases/YYYY/MM/<slug>/`). Only verified paper deliverables
+>     (.md, .pdf, PROVENANCE-BUNDLE.zip) belong in paper prefixes. Skill remediation
+>     artifacts go to `qnfo-releases/skills/` or `.deepchat/artifacts/`. Case: ODR v3.0
+>     closeout had remediation handoffs in the paper prefix after cleanup.
+> Cross-reference: research v2.48, kaizen v1.8, session R8ZWb04K4BHAldwEqCX4b.
+
+> **v3.20 UPDATE (2026-08-03, kaizen — D1-BIND-1 + VECTORIZE-SILO-1 anti-pattern migration):**
+> Red-team: direct parent-agent 5-adversary audit of session pattern-to-skill gaps.
+> HARD: 0. SOFT: 2. DESIGN: 0.
+> Changes:
+> (1) [SOFT] Added **D1-BIND-1**: D1 `.bind().first()` chain throws 1101 on Workers —
+>     use `?1` parameterized syntax or try/catch with `.all()` fallback. Discovered in
+>     session bWLdtP54lAjqfblr2cUKH, stored in memory but never migrated to skill.
+> (2) [SOFT] Added **VECTORIZE-SILO-1**: embeddings indexed by one Worker invisible to
+>     MCP search tools — verify embedding model consistency and binding name match.
+>     Same session, same memory-to-skill gap.
+> Cross-reference: kaizen v1.6→v1.7 (MEMORY-TO-SKILL-DRIFT anti-pattern + MEMORY-DRIFT-AXIS).
 
 > **v3.19 UPDATE (2026-08-02, kaizen — MCP OAuth loopback protocol; NO default browser):**
 > Red-team: direct parent-agent audit after the Cloudflare Observability MCP OAuth fix.
@@ -61,7 +84,7 @@ self_sufficient: true
 >     MUST name the actual agent tool (`workers_list`, `query_worker_observability`,
 >     `search_cloudflare_documentation`, `search_papers`, `query_graph`) in its
 >     instructions, per the ephemeral-memory mandate.
-> Cross-reference: kaizen v1.4.1, memory-management, windows-command-patterns v2.4,
+> Cross-reference: kaizen v1.7, memory-management, windows-command-patterns v2.4,
 > git-github v2.4, frontend-design v2.3, documents v2.4.
 
 > **v3.17 UPDATE (2026-08-02, kaizen — STALE-AUDIT-1 anti-pattern + red-team v2 validation):**
@@ -80,7 +103,7 @@ self_sufficient: true
 >     (the 1101 root cause was DNS NXDOMAIN route, NOT missing AI binding — confirmed
 >     by red-team v2: 1101 now fires ONLY for non-existent slugs, cosmetic 500-vs-404).
 > (2) [SOFT] Duplicate v3.16 entry removed from `.kaizen_history` (Status Auditor).
-> Cross-reference: kaizen v1.4.1, session OL00bCz3AJlaz_NjUi4eS (v3.16), KIF-61.
+> Cross-reference: kaizen v1.7, session OL00bCz3AJlaz_NjUi4eS (v3.16), KIF-61.
 
 > **v3.16 UPDATE (2026-08-02, kaizen — autonomous P0 remediation session):**
 > Red-team: direct parent-agent audit of session OL00bCz3AJlaz_NjUi4eS.
@@ -287,7 +310,7 @@ self_sufficient: true
 > archive/health=200 (I-03 FIXED), D1 papers=918, KG paper:*=902 (delta=16,
 > 98.3% coverage — down from prior 610 gap). Backup file created
 > (`mcp-settings.json.bak-2026-07-29`, 10,985 bytes). Config red-team: zero
-> drift, JSON valid. See `qnfo-agent` KIF-48 (MCP coverage mandate).
+> drift, JSON valid. See `qnfo-core` KIF-48 (MCP coverage mandate).
 >
 > **v3.6 UPDATE (2026-07-29, 9-MCP coverage + red-team audit):**
 > DeepChat now connects to 9 Cloudflare MCP servers (up from 5), covering
@@ -300,7 +323,7 @@ self_sufficient: true
 > (OAuth, consistent with existing servers). Config red-team: zero
 > drift in 23 existing entries, 4/4 new entries validated, backup at
 > `mcp-settings.json.bak-2026-07-29`. Full MCP endpoint reference table
-> added below (§DeepChat MCP Server Coverage). See `qnfo-agent`
+> added below (§DeepChat MCP Server Coverage). See `qnfo-core`
 > KIF-48 (MCP coverage mandate).
 
 > **v3.5 UPDATE (2026-07-25, wrangler false-negative + structured-schema kaizen):**
@@ -317,7 +340,7 @@ self_sufficient: true
 > multipart deploy schema + binding shapes + the CRLF-boundary code-corruption
 > bug), plus **`scripts/d1-safe-write.js`** (Node-native CHECK-THEN-WRITE
 > helper that avoids the PowerShell `ConvertTo-Json` large-payload corruption
-> bug and always re-verifies via length comparison). See `qnfo-agent`
+> bug and always re-verifies via length comparison). See `qnfo-core`
 > KIF-19/20/21.
 
 > **v3.3 UPDATE (2026-07-21, phantom-claim audit):** Added the **Tool-Call
@@ -358,7 +381,7 @@ self_sufficient: true
 
 > **Merges 18:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7) + browser-mcp + dns-analytics + containers-mcp + casb-mcp + autorag-mcp + blog-mcp + dex-mcp (v3.8)
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
-> **Related:** Always load with `qnfo-agent` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
+> **Related:** Always load with `qnfo-core` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
 > **Full-Stack Mandate:** Evaluate Workers, D1, R2, KV, DO, AI, Vectorize, Queues, Pages, DNS, Zero Trust, Email, WAF, CDN as ONE integrated platform. NEVER isolate components.
 
 ---
@@ -399,7 +422,7 @@ No claim that a Worker is "deployed", a DNS record is "live", a D1 write
 may appear in a response without an actually-invoked tool call in the SAME
 turn whose output is shown. Future-tense or narrative-only claims
 ("this should now route correctly", "the deploy will fix it") are PHANTOM
-CLAIMS per `qnfo-agent` §9.11 Rule 14 — BLOCKED.
+CLAIMS per `qnfo-core` §9.11 Rule 14 — BLOCKED.
 
 **Domain-specific verification (pick the ones relevant to the claim):**
 1. **Worker deploy** — `npx wrangler deployments list --name <worker>` shows the new deployment, AND `curl -sI https://<worker>.<subdomain>.workers.dev/` (or the production route) returns the expected status. A `200 OK` from the deploy API response body alone is NOT verification.
@@ -1351,4 +1374,10 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **HARDCODED-HEALTH-1: Health endpoint hardcodes binding names (2026-08-02)** | `/health` MUST verify bindings at runtime with `!!env.BINDING_NAME` (e.g. `ai: !!env.AI`), NEVER echo the expected name as a string (`d1: "living-paper"`). Case: qnfo-qwav reported d1:"living-paper" while env.LIVING_PAPER was undefined → "Cannot read properties of undefined (reading 'prepare')" on /ask. Fix: `bindings: { d1: !!env.LIVING_PAPER ? "living-paper" : null, ai: !!env.AI, ai_search: !!env.QNFO_SEARCH }`. |
 | **CF-WAF-1: Python urllib blocked by Cloudflare WAF without browser UA (2026-08-02)** | ALWAYS pass `headers={'User-Agent':'Mozilla/5.0'}` when probing Worker endpoints from Python. Default urllib UA → HTTP 403. To read the real error body, catch `urllib.error.HTTPError` and `e.read().decode()` — surfaces 1101 text, "Cannot read properties...", etc. |
 | **MCP-OFFLOAD-1: Trusting MCP tool "OK" output for infra verification (2026-08-02)** | QNFO MCP tools (search_papers, query_graph, resolve_paper_id) often return "OK" with results offloaded to unreadable files. For INFRA state claims, verify with DIRECT probes (Python urllib + browser UA against the live Worker endpoint) — do not treat MCP "OK" as evidence of resource state. |
+| **D1-BIND-1: D1 `.bind().first()` chain throws 1101 on Workers (2026-08-03)** | `prepare(...).bind(slug).first()` throws 1101 (JS exception) for ALL slugs while `.first()` without `.bind()` works on the same table. Confirmed on qnfo-paper-indexer: handleSingle with `.bind()` → 1101; handleBatch without `.bind()` → OK. Fix: use parameterized `?1` syntax instead of `.bind()`, OR update `compatibility_date` to latest, OR wrap in try/catch with `.all()` fallback. Suspected D1 client version mismatch with `.bind()`. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
+| **VECTORIZE-SILO-1: Vectorize content indexed by one Worker is invisible to MCP search tools (2026-08-03)** | Qnfo-paper-indexer upserts 646 chunks via PAPER_VZ binding (qwav-research-v2), but `search_papers`/`search_papers_enriched` MCP tools return `{}` (empty). Probable cause: embedding model mismatch between indexer and searcher Workers, or Vectorize binding name mismatch in MCP server config. Fix: verify same embedding model (`@cf/baai/bge-base-en-v1.5`) used for both indexing and querying; verify Vectorize binding name in the MCP server's wrangler config matches the index alias. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
 | **Relying on durable memory for critical Cloudflare operational rules (2026-08-02)** | DeepChat memories are EPHEMERAL (may be purged). Critical rules (KIF-*, anti-patterns, endpoint maps, binding formats) MUST be embedded in this SKILL.md. Memory is for session outcomes, not operational authority. Migrate any rule found only in memory into this skill. |
+
+## Version
+
+Current: **v3.21.0** (cloudflare — ODR v3.0 publication forensics: C1 R2 sync path allowlist; 2026-08-03)

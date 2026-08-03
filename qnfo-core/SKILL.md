@@ -1,10 +1,23 @@
 ---
 name: qnfo-core
-version: "1.4.1"
+version: "1.5"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO Core — Governance Foundation (v1.4)
+# QNFO Core — Governance Foundation (v1.5)
+
+> **v1.5 UPDATE (2026-08-03, kaizen — Bibliographic Integrity GATE triggered by fabrication incident):**
+> Red-team: direct parent-agent 5-adversary audit (odr-thesis Phases 0-3, session SHEfIEGiQvA2LI5xAPkon).
+> HARD: 9. SOFT: 10. DESIGN: 1. Trigger: standing directive — "hallucinated authors or fabricated
+> data/information is an automatic red-team audit and kaizen update of affected skills."
+> Incident: odr-thesis `references.bib` contained fabricated author lists (C4: "Gao, Ping;
+> S.~Ning; Watanabe, Hikaru" — all hallucinated; C5: wrong list) and wrong DOIs (S2, S3).
+> Changes: (1) [HARD] **§0.0 Bibliographic Integrity clause added** — fabricated/unverified
+> bibliographic metadata = research-integrity violation; every citation verified against live
+> Crossref/OpenAlex before inclusion; DOI title-match required; no phantom tool claims;
+> duplicate-key check after merges; violation response protocol (correct → red-team → kaizen).
+> (2) [HARD] Anti-pattern table updated (CITING-1..5 cross-reference).
+> Cross-reference: research v2.49 (P3.AUTHOR-GATE), kaizen v1.8, odr-thesis v0.5-redteam-fix.
 
 > **v1.4 UPDATE (2026-08-02, kaizen — Real-Number Trap clause + Archimedean decimal ban):**
 > Added §0.7.1 "Real Numbers Are Not 'Real'" clause. Due diligence (Continuum Trilogy,
@@ -72,6 +85,38 @@ For any speculative claim: "This would be disconfirmed if we observed X." Cannot
 
 ### Philosophy Boundary
 [PHILOSOPHY] at paragraph start when stepping from physics into philosophy.
+
+### Bibliographic Integrity (v1.5, HARD GATE — NO EXCEPTIONS)
+
+**Fabricated or unverified bibliographic metadata is a research-integrity violation, not a
+citation error.** A hallucinated author name, a DOI that resolves to the wrong paper, or a
+claimed verification that never ran poisons every downstream system (bibliography, D1,
+Zenodo, search indexes) and destroys credibility — identical in kind to a fabricated
+numerical result.
+
+**Rules:**
+1. **Every citation's author list, title, journal, volume, year, and DOI must be verified
+   against live Crossref (`api.crossref.org/works/<doi>`) or OpenAlex metadata before
+   inclusion in any bibliography.** Hand-constructed entries without live verification
+   are fabrication risk. [HARD — cross-ref: research P3.AUTHOR-GATE]
+2. **A DOI resolving (HTTP 200) is NOT proof it is the correct DOI** — the resolved title
+   must match the entry title. Wrong-paper DOIs have been caught in two QNFO incidents
+   (2026-08-03 odr-thesis: S2, S3 pointed at unrelated papers).
+3. **Never claim a tool ran when it is not installed.** "0 errors, 0 warnings" requires an
+   actual run. Report "not installed — skipped" otherwise.
+4. **Never claim auto-generation that did not occur.** If a DOI→BibTeX endpoint returns an
+   HTML redirect page, the auto-generation FAILED — construct manually and verify.
+5. **After any .bib merge/append, run duplicate-key detection** (silent duplicates break
+   the bibliography).
+
+**Canonical incident (2026-08-03, odr-thesis red-team v1):** C4 entry contained three
+fabricated authors ("Gao, Ping; S.~Ning; Watanabe, Hikaru"); C5 listed the wrong authors
+(real: Hung, Li, Melby-Thompson); S2/S3 DOIs resolved to unrelated papers. Triggered the
+automatic red-team + kaizen directive. Cross-ref: research v2.49, session SHEfIEGiQvA2LI5xAPkon.
+
+**Violation response:** any discovered fabrication triggers (a) immediate correction of the
+affected artifact, (b) red-team audit of the producing workflow, (c) kaizen update of
+affected skills — per the standing user directive.
 
 ## §0.1 Content Genre Classification (v1.0)
 
@@ -216,50 +261,55 @@ See `scripts/scan-mojibake.py` in this skill's root directory. The script scans 
 
 ### Rule (Ironclad)
 
-**Python is the PRIMARY execution environment for ALL operations on this system.
-PowerShell is DEPRECATED and may ONLY be used as an absolute LAST RESORT when
-Python is genuinely impossible (Windows registry, service management, AD, AppX).**
+**Python is the ONLY execution environment for ALL operations on this system.
+PowerShell is PERMANENTLY DELETED. Zero tolerance. Zero exceptions.
+There is no "last resort." There is no ".ps1 file only." PowerShell does not exist.**
 
 ### Decision Protocol (before ANY `exec` call)
 
 ```
-1. Can this be done with Python? → YES (99%+ of cases)
+1. Can this be done with Python? → YES (ALWAYS)
    → Write to .py file → exec python <file>.py → DONE
-2. Is this a native executable (curl.exe, git, pandoc, npx)?
+2. Is this a native executable (curl.exe, git, pandoc, node.exe)?
    → exec <executable> <args> → DONE
-3. Is this a cmd-native operation (dir, type, copy, del)?
+3. Is this cmd-native chaining (&&, ||)?
    → exec cmd /c "<command>" → DONE
-4. NONE of the above work?
-   → PowerShell, but ONLY via .ps1 file. NEVER inline powershell -Command "..."
 ```
 
-### Why This Mandate Exists
+### Why PowerShell Was Deleted
 
 The 2026-07-31 resume portfolio mojibake incident is the canonical case:
 PowerShell `Get-Content` silently read UTF-8 source files as CP1252, double-encoding
 every non-ASCII character. The corrupted text was committed to GitHub, rendered into
 a 29-page PDF with 275 U+FFFF glyph-miss errors, and published to Zenodo
-(10.5281/zenodo.21725453) as a supposedly professional resume. A SECOND incident
-(computing-machines/paper.md, 42 double-encoded dashes committed to GitHub) was
-discovered during the systemic audit. The root cause in both cases was identical:
-PowerShell's default encoding (CP1252) ≠ UTF-8, and the corruption is SILENT — no
-error, no warning, just garbled characters that propagate through every downstream
-system.
+(10.5281/zenodo.21725453). A SECOND incident (computing-machines/paper.md, 42
+double-encoded dashes committed to GitHub) was discovered during the systemic audit.
 
-**The cumulative cost of PowerShell failures on this system (KIF-05/06/07/09 parse
-errors, encoding corruption, quote collapse, $variable eating) exceeds every other
-tooling failure pattern combined. Python is installed. Python is reliable. Python
-uses UTF-8 by default. Use Python.**
+The cumulative damage from PowerShell (encoding corruption, quote collapse, BOM writes,
+KIF-05/06/07/09/10/11/12/13/14 failures) exceeds every other tooling failure combined.
+On 2026-08-03, all 9 .ps1 scripts were permanently deleted across 3 skills, and the
+`windows-command-patterns` skill was rewritten to v3.0 with absolute-zero tolerance.
+
+**PowerShell is dead. Python is the ONLY option.**
+
+### Windows System Administration (Python-native)
+
+For tasks that historically required PowerShell:
+- **Registry**: Python `winreg` module
+- **Services**: `subprocess.run(['sc.exe', ...])`
+- **WMI**: `subprocess.run(['wmic.exe', ...])` or Python `wmi` package
+- **Process management**: `tasklist.exe`, `taskkill.exe`, Python `subprocess`
+- **AppX/Store**: Windows native tools via `subprocess`
 
 ### Integration Points
 
 | Skill | Where | What |
 |:------|:------|:------|
-| `windows-command-patterns` | §1.0 | Python-First Decision Tree, encoding protocol |
-| `research` | Phase 5 PDF Building | Use `build-pdf-pro.py` (MathJax-SVG -> puppeteer CDP, canonical 2026-08-02) |
-| `research` | Phase 6 D1 Insert | Python script with `urllib.request`, not PS inline |
+| `windows-command-patterns` | v3.0 | Python-Only Protocol, total PowerShell ban |
+| `research` | Phase 5 PDF Building | Use `build-pdf-pro.py` (MathJax-SVG -> puppeteer CDP) |
+| `research` | Phase 6 D1 Insert | Python script with `urllib.request` |
 | `git-github` | All operations | `exec git ...` directly, or Python `subprocess.run` |
-| **All skills** | Before ANY `exec` | Run the §1.0 decision tree. PS = LAST RESORT |
+| **All skills** | Before ANY `exec` | Python. Always Python. |
 
 ### Pre-Commit Gate
 
@@ -270,26 +320,15 @@ python C:\Users\LENOVO\.deepchat\pre-commit-mojibake-scan.py
 ```
 
 **No exceptions.** This gate exists because the resume v3.3 PDF and computing-machines
-paper.md were both corrupted by the exact same PowerShell encoding failure. If the
-scanner exits non-zero, the commit is BLOCKED.
-
-### PowerShell Usage (Last Resort Only)
-
-PowerShell may ONLY be used when ALL of the following conditions are met:
-1. A Python equivalent has been explicitly confirmed impossible
-2. The task falls into a Windows-native category (registry, services, WMI, AD, AppX)
-3. The command is written to a `.ps1` file (NEVER inline)
-4. `ps-safe-exec.ps1 -Strict` is used as the wrapper
-5. The reason for using PowerShell is documented in the commit/session
-
-**If you are about to type `powershell -NoProfile -Command "..."` with ANY `$`, `&`, `|`, or `>` in the command: ABORT. Write a Python file instead.**
+paper.md were both corrupted by PowerShell encoding failures. If the scanner exits
+non-zero, the commit is BLOCKED.
 
 ### Self-Check (before every `exec`)
 
-1. Python? → .py file
+1. Python? → .py file. ALWAYS.
 2. Native executable? → direct exec
 3. cmd? → cmd /c
-4. PowerShell? → PROVE Python can't do it first. If yes: .ps1 file only.
+4. PowerShell? → NEVER. DELETED. DOES NOT EXIST.
 
 ## §0.7 OSTROWSKI DIMENSIONLESS MANDATE (HARD GATE — ALL PHYSICS FORMULAS)
 

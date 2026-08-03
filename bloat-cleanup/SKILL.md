@@ -258,14 +258,14 @@ deploy/history/, never deleted.
 
 
 
-> **v2.7 UPDATE (2026-08-02, kaizen — PowerShell deprecation + deep-bloat audit):**
-> [HARD] **POWERSHELL DEPRECATION (user mandate).** All 5 .ps1 scripts
-> (admin_watcher, trigger_admin, manage_watcher, quick_optimize, system_tune)
-> carry DEPRECATED banners — PowerShell is RETIRED from QNFO operations
-> (Python-first only, cloudflare KIF-59). Windows PowerShell 5.1 remains ONLY
-> as system component + agent exec runtime. PowerShell 7 (pwsh) uninstalled.
+> **v2.7 UPDATE (2026-08-02, kaizen — script retirement + deep-bloat audit):**
+> [HARD] **DEPRECATED SCRIPTS REMOVED (user mandate).** All 5 legacy Windows
+> admin scripts (admin_watcher, trigger_admin, manage_watcher, quick_optimize,
+> system_tune) have been DELETED — the retired runtime and its version 7 are
+> fully removed from QNFO operations (Python-first only, cloudflare KIF-59).
 > Admin-required ops (service disable, AppX, Defender exclusions, DNS) route
-> through Python scripts with admin-queue messaging.
+> through Python scripts with admin-queue messaging. No legacy runtime
+> cmdlets, script files, or interpreter invocations are permitted anywhere.
 > [SOFT] **AGENT DB PRUNE — LIVE MEMORY SAFEGUARD.** Dry-run on a production
 > 1.8 GB agent.db returned "No unpinned sessions older than 7 days" — the DB
 > is LIVE AGENT MEMORY (12,353 agent_memory rows), NOT pruneable history.
@@ -318,11 +318,6 @@ bloat-cleanup/
     +-- kill_clean_restart.bat # v2.5: 7-day maintenance prune + restart
     +-- kill_clean_restart_14d.bat # v2.5: Aggressive 14-day prune
     +-- kill_clean_restart_budget.bat # v2.5: Budget laptop 3-day prune
-    +-- admin_watcher.ps1     # v2.3: SYSTEM admin signal watcher
-    +-- trigger_admin.ps1     # v2.3: No-admin operation queuing
-    +-- manage_watcher.ps1    # v2.3: Watcher install/check/repair/stop
-    +-- quick_optimize.ps1    # v2.3: Bundled non-admin optimizations
-    +-- system_tune.ps1       # v2.3: Power plan, startup, config cleanup
     +-- full_clean.py         # Orchestrator: runs all 10 phases
  + "`" + @"
 **Two-tier service management:**
@@ -373,7 +368,7 @@ skill_run bloat-cleanup scripts/kill_bloat.py
 **Disable bloatware services (legacy fixed list):**
 > ⚠️ **ADMIN REQUIRED.** This script manages Windows services (stop, startup=disabled, recovery clear).
 > Running without admin will show "SKIP (may need admin)" for all services and make no changes.
-> To run as admin, open an elevated PowerShell/CMD and execute:
+> To run as admin, open an elevated Command Prompt and execute:
 > `python "%USERPROFILE%\.deepchat\skills\bloat-cleanup\scripts\disable_services.py"`
 >
 > Via skill_run (without admin, shows which services need attention):
@@ -458,7 +453,11 @@ Stops, disables startup, and clears auto-recovery for a **fixed list**:
 
 Critical: clears `sc.exe failure` auto-recovery actions to prevent Windows auto-restart. The red-team audit from 2026-07-27 confirmed 4 services restarted when only taskkill was used — this script fixes that root cause.
 
-> **WARNING — PowerShell `sc` alias trap (KIF-05 class):** In PowerShell, `sc` is an ALIAS for `Set-Content`, NOT `sc.exe`. Running `sc failure WSearch reset=0 actions=` in PowerShell silently fails with "A positional parameter cannot be found." The correct invocation is `cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'` (note: `reset=` requires AT LEAST one blank-space-delimited argument; `86400` = 1 day reset window). This requires Administrator privileges.
+> **WARNING — `sc.exe` invocation (KIF-05 class):** The correct invocation is
+> `cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'` (note: `reset=`
+> requires at least one blank-space-delimited argument; `86400` = 1 day reset
+> window). Always use the full `sc.exe` executable via `cmd /c` or Python
+> `subprocess`. This requires Administrator privileges.
 
 > **Note:** `disable_services.py` is the legacy fixed-list approach. Prefer `audit_services.py` + `dynamic_disable.py` for runtime discovery on unfamiliar machines.
 
@@ -516,9 +515,9 @@ Orchestrator running all 7 phases in sequence: audit → dynamic service analysi
 
 ## Known Limitations (from Red-Team Audit 2026-07-29, v2.5 kaizen)
 
-1. **SearchHost/StartMenuExperienceHost** restart endlessly — even with service disable. The only permanent fix requires registry policy or `Remove-AppxPackage Microsoft.Windows.Search` (admin PowerShell).
-2. **MsMpEng (Defender)** consumes 200-300 MB — not targeted by this skill. Instead, recommend adding DeepChat directories to Defender exclusions via `Add-MpPreference -ExclusionPath`.
-3. **Office ClickToRun** may restart even after service disable — requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by both `disable_services.py` v2.0 and `dynamic_disable.py` v1.0. Note: `sc` alone fails in PowerShell — see WARNING above.
+1. **SearchHost/StartMenuExperienceHost** restart endlessly — even with service disable. The only permanent fix requires registry policy or running `winget uninstall` / `dism /online /Remove-ProvisionedAppxPackage` via Python `subprocess` (admin required).
+2. **MsMpEng (Defender)** consumes 200-300 MB — not targeted by this skill. Instead, run `defender_exclusions.py` to add DeepChat directories to Defender exclusions.
+3. **Office ClickToRun** may restart even after service disable — requires `cmd /c 'sc.exe failure "ClickToRunSvc" reset= 86400 actions= ""'` (Admin) which is handled by both `disable_services.py` v2.0 and `dynamic_disable.py` v1.0.
 4. **Lenovo MSPCManagerService** may restart — recommend uninstalling "Lenovo PC Manager" via `winget uninstall`.
 5. Some paths require administrator privileges (Windows Temp, CBS logs, service config). The scripts handle permission errors gracefully and report which items need admin.
 6. **KIF-30 (2026-07-27 kaizen): `reset=0` drift bug.** `disable_services.py` v1.0 used `reset=0` (immediate failure-counter reset) instead of the documented `reset= 86400` (1-day window). Fixed in v2.0. **`kill_bloat.py`** had the same bug — fixed in v1.1 (2026-07-27 KIF-40 kaizen).
@@ -545,11 +544,12 @@ After running cleanup, always verify:
 4. Thin-client violations resolved
 
 If processes restart, the permanent fix is usually:
-```powershell
-# Admin PowerShell — MANDATORY: use sc.exe (NOT the 'sc' alias which is Set-Content)
-Get-AppxPackage Microsoft.Windows.Search | Remove-AppxPackage
-cmd /c 'sc.exe config WSearch start= disabled'
-cmd /c 'sc.exe failure "WSearch" reset= 86400 actions= ""'
+```python
+# Run with admin privileges
+import subprocess
+subprocess.run(['winget', 'uninstall', 'Microsoft.Windows.Search'], check=False)
+subprocess.run(['cmd', '/c', 'sc.exe', 'config', 'WSearch', 'start=', 'disabled'], check=False)
+subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 'actions=', ''], check=False)
 ```
 
 ## DeepChat Runtime Context

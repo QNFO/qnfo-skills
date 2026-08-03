@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.46
+version: 2.50
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -26,7 +26,89 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.46 De-Bloated (KIF-29 HARD Upgrade + Silo-Failure Detection Protocol)
+# RESEARCH — v2.50 (Zenodo Unblock — InvenioRDM API Migration + Token Diagnosis Fix)
+
+> **v2.50 UPDATE (2026-08-03, kaizen — Zenodo API diagnostics + metadata fix):**
+> Trigger: `ZENODO_TOKEN` diagnosed as "403 token scope problem" for 6+ hours while
+> the real issue was the decommissioned `/api/deposit/depositions` endpoint (HTTP 404
+> after InvenioRDM migration). Token confirmed WORKING via `GET /api/user` → 200.
+> Session SHEfIEGiQvA2LI5xAPkon.
+> Changes:
+> (1) [HARD] **ZENODO-API-INVENIORDM table added** — maps all 6 decommissioned
+>     `/api/deposit` endpoints to their InvenioRDM replacements (`/api/records`).
+> (2) [HARD] **Credential Protocol rewritten** — `zenodo-token-check.py` is now
+>     MANDATORY before diagnosing any auth failure; the protocol distinguishes token
+>     validity (GET /api/user → 200), endpoint reachability (GET /api/records → 200),
+>     and Content-Type requirements (415) before reaching any conclusion.
+> (3) [HARD] **Common Error Signatures expanded** with InvenioRDM-specific entries:
+>     POST 404 (decommissioned endpoint), POST 415 (missing Content-Type), DELETE 204
+>     (zero-length body).
+> (4) [HARD] **Anti-pattern row added** — "Diagnosing every Zenodo 403/404 as token
+>     scope problem" — with the zenodo-token-check.py workflow.
+> (5) [SOFT] **`scripts/zenodo-token-check.py` created** — the previously non-existent
+>     script now exists at the referenced path. Validates token, endpoint, headers.
+> Cross-reference: qnfo-core v1.5, kaizen v1.9, session SHEfIEGiQvA2LI5xAPkon.
+
+> **v2.49 UPDATE (2026-08-03, kaizen — bibliographic fabrication prevention):**
+> Red-team: direct parent-agent 5-adversary audit of odr-thesis Phases 0-3 (session SHEfIEGiQvA2LI5xAPkon).
+> HARD: 9. SOFT: 10. DESIGN: 1. Trigger: standing directive — "hallucinated authors or fabricated
+> data/information is an automatic red-team audit and kaizen update of affected skills."
+> Incident: `references.bib` contained fabricated author lists (C4: 3 hallucinated authors;
+> C5: wrong list) and wrong DOIs (S2, S3 pointed at unrelated papers).
+> Changes:
+> (1) [HARD] **P3.AUTHOR-GATE added to Phase 3** — every BibTeX entry verified against live
+>     Crossref/OpenAlex before commit; DOI resolved title must match entry title;
+>     HTML-redirect responses disqualify "auto-generated" claims; no unread tool-output claims.
+> (2) [HARD] **5 anti-pattern rows** (CITING-1..5): unverified author lists, wrong-paper DOIs,
+>     phantom auto-generation, phantom validation, silent merge duplicates.
+> (3) [SOFT] Canonical incident documented in P3.AUTHOR-GATE for cross-skill discoverability.
+> Cross-reference: qnfo-core v1.5 (§0.0 Bibliographic Integrity), kaizen v1.8,
+> session SHEfIEGiQvA2LI5xAPkon, odr-thesis tag v0.5-redteam-fix.
+
+> **v2.48 UPDATE (2026-08-03, kaizen — ODR v3.0 publication forensics):**
+> Red-team: direct parent-agent 5-adversary audit of session R8ZWb04K4BHAldwEqCX4b.
+> HARD: 4. SOFT: 1. DESIGN: 0.
+> Root incident: ODR v3.0 publication pipeline produced a duplicate Zenodo deposit (21761802)
+> and the canonical record (21758752) embedded stale YAML (`doi: TBD`, `status: draft`).
+> User challenge forced forensic diff: documents differ by 9 bytes (YAML-only).
+> Changes:
+> (1) [HARD] **R1 — 3 Zenodo error signatures added to Common Error Signatures**:
+>     (a) **ZENODO-SEARCH-FN: search-API false negative** — `GET /api/records?q=<slug>`
+>         OR-tokenizes unquoted queries and misses live records. ALWAYS follow search
+>         with direct `GET /api/records/{id}` before concluding "record not found."
+>     (b) **ZENODO-DUP-1: duplicate deposit created when YAML already has live DOI**
+>         — paper YAML `doi:` field exists and resolves → use `actions/newversion`,
+>         NEVER create a fresh deposit. P5.DUPCHECK gate added (BLOCKING).
+>     (c) **ZENODO-PUB-1: published-record deletion attempted** — published Zenodo
+>         records CANNOT be deleted via API. Use `isObsoletedBy` in related_identifiers
+>         to mark superseded, or delete the duplicate via the Zenodo web UI.
+> (2) [HARD] **R2 — Post-publish embedded-YAML freshness gate (P5.FRESH)**:
+>     After Zenodo publish, download the deposit `.md` file and assert `doi:` ≠ TBD
+>     AND `status:` = "published" in the YAML frontmatter. Case: 21758752 had stale
+>     YAML while R2 held the corrected version — the deposit's OWN embedded markdown
+>     was wrong. This gate catches it.
+> (3) [HARD] **R3 — SCS-1 cross-reference**: competing D1 write scripts targeting same
+>     row → race-dependent outcome. One D1 write target, one approach. After write,
+>     re-read AND content-verify. Anti-pattern row added.
+> (4) [SOFT] **R4 — Version sync note**: after publish, verify D1 `version` matches
+>     Zenodo metadata `version` in `.zenodo_versions.json`.
+> (5) [HARD] **R5 — Token retrieval note**: `ZENODO_TOKEN` always retrievable via
+>     `wmic process call create` shortcut; never declare a token-blocker without
+>     trying the wmic route.
+> Cross-reference: kaizen v1.8, cloudflare v3.21, session R8ZWb04K4BHAldwEqCX4b,
+> ODR v3.0 (DOI 10.5281/zenodo.21758752).
+
+> **v2.47 UPDATE (2026-08-02, kaizen — PDF fallback + Zenodo hardening):**
+> Red-team: direct parent-agent audit (no subagents, per HARD GATE). HARD: 0. SOFT: 3. DESIGN: 1.
+> (1) [SOFT] PDF fallback pipeline documented (pandoc→HTML→xhtml2pdf) for when build-pdf-pro.py
+>     times out on puppeteer bootstrap. Validated on 6 papers (ACRP-06,07,08,09, PERR, Consilient Synth v2.1).
+> (2) [SOFT] Zenodo API error signatures expanded: DELETE 204, newversion draft-conflict,
+>     metadata partial-update rejection. Fixes documented in Common Error Signatures table.
+> (3) [SOFT] Pandoc canonical path documented: C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe
+>     (not on PATH — reference full path in build scripts).
+> (4) [DESIGN] Zenodo anti-patterns added to research skill from kaizen v1.6 for
+>     cross-skill discoverability.
+> Cross-reference: kaizen v1.6, session 3bPo9XqsLFBBGRz0xT4HB.
 
 > **v2.46 UPDATE (2026-08-02, kaizen — KIF-29 SOFT→HARD + Silo-Failure Detection):**
 > Red-team: 5-adversary audit. HARD: 3 (KIF-29 upgrade, Silo-Failure Detection, dynamic domains).
@@ -279,6 +361,38 @@ constraining evidence or explicitly state [NO CONSTRAINING EVIDENCE FOUND].]
 
 Extract citations from markdown (Pandoc `@key`, numeric `[1]`, LaTeX `\cite{key}`). Cross-reference against `.bib` file. Flag missing, unused, malformed entries. Auto-generate missing BibTeX from DOIs via `doi.org/<DOI>` (Accept: application/x-bibtex). Audit report.
 
+### P3.AUTHOR-GATE (HARD — v2.49, bibliographic fabrication prevention)
+
+**Every BibTeX entry's author list, title, journal, volume, year, and DOI MUST be verified
+against live Crossref (`api.crossref.org/works/<doi>`) or OpenAlex metadata BEFORE the
+entry is committed.** Hand-constructed entries without live verification are FABRICATION
+RISK — author names and DOIs are the two most commonly hallucinated fields.
+
+**Canonical incident (2026-08-03, odr-thesis red-team v1):** `references.bib` contained
+fabricated author lists for C4 ("Gao, Ping; S.~Ning; Watanabe, Hikaru" — all hallucinated)
+and C5 ("Bhattacharyya, Chen, Hung, Liu" — real: Hung, Li, Melby-Thompson), plus wrong
+DOIs (S3 pointed at Guo & Lin "BGK Waves"; S2 pointed at Postma "electroweak baryogenesis").
+
+1. **Verify EVERY author list** — never trust a recalled or LLM-suggested author list.
+   `curl -s https://api.crossref.org/works/<url-encoded-doi>` → parse `message.author[].given/family`.
+   Mismatch → BLOCKED.
+2. **Verify every DOI resolves to the CORRECT paper** — HTTP 200 is not enough; the
+   resolved title must MATCH the entry title. `doi.org/<DOI>` HEAD 200 ≠ correct DOI.
+3. **Never claim "auto-generated from DOI" when the endpoint returned an HTML redirect** —
+   `curl -H "Accept: application/x-bibtex" https://doi.org/<DOI>` frequently returns an
+   HTML Handle Redirect page, not BibTeX. If the response starts with `<html`, the
+   auto-generation FAILED — construct the entry manually from Crossref/OpenAlex metadata
+   and VERIFY it per rules 1-2.
+4. **Never claim validation tool output without reading it** — if `biber` / `bibtexparser`
+   is not installed, say so. "0 errors, 0 warnings" must come from an actual run.
+5. **After any `.bib` merge or append, re-run duplicate-key detection** — `copy /b file1+file2`
+   can double entries silently (odr-thesis incident: 11 duplicate keys).
+6. **Zero fabricated entries** per qnfo-core §0.0: a fabricated author or DOI is a
+   research-integrity violation, not a citation error.
+
+Output: `artifacts/citation-audit.md` — entry count, verification method per entry,
+DOI-resolution evidence, duplicate check.
+
 ---
 
 ## Phase 4: Deep Research & Structured Forecast (MANDATORY for all projects)
@@ -384,11 +498,49 @@ Slug-based naming: `<slug>.md`, `<slug>.pdf` — NEVER generic `paper.md`.
 
 **Mandatory verification:** `build-pdf-pro.py` exit code 0 = ZERO U+FFFD, ZERO PUA, ZERO icon-fonts, ZERO Times fallback. Exit code 1 → MUST NOT publish.
 
+### PDF Fallback Pipeline (validated 2026-08-02)
+
+When `build-pdf-pro.py` is unavailable (puppeteer bootstrap timeout, node_modules
+absent, network-restricted), use the validated pandoc→xhtml2pdf route:
+
+**Environment:** Pandoc at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe`.
+TeX Live is UNINSTALLED. pdflatex and wkhtmltopdf are ABSENT.
+
+```bash
+# Step 1: Generate HTML with MathJax (parses $...$ as real math)
+cmd /c "set PATH=C:\Users\LENOVO\AppData\Local\Pandoc;%PATH% && pandoc --mathjax --standalone <slug>.md -o <slug>.html"
+
+# Step 2: Python script to strip CSS + convert to PDF
+python _build_pdf_fallback.py <slug>.html <slug>.pdf
+```
+
+The Python script must:
+1. Strip `:not(:hover){...}` and `:hover{...}` CSS rules (xhtml2pdf cannot parse pseudo-selectors)
+2. Convert via `xhtml2pdf.pisa.CreatePDF(html, dest=pdf_out)`
+3. Verify: U+FFFD count == 0 in raw output
+
+**Verified:** 6 papers built this way on 2026-08-02 (ACRP-06,07,08,09, PERR, Consilient Synth v2.1).
+All PDFs professional quality, all MathJax-rendered math preserved.
+
+**Keep `--mathjax`:** do NOT pass `-f markdown-tex_math_dollars-...` or disable math
+parsing — pandoc treats `$...$` as plain text and strips backslashes otherwise.
+
 ### Zenodo Upload
 
-**Credential Protocol:** Never hardcode or retype tokens. Reference live environment variable. Run `scripts/zenodo-token-check.py` on any 403. Required scopes: `deposit:write`, `deposit:actions`, `user:email`.
+**Credential Protocol:** Never hardcode or retype tokens. Reference live environment variable. Run `scripts/zenodo-token-check.py` on ANY auth failure (403, 404, 415). The script validates (a) token existence, (b) token validity via `GET /api/user`, (c) InvenioRDM endpoint reachability via `GET /api/records`, and (d) Content-Type header requirements before diagnosing the root cause. Never diagnose "403 = token scope" without running the checker first — InvenioRDM migrates old endpoints to 404, which some clients report as 403. [HARD — v2.50, session SHEfIEGiQvA2LI5xAPkon: quasiparticle extension paper blocked 6+ hours because 403 was diagnosed as "token scope" when the real issue was decommissioned endpoint 404.]
 
-**PRE-CHECK:** Before `actions/newversion`, check for unsubmitted drafts via `GET /api/deposit/depositions?q=<title>`.
+**ZENODO-API-INVENIORDM (v2.50, HARD):** Zenodo migrated to InvenioRDM. The old `GET /api/deposit/depositions` endpoint returns HTTP 404 (decommissioned). Use:
+
+| Old (decommissioned) | New (InvenioRDM) |
+|:---------------------|:-----------------|
+| `POST /api/deposit/depositions` | `POST /api/records` |
+| `GET /api/deposit/depositions?q=<query>` | `GET /api/records?q=<query>` |
+| `PUT /api/deposit/depositions/{id}` | `PUT /api/records/{id}/draft` |
+| `POST /api/deposit/depositions/{id}/actions/publish` | `POST /api/records/{id}/draft/actions/publish` |
+| `PUT /api/files/{bucket}/{filename}` | `PUT /api/records/{id}/draft/files/{filename}` |
+| File upload Content-Type | `application/octet-stream` (mandatory) |
+
+**PRE-CHECK:** Before publishing, search for existing records: `GET /api/records?q=<title>`. If a draft exists: `GET /api/user/records?q=<title>&status=draft`. Deduplicate per P5.DUPCHECK.
 
 **Upload order (PREVIEW-FIRST):** `<slug>.pdf` → `README.md` → `<slug>.md` → `PROVENANCE-BUNDLE.zip` → remaining files. BUCKET URL RULE: upload to `{links.bucket}/{filename}`, never construct URL manually.
 
@@ -396,9 +548,18 @@ Slug-based naming: `<slug>.md`, `<slug>.pdf` — NEVER generic `paper.md`.
 
 **Publish → Verify:** `curl -sI https://doi.org/10.5281/zenodo/{id}` → HTTP 200. `.zenodo_versions.json` tracking.
 
+**P5.FRESH — Post-publish embedded-YAML freshness gate (v2.48, HARD):**
+After Zenodo publish, download the deposit's `.md` file and verify its YAML frontmatter:
+1. `curl -s https://zenodo.org/api/records/{id}/files/<slug>.md/content` → read YAML
+2. Assert `doi:` field ≠ `TBD` / `null` / placeholder
+3. Assert `status:` field = `"published"` (not `"draft"`)
+4. If verification fails: re-upload corrected `.md` + re-publish (or newversion)
+**Case:** ODR v3.0 canonical record 21758752 had `doi: TBD` and `status: draft` in its embedded `.md` while R2 held the corrected version — the deposit's OWN embedded markdown was stale. This gate catches that before closeout.
+
 **Versioning:** Use `actions/newversion` for same-concept updates. Never create disconnected new deposit for same project.
 
 **HARD GATES:**
+- **P5.DUPCHECK (v2.48):** Before ANY Zenodo deposit, check paper YAML frontmatter for a `doi:` field. If present AND resolves to HTTP 200 → paper already has a canonical Zenodo record. Use `actions/newversion` on the existing deposit; NEVER create a fresh deposit. Also check `GET /api/records?q=<title>` for unsubmitted drafts before newversion. If YAML `doi:` is non-null and resolves → fresh-deposit is BLOCKED.
 - **P5.PDF (KIF-30):** Every deposit must include individual PDFs. Markdown-only = INCOMPLETE.
 - **P5.IDENTITY (KIF-58):** Title + DOI + GitHub repo identity verified before upload.
 - **P5.CLEAN (v2.45):** After newversion, DELETE all stale files before uploading fresh ones.
@@ -412,6 +573,12 @@ Slug-based naming: `<slug>.md`, `<slug>.pdf` — NEVER generic `paper.md`.
 | `keywords` 400 | Comma-joined, not array | Wrap in `[...]` |
 | `newversion` 400 `files.enabled` | Draft already exists | Follow `links.latest_draft` |
 | Upload 415 | Missing Content-Type | `Content-Type: application/octet-stream` |
+| DELETE returns 204 No Content | Zenodo DELETE file returns zero-length body | Check `len(response) == 0` before `json.loads()`; return `{}` for empty bodies |
+| `newversion` 400 `files.enabled` (stale draft) | Existing draft from prior failed publish has stale files | Search drafts via `GET /deposit/depositions?q=<title>&status=draft`, find match, DELETE files, re-upload, PUBLISH |
+| Metadata PUT 400 `resource_type`/`creators` | Metadata PUT is FULL replacement, not merge | Always include minimum: `upload_type`, `publication_type`, `creators` |
+| **POST /api/records 404 (v2.50)** | Decommissioned endpoint — old `/api/deposit` prefix is GONE in InvenioRDM | Use `POST /api/records` with `Content-Type: application/json`; verify via `GET /api/user` (200 = token works, 404 = endpoint decommissioned) |
+| **POST /api/records 415 (v2.50)** | Missing `Content-Type: application/json` | Add `Content-Type: application/json` header — InvenioRDM requires it explicitly for JSON payloads |
+| **DELETE file 204 (v2.47)** | Zenodo returns zero-length body on file DELETE | Check `len(response) == 0` before `json.loads()`; return `{}` for empty bodies |
 
 ---
 
@@ -492,7 +659,7 @@ All 4 layers verified before status → "published":
 | No falsifiability | Every speculative claim: "disconfirmed if..." |
 | Hardcoding API tokens | Store path, read live |
 | python -c "..." inline on Windows | write .py → exec → delete |
-| curl on PS (alias to Invoke-WebRequest) | Use curl.exe explicitly |
+| PowerShell curl alias (Invoke-WebRequest) | Use curl.exe explicitly. PowerShell is DELETED. |
 | Obsidian/external paths silently skipped | Document, ask user to copy in |
 | Generic paper.md naming | Use <slug>.md |
 | Temp directory assumed to identify project | Read YAML title: + doi: first |
@@ -509,6 +676,23 @@ All 4 layers verified before status → "published":
 | Unreproducible headline sigma | BP-7: trace every σ to specific source |
 | Derived quantity not recomputed | BP-6: recompute from first principles |
 | Density gate for one claim but not identical sibling | BP-8: classify all claims uniformly |
+| **Assuming `pandoc` is on PATH — binary at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe`** | Reference full path or prepend to PATH in all build scripts |
+| **Assuming `build-pdf-pro.py` always works — puppeteer bootstrap times out** | Fall back to pandoc→xhtml2pdf per §PDF Fallback Pipeline; do not wait >60s for puppeteer npm install |
+| **Zenodo DELETE — assuming JSON response body** | Handle HTTP 204: check `len(content) == 0` before `json.loads()` |
+| **Zenodo `actions/newversion` — assuming clean draft** | Search for existing drafts first; delete stale files; then upload |
+| **Zenodo metadata PUT — partial update** | Always include `upload_type`, `publication_type`, `creators` in metadata PUT |
+| **ZENODO-SEARCH-FN: Search API false negative — `GET /api/records?q=<slug>` misses live records (2026-08-03)** | Zenodo `q=` OR-tokenizes unquoted queries. `GET /api/records?q=odr-v3` → `hits=0` while `GET /api/records/21758752` → 200. ALWAYS follow a negative search with direct record-ID GET before concluding "not found." Case: session R8ZWb04K, search missed canonical record 21758752 → pipeline created duplicate 21761802. |
+| **ZENODO-DUP-1: Duplicate deposit created when paper YAML already has live DOI (2026-08-03)** | Before ANY deposit, check paper YAML `doi:` field. If present AND resolves → use `actions/newversion`, NEVER create fresh deposit. P5.DUPCHECK gate (HARD). Case: ODR v3.0 YAML had `doi: 10.5281/zenodo.21758752` (live) but pipeline created fresh 21761802. |
+| **ZENODO-PUB-1: Attempting to delete published Zenodo record via API (2026-08-03)** | Published records CANNOT be deleted via REST API. Mitigation: add `isObsoletedBy` → canonical DOI, mark title `[SUPERSEDED]`, queue UI deletion. Never waste API calls on published-record deletion. |
+| **SCS-1: Competing D1 write scripts targeting same row — race-dependent outcome (2026-08-03)** | One D1 write target, one approach. If a backup script fails, DELETE it immediately. Never leave competing scripts alive. After any D1 write: re-read AND content-verify the row contains the INTENDED content, not just "update succeeded." Cross-reference: kaizen v1.2.5. Case: session R8ZWb04K, two D1 write scripts ran concurrently — truncated version won because full version hit wrong DB UUID. |
+| **Version drift between D1 and Zenodo metadata after publish** | After publish, verify D1 `version` column matches Zenodo metadata version in `.zenodo_versions.json`. Publish ≠ D1 is automatically current. Case: ODR v3.0 D1 had v1.8 but Zenodo metadata said v1.0. |
+| **Declaring ZENODO_TOKEN unreachable without trying wmic** | `ZENODO_TOKEN` is always retrievable via `wmic process call create` shortcut in a Python subprocess. Never declare a token-blocker without attempting the wmic route first. |
+| **Diagnosing every Zenodo 403/404 as "token scope problem" (2026-08-03)** | IMPORTANT: Run `scripts/zenodo-token-check.py` FIRST before diagnosing. Confirm (a) `GET /api/user` → 200 = token works; (b) `GET /api/records` → 200 = InvenioRDM reachable. If token works and endpoint works, the issue is Content-Type (415) or endpoint URL (404 on decommissioned paths). Case: odr-quasiparticle-extension blocked 6+ hours in session SHEfIEGiQvA2LI5xAPkon — 403 diagnosed as scope, real issue was `/api/deposit/depositions` 404 (decommissioned in InvenioRDM migration). ZENODO-API-INVENIORDM table (v2.50) maps all old → new endpoints. |
+| **CITING-1: Hand-writing BibTeX author lists without live verification (2026-08-03)** | Author lists are hallucination-prone. Verify EVERY entry against `api.crossref.org/works/<doi>` before commit (P3.AUTHOR-GATE, HARD). Case: odr-thesis C4 had 3 fabricated authors ("Gao, Ping; S.~Ning; Watanabe, Hikaru"); C5 had wrong list (real: Hung, Li, Melby-Thompson). |
+| **CITING-2: DOI points to WRONG paper — 200 OK ≠ correct DOI (2026-08-03)** | `doi.org/<DOI>` HEAD 200 only proves the DOI exists. Verify the resolved title MATCHES the entry title. Case: odr-thesis S3 used 10.1007/s00220-017-2873-2 (Guo & Lin "BGK Waves") for Gubser's p-Adic AdS/CFT (correct: 10.1007/s00220-016-2813-6); S2 used 10.1007/jhep09(2021)055 (Postma "baryogenesis") for Bending-the-BT-tree (correct: 10.1007/jhep09(2021)097). |
+| **CITING-3: Claiming "auto-generated BibTeX from DOI" when endpoint returned HTML (2026-08-03)** | `curl -H "Accept: application/x-bibtex" doi.org/<DOI>` returns an HTML Handle Redirect page, not BibTeX, unless redirects are followed. If response starts with `<html`, auto-generation FAILED — construct manually from Crossref/OpenAlex and verify per P3.AUTHOR-GATE. Never claim auto-generation that did not occur. |
+| **CITING-4: Claiming validation results from a tool that is not installed (2026-08-03)** | "biber: 0 errors, 0 warnings" was claimed while `biber` is not installed. Report actual tool output; say "not installed — skipped" when the tool is absent. |
+| **CITING-5: Silent duplicate BibTeX keys after file merge (2026-08-03)** | `copy /b references.bib + part2.bib` appended entries that already existed → 11 duplicate keys broke the bibliography. After ANY .bib merge/append, run duplicate-key detection (regex `@\w+\{([^,]+),` + Counter). |
 
 > **Full anti-pattern archive (pre-2025 incidents, 50+ resolved rows) → HISTORY.md**
 
@@ -529,3 +713,7 @@ The full research skill archive is maintained at `deploy/history/research-v2.45-
 - All retired script references (build-paper.py, _check_pdf.py, unicode-latex-preprocess.py, _fffd_scan.py)
 
 This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgrade, and the last 12 months of anti-patterns. For version history beyond v2.46, audit the archive file.
+
+## Version
+
+Current: **v2.50.0** (research — Zenodo unblock: InvenioRDM API migration documented, zenodo-token-check.py created, token-diagnosis anti-pattern fixed; 2026-08-03)
