@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.62
+version: 2.65
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -39,7 +39,29 @@ triggers:
 >     [QNFO.UMP.002.Px]-style update_plan example to execute_plan §WBS INTEGRATION
 >     (was template-only [{WBS}.P{N}]). Working-memory gap, confidence 0.85, now resolved.
 > Cross-reference: qnfo-core v1.11 §N-4, git-github v2.12, kaizen v1.19.
-# RESEARCH — v2.62
+# RESEARCH — v2.67
+
+> **v2.66 UPDATE (2026-08-04, kaizen — PDF pipeline clarification + InvenioRDM complete dictionary):**
+> Red-team: direct parent-agent skills audit (session 7gJ25ecLca3VNUeaFCZKB).
+> HARD: 2. SOFT: 1. DESIGN: 1.
+> Changes:
+> (1) [HARD] **PDF Building section rewritten with TWO-TIER pipeline** — pandoc-native
+>     MathJax HTML is the PRIMARY tier (zero downloads, zero Chrome, zero Node.js).
+>     CDP puppeteer-core is the OPTIONAL production tier. The old HARD GATE "NO CHROMIUM
+>     = BLOCK PUBLICATION" removed — publication is NEVER blocked by missing Chrome.
+>     Primary tier always available for all papers.
+> (2) [HARD] **InvenioRDM Complete API Reference added** — 18-operation table with
+>     methods, endpoints, auth, request/response bodies, and notes; REQUIRED METADATA
+>     FIELDS table with types and valid values; FILE UPLOAD FLOW diagram; PUBLISH
+>     RESPONSE schema. This is the canonical dictionary — no agent should need to
+>     reverse-engineer Zenodo API behavior.
+> (3) [SOFT] **CHROME-CACHED-DETECTION-1 anti-pattern added** — Chrome may already be
+>     cached from prior sessions; check before downloading 194 MB.
+> (4) [DESIGN] **Primary tier established as default** — pandoc + browser print-to-PDF
+>     is the CORRECT default for most paper workflows. CDP is for automated pipeline
+>     scenarios only.
+> Cross-reference: kaizen v1.20, session 7gJ25ecLca3VNUeaFCZKB.
+
 
 > **v2.61 UPDATE (2026-08-04, kaizen — Red-team closeout: surgical draft-discard + token-validation correction):**
 > Red-team: direct parent-agent audit of session ktmz7cqk Zenodo publish chain (successful publish 21784489/21784490).
@@ -263,6 +285,59 @@ Cross-reference: kaizen v1.6, session 3bPo9XqsLFBBGRz0xT4HB.
 > **Bloat removed:** 22 version banners (~400 lines), 5 deleted-script references, 3 duplicate mandates,
 > historical pipelines, 37-field Zenodo dictionary → `references/zenodo-deposit-schema.json`.
 > **Net:** 2,022 lines → ~900 lines (55% reduction). Core pipeline preserved. v2.46 changes preserved.
+
+> **v2.63 UPDATE (2026-08-04, kaizen — Research Continuity Registry protocol):**
+> Red-team: direct parent-agent audit (session hdd6PloLtF_ybqD_CK7EH).
+> HARD: 1. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] Research Continuity Registry Protocol added — frontier questions, falsifiable
+>     predictions, and pre-registration scaffolds from published papers MUST be tracked as
+>     living documents in RESEARCH-CONTINUITY-REGISTRY.md. Canonical case: ODR Thesis v2.0
+>     (DOI 10.5281/zenodo.21784489) with 10 FQs + 5 predictions + 5 falsifiability conditions.
+> Cross-reference: kaizen v1.19, session hdd6PloLtF_ybqD_CK7EH.
+
+
+> **v2.65 UPDATE (2026-08-04, kaizen — MERGE: concurrent Continuity-Registry v2.63/v2.64 + session 1tz85 audit rows):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR publication pipeline).
+> HARD: 0. SOFT: 2. DESIGN: 0. This banner MERGES two concurrent change-sets:
+>   (A) concurrent v2.63/v2.64 (Research Continuity Registry protocol — REG-IPR scaffolds,
+>       pre-registration, calibration tracking) — preserved below;
+>   (B) this session's audit rows (WBS-REGISTRY-STALE-1, VECTORIZE-WEBHOOK-VERIFY-1)
+>       — added to the anti-pattern table.
+> Changes (this session):
+> (1) [SOFT] **WBS-REGISTRY-STALE-1** — D1 program_registry can be missing canonical rows
+>     (QNFO.UMP/SLB/INM/RES were absent); reconcile via CHECK-THEN-WRITE from WBS.TAXONOMY.md.
+> (2) [SOFT] **VECTORIZE-WEBHOOK-VERIFY-1** — canonical single-paper Vectorize verification is
+>     the qnfo-paper-indexer /webhook?slug= endpoint; search_papers MCP "OK" is not index proof.
+> Cross-reference: kaizen v1.20, qnfo-core v1.12, cloudflare v3.29, session 1tz85-vMiqh2TyFySznBA.
+
+> **v2.64 UPDATE (2026-08-04, kaizen — Research Continuity Registry protocol):**
+> Red-team: direct parent-agent audit (session hdd6PloLtF_ybqD_CK7EH).
+> HARD: 1. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] Research Continuity Registry Protocol added — frontier questions, falsifiable
+>     predictions, and pre-registration scaffolds from published papers MUST be tracked as
+>     living documents in RESEARCH-CONTINUITY-REGISTRY.md. Canonical case: ODR Thesis v2.0.
+> Cross-reference: kaizen v1.19, session hdd6PloLtF_ybqD_CK7EH.
+
+
+> **v2.67 UPDATE (2026-08-04, kaizen — Zenodo metadata shape enforcement):**
+> Red-team: direct parent-agent audit of session (Adelic Core Synthesis publication,
+> DOI 10.5281/zenodo.21786473). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **AD-HOC-ZENODO-METADATA-1 anti-pattern added** — the agent constructed
+>     Zenodo metadata incrementally (reading the draft back, guessing missing fields)
+>     instead of building the COMPLETE metadata object from the REQUIRED METADATA
+>     FIELDS table below. The publish failed 3x with 400 (missing resource_type,
+>     creators, publisher) — all fields documented in this skill since v2.66.
+>     Fix: BEFORE any Zenodo PUT, build the full metadata object from the table:
+>     title + publication_date + resource_type + creators + publisher are MANDATORY.
+>     Never read-modify-guess the draft; always full-replace from the dictionary.
+> (2) [SOFT] **Stale-memory script references** — durable memory cites
+>     `zenodo-create-upload.py` / `zenodo-metadata-publish.py` as project-canonical;
+>     these scripts were removed in the v2.46 de-bloat. The canonical path is the
+>     INVENIORDM COMPLETE API REFERENCE + FILE UPLOAD FLOW in this skill. Corrected
+>     memory; flagged MEMORY-TO-SKILL-DRIFT resolution.
+> Cross-reference: qnfo-core v1.11, kaizen v1.19, git-github v2.12.
 
 ## execute_plan
 
@@ -656,6 +731,41 @@ Scan for: internal language, credential leaks, bare Unicode math, AI-generated f
 ### Physics Writing Standards
 All 18 points from qnfo-core §7. Minimum: certainty calibration, falsifiability conditions, banned-word enforcement.
 
+
+
+
+### Research Continuity Registry Protocol (v2.64, HARD)
+
+**Purpose:** When any QNFO publication puts forth research plans, frontier questions,
+falsifiable predictions, or pre-registerable conditions, they MUST be tracked in a
+living RESEARCH-CONTINUITY-REGISTRY.md in the project's repository.
+
+**Trigger:** Any Zenodo publication (Phase 5) that contains frontier/research questions
+for further investigation, falsifiable predictions with test windows, falsifiability
+conditions, or pre-registration scaffolds.
+
+**Registry Structure (canonical):**
+1. FRONTIER RESEARCH QUESTIONS — FQ1-FQn with Status/Next Action/Pre-Reg Suitable
+2. FALSIFIABLE PREDICTIONS — P1-Pn with Test Window/Instrument/Disconfirmation Condition
+3. PER-RQ FALSIFIABILITY CONDITIONS — one "disconfirmed if" per research question
+4. PRE-REGISTRATION SCAFFOLDS — REG-{PROJ}-001+ with Hypothesis/Falsification/Data/Deadline
+5. CALIBRATION REGISTER — dated [CHECK: YYYY] predictions with strength grading
+6. NEXT ACTIONS (Prioritized) — P0/P1/P2 with dependencies and targets
+7. SESSION LOG + MAINTENANCE PROTOCOL
+
+**Canonical case:** ODR Thesis v2.0 (DOI 10.5281/zenodo.21784489) + Quasiparticles v2.0
+(DOI 10.5281/zenodo.21784490) — created RESEARCH-CONTINUITY-REGISTRY.md in QNFO/odr-thesis
+with 10 FQs + 5 predictions + 5 disconfirmation conditions + 3 pre-reg scaffolds.
+
+**Anti-patterns:**
+| Anti-Pattern | Fix |
+|:-------------|:----|
+| Publishing frontier questions without tracking in a registry | Create RESEARCH-CONTINUITY-REGISTRY.md before Phase 5 closeout |
+| Tracking registries as static paper artifacts | Registry is a LIVING DOCUMENT — maintained with version bumps |
+| Overlooking companion papers in same session | Cross-reference companion DOIs; extract their trackable items |
+| Central registry in archived repo blocking cross-ref push | Unarchive first; keep unarchived for living documents |
+
+
 ### Professional Publication Standards (HARD GATE)
 Structural: Title, Abstract (150-250 words), Keywords (4-6), Introduction, Body, Conclusion, Declarations (9 subsections), Bibliography. Tone: formal third-person, no hedging filler, no contractions, no rhetorical questions. Copyediting: zero spelling errors, consistent hyphenation, curly quotes, every acronym defined, every figure captioned, no orphaned headers.
 
@@ -665,11 +775,37 @@ ALL physics formulas in dimensionless Planck units (ℏ=c=G=kB=1). Dimensional f
 ### Source File Encoding Integrity (HARD, KIF-28)
 Zero BOM, zero U+FFFD, zero U+FFFF in all source files. All Python: `encoding='utf-8'` explicit. Pre-commit scan mandatory.
 
-### PDF Building (v2.55, HARD GATE — NO FALLBACK TO SUBSTANDARD RENDERERS)
+### PDF Building (v2.66 — TWO-TIER PIPELINE)
+
+**PRIMARY TIER (zero-download, pandoc-native):** pandoc `--mathjax` → MathJax SVG HTML.
+This is a RENDERED HTML page with fully typeset math — the user opens it in a browser
+and can print-to-PDF natively. NO additional downloads, NO Chrome, NO Node.js required.
+This is the CORRECT default for most papers. MathJax CDN is used directly in the HTML;
+no local download is needed because the user's browser reaches the CDN normally.
+
+```bash
+pandoc --mathjax --standalone paper.md -o paper.html
+# Open paper.html in any browser — math renders via CDN MathJax
+# Print-to-PDF from browser for a PDF copy (browser-native, no agent involvement)
+```
+
+**PRODUCTION TIER (Chrome/puppeteer-core, OPTIONAL):** For automated PDF generation
+with LaTeX-quality typesetting, use the CDP pipeline below. This requires a one-time
+Chrome for Testing download (~194 MB, cached). This tier is OPTIONAL — use it when
+the agent must produce a PDF without user interaction. The PRIMARY tier above is
+sufficient for most paper workflows.
+
+**HARD GATE (PRODUCTION TIER ONLY):** If attempting the CDP pipeline and no Chromium
+binary exists: BLOCK the CDP render and fall back to the PRIMARY tier. Never block
+publication entirely — always fall back to pandoc-native HTML + browser print-to-PDF.
+
+---
+
+#### Production Tier: CDP PDF Pipeline
 
 **CANONICAL PIPELINE:** pandoc (--mathjax) → MathJax SVG switch → MathJax local download + inline → puppeteer-core CDP PDF render. TeX Live uninstalled (2026-08-02). xhtml2pdf and Page.printToPDF permanently deprecated (2026-08-03). MathJax MUST use SVG output processor (`tex-svg-full.js`), NOT CHTML (`tex-chtml-full.js`) — CHTML uses Private Use Area glyphs that do not survive CDP capture.
 
-**HARD GATE — NO CHROMIUM = NO PDF (BLOCK):** If no Chromium binary exists anywhere on the system: **BLOCK the publication.** Do not publish with any substandard PDF renderer. Report: `[BLOCKED: no Chromium binary available for CDP PDF pipeline]`. In practice, always procure Chrome for Testing (see below).
+**CHROMIUM GATE (PRODUCTION TIER ONLY):** If no Chromium binary exists anywhere on the system and the CDP pipeline is requested: **fall back to the PRIMARY tier** (pandoc → MathJax HTML → browser print-to-PDF). For automated CDP PDF, procure Chrome for Testing (see below). The Primary Tier is always available — publication is NEVER blocked by missing Chromium.
 
 #### Step 1: Procure Chrome for Testing (MANDATORY when no system Chromium exists)
 
@@ -860,6 +996,15 @@ All five failures would repeat for any agent on this machine. This section now d
 
 
 ### Zenodo Upload
+**METADATA SHAPE MANDATE (v2.67, HARD):** The EXACT metadata shape for ALL Zenodo
+uploads is the REQUIRED METADATA FIELDS table below — do NOT guess it, do NOT
+read-modify-guess the draft. Build the complete object on the first PUT:
+`title`, `publication_date`, `resource_type` (object `{"id": "publication-preprint"}`),
+`creators` (array of `person_or_org`), and `publisher` are ALL MANDATORY at publish.
+A partial PUT (missing any of these) fails with HTTP 400 on publish — exactly as
+documented in ZENODO-PUBLISHER-REQUIRED-1 and ZENODO-METADATA-REQUIRED.
+
+
 
 **Credential Protocol:** Never hardcode or retype tokens. Reference live environment variable. Run `scripts/zenodo-token-check.py` on ANY auth failure (403, 404, 415). The script validates (a) token existence, (b) token validity via a REAL endpoint `GET /api/records/{id}` (200) — NOTE: `GET /api/me` is UNRELIABLE (intermittently 404s with a valid token; see ZENODO-ME-404), (c) InvenioRDM endpoint reachability via `GET /api/records`, and (d) Content-Type header requirements before diagnosing the root cause. Never diagnose "403 = token scope" without running the checker first — InvenioRDM migrates old endpoints to 404, which some clients report as 403. [HARD — v2.50, session SHEfIEGiQvA2LI5xAPkon: quasiparticle extension paper blocked 6+ hours because 403 was diagnosed as "token scope" when the real issue was decommissioned endpoint 404.]
 
@@ -876,6 +1021,72 @@ All five failures would repeat for any agent on this machine. This section now d
 | File upload Content-Type | `application/octet-stream` (mandatory) | ✅ |
 | Token validation | `GET /api/me` (HTTP 200) — NOT `/api/user` (HTTP 404) | ✅ |
 | Newversion (Obsolete) | `/actions/newversion` returns **HTTP 404** — decommissioned entirely. Use `POST /api/records/{id}/draft` instead. | ✅ |
+
+**INVENIORDM COMPLETE API REFERENCE (v2.66 — comprehensive):**
+
+| Operation | Method | Endpoint | Auth | Request Body | Success | Notes |
+|:----------|:-------|:---------|:-----|:-------------|:--------|:------|
+| **Token validation** | GET | `/api/records/{id}` | Bearer | — | 200 | `/api/me` is UNRELIABLE (intermittent 404); use any real record endpoint instead (ZENODO-ME-404) |
+| **Create deposit** | POST | `/api/records` | Bearer | `{"metadata":{...}}` | 201 | Returns `{id, links, metadata}`; `links.bucket` may be empty in InvenioRDM |
+| **Get record** | GET | `/api/records/{id}` | Bearer | — | 200 | Returns full record including `metadata`, `files`, `links` |
+| **Get record (public)** | GET | `/api/records/{id}` | None | — | 200 | Public metadata only; `files` accessible without auth |
+| **Search records** | GET | `/api/records?q=<query>` | None | — | 200 | **q= OR-tokenizes unquoted queries** (ZENODO-SEARCH-FN); use `&q=` for phrase search |
+| **Update metadata** | PUT | `/api/records/{id}/draft` | Bearer | `{"metadata":{...}}` | 200 | **FULL replacement**, not merge — include ALL fields: title, date, resource_type, creators, publisher (ZENODO-PUBLISHER-REQUIRED-1) |
+| **Create draft from published** | POST | `/api/records/{id}/draft` | Bearer | — | 201 | Creates edit draft; **bucket may be LOCKED** (ZENODO-EDIT-DRAFT PROTOCOL). For file changes prefer newversion |
+| **New version** | POST | `/api/records/{id}/versions` | Bearer | — | 201 | Creates new record; **HTTP 500 if stale drafts exist on concept** (ZENODO-STALE-DRAFT-BLOCK-1). Response may have `id: null` — real id in `links.self` (ZENODO-REQUESTS-POST-201) |
+| **Discard draft** | DELETE | `/api/records/{id}/draft` | Bearer | — | 204 | 204 = No Content; body is empty (do NOT json.loads()) |
+| **Delete record** | DELETE | `/api/records/{id}` | Bearer | — | 204/403 | Published records CANNOT be deleted (403); drafts return 204 |
+| **List user drafts** | GET | `/api/user/records?status=draft` | Bearer | — | 200 | Returns `{hits: {hits: [...]}}`; ~500 drafts on QNFO account (ZENODO-DRAFT-DISCARD-SURGICAL-1) |
+| **Declare file** | POST | `/api/records/{id}/draft/files` | Bearer | `[{"key":"fname"}]` | 201 | Returns `{entries: [{key, links: {content, commit}}]}`; select entry by `key == fname` (ZENODO-FILE-ENTRY-SELECTION-1) |
+| **Upload file content** | PUT | `{entry.links.content}` | Bearer | raw bytes | 200 | `Content-Type: application/octet-stream` MANDATORY |
+| **Commit file** | POST | `{entry.links.commit}` | Bearer | — | 200 | Required after upload; 404 = wrong entry selected |
+| **Delete file** | DELETE | `{entry.links.self}` | Bearer | — | 204 | 204 = zero-length body |
+| **Overwrite file** | PUT | `/api/records/{id}/draft/files/{fname}` | Bearer | raw bytes | 200 | Overwrites existing file atomically — no DELETE needed (BUCKET-LOCKED-RESOLVE-1) |
+| **Publish** | POST | `/api/records/{id}/draft/actions/publish` | Bearer | — | 202 | Returns `{doi, conceptdoi, id, metadata}`; verify DOI resolves with `curl -sI https://doi.org/{doi}` |
+| **Metadata-only edit (in-place)** | POST→PUT→POST | `/api/records/{id}/draft` cycle | Bearer | metadata JSON | 202 | Same DOI, no new record. Use for keywords/notes fixes; newversion only for file changes. Verified on 322 records (ZENODO-INPLACE-EDIT-1) |
+
+**REQUIRED METADATA FIELDS (InvenioRDM):**
+
+| Field | Type | Required? | Example | Notes |
+|:------|:-----|:----------|:--------|:------|
+| `title` | string | YES (PUT) | `"Paper Title"` | |
+| `publication_date` | string | YES (PUT) | `"2026-08-04"` | ISO 8601 date |
+| `resource_type` | object | YES (PUT) | `{"id": "publication-preprint"}` | Valid IDs: publication-preprint, publication-article, publication-thesis, publication-book, publication-other |
+| `creators` | array | YES (PUT) | `[{person_or_org: {family_name, given_name, type: "personal"}}]` | Personal: `family_name`+`given_name`; Organizational: `name` only (ZENODO-CREATOR-FORMAT) |
+| `publisher` | string | YES (publish) | `"QNFO"` | Required for DOI registration (ZENODO-PUBLISHER-REQUIRED-1) |
+| `description` | string | Recommended | `"Abstract text..."` | |
+| `version` | string | Recommended | `"v0.1-draft"` | |
+| `access_right` | string | Recommended | `"open"` | open, embargoed, restricted, closed |
+| `license` | string | Recommended | `"QNFO Unified License Agreement (QNFO-ULA)"` | Custom licenses allowed |
+| `keywords` | array | Recommended | `["adeles","p-adic"]` | MUST be JSON array, NOT comma-joined string |
+| `related_identifiers` | array | Optional | `[{relation:"isNewVersionOf", identifier:"10.5281/..."}]` | For version chains |
+
+**FILE UPLOAD FLOW (complete):**
+```
+1. POST /api/records/{id}/draft/files  with [{"key": "paper.pdf"}]
+   → 201, entries[0].links.content = upload URL, entries[0].links.commit = commit URL
+2. PUT  {links.content}  with raw bytes, Content-Type: application/octet-stream
+   → 200
+3. POST {links.commit}
+   → 200, file committed
+4. Repeat for each file
+5. POST /api/records/{id}/draft/actions/publish
+   → 202, DOI assigned
+```
+**SELECTION RULE:** After POST files, iterate `entries[]` and select entry where `key == fname`. NEVER use `entries[0]` blindly — it may be a prior file (ZENODO-FILE-ENTRY-SELECTION-1).
+
+**PUBLISH RESPONSE:**
+```json
+{
+  "id": 21786603,
+  "doi": "10.5281/zenodo.21786603",
+  "conceptdoi": "10.5281/zenodo.21786602",
+  "metadata": {...},
+  "files": [...],
+  "links": {...}
+}
+```
+Verify: `curl -sI https://doi.org/{doi}` → HTTP 200. Then P5.FRESH gate.
 
 **PRE-CHECK:** Before publishing, search for existing records: `GET /api/records?q=<title>`. If a draft exists: `GET /api/user/records?q=<title>&status=draft`. Deduplicate per P5.DUPCHECK.
 
@@ -1092,6 +1303,8 @@ All 4 layers verified before status → "published":
 | **BACKFILL-PREVIEW-1: Executing a bulk derived-value D1 UPDATE without a read-only classification preview (2026-08-04)** | Any bulk write that DERIVES values (e.g., `zenodo_url = 'https://doi.org/'||doi`) MUST first run a read-only classification pass (owned/external/garbage counts from the live API, printed BEFORE any write) and gate the write on it (0 garbage, 0 external). The 2026-08-04 backfill went straight to UPDATE → 1,245+ fake links (225 papers + 219 paper_ids external citations, 8 double-prefix/PENDING garbage). Rollback papers 503→277, paper_ids 468→248 succeeded because it previewed first. See P5.OWNERSHIP ENFORCED BACKFILL PROTOCOL. |
 | **D1-UPDATE-SUCCESS-NE-ROWS-CHANGED: Treating per-call UPDATE "ok" as rows actually changed (2026-08-04)** | D1 returns success for UPDATE calls that matched 0 rows (NULL-key WHERE no-op). Rollback reported "385 ok, 0 failed" while papers only dropped 503→341 (162/226 targets changed). Fix: after any bulk D1 write verify COUNT(*) before/after against the exact target AND inspect response meta `changes`/`rows_written`; use keyless bulk matching on (doi,url) instead of keyed passes. |
 | **WBS-STD-1: update_plan steps without a canonical WBS code prefix (2026-08-04)** | Every plan step MUST start with `[{WBS}.P{N}]` (qnfo-core N-1/N-4, WBS-AGENT-PROTOCOL.md §2, ADR-2026-007). Plain `Phase N:` steps break cross-session continuity, dependency tracking, and auditability. Fix: resolve the WBS code from D1 `program_registry` (or WBS.TAXONOMY.md) and prefix every step. Case: research v2.55 execute_plan had no WBS codes despite qnfo-core claiming it did. |
+| **WBS-REGISTRY-STALE-1: D1 program_registry missing canonical program rows (2026-08-04)** | The D1 program_registry (designated source of truth per qnfo-core N-1) LACKED QNFO.UMP/SLB/INM/RES rows despite WBS.TAXONOMY.md defining them. Before concluding a WBS code "doesn't exist", verify against BOTH registries; if D1 lacks the row, INSERT it during reconciliation (CHECK-THEN-WRITE) — never invent an alternate code. Case: session 1tz85-vMiqh2TyFySznBA — QNFO.UMP + QNFO.UMP.003 + QNFO.RES rows created from the file registry; Phase 0.1 WBS resolution would have falsely failed otherwise. |
+| **VECTORIZE-WEBHOOK-VERIFY-1: search_papers "OK" treated as Vectorize index proof (2026-08-04)** | MCP search_papers returns "OK"/empty for newly indexed papers (VECTORIZE-SILO-1). The AUTHORITATIVE single-paper index check is `GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` — response `{indexed:true, chunks:N, errors:0}` is direct proof the paper is in Vectorize. Use the webhook for "is this paper indexed?" claims; search_papers is directional only. Case: IPR paper (QNFO.UMP.003) — search_papers returned "OK" while webhook confirmed 26 chunks, 0 errors, body_len 41883. Cross-ref: cloudflare v3.29 VECTORIZE-WEBHOOK-VERIFY-1. |
 | **WBS-STD-2: Cross-reference claims WBS usage that does not exist (2026-08-04)** | A skill's cross-ref "research (phases carry WBS codes in execute_plan)" was FALSE — research had plain Phase steps. Cross-refs to a standard must be verified against the target skill's actual content (read the file) before being written; phantom compliance claims are the same class as phantom validation claims. Fix: verify target content before writing the cross-ref; kaizen Watchtower should audit WBS cross-refs. |
 | **PHASE0-EMPTY-REPO: `git subtree add` on a new program repo without a bootstrap commit — v2.59, 2026-08-04** | A brand-new program repo created via `gh repo create <name> --public` has NO commits and NO HEAD. `git subtree add` requires an existing commit to merge into → all subtree adds fail silently. **Fix:** Clone with `gh repo create --add-readme` (creates a bootstrap commit on main) OR clone → write README → commit → rename branch to main → push BEFORE any subtree operations. Canonical case: session PMH0kzte — consolidate.py v1 subtree-added 12 repos into a new-empty ultrametric-physics repo; all 12 failed silently because HEAD didn't exist. See git-github skill SUBTREE-NO-HEAD anti-pattern.
 
@@ -1104,6 +1317,7 @@ All 4 layers verified before status → "published":
 
 
 | **CHROME-PROCURE-1: Attempting `npx @puppeteer/browsers install chrome` hangs (2026-08-04)** | The `@puppeteer/browsers` install() method hangs indefinitely on this machine after downloading the zip. Use Python `urllib.request.urlretrieve(url, zip_path)` + `zipfile.extractall()` instead. Download is ~194 MB, takes 2-5 minutes. Cache at `%USERPROFILE%\.cache\puppeteer\chrome\`. |
+| **CHROME-CACHED-DETECTION-1: Chrome for Testing may already be cached from prior sessions (2026-08-04)** | Before downloading Chrome (~194 MB), check `%USERPROFILE%\.cache\puppeteer\chrome\chrome-win64\chrome.exe` — if present, the CDP pipeline is available with zero additional downloads. The download step is a one-time setup per machine. |
 | **MATHJAX-CDN-HEADLESS-1: Chrome headless cannot reach MathJax CDN (2026-08-04)** | `page.goto(htmlFile, {waitUntil: 'networkidle0'})` with CDN-referenced MathJax hangs forever on `networkidle0`. Download `tex-svg-full.js` (~2.2 MB) via Python urllib and INLINE it into the HTML before CDP capture. Use `str.replace(script_tag, inline_script_tag)` — NOT `re.sub()` which crashes on MathJax JS `\u` escape sequences. |
 | **RE-SUB-ESCAPE-1: Using re.sub() on MathJax JS crashes with "bad escape \u" (2026-08-04)** | MathJax `tex-svg-full.js` contains `\uXXXX` Unicode escape sequences. Python's `re.sub(replacement)` interprets `\u` as a regex escape and crashes. Use `str.replace(exact_match, replacement)` instead — it treats the replacement as a literal string. |
 | **ZENODO-NEWVERSION-404: POST /api/records/{id}/actions/newversion → HTTP 404 in InvenioRDM (2026-08-04)** | The `/actions/newversion` endpoint is DECOMMISSIONED. It returns HTTP 404 for all records. Use `POST /api/records/{id}/draft` — creates a draft edit of the published record (HTTP 201) with the same ID. Publish via `POST /api/records/{id}/draft/actions/publish` (HTTP 202). |
@@ -1116,6 +1330,7 @@ All 4 layers verified before status → "published":
 | **ZENODO-STALE-DRAFT-BLOCK-1: POST /records/{id}/versions returns HTTP 500 when stale drafts exist on the concept (2026-08-04)** | InvenioRDM silently 500s newversion when ANY draft record exists on the same concept — even drafts unrelated to the current version. Root cause: prior failed publish attempts leave draft records (visible via `GET /api/user/records?status=draft`) that block new version creation. Fix: BEFORE any newversion, enumerate `GET /api/user/records?status=draft` + `q=<title>`, identify drafts whose conceptrecid matches the target, and discard each via `DELETE /api/records/{id}/draft` (204). Only then `POST /records/{id}/versions` (201). Canonical case: session ktmz7cqk — ODR Thesis + Quasiparticles blocked ~30 tool calls; 3 stale drafts (21768735, 21783092, 21783093) silently blocking; after discard, newversion worked instantly (21784489, 21784490 published). |
 | **ZENODO-FILE-ENTRY-SELECTION-1: entries[0] from POST /draft/files may be a stale entry, not the new file (2026-08-04)** | After `POST /records/{id}/draft/files` with `[{'key': fname}]`, the response `entries[]` may include PREVIOUS files; `entries[0]` can point at the wrong file's content/commit URL, causing commit 404 ("Record has no file X"). Fix: iterate entries and select the one whose `key == fname`; fallback to `entries[-1]`. Verified: uploading MD then PDF — entries[0] returned the MD entry for the PDF POST; key-matching fixed commit 404. |
 | **ZENODO-PUBLISHER-REQUIRED-1: Publish fails 400 "Missing publisher field required for DOI registration" (2026-08-04)** | InvenioRDM requires `metadata.publisher` on publish for DOI registration. The publish 400 error reveals it only after files+metadata are set. Fix: ALWAYS include `publisher` in the metadata PUT (e.g., `publisher: 'QNFO'`) alongside `title`, `publication_date`, `version`, `description`, `creators`, `resource_type`, `access_right`, `license`, `keywords`. Verified: adding publisher unblocked both 202 publishes. |
+| **AD-HOC-ZENODO-METADATA-1: Constructing Zenodo metadata incrementally by reading the draft back and guessing missing fields (2026-08-04)** | The REQUIRED METADATA FIELDS table in this skill is the canonical shape — title, publication_date, resource_type (object), creators (person_or_org array), publisher are ALL mandatory. Read the table BEFORE any PUT; build the COMPLETE object in ONE PUT (full replacement, not merge). Never diagnose a publish 400 as "server issue" — the 400's error array names the missing field; fix that field and re-PUT. Canonical case: Adelic Core Synthesis (DOI 10.5281/zenodo.21786473) — 3 publish 400s (resource_type, creators, publisher) all documented in-skill, all caused by ad-hoc incremental construction. Cross-ref: ZENODO-PUBLISHER-REQUIRED-1, ZENODO-METADATA-REQUIRED, BLAME-EXTERNAL-1 (kaizen). |
 
 
 | **ZENODO-DRAFT-DISCARD-SURGICAL-1: Blanket-discarding ALL account drafts to unblock newversion (2026-08-04)** | `GET /api/user/records?status=draft` on a QNFO account returns ~500 drafts — including OTHER papers' work-in-progress drafts and 122+ contentless chapter stubs (STUB-RECORD-1). Iterating DELETE /records/{id}/draft + DELETE /records/{id} across ALL of them risks destroying unrelated work (403 "Permission denied" protects most, but not all). Fix: discard ONLY drafts whose title/conceptrecid matches the TARGET paper, or whose record ID falls in the current session's newversion range (e.g., 217844xx). NEVER blanket-discard. Canonical case: session ktmz7cqk — discard_all.py enumerated 500 drafts; surgical filter (217844xx + known stale 21768735/21783092/21783093) succeeded where blanket discard was a risk. |
@@ -1145,4 +1360,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.62** (research — WBS canonical registry relocation: WBS docs now live at QNFO/qnfo-ops:WBS/ (d135d8da81 re-sync); iteration-2 red-team closed WBS-TAXONOMY-GAP by adding CONCRETE [QNFO.UMP.002.Px]-style update_plan example to execute_plan; cross-ref qnfo-core v1.11, git-github v2.12, kaizen v1.19; 2026-08-04) (research — v2.61: ZENODO anti-patterns; v2.62: registry relocation + WBS example; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.12, qnfo-core v1.11; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
+Current: **v2.67** (research — v2.67: Zenodo metadata shape enforcement — AD-HOC-ZENODO-METADATA-1 anti-pattern + METADATA SHAPE MANDATE; stale zenodo-create/zenodo-metadata script memory corrected; 2026-08-04) (research — WBS canonical registry relocation: WBS docs now live at QNFO/qnfo-ops:WBS/ (d135d8da81 re-sync); iteration-2 red-team closed WBS-TAXONOMY-GAP by adding CONCRETE [QNFO.UMP.002.Px]-style update_plan example to execute_plan; cross-ref qnfo-core v1.11, git-github v2.12, kaizen v1.19; 2026-08-04) (research — v2.61: ZENODO anti-patterns; v2.62: registry relocation + WBS example; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.12, qnfo-core v1.11; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
