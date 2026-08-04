@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.59
+version: 2.60
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
