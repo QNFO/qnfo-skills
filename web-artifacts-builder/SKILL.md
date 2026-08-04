@@ -1,5 +1,6 @@
 ---
 name: web-artifacts-builder
+version: 0.3
 description: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
 license: Complete terms in LICENSE.txt
 ---
@@ -101,7 +102,7 @@ Strategy 3.0 (`QNFO/QWAV/strategy/3.0.md`) carries the artifact status table
 
 ## Frontend Design Principles (merged from frontend-design skill, 2026-08-03).
 
-# Web Artifacts Builder
+# Web Artifacts Builder — v0.3
 
 To build powerful frontend claude.ai artifacts, follow these steps:
 1. Initialize the frontend repo using `scripts/init-artifact.sh`
@@ -299,3 +300,11 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+
+---
+
+## Version
+
+Current: **v0.3** (kaizen — GitHub Pages deployment patterns: PAGES-DEPLOY-OWNER-1,
+PAGES-IDENTITY-1, REPO-ARCHIVED-403, PAGES-BUILD-LATENCY-1, TOKEN-DISCOVERY-1;
+QWAV A1/A2/A3 artifact pipeline verified; 2026-08-04)
