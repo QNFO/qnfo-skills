@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: "2.11"
+version: "2.12"
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -48,7 +48,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.11 §N-4.
-# GIT-GITHUB — v2.11
+# GIT-GITHUB — v2.12
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider

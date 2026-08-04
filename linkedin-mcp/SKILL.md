@@ -25,7 +25,7 @@ version: 1.1
 > (5) [DESIGN] WBS integration: plan steps carry [KZ.*] codes.
 > Cross-reference: kaizen v1.18, windows-command-patterns S-1.0.6, qnfo-core N-2.
 
-# LinkedIn MCP — Operations Guide — v1.1
+# LINKEDIN MCP — v1.1
 
 
 Manage the LinkedIn MCP integration inside DeepChat: `linkedin-mcp-tools`

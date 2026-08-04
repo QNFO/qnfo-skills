@@ -1,7 +1,7 @@
 ---
 name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
-version: 3.8
+version: 3.9
 kif_tags: [KIF-32]
 ---
 > **v3.8 UPDATE (2026-08-04, kaizen — Red-team skills audit closeout):**
@@ -13,71 +13,23 @@ kif_tags: [KIF-32]
 >     Only one canonical S-1.0.2 remains.
 > (2) [HARD] N-2 version footer added (was missing)
 > Cross-reference: kaizen v1.14.
-# windows-command-patterns (Python-First Protocol) -- v3.8
+# windows-command-patterns — v3.9
 
-
-
-> **v3.7 (2026-08-03, kaizen — Git commit -F pattern mandated):**
-> Kaizen session retrospective from frequency-valuation-theory paper pipeline
-> (zESRNRQLF76EBvTbldEev). Recurring pattern: `git commit -m "message"` fails on
-> cmd.exe — Node.js spawn() re-quotes args, cmd.exe strips outer quotes, git receives
-> fragmented positional args. 8+ occurrences. Also: EXEC-CWD-DRIFT caused commits to
-> land on wrong branch. Fixes: (1) [HARD] Git commit/tag -F <tempfile> documented as
-> the ONLY 100%-reliable pattern; misleading `git commit -m 'msg'` example removed from
-> CMD Pattern section. (2) [SOFT] Kaizen closeout completed — .kaizen_history v3.7
-> entry added, version frontmatter bumped 3.6→3.7.
-> Cross-reference: research v2.52, session zESRNRQLF76EBvTbldEev.
-
-> **v3.6 (2026-08-03, kaizen — Cloudflare MCP + Space-Splitting Closeout):**
-> Kaizen closeout on v3.5 changes. Red-team: 5 parallel subagents (truncated,
-> fell back to direct parent-agent audit). HARD: 1. SOFT: 5. DESIGN: 0.
-> Changes: (1) [HARD] Fixed frontmatter version 3.5→3.6 to match latest banner.
-> (2) [SOFT] Added v3.5 entry to .kaizen_history (was missing — MEMORY-TO-SKILL-DRIFT).
-> (3) [SOFT] Added ASAR-PATCH-FRAGILE + ELEVATE-MISSING anti-patterns to §S-1.0.4.
-> (4) [SOFT] Verified exec_safe.py --file/--stdin modes exist at deployed path.
-> (5) [SOFT] Confirmed elevate.exe exists at DeepChat resources.
-> Prior v3.5: sustainable space-splitting workaround (8.3 names, Python, exec_safe.py).
-> Prior v3.6 (Cloudflare): MCP-first Cloudflare API row, SCS-1, KIF-59.
-> Cross-reference: kaizen v1.11, KIF-23 SPACE-SPLITTING, KIF-32.
-
-> **v3.5 (2026-08-03, SUSTAINABLE SPACE-SPLITTING WORKAROUND — no asar patching):**
-> Replaced §S-1.0.4 with sustainable strategy. Patching `app.asar` in Program Files
-> is fragile — every DeepChat update would overwrite it. Instead: (1) 8.3 short names
-> for quick cmd commands, (2) Python for all file operations (already §S1.0 mandate),
-> (3) `exec_safe.py` helper at `%USERPROFILE%\.deepchat\scripts\exec_safe.py`
-> for edge cases via --file mode. Root cause documented for upstream bug report.
-> Cross-reference: KIF-23 SPACE-SPLITTING.
-
-> **v3.3 (2026-08-03, DEEPCHAT SOURCE CODE HACKS — settings, dynamic reload, MCP, exec config):**
-> Added §S-1.0.3: Complete DeepChat configuration reference from source code analysis.
-> - Dynamic settings reload: `settingsWatcher.ts` watches `app-settings.json` changes
-> - MCP server JSON format: `{command, args, env}` in `mcpSettings.mcpServers`
-> - Custom prompts: `customPrompts` key with `{id, template, parameters}`
-> - Exec env vars: `PI_BASH_YIELD_MS`, `PI_BASH_TIMEOUT_SEC`, `PI_BASH_MAX_OUTPUT_CHARS`
-> - Tool execution policy: `toolExecutionPolicy.ts` controls auto-approval
-> - ACP agent system: `agentSettings.enabled` toggle
-> Cross-reference: system v2.3, system-prompt-v2.6.md
----
-
-> **v3.2 (2026-08-03, PSModulePath MECHANISM — ROOT CAUSE FIX):**
-> Added §S-1.0.2: The definitive explanation of how DeepChat chooses between
-> PowerShell and cmd.exe. DeepChat's `getUserShell()` (shellEnvHelper.ts) checks
-> `process.env.PSModulePath` — if set, spawns PowerShell with UTF8Encoding
-> preamble; if unset, spawns cmd.exe with `chcp 65001 > nul && command` preamble.
-> PSModulePath deleted from HKCU registry. HKLM checked clean. Source traced:
-> ThinkInAIXYZ/deepchat commit 65c937b, src/main/agent/shared/process/shellEnvHelper.ts.
-> Cross-reference: system v2.2, system-prompt-v2.6.md, PSFAIL.md.
->
-> **v3.1 (2026-08-03, EXEC SHELL MANDATE):**
-> Added §S-1.0.1: The exec tool uses cmd.exe, not PowerShell. All commands
-> run through cmd.exe. Documented the shell migration and its implications
-> for command syntax. Cross-reference: PSFAIL.md (25 documented failures).
-
-> **v3.0 (2026-08-03, TOTAL POWERSHELL BAN):**
-> TOTAL POWERSHELL BAN. User mandate: PowerShell is DELETED from this system.
-> All 9 .ps1 scripts purged across 3 skills. All "last resort" carve-outs removed.
-> Zero tolerance. The ONLY execution environments are Python (PRIMARY) and
-> cmd.exe (cmd-native chaining only).
+> **v3.9 UPDATE (2026-08-04, kaizen — EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns):**
+> Red-team: direct parent-agent audit of session CGS_BRT26CX64OuSP1xJg infrastructure audit.
+> HARD: 1. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [HARD] **EXEC-TOOL-QUOTE-1 anti-pattern**: exec tool wraps absolute paths in quotes
+>     and prepends workspace path, producing paths like
+>     `C:\Users\...\workspaces\"C:\Users\LENOVO\npm-global"`.
+>     This breaks `npm config set`, `npm install`, `node <path>`, and any command using
+>     absolute paths. Fix: use `write`→`exec python <file>` pattern (S1.0 decision tree),
+>     write `.npmrc` directly via Python, or use `.cmd` shim paths instead of `node`.
+> (2) [SOFT] **npm-CONFIG-QUOTE-1**: `npm config set prefix "C:\path"` stores quotes
+>     literally in `.npmrc` (e.g., `prefix="C:\Users\LENOVO\npm-global"`), breaking
+>     all subsequent npm operations. Fix: write `.npmrc` directly via Python `open().write()`
+>     or use Win32 registry PATH persistence instead of npm config.
+> Cross-reference: cloudflare v3.26, kaizen v1.16, session CGS_BRT26CX64OuSP1xJg.
 
 ---
 
@@ -224,7 +176,18 @@ Key files: `backgroundExecSessionManager.ts`, `shellEnvHelper.ts`, `shellOutputE
 | Anti-Pattern | Correct |
 |:-------------|:--------|
 | **ASAR-PATCH-FRAGILE: Patching `app.asar` to fix exec quoting** (v3.5) | Do NOT patch `app.asar` in Program Files. Every DeepChat update overwrites it. Use the 3 sustainable strategies above instead. The correct fix (`windowsVerbatimArguments: true`) belongs in upstream source. |
-| **ELEVATE-MISSING: Not using `elevate.exe` for admin operations** (v3.5) | `elevate.exe` ships with DeepChat at `C:\Program Files\DeepChat\resources\elevate.exe`. Use `elevate.exe -wait cmd.exe /c "..."` for operations requiring admin privileges. Requires UAC confirmation. |
+| **ELEVATE-MISSING: Not using `elevate.exe` for admin operations**
+| **EXEC-TOOL-QUOTE-1: exec wraps absolute paths in quotes, breaking npm/node commands (2026-08-04)** | The exec tool prepends workspace paths to absolute paths wrapped in quotes (e.g.,
+  `C:\Users\...\workspaces\"C:\Users\LENOVO\npm-global"`). This breaks npm config set,
+  npm install, `node <abs-path>`, and any command with absolute path arguments. Fix:
+  use write->exec-python pattern (S1.0 decision tree), write .npmrc via Python open().write(),
+  or use .cmd shim paths (C:\Users\LENOVO\npm-global\wrangler.cmd). Case: this session
+  — 5+ failures across npm config, npm install, node module resolution. |
+| **npm-CONFIG-QUOTE-1: npm stores quoted paths literally in .npmrc (2026-08-04)** | `npm config set prefix "C:\path"` stores `prefix="C:\path"` in .npmrc with literal
+  quotes. npm then tries to mkdir the quoted path, creating directories like
+  `workspaces\"C:\Users\LENOVO\npm-global"`. Fix: write .npmrc directly via
+  Python `open().write()` — this bypasses npm's quote-stripping logic. Also use
+  Win32 registry (`winreg`) for PATH persistence instead of `setx`. | (v3.5) | `elevate.exe` ships with DeepChat at `C:\Program Files\DeepChat\resources\elevate.exe`. Use `elevate.exe -wait cmd.exe /c "..."` for operations requiring admin privileges. Requires UAC confirmation. |
 
 ---
 
@@ -402,6 +365,50 @@ escalating to infrastructure theories. Failure to do so is a HARD kaizen finding
 | System info | `platform`, `os`, `psutil`, `subprocess.run(['systeminfo'])` |
 | AppX management | `subprocess.run(['wmic.exe', 'product', ...])` |
 
+## S-1.0.7 EXEC-TOOL-QUOTE-1 -- PATH QUOTING MANGLES npm/node COMMANDS (v3.9, 2026-08-04)
+
+**The exec tool wraps absolute paths in quotes and prepends the workspace directory path,
+producing paths like C:\Users\LENOVO\AppData\Local\Temp\deepchat-agent\workspaces
+\"C:\Users\LENOVO\npm-global". This breaks npm, node, and any command using
+absolute path arguments.**
+
+### Affected Commands
+
+| Command | Failure | Root Cause | Fix |
+|:--------|:--------|:-----------|:----|
+| npm config set prefix "C:\path" | Quotes stored literally in .npmrc | Exec wraps path in quotes, npm stores them | Write .npmrc via Python open().write() |
+| npm install -g wrangler | ENOENT: no such file or directory | npm reads quoted prefix from .npmrc | Fix .npmrc first, then install |
+| node "C:\path\to\script.js" | MODULE_NOT_FOUND | Exec prepends workspace path to quoted abs path | Use .cmd shim or Python subprocess |
+| setx Path "%Path%;C:\path" | Invalid syntax | Exec rewrites %Path% with quotes | Use Python winreg directly |
+
+### Permanent Workaround (write-then-exec pattern)
+
+The ONLY reliable pattern is to write Python code to a temp file, then exec it:
+1. write tool -> C:\Users\LENOVO\AppData\Local\Temp\_task.py
+2. exec python C:\Users\LENOVO\AppData\Local\Temp\_task.py
+3. exec cmd /c "del C:\Users\LENOVO\AppData\Local\Temp\_task.py"
+
+This is why S0.0 rule 2 bans python -c -- the exec tool cannot safely pass
+multi-line or quoted Python through cmd.exe. The write-then-exec pattern is NOT
+a workaround; it is the ONLY canonical execution path on this system.
+
+### npm-Specific Fix
+
+Write .npmrc directly via Python -- never use npm config set for paths:
+
+    open(r"C:\Users\LENOVO\.npmrc", "w").write(
+        "prefix=C:\\Users\\LENOVO\\npm-global\n"
+        "cache=C:\\Users\\LENOVO\\AppData\\Local\\npm-cache\n"
+    )
+
+For PATH persistence, use winreg instead of setx.
+
+### Cross-Reference
+- cloudflare skill v3.27: WRANGLER-PATH-REGRESSION-1 (wrangler PATH reverts)
+- kaizen skill v1.17: BLAME-EXTERNAL-1 (assume your code is wrong first)
+- DeepChat upstream: backgroundExecSessionManager.ts needs windowsVerbatimArguments: true
+
+
 ## Version
 
-Current: **v3.8** (windows-command-patterns — Git commit -F mandate, URLLIB-METHOD anti-pattern, API-Failure Self-Diagnosis protocol; 2026-08-04; kaizen 2026-08-04: removed duplicate §S-1.0.2, added N-2 footer) (windows-command-patterns — Git commit -F mandate, URLLIB-METHOD anti-pattern, API-Failure Self-Diagnosis protocol; 2026-08-04; kaizen 2026-08-04: removed duplicate §S-1.0.2, added N-2 footer)
+Current: **v3.9** (windows-command-patterns — EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns, §S-1.0.7 exec-tool path quoting section, write->exec pattern elevated to canonical; 2026-08-04)
