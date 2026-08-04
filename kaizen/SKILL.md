@@ -1,8 +1,16 @@
 ---
 name: kaizen
-version: 1.18
+version: 1.19
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
+
+> **v1.19 UPDATE (2026-08-04, kaizen — Ecosystem N-2 normalization + version drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (session KKe7UaEJFDhHsMiUHdbQC).
+> HARD: 1. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] git-github v2.11→v2.12 header/frontmatter N-2 version drift fixed (header said v2.11, footer said v2.12; frontmatter+header now both v2.12).
+> (2) [SOFT] linkedin-mcp header normalized: "LinkedIn MCP — Operations Guide — v1.1" → "LINKEDIN MCP — v1.1" (removed "Operations Guide" per N-2).
+> (3) [SOFT] windows-command-patterns header normalized: removed "(Python-First Protocol)" parenthetical from version header per N-2.
+> Cross-reference: qnfo-core v1.11 N-2, git-github v2.12, research v2.62.
 
 ,
 > **v1.18 UPDATE (2026-08-04, kaizen — WBS canonical registry relocation):**
@@ -141,7 +149,10 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: execution-mandate v2.3, code v2.2.
 
 
-# KAIZEN — v1.18 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
+> (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — WBS INTEGRATION note
+>     now carries a CONCRETE [QNFO.RES.001.P9]-style example in addition to the
+>     [{WBS}.P{N}] template. Cross-ref qnfo-core v1.11 §N-4, research v2.62, git-github v2.11.
+# KAIZEN — v1.19 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
 
 > **v1.17 UPDATE (2026-08-04, kaizen — infrastructure audit cross-skill anti-patterns):**
 > Red-team: direct parent-agent session CGS_BRT26CX64OuSP1xJg (Cloudflare audit).
@@ -448,6 +459,20 @@ code prefix `[{WBS}.P{N}]` (e.g., `[QNFO.KAIZEN.P1]`). Kaizen phases map to WBS
 P9-extension semantics (audit/update/verify/closeout) but the code resolves to
 the TARGET SKILL's WBS registration, not a research phase. Resolve the code from
 D1 `program_registry` or use `[{WBS}.P{N}]` template form; never invent codes.
+
+**CONCRETE EXAMPLE (v1.18, iteration-2 kaizen):** a kaizen run on the Ultrametric
+Physics program's git skill uses `[QNFO.UMP.002.P9]` prefixes; a kaizen run on the
+research skill itself uses `[QNFO.RES.001.P9]`. The program code (UMP, RES, ...) is
+the TARGET skill's owning program from qnfo-core §N-1 — resolve before starting.
+
+```python
+update_plan([
+  {"step": "[QNFO.RES.001.P9] Kaizen P0: trigger detection + pre-flight memory_recall", "status": "in_progress"},
+  {"step": "[QNFO.RES.001.P9] Kaizen P1: skill audit (explorer)", "status": "pending"},
+  {"step": "[QNFO.RES.001.P9] Kaizen P2: red-team review (5 adversaries)", "status": "pending"},
+  {"step": "[QNFO.RES.001.P9] Kaizen P3-P5: fixes, verification, closeout", "status": "pending"},
+])
+```
 Canonical docs: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` +
 `QNFO/qnfo-ops:WBS/WBS-AGENT-PROTOCOL.md` (live governance repo). The Watchtower's plan-step audit (INCIDENT-AXIS)
 checks for these prefixes — a kaizen run without WBS-coded steps fails its own
@@ -1218,7 +1243,7 @@ Likelihood: [HIGH] — enforcement documented in two skills with a concrete 4-st
 
 ## Version
 
-Current: **v1.18** (kaizen — cross-skill infrastructure audit session CGS_BRT26CX64OuSP1xJg: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns migrated to windows-command-patterns v3.9; cloudflare v3.27 confirmed with WBS-coded execute_plan + 4 anti-patterns; v1.16 PMH0kzte consolidation retained; 2026-08-04)
+Current: **v1.19** (kaizen — Ecosystem N-2 normalization + version drift fix: git-github v2.11→v2.12 HARD, linkedin-mcp + windows-command-patterns header norms SOFT; cross-ref qnfo-core v1.11, git-github v2.12, research v2.62; 2026-08-04)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.55 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
