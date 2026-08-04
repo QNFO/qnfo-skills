@@ -1,8 +1,19 @@
 ---
 name: qnfo-core
-version: 1.10
+version: 1.11
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
+
+,
+> **v1.11 UPDATE (2026-08-04, kaizen — WBS canonical registry relocation):**
+> Red-team: 5-subagent parallel + direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] Canonical WBS registry moved from archived `QNFO/wbs-6-synthesis:docs/`
+>     to LIVE governance repo `QNFO/qnfo-ops:WBS/` (WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md,
+>     commits ed54653197/c3e3e22ae3). Archived copy retained as historical record.
+>     All canonical-registry cross-references updated in qnfo-core, git-github, kaizen, research.
+> (2) [SOFT] rwnq8/qnfo-skills-1 fork archived (canonical is QNFO/qnfo-skills).
+> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, kaizen v1.18, research v2.62.
 
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
@@ -52,7 +63,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > Red-team: direct parent-agent ecosystem audit. HARD: 0. SOFT: 0. DESIGN: 1.
 > Content appended as ## DeepChat Settings Modification (merged from deepchat-settings skill, 2026-08-03).
 
-# QNFO Core — v1.10
+# QNFO Core — v1.11
 
 > **v1.5 UPDATE (2026-08-03, kaizen — Bibliographic Integrity GATE triggered by fabrication incident):**
 > Red-team: direct parent-agent 5-adversary audit (odr-thesis Phases 0-3, session SHEfIEGiQvA2LI5xAPkon).
@@ -116,8 +127,9 @@ across every skill, project, and plan item. Cross-referenced from all skills.
 ### N-1 WBS Code Standard (HARD — Canonical per ADR-2026-007)
 
 The WBS code convention is defined by **ADR-2026-007** (authority) and maintained in
-**QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md** (canonical registry) and
-**docs/WBS-AGENT-PROTOCOL.md** (agent execution protocol). This skill does NOT define
+**QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md** (canonical registry, live governance repo) and
+**QNFO/qnfo-ops:WBS/WBS-AGENT-PROTOCOL.md** (agent execution protocol); historical copy archived at
+**QNFO/wbs-6-synthesis:docs/** (2026-08-04, session vy97NnZcIGFjkhebn1DPU). This skill does NOT define
 a separate format — it mandates the canonical format:
 
 ```
@@ -139,7 +151,7 @@ Task 3, Subtask 2.
 **Canonical registries to consult (NEVER invent codes):**
 - D1: `portfolio-state.program_registry` (source of truth)
 - KG: nodes label=Program/Project, id=`prog-{slug}`/`proj-{slug}`
-- File: `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`
+- File: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` (live; archived copy: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md`)
 
 **Canonical program codes (CONSOLIDATED PROGRAM REPOS — canonical mapping, 2026-08-04):**
 
@@ -239,8 +251,8 @@ include the canonical cross-reference or be flagged PIPELINE-AMBIGUITY.
 | Ambiguous pipeline tooling | N-5: document canonical path + decision table |
 | D1 size compare via os.path.getsize() | Use len() — CRLF inflates bytes ~3.5% |
 
-**Cross-reference:** ADR-2026-007, `QNFO/wbs-6-synthesis` (WBS.TAXONOMY.md,
-WBS-AGENT-PROTOCOL.md), kaizen (Watchtower audits plan steps for WBS codes),
+**Cross-reference:** ADR-2026-007, `QNFO/qnfo-ops` (WBS/WBS.TAXONOMY.md,
+WBS/WBS-AGENT-PROTOCOL.md — canonical, live; historical in archived `QNFO/wbs-6-synthesis`), kaizen (Watchtower audits plan steps for WBS codes),
 research (phases carry WBS codes in execute_plan), windows-command-patterns (execution gates).
 
 ## §0.0 RESEARCH INTEGRITY MANDATE
@@ -692,4 +704,4 @@ Settings navigation (open-only):
 
 ## Version
 
-Current: **v1.10** (qnfo-core — WBS taxonomy: 7 new program codes added to §N-1 WBS Code Standard (UMP/SLB/INM/CFE/RES/PLT/DEM) with canonical repo URLs + branch prefixes; QWAV portfolio codes; coding conventions; cross-ref git-github v2.10 routing table, research v2.60 WBS taxonomy, kaizen v1.17; 2026-08-04)
+Current: **v1.11** (qnfo-core — WBS taxonomy: 7 new program codes added to §N-1 WBS Code Standard (UMP/SLB/INM/CFE/RES/PLT/DEM) with canonical repo URLs + branch prefixes; QWAV portfolio codes; coding conventions; cross-ref git-github v2.10 routing table, research v2.60 WBS taxonomy, kaizen v1.17; 2026-08-04)

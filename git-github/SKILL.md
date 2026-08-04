@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: "2.10"
+version: "2.11"
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -25,7 +25,15 @@ self_sufficient: true
 > Cross-reference: kaizen v1.14, cloudflare v3.25 (cross-ref table updated).
 
 
-# GIT-GITHUB — v2.10
+> **v2.11 UPDATE (2026-08-04, kaizen — PowerShell remediation + repo consolidation audit):**
+> Red-team: 5-subagent parallel + direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] PowerShell references replaced with Python equivalents:
+>     `Remove-Item -Recurse -Force $env:TEMP\<project>` → `python -c "import shutil; shutil.rmtree(...)"`;
+>     `$env:TEMP` → `%TEMP%` in clone instructions.
+> Cross-reference: qnfo-core §0.6 Python-First Execution Mandate, windows-command-patterns v3.9.
+
+# GIT-GITHUB — v2.11
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -311,7 +319,7 @@ location is a MAXIMUM ONE-TURN checkout. The sequence:
 
 ```
 # Step 1: Clone (this turn only)
-git clone <url> $env:TEMP\<project>
+git clone <url> %TEMP%\<project>
 
 # Step 2: Apply ALL edits (this turn only)
 
@@ -325,7 +333,7 @@ git push origin <branch>
 git ls-remote origin <branch>
 
 # Step 6: Delete local clone immediately
-Remove-Item -Recurse -Force $env:TEMP\<project>
+python -c "import shutil; shutil.rmtree(r'%TEMP%\<project>', ignore_errors=True)"
 ```
 
 **What is FORBIDDEN (v2.3 HARD GATE):**
@@ -388,7 +396,7 @@ See ADR-026 below.
 | Creating a new repo for a single paper/project | **HARD GATE (Project Branch Policy):** Branch from the appropriate program repo (see routing table). NEVER create a new repo for an individual paper, audit, or project. All QNFO/QWAV content lives in the consolidated program repos. |
 | Using generic branch names (`feature/phase0-scaffold`) | Use `{type}/{canonical-slug}` — e.g. `paper/measurable-vs-imaginable`, `audit/acrp04-five-smooth`. The slug must match the paper's canonical short name used everywhere (Zenodo, D1, R2, filename). |
 | **WBS-NO-CODE: Branch or plan item lacks a WBS program code prefix — v2.10, 2026-08-04** | Every branch MUST use `{prog}/{type}/{slug}` format where `{prog}` is the lowercase WBS program code (`ump`, `slb`, `inm`, `cfe`, `res`, `plt`, `dem`). Every `update_plan` step MUST carry `[{PORTFOLIO}.{PROG}.{NNN}.P{N}]` prefix. Branches and plan items without WBS codes cannot be audited, traced, or linked across sessions. Canonical codes: qnfo-core §N-1 table. |
-| **WBS-INVENT-CODE: Inventing a non-canonical WBS code instead of looking it up — v2.10, 2026-08-04** | WBS program codes are DEFINED in qnfo-core §N-1 (canonical registry) and the Project Branch Policy routing table. Never invent a code. Resolve from: (1) qnfo-core SKILL.md §N-1 table, (2) the routing table in this skill, (3) `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`. The codes are: `UMP`, `SLB`, `INM`, `CFE`, `RES`, `PLT`, `DEM` plus the existing `ADL`, `CON`, `SR`. Any other code is a fabrication. |
+| **WBS-INVENT-CODE: Inventing a non-canonical WBS code instead of looking it up — v2.10, 2026-08-04** | WBS program codes are DEFINED in qnfo-core §N-1 (canonical registry) and the Project Branch Policy routing table. Never invent a code. Resolve from: (1) qnfo-core SKILL.md §N-1 table, (2) the routing table in this skill, (3) `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` (live canonical; archived copy: `QNFO/wbs-6-synthesis:docs/`). The codes are: `UMP`, `SLB`, `INM`, `CFE`, `RES`, `PLT`, `DEM` plus the existing `ADL`, `CON`, `SR`. Any other code is a fabrication. |
 | Committing to main/master | HARD GATE: `git branch --show-current` before commit |
 | `git push --force` on shared branches | NEVER force-push to branches others use |
 | Amending pushed commits | Only amend unpushed commits |
@@ -413,4 +421,4 @@ See ADR-026 below.
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.10** (git-github — WBS taxonomy integration: program codes UMP/SLB/INM/CFE/RES/PLT/DEM added to routing table; branch naming upgraded to `{prog}/{type}/{slug}`; WBS-NO-CODE/WBS-INVENT-CODE anti-patterns; WBS resolution in Standard Workflow §0; cross-ref qnfo-core v1.10 §N-1; 2026-08-04) (git-github — v2.9: 6 anti-patterns; v2.10: WBS taxonomy; 2026-08-04)
+Current: **v2.11** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.10, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)

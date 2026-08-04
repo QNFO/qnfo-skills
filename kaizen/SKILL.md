@@ -1,8 +1,17 @@
 ---
 name: kaizen
-version: 1.17
+version: 1.18
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
+
+,
+> **v1.18 UPDATE (2026-08-04, kaizen — WBS canonical registry relocation):**
+> Red-team: direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] WBS canonical docs reference updated: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` +
+>     `WBS-AGENT-PROTOCOL.md` (live governance repo) replace archived
+>     `QNFO/wbs-6-synthesis:docs/` (retained as historical record, 2026-08-04).
+> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, research v2.62.
 
 > **v1.15 UPDATE (2026-08-04, kaizen — WBS protocol wiring + nomenclature standard):**
 > Red-team: ecosystem-wide skills audit for consistent taxonomy/nomenclature.
@@ -132,7 +141,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: execution-mandate v2.3, code v2.2.
 
 
-# KAIZEN — v1.17 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
+# KAIZEN — v1.18 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
 
 > **v1.17 UPDATE (2026-08-04, kaizen — infrastructure audit cross-skill anti-patterns):**
 > Red-team: direct parent-agent session CGS_BRT26CX64OuSP1xJg (Cloudflare audit).
@@ -439,8 +448,8 @@ code prefix `[{WBS}.P{N}]` (e.g., `[QNFO.KAIZEN.P1]`). Kaizen phases map to WBS
 P9-extension semantics (audit/update/verify/closeout) but the code resolves to
 the TARGET SKILL's WBS registration, not a research phase. Resolve the code from
 D1 `program_registry` or use `[{WBS}.P{N}]` template form; never invent codes.
-Canonical docs: `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md` +
-`docs/WBS-AGENT-PROTOCOL.md`. The Watchtower's plan-step audit (INCIDENT-AXIS)
+Canonical docs: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` +
+`QNFO/qnfo-ops:WBS/WBS-AGENT-PROTOCOL.md` (live governance repo). The Watchtower's plan-step audit (INCIDENT-AXIS)
 checks for these prefixes — a kaizen run without WBS-coded steps fails its own
 standard.
 
@@ -1209,7 +1218,7 @@ Likelihood: [HIGH] — enforcement documented in two skills with a concrete 4-st
 
 ## Version
 
-Current: **v1.17** (kaizen — cross-skill infrastructure audit session CGS_BRT26CX64OuSP1xJg: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns migrated to windows-command-patterns v3.9; cloudflare v3.27 confirmed with WBS-coded execute_plan + 4 anti-patterns; v1.16 PMH0kzte consolidation retained; 2026-08-04)
+Current: **v1.18** (kaizen — cross-skill infrastructure audit session CGS_BRT26CX64OuSP1xJg: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns migrated to windows-command-patterns v3.9; cloudflare v3.27 confirmed with WBS-coded execute_plan + 4 anti-patterns; v1.16 PMH0kzte consolidation retained; 2026-08-04)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.55 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |

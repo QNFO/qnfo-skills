@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.61
+version: 2.62
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -26,7 +26,16 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.61
+,
+> **v2.62 UPDATE (2026-08-04, kaizen — WBS canonical registry relocation):**
+> Red-team: direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] WBS canonical registry reference updated to live `QNFO/qnfo-ops:WBS/`
+>     (WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md); archived `QNFO/wbs-6-synthesis:docs/`
+>     retained as historical record (2026-08-04).
+> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, kaizen v1.18.
+
+# RESEARCH — v2.62
 
 > **v2.61 UPDATE (2026-08-04, kaizen — Red-team closeout: surgical draft-discard + token-validation correction):**
 > Red-team: direct parent-agent audit of session ktmz7cqk Zenodo publish chain (successful publish 21784489/21784490).
@@ -115,7 +124,7 @@ triggers:
 >     plain `Phase N:` steps violated the WBS mandate and made qnfo-core's
 >     cross-ref ("research carries WBS codes in execute_plan") false.
 > (2) [HARD] **WBS INTEGRATION note added to execute_plan section** — canonical
->     docs (`QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`, `WBS-AGENT-PROTOCOL.md`),
+>     docs (`QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md`, `WBS-AGENT-PROTOCOL.md`),
 >     D1 program_registry resolution rule, phase-number mapping.
 > (3) [SOFT] **Anti-pattern rows added** — WBS-STD-1 (plan steps without WBS code
 >     prefix) + WBS-STD-2 (cross-ref claiming WBS usage that doesn't exist).
@@ -258,7 +267,7 @@ WBS code prefix `[{WBS}.P{N}]` (per qnfo-core N-1/N-4 + WBS-AGENT-PROTOCOL.md §
 ADR-2026-007). Resolve the project's WBS code from D1 `program_registry` (or the
 WBS.TAXONOMY.md registry) BEFORE executing; never invent codes. Phase numbers map
 1:1 to WBS.TAXONOMY.md §2 (P0 Init → P8 Core Distribution). Canonical docs:
-`QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md` + `docs/WBS-AGENT-PROTOCOL.md`.
+`QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` + `docs/WBS-AGENT-PROTOCOL.md`.
 
 update_plan([
   {"step": "[{WBS}.P0] Init: repo scaffold, WBS code resolution, README, PROJECT-PLAN.md, core claim lock", "status": "pending"},
@@ -1118,4 +1127,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.61** (research — ZENODO-DRAFT-DISCARD-SURGICAL-1, ZENODO-ME-404, ZENODO-REQUESTS-POST-201 anti-patterns from red-team audit of session ktmz7cqk publish chain; + v2.60 WBS routing retained; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
+Current: **v2.62** (research — ZENODO-DRAFT-DISCARD-SURGICAL-1, ZENODO-ME-404, ZENODO-REQUESTS-POST-201 anti-patterns from red-team audit of session ktmz7cqk publish chain; + v2.60 WBS routing retained; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
