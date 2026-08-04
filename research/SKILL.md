@@ -26,7 +26,7 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.59
+# RESEARCH — v2.60
 
 > **v2.54 UPDATE (2026-08-04, kaizen — D1 zenodo_url ownership incident):**
 > Red-team: user challenge caught a blanket `zenodo_url = 'https://doi.org/'||doi`
@@ -291,19 +291,20 @@ delegate to this umbrella mandate — the rule is the same, the tool is what cha
 
 **Workflow:**
 1. Clone the appropriate program repo: `git clone https://github.com/QNFO/<program>.git`
-2. Create a branch using `{type}/{canonical-slug}`: `git checkout -b paper/<slug>`
-3. Scaffold: `mkdir -p <slug>/docs <slug>/artifacts <slug>/notebooks <slug>/releases`
-4. Create `PROJECT-PLAN.md` at `<slug>/PROJECT-PLAN.md` (not at repo root).
+2. Resolve WBS program code from qnfo-core §N-1 (canonical: `UMP`, `SLB`, `INM`, `CFE`, `RES`, `PLT`, `DEM` + existing `ADL`, `CON`, `SR`)
+3. Create a branch using `{prog}/{type}/{canonical-slug}`: `git checkout -b ump/paper/<slug>`
+4. Scaffold: `mkdir -p <slug>/docs <slug>/artifacts <slug>/notebooks <slug>/releases`
+5. Create `PROJECT-PLAN.md` at `<slug>/PROJECT-PLAN.md` (not at repo root). First line MUST carry the WBS code: `# WBS: {PORTFOLIO}.{PROG}.{NNN}`
 
-**Program repo routing (canonical): insert from git-github skill Project Branch Policy table.**
+**Program repo routing with WBS codes (canonical):**
 
-| Research Domain | Program Repo | Branch Prefix |
-|:----------------|:-------------|:--------------|
-| Ultrametric / p-adic / adelic physics | `QNFO/ultrametric-physics` | `paper/` |
-| Laws of Form / Spencer-Brown | `QNFO/laws-of-form` | `paper/` |
-| Infomatics / information-as-fundamental | `QNFO/infomatics` | `paper/` |
-| CFPE / paradigm forecasting | `QNFO/cfpe` | `paper/` |
-| General QNFO research / audits | `QNFO/qnfo-research` | `paper/`, `audit/` |
+| WBS Code | Research Domain | Program Repo | Branch Prefix |
+|:---------|:----------------|:-------------|:--------------|
+| `UMP` | Ultrametric / p-adic / adelic physics | `QNFO/ultrametric-physics` | `ump/` |
+| `SLB` | Laws of Form / Spencer-Brown | `QNFO/laws-of-form` | `slb/` |
+| `INM` | Infomatics / information-as-fundamental | `QNFO/infomatics` | `inm/` |
+| `CFE` | CFPE / paradigm forecasting | `QNFO/cfpe` | `cfe/` |
+| `RES` | General QNFO research / audits | `QNFO/qnfo-research` | `res/` |
 
 **REPO-TARGET GATE (HARD):** `git remote -v` before every tag/commit/release — confirm target is a QNFO program repo, NEVER `QNFO/qnfo-skills` (ADR-026).
 
@@ -1076,4 +1077,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.59** (research — Red-team audit of consolidation session PMH0kzte: PHASE0-EMPTY-REPO anti-pattern documented; cross-reference: git-github v2.9 SUBTREE-NO-HEAD; 2026-08-04) (research — v2.58: Project Branch Policy, v2.59: PHASE0-EMPTY-REPO kaizen; 2026-08-04)
+Current: **v2.60** (research — WBS taxonomy integration: Phase 0.1 routing table includes WBS codes (UMP/SLB/INM/CFE/RES) with canonical repo URLs + branch prefixes; `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04)
