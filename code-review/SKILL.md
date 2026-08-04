@@ -1,3 +1,12 @@
+---
+name: code-review
+description: Comprehensive code review assistant that analyzes code quality, security, and best practices
+allowedTools:
+  - read_file
+  - list_files
+  - search_files
+---
+
 # Code Review Skill
 
 > **v1.1 UPDATE (2026-08-04, kaizen — N-2 nomenclature + redundancy resolution + WBS integration):**

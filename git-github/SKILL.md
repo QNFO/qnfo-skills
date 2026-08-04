@@ -453,4 +453,4 @@ See ADR-026 below.
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.11** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.11, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
+Current: **v2.12** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.11, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
