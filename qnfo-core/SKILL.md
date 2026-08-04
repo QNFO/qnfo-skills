@@ -150,7 +150,6 @@ P9 Extension. (Canonical — see WBS.TAXONOMY.md §2.)
 A skill's version MUST be identical in ALL THREE locations:
 1. Frontmatter: `version: X.Y`
 2. Header: `# SKILLNAME — vX.Y` (canonical delimiter = EM-DASH `—`)
-3. Footer: `Current: **vX.Y**`
 
 The version header delimiter is STANDARDIZED to em-dash `—` (`# SKILLNAME — vX.Y`)
 per the 2026-08-04 ecosystem nomenclature audit. `--` (double hyphen) and
@@ -197,7 +196,7 @@ failures. Canonical decisions (current):
 
 | Operation | Canonical Path | Ambiguity Source |
 |:----------|:---------------|:-----------------|
-| Markdown→PDF | pandoc `--mathjax` → build-pdf-pro.py → xhtml2pdf fallback | multiple renderers |
+| Markdown→PDF | pandoc `--mathjax` → MathJax SVG inline → puppeteer-core CDP (NO xhtml2pdf — permanently deprecated per research v2.51) | multiple renderers / substandard fallback risk |
 | Zenodo update published record | **newversion** (`POST /records/{id}/versions`) — edit-drafts have LOCKED buckets | edit-draft vs newversion |
 | Zenodo API non-GET | `requests` library ONLY (urllib drops DELETE/PUT) | urllib vs requests |
 | D1 content update | `UPDATE ... WHERE slug=?` (NOT DELETE+INSERT) | FTS5 shadow tables |

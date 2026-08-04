@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.15
+version: 1.17
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -132,7 +132,20 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: execution-mandate v2.3, code v2.2.
 
 
-# KAIZEN — v1.15 (WBS protocol wiring — update_plan steps carry canonical WBS codes)
+# KAIZEN — v1.17 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
+
+> **v1.17 UPDATE (2026-08-04, kaizen — infrastructure audit cross-skill anti-patterns):**
+> Red-team: direct parent-agent session CGS_BRT26CX64OuSP1xJg (Cloudflare audit).
+> HARD: 1. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [HARD] **EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 cross-reference**: exec tool
+>     wraps absolute paths in quotes and prepends workspace path. Migrated to
+>     windows-command-patterns v3.9 S-1.0.7 with full diagnosis + fix patterns.
+> (2) [SOFT] **Version banner repair**: duplicative v1.15 version clause cleaned
+>     (two descriptions merged on one line — copy-paste artifact).
+> Cross-reference: windows-command-patterns v3.9, cloudflare v3.27,
+> session CGS_BRT26CX64OuSP1xJg, session PMH0kzte.
+
 
 > **v1.9 UPDATE (2026-08-03, kaizen — GREP-SCOPE tool-failure remediation):**
 > Trigger: `grep` tool denied `Access denied - path outside allowed directories:
@@ -1196,7 +1209,7 @@ Likelihood: [HIGH] — enforcement documented in two skills with a concrete 4-st
 
 ## Version
 
-Current: **v1.15** (research — v1.14: 15 anti-patterns from session ktmz7cqk red-team closeout (concurrent-write, process-mgmt, Chrome procurement); v1.15: WBS protocol wiring — update_plan steps carry canonical [{WBS}.P{N}] codes per qnfo-core N-4 + WBS-AGENT-PROTOCOL §2; 2026-08-04) (WBS protocol wiring — update_plan steps carry canonical `[{WBS}.P{N}]` codes per qnfo-core N-4 + WBS-AGENT-PROTOCOL.md §2; v1.14 rollback-execution lessons retained; 2026-08-04)
+Current: **v1.17** (kaizen — cross-skill infrastructure audit session CGS_BRT26CX64OuSP1xJg: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 anti-patterns migrated to windows-command-patterns v3.9; cloudflare v3.27 confirmed with WBS-coded execute_plan + 4 anti-patterns; v1.16 PMH0kzte consolidation retained; 2026-08-04)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.55 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
@@ -1212,6 +1225,8 @@ Current: **v1.15** (research — v1.14: 15 anti-patterns from session ktmz7cqk r
 | **VERSION-OVERWRITE-1: Version string in skill SKILL.md overwritten by concurrent process mid-kaizen (2026-08-04)** | The version line (`Current: **vN.MM** (...)`) is the most fragile line in any skill file — every kaizen session writes to it. When two sessions kaizen the same skill concurrently, the version string in the file after both writes reflects the LAST writer, not the union. Fix: (A) kaizen sessions on the same skill MUST serialize — check `.kaizen_history` for active sessions before starting; (B) if a concurrent write is detected (version string changed between read and write), merge changes and bump the version past both intended versions. Canonical case: ktmz7cqk v2.55 → backfill protocol v2.55 → merged into v2.56. |
 | **SSESSION-KAIZEN-DISCOVERY-1: Red-team session closeouts must audit ALL skills touched, not just the primary target (2026-08-04)** | Session ktmz7cqk touched research (primary), git-github (clone/push), windows-command-patterns (cmd.exe quirks), cloudflare (D1 verification), knowledge (memory). The red-team audit should cover ALL touched skills for new anti-patterns, not just the primary. For each touched skill: check if this session's failures would have been prevented by an existing anti-pattern in that skill. If not → new anti-pattern for that skill. |
 | **PIPELINE-CROSS-SKILL-DRIFT-1: Research skill v2.50 documents Zenodo endpoints that 404 in production; kaizen detected but research was the fix target, not kaizen (2026-08-04)** | When a pipeline procedure (publication) spans multiple skills (research for PDF/Zenodo, git-github for commits, windows-command-patterns for exec), fixes to the primary skill (research v2.55) should ALSO be back-propagated to supporting skills (kaizen anti-pattern for the migration lesson). A session retrospective that only fixes the originally-loaded skill leaves the supporting skills stale. Canonical case: /actions/newversion 404 fix went into research v2.55 but kaizen v1.13 didn't get the equivalent pattern until v1.14. |
+| **CONSOLIDATION-OWNER-RESOLVE-1: `gh repo create` without owner prefix resolves to org (not personal account) — v1.16, session PMH0kzte, 2026-08-04** | `gh repo create <name> --public` with no owner prefix can create the repo in the QNFO org rather than the authenticated user's personal account. The resolution depends on the environment (git remote, GH_REPO env, local config). This causes `gh repo archive rwnq8/<name>` to archive the canonical org repo via GitHub 301 redirect (same repo id, different owner prefixes resolve to the same repo). **Fix:** Always use EXPLCIT owner prefixes: `gh repo create rwnq8/<name>` or `gh repo create QNFO/<name>`. Never rely on default resolution. Verify repos actually exist under the intended owner via `user/repos?affiliation=owner` paginated list. Canonical case: session PMH0kzte — consolidate scripts created cfpe/laws-of-form/ultrametric-physics in QNFO org (discovered because both `repos/rwnq8/<name>` and `repos/QNFO/<name>` returned the same repo id `1322383106`). |
+| **PYTHON-BUFFERING-1: Python background scripts produce empty poll output because stdout is buffered without TTY — v1.16, session PMH0kzte, 2026-08-04** | When a Python script is run in the background (`exec` with `background: true`), stdout is NOT attached to a terminal → Python's default line-buffering switches to block-buffering. `process poll` returns empty or truncated output until the script completes (or the buffer fills). This makes background process monitoring useless for diagnostics. **Fix:** Always launch background Python scripts with `python -u` (unbuffered) OR add `print("...", flush=True)` after every status line. Polls can then show real-time progress. Canonical case: session PMH0kzte — 10+ background Python scripts showed `"output":""` in polls despite actively running (subtree merges completing, PR API calls succeeding).
 
 
 ## DeepChat Runtime Context

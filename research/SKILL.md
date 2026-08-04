@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.57
+version: 2.59
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -26,7 +26,7 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.57 (WBS-coded execute_plan + taxonomy wiring; merged with concurrent v2.56 closeout)
+# RESEARCH — v2.59
 
 > **v2.54 UPDATE (2026-08-04, kaizen — D1 zenodo_url ownership incident):**
 > Red-team: user challenge caught a blanket `zenodo_url = 'https://doi.org/'||doi`
@@ -287,9 +287,25 @@ delegate to this umbrella mandate — the rule is the same, the tool is what cha
 
 ### 0.1 Repository
 
-Standard scaffold: `<project-slug>/` with `README.md`, `PROJECT-PLAN.md`, `.gitignore`, `docs/`, `artifacts/`, `notebooks/`, `releases/`. Git init on feature branch (NEVER main/master).
+**PROJECT BRANCH POLICY (HARD GATE):** NEVER create a new repository for a single paper or project. All QNFO research work lives as **branches** inside the consolidated program repos in `QNFO/`. Use the routing table from the git-github skill ($Project Branch Policy) to select the correct program repo for the project's domain.
 
-**REPO-TARGET GATE (HARD):** `git remote -v` before every tag/commit/release — confirm target is the PROJECT's repo, NEVER `QNFO/qnfo-skills` (ADR-026).
+**Workflow:**
+1. Clone the appropriate program repo: `git clone https://github.com/QNFO/<program>.git`
+2. Create a branch using `{type}/{canonical-slug}`: `git checkout -b paper/<slug>`
+3. Scaffold: `mkdir -p <slug>/docs <slug>/artifacts <slug>/notebooks <slug>/releases`
+4. Create `PROJECT-PLAN.md` at `<slug>/PROJECT-PLAN.md` (not at repo root).
+
+**Program repo routing (canonical): insert from git-github skill Project Branch Policy table.**
+
+| Research Domain | Program Repo | Branch Prefix |
+|:----------------|:-------------|:--------------|
+| Ultrametric / p-adic / adelic physics | `QNFO/ultrametric-physics` | `paper/` |
+| Laws of Form / Spencer-Brown | `QNFO/laws-of-form` | `paper/` |
+| Infomatics / information-as-fundamental | `QNFO/infomatics` | `paper/` |
+| CFPE / paradigm forecasting | `QNFO/cfpe` | `paper/` |
+| General QNFO research / audits | `QNFO/qnfo-research` | `paper/`, `audit/` |
+
+**REPO-TARGET GATE (HARD):** `git remote -v` before every tag/commit/release — confirm target is a QNFO program repo, NEVER `QNFO/qnfo-skills` (ADR-026).
 
 ### 0.2 Project Plan
 
@@ -305,7 +321,7 @@ Phase Closeout Protocol: commit → credential-scan → tag → push → verify 
 
 | ID | Check | Gate |
 |:---|:------|:-----|
-| P1 | Git repo initialized on feature branch | HARD |
+| P1 | Branch created in correct program repo; `{type}/{slug}` convention | HARD |
 | P2 | GitHub remote configured and pushed | HARD |
 | P3 | Directory structure: docs/ artifacts/ notebooks/ releases/ | HARD |
 | P4 | PROJECT-PLAN.md with charter, WBS, milestones | HARD |
@@ -1018,6 +1034,7 @@ All 4 layers verified before status → "published":
 | **D1-UPDATE-SUCCESS-NE-ROWS-CHANGED: Treating per-call UPDATE "ok" as rows actually changed (2026-08-04)** | D1 returns success for UPDATE calls that matched 0 rows (NULL-key WHERE no-op). Rollback reported "385 ok, 0 failed" while papers only dropped 503→341 (162/226 targets changed). Fix: after any bulk D1 write verify COUNT(*) before/after against the exact target AND inspect response meta `changes`/`rows_written`; use keyless bulk matching on (doi,url) instead of keyed passes. |
 | **WBS-STD-1: update_plan steps without a canonical WBS code prefix (2026-08-04)** | Every plan step MUST start with `[{WBS}.P{N}]` (qnfo-core N-1/N-4, WBS-AGENT-PROTOCOL.md §2, ADR-2026-007). Plain `Phase N:` steps break cross-session continuity, dependency tracking, and auditability. Fix: resolve the WBS code from D1 `program_registry` (or WBS.TAXONOMY.md) and prefix every step. Case: research v2.55 execute_plan had no WBS codes despite qnfo-core claiming it did. |
 | **WBS-STD-2: Cross-reference claims WBS usage that does not exist (2026-08-04)** | A skill's cross-ref "research (phases carry WBS codes in execute_plan)" was FALSE — research had plain Phase steps. Cross-refs to a standard must be verified against the target skill's actual content (read the file) before being written; phantom compliance claims are the same class as phantom validation claims. Fix: verify target content before writing the cross-ref; kaizen Watchtower should audit WBS cross-refs. |
+| **PHASE0-EMPTY-REPO: `git subtree add` on a new program repo without a bootstrap commit — v2.59, 2026-08-04** | A brand-new program repo created via `gh repo create <name> --public` has NO commits and NO HEAD. `git subtree add` requires an existing commit to merge into → all subtree adds fail silently. **Fix:** Clone with `gh repo create --add-readme` (creates a bootstrap commit on main) OR clone → write README → commit → rename branch to main → push BEFORE any subtree operations. Canonical case: session PMH0kzte — consolidate.py v1 subtree-added 12 repos into a new-empty ultrametric-physics repo; all 12 failed silently because HEAD didn't exist. See git-github skill SUBTREE-NO-HEAD anti-pattern.
 
 | **BACKGROUND-TIMEOUT-1: Foreground exec of long-running command (Chrome download, MathJax CDP render, pandas HTML) times out at 600s max (2026-08-04)** | `exec` has a 600s (10min) maximum timeout including `background: true` tasks that auto-cancel. Chrome download (~194 MB) takes 2-5 min; CDP PDF render with MathJax takes 30-90s. Always use `background: true` for downloads > 30s. Use `process poll` to check status; do NOT assume `exec` returning a sessionId means the task completed. Kill hung processes early (2 polls with no progress = stuck) and retry with a different approach. Canonical case: session ktmz7cqk — 3 hung background Chrome installs, 2 hung CDP renders. |
 | **TEMP-VOLATILITY-2: Published paper files in %TEMP% evicted between authoring and PDF build phases (2026-08-04)** | Files written to `%TEMP%` during the authoring phase (step N) are GONE by the PDF-build phase (step N+1). Windows cleans temp directories between long-running agent turns. **Re-clone repos from GitHub after every phase transition.** Never assume a `%TEMP%` file written in an earlier phase is still there. Canonical case: session ktmz7cqk — both `_26216024446.md` (136KB) and `_26216024519.md` (10KB) evicted; odr-thesis-v2.md and quasipaper-v2.md also evicted. Git is the persistence layer, not temp. Cross-reference: git-github TEMP Volatility HARD GATE. |
@@ -1059,4 +1076,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.57** (research — v2.55: complete PDF build pipeline rewrite (Chrome procurement, MathJax inline, 9 new anti-patterns); v2.56: red-team closeout (BACKGROUND-TIMEOUT-1, TEMP-VOLATILITY-2, CONCURRENT-SKILL-WRITE-1, BUCKET-LOCKED-RESOLVE-1, DRAFT-PUBLISH-FLOW-1, 6 anti-patterns); v2.57: Zenodo upload documentation corrections; 2026-08-04) (research — WBS-coded execute_plan `[{WBS}.P0–P8]` per qnfo-core N-4 + WBS-AGENT-PROTOCOL; WBS-STD-1/2; merged concurrent v2.56 closeout ktmz7cqk: BACKGROUND-TIMEOUT-1, TEMP-VOLATILITY-2, CONCURRENT-SKILL-WRITE-1, BUCKET-LOCKED-RESOLVE-1, DRAFT-PUBLISH-FLOW-1, SUBAGENT-DEADLINE-CROSSREF-1; 2026-08-04)
+Current: **v2.59** (research — Red-team audit of consolidation session PMH0kzte: PHASE0-EMPTY-REPO anti-pattern documented; cross-reference: git-github v2.9 SUBTREE-NO-HEAD; 2026-08-04) (research — v2.58: Project Branch Policy, v2.59: PHASE0-EMPTY-REPO kaizen; 2026-08-04)
