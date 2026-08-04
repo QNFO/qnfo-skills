@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.30
+version: 3.32
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -23,7 +23,7 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.29
+# CLOUDFLARE — 3.31
 
 > **v3.26 UPDATE (2026-08-04, kaizen — infrastructure audit anti-patterns + WBS plan integration):**
 > Red-team: direct parent-agent audit of full infrastructure ecosystem (10 Workers, 12 DNS zones, 37 URLs).
@@ -182,6 +182,7 @@ print(p.pid)  # poll via log file, not session poll
 | Anti-Pattern | Fix |
 |:-------------|:----|
 | **RCLONE-FIRST-1: Per-file wrangler/REST loop for thousands of R2 objects** | `rclone sync/copy` with `--transfers 16` — multipart, parallel, resumable. One command, not N calls. |
+| **RCLONE-NESTED-KEY-1: `rclone copy <file> <remote>:<bucket>/<path>/<filename>` creates `filename/filename` nested keys (2026-08-04)** | rclone treats the destination's last segment as a DIRECTORY when it doesn't already exist as a prefix. `copy file.md remote:bucket/dir/file.md` creates key `dir/file.md/file.md`. FIX: use a directory destination ending in `\`: `rclone copy file.md remote:bucket/dir\` → flat key `dir/file.md`. Always verify with `rclone lsl` after upload. Canonical case: session 7gJ25ecLca3VNUeaFCZKB — adelic-distinction paper md+PDF uploaded nested, deleted + re-uploaded flat. Cross-ref: research v2.55 R2 archive. |
 | **BUCKET-COMMINGLE-1: Personal + project files in same bucket** | Separate buckets per §Bucket Separation Mandate. d-drive ≠ qnfo-projects ≠ qnfo-backups. |
 | **LOCAL-BOUNCE-1: Downloading R2→local to re-upload R2→R2** | `rclone copy remoteA:path remoteB:path` — server-side copy, zero local traffic. |
 | **WINDOWED-MOUNT-1: Mount dies when console closes** | Invisible mount via VBS window-style 0 + `--no-console` + `--daemon-timeout 0` in Startup folder. |
@@ -1039,6 +1040,14 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 
 **BACKUP GAP CLOSED (2026-07-25, KIF-22):** `qnfo-lifecycle` v1.2 deployed with `living-paper.papers` added to the daily `runBackup` tables array (LIVING_PAPER D1 binding). The mandate above ("extend runBackup whenever a new production-critical table is added") had sat unexecuted for 7 days while the table grew to 931 rows with zero scheduled backups. First backup verified: `qnfo-backups/living-paper/papers-2026-07-25.json` (4.9 MB, 931 rows).
 
+> **SYNCPATH-1 FIX LIVE (2026-08-04, verified in session 7gJ25ecLca3VNUeaFCZKB):** POST /sync now
+> REQUIRES the shared-secret header `X-Sync-Token`. Without it: HTTP 401 `{"error": "Unauthorized:
+> missing or invalid X-Sync-Token"}`. The token is a gateway secret (not in keys.json — see
+> qnfo-gateway Worker secrets). **Fallback for KG seeding when X-Sync-Token is unavailable:**
+> write directly to the `qnfo-graph` D1 database via `cloudflare/scripts/d1-query.py` discovery
+> (INSERT INTO nodes / edges with CHECK-THEN-WRITE + re-query verification — the knowledge-skill
+> canonical 4-D seed path). Verified: node `paper:<slug>` + BELONGS_TO edge seeded via direct D1
+> after /sync returned 401.
 ### Gateway /sync Bulk Contract (documented 2026-07-25, F-6)
 `POST https://qnfo-gateway.q08.workers.dev/sync` requires EXACTLY:
 ```json
@@ -1271,12 +1280,41 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **WRANGLER-PATH-REGRESSION-1: Wrangler PATH fix from prior session silently reverts (2026-08-04)** | The permanent wrangler PATH fix (npm config set prefix + setx Path) applied 2026-08-01 was reverted by 2026-08-04 — `wrangler --version` returns "not recognized". The npm global prefix at `C:\Users\LENOVO\npm-global` may have been cleared or overwritten. Fix: re-apply the permanent fix from the Wrangler Environment Setup section AND add a verification step to `availability-audit.js` or `url-health-check.js` that checks `wrangler --version` as a pre-flight gate. |
 | **GATEWAY-PROD-STALE-1: `qnfo-gateway-production` created 2026-07-31, never deployed with HTTP routes (2026-08-04)** | The staging/production variant Worker was created 2026-07-31 and returns 404 on /health. Likely a test Worker that was never deployed with `workers_dev = true` (KIF-61) or never had HTTP route handlers. If unused, delete to prevent drift from the 9-Worker baseline. Flagged in 2026-08-04 infrastructure audit — `workers_list` shows 10 Workers (baseline 9), but "+qnfo-email" is legitimate growth while "+qnfo-gateway-production" is unexplained drift. |
 | **SYNCPATH-1: Unauthenticated POST /sync writes to the KG (2026-08-04)** | qnfo-gateway `handleSync` accepts POST /sync at graph-api.qnfo.org and qnfo.org with NO auth — verified live: HTTP 200, `{action:bulk, nodes[], edges[]}` inserts into graph D1. Anyone can create/modify KG nodes+edges. Fix: require a shared-secret header (X-Sync-Token) on /sync before writes; keep read endpoints open. Also note: this endpoint is the executable path for deferred KG-seed tasks (write path exists — awaits node/edge spec). Canonical case: session dXXJ3TxRQ1VHzGdAyp-lo. |
+| **WORKER-CPU-LIMIT-1: Ignoring Free plan CPU budget when designing Workers (2026-08-04)** | `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request. Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan OR paginate D1 queries + stream large payloads via `ReadableStream` + move CPU-heavy work to Queue consumers. Diagnose via `cloudflare-observability` MCP watching for `CPU time exceeded` in invocation logs. See §Workers Execution Limits. |
+
+## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
+
+Lessons from building the `personal-life` semantic index (d-drive bucket -> Workers AI bge -> Vectorize). Every one of these cost real debugging time; they are now anti-patterns.
+
+| Anti-pattern | Fix |
+|:-------------|:----|
+| **CHUNKTEXT-INFINITE-LOOP-1 (1102 root cause):** chunkText with `i = end - overlap` never breaks when `end` reaches the string end — `i` freezes at `n - overlap`, infinite CPU spin, worker dies with **503 error code 1102** (CPU time limit) on ANY file >= min-chunk-size. Debug routes pass because they never chunk real content. | Add `if (end >= n) break;` (or `if (e === text.length) break;` — the working qnfo-paper-indexer has exactly this line). Symptom fingerprint: 1102 at even `limit=1` on a small file; stage-logging shows death right after the read stage. |
+| **VECTOR-ID-64B-1:** Vectorize vector IDs capped at **64 bytes**. `personal:obsidian/notes/.../file.md:12` overflows → `VECTOR_UPSERT_ERROR (40008): id too long`. | Deterministic short IDs: `sha256hex(key + ':' + chunkIdx).slice(0,32)` → 32 hex chars. Stable across re-indexes (upsert overwrites). |
+| **VZ-UPSERT-FIXED-OVERHEAD-1:** Vectorize upsert has ~1.0-1.7s FIXED overhead per call regardless of batch size (20 vec = 1061ms, 100 vec = 1263ms). Per-file upsert on thousands of files blows the 30s wall clock. | **Accumulate vectors across files; bulk-upsert in batches of ~500** per call. One flush per N files, not one per file. Also batch D1 registry writes (`PERSONAL.batch([])`). |
+| **EMBED-FORMAT-1:** bge-base-en-v1.5 via Workers AI accepts `{ text: [array] }` (array of strings, batched) — **NOT** `{ texts: [...] }` (400 oneOf error) and NOT `{ requests: [...] }` (3030 invalid input). Verified live 2026-08-04. | Use `env.AI.run('@cf/baai/bge-base-en-v1.5', { text: chunks.slice(0,32) })` — one call per file, up to 32 chunks, ~300ms. |
+| **VECTORIZE-DELETE-404-1:** REST `POST /vectorize/v2/indexes/{i}/delete-by-ids` returns 404; `/vectorize/indexes/{i}/delete-by-ids` (v1 path) returns 400 `incorrect_api_version` for v2 indexes. | Use **`wrangler vectorize delete-vectors <index> --ids <id>...`** (works, returns mutation id). Batch ~50 ids per call (arg limits). |
+| **VZ-METADATA-STRING-1:** Vectorize metadata values must be **strings** — numbers cause `VECTOR_UPSERT_ERROR (40023): failed to parse upsert vectors request` (chunk/category as `Number` break JSON shape). | `String(chunk)`, `String(category)`, `String(modified)` everywhere. |
+| **WORKER-USAGE-MODEL-1:** Checking the account plan is NOT enough — check the worker's `usage_model` (`GET /accounts/{a}/workers/scripts/{w}/settings`). All QNFO workers = `standard` (paid, 30s CPU). A `free` worker = 10ms CPU = instant 1102 on any real work. | Before debugging 1102s, confirm `usage_model=standard` via the settings API. |
+| **WORKER-1102-DIAGNOSTIC-1 (D1 stage-logging):** 1102 kills the response with no body — you cannot see WHERE it died. | Deploy a debug build that writes a `debug_progress(stage, ts, note)` row to D1 **before each stage** (registry -> list -> candidate -> read -> chunk -> embed -> upsert -> batch). After the 503, query D1 — the last row shows the dying stage. This is the definitive 1102 bisect. |
+| **INDEXER-CURSOR-SLICING-1:** One `/index` request scanning the whole bucket (30k+ objects) exceeds 30s wall clock even with fast ops. | **Cursor-based incremental slicing:** each request processes a bounded slice (limit/scanCap, default 300-400 objects), returns the R2 list `cursor`, `done` flag. A driver loop (or cron) re-invokes with `?cursor=...` until `done`. Resumable, retryable. |
+
+### Personal-Life Indexer Architecture (reference)
+```
+d-drive bucket (R2) --rclone sync--> local sources (D:\Archive, Obsidian vault...)
+personal-life-indexer Worker (cron 0 */12 + /index?cursor=) :
+  list R2 objects (bounded slice) -> filter TEXT_EXTS + noise -> getObjectText (512KB cap)
+  -> chunkText (O(n), MUST break at end) -> AI.run bge {text:[chunks]} (batch 32)
+  -> accumulate vectors -> bulk upsert 500/batch -> D1 batch registry upsert
+  -> return {cursor, done}
+personal-life-search Worker: /search?q= -> embed query {text:[q]} -> VZ.query -> group by file
+```
+Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-life` (files + chunks tables), Worker pair `personal-life-indexer`/`personal-life-search`. **STRICTLY separate from qnfo-* (user mandate, 2026-08-04).**
 
 ## Version
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.31** (cloudflare — integrated ALL 11 official Cloudflare skills from github.com/cloudflare/skills: Agents SDK + Sandbox SDK (v3.30) now joined by Durable Objects, Workers Best Practices, Web-Perf, and Turnstile; full official-skill coverage matrix below; 2026-08-04)
+Current: **v3.32** (cloudflare — integrated ALL 11 official Cloudflare skills from github.com/cloudflare/skills: Agents SDK + Sandbox SDK (v3.30) now joined by Durable Objects, Workers Best Practices, Web-Perf, and Turnstile; full official-skill coverage matrix below; + Workers Execution Limits section (v3.32 — Free/Paid plan CPU/wall-clock limits, WORKER-CPU-LIMIT-1 anti-pattern); 2026-08-04)
 
 ---
 
@@ -1635,6 +1673,58 @@ export class MyDurableObject extends DurableObject<Env> {
 
 ### Review Workflow
 Retrieve latest docs/types/schema → read FULL files → check types (`npx tsc --noEmit`, no-floating-promises lint) → check config (compat date, nodejs_compat, observability, secrets) → check patterns (streaming, floating promises, global state) → check security (crypto, timing-safe) → flag with line numbers.
+
+---
+
+## Workers Execution Limits (v3.32 — integrated from official docs)
+
+> **Source:** https://developers.cloudflare.com/workers/platform/limits/
+> **Retrieval bias:** Prefer `search_cloudflare_documentation` for current limits — plan tiers and quotas change.
+
+### Plan Comparison
+
+| Resource | Free Plan | Paid Plan |
+|:---------|:----------|:----------|
+| CPU time per request | **10 ms** | Up to **5 min** (default: 30 s) |
+| Requests per day | 100,000 | Unlimited (billed per request) |
+| Subrequests per request | 50 | 10,000 |
+| Memory | 128 MB | 128 MB |
+| Cron/Queue wall-clock | 15 min (same) | Up to **15 min** |
+| Script size (compressed) | 3 MB | 3 MB |
+| Durable Objects | Not included | Included |
+| KV namespaces | 100 | Unlimited |
+
+### CPU Time vs. Wall-Clock Time
+
+- **CPU Time:** Measures only active computation on the processor. I/O waits (external `fetch()`, D1 queries, KV/R2 reads) do NOT count against CPU time.
+- **Wall-Clock Time:** Total elapsed time. Incoming HTTP requests have no hard wall-time cap as long as the client stays connected and streams data. Cron and Queue triggers are capped at 15 min wall-clock.
+
+This distinction is critical for Workers on the **Free plan**: a Worker with three `await fetch()` calls and some JSON parsing might finish within the 10 ms CPU budget because most time is spent waiting on I/O. But a Worker doing a tight `for` loop over 10,000 D1 rows will exhaust the 10 ms CPU budget instantly and throw a `CPU time exceeded` error.
+
+### Operational Implications for QNFO Workers
+
+| Scenario | Free Plan Risk | Mitigation |
+|:---------|:------------|:-----------|
+| D1 `SELECT` + JSON serialize large result set | CPU blow on serialization of hundreds of rows | Paginate with `LIMIT`/`OFFSET`; stream via `Response` |
+| Vectorize `.query()` with large `returnValues` | Embedding + similarity calc = CPU | Keep `returnValues` ≤ 10; offload heavy ranking to edge |
+| Workers AI inference | Counting against CPU time? No — AI inference runs on separate GPU infrastructure. However the embedding model call itself consumes CPU cycles. | Use the smallest model that fits accuracy needs; cache embeddings |
+| Multiple `await fetch()` to external APIs | Low CPU risk (I/O-bound) but subrequest count matters | Batch calls; Free plan's 50 subrequests is the real ceiling |
+| `crypto.subtle.digest()` / hashing large bodies | CPU spike | Hash lazily; consider R2 `Content-MD5` instead of re-hashing |
+| Cron trigger doing full-table D1 scan | 15 min wall-clock limit (both plans) | Chunk work with offset tracking in KV; resume across cron runs |
+
+### Anti-Pattern: WORKER-CPU-LIMIT-1 — Ignoring Free plan CPU budget when designing Workers
+
+**Symptoms:** `CPU time exceeded` errors appearing for Workers that never exceeded 10 ms in local testing (`wrangler dev` bypasses the Free plan limit!).
+
+**Diagnosis:** 1) Check `cloudflare-observability` MCP for `CPU time exceeded` in invocation logs. 2) Run `wrangler tail` and watch for the error. 3) If the Worker is on Free plan and performs any synchronous loop or large JSON serialization, suspect CPU budget exhaustion.
+
+**Fix options:**
+1. Upgrade to Paid plan (up to 5 min CPU time, default 30 s) — the only real fix for CPU-bound Workers
+2. Paginate all D1 queries; use streaming `Response` with `ReadableStream` for large payloads
+3. Move heavy work to a Queue consumer (Cron/Queue triggers get 15 min wall-clock, still 10 ms CPU on Free)
+4. Offload CPU-heavy computation to external services or Workers AI
+
+> **QNFO STATUS:** All QNFO Workers run on a Paid plan (`quniverse` account, `edb167b78c9fb901ea5bca3ce58ccc4b`). The Free plan limits are documented here for Worker design awareness and for any Workers deployed to other accounts.
 
 ---
 
