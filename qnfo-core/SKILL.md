@@ -1,6 +1,6 @@
 ---
 name: qnfo-core
-version: 1.9
+version: 1.10
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
@@ -52,7 +52,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > Red-team: direct parent-agent ecosystem audit. HARD: 0. SOFT: 0. DESIGN: 1.
 > Content appended as ## DeepChat Settings Modification (merged from deepchat-settings skill, 2026-08-03).
 
-# QNFO Core — v1.9 (Nomenclature standardization: em-dash version header + N-2 delimiter mandate)
+# QNFO Core — v1.10
 
 > **v1.5 UPDATE (2026-08-03, kaizen — Bibliographic Integrity GATE triggered by fabrication incident):**
 > Red-team: direct parent-agent 5-adversary audit (odr-thesis Phases 0-3, session SHEfIEGiQvA2LI5xAPkon).
@@ -127,7 +127,7 @@ a separate format — it mandates the canonical format:
 | Component | Pattern | Example |
 |:----------|:--------|:--------|
 | Portfolio | uppercase | `QNFO` |
-| Program | 2-3 char uppercase | `ADL` (Adelic), `CON` (Consilience), `SR` |
+| Program | 2-3 char uppercase | `ADL` (Adelic), `CON` (Consilience), `SR` (Silent Radix), `AUT` (Autaxys), `UMP` (Ultrametric Physics), `SLB` (Laws of Form), `INM` (Infomatics), `CFE` (CFPE), `RES` (QNFO Research), `PLT` (QWAV Platform), `DEM` (QWAV Demos) |
 | Project | 3-digit padded | `001`, `002` |
 | Phase | P + digit 0-9 | `P4` |
 | Task | T + digit 1-n | `T3` |
@@ -140,6 +140,27 @@ Task 3, Subtask 2.
 - D1: `portfolio-state.program_registry` (source of truth)
 - KG: nodes label=Program/Project, id=`prog-{slug}`/`proj-{slug}`
 - File: `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`
+
+**Canonical program codes (CONSOLIDATED PROGRAM REPOS — canonical mapping, 2026-08-04):**
+
+| WBS Code | Program | Portfolio | Program Repo | Branch Prefix | update_plan prefix |
+|:---------|:--------|:----------|:-------------|:--------------|:-------------------|
+| `UMP` | Ultrametric Physics | QNFO | `QNFO/ultrametric-physics` | `ump/` | `[QNFO.UMP.001.P0]` |
+| `SLB` | Laws of Form (Spencer-Brown) | QNFO | `QNFO/laws-of-form` | `slb/` | `[QNFO.SLB.001.P0]` |
+| `INM` | Infomatics | QNFO | `QNFO/infomatics` | `inm/` | `[QNFO.INM.001.P0]` |
+| `CFE` | CFPE (Cascading Foresight) | QNFO | `QNFO/cfpe` | `cfe/` | `[QNFO.CFE.001.P0]` |
+| `RES` | QNFO Research Archive | QNFO | `QNFO/qnfo-research` | `res/` | `[QNFO.RES.001.P0]` |
+| `PLT` | QWAV Platform | QWAV | `QNFO/qwav-platform` | `plt/` | `[QWAV.PLT.001.P0]` |
+| `DEM` | QWAV Demos | QWAV | `QNFO/qwav-demos` | `dem/` | `[QWAV.DEM.001.P0]` |
+
+**Branch naming convention (HARD):** `{prog}/{type}/{slug}` — program code prefix (lowercase),
+work type (`paper`/`audit`/`artifact`/`infra`/`fix`/`kaizen`), then the paper/project slug.
+Example: `ump/paper/adelic-shannon-theory`, `res/audit/acrp04-five-smooth`, `plt/infra/d1-backfill`.
+
+**update_plan integration (HARD, N-4):** every plan step carries `[{PORTFOLIO}.{PROG}.{NNN}.P{N}]`.
+Project numbers are 3-digit padded within each program (001, 002, ...). Phase codes P0-P9 per
+WBS.TAXONOMY.md §2. Task/Subtask: T{N}/S{N}. The full code `QNFO.UMP.001.P4.T3.S2` is the unique
+key for plan steps, branches, tags, D1 entries, and KG edges.
 
 **Phase definitions (P0-P9):** P0 Init, P1 Due Diligence, P2 Literature, P3 Citations,
 P4 Deep Research, P5 Publication, P6 Deployment, P7 Dissemination, P8 Core Distribution,
@@ -671,4 +692,4 @@ Settings navigation (open-only):
 
 ## Version
 
-Current: **v1.9** (qnfo-core — 2026-08-04 ecosystem nomenclature audit: N-2 version-header delimiter standardized to em-dash `—`; `--`/`(vX.Y)` formats deprecated; header reconciled; WBS N-1/N-4 cross-refs verified)
+Current: **v1.10** (qnfo-core — WBS taxonomy: 7 new program codes added to §N-1 WBS Code Standard (UMP/SLB/INM/CFE/RES/PLT/DEM) with canonical repo URLs + branch prefixes; QWAV portfolio codes; coding conventions; cross-ref git-github v2.10 routing table, research v2.60 WBS taxonomy, kaizen v1.17; 2026-08-04)

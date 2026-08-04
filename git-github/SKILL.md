@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: "2.6"
+version: "2.10"
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -25,7 +25,7 @@ self_sufficient: true
 > Cross-reference: kaizen v1.14, cloudflare v3.25 (cross-ref table updated).
 
 
-# GIT-GITHUB — v2.7
+# GIT-GITHUB — v2.10
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -100,10 +100,34 @@ ACTION:DELETE FILE: deprecated/old-script.py RATIONALE: Replaced by new version
 
 ### Branch Discipline (IRON RULE)
 - **NEVER commit to main/master.** This is a HARD GATE.
-- Always use feature branches: `feature/<kebab-case-description>`
-- Branch naming: lowercase, hyphens, descriptive (no underscores, no CamelCase)
+- Branch naming uses the `{type}/{slug}` convention (replaces legacy `feature/<description>`).
+- **Type** is the work category: `paper`, `project`, `audit`, `artifact`, `fix`, `kaizen`, `infra`.
+- **Slug** is the paper or project identifier in kebab-case — it MUST be descriptive (the paper's canonical short name, not a generic phase label like "phase0-scaffold" or "project-init-phase0").
+- **No underscores or CamelCase.** lowercase-kebab-case only.
 - Verify before commit: `git branch --show-current`
-- Examples: `feature/kaizen-update-2026-07-17`, `feature/cfpe-stage-4-red-team`
+- **Good:** `paper/measurable-vs-imaginable`, `audit/acrp04-five-smooth`, `fix/zenodo-403-urllib`, `kaizen/e2e-nomenclature-audit`, `infra/r2-sync-worker`
+- **Bad (forbidden):** `feature/phase0-scaffold`, `feature/project-init-phase0` — generic phase names are not descriptive and cannot be disambiguated across projects sharing a repo.
+
+### Project Branch Policy (HARD GATE — no new repos for individual papers/projects)
+
+**NEVER create a new repository for a single paper, project, or audit.** QNFO and QWAV content lives in a small set of consolidated **program repos** in the QNFO org. Every new piece of work is a **branch** inside the appropriate program repo, not a new repository.
+
+| Work Type | QNFO Program Repo | Branch Prefix | Example |
+|:----------|:------------------|:--------------|:--------|
+| Ultrametric / p-adic / adelic physics papers | `QNFO/ultrametric-physics` | `paper/` | `paper/adelic-shannon-theory` |
+| Laws of Form / Spencer-Brown research | `QNFO/laws-of-form` | `paper/` | `paper/cancellation-rule` |
+| Infomatics / information-as-fundamental | `QNFO/infomatics` | `paper/` | `paper/informational-universe` |
+| CFPE / paradigm forecasting | `QNFO/cfpe` | `paper/` | `paper/computing-after-silicon` |
+| General QNFO research papers / audits | `QNFO/qnfo-research` | `paper/`, `audit/` | `paper/rosetta-fractal`, `audit/pqs-ai-evaluation` |
+| QWAV platform / worker infra | `QNFO/qwav-platform` | `infra/`, `project/` | `infra/d1-backfill`, `project/papers-server-v2` |
+| QWAV interactive demos | `QNFO/qwav-demos` | `artifact/` | `artifact/hardware-visualizer` |
+| QNFO skills / prompts | `QNFO/qnfo-skills` | `kaizen/`, `feature/` | `kaizen/watchtower-scan` |
+
+**Routing protocol:** Before starting ANY new project, paper, or audit:
+1. Classify the work against the table above to select the correct program repo.
+2. If the work doesn't match any existing program area, consult the user — do NOT invent a new repo.
+3. Clone the program repo → `git checkout -b {type}/{slug}` → work → PR into main.
+4. The branch slug MUST be the paper's canonical short name (the same slug used for Zenodo, D1, R2, and the paper filename).
 
 ### Standard Workflow
 ```bash
@@ -237,10 +261,11 @@ git reset --hard HEAD~1
 ## GitHub Management
 
 ### Repository Operations
-- **Create repo:** Via GitHub API or web UI
+- **Create repo:** `gh repo create {owner/repo} --public --add-readme` (recommended: `--add-readme` ensures a bootstrap commit on main, making the repo immediately subtree-add-safe). NEVER create without a bootstrap commit if `git subtree add` will follow.
 - **Clone:** `git clone <url>`
 - **Push:** `git push origin <branch>`
 - **Pull:** `git pull origin <branch>`
+- **Archive:** `gh repo archive {owner/repo} --yes` — **WARNING**: `gh repo archive` follows GitHub HTTP 301 redirects. Always verify the repo's actual owner via `gh api repos/<owner>/<name> --jq .owner.login` AND confirm it's in the `user/repos?affiliation=owner` list before archiving. Archiving the wrong copy (org repo via redirect) can be undone with `gh repo unarchive`. See ARCHIVE-REDIRECT-1 anti-pattern.
 
 ### Issues
 Create, update, close Issues. Template: title (actionable, specific), body (description, steps, expected behavior, environment).
@@ -360,6 +385,10 @@ See ADR-026 below.
 ## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
+| Creating a new repo for a single paper/project | **HARD GATE (Project Branch Policy):** Branch from the appropriate program repo (see routing table). NEVER create a new repo for an individual paper, audit, or project. All QNFO/QWAV content lives in the consolidated program repos. |
+| Using generic branch names (`feature/phase0-scaffold`) | Use `{type}/{canonical-slug}` — e.g. `paper/measurable-vs-imaginable`, `audit/acrp04-five-smooth`. The slug must match the paper's canonical short name used everywhere (Zenodo, D1, R2, filename). |
+| **WBS-NO-CODE: Branch or plan item lacks a WBS program code prefix — v2.10, 2026-08-04** | Every branch MUST use `{prog}/{type}/{slug}` format where `{prog}` is the lowercase WBS program code (`ump`, `slb`, `inm`, `cfe`, `res`, `plt`, `dem`). Every `update_plan` step MUST carry `[{PORTFOLIO}.{PROG}.{NNN}.P{N}]` prefix. Branches and plan items without WBS codes cannot be audited, traced, or linked across sessions. Canonical codes: qnfo-core §N-1 table. |
+| **WBS-INVENT-CODE: Inventing a non-canonical WBS code instead of looking it up — v2.10, 2026-08-04** | WBS program codes are DEFINED in qnfo-core §N-1 (canonical registry) and the Project Branch Policy routing table. Never invent a code. Resolve from: (1) qnfo-core SKILL.md §N-1 table, (2) the routing table in this skill, (3) `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`. The codes are: `UMP`, `SLB`, `INM`, `CFE`, `RES`, `PLT`, `DEM` plus the existing `ADL`, `CON`, `SR`. Any other code is a fabrication. |
 | Committing to main/master | HARD GATE: `git branch --show-current` before commit |
 | `git push --force` on shared branches | NEVER force-push to branches others use |
 | Amending pushed commits | Only amend unpushed commits |
@@ -373,9 +402,15 @@ See ADR-026 below.
 | Editing files in a temp clone without committing same-turn (KIF-32, v2.3) | **HARD GATE:** clone → edit → commit → push → delete, ALL in one turn. Never defer commit across turn boundaries. If a file was edited in turn N and `git status` showed changes at the start of turn N+1, re-clone the repo and re-apply the edits — the local files may have been silently lost or corrupted. |
 | Assuming `$env:TEMP` persists across turns on Windows (v2.3) | Temp directories are volatile. System cleanup, session teardown, or storage-sense can evict files between turns. `Test-Path $env:TEMP\<project>` returning true in turn N does NOT guarantee it returns true in turn N+1. |
 | Multi-turn iterative editing on a single temp clone (v2.3) | Re-clone each turn (fetching latest from remote). Batch edits must be atomic per turn: if you can't finish all edits in one turn, commit what you have, push it, and pick up the rest next turn from a fresh clone. |
+| **SUBTREE-NO-HEAD: `git subtree add` fails silently on a new/empty repository (no HEAD commit) — v2.9, 2026-08-04** | `git subtree add` requires an existing HEAD commit to merge into. A brand-new repo cloned without `--add-readme` has no commits → all subtree adds fail silently (especially with `check=False`). **Fix:** Always bootstrap main with a commit BEFORE subtree adds. Use `gh repo create --add-readme` (or create/bootstrap a README commit on main). Never run subtree add on an unborn HEAD. Canonical case: session PMH0kzte — 12 subtree adds failed silently, then README+PROVENANCE committed alone, producing a program repo with ONLY bootstrap files and zero member content. |
+| **PR-CREATE-CWD: `gh pr create` without `--repo` flag fails outside a git repo — v2.9, 2026-08-04** | `gh pr create` (and `gh pr merge`) require being run INSIDE a local git checkout or given `--repo owner/name`. When the working directory is not a git repo, gh fails with "not a git repository." **Fix:** Always use `--repo owner/name` on pr create/merge from scripts running in temp directories. Never rely on cwd being a git clone. Canonical case: session PMH0kzte — consolidate_v2.py succeeded through subtree merges and push, then failed at `gh pr create` because the script's cwd was the temp root, not the clone. |
+| **ARCHIVE-REDIRECT-1: `gh repo archive owner/name` archives the CANONICAL org repo via GitHub 301 redirect — v2.9, 2026-08-04** | When a repo is owned by an org but queried under a different owner path, GitHub returns HTTP 301 → gh follows silently and operates on the canonical org repo. Relying on the owner prefix in `gh repo archive` to target the right copy is UNSAFE. **Fix:** Before archiving, verify the repo's actual owner via `gh api repos/owner/name --jq .owner.login` AND check `user/repos?affiliation=owner` to confirm it's owned by the target account. Canonical case: session PMH0kzte — `gh repo archive rwnq8/ultrametric-physics` archived QNFO/ultrametric-physics (same repo id) because the repo was created directly in the QNFO org, not rwnq8. |
+| **CLONE-LEFTOVER-1: Previous session's temp clone blocks a new clone — v2.9, 2026-08-04** | A background Python script that exits before cleanup (`shutil.rmtree`) leaves a clone directory in `%TEMP%`. A subsequent clone in the same session hits "destination path already exists and is not an empty directory." **Fix:** ALWAYS `shutil.rmtree(workdir, ignore_errors=True)` BEFORE cloning, in the same script. Never assume the workdir is clean from a prior run. Canonical case: session PMH0kzte — the killed consolidate.py v1 left `%TEMP%\ultrametric-physics` with bootstrap files, blocking v2's clone. |
+| **CHECK-FALSE-SWALLOW-1: `check=False` in subprocess.run swallows git failures with no diagnostic output — v2.9, 2026-08-04** | `subprocess.run(cmd, check=False)` returns a CompletedProcess but the caller never inspects `returncode` or prints `stderr`. The failure is invisible. This is especially dangerous with `git subtree add` which can fail for multiple reasons (no HEAD, remote unreachable, branch mismatch). **Fix:** NEVER use `check=False` on git operations without capturing AND printing both stdout and stderr on non-zero returncode. Use `check=True` (fail-fast, visible) as the default; reserve `check=False` ONLY for operations where failure is expected (e.g., `git rev-parse --verify` to check existence). Canonical case: session PMH0kzte — consolidate.py v1 used `check=False` on all 12 subtree adds, all failed, none were diagnosed until post-hoc verification. |
+| **DELETE-BRANCH-DEFAULT-1: `gh pr merge --delete-branch` cannot delete a branch if it was the repo's default at creation — v2.9, 2026-08-04** | When a new repo has only one branch (the feature branch, because main was empty/unborn), GitHub sets that branch as the default. `gh pr merge --delete-branch` refuses to delete the default branch — the branch survives the merge. **Fix:** After PR merge, explicitly set the default branch to `main` via `gh repo edit --default-branch main`, then DELETE the leftover feature branch via API (`gh api -X DELETE repos/owner/repo/git/refs/heads/<branch>`). Verify with `gh api repos/owner/repo/branches`. Canonical case: session PMH0kzte — ultrametric-physics, laws-of-form, cfpe all had leftover `feature/consolidate-projects` branches after merge because they were the repo's default at creation time. |
 
 ## Version
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.7** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash) per qnfo-core N-2 ecosystem audit; 2026-08-04) (git-github — KIF-32 thin-client temp-volatility, same-turn commit mandate, qnfo-skills protection; v2.5: N-2 version footer; v2.6: kaizen closeout — cross-ref table verified; 2026-08-04) (git-github — KIF-32 thin-client temp-volatility, same-turn commit mandate, qnfo-skills protection; v2.5: added version footer — N-2 compliance; 2026-08-04)
+Current: **v2.10** (git-github — WBS taxonomy integration: program codes UMP/SLB/INM/CFE/RES/PLT/DEM added to routing table; branch naming upgraded to `{prog}/{type}/{slug}`; WBS-NO-CODE/WBS-INVENT-CODE anti-patterns; WBS resolution in Standard Workflow §0; cross-ref qnfo-core v1.10 §N-1; 2026-08-04) (git-github — v2.9: 6 anti-patterns; v2.10: WBS taxonomy; 2026-08-04)

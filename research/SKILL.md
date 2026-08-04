@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.60
+version: 2.61
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -26,7 +26,36 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.60
+# RESEARCH — v2.61
+
+> **v2.61 UPDATE (2026-08-04, kaizen — Red-team closeout: surgical draft-discard + token-validation correction):**
+> Red-team: direct parent-agent audit of session ktmz7cqk Zenodo publish chain (successful publish 21784489/21784490).
+> HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-DRAFT-DISCARD-SURGICAL-1** — blanket `GET /user/records?status=draft` + discard-all
+>     enumerated ~500 drafts including OTHER papers' WIP + STUB-RECORD-1 chapter stubs. Risk of destroying
+>     unrelated work. Fix: discard ONLY drafts matching the target title/conceptrecid or current-session
+>     newversion ID range. Verified: surgical filter (217844xx + 3 known stale) succeeded; blanket discard = risk.
+> (2) [HARD] **ZENODO-ME-404** — `GET /api/me` intermittently 404s with a VALID token (6+ checks in session).
+>     Fix: validate tokens via a real endpoint (`GET /api/records/{id}` → 200). Credential protocol corrected.
+> (3) [SOFT] **ZENODO-REQUESTS-POST-201** — newversion 201 response may have `id: null`; draft id lives in
+>     `links.self` / `links.latest_draft`. Parse fallback chain.
+> Cross-reference: kaizen v1.16, session ktmz7cqkhPnG6pyZEvEMB.
+
+
+> **v2.60 UPDATE (2026-08-04, kaizen — Zenodo newversion unblock: stale-draft discovery):**
+> Red-team: direct parent-agent forensic audit of session ktmz7cqk Zenodo publish attempts.
+> HARD: 3. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-STALE-DRAFT-BLOCK-1** — `POST /records/{id}/versions` silently returns
+>     HTTP 500 when stale draft records exist on the concept (leftovers from failed publishes).
+>     Fix: enumerate `GET /user/records?status=draft`, discard matching drafts
+>     (`DELETE /records/{id}/draft` → 204), THEN newversion (201). ODR/QP were blocked
+>     ~30 tool calls by 3 stale drafts (21768735, 21783092, 21783093); discard unblocked instantly.
+> (2) [HARD] **ZENODO-FILE-ENTRY-SELECTION-1** — `entries[0]` after `POST /draft/files` may be a
+>     stale entry; select entry by `key == fname` before PUT content / POST commit. Fixes 404 commits.
+> (3) [HARD] **ZENODO-PUBLISHER-REQUIRED-1** — publish 400 "Missing publisher field required for
+>     DOI registration". Always include `publisher` in metadata PUT.
+> Cross-reference: kaizen v1.16, session ktmz7cqkhPnG6pyZEvEMB.
+
 
 > **v2.54 UPDATE (2026-08-04, kaizen — D1 zenodo_url ownership incident):**
 > Red-team: user challenge caught a blanket `zenodo_url = 'https://doi.org/'||doi`
@@ -305,6 +334,8 @@ delegate to this umbrella mandate — the rule is the same, the tool is what cha
 | `INM` | Infomatics / information-as-fundamental | `QNFO/infomatics` | `inm/` |
 | `CFE` | CFPE / paradigm forecasting | `QNFO/cfpe` | `cfe/` |
 | `RES` | General QNFO research / audits | `QNFO/qnfo-research` | `res/` |
+
+**Note — QWAV product work routes through git-github, not research:** `PLT` (QWAV Platform → `QNFO/qwav-platform`, `plt/`) and `DEM` (QWAV Demos → `QNFO/qwav-demos`, `dem/`) are PRODUCT repos, not research-paper domains. Product/infra branches (`plt/infra/...`, `dem/artifact/...`) are handled by the git-github skill §Project Branch Policy routing table — the research pipeline (Phases 0-8) applies to `UMP`/`SLB`/`INM`/`CFE`/`RES` only. Full canonical mapping: qnfo-core §N-1.
 
 **REPO-TARGET GATE (HARD):** `git remote -v` before every tag/commit/release — confirm target is a QNFO program repo, NEVER `QNFO/qnfo-skills` (ADR-026).
 
@@ -803,7 +834,7 @@ All five failures would repeat for any agent on this machine. This section now d
 
 ### Zenodo Upload
 
-**Credential Protocol:** Never hardcode or retype tokens. Reference live environment variable. Run `scripts/zenodo-token-check.py` on ANY auth failure (403, 404, 415). The script validates (a) token existence, (b) token validity via `GET /api/me` (NOT `/api/user` — returns 404 in InvenioRDM), (c) InvenioRDM endpoint reachability via `GET /api/records`, and (d) Content-Type header requirements before diagnosing the root cause. Never diagnose "403 = token scope" without running the checker first — InvenioRDM migrates old endpoints to 404, which some clients report as 403. [HARD — v2.50, session SHEfIEGiQvA2LI5xAPkon: quasiparticle extension paper blocked 6+ hours because 403 was diagnosed as "token scope" when the real issue was decommissioned endpoint 404.]
+**Credential Protocol:** Never hardcode or retype tokens. Reference live environment variable. Run `scripts/zenodo-token-check.py` on ANY auth failure (403, 404, 415). The script validates (a) token existence, (b) token validity via a REAL endpoint `GET /api/records/{id}` (200) — NOTE: `GET /api/me` is UNRELIABLE (intermittently 404s with a valid token; see ZENODO-ME-404), (c) InvenioRDM endpoint reachability via `GET /api/records`, and (d) Content-Type header requirements before diagnosing the root cause. Never diagnose "403 = token scope" without running the checker first — InvenioRDM migrates old endpoints to 404, which some clients report as 403. [HARD — v2.50, session SHEfIEGiQvA2LI5xAPkon: quasiparticle extension paper blocked 6+ hours because 403 was diagnosed as "token scope" when the real issue was decommissioned endpoint 404.]
 
 **ZENODO-API-INVENIORDM (v2.50, HARD):** Zenodo migrated to InvenioRDM. The old `GET /api/deposit/depositions` endpoint returns HTTP 404 (decommissioned). Use:
 
@@ -1055,6 +1086,16 @@ All 4 layers verified before status → "published":
 | **PYTHON-C-AMPERSAND-1: python -c fails when command contains & (2026-08-04)** | cmd.exe interprets `&` as command separator. Always write Python scripts to `.py` files and run `python <file>`. Cross-reference: windows-command-patterns S0.0. |
 | **PANDOC-PATH-CMD-QUOTES-1: cmd.exe quoting fails for pandoc with PATH prepend (2026-08-04)** | `cmd /c "set PATH=... && pandoc ..."` with outer quotes is not valid cmd.exe syntax. Use the canonical pandoc path directly: `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe`. Never prepend to PATH via cmd /c set. |
 
+| **ZENODO-STALE-DRAFT-BLOCK-1: POST /records/{id}/versions returns HTTP 500 when stale drafts exist on the concept (2026-08-04)** | InvenioRDM silently 500s newversion when ANY draft record exists on the same concept — even drafts unrelated to the current version. Root cause: prior failed publish attempts leave draft records (visible via `GET /api/user/records?status=draft`) that block new version creation. Fix: BEFORE any newversion, enumerate `GET /api/user/records?status=draft` + `q=<title>`, identify drafts whose conceptrecid matches the target, and discard each via `DELETE /api/records/{id}/draft` (204). Only then `POST /records/{id}/versions` (201). Canonical case: session ktmz7cqk — ODR Thesis + Quasiparticles blocked ~30 tool calls; 3 stale drafts (21768735, 21783092, 21783093) silently blocking; after discard, newversion worked instantly (21784489, 21784490 published). |
+| **ZENODO-FILE-ENTRY-SELECTION-1: entries[0] from POST /draft/files may be a stale entry, not the new file (2026-08-04)** | After `POST /records/{id}/draft/files` with `[{'key': fname}]`, the response `entries[]` may include PREVIOUS files; `entries[0]` can point at the wrong file's content/commit URL, causing commit 404 ("Record has no file X"). Fix: iterate entries and select the one whose `key == fname`; fallback to `entries[-1]`. Verified: uploading MD then PDF — entries[0] returned the MD entry for the PDF POST; key-matching fixed commit 404. |
+| **ZENODO-PUBLISHER-REQUIRED-1: Publish fails 400 "Missing publisher field required for DOI registration" (2026-08-04)** | InvenioRDM requires `metadata.publisher` on publish for DOI registration. The publish 400 error reveals it only after files+metadata are set. Fix: ALWAYS include `publisher` in the metadata PUT (e.g., `publisher: 'QNFO'`) alongside `title`, `publication_date`, `version`, `description`, `creators`, `resource_type`, `access_right`, `license`, `keywords`. Verified: adding publisher unblocked both 202 publishes. |
+
+
+| **ZENODO-DRAFT-DISCARD-SURGICAL-1: Blanket-discarding ALL account drafts to unblock newversion (2026-08-04)** | `GET /api/user/records?status=draft` on a QNFO account returns ~500 drafts — including OTHER papers' work-in-progress drafts and 122+ contentless chapter stubs (STUB-RECORD-1). Iterating DELETE /records/{id}/draft + DELETE /records/{id} across ALL of them risks destroying unrelated work (403 "Permission denied" protects most, but not all). Fix: discard ONLY drafts whose title/conceptrecid matches the TARGET paper, or whose record ID falls in the current session's newversion range (e.g., 217844xx). NEVER blanket-discard. Canonical case: session ktmz7cqk — discard_all.py enumerated 500 drafts; surgical filter (217844xx + known stale 21768735/21783092/21783093) succeeded where blanket discard was a risk. |
+| **ZENODO-ME-404: GET /api/me returns 404 despite valid token — token validation via /api/me is unreliable (2026-08-04)** | In practice, `GET /api/me` intermittently returns HTTP 404 ("The requested URL was not found") while the SAME token succeeds on `GET /api/records/{id}` (200) and all write operations. Do NOT conclude "token invalid/expired" from a /api/me 404. Reliable validation: attempt `GET /api/records/{id}` (or any real endpoint) and check 200. The /api/me endpoint is inconsistently routed on this Zenodo instance. Canonical case: session ktmz7cqk — token produced 404 on /api/me across 6+ checks but successfully created newversions, uploaded files, and published (21784489/21784490). |
+| **ZENODO-REQUESTS-POST-201: POST /records/{id}/versions returns 201 with id=null in draft — draft id lives in links (2026-08-04)** | The newversion response may return `id: null` at top level with the real draft id embedded in `links.self` (e.g., `/api/records/21784466`). If you read only `d.get('id')`, you'll get None and lose the draft handle. Fix: parse `id` first, fall back to `links.self.rstrip('/').split('/')[-1]`, fall back to `links.latest_draft`. Verified: POST /versions → 201 → id=None → links.self=.../21784466 (the draft). |
+
+
 > **Full anti-pattern archive (pre-2025 incidents, 50+ resolved rows) → HISTORY.md**
 
 ---
@@ -1077,4 +1118,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.60** (research — WBS taxonomy integration: Phase 0.1 routing table includes WBS codes (UMP/SLB/INM/CFE/RES) with canonical repo URLs + branch prefixes; `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04)
+Current: **v2.61** (research — ZENODO-DRAFT-DISCARD-SURGICAL-1, ZENODO-ME-404, ZENODO-REQUESTS-POST-201 anti-patterns from red-team audit of session ktmz7cqk publish chain; + v2.60 WBS routing retained; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
