@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: "2.4"
+version: "2.6"
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -18,8 +18,21 @@ self_sufficient: true
 > on durable memory for Cloudflare operational state.
 > Cross-reference: cloudflare v3.18.
 
+> **v2.6 UPDATE (2026-08-04, kaizen — Red-team skills audit closeout):**
+> Red-team: 5-skill Watchtower scan; git-github flagged for missing N-2 version footer.
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] N-2 version footer added — was the only QNFO core skill without one.
+> Cross-reference: kaizen v1.14, cloudflare v3.25 (cross-ref table updated).
 
-# GIT-GITHUB -- v2.4 (Ultra-Consolidated VC + PM)
+
+# GIT-GITHUB — v2.7
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+> Canonical case: Zenodo 403 was urllib.Request(method="DELETE") silently sending GET.
+
+ (Ultra-Consolidated VC + PM)
 
 > **v2.3 UPDATE (2026-07-29, KIF-32 thin-client temp-volatility incident):**
 > Added **TEMP Volatility & Same-Turn Commit Mandate (HARD GATE)** below.
@@ -58,7 +71,7 @@ update_plan([
 
 Claiming a commit is "pushed", a tag/release is "created", or a PR/Issue
 is "opened" without an invoked tool call showing evidence in this turn is a
-PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+PHANTOM CLAIM (`qnfo-core` §9.11 Rule 14) — BLOCKED.
 
 1. **Local commit** — `git log -1 --oneline` must show the hash; `git status --short` must be empty.
 2. **Push** — a local `git push` returning exit 0 is NOT sufficient. Independently re-query the GitHub API (`GET /repos/{owner}/{repo}/commits/{sha}` or `git ls-remote origin <branch>`) to confirm the commit is actually visible on the remote before claiming "pushed".
@@ -360,3 +373,9 @@ See ADR-026 below.
 | Editing files in a temp clone without committing same-turn (KIF-32, v2.3) | **HARD GATE:** clone → edit → commit → push → delete, ALL in one turn. Never defer commit across turn boundaries. If a file was edited in turn N and `git status` showed changes at the start of turn N+1, re-clone the repo and re-apply the edits — the local files may have been silently lost or corrupted. |
 | Assuming `$env:TEMP` persists across turns on Windows (v2.3) | Temp directories are volatile. System cleanup, session teardown, or storage-sense can evict files between turns. `Test-Path $env:TEMP\<project>` returning true in turn N does NOT guarantee it returns true in turn N+1. |
 | Multi-turn iterative editing on a single temp clone (v2.3) | Re-clone each turn (fetching latest from remote). Batch edits must be atomic per turn: if you can't finish all edits in one turn, commit what you have, push it, and pick up the rest next turn from a fresh clone. |
+
+## Version
+
+**API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+Current: **v2.7** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash) per qnfo-core N-2 ecosystem audit; 2026-08-04) (git-github — KIF-32 thin-client temp-volatility, same-turn commit mandate, qnfo-skills protection; v2.5: N-2 version footer; v2.6: kaizen closeout — cross-ref table verified; 2026-08-04) (git-github — KIF-32 thin-client temp-volatility, same-turn commit mandate, qnfo-skills protection; v2.5: added version footer — N-2 compliance; 2026-08-04)

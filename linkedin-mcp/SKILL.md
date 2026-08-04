@@ -1,8 +1,14 @@
 ---
 name: linkedin-mcp
 description: LinkedIn MCP integration management — linkedin-mcp-tools v2.0.3 via DeepChat. Covers auth (persistent browser profile, NOT cookies), the 22 tools (profiles, people/job/company search, feed, messaging, network, connections, posts), credential storage redundancy, live verification (--status/--spike), and safety caps. Use when operating LinkedIn through DeepChat, re-authenticating the LinkedIn session, or troubleshooting LinkedIn MCP tools.
-version: "1.0"
+version: 1.1
 ---
+
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
 
 # LinkedIn MCP — Operations Guide (v1.0)
 

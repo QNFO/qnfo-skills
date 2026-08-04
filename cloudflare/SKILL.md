@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: "3.21"
+version: 3.27
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -10,7 +10,28 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE -- v3.21 (ODR v3.0 Publication Forensics — R2 sync path allowlist)
+# CLOUDFLARE — v3.27 (Infrastructure Audit Anti-Patterns — WBS-coded Plans + False-Positive Remediation)
+
+> **v3.26 UPDATE (2026-08-04, kaizen — infrastructure audit anti-patterns + WBS plan integration):**
+> Red-team: direct parent-agent audit of full infrastructure ecosystem (10 Workers, 12 DNS zones, 37 URLs).
+> HARD: 2. SOFT: 3. DESIGN: 2.
+> Changes:
+> (1) [HARD] **AUDIT-FALSE-POSITIVE-1 anti-pattern**: `availability-audit.js` W-S2/W-S4 findings
+>     included 6 false positives (POST-only routes tested via GET, catch-all 200 misread as debug endpoints).
+>     Added route-map requirement and body-content check to W-S4 standard.
+> (2) [HARD] **PAGES-DEPLOY-METADATA-1 + WRANGLER-PATH-REGRESSION-1 + GATEWAY-PROD-STALE-1**
+>     anti-patterns: Pages stage parsing bug, wrangler PATH revert, stale staging Worker.
+> (3) [SOFT] Fixed corrupted EMAILMSG-1/D1-UPDATE-PATTERN anti-pattern rows (merged during
+>     v3.25 cross-ref update).
+> (4) [SOFT] Repaired duplicate version banner at end of file.
+> (5) [DESIGN] **WBS-PLAN-INTEGRATION-1**: Replaced execute_plan with 7-step WBS-coded template
+>     (CLD-E0-T01 through CLD-E0-T07) per `docs/WBS-AGENT-PROTOCOL.md`. Each step carries a
+>     verifiable acceptance criterion.
+> (6) [DESIGN] Worker baseline updated: 10 (was 9; +qnfo-email legitimate, qnfo-gateway-production
+>     is unexplained drift). 4 CRITICAL findings: 3 real (empty zones + redirect), 1 unauthenticated
+>     trigger (/cron/debug). 7 WARNING findings: 6 false positives, 1 real (email health auth).
+> Cross-reference: kaizen v1.15, research v2.55, session CGS_BRT26CX64OuSP1xJg.
+
 
 > **v3.21 UPDATE (2026-08-03, kaizen — ODR v3.0 session closeout C1):**
 > Red-team: direct parent-agent audit of session R8ZWb04K. HARD: 0. SOFT: 1. DESIGN: 0.
@@ -23,360 +44,30 @@ self_sufficient: true
 >     closeout had remediation handoffs in the paper prefix after cleanup.
 > Cross-reference: research v2.48, kaizen v1.8, session R8ZWb04K4BHAldwEqCX4b.
 
-> **v3.20 UPDATE (2026-08-03, kaizen — D1-BIND-1 + VECTORIZE-SILO-1 anti-pattern migration):**
-> Red-team: direct parent-agent 5-adversary audit of session pattern-to-skill gaps.
-> HARD: 0. SOFT: 2. DESIGN: 0.
-> Changes:
-> (1) [SOFT] Added **D1-BIND-1**: D1 `.bind().first()` chain throws 1101 on Workers —
->     use `?1` parameterized syntax or try/catch with `.all()` fallback. Discovered in
->     session bWLdtP54lAjqfblr2cUKH, stored in memory but never migrated to skill.
-> (2) [SOFT] Added **VECTORIZE-SILO-1**: embeddings indexed by one Worker invisible to
->     MCP search tools — verify embedding model consistency and binding name match.
->     Same session, same memory-to-skill gap.
-> Cross-reference: kaizen v1.6→v1.7 (MEMORY-TO-SKILL-DRIFT anti-pattern + MEMORY-DRIFT-AXIS).
 
-> **v3.19 UPDATE (2026-08-02, kaizen — MCP OAuth loopback protocol; NO default browser):**
-> Red-team: direct parent-agent audit after the Cloudflare Observability MCP OAuth fix.
-> HARD: 1. SOFT: 0. DESIGN: 1.
-> Changes:
-> (1) [HARD] **NEVER repeatedly open the external/default browser for MCP or Cloudflare
->     OAuth flows. Do NOT use the default browser for OAuth consent.** The 2026-08-02
->     Observability MCP OAuth fix initially looped the default browser (frustrating,
->     laborious). Correct autonomous flow (§MCP OAuth Loopback Fix below): recover the
->     PKCE verifier + client_id from `~/.mcp-auth/mcp-remote-<ver>/<hash>_client_info.json`
->     + `_code_verifier.txt`; start a listener on the registered redirect port with
->     AUTO-EXCHANGE inside the listener process; open the auth URL ONCE in the session
->     browser (YoBrowser/CDP) — the session browser is often NOT logged in, and if the
->     flow cannot complete headlessly, STOP and report the blocker; do not spawn more
->     browser windows.
-> (2) [DESIGN] Added **§MCP OAuth Loopback Fix** — the full recover→listen→auto-exchange→
->     cache protocol, including the two failure modes found live: (a) code expires in
->     <60s so exchange MUST happen inside the listener process, never a separate tool
->     call; (b) session browser may lack the Cloudflare login while the default browser
->     has it — resolve by completing consent headlessly or reporting the blocker.
-> Cross-reference: memory "MCP OAuth loopback fix pattern", kaizen v1.4.1,
-> observability.mcp.cloudflare.com/mcp (workers-observability v0.5.2).
-
-> **v3.18 UPDATE (2026-08-02, kaizen — memory-to-skill migration + CF tool discoverability):**
-> Red-team: direct parent-agent audit (user mandate: DeepChat memories are EPHEMERAL —
-> critical operational rules MUST live in SKILL.md, not durable memory).
-> HARD: 0. SOFT: 3. DESIGN: 1.
-> Changes:
-> (1) [SOFT] **HARDCODED-HEALTH-1: Worker health endpoints that hardcode binding names
->     (e.g. `d1: "living-paper"`) produce false-positive health checks.** `/health` MUST
->     verify at runtime with `!!env.BINDING_NAME` (e.g. `ai: !!env.AI`) — never echo the
->     expected name as a string. Case: qnfo-qwav reported `d1:"living-paper"` while
->     `env.LIVING_PAPER` was undefined at runtime ("Cannot read properties of undefined
->     (reading 'prepare')"). Migrated from durable memory (ephemeral) into this skill.
-> (2) [SOFT] **CF-WAF-1: Cloudflare WAF blocks non-browser user-agents (urllib default).**
->     When testing Worker endpoints with Python, ALWAYS pass
->     `headers={'User-Agent':'Mozilla/5.0'}`; without it urllib gets HTTP 403.
->     To read error bodies: catch `urllib.error.HTTPError` and call `e.read().decode()`
->     — this surfaces the real Worker error (e.g. 1101 body, "Cannot read properties...").
->     Migrated from durable memory (ephemeral).
-> (3) [SOFT] **MCP-OFFLOAD-1: QNFO MCP tools (search_papers, query_graph, etc.) return
->     "OK" with results offloaded** — offload files may not be readable in-session.
->     For verification of infra claims, use DIRECT probes (Python urllib with browser UA
->     against the live Worker endpoint) instead of relying solely on MCP tool output.
-> (4) [DESIGN] Added **§Skill Cross-Reference: Cloudflare Tool/Resource Discoverability**
->     — a map of which skills touch Cloudflare resources and how to discover the right
->     MCP agent tools (below). Every skill that references D1/R2/Vectorize/Pages/Workers
->     MUST name the actual agent tool (`workers_list`, `query_worker_observability`,
->     `search_cloudflare_documentation`, `search_papers`, `query_graph`) in its
->     instructions, per the ephemeral-memory mandate.
-> Cross-reference: kaizen v1.7, memory-management, windows-command-patterns v2.4,
-> git-github v2.4, frontend-design v2.3, documents v2.4.
-
-> **v3.17 UPDATE (2026-08-02, kaizen — STALE-AUDIT-1 anti-pattern + red-team v2 validation):**
-> Red-team: direct parent-agent audit of session bWLdtP54lAjqfblr2cUKH.
-> HARD: 0. SOFT: 1. DESIGN: 0.
-> Changes:
-> (1) [SOFT] **STALE-AUDIT-1: Auditing Cloudflare infra WITHOUT checking `workers_list`
->     modified_on timestamps first** — produces findings that can be fully invalidated by
->     remediation that landed minutes earlier. Case: v1 audit (same session) found qnfo-qwav
->     dead (ai:false) and webhook 1101 — but both Workers had been redeployed ~30 min prior
->     (qnfo-paper-indexer 04:28:57Z, qnfo-qwav 04:30:59Z, workers_dev=true). Red-team v2
->     re-verified: qnfo-qwav /health now reports ai:true, vector search returns 0.75-0.90
->     scores on 4/4 queries, webhook returns 200 for real slugs (24 chunks). Fix: ALWAYS
->     call `workers_list` and check modified_on BEFORE trusting any infra-state claim;
->     findings older than the latest deployment are provisional. This complements KIF-61
->     (the 1101 root cause was DNS NXDOMAIN route, NOT missing AI binding — confirmed
->     by red-team v2: 1101 now fires ONLY for non-existent slugs, cosmetic 500-vs-404).
-> (2) [SOFT] Duplicate v3.16 entry removed from `.kaizen_history` (Status Auditor).
-> Cross-reference: kaizen v1.7, session OL00bCz3AJlaz_NjUi4eS (v3.16), KIF-61.
-
-> **v3.16 UPDATE (2026-08-02, kaizen — autonomous P0 remediation session):**
-> Red-team: direct parent-agent audit of session OL00bCz3AJlaz_NjUi4eS.
-> HARD: 4. SOFT: 2. DESIGN: 1.
-> Changes:
-> (1) [HARD] **KIF-61: Workers WITHOUT `workers_dev = true` have NO public HTTP route**
->     — webhook/health endpoints return DNS NXDOMAIN (curl exit 1), misread as HTTP 1101.
->     Root cause of the qnfo-paper-indexer webhook failure: NOT a missing AI binding
->     (binding WAS present — `wrangler deploy --dry-run` proved it). Fix: add
->     `workers_dev = true` to wrangler.toml + `wrangler deploy`. Verified live:
->     https://qnfo-paper-indexer.q08.workers.dev and https://qnfo-qwav.q08.workers.dev.
-> (2) [HARD] **AI binding format: `[[ai]]` (array of tables), NOT `[ai]` (single table)**
->     — `[ai]` fails config validation with "The field `ai` should be an object but got
->     [{\"binding\":\"AI\"}]". Both qnfo-paper-indexer and qnfo-qwav deployed with `[[ai]]`;
->     qnfo-qwav /health then reported `ai: true` (previously false → D1 LIKE fallback).
-> (3) [HARD] **REST bindings endpoint 9106 ≠ token lacks Workers permission** — `GET
->     /accounts/{id}/workers/scripts/{name}/bindings` returned 9106 "Authentication failed
->     (status: 400)" while `wrangler deploy` (same CLOUDFLARE_API_TOKEN) succeeded. The
->     REST bindings sub-endpoint has a different auth requirement; NEVER conclude "token
->     lacks Workers Scripts:Edit" from a single REST 9106 — test `wrangler deploy` directly.
-> (4) [HARD] **`wrangler routes list` REMOVED in v4.118.0** — returns "Unknown arguments:
->     routes, list". Route management is via wrangler.toml `workers_dev`/`routes` or API.
-> (5) [SOFT] `wrangler pages project list` — canonical Pages discovery (5 projects: qwav,
->     qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). cfpe-dashboard.pages.dev down =
->     project NEVER existed (not a runtime issue).
-> (6) [SOFT] ipatent.me chain: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app
->     → 500 (Google Cloud Run backend). NOT a Cloudflare issue — GCP side.
-> (7) [DESIGN] Added §Workers.dev Route Enablement protocol (below).
-> Cross-reference: qnfo-paper-indexer (created 2026-08-01), qnfo-qwav v2.0-cors-fixed,
-> memory "Walking Cat v_p^max", LoS W-S5.
-
-> **v3.15 UPDATE (2026-08-02, kaizen — Workers baseline + paper auto-indexing):**
-> Reactive kaizen triggered by session dc5191VzXRICu4vd_cIEo — full paper Vectorize
-> reindexing + automation layer deployed.
-> Red-team: direct parent-agent 5-adversary audit. HARD: 0. SOFT: 3. DESIGN: 1.
-> Changes:
-> (1) [SOFT] Workers baseline 8 → 9. Fleet: +`qnfo-paper-indexer` (auto-indexes
->     all 233 paper full-text bodies into `qwav-research-v2` Vectorize; cron every
->     30 min + webhook for real-time; D1 + PAPER_VZ + AI bindings).
-> (2) [SOFT] Resource Baselines: Workers Expected 7→9, Warning 8-11→10-11,
->     Critical 10+→12+.
-> (3) [SOFT] Cronjob count: +1 "Paper Vectorize Auto-Indexer" (every 4h backup).
->     Scheduler running, 8 enabled jobs.
-> (4) [DESIGN] Cross-reference: qnfo-paper-indexer Worker at
->     qnfo-paper-indexer.q08.workers.dev (/health, /count, /index?offset=N,
->     /webhook?slug=XXX, /cron/debug).
-
-> **v3.14 UPDATE (2026-08-01, kaizen — wrangler environment + R2 verification false-negatives):**
-> Red-team: direct parent-agent 5-adversary audit of a full session's execution errors
-> (wrangler install EPERM, R2 "key does not exist" false negatives, R2 list pagination
-> false negative, R2 HEAD 405 misread, stale workers baseline). HARD findings: 4.
-> SOFT: 2. DESIGN: 1.
-> Changes:
-> (1) [HARD] **KIF-19 anti-pattern UPDATED:** Wrangler is NO LONGER "npx-only, never
->     globally installed." As of 2026-08-01 wrangler **4.118.0 IS globally installed**
->     at `C:\Users\LENOVO\npm-global\node_modules\wrangler\bin\wrangler.js` with a
->     persistent PATH entry. The old npx-cached 4.114.0 copy was CORRUPT (truncated
->     download → SyntaxError at cli.js:81194), which is why npx tried to re-fetch and
->     hung. The correct availability test is `wrangler --version` (now on PATH) or
->     `node scripts/wrangler-check.js` (Accuracy Auditor, parent-agent).
-> (2) [HARD] Added **§Wrangler Environment Setup (PERMANENT FIX)** — documents the
->     root cause of the EPERM block (npm prefix pointed at admin-only
->     `C:\Program Files\DeepChat\resources\app.asar.unpacked\runtime\node`) and the
->     permanent fix (`npm config set prefix C:\Users\LENOVO\npm-global`, absolute
->     paths in `~/.npmrc` — NEVER `%VAR%` syntax which npm treats literally, plus
->     persistent PATH via setx). Also added the `%VAR%`-literal gotcha: `.npmrc`
->     does NOT expand Windows `%VAR%` — use absolute paths or `${VAR}` (Completeness
->     Auditor, parent-agent).
-> (3) [HARD] R2 CLI docs: added **`--remote` MANDATORY note** — wrangler v4 `r2 object`
->     commands default to LOCAL storage; without `--remote` a live object returns
->     `"The specified key does not exist."` (false negative). Every R2 read/verify
->     MUST pass `--remote` (Accuracy Auditor, parent-agent).
-> (4) [HARD] R2 REST listing: added **pagination note** — default page size is 20
->     objects; pass `&limit=1000` and follow `cursor` for full listings. The old
->     snippet returned 20 objects and produced a false "resume NOT in bucket"
->     conclusion (Completeness Auditor, parent-agent).
-> (5) [SOFT] R2 REST verification: added **HEAD-405 note** — R2 object API does NOT
->     support HEAD (returns 405, misread as "not found"); use GET and compare
->     Content-Length or hash (Accuracy Auditor, parent-agent).
-> (6) [SOFT] Workers baseline 7 → **8** — live `workers_list` MCP returned 8 incl.
->     `qnfo-gateway-production` (created 2026-07-31, modified_on 2026-07-31T12:36Z).
->     Baseline row updated; treat any future count ≠ 8 as drift (Status Auditor,
->     parent-agent).
-> (7) [DESIGN] Added anti-pattern rows: R2 object GET without `--remote`, R2 REST
->     listing without pagination, R2 HEAD-for-verification, literal `%VAR%` in
->     `.npmrc` (Novelty Auditor, parent-agent).
-> Cross-reference: windows-command-patterns v2.2, kaizen v1.2.5, research v2.40,
-> memory "Wrangler PERMANENTLY resolved on this machine (2026-08-01)".
-
-> **v3.13 UPDATE (2026-07-31, no-dashboard kaizen):**
-> User mandate: NO Cloudflare Dashboard — no web UI, no manual browser login, no
-> human intervention for anything that CLI/API can do. Changes:
-> (1) [HARD] **KIF-51 FALSE CLAIM RETRACTED:** "API Tokens typically cannot read/modify/
->     delete account-level redirect rulesets" was WRONG. Account-level rulesets ARE
->     manageable via REST API (`GET/DELETE /accounts/{id}/rulesets`). The 2026-07-30
->     incident was a token-permissions issue, not an API limitation.
-> (2) [HARD] Updated KIF-51 fix protocol: "manual Cloudflare Dashboard → delete the
->     rule" → "DELETE /accounts/{id}/rulesets/{id}" with `Account:Rulesets:Edit` scope.
-> (3) [HARD] Added **KIF-60: Using Cloudflare Dashboard** — HARD BLOCK on all Dashboard
->     operations. All operations MUST be CLI/API/command-line only. Every Dashboard
->     action has an API equivalent.
-> (4) [HARD] Updated EXECUTION GATE: "NO DASHBOARD" added to the decision ladder.
-> (5) [HARD] Added step 5 (API deletion) to Account-Level Redirect detection protocol.
-> Cross-reference: KIF-51, KIF-60, windows-command-patterns v2.0.
-
-> **v3.12 UPDATE (2026-07-31, red-team kaizen — PowerShell gate + MCP-first execution):**
-> Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
-> parent-agent 5-adversary audit (Accuracy, Completeness, Dependency, Novelty, Status).
-> HARD findings: 4. SOFT findings: 4. DESIGN findings: 2.
-> Changes:
-> (1) [HARD] **EXECUTION GATE (KIF-59):** Added mandatory HARD GATE at skill top —
->     PowerShell is FORBIDDEN for Cloudflare operations. Decision ladder: MCP tools FIRST,
->     `npx wrangler` SECOND, Python REST API THIRD. PowerShell is NEVER acceptable.
->     Rationale: 15+ documented PowerShell failures (UTF-8 corruption, quote mangling,
->     `curl` alias breakage, `ConvertTo-Json` garbage). This gate prevents the exact
->     incident that triggered this kaizen (Completeness Auditor, parent-agent).
-> (2) [HARD] Fixed `execute_plan` step 3: "wrangler CLI, REST API, Dashboard" →
->     "MCP tools FIRST (workers_list, workers_get_worker, query_worker_observability,
->     search_cloudflare_documentation), fallback wrangler CLI" — the old text was the
->     ROOT CAUSE of the PowerShell incident (Accuracy Auditor, parent-agent).
-> (3) [HARD] Added anti-pattern KIF-59: "Using PowerShell for ANY Cloudflare operation"
->     — HARD BLOCK with the full decision ladder (Completeness Auditor, parent-agent).
-> (4) [HARD] Bumped frontmatter `version: "3.8"` → `"3.12"` — the v3.11 kaizen didn't
->     bump it (Status Auditor, parent-agent).
-> (5) [SOFT] Updated stale cross-refs: "research v2.25" → "research v2.38 (confirmed live
->     2026-07-31)" in v3.9 banner (Dependency Auditor, parent-agent).
-> (6) [SOFT] Fixed Resource Baselines table: Vectorize Indexes 4→5 to match Vectorize
->     section text (Status/Dependency Auditors, parent-agent).
-> (7) [SOFT] Added §MCP Server → Agent Tool Mapping — maps MCP server names to actual
->     agent tool names (workers_list, query_worker_observability, etc.) so agents
->     know exactly which tool to call (Completeness Auditor, parent-agent).
-> (8) [SOFT] Added MCP-first preference note to execute_plan comment area (Completeness
->     Auditor, parent-agent).
-> (9) [DESIGN] Infrastructure Audit section: added MCP-first preamble (Novelty Auditor,
->     parent-agent).
-> (10) [DESIGN] Reusable Scripts section: added MCP-first preference note (Novelty
->     Auditor, parent-agent).
-> Cross-reference: kaizen v1.2.3, research v2.38, KIF-59.
-
-> **v3.11 UPDATE (2026-07-30, LoS codification kaizen):**
-> Codified formal **Level-of-Service (LoS) standards** across three tiers — Pages (P-S1..P-S5),
-> Workers (W-S1..W-S6), and DNS/Domains (D-S1..D-S7) — with severity ratings (CRITICAL/WARNING/INFO),
-> test protocols, remediation steps, and verification gates. Created **`scripts/availability-audit.js`**
-> (unified LoS auditor running all 18 standards in a single pass) and **`scripts/url-health-check.js`**
-> (quick HTTP probe of all 28 known QNFO public URLs). Added canonical standards document at
-> `references/level-of-service-standards.md`. See §Level-of-Service Standards below.
-
-> **v3.10 UPDATE (2026-07-30, live-incident red-team kaizen):**
-> Full infrastructure audit + live incident response on production QNFO outage.
-> **Root cause:** `qnfo-gateway` Worker silently lost D1/R2 bindings during a REST API
-> deploy, returning HTTP 500 on all data-dependent routes (papers.qnfo.org, legal.qnfo.org,
-> graph-api.qnfo.org, qnfo.org hub). **Fix:** redeployed via `npx wrangler deploy` from a
-> properly-configured `wrangler.toml` with all bindings declared. **Impact:** 4 public
-> domains down for ~30 minutes. Added 4 new anti-patterns covering:
-> 1. **KIF-50: Binding Loss During REST Deploy** — PUT to `/workers/scripts` without
->    metadata silently drops ALL D1/R2/KV bindings. ALWAYS use wrangler deploy.
-> 2. **KIF-51: Account-Level Redirect Blocks Pages** — `http_request_redirect` rulesets
->    at account level execute at position 5 in Rules Engine, before Workers (position 10).
->    Custom domains that match a redirect rule will never reach Pages or Workers.
->    **Fix (v3.13):** Account-level rulesets ARE manageable via API — `GET /accounts/{id}/rulesets` to list, `DELETE /accounts/{id}/rulesets/{id}` to delete. The prior "API Tokens can't" claim was a permissions/scope issue, not an API limitation. NEVER use the Dashboard — use the REST API with a properly-scoped token (`Account:Rulesets:Edit`).
-> 3. **KIF-52: Empty DNS Zones** — 3 of 12 active zones had 0 DNS records (qnfo.net,
->    qnfo.uk, q-wave.tech). A zone with no records resolves to nothing. Infra audits
->    must flag `dns_records count = 0` as CRITICAL and add CNAME + Worker route.
-> 4. **KIF-53: API-Only Workers Under Custom Domains** — `qnfo-ipatent` Worker returns
->    404 for `/` but ipatent.me CNAME pointed at it. Route custom domains to Pages
->    projects that serve HTML; keep Workers as API endpoints only.
-> All 4 FINDING-X entries closed. See `tape_handoff binding-loss-2026-07-30`.
-
-> **v3.9 UPDATE (2026-07-29, MCP-Driven Operations red-team + kaizen):**
-> Red-team audit of all skills/settings against the 17-MCP server fleet identified 7
-> integration gaps: skills referenced Cloudflare MCP servers in their documentation but
-> gave zero operational guidance on WHEN and HOW to use specific MCP servers during
-> research, infrastructure, and operations workflows. This update adds:
-> 1. **MCP-Driven Operations section** (new, below) — a decision matrix mapping every
->    common Cloudflare operation to its preferred MCP server(s), ensuring agents reach
->    for `cloudflare-observability` not `curl` for Worker health checks, `cloudflare-graphql`
->    not raw REST for cross-product analytics, and `cloudflare-auditlogs` not `wrangler`
->    for deployment audit trails.
-> 2. **Updated Infrastructure Audit** to use `cloudflare-observability` (per-Worker
->    metrics), `cloudflare-graphql` (cross-product analytics), `cloudflare-auditlogs`
->    (compliance verification), and `dns-analytics` (zone query volumes) as first-class
->    audit tools — not as an afterthought.
-> 3. **Updated Retrieval Sources** with `cloudflare-docs` MCP and `cloudflare-blog` MCP
->    as preferred doc search channels.
-> 4. **New anti-patterns** for reaching for raw CLI/REST when an MCP server exists.
-> Companion kaizen updates: research skill v2.38 (Phases 1,6,7,8 MCP integration, confirmed live 2026-07-31),
->    code skill v2.2 (MCP server deploy/verify workflow), knowledge skill v2.2
->    (AutoRAG + AI Gateway references). See `tape_handoff mcp-driven-operations-2026-07-29`
->    for full audit findings and skill delta map.
-
-> **v3.8 UPDATE (2026-07-29, 17-MCP coverage — FULL COVERAGE):**
-> Configured all 7 remaining Cloudflare MCP servers: `cloudflare-browser-mcp-server` (browser automation),
-> `dns-analytics` (DNS analytics), `containers-mcp` (Docker containers on edge),
-> `cloudflare-casb-mcp-server` (SaaS security), `cloudflare-autorag-mcp-server` (AutoRAG),
-> `cloudflare-blog` (blog search, public), `dex-analysis` (Digital Experience).
-> All 7 endpoints verified live (6× 401 OAuth, 1× 405 blog — all reachable).
-> Full infrastructure audit re-verified: 7/7 Workers healthy, D1 papers=918, KG paper:*=902 (delta=16, 98.3%).
-> Config: 17/17 Cloudflare MCP servers (100% coverage), 35 total MCP servers, 13,519 bytes. KIF-48 CLOSED.
-> Backup created: `mcp-settings.json.bak-2026-07-29-v2`.
-
-> **v3.7 UPDATE (2026-07-29, 10-MCP coverage + infra audit):**
-> Added `cloudflare-logpush` (10th MCP server, 59% coverage). Full infrastructure
-> audit confirmed: 7/7 Workers healthy, lifecycle/status=200 (I-02 FIXED),
-> archive/health=200 (I-03 FIXED), D1 papers=918, KG paper:*=902 (delta=16,
-> 98.3% coverage — down from prior 610 gap). Backup file created
-> (`mcp-settings.json.bak-2026-07-29`, 10,985 bytes). Config red-team: zero
-> drift, JSON valid. See `qnfo-core` KIF-48 (MCP coverage mandate).
->
-> **v3.6 UPDATE (2026-07-29, 9-MCP coverage + red-team audit):**
-> DeepChat now connects to 9 Cloudflare MCP servers (up from 5), covering
-> 53% of the available Cloudflare MCP ecosystem. Added AI Gateway
-> (`cloudflare-ai-gateway`, log search + prompt inspection), GraphQL
-> Analytics (`cloudflare-graphql`, cross-product analytics), Audit Logs
-> (`cloudflare-auditlogs`, compliance trail), and Radar
-> (`cloudflare-radar`, internet insights — public, read-only). All
-> endpoints DNS-verified (104.18.24.159/25.159) and return HTTP 401
-> (OAuth, consistent with existing servers). Config red-team: zero
-> drift in 23 existing entries, 4/4 new entries validated, backup at
-> `mcp-settings.json.bak-2026-07-29`. Full MCP endpoint reference table
-> added below (§DeepChat MCP Server Coverage). See `qnfo-core`
-> KIF-48 (MCP coverage mandate).
-
-> **v3.5 UPDATE (2026-07-25, wrangler false-negative + structured-schema kaizen):**
-> Root-caused a live "wrangler is not installed" claim in this session's own
-> reasoning output — direct re-verification via `npx wrangler --version` +
-> `npx wrangler whoami` (executed via `exec`, same turn) both succeeded
-> (account `quniverse`, token valid). The false claim traced to checking the
-> WRONG signal (`npm ls -g wrangler` / bare PATH lookup / subprocess PATH
-> loss) instead of the only sufficient test (`npx wrangler <cmd>` directly).
-> Added canonical **`scripts/wrangler-check.js`** probe — run this instead of
-> re-deriving an availability check ad hoc. Also added
-> **`references/d1-rest-api-schema.json`** (D1 REST schema + FTS5/upsert
-> gotchas) and **`references/workers-deploy-metadata-schema.json`** (Worker
-> multipart deploy schema + binding shapes + the CRLF-boundary code-corruption
-> bug), plus **`scripts/d1-safe-write.js`** (Node-native CHECK-THEN-WRITE
-> helper that avoids the PowerShell `ConvertTo-Json` large-payload corruption
-> bug and always re-verifies via length comparison). See `qnfo-core`
-> KIF-19/20/21.
-
-> **v3.3 UPDATE (2026-07-21, phantom-claim audit):** Added the **Tool-Call
-> Execution Mandate** section below (immediately after `execute_plan`).
-> Every "deployed"/"fixed"/"live"/"healthy" claim in this domain now
-> requires an independently re-queried live-state tool result in the same
-> turn — a `"success": true` API response or a Dashboard-style assumption
-> is NOT sufficient evidence.
-
-> **v3.4 UPDATE (2026-07-21, orphan-script audit):** Deleted
-> `scripts/filebase-upload.js` — a stale SigV4 helper for the Filebase
-> pinning service that the v3.2 deprecation banner below already declared
-> removed, but the script file itself survived that commit untouched,
-> creating a live contradiction between this skill's text (Filebase
-> deprecated) and its shipped scripts (a working Filebase uploader still
-> present). Filebase/Pinata/Lighthouse/Arweave remain fully out of scope;
-> the v3.1 banner immediately below is retained ONLY as historical record
-> of why the (now-deleted) script once existed — do not resurrect it.
-
-> **v3.1 UPDATE (2026-07-20, Pinata quota exceeded) — SUPERSEDED, script DELETED v3.4:**
-> Removed Pinata from the R2→IPFS Bridge. Filebase (free 5GB S3-compatible,
-> no request-volume limit, auto-pins on write) was made PRIMARY pinner;
-> Lighthouse (free Filecoin tier) was SECONDARY. `scripts/filebase-upload.js`
-> and the `research` skill's `scripts/filebase-pin.js` implemented this —
-> BOTH are deprecated per the v3.2 banner below and the script has now
-> been physically deleted (v3.4). Do not add `PINATA_API_KEY`/
-> `PINATA_API_SECRET`/`FILEBASE_ACCESS_KEY`/`FILEBASE_SECRET_KEY` back to
-> any Worker env or wrangler secret.
-
-> **v3.2 UPDATE (2026-07-20, red-team audit):** Deprecated "R2→IPFS Bridge"
-> section, Filebase S3 SigV4 upload script, and all external pinning service
-> references. Core stack: Cloudflare R2 (canonical durable host) + D1 (records)
-> + Workers (serving) + DNS (DNSLink for optional IPFS resolution). No external
-> pinning services (Filebase, Lighthouse, Arweave) are required or referenced.
-> Fixed wrangler r2 CLI syntax docs (`{bucket}/{key}` single arg, no `list`
-> subcommand in v4), Workers routes API endpoint (zone-level, not account-level).
+> **v3.1–v3.20 COLLAPSED HISTORY (20 banners, kaizen de-bloat 2026-08-03):**
+> These historical version banners have been collapsed into this summary.
+> Full content preserved in git history and skills-archive. Active content below.
+  - v3.20: 2026-08-03, kaizen — D1-BIND-1 + VECTORIZE-SILO-1 anti-pattern migration
+  - v3.19: 2026-08-02, kaizen — MCP OAuth loopback protocol; NO default browser
+  - v3.18: 2026-08-02, kaizen — memory-to-skill migration + CF tool discoverability
+  - v3.17: 2026-08-02, kaizen — STALE-AUDIT-1 anti-pattern + red-team v2 validation
+  - v3.16: 2026-08-02, kaizen — autonomous P0 remediation session
+  - v3.15: 2026-08-02, kaizen — Workers baseline + paper auto-indexing
+  - v3.14: 2026-08-01, kaizen — wrangler environment + R2 verification false-negatives
+  - v3.13: 2026-07-31, no-dashboard kaizen
+  - v3.12: 2026-07-31, red-team kaizen — PowerShell gate + MCP-first execution
+  - v3.11: 2026-07-30, LoS codification kaizen
+  - v3.10: 2026-07-30, live-incident red-team kaizen
+  - v3.9: 2026-07-29, MCP-Driven Operations red-team + kaizen
+  - v3.8: 2026-07-29, 17-MCP coverage — FULL COVERAGE
+  - v3.7: 2026-07-29, 10-MCP coverage + infra audit
+  - v3.6: 2026-07-29, 9-MCP coverage + red-team audit
+  - v3.5: 2026-07-25, wrangler false-negative + structured-schema kaizen
+  - v3.3: 2026-07-21, phantom-claim audit Added the **Tool-Call
+  - v3.4: 2026-07-21, orphan-script audit Deleted
+  - v3.1: 2026-07-20, Pinata quota exceeded) — SUPERSEDED, script DELETED v3.4:**
+  - v3.2: 2026-07-20, red-team audit Deprecated "R2→IPFS Bridge"
 
 
 > **Merges 18:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7) + browser-mcp + dns-analytics + containers-mcp + casb-mcp + autorag-mcp + blog-mcp + dex-mcp (v3.8)
@@ -403,14 +94,16 @@ Use this decision ladder for EVERY Cloudflare operation:
 
 ## execute_plan
 
+# WBS-CODED PLAN (per docs/WBS-AGENT-PROTOCOL.md). Priority field carries WBS code.
+# Each step MUST include a verifiable acceptance criterion (exit code, count threshold, cross-ref match).
 update_plan([
-  {"step": "Identify service via decision trees below", "status": "pending"},
-  {"step": "Check full-stack cross-service implications", "status": "pending"},
-  {"step": "Execute with MCP tools FIRST (workers_list, workers_get_worker, query_worker_observability, search_cloudflare_documentation), fallback wrangler CLI", "status": "pending"},
-  {"step": "Verify deployment health + DNS integrity + lifecycle state", "status": "pending"},
-  {"step": "Audit: check for orphans, 522-RISK, CNAME chains, resource drift", "status": "pending"},
-  {"step": "Core Distribution Gate: Verify GitHub, Zenodo, R2, D1/KG layers", "status": "pending"},
-  {"step": "LoS Availability Audit: run availability-audit.js or url-health-check.js", "status": "pending"},
+  {"step": "CLD-E0-T01: Gather Workers list + details + source code (MCP: workers_list, workers_get_worker, workers_get_worker_code) → expect count=10, confirm all handlers exist", "status": "pending", "priority": "CLD-E0-T01"},
+  {"step": "CLD-E0-T02: Run url-health-check.js → probe all public URLs, expect exitCode=0 Tier-1 CRITICAL=0", "status": "pending", "priority": "CLD-E0-T02"},
+  {"step": "CLD-E0-T03: Run availability-audit.js → full LoS standards audit, expect exitCode=0 all CRITICAL=0 WARNING≤3", "status": "pending", "priority": "CLD-E0-T03"},
+  {"step": "CLD-E0-T04: Verify Worker health + data-dependent routes → ≥2 data routes per Worker return 200 (KIF-50 gate)", "status": "pending", "priority": "CLD-E0-T04"},
+  {"step": "CLD-E0-T05: Audit DNS zones → check empty zones (KIF-52), redirects (KIF-51), 522-RISK, CNAME chains", "status": "pending", "priority": "CLD-E0-T05"},
+  {"step": "CLD-E0-T06: Cross-system integrity → D1 paper count matches KG Paper nodes (KIF-23), Vectorize search returns results", "status": "pending", "priority": "CLD-E0-T06"},
+  {"step": "CLD-E0-T07: Synthesize findings → priority fix queue with verification protocol, store in memory, deliver report", "status": "pending", "priority": "CLD-E0-T07"},
 ])
 
 ---
@@ -467,6 +160,13 @@ All 17 available Cloudflare MCP servers are now configured. No servers remain to
 
 ### MCP Verification Gate
 
+**HEALTH CHECK SCRIPT:** `scripts/fleet-mcp-health-check.py` (this skill) probes ALL 17
+configured Cloudflare MCP servers — token-cache presence + MCP initialize probe for the 14
+OAuth servers, POST-initialize probe for the 3 public servers. Run it to detect
+`invalid_token` / expired / missing-token fleet-wide BEFORE errors surface in the UI
+(2026-08-03 outage class). Integrated into the `kaizen-watchtower-daily` cronjob.
+Exit codes: 0 = all live, 1 = warnings (no-token/expired), 2 = failures.
+
 Before claiming "MCP server X is working", verify with:
 ```bash
 # All endpoints should return HTTP 401 (OAuth required) or HTTP 200 (public)
@@ -504,7 +204,7 @@ can't complete, STOP and report the blocker.
 4. **Open the auth URL ONCE in the SESSION browser (YoBrowser/CDP)**. If the session browser
    is not logged into Cloudflare (redirects to `dash.cloudflare.com/login`), do NOT loop —
    STOP and report: consent requires a logged-in browser session.
-5. **Cache the token** to `<hash>_token.json` in the same mcp-remote dir (format:
+5. **Cache the token** to `<hash>_tokens.json` in the same mcp-remote dir (format:
    `{access_token, token_type, expires_in, scope, refresh_token}`). Verify with
    `POST /mcp` `initialize` → HTTP 200 (`serverInfo.name`, `version`).
 6. **Agent-level MCP tools may still time out** until the host app re-initializes the MCP
@@ -514,6 +214,82 @@ can't complete, STOP and report the blocker.
 - **Expired code**: manual exchange in a separate tool call → `invalid_grant`. Fix: auto-exchange in listener.
 - **Session browser not logged in**: YoBrowser lacks the Cloudflare session → login redirect.
   Fix: stop and report; never spawn the default browser.
+- **Fleet-wide token expiration (FLEET-OAUTH-1, 2026-08-03)**: Tokens expire silently across all
+  14 OAuth servers. Only `cloudflare-observability` had a cached token at time of audit;
+  the other 13 servers returned `invalid_token` on every request with zero cached tokens.
+  Fix: disable/re-enable each server in DeepChat MCP settings, OR use the Token Refresh
+  Protocol below to auto-refresh all 14 tokens without browser consent once each server has
+  been authenticated at least once.
+- **mcp-remote v0.1.37 naming**: uses `_tokens.json` (plural), not `_token.json` (singular).
+
+### Token Refresh Protocol (v3.23 — MANDATORY for fleet-wide OAuth renewal)
+
+**BUNDLED SCRIPT:** `scripts/fleet-oauth-refresh.py` (this skill) implements the full
+protocol below — run it with `--verify` to refresh AND probe every cached token:
+```bash
+python scripts/fleet-oauth-refresh.py --verify     # refresh + MCP initialize verify
+python scripts/fleet-oauth-refresh.py --dry-run    # report what WOULD refresh
+```
+Cronjob `cloudflare-mcp-token-refresh-daily` (03:00 UTC) runs it automatically.
+Servers without a token report `[NO-TOKEN]` → needs one-time browser OAuth.
+
+After at least ONE successful browser-based OAuth flow per server (producing a token cache),
+subsequent token refreshes can be automated WITHOUT browser consent using the `refresh_token` grant:
+
+```python
+import urllib.request, json, os, hashlib
+
+CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
+SERVER_URL = "https://observability.mcp.cloudflare.com/mcp"
+HASH = hashlib.md5(SERVER_URL.encode()).hexdigest()
+
+# Read existing token cache
+with open(os.path.join(CACHE_DIR, f"{HASH}_tokens.json")) as f:
+    token = json.load(f)
+
+# Exchange refresh_token for new access_token (no browser needed)
+data = urllib.parse.urlencode({
+    "grant_type": "refresh_token",
+    "refresh_token": token["refresh_token"],
+    "client_id": json.load(open(os.path.join(CACHE_DIR, f"{HASH}_client_info.json")))[
+        "client_id"
+    ],
+}).encode("ascii")
+
+resp = urllib.request.urlopen(
+    urllib.request.Request(
+        f"{SERVER_URL.rstrip('/mcp')}/token",
+        data=data,
+        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "Mozilla/5.0"},
+    )
+)
+new_token = json.loads(resp.read().decode())
+
+# Cache refreshed token (access_token + refresh_token both rotated)
+with open(os.path.join(CACHE_DIR, f"{HASH}_tokens.json"), "w") as f:
+    json.dump(new_token, f, indent=2)
+
+# Verify
+verify_req = urllib.request.Request(
+    SERVER_URL,
+    data=json.dumps({"jsonrpc": "2.0", "method": "initialize", ...}).encode(),
+    headers={"Authorization": f"Bearer {new_token['access_token']}", 
+             "Accept": "application/json, text/event-stream", "User-Agent": "Mozilla/5.0"},
+)
+print(f"Refresh: {'OK' if urllib.request.urlopen(verify_req).status == 200 else 'FAIL'}")
+```
+
+**Key behaviors verified live 2026-08-03:**
+- `refresh_token` grant works without browser consent (✅ HTTP 200)
+- Access token rotated (✅ new `access_token` issued)
+- Refresh token rotated (✅ old `refresh_token` invalidated, new one issued)
+- Scopes preserved across refresh (✅ all scopes unchanged)
+- MCP initialize succeeds post-refresh (✅ HTTP 200, server info returned)
+- Token valid for 3600s (60 min) per refresh cycle
+
+**Fleet-wide renewal strategy:** Once all 14 OAuth servers have been authenticated at least
+once (via DeepChat MCP settings disable/re-enable), a single Python script can iterate all
+14 hashes and refresh every token. This eliminates the 13-server manual re-auth burden.
 
 ---
 
@@ -909,23 +685,35 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 ```javascript
 // wrangler.jsonc
 {
-  "send_email": [{
-    "name": "SEND_EMAIL",
-    "destination_address": "me@example.com"
-  }]
+  "send_email": [{ "name": "SEND_EMAIL" }]
 }
 
-// In Worker
-await env.SEND_EMAIL.send(
-  new EmailMessage(
-    "from@example.com",
-    "to@example.com",
-    "Subject line",
-    "Plain text body",
-    "<p>HTML body</p>"
-  )
-);
+// In Worker — MODERN Email Service object API (v2026):
+// send() takes an object builder, NOT the deprecated positional EmailMessage constructor
+await env.SEND_EMAIL.send({
+  to: "recipient@example.com",
+  from: "me@example.com",
+  subject: "Subject line",
+  text: "Plain text body",
+  html: "<p>HTML body</p>"
+});
 ```
+
+**CRITICAL — EmailMessage API change (2026-08-03, qnfo-email v1.5):**
+The old `new EmailMessage(from, to, subject, body, html)` positional constructor is
+DEPRECATED. It silently produces `{"error":"missing From: header"}` because the runtime
+no longer maps positional args to headers. Use the object builder:
+`send({ to, from, subject, text, html })`. Response: `{ messageId: string }`.
+Cross-ref: email-composer v2.0, qnfo-email Worker v1.5, docs
+`/email-service/api/send-emails/workers-api/`.
+
+**Send binding restriction semantics (docs /email-service/configuration/send-bindings/):**
+- No attributes → send to ANY verified destination address
+- `destination_address` → send ONLY to that single address (recipient restriction!)
+- `allowed_destination_addresses` → recipient allowlist
+- `allowed_sender_addresses` → sender allowlist
+For general send capability, use NO restriction attributes. Setting `destination_address`
+silently blocks all other recipients with `email to X not allowed`.
 
 ### Email Routing (Inbound Processing)
 ```jsonc
@@ -1307,14 +1095,14 @@ for discovery and verification — never assume the agent will recall them from 
 | Skill | Cloudflare Resources | Tool Names Required | Status |
 |:------|:--------------------|:--------------------|:-------|
 | `cloudflare` (this skill) | All (Workers, D1, R2, Vectorize, Pages, DNS) | All agent tools above | ✅ v3.18 |
-| `research` | D1 living-paper, R2 releases, papers-server Worker, Zenodo | search_papers, query_graph, workers_list | ✅ v2.45 (verify) |
+| `research` | D1 living-paper, R2 releases, papers-server Worker, Zenodo | search_papers, query_graph, workers_list | ✅ v2.56 (verified 2026-08-04) |
 | `knowledge` | D1 qnfo-graph, Vectorize, graph-api.qnfo.org | query_graph, search_memories, recall_facts | ✅ v2.2 (verify) |
 | `system` | Skills R2 bucket (qnfo-skills), skill-sync.js | workers_list (sync target) | ✅ v2.4 |
-| `code` / `mcp-builder` | Workers deploys (MCP servers) | workers_list, workers_get_worker | ✅ (verify) |
-| `git-github` | GitHub-D1 sync (GitHub is canonical, D1 is mirror) | workers_list, query_graph | ⬅ v2.3 needs pointer |
-| `frontend-design` | Pages deploys, R2 static assets | workers_list, search_cloudflare_documentation | ⬅ v2.2 needs pointer |
-| `documents` | R2 archive (r2-archive.js) | search_cloudflare_documentation, workers_list | ⬅ v2.3 needs pointer |
-| `windows-command-patterns` | D1 writes (Python-first, no PowerShell) | workers_list (verification) | ⬅ v2.3 needs pointer |
+| `code` | Workers deploys (MCP servers — merged code-review + mcp-builder v2.2) | workers_list, workers_get_worker | ✅ v2.2 (verified 2026-08-03) |
+| `git-github` | GitHub-D1 sync (GitHub is canonical, D1 is mirror) | workers_list, query_graph | ✅ v2.5 (verified 2026-08-04) |
+| `web-artifacts-builder` | Pages deploys, R2 static assets (merged frontend-design 2026-08-03) | workers_list, search_cloudflare_documentation | ✅ (verified 2026-08-03) |
+| `documents` | R2 archive (r2-archive.js, merged doc-coauthoring 2026-08-03) | search_cloudflare_documentation, workers_list | ✅ v2.4 (verified 2026-08-03) |
+| `windows-command-patterns` | D1 writes, bloat cleanup (merged bloat-cleanup 2026-08-03, Python-first, no PowerShell) | workers_list (verification) | ✅ v3.1 (verified 2026-08-03) |
 | `linkedin-mcp` | (incidental — session persistence only) | — | no action |
 
 **Verification rule:** any skill claiming "synced to R2" / "deployed to Workers" / "D1 updated"
@@ -1378,6 +1166,19 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **VECTORIZE-SILO-1: Vectorize content indexed by one Worker is invisible to MCP search tools (2026-08-03)** | Qnfo-paper-indexer upserts 646 chunks via PAPER_VZ binding (qwav-research-v2), but `search_papers`/`search_papers_enriched` MCP tools return `{}` (empty). Probable cause: embedding model mismatch between indexer and searcher Workers, or Vectorize binding name mismatch in MCP server config. Fix: verify same embedding model (`@cf/baai/bge-base-en-v1.5`) used for both indexing and querying; verify Vectorize binding name in the MCP server's wrangler config matches the index alias. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
 | **Relying on durable memory for critical Cloudflare operational rules (2026-08-02)** | DeepChat memories are EPHEMERAL (may be purged). Critical rules (KIF-*, anti-patterns, endpoint maps, binding formats) MUST be embedded in this SKILL.md. Memory is for session outcomes, not operational authority. Migrate any rule found only in memory into this skill. |
 
+| **EMAILMSG-1: Using deprecated positional `new EmailMessage(from, to, ...)` constructor (2026-08-03)** | The modern Email Service `send()` API takes an object builder: `send({to, from, subject, text, html})`. The old positional constructor silently fails with `missing From: header` — no exception, just a 500 at send time. Diagnosed live on qnfo-email Worker (v1.4→v1.5). Cross-ref: cloudflare v3.23 Email section. |
+| **D1-UPDATE-PATTERN (2026-08-04): DELETE + INSERT silently returns OLD body_md** | When updating a paper's body_md in D1, use `UPDATE papers SET body_md = ? WHERE slug = ?` - NOT `DELETE FROM papers WHERE slug=?` followed by INSERT. DELETE+INSERT can silently leave the old row (FTS5 shadow-table interaction or write-consistency lag), making the paper appear "stuck" at an old size. Always re-read the row after write and verify body_len AND doi match expected values. Cross-ref: SCS-1, research v2.55. |
+| **SEND-BIND-RESTRICT: Setting `destination_address` on send_email binding thinking it's the From (2026-08-03)** | `destination_address` RESTRICTS the recipient to that single address (`email to X not allowed` for everything else). It is NOT the From/sender. For general send: no restriction attributes (unrestricted). To restrict senders: `allowed_sender_addresses`. Diagnosed live on qnfo-email Worker. |
+| **FLEET-OAUTH-1: Single-server OAuth re-auth leaves fleet-wide gap — 13/14 MCP servers return `invalid_token` (2026-08-03)** | When one Cloudflare MCP server's OAuth token expires, it's likely ALL 14 OAuth servers' tokens are expired. Authentication one server leaves the other 13 dead. Fix: (1) disable/re-enable ALL 14 servers in DeepChat MCP settings (~65 seconds, 39 clicks), OR (2) after each server has been authenticated once, use the Token Refresh Protocol (refresh_token grant) to auto-renew all 14 tokens without browser consent. Session -3rxrml7G5tAjlb77t9E1: only observability authenticated; 13 servers (cloudflare main, bindings, builds, ai-gateway, graphql, auditlogs, logs, browser, dns-analytics, containers, casb, autorag, dex) returned invalid_token and had zero cached tokens. |
+| **OAUTH-REFRESH-1: Not using `refresh_token` grant after first-time OAuth authentication, forcing manual browser re-auth every hour (2026-08-03)** | Every Cloudflare MCP OAuth token cache includes `refresh_token` with `offline_access` scope. The `grant_type=refresh_token` flow at each server's `/token` endpoint works server-side without browser consent — proven live 2026-08-03: access token refreshed, refresh token rotated, MCP initialize HTTP 200. Fix: implement automated fleet-wide token refresh script using refresh_token grants. See §Token Refresh Protocol. |
+
+| **AUDIT-FALSE-POSITIVE-1: `availability-audit.js` flags legitimate Worker behavior as CRITICAL (2026-08-04)** | Many W-S2 and W-S4 audit findings are false positives: GET /sync returns 404 because it requires POST; GET /mcp returns 404 because it's an MCP protocol endpoint; GET /ask?q=test on qwav returns 404 because it requires POST with JSON body; GET /papers on qwav returns 404 because qwav doesn't serve papers; /debug/* returning 200 on paper-indexer is the catch-all handler returning status JSON, not destructive routes. Fix: route-map per Worker to distinguish "route doesn't exist" from "route exists but requires different method"; W-S4 probe must check response BODY for destructive keywords (DROP/CREATE/INSERT), not just HTTP 200. Case: 2026-08-04 infrastructure audit — 6 of 11 CRITICAL findings were false positives. |
+| **PAGES-DEPLOY-METADATA-1: Pages deploy stage shows "[object Object]" — JSON parsing bug (2026-08-04)** | The `availability-audit.js` P-S3 check calls the Pages API and parses `latest_deployment.latest_stage` but the field is an object, not a string. All 5 Pages projects show "[object Object]" for latest deploy stage. Fix: access `latest_deployment.latest_stage.name` or `JSON.stringify` the stage object. Found in 2026-08-04 infrastructure audit — P-S3 build freshness verification is impossible. |
+| **WRANGLER-PATH-REGRESSION-1: Wrangler PATH fix from prior session silently reverts (2026-08-04)** | The permanent wrangler PATH fix (npm config set prefix + setx Path) applied 2026-08-01 was reverted by 2026-08-04 — `wrangler --version` returns "not recognized". The npm global prefix at `C:\Users\LENOVO\npm-global` may have been cleared or overwritten. Fix: re-apply the permanent fix from the Wrangler Environment Setup section AND add a verification step to `availability-audit.js` or `url-health-check.js` that checks `wrangler --version` as a pre-flight gate. |
+| **GATEWAY-PROD-STALE-1: `qnfo-gateway-production` created 2026-07-31, never deployed with HTTP routes (2026-08-04)** | The staging/production variant Worker was created 2026-07-31 and returns 404 on /health. Likely a test Worker that was never deployed with `workers_dev = true` (KIF-61) or never had HTTP route handlers. If unused, delete to prevent drift from the 9-Worker baseline. Flagged in 2026-08-04 infrastructure audit — `workers_list` shows 10 Workers (baseline 9), but "+qnfo-email" is legitimate growth while "+qnfo-gateway-production" is unexplained drift. |
+
 ## Version
 
-Current: **v3.21.0** (cloudflare — ODR v3.0 publication forensics: C1 R2 sync path allowlist; 2026-08-03)
+**API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+Current: **v3.27** (research — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash) per qnfo-core N-2 ecosystem audit; 2026-08-04) (cloudflare — infrastructure audit anti-patterns: AUDIT-FALSE-POSITIVE-1, PAGES-DEPLOY-METADATA-1, WRANGLER-PATH-REGRESSION-1, GATEWAY-PROD-STALE-1; WBS-coded execute_plan; Worker baseline 10; corrupted anti-pattern rows repaired; 2026-08-04)

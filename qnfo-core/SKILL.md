@@ -1,10 +1,58 @@
 ---
 name: qnfo-core
-version: "1.5"
+version: 1.9
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO Core — Governance Foundation (v1.5)
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+
+> **v1.7 UPDATE (2026-08-03, kaizen — Proprietary Nomenclature Integrity):**
+> Added §0.0 Proprietary Nomenclature Integrity clause — project names/slugs (QNFO, ODR,
+> QWAV) are proper names, NOT acronyms. Never expand them. Any expansion without explicit
+> user confirmation is a fabrication. Triggered by the ODR → "Ontological Distribution of
+> Reality" acronym hallucination (session SHEfIEGiQvA2LI5xAPkon, Zenodo 21774048) — the
+> second such incident after the QNFO → "Quantum Number Field Ontology" fabrication
+> (canonicalized as ADR-010). This is the same failure class as bibliographic fabrication.
+> Cross-reference: §0.0 Proprietary Nomenclature Integrity, Anti-patterns table (acronym
+> hallucination), research skill v2.51+.
+
+> **v1.9 UPDATE (2026-08-04, kaizen — ecosystem nomenclature standardization):**
+> Red-team: ecosystem-wide skills audit for consistent taxonomy/nomenclature
+> (session dXXJ3TxRQ1VHzGdAyp-lo). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **N-2 Version Header Consistency updated** — version header delimiter
+>     STANDARDIZED to em-dash `# SKILLNAME — vX.Y`; `--` (double hyphen) and
+>     `(vX.Y)` parenthesized formats DEPRECATED. Rationale: mixed delimiters break
+>     regex-based version scans (Watchtower DRIFT-AXIS, dependency graph).
+>     Skills using deprecated formats (cloudflare, system, knowledge, linkedin-mcp)
+>     must normalize on their next kaizen pass.
+> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — Governance
+>     Foundation (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
+>     violator); footer deduplicated.
+> Cross-reference: research v2.57 (WBS-coded execute_plan), kaizen v1.15,
+> execution-mandate v2.8 (WBS subagent routing), WBS-AGENT-PROTOCOL.md,
+> session dXXJ3TxRQ1VHzGdAyp-lo.
+
+> **v1.8 UPDATE (2026-08-04, kaizen — Red-team skills audit session closeout):**
+> Red-team: 5-skill autonomous Watchtower scan found 4 drifts; qnfo-core had §N
+> header ambiguity (v2.0 vs skill v1.7) and stale N-5 pipeline entry (xhtml2pdf fallback).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] §N header disambiguated — "(v2.0, HARD — 2026-08-04)" → "(v2.0, HARD — 2026-08-04; §N internal version, not skill version)"
+> (2) [HARD] N-5 pipeline table: "pandoc → build-pdf-pro.py → xhtml2pdf fallback" →
+>     "pandoc → MathJax SVG inline → puppeteer-core CDP (NO xhtml2pdf — permanently
+>     deprecated per research v2.51)"
+> (3) [SOFT] N-2 version footer added (was missing — only header displayed version)
+> Cross-reference: research v2.51, kaizen v1.14, windows-command-patterns S1.0.5.
+
+> **v1.6 UPDATE (2026-08-03, kaizen — skill merge):**
+> Merged `deepchat-settings` skill (71 lines) into this skill.
+> Red-team: direct parent-agent ecosystem audit. HARD: 0. SOFT: 0. DESIGN: 1.
+> Content appended as ## DeepChat Settings Modification (merged from deepchat-settings skill, 2026-08-03).
+
+# QNFO Core — v1.9 (Nomenclature standardization: em-dash version header + N-2 delimiter mandate)
 
 > **v1.5 UPDATE (2026-08-03, kaizen — Bibliographic Integrity GATE triggered by fabrication incident):**
 > Red-team: direct parent-agent 5-adversary audit (odr-thesis Phases 0-3, session SHEfIEGiQvA2LI5xAPkon).
@@ -58,6 +106,122 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > §0.0's universal mandate ("ALL content") and the reality that applying paper-level
 > `[speculative]` badges to marketing landing pages is genre-inappropriate. See also:
 > `frontend-design` v2.2 (Landing Page Content Gate), `research` v2.30 (genre cross-reference).
+
+## §N NOMENCLATURE & STANDARDIZATION (v2.0, HARD — 2026-08-04)
+
+**Purpose:** Guarantee that all pipelines, processes, and protocols execute correctly
+100% of the time by enforcing consistent taxonomy, nomenclature, and standardization
+across every skill, project, and plan item. Cross-referenced from all skills.
+
+### N-1 WBS Code Standard (HARD — Canonical per ADR-2026-007)
+
+The WBS code convention is defined by **ADR-2026-007** (authority) and maintained in
+**QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md** (canonical registry) and
+**docs/WBS-AGENT-PROTOCOL.md** (agent execution protocol). This skill does NOT define
+a separate format — it mandates the canonical format:
+
+```
+{PORTFOLIO}.{PROGRAM}.{PROJECT}.P{PHASE}.T{TASK}.S{SUBTASK}
+```
+
+| Component | Pattern | Example |
+|:----------|:--------|:--------|
+| Portfolio | uppercase | `QNFO` |
+| Program | 2-3 char uppercase | `ADL` (Adelic), `CON` (Consilience), `SR` |
+| Project | 3-digit padded | `001`, `002` |
+| Phase | P + digit 0-9 | `P4` |
+| Task | T + digit 1-n | `T3` |
+| Subtask | S + digit 1-n | `S2` |
+
+**Full example:** `QNFO.ADL.002.P4.T3.S2` = Adelic Physics, project 002, Phase 4,
+Task 3, Subtask 2.
+
+**Canonical registries to consult (NEVER invent codes):**
+- D1: `portfolio-state.program_registry` (source of truth)
+- KG: nodes label=Program/Project, id=`prog-{slug}`/`proj-{slug}`
+- File: `QNFO/wbs-6-synthesis:docs/WBS.TAXONOMY.md`
+
+**Phase definitions (P0-P9):** P0 Init, P1 Due Diligence, P2 Literature, P3 Citations,
+P4 Deep Research, P5 Publication, P6 Deployment, P7 Dissemination, P8 Core Distribution,
+P9 Extension. (Canonical — see WBS.TAXONOMY.md §2.)
+
+### N-2 Version Header Consistency (HARD)
+
+A skill's version MUST be identical in ALL THREE locations:
+1. Frontmatter: `version: X.Y`
+2. Header: `# SKILLNAME — vX.Y` (canonical delimiter = EM-DASH `—`)
+3. Footer: `Current: **vX.Y**`
+
+The version header delimiter is STANDARDIZED to em-dash `—` (`# SKILLNAME — vX.Y`)
+per the 2026-08-04 ecosystem nomenclature audit. `--` (double hyphen) and
+`(vX.Y)` parenthesized formats are DEPRECATED — skills using them (cloudflare,
+system, knowledge, linkedin-mcp, qnfo-core own header) must normalize on their
+next kaizen pass. Rationale: mixed delimiters break regex-based version scans
+(Watchtower DRIFT-AXIS, dependency graph) — a single canonical delimiter makes
+every skill's version machine-findable.
+
+If any two differ → VERSION-DRIFT violation → fix immediately during kaizen.
+The footer is the source of truth for the latest kaizen; frontmatter and header
+MUST be bumped to match in the same edit.
+
+### N-3 Protocol ID Format (HARD)
+
+Every protocol/anti-pattern identifier MUST match: `DOMAIN-NN` (uppercase domain,
+dash, sequential number). Examples: `BLAME-EXTERNAL-1`, `URLLIB-METHOD`,
+`D1-UPDATE-PATTERN`, `ZENODO-EDIT-DRAFT`, `KIF-29`.
+
+**Forbidden:** date-stamped IDs (`AUDIT-2026-07`), free-text IDs, duplicate numbers.
+Cross-references MUST use the exact canonical ID so audits can verify presence.
+
+### N-4 update_plan Integration Protocol (HARD)
+
+The agent plan feature (update_plan) is the execution backbone for multi-phase,
+multi-project work. Rules (per WBS-AGENT-PROTOCOL.md):
+
+1. **Every plan step carries a canonical WBS code prefix** as its first token:
+   `[QNFO.ADL.002.P4] VERB: description` — full code to at least the PHASE level.
+2. **Resolve WBS from D1/KG before executing** — never guess or invent codes.
+   `SELECT * FROM program_registry WHERE wbs_code = ?`; check KG neighbors/impact.
+3. **Plan steps map 1:1 to PROJECT-PLAN.md WBS rows** — the update_plan list IS
+   the live execution view of the WBS.
+4. **Max 12 plan steps** per update_plan call (tool limit). For multi-project
+   work, use one update_plan with project-prefixed steps: `[QNFO.ADL.002.P4]`,
+   `[QNFO.CON.001.P9]`.
+5. **Status reflects the WBS item state** — not the step's speculative future.
+
+### N-5 Pipeline Canonicalization (HARD)
+
+For every operation with multiple possible tools, EXACTLY ONE canonical path MUST
+be documented with a decision table. Ambiguous pipelines cause 100%-execution
+failures. Canonical decisions (current):
+
+| Operation | Canonical Path | Ambiguity Source |
+|:----------|:---------------|:-----------------|
+| Markdown→PDF | pandoc `--mathjax` → build-pdf-pro.py → xhtml2pdf fallback | multiple renderers |
+| Zenodo update published record | **newversion** (`POST /records/{id}/versions`) — edit-drafts have LOCKED buckets | edit-draft vs newversion |
+| Zenodo API non-GET | `requests` library ONLY (urllib drops DELETE/PUT) | urllib vs requests |
+| D1 content update | `UPDATE ... WHERE slug=?` (NOT DELETE+INSERT) | FTS5 shadow tables |
+| Cloudflare ops | MCP tools → `npx wrangler` → REST (never PowerShell) | decision ladder |
+| D1 verification | `len(body_md)` vs `len(open(path).read())` — NEVER os.path.getsize() | CRLF byte inflation |
+
+**Rule:** Any skill referencing a non-canonical tool for these operations MUST
+include the canonical cross-reference or be flagged PIPELINE-AMBIGUITY.
+
+### Anti-Patterns
+
+| Anti-Pattern | Fix |
+|:-------------|:----|
+| Plan steps without WBS codes (NO-WBS-CODE) | Prefix every update_plan step with `[QNFO.{PROG}.{NNN}.P{N}]` |
+| **Inventing a non-canonical WBS format** (e.g. `QNFO.{PROG}.{NNN}.P{N}`) | Use the ADR-2026-007 canonical format ONLY — never create a parallel taxonomy |
+| Guessing WBS code without D1 lookup | Resolve from program_registry before executing |
+| Version drift across fm/hdr/ft | N-2: bump all three in one edit |
+| Date-stamped protocol IDs | N-3: use `DOMAIN-NN` |
+| Ambiguous pipeline tooling | N-5: document canonical path + decision table |
+| D1 size compare via os.path.getsize() | Use len() — CRLF inflates bytes ~3.5% |
+
+**Cross-reference:** ADR-2026-007, `QNFO/wbs-6-synthesis` (WBS.TAXONOMY.md,
+WBS-AGENT-PROTOCOL.md), kaizen (Watchtower audits plan steps for WBS codes),
+research (phases carry WBS codes in execute_plan), windows-command-patterns (execution gates).
 
 ## §0.0 RESEARCH INTEGRITY MANDATE
 
@@ -117,6 +281,44 @@ automatic red-team + kaizen directive. Cross-ref: research v2.49, session SHEfIE
 **Violation response:** any discovered fabrication triggers (a) immediate correction of the
 affected artifact, (b) red-team audit of the producing workflow, (c) kaizen update of
 affected skills — per the standing user directive.
+
+### Proprietary Nomenclature Integrity (v1.7, HARD GATE — NO EXCEPTIONS)
+
+**Project names, slugs, and proper nouns in the QNFO ecosystem are NOT acronyms and do
+NOT expand to anything.** QNFO does not stand for "Quantum Number Field Ontology." ODR
+does not stand for "Ontological Distribution of Reality." QWAV does not stand for anything.
+These are PROPER NAMES — self-referential identifiers like AT&T, 3M, or Microsoft. Any
+expansion of a QNFO proper name or project slug into an acronym or phrase without explicit
+user confirmation is a fabrication — identical in kind to a fabricated author name or
+bibliographic DOI.
+
+**Rules:**
+1. **Never expand a proper name or project slug into an acronym.** QNFO, ODR, QWAV, and
+   similar identifiers are names, not acronyms. [HARD]
+2. **If a term appears as a capitalized slug or project identifier in the user's materials,
+   do not invent an expansion for it.** The user defines the terminology. [HARD]
+3. **Avoid creating new proprietary, proper-noun terminology entirely.** Use established
+   descriptive language. If a new term is unavoidable, define it operationally with the
+   user's explicit approval — never generate it unilaterally. [HARD]
+4. **Before using any proper-noun term in a publication or durable artifact, verify the
+   user has approved that exact term.** "Approved" means the user typed it or explicitly
+   confirmed it. A term that appears only in the agent's own output is NOT approved. [HARD]
+
+**Canonical incidents:**
+- **QNFO (2026-07-30):** Agent expanded QNFO to "Quantum Number Field Ontology" — all
+  three words fabricated. Codified by ADR-010 at qnfo/audit/decisions/ADR-010-QNFO-Not-Acronym.md.
+- **ODR (2026-08-03):** Agent expanded ODR to "Ontological Distribution of Reality" —
+  all three words fabricated. Used throughout a 90-message research pipeline spanning
+  7 git tags, 2 published papers, D1/R2 deployment, and 4 kaizen rounds. The Zenodo
+  records themselves are clean (ODR used as a proper name), but the agent's internal
+  language corrupted the reasoning trail. Session SHEfIEGiQvA2LI5xAPkon.
+  Cross-reference: Zenodo DOI 10.5281/zenodo.21774048.
+
+**Violation response:** any discovered proper-name expansion triggers (a) immediate
+correction of the affected artifact, (b) red-team audit of the producing conversation
+for ALL acronym/proper-name fabrications, (c) kaizen update of affected skills, (d) the
+term is stripped from the agent's output and replaced with the verified proper-name form
+(typically the unexpanded slug or the user's own designation).
 
 ## §0.1 Content Genre Classification (v1.0)
 
@@ -186,6 +388,7 @@ Before beginning work on a QNFO/QWAV deliverable:
 | Defaulting to Genre C for everything "internal" | Project plans shared externally (investors, partners) are Genre B, not Genre C |
 | Over-applying Genre A certainty labels to Genre B content | Landing pages with yellow `[speculative]` badges are visually self-sabotaging and genre-inappropriate — use Genre B footer + dagger footnotes |
 | **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for CP1252 double-encoded hex patterns (0xE2 0x80 0x93/0x94/0x98/0x99/0x9C/0x9D/0xA2/0xA6, 0xE2 0x84 0xA2, 0xC3 0x8x) BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
+| **Expanding a proper name or project slug into a fabricated acronym (2026-08-03, ODR — "Ontological Distribution of Reality")** | **HARD GATE §0.0 (Proprietary Nomenclature Integrity)** — QNFO ecosystem names (QNFO, ODR, QWAV, etc.) are proper names, NOT acronyms. Never expand them. Any expansion without explicit user confirmation is a fabrication. Same class of error as hallucinated authors/fabricated DOIs. |
 
 ## §0.2 UTF-8 SOURCE ENCODING MANDATE (HARD GATE — NO EXCEPTIONS)
 
@@ -320,8 +523,8 @@ python C:\Users\LENOVO\.deepchat\pre-commit-mojibake-scan.py
 ```
 
 **No exceptions.** This gate exists because the resume v3.3 PDF and computing-machines
-paper.md were both corrupted by PowerShell encoding failures. If the scanner exits
-non-zero, the commit is BLOCKED.
+paper.md were both corrupted by PowerShell encoding failures. The complete
+25-failure record is in `docs/PSFAIL.md` (see git repo).
 
 ### Self-Check (before every `exec`)
 
@@ -401,3 +604,72 @@ GATE: If KG was NOT queried before claiming "comprehensive" → cherry-picking v
 1. Load `email-composer` via `skill_view("email-composer")` for business communication
 2. Load `knowledge` via `skill_view("knowledge")` for KG + memory
 3. This skill is ALWAYS loaded at session start (visible in skill_list)
+
+
+---
+
+## DeepChat Settings Modification (merged from deepchat-settings skill, 2026-08-03)
+
+# DeepChat Settings Modification Skill
+
+Use this skill to safely change DeepChat *application* settings during a conversation.
+
+## Core rules
+
+- Only change settings when the user is asking to change **DeepChat** settings.
+- Use the dedicated settings tools; never attempt arbitrary key/value writes.
+- These tools are intended to be available only when this skill is active.
+- Viewing the main `deepchat-settings` `SKILL.md` activates this skill for the current conversation and exposes the `deepchat_settings_*` tools in the next tool loop iteration.
+- Viewing linked files under this skill does **not** activate the skill.
+- If the request is ambiguous, ask a clarifying question before applying.
+- For unsupported or high-risk settings (MCP, prompts, providers, API keys, paths): do **not** apply changes; instead explain where to change it and open Settings.
+
+## Supported settings (initial allowlist)
+
+Toggles:
+
+- `soundEnabled`: enable/disable sound effects.
+- `copyWithCotEnabled`: enable/disable copying COT details.
+
+Enums:
+
+- `language`: DeepChat locale, including `system`, `zh-CN`, `en-US`, `zh-TW`, `zh-HK`, `ko-KR`, `ru-RU`, `ja-JP`, `fr-FR`, `fa-IR`, `pt-BR`, `da-DK`, `he-IL`.
+- `theme`: `dark | light | system`.
+- `fontSizeLevel`: integer level within supported range.
+
+Settings navigation (open-only):
+
+- Use `deepchat_settings_open` only when the request cannot be fulfilled by the settings tools, and avoid calling it if the change is already applied.
+- `section` hints: `common`, `display`, `provider`, `mcp`, `prompt`, `acp`, `skills`, `knowledge-base`, `database`, `shortcut`, `about`.
+
+## Workflow
+
+1. Confirm the user is requesting a DeepChat settings change.
+2. If the settings tools are not yet present, inspect the main `deepchat-settings` skill document first so the skill becomes active for this conversation.
+3. Determine the target setting and the intended value.
+4. If the setting is supported, call the matching tool:
+   - toggles: `deepchat_settings_toggle`
+   - language: `deepchat_settings_set_language`
+   - theme: `deepchat_settings_set_theme`
+   - font size: `deepchat_settings_set_font_size`
+5. Confirm back to the user what changed (include the final value).
+6. If the setting is unsupported, call `deepchat_settings_open` (with `section`) and provide a short pointer to the correct Settings section. Do not call it if the requested change has already been applied.
+
+## Examples (activate this skill)
+
+- "把主题改成深色"
+- "Turn off sound effects"
+- "语言改成英文"
+- "复制时不要带 COT"
+- "Open the MCP settings page"
+- "Edit my prompts"
+
+## Examples (do NOT activate this skill)
+
+- "把 Windows 的系统代理改成..."
+- "帮我改 VS Code 的字体"
+- "把电脑的声音关掉"
+
+## Version
+
+Current: **v1.9** (qnfo-core — 2026-08-04 ecosystem nomenclature audit: N-2 version-header delimiter standardized to em-dash `—`; `--`/`(vX.Y)` formats deprecated; header reconciled; WBS N-1/N-4 cross-refs verified)

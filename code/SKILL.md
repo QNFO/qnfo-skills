@@ -1,7 +1,7 @@
 ---
 name: code
 description: Code quality review, security audit, and MCP server building. Analyze code for quality/security/anti-patterns with specific line numbers. Build MCP servers in Python (FastMCP) or Node/TypeScript (MCP SDK) for integrating external APIs. Deploy MCP servers as Cloudflare Workers when possible.
-version: "2.2"
+version: "2.3"
 triggers: ["code review", "security audit", "code quality", "best practices", "anti-pattern", "review this code", "audit this", "MCP", "Model Context Protocol", "FastMCP", "MCP server", "API integration", "tool building", "external API", "MCP SDK", "type safety", "SQL injection", "secrets", "race condition", "error handling", "code smell", "refactor"]
 related: ["cloudflare"]
 priority: 2
@@ -18,7 +18,14 @@ self_sufficient: true
 > `cloudflare-auditlogs` (deploy trail). See `cloudflare` skill v3.9
 > §MCP-Driven Operations for the full decision matrix.
 
-# CODE -- v2.2 (Ultra-Consolidated Review + MCP + Deploy Verification)
+# CODE — v2.4
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+> Canonical case: Zenodo 403 was urllib.Request(method="DELETE") silently sending GET.
+
+ (Ultra-Consolidated Review + MCP + Deploy Verification)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A code review finding or
@@ -44,7 +51,7 @@ update_plan([
 ## Tool-Call Execution Mandate (Anti-Phantom Gate — MANDATORY)
 
 A finding, fix, or MCP tool claim without an invoked tool call showing
-actual output is a PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+actual output is a PHANTOM CLAIM (`qnfo-core` §9.11 Rule 14) — BLOCKED.
 
 1. **Code review** — every file MUST be `read` in this turn before a finding is reported; never review "from memory" of an earlier turn or from the diff summary alone. If the language toolchain is available, actually run the linter/type-checker/build (`tsc --noEmit`, `eslint`, `pytest`, etc.) and show the exit code and output rather than asserting "this compiles" or "tests would pass".
 2. **MCP server build** — after writing a tool, actually invoke it (via the MCP client/test harness or a direct function call) and show the real response. "The tool should return the papers list" is a phantom claim until a real call returns real JSON.
@@ -764,3 +771,6 @@ must be cleaned up in the same turn:
 | Silent error swallowing | Log all errors with context; never empty catch |
 | Leaving scratch files on disk after review/build | Delete `_*.py`, `__pycache__/`, test output same-turn (KIF-32) |
 | Drafting MCP server code locally without git commit same-turn | Commit to git in the SAME turn, or treat as not-yet-existing (KIF-09) |
+Current: **v2.4** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+
+

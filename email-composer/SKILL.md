@@ -1,118 +1,147 @@
 ---
 name: email-composer
-description: Email triage, drafting, business communication. Python win32com for Outlook automation (PowerShell DELETED). Use for inbox analysis, drafting responses, bizdev outreach, declining/pitching, QNFO/QWAV-aligned correspondence.
-version: 1.2
-kif_tags: [KIF-03, KIF-05, KIF-32]
+description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
+version: 2.2
+triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
+related: ["qnfo-core", "cloudflare", "knowledge"]
+priority: 2
+platform: cloudflare
+autonomous: true
+self_sufficient: true
 ---
 
-> **v1.2 (2026-08-03, total PowerShell purge — user mandate):**
-> ALL PowerShell references replaced with Python win32com. All .ps1 script references
-> updated to .py. PowerShell COM Fallback Protocol → Python win32com Fallback Protocol.
-> Phase 0 rewritten in Python. `$`-sign stripping section removed. All PowerShell code
-> blocks replaced. Cross-reference: windows-command-patterns v3.0.
->
-> **v1.1 UPDATE (2026-07-31, kaizen — 20-finding remediation):**
-> Red-team review: 5 parallel subagents attempted, all truncated; fell back to direct
-> parent-agent 5-adversary audit (Accuracy, Completeness, Dependency, Novelty, Status).
-> HARD findings: 6. SOFT findings: 9. DESIGN findings: 5.
-> Changes:
-> (1) [HARD] Removed broken `launch_app(name="Outlook")` — fails on Windows ("Failed to
->     activate packaged app"). Only `launch_app(path=...)` works. Added warning that
->     `start_minimized: true` breaks window detection. (Accuracy)
-> (2) [HARD] Added explicit instruction: `press_key("return")` on SearchTextBox does NOT
->     submit search; must click Submit Search button via element_index. (Accuracy)
-> (3) [HARD] Added Phase 0: Environment Discovery — multi-account enumeration via
->     PowerShell COM, Outlook health check, folder inventory before Phase 1. (Completeness)
-> (4) [HARD] Added PowerShell COM Fallback Protocol — when UI search fails or returns
->     irrelevant results, fall back to COM-based search scripts. COM was 10x more reliable
->     than UI search in session testing. (Completeness)
-> (5) [HARD] Added Recovery Protocol for Outlook window disappearance — the HWND persists
->     but `list_windows` drops it; use `debug_window_info` + re-fetch. (Completeness)
-> (6) [HARD] Added cross-folder search instructions — Sent Items, Archive, Deleted Items
->     are common locations for target emails. (Completeness)
-> (7) [SOFT] Added general-purpose `search-email.ps1` script reference (keyword search
->     across all stores/folders). Replaces Ice-Geng-only `find-ice-email.ps1`. (Completeness)
-> (8) [SOFT] Added version header, `.kaizen_history`, KIF tags. (Status)
-> (9) [SOFT] Fixed `email-patterns.md` mojibake: â€" → —,  → ". (Accuracy)
-> (10) [SOFT] Fixed Integration Points: `computer-use` is a built-in capability, not a
->     skill. Clarified with note. (Dependency)
-> (11) [SOFT] Qualified "All Mailboxes" claim — does NOT reliably reach cross-account
->     results; PowerShell COM multi-store search is the reliable path. (Completeness)
-> (12) [SOFT] Added `windows-command-patterns` skill reference for PowerShell safety. (Novelty)
-> (13) [SOFT] Generalized "Critical search tip" from Ice-Geng-specific to principle:
->     Outlook display names often differ from contact names. (Status)
-> (14) [SOFT] Added `list_windows` to Phase 1 tool enumeration (was referenced but not
->     listed). (Accuracy)
-> (15) [SOFT] Documented `search_memories` and `recall_facts` as the correct tool names
->     (both verified available). (Accuracy)
-> (16-20) [DESIGN] Added OWA fallback, COM body-reading protocol, Anti-Patterns table,
->     email session context preservation, and generalized `find-ice-email.ps1` from
->     hardcoded reply to template. (Novelty + Status)
-> Cross-reference: kaizen v1.2.3, windows-command-patterns.
+> **v2.1 (2026-08-03, red-team — send pipeline fix):**
+> Red-team audit found `POST /send` failing with 500. Root cause: the qnfo-email Worker
+> used the deprecated positional `new EmailMessage(from, to, ...)` constructor. Cloudflare
+> Email Service now requires the object-builder API: `send({to, from, subject, text, html})`.
+> Worker bumped v1.3 → v1.5 with the fix; all 9 endpoints verified 200. The `send_email`
+> binding must be UNRESTRICTED (no `destination_address`) for general sending.
+> Cross-reference: cloudflare v3.22 (EMAILMSG-1, SEND-BIND-RESTRICT anti-patterns),
+> qnfo-email Worker v1.5.
 
-# Email Composer — Business Communication for QNFO/QWAV
+# Email Composer — Inter-Personal Communication via Cloudflare Worker
+
+> **v2.0 (2026-08-03, kaizen — Cloudflare-native migration):**
+> Complete rewrite. Email infrastructure migrated from Outlook/win32com to the
+> `qnfo-email` Cloudflare Worker. All qnfo.org email now lives in Cloudflare:
+> inbound routed via Email Routing rules → Worker processes/stores in D1 →
+> DeepChat queries the Worker HTTP API to read, search, send, and manage filters.
+> Zero Outlook dependency. Zero win32com. Zero desktop automation for email.
+>
+> Changes:
+> (1) [HARD] Phase 0: Outlook win32com account discovery → Worker /health probe.
+> (2) [HARD] Phase 1: Computer Use Outlook navigation → Worker GET /emails/recent + /search.
+> (3) [HARD] Phase 2: win32com item.Body → Worker GET /emails/body?id=N.
+> (4) [HARD] Phase 5: Outlook Reply button click → Worker POST /send.
+> (5) [SOFT] Added phase 6 (filter management) and phase 7 (memory logging).
+> (6) [SOFT] All win32com/Outlook code blocks removed. Computer Use references removed.
+> (7) [DESIGN] Integration table updated: cloudflare replaces windows-command-patterns + CUA.
+> Cross-reference: cloudflare v3.22, qnfo-email Worker v1.5, qnfo-core.
 
 ## Quick Start
 
-1. **Open Outlook** via Computer Use:
-   - `launch_app(path="C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE")` — the ONLY reliable method on Windows.
-   - **DO NOT use `launch_app(name="Outlook")`** — fails with "Failed to activate packaged app."
-   - **DO NOT use `start_minimized: true`** — breaks window detection; the process exists but `list_windows` returns zero windows. Launch normally and let the window appear.
-2. **Find the email**:
-   - Use `get_window_state` to inspect inbox.
-   - Press `hotkey(keys=["ctrl","e"])` to focus the search box.
-   - Type search term via `set_value` on SearchTextBox.
-   - **CRITICAL: `press_key("return")` does NOT submit the search.** You MUST click the Submit Search button explicitly via its `element_index`.
-   - If UI search returns irrelevant results (common: old archive items surface before recent inbox items), fall back to Python win32com (see §Python win32com Fallback Protocol).
-3. **Read the email**:
-   - **Preferred (reliable):** Use Python win32com `item.Body` — see §Python win32com Fallback Protocol.
-   - **Fallback (UI):** Double-click the email in the list to open standalone window, then `get_window_state(max_elements=150, max_depth=30)` on that window.
-4. **Load strategy context**: Read `references/qnfo-qwav-strategy.md` if QNFO/QWAV positioning is needed for the response.
-5. **Draft the response**: Apply tone guidelines from `references/email-patterns.md`, integrate QNFO/QWAV strategy, run through qnfo-core §0.0 Research Integrity Mandate.
-6. **Deliver**: Click Reply in the standalone email window, `type_text` the response, or present draft for user approval.
+> **ALL Worker requests require auth (v1.6+).** Send `Authorization: Bearer <API_KEY>` on every call.
+> API key: `~/.deepchat/workers/qnfo-email/wrangler.toml` → `[vars] API_KEY`.
+> No key → HTTP 401. Key wrong → HTTP 401.
+
+**Read recent email:**
+```bash
+KEY="<API_KEY from wrangler.toml>"
+curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/emails/recent?limit=10
+```
+
+**Read a specific email:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/body?id=1"
+```
+
+**Search email:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=research"
+```
+
+**Send email / reply:**
+```bash
+curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $KEY" \
+  https://qnfo-email.q08.workers.dev/send \
+  -d '{"to":"person@example.com","subject":"Re: Hello","body":"Thanks for reaching out.","reply_to_id":1}'
+```
+
+**Get stats:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
+```
+
+**The Worker routes ALL @qnfo.org email.** No desktop app needed. All endpoints except `OPTIONS` preflight require the Bearer key.
+
+---
 
 ## Core Workflow
 
-### Phase 0: Environment Discovery (MANDATORY — run before Phase 1)
+### Phase 0: Connectivity Check (MANDATORY — run before Phase 1)
 
-Before starting any email search, discover the environment:
+Verify the Worker is healthy and email is flowing:
 
 ```
-1. Python win32com — enumerate accounts:
-   outlook = win32com.client.Dispatch("Outlook.Application")
-   ns = outlook.GetNamespace("MAPI")
-   for acc in ns.Accounts:
-       print(acc.SmtpAddress)
+1. curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/health
+   → Expect: {"status":"ok","version":"1.6","bindings":{"d1":true,"send_email":true,...}}
+   → If status != "ok": Worker may be down. Check wrangler deploy logs.
+   → If d1 == false: D1 binding missing — redeploy Worker.
+   → If HTTP 401: API_KEY mismatch — read key from wrangler.toml [vars].
 
-2. For each account, enumerate top-level folders:
-   for store in ns.Stores:
-       print(f"Store: {store.DisplayName}")
-       for f in store.GetRootFolder().Folders:
-           print(f"  {f.Name} — {f.Items.Count} items")
+2. curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
+   → Expect: {"total":<N>,"last24h":<M>,...}
+   → If total == 0: no email has been received yet, OR D1 is not connected.
 
-3. Verify Outlook is healthy: check that tasklist shows OUTLOOK.EXE running.
-4. Note: which account is the DEFAULT (shown on launch) vs which accounts are secondary.
+3. Verify Email Routing rules are routing to the Worker:
+   wrangler email routing rules list qnfo.org
+   → ALL rules should show "Actions: worker:qnfo-email" (not "forward:*@outlook.com")
+
+4. memory_recall({query: "email sent OR replied OR qnfo-email"})
+   → Check for recent email interactions in durable memory.
 ```
-
-**Why this matters:** The target email may be in a non-default account. In session testing,
-a search email was in `rowan.quni@outlook.com` while the UI defaulted to `rwnquni@outlook.com`.
-Without Phase 0, the agent searches the wrong account and finds nothing.
 
 ### Phase 1: Discovery & Triage
 
-- Use Computer Use tools (`list_windows`, `get_window_state`, `click`, `type_text`, `hotkey`, `set_value`) to navigate Outlook.
-- **Critical search tip:** Sender display names in Outlook often differ from the contact's actual name. The `SenderName` field shown in the UIA tree may display "Project" when the actual person is "Ice Geng" at TechInBridge. Always search using BROAD terms first (partial name, first name, domain from email), not the exact expected display name. Verify the actual sender by reading the full email or using Python win32com to inspect `SenderEmailAddress`.
-- **Multi-account search:** The "All Mailboxes" dropdown option may NOT reliably surface cross-account results (testing showed stale archive results). For cross-account search, use Python win32com to search all stores (see §Python win32com Fallback Protocol).
-- **Cross-folder search:** Target emails may be in Sent Items, Archive, or Deleted Items — not just Inbox. Python win32com searches all folders automatically; UI search requires manual folder navigation.
-- Triage: identify unread emails, categorize by urgency (bizdev opportunity, publication notice, infrastructure alert, spam).
+**List recent emails:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/recent?limit=20"
+```
+Returns metadata for each email: id, sender, recipient, subject, classification, status, received_at.
+
+**Search for specific emails:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=<keyword>"
+```
+Searches across sender, subject, and body_text fields.
+
+**Triage checklist:**
+- Parse the JSON response. Extract: id, sender, subject, classification.
+- Categorize by urgency:
+  - `classification: "personal"` — from known contacts (e.g., rowan.quni@qnfo.org) → highest priority
+  - `classification: "research"` or `"publications"` — bizdev/research opportunities
+  - `classification: "alerts"` — infrastructure notifications
+  - `status: "rejected"` or `"spam"` — filtered, skip unless user asks
+- **Critical search tip:** Sender addresses may differ from display names. Always search by domain (e.g., `@example.com`) or partial name first, before assuming identity.
 
 ### Phase 2: Analysis
 
-- **Preferred (reliable):** Use Python win32com to read email body (`item.Body`). This avoids UIA tree truncation, encoding issues, and window-juggling.
-- **Fallback (UI):** Read the full email body by double-clicking the email, then inspecting the standalone window with `get_window_state(max_elements=150, max_depth=30)`.
-- Extract: sender identity (company, role, relationship history — use `item.SenderEmailAddress` for accurate identity), what they're asking, what they're offering, what they need from you.
-- Check conversation history: search Sent Items for prior exchanges with this contact.
-- Check memory: `search_memories` (Vectorize semantic search) and `recall_facts` (D1 keyword/category lookup) for prior interactions and decisions.
+**Read full email body:**
+```bash
+curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/body?id=<id>"
+```
+Returns: sender, recipient, subject, body_text, body_html, headers_json, classification, status, received_at, processing_ms.
+
+**Analysis steps:**
+1. Extract sender identity from `sender` field and cross-reference with `search_memories` and `recall_facts` for prior interactions.
+2. Read `body_text` for the full message content.
+3. Check `headers_json` for additional context (reply-to, in-reply-to, references).
+4. Search for prior conversation threads:
+   - `curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=<sender_email>"`
+   - Or: `curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=<subject_keyword>"`
+5. Check durable memory for decisions related to this sender/topic:
+   - `search_memories({query: "<sender name> OR <topic>"})`
+   - `recall_facts({keyword: "<sender email>"})`
 
 ### Phase 3: Strategic Context
 
@@ -127,137 +156,165 @@ Without Phase 0, the agent searches the wrong account and finds nothing.
 2. Apply the QNFO/QWAV positioning from `references/qnfo-qwav-strategy.md`.
 3. Apply tone guidelines from `references/email-patterns.md`.
 4. Run through qnfo-core §0.0: banned words check, certainty calibration, falsifiability check.
-5. Present draft with explicit strategic rationale.
+5. Present the draft to the user with explicit strategic rationale before sending.
 
 ### Phase 5: Delivery
 
-- Use Computer Use to click Reply in the Outlook window and type the response.
-- Or present the draft for user review before sending.
-- After sending, remember the interaction (`remember_fact`) for future reference.
-
-## Python win32com Fallback Protocol (MANDATORY when UI search fails)
-
-When UI-based search returns no results, irrelevant results, or stalls, fall back to Python win32com immediately. Do NOT retry UI search more than twice.
-
-### Search all stores by keyword
-
-```python
-import win32com.client
-from datetime import datetime, timedelta
-
-outlook = win32com.client.Dispatch("Outlook.Application")
-ns = outlook.GetNamespace("MAPI")
-
-def search_folders(folder, depth, keyword, max_days):
-    if depth > 5:
-        return
-    if folder.Items.Count > 0:
-        cutoff = datetime.now() - timedelta(days=max_days)
-        try:
-            kw_filter = (
-                f"@SQL=urn:schemas:httpmail:subject LIKE '%{keyword}%' "
-                f"OR urn:schemas:httpmail:textdescription LIKE '%{keyword}%'"
-            )
-            found = folder.Items.Restrict(kw_filter)
-            for item in found:
-                try:
-                    date = item.ReceivedTime
-                except Exception:
-                    try:
-                        date = item.SentOn
-                    except Exception:
-                        continue
-                if date.replace(tzinfo=None) >= cutoff:
-                    print(f"[{folder.Name}] {item.SenderName} | {item.Subject} | {date}")
-        except Exception:
-            pass
-    for sub in folder.Folders:
-        search_folders(sub, depth + 1, keyword, max_days)
-
-for store in ns.Stores:
-    search_folders(store.GetRootFolder(), 0, "research", 21)
+**Send the reply via the Worker:**
+```bash
+curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $KEY" \
+  https://qnfo-email.q08.workers.dev/send \
+  -d '{
+    "to": "recipient@example.com",
+    "subject": "Re: Original Subject",
+    "body": "Plain text reply body...",
+    "reply_to_id": <original_email_id>
+  }'
 ```
 
-### Read full email body by subject match
+**Parameters:**
+| Field | Required | Description |
+|:------|:--------|:------------|
+| `to` | Yes | Recipient email address |
+| `subject` | No | Subject line (defaults to "(no subject)") |
+| `body` | No | Plain text body |
+| `html` | No | HTML body (falls back to body text wrapped in `<p>`) |
+| `reply_to_id` | No | D1 email ID this is replying to — marks original as "replied" |
 
-```python
-import win32com.client
+**The Worker automatically:**
+- Sends via the `SEND_EMAIL` binding (DKIM-signed, SPF-aligned)
+- Records the sent email in D1 with `status: "sent"`
+- Marks the original email as `status: "replied"` if `reply_to_id` is provided
 
-outlook = win32com.client.Dispatch("Outlook.Application")
-ns = outlook.GetNamespace("MAPI")
-# ...search stores recursively for matching subject...
-print(item.Body)
+**On success:** `{"success":true,"message_id":"<uuid>","to":"...","subject":"...","sent_at":"..."}`
+
+### Phase 6: Mark as Processed
+
+After reading or replying to an email, update its status:
+```bash
+curl -s -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $KEY" \
+  https://qnfo-email.q08.workers.dev/emails/status \
+  -d '{"id": 1, "status": "read"}'
 ```
 
-### Key advantages over UI search
+**Valid statuses:** `received`, `processed`, `sent`, `replied`, `archived`, `spam`, `read`, `rejected`
 
-| Aspect | UI Search | Python win32com |
-|:-------|:----------|:----------------|
-| Cross-account | "All Mailboxes" unreliable | Searches all stores explicitly |
-| Cross-folder | Manual navigation needed | Recursive: hits all folders |
-| Body access | UIA tree length limited | Full body text |
-| Reliability | Window disappears, search stalls | Direct COM, no UI dependency |
-| Speed | 5-10 tool calls per search | 1 script execution |
+### Phase 7: Log to Memory
 
-**Gate:** If UI search returns 0 results after 2 attempts, switch to Python win32com. Do not retry.
+After any email interaction, remember it for future sessions:
+```
+memory_remember(category="task_outcome", content="Email interaction: <sender> — <subject> — <action taken>. Email ID: <id>.")
+```
 
-## Recovery Protocols
+---
 
-### Outlook Window Disappearance
+## Filter Management
 
-**Symptom:** `list_windows` returns no Outlook window, but `Get-Process -Name OUTLOOK` shows the process alive with a MainWindowTitle.
+### List filters:
+```bash
+curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/filters
+```
 
-**Root cause:** The `rctrl_renwnd32` window class is a special Outlook render window that can drop from the window manager's enumeration while the HWND remains valid.
+### Create a filter:
+```bash
+curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $KEY" \
+  https://qnfo-email.q08.workers.dev/filters \
+  -d '{
+    "field": "from",
+    "pattern": "spammer@example.com",
+    "action": "reject",
+    "priority": 10
+  }'
+```
 
-**Recovery:**
-1. Call `debug_window_info(pid=<pid>)` — this will report the HWND even when `list_windows` doesn't.
-2. Use the reported HWND directly with `get_window_state(pid=<pid>, window_id=<hwnd>)`.
-3. If that also fails, kill and restart Outlook:
-   - `kill_app(pid=<pid>)`
-   - Wait 3 seconds
-   - `launch_app(path="C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE")`
+**Filter fields:** `from`, `to`, `subject`, `body` (or empty for all fields)
+**Filter actions:** `accept` (default), `reject` (bounce), `auto_reply` (send template), `notify` (webhook), `tag` (classify)
 
+### Delete a filter:
+```bash
+curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/filters/<id>
+```
+
+---
+
+## qnfo-email Worker API Reference
+
+| Endpoint | Method | Purpose | Example |
+|:---------|:-------|:--------|:--------|
+| `/health` | GET | Binding status, version | `curl -s -H "Authorization: Bearer $KEY" .../health` |
+| `/stats` | GET | Total, last24h, by classification, by status | `curl -s -H "Authorization: Bearer $KEY" .../stats` |
+| `/emails/recent` | GET | List emails (limit, offset, status filter) | `curl -s -H "Authorization: Bearer $KEY" ".../emails/recent?limit=20&status=received"` |
+| `/emails/body` | GET | Full email body by ID | `curl -s -H "Authorization: Bearer $KEY" ".../emails/body?id=5"` |
+| `/emails/search` | GET | Search sender/subject/body | `curl -s -H "Authorization: Bearer $KEY" ".../emails/search?q=meeting"` |
+| `/emails/status` | PATCH | Update status | `curl -s -X PATCH -H "Authorization: Bearer $KEY" ... -d '{"id":1,"status":"read"}'` |
+| `/send` | POST | Send email | `curl -s -X POST -H "Authorization: Bearer $KEY" ... -d '{"to":"...","subject":"...","body":"..."}'` |
+| `/filters` | GET/POST | List/create filters | `curl -s -H "Authorization: Bearer $KEY" .../filters` |
+| `/filters/:id` | DELETE | Remove filter | `curl -s -X DELETE -H "Authorization: Bearer $KEY" .../filters/5` |
+
+**Worker source:** `~/.deepchat/workers/qnfo-email/qnfo-email.js`
+**Worker URL:** `https://qnfo-email.q08.workers.dev`
+**D1 database:** `qnfo-audit` (tables: `emails`, `email_filters`)
+**Bindings:** `SEND_EMAIL`, `AUDIT_DB`, `NOTIFY_WEBHOOK`
+
+---
 
 ## Integration Points
 
-| Skill / Capability | When to Load | What It Provides |
-|:-------------------|:-------------|:-----------------|
+| Skill / Tool | When to Load | What It Provides |
+|:-------------|:-------------|:-----------------|
 | `qnfo-core` | Before drafting any response | Research Integrity Mandate, governance, banned words, certainty labels |
-| `knowledge` | Before checking contact history | KG querying, memory search, paper context |
-| `research` | When citing QNFO publications | Paper lookup, DOI retrieval, publication context |
-| `windows-command-patterns` | Before any Python `exec` | Python-First Protocol, encoding safety, cmd chaining |
-| Computer Use tools | Throughout (Outlook interaction) | Built-in capability — `launch_app`, `get_window_state`, `click`, `type_text`, `hotkey`, `set_value`, `list_windows` |
-| YoBrowser (`load_url`, `cdp_send`) | When desktop Outlook is unrecoverable | Outlook Web Access (OWA) fallback |
+| `cloudflare` | For Worker management, D1 queries, infrastructure context | Workers fleet status, D1 query tools, Email Routing rules |
+| `knowledge` | Before checking contact history | KG querying, memory search (`search_memories`, `recall_facts`) |
+| `research` | When citing QNFO publications in replies | Paper lookup, DOI retrieval, publication context |
+| `exec` (curl) | Throughout — ALL email operations | Worker HTTP API queries |
+| `wrangler` | Email Routing rule management | `wrangler email routing rules list qnfo.org` |
+
+---
 
 ## Key Constraints
 
 - **Description must stay ≤176 chars** (same scanner bug that broke qnfo-core and system).
-- Computer Use for Outlook requires patience — PostMessage-based typing may not verify; element-indexed `set_value` and UIA Invoke are more reliable.
+- All email operations go through `curl` → `qnfo-email.q08.workers.dev`. No desktop apps.
 - Drafts must pass qnfo-core §0.0 before delivery — no exceptions.
 - Never fabricate citations or DOI references. Verify via `search_papers_enriched` or `get_paper_context`.
-- **Python safety:** All COM scripts must be written to `.py` files and executed via `exec python`, never inline. See `windows-command-patterns` v3.0 for Python-First Protocol.
+- The Worker records ALL sent emails in D1 — replies are traceable.
+- The `send_email` binding sends FROM the address configured in wrangler.toml (currently `qnfo@qnfo.org`).
+- If `qnfo@qnfo.org` is not yet verified, catch-all won't forward to it — unknown addresses are dropped.
+
+---
 
 ## Anti-Patterns
 
 | Anti-Pattern | Correct |
 |:-------------|:--------|
-| Using `launch_app(name="Outlook")` on Windows | Use `launch_app(path="C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE")` only |
-| Using `start_minimized: true` with Outlook | Never minimize — the window becomes undetectable |
-| Pressing Enter to submit Outlook search | Click the Submit Search button explicitly via element_index |
-| Retrying UI search 3+ times when it returns irrelevant results | Fall back to Python win32com after 2 failed UI search attempts |
-| Assuming single Outlook account | Run Phase 0: Environment Discovery first |
-| Searching only Inbox | Search Sent Items, Archive, Deleted Items too |
-| Reading email body via UIA tree (truncation risk) | Use Python win32com `item.Body` for reliable full-body access |
-| Inline Python with complex quoting | Write to `.py` file first, then `exec python` |
-| Treating `computer-use` as a loadable skill | It's a built-in capability — reference its tools directly |
+| Launching Outlook to check qnfo.org email | Query the Worker API: `curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/emails/recent` |
+| Using win32com / Python COM for email | Use `curl` HTTP calls to the Worker. All email is in D1, not in Outlook. |
+| Using Computer Use to navigate Outlook UI | No desktop email client needed. The Worker IS the email client. |
+| Reading email body via UIA tree / screenshot | `curl -s -H "Authorization: Bearer $KEY" ".../emails/body?id=N"` — full text, no truncation. |
+| Sending email via Outlook Reply button | `POST /send` — DKIM-signed, SPF-aligned, recorded in D1. |
+| Assuming email is only in Inbox | All qnfo.org mail goes to the Worker. D1 is the canonical store. |
+| Forgetting to mark emails as read | `PATCH /emails/status {"id":N, "status":"read"}` after reading. |
+| Not logging email interactions to memory | `memory_remember(category="task_outcome", ...)` after every interaction. |
+| Treating all qnfo.org addresses equally | Classifications (research/alerts/publications/personal/general) drive priority and response strategy. |
+| Searching D1 directly instead of using Worker API | The Worker API is the canonical interface. D1 queries bypass classification and logging. |
+| Skipping Phase 0 connectivity check | Always run `/health` + `/stats` + verify Email Routing rules before email operations. |
+| Omitting `reply_to_id` when replying | Include `reply_to_id` so the Worker can mark the original email as "replied". |
+| **Calling Worker endpoints without `Authorization: Bearer <API_KEY>`** | ALL endpoints (except `OPTIONS`) return HTTP 401 without the key. Read the key from `wrangler.toml [vars] API_KEY`. v1.6+ enforces this — a red-team audit proved full inbox read + send-as was possible with zero auth (2026-08-03). |
+
+---
 
 ## References
 
 - `references/qnfo-qwav-strategy.md` — QWAV commercial thesis, Qubit Delusion series, Manifesto, Problem-Substrate Mapping, JPCUB positioning
 - `references/email-patterns.md` — Communication patterns: declining opportunities, pitching QWAV, follow-ups, relationship maintenance
-- `scripts/find-ice-email.py` — Python template for sender-specific email search via win32com (generalize for other contacts)
-- `scripts/search-email.py` — Python general-purpose keyword search across all Outlook stores/folders via win32com
+
+**Worker source:** `C:\Users\LENOVO\.deepchat\workers\qnfo-email\qnfo-email.js` (v1.6)
+**Worker deploy:** `wrangler deploy` from `C:\Users\LENOVO\.deepchat\workers\qnfo-email\`
+
+---
 
 ## Version
 
-Current: **v1.1** (kaizen — 20-finding remediation, 2026-07-31)
+**API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+Current: **v2.2** (red-team — auth gate: ALL endpoints require Bearer API_KEY, Worker v1.6, 9/9 auth checks pass; 2026-08-03)

@@ -1,9 +1,15 @@
 ---
 name: system
 description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec uses cmd.exe (PSModulePath deleted + Python shim v3). See EXEC-SHELL-FIX.md.
-version: 2.9
+version: 2.11
 kif_tags: [KIF-32]
 ---
+
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
 
 
 > **v2.9 UPDATE (2026-08-03, kaizen — RED-TEAM RECOVERY + EXEC SHELL MANDATE):**
@@ -72,7 +78,7 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 
 
 
-# SYSTEM -- v2.9 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
+# SYSTEM — v2.11 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
 
 > **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,
@@ -523,7 +529,6 @@ skill_view("system")       # Load skill management
 When you know which skill you need:
 ```
 skill_view("research")     # For papers/Zenodo/literature
-skill_view("execution-mandate")  # For execution protocols + subagent orchestration
 skill_view("cloudflare")   # For Workers/R2/D1/infra
 skill_view("code-review")  # For code quality/security
 ```
@@ -725,3 +730,6 @@ Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winr
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
 `EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.3 §S-1.0.2.
+Current: **v2.11** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+
+

@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: "2.2"
+version: 2.5
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -10,6 +10,24 @@ autonomous: true
 self_sufficient: true
 ---
 
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+
+> **v2.3 UPDATE (2026-08-04, kaizen — zenodo_doi ownership gate):**
+> Red-team: blanket `zenodo_url` backfill incident (session dXXJ3TxRQ1VHzGdAyp-lo)
+> created 1,245+ fake D1 links to external citations. The KG 4-D seed script writes
+> `zenodo_doi` — it must NOT write DOIs that are not QNFO-owned.
+> Changes:
+> (1) [HARD] **zenodo_doi ownership gate added to the 4-D seed section** — verify
+>     DOI ownership against the live Zenodo API (creator search + person-name
+>     variant) before writing `zenodo_doi` to any KG Paper node.
+> (2) [SOFT] Anti-pattern row added: ZENODO-KG-OWNERSHIP-1.
+> Cross-reference: research v2.54 (P5.OWNERSHIP), kaizen v1.13,
+> session dXXJ3TxRQ1VHzGdAyp-lo.
+
 > **v2.2 UPDATE (2026-07-29, Cloudflare MCP kaizen):**
 > Added references to `cloudflare-autorag-mcp-server` (automated RAG with Workers AI +
 > Vectorize) as the preferred method for building RAG pipelines over manual Vectorize
@@ -17,7 +35,7 @@ self_sufficient: true
 > source for memory operations. Updated Cross-System Discovery Hierarchy to include
 > MCP-first retrieval paths. See `cloudflare` skill v3.9 §MCP-Driven Operations.
 
-# KNOWLEDGE -- v2.2 (Ultra-Consolidated KG + Memory + AutoRAG)
+# KNOWLEDGE — v2.5 (Ultra-Consolidated KG + Memory + AutoRAG)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A KG edge/node write or a
@@ -136,6 +154,17 @@ When seeding or updating KG Paper nodes, include 4-D distribution properties:
 }
 ```
 **GATE:** Paper nodes without 4-D properties are `distribution_status: "draft"` — not published.
+
+**zenodo_doi OWNERSHIP GATE (v2.3, HARD — added 2026-08-04):** Before writing
+`zenodo_doi` (or any Zenodo URL/DOI) to a KG Paper node or D1 row, verify the DOI is
+QNFO-owned against the LIVE Zenodo API. Build the owned-DOI set from BOTH
+`metadata.creators.person_or_org.name:QNFO` AND the person-name variant
+`"Rowan Brad Quni-Gudzinas"` (mis-attributed records are invisible to the QNFO
+creator search). NEVER write `zenodo_doi` derived from a raw `doi LIKE '%zenodo%'`
+match — D1 `papers`/`paper_ids` contain EXTERNAL citations. Canonical incident:
+session dXXJ3TxRQ1VHzGdAyp-lo blanket backfill created 1,245+ fake links.
+Enforcement script: `research/scripts/zenodo-ownership-check.py`.
+Cross-ref: research v2.54 P5.OWNERSHIP, kaizen v1.13.
 
 ### /nodes -- Query by Label
 ```python
@@ -323,3 +352,7 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | Skipping impact analysis before modifying entity | Query `/impact/{id}` to check downstream dependents |
 | Storing memory without category | Always categorize: user_preference/project_fact/task_outcome/heuristic/anti_pattern |
 | Ignoring search_memories for context | Semantic search finds decisions by meaning, not keywords |
+| **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
+Current: **v2.5** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+
+
