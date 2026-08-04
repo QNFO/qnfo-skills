@@ -10,6 +10,23 @@ autonomous: true
 self_sufficient: true
 ---
 
+> **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
+> Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
+> HARD: 0. SOFT: 2. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **Staleness sweep**: 16 days since last kaizen (2026-07-21).
+> (2) [SOFT] **KIF-23 reconciliation note**: 11 D1-only Paper nodes seeded into
+>     KG today via graph-api /sync (acrp04/acrp07/acrp08/adelic-cross-domain/
+>     compton-ontology/frequency-valuation/kkr-coarse/odr-thesis/ostrowski/
+>     ultrametric-p-adic/wbs-6). KG paper-slug sync now 952/952 (100%).
+> (3) [DESIGN] **KG baseline updated**: 2,569 nodes / 908 edges / 14
+>     GovernancePolicy nodes (2026-08-04). Edge-type distribution: 57 types,
+>     BELONGS_TO dominant (378, 41.6%), OWNS (143). Edge count 908 vs prior
+>     ~1,433 baseline reflects paper-sync node growth without edge seeding —
+>     document in reconciliation runs, not data loss.
+> Cross-reference: kaizen v1.18, research v2.62, KIF-23.
+
+
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -353,6 +370,6 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | Storing memory without category | Always categorize: user_preference/project_fact/task_outcome/heuristic/anti_pattern |
 | Ignoring search_memories for context | Semantic search finds decisions by meaning, not keywords |
 | **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
-Current: **v2.5** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+Current: **v2.6**** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 

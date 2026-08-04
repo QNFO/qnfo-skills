@@ -1,184 +1,92 @@
----
-name: code-review
-description: Comprehensive code review assistant that analyzes code quality, security, and best practices. Use when user asks for code review, security audit, implementation feedback, or wants code quality assessment.
-version: "2.1"
-triggers: ["code review", "review code", "security audit", "code audit", "implementation feedback", "code quality", "PR review", "pull request review", "diff review", "security review", "performance review", "is this good code", "check my code", "analyze code", "code analysis", "vulnerability scan", "OWASP", "CVE check", "dependency audit"]
-related: ["code"]
-priority: 2
-platform: all
-autonomous: true
-self_sufficient: true
----
+# Code Review Skill
 
-> **INCLUDES AUTONOMOUS RED-TEAM SELF-AUDIT.** Every CRITICAL finding must cite a specific line number. After review, the reviewer red-teams its own findings (could any be false positives?).
+> **v1.1 UPDATE (2026-08-04, kaizen — N-2 nomenclature + redundancy resolution + WBS integration):**
+> Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
+> HARD: 3. SOFT: 1. DESIGN: 1.
+> Changes:
+> (1) [HARD] **N-2 nomenclature compliance**: added `## Version` section with
+>     `Current: **v1.1**` closing line per qnfo-core N-2 (em-dash delimiter,
+>     2026-08-04 ecosystem audit). Previously had NO version header at all.
+> (2) [HARD] **REDUNDANCY-RESOLVED-1**: this skill overlaps `code` v2.4 (which
+>     merged code-review at v2.2). For line-number-level code audits, security
+>     scans, and MCP server building, load `code` skill instead. This skill is
+>     now the lightweight triage front-end; `code` is the deep auditor.
+> (3) [HARD] **Kaizen banner + anti-pattern table added**: first kaizen history
+>     entry for this skill; watchtower scan flagged 0 banners / 0 history.
+> (4) [SOFT] WBS integration: plan steps reference [KZ.*] codes per
+>     WBS-AGENT-PROTOCOL.md.
+> (5) [DESIGN] Cross-skill integration: `code`, `kaizen`, `windows-command-patterns`.
+> Cross-reference: code v2.4, kaizen v1.18, qnfo-core N-2.
 
-# CODE REVIEW SKILL — v2.2 (DEPRECATED — merged into `code`)
+You are an expert code reviewer. When this skill is activated, you should:
 
-> **DEPRECATED (2026-08-03):** This skill has been MERGED into the `code` skill (v2.2).
-> The `code` skill now handles all code review AND MCP server building in one ultra-consolidated skill.
-> All review checklists (6 domains: Security, Type Safety, Error Handling, Concurrency,
-> Cloudflare-Native, Performance) are now maintained in the `code` skill.
-> **Use `code` instead — this skill is retained for backwards compatibility only.**
->
-> ---
-> ## FORWARD TO `code`
-> Load `skill_view("code")` for the active code review + MCP builder pipeline.
-> See `code` skill v2.2 §Review Checklist for the 6-domain framework.
-> ---
+## Review Focus Areas
 
----
+1. **Code Quality**
+   - Readability and maintainability
+   - Naming conventions
+   - Code organization and structure
+   - DRY (Don't Repeat Yourself) principle
 
-## When to Use
+2. **Best Practices**
+   - Language-specific idioms
+   - Design patterns usage
+   - Error handling
+   - Logging practices
 
-| Trigger | Action |
-|:--------|:-------|
-| "Review this code" | Full review with all focus areas |
-| "Security audit" | Focused on §2.3 (Security) + §2.5 (Dependencies) |
-| "Performance review" | Focused on §2.4 (Performance) |
-| "Is this good code?" | Lightweight review, §2.1 + §2.2 only |
-| User submits a PR or diff | Full review against changed files |
+3. **Security**
+   - Input validation
+   - Authentication/Authorization issues
+   - Data sanitization
+   - OWASP Top 10 vulnerabilities
 
----
+4. **Performance**
+   - Algorithm efficiency
+   - Memory usage
+   - Database query optimization
+   - Caching opportunities
 
-## Workflow — 4 Phases
+## Review Output Format
 
-### Phase 1: Discovery
+When reviewing code, provide:
 
-```powershell
-# Discover what's being reviewed
-git diff --name-only          # Changed files in current branch
-git log --oneline -5          # Recent commits for context
-```
-Use `exec` to discover project structure, dependencies, and test coverage.
+1. **Summary**: Brief overview of the code's purpose and quality
+2. **Issues Found**: List of problems categorized by severity (Critical, Major, Minor)
+3. **Suggestions**: Specific improvements with code examples
+4. **Positive Aspects**: Highlight what's done well
 
-### Phase 2: Analysis
+## Escalation
 
-For each file under review, analyze across ALL four focus areas:
+For line-number-level audits, security deep-dives, and MCP server building,
+**load the `code` skill** (v2.4+) — it is the canonical merged auditor
+(code-review + mcp-builder). Use this skill for quick triage; `code` for
+production-grade review with specific line numbers and anti-pattern tables.
 
-### 2.1 Code Quality
-- Readability: clear variable names, consistent style, logical flow
-- Maintainability: DRY principle, modular functions, low coupling
-- Naming: descriptive, consistent with project conventions
-- Structure: logical file organization, appropriate abstraction level
-- Comments: explain WHY, not WHAT; no stale/outdated comments
+## Anti-Patterns
 
-### 2.2 Best Practices
-- Language idioms: uses the language's recommended patterns
-- Design patterns: appropriate use (not over-engineered)
-- Error handling: all error paths handled, no silent failures
-- Logging: appropriate levels (DEBUG/INFO/WARN/ERROR), structured where needed
-- Testing: edge cases covered, tests are readable and maintainable
+| Anti-Pattern | Correct |
+|:-------------|:--------|
+| Treating this skill as the deep auditor when `code` v2.4 exists | Load `code` skill for line-number audits, security scans, and MCP server building. This skill is triage-only. |
+| Reviewing without specific line numbers | Always cite line numbers in issues found. See `code` skill for the standard. |
+| Skipping severity classification | Every issue MUST be classified Critical / Major / Minor with a fix suggestion. |
+| Not checking for anti-patterns during review | Reference the `code` skill anti-pattern tables during security audits. |
 
-### 2.3 Security
-- Input validation: all external inputs validated and sanitized
-- Injection prevention: SQL, command, path injection vectors closed
-- Authentication: proper auth checks on all protected operations
-- Data exposure: no secrets in code, logs, or error messages
-- OWASP Top 10: check against current OWASP vulnerabilities
-- Dependency audit: `pip audit` / `npm audit` for known CVEs
+## Usage
 
-### 2.4 Performance
-- Algorithm complexity: Big-O analysis for critical paths
-- Memory: no leaks, appropriate data structure choices
-- I/O: batching, connection pooling, lazy loading where appropriate
-- Caching: appropriate use, cache invalidation strategy
-- N+1 queries: no inefficient database access patterns
+Activate this skill when:
+- User asks for code review
+- User wants feedback on their implementation
+- User requests security audit of code
+- User asks "which skill should I use for code review" → answer: `code` for deep, this for triage
 
-### Phase 3: Output Generation
+## Cross-Skill Integration
 
-Structure the review output as follows:
+| Skill / Tool | When to Load | Purpose |
+|:-------------|:-------------|:--------|
+| `code` | Deep audits, security scans, MCP server building | Canonical merged code-review + mcp-builder (v2.4) |
+| `kaizen` | After review to log new anti-patterns | Continuous improvement pipeline |
+| `windows-command-patterns` | Running review scripts on Windows | Python-first protocol, no PowerShell |
 
-```markdown
-# CODE REVIEW: [file/project name]
-**Reviewer:** QNFO Agent | **Date:** YYYY-MM-DD | **Scope:** [files reviewed]
+## Version
 
-## Summary (2-3 sentences)
-[What the code does, overall quality assessment, key risks]
-
-## Issues Found
-
-| # | Severity | File:Line | Issue | Recommendation |
-|:--|:---------|:----------|:------|:---------------|
-| 1 | CRITICAL | ... | ... | ... |
-| 2 | MAJOR | ... | ... | ... |
-| 3 | MINOR | ... | ... | ... |
-
-### CRITICAL Issues
-[Detailed analysis for each CRITICAL issue — must include specific code reference]
-
-### MAJOR Issues
-[Detailed analysis for each MAJOR issue]
-
-### MINOR Issues
-[Detailed analysis for each MINOR issue with suggested fixes]
-
-## Positive Aspects
-[3-5 things the code does well]
-
-## Recommendations (Prioritized)
-1. [Highest-priority fix with rationale]
-2. [Next-priority fix]
-...
-
-## Dependency Health (if applicable)
-[Audit results, known vulnerabilities, upgrade recommendations]
-```
-
-### Phase 4: Verification & Red-Team (Before Delivering Review)
-
-1. **Evidence check:** Every CRITICAL/MAJOR issue cites a specific line or pattern
-2. **False positive check:** Red-team each finding — could it be a false positive? Re-read the code.
-3. **Completeness:** Did I cover all four focus areas?
-4. **Actionability:** Can the developer act on every recommendation without additional research?
-5. **Red-team the review itself:** If I claim "this is a security vulnerability," try to prove it's NOT one first.
-
----
-
-## Severity Classification
-
-| Severity | Definition | Examples |
-|:---------|:-----------|:---------|
-| **CRITICAL** | Security vulnerability, data loss risk, production outage risk | SQL injection, hardcoded secrets, infinite loop |
-| **MAJOR** | Bug, significant performance issue, maintainability blocker | Memory leak, wrong algorithm, missing error handling |
-| **MINOR** | Style inconsistency, minor optimization, documentation gap | Naming convention violation, missing comment |
-
----
-
-## Anti-Patterns (Flag Immediately)
-
-| Anti-Pattern | Signal |
-|:-------------|:-------|
-| **Hardcoded secrets** | API keys, tokens, passwords in source |
-| **Bare except** | `except:` or `except Exception:` without specific types |
-| **eval()/exec()** | Dynamic code execution on user input |
-| **Unvalidated input** | No sanitization before SQL/filesystem/command use |
-| **Silent error swallowing** | `except: pass` or `try: ... except: None` |
-| **God function** | Function >200 lines with multiple responsibilities |
-
----
-
-## Usage Examples
-
-```
-# Trigger via: "Review the code in src/auth.py"
-# Or: "Do a security audit of the API endpoints"
-# Or: "Is this implementation good?" (lightweight review)
-```
-
----
-
-## RT: RED-TEAM SELF-AUDIT
-
-Before claiming this skill complete, autonomously run:
-
-1. Output Verification (negative verification)
-2. Assumption Challenge (state and test every assumption)
-3. Edge Case Check (empty/null/max/boundary/desync)
-4. DoD Integration (run _dod_enforce.py if exists)
-5. Iteration (retry on failure, max 3)
-
-ANTI-PATTERN: User should NEVER ask about quality.
-
----
-
-*code-review v2.1 — Comprehensive code quality, security, and best practices analysis. All output labeled [LLM-INFERRED] unless verified against execution evidence.*
+Current: **v1.1** (kaizen — N-2 nomenclature compliance, redundancy resolution with `code` v2.4, first kaizen history entry; 2026-08-04)

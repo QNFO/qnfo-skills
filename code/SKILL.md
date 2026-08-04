@@ -10,6 +10,18 @@ autonomous: false
 self_sufficient: true
 ---
 
+> **v2.5 UPDATE (2026-08-04, kaizen — staleness sweep + code-review redundancy note):**
+> Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
+> HARD: 0. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [SOFT] **Staleness sweep**: 16 days since last kaizen (2026-07-21).
+> (2) [SOFT] **code-review resolution**: standalone `code-review` skill v1.1
+>     now redirects to THIS skill (v2.4+) for line-number audits, security
+>     scans, and MCP server building — it was redundant after the v2.2 merge.
+>     This skill is the canonical deep auditor.
+> Cross-reference: kaizen v1.18, code-review v1.1, qnfo-core N-2.
+
+
 > **v2.2 UPDATE (2026-07-29, Cloudflare MCP deploy kaizen):**
 > Added MCP-driven deployment verification to the Deploy & Verify and Testing
 > Checklist sections. After every MCP server deploy, the verification chain now
@@ -771,6 +783,6 @@ must be cleaned up in the same turn:
 | Silent error swallowing | Log all errors with context; never empty catch |
 | Leaving scratch files on disk after review/build | Delete `_*.py`, `__pycache__/`, test output same-turn (KIF-32) |
 | Drafting MCP server code locally without git commit same-turn | Commit to git in the SAME turn, or treat as not-yet-existing (KIF-09) |
-Current: **v2.4** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+Current: **v2.5**** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 

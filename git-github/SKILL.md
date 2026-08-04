@@ -9,6 +9,18 @@ platform: all
 autonomous: false
 self_sufficient: true
 ---
+
+> **v2.12 UPDATE (2026-08-04, kaizen — staleness sweep + N-2 nomenclature):**
+> Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
+> HARD: 0. SOFT: 2. DESIGN: 0.
+> Changes:
+> (1) [SOFT] **Staleness sweep**: 19 days since last kaizen (2026-07-18).
+>     Verified WBS routing table (v2.10) still matches canonical codes in
+>     QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md. No drift.
+> (2) [SOFT] **N-2 nomenclature check**: version-header delimiter standardized
+>     to em-dash per qnfo-core N-2. Any remaining `--` formats deprecated.
+> Cross-reference: qnfo-core N-2, kaizen v1.18, WBS-AGENT-PROTOCOL.md.
+
 > **v2.4 UPDATE (2026-08-02, kaizen — Cloudflare tool discoverability):**
 > Ephemeral-memory mandate: memories are NOT permanent — skill instructions must name
 > the actual agent tools. GitHub-D1 Sync (this skill) touches Cloudflare D1 via
@@ -33,6 +45,9 @@ self_sufficient: true
 >     `$env:TEMP` → `%TEMP%` in clone instructions.
 > Cross-reference: qnfo-core §0.6 Python-First Execution Mandate, windows-command-patterns v3.9.
 
+> (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
+>     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
+>     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.11 §N-4.
 # GIT-GITHUB — v2.11
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
@@ -65,6 +80,23 @@ self_sufficient: true
 > **v2.1 UPDATE (2026-07-18):** Added mandatory REPO-TARGET GATE (`git remote -v` before ANY tag/release/commit) after ADR-026 Incident 3 -- a prior session created research-project tags (`v0.1-phase0`, `v1.0.0`) and a Zenodo-DOI GitHub Release inside `qnfo-skills` by mistake. The old "Protected Repositories" section only warned about committing *files*; it did not cover tags/releases, which are independent git refs and slip through file-level checks.
 
 ## execute_plan
+
+**WBS INTEGRATION (v2.11, iteration-2 kaizen):** every `update_plan` step in a git
+operation carries a canonical WBS prefix per qnfo-core §N-4 + `QNFO/qnfo-ops:WBS/WBS-AGENT-PROTOCOL.md`.
+CONCRETE EXAMPLE — branching in the Ultrametric Physics program repo:
+`[QNFO.UMP.002.P4] Branch ump/paper/adelic-shannon-theory + PR`.
+
+```python
+update_plan([
+  {"step": "[QNFO.UMP.002.P4] REPO-TARGET GATE: git remote -v -- confirm program repo, NEVER qnfo-skills", "status": "in_progress"},
+  {"step": "[QNFO.UMP.002.P4] Create branch: git checkout -b ump/paper/adelic-shannon-theory (WBS {prog}/{type}/{slug})", "status": "pending"},
+  {"step": "[QNFO.UMP.002.P4] Execute git operation, conventional commit", "status": "pending"},
+  {"step": "[QNFO.UMP.002.P4] Verify: git log -1 --oneline, git status --short, git ls-remote origin", "status": "pending"},
+])
+```
+
+Fallback (no program repo context): use `[{WBS}.P{N}]` template form, never omit
+the prefix — a plan step without a WBS code is WBS-NO-CODE (HARD GATE).
 
 update_plan([
   {"step": "REPO-TARGET GATE: git remote -v -- confirm this is the intended repo, NEVER qnfo-skills for project/research content", "status": "pending"},
@@ -421,4 +453,4 @@ See ADR-026 below.
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.11** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.10, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
+Current: **v2.11** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.11, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)

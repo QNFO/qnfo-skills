@@ -1,3 +1,21 @@
+> **v2.3 UPDATE (2026-08-04, kaizen — orphan artifact removal + cmd.exe curl syntax):**
+> Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
+> HARD: 3. SOFT: 2. DESIGN: 0.
+> Changes:
+> (1) [HARD] **Orphan artifact removed**: scripts/physical-number-theory-*.pdf
+>     (an unrelated physics PDF) deleted from this skill — violated file hygiene
+>     and skill-bloat metrics (kaizen v1.5).
+> (2) [HARD] **CMD.EXE curl syntax documented**: all curl examples use bash `$KEY`
+>     which does NOT expand under the exec tool's cmd.exe. Added cmd.exe note
+>     with `set KEY=`/`%KEY%` alternative.
+> (3) [HARD] **Missing v2.2 banner repaired**: the Current line said v2.2 but the
+>     banner block at top only showed v2.1 (auth gate). Banner chain now complete.
+> (4) [SOFT] **WRANGLER-PATH-REGRESSION-1 note**: `wrangler email routing rules`
+>     may fail if wrangler is off PATH (2026-08-04 regression). Fallback: use
+>     Cloudflare MCP tools or the zone-level REST API.
+> (5) [SOFT] Worker source path canonicalized to `C:\Users\LENOVO\.deepchat\workers\qnfo-email\qnfo-email.js`.
+> Cross-reference: cloudflare v3.27, kaizen v1.18, qnfo-core N-2.
+
 ---
 name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
@@ -39,6 +57,13 @@ self_sufficient: true
 > Cross-reference: cloudflare v3.22, qnfo-email Worker v1.5, qnfo-core.
 
 ## Quick Start
+
+> **CMD.EXE NOTE (v2.3):** All curl examples below use bash `$KEY` syntax.
+> The exec tool runs `cmd.exe`, which does NOT expand `$KEY`. On Windows use:
+> - Either `set KEY=<API_KEY>` then `%KEY%` in commands (cmd.exe variable syntax), OR
+> - Inline the key directly: `curl -s -H "Authorization: Bearer <API_KEY>" ...`
+> The Worker returns HTTP 401 without a valid Bearer key on ALL endpoints (except OPTIONS).
+
 
 > **ALL Worker requests require auth (v1.6+).** Send `Authorization: Bearer <API_KEY>` on every call.
 > API key: `~/.deepchat/workers/qnfo-email/wrangler.toml` → `[vars] API_KEY`.
@@ -95,6 +120,7 @@ Verify the Worker is healthy and email is flowing:
 
 3. Verify Email Routing rules are routing to the Worker:
    wrangler email routing rules list qnfo.org
+   → (if wrangler is off PATH, use Cloudflare MCP / REST API per WRANGLER-PATH-REGRESSION-1)
    → ALL rules should show "Actions: worker:qnfo-email" (not "forward:*@outlook.com")
 
 4. memory_recall({query: "email sent OR replied OR qnfo-email"})
@@ -251,7 +277,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | `/filters` | GET/POST | List/create filters | `curl -s -H "Authorization: Bearer $KEY" .../filters` |
 | `/filters/:id` | DELETE | Remove filter | `curl -s -X DELETE -H "Authorization: Bearer $KEY" .../filters/5` |
 
-**Worker source:** `~/.deepchat/workers/qnfo-email/qnfo-email.js`
+**Worker source:** `C:\Users\LENOVO\.deepchat\workers\qnfo-email\qnfo-email.js`
 **Worker URL:** `https://qnfo-email.q08.workers.dev`
 **D1 database:** `qnfo-audit` (tables: `emails`, `email_filters`)
 **Bindings:** `SEND_EMAIL`, `AUDIT_DB`, `NOTIFY_WEBHOOK`
@@ -317,4 +343,4 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.2** (red-team — auth gate: ALL endpoints require Bearer API_KEY, Worker v1.6, 9/9 auth checks pass; 2026-08-03)
+Current: **v2.3** (kaizen — orphan artifact removal, cmd.exe curl syntax note, v2.2 banner repair, WRANGLER-PATH note, path canonicalization; 2026-08-04)
