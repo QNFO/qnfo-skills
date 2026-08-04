@@ -13,7 +13,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 >     commits ed54653197/c3e3e22ae3). Archived copy retained as historical record.
 >     All canonical-registry cross-references updated in qnfo-core, git-github, kaizen, research.
 > (2) [SOFT] rwnq8/qnfo-skills-1 fork archived (canonical is QNFO/qnfo-skills).
-> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, kaizen v1.18, research v2.62.
+> Cross-reference: qnfo-core v1.11 N-1, git-github v2.12, kaizen v1.18, research v2.62.
 
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
@@ -704,4 +704,4 @@ Settings navigation (open-only):
 
 ## Version
 
-Current: **v1.11** (qnfo-core — WBS taxonomy: 7 new program codes added to §N-1 WBS Code Standard (UMP/SLB/INM/CFE/RES/PLT/DEM) with canonical repo URLs + branch prefixes; QWAV portfolio codes; coding conventions; cross-ref git-github v2.10 routing table, research v2.60 WBS taxonomy, kaizen v1.17; 2026-08-04)
+Current: **v1.11** (qnfo-core — WBS canonical registry relocation: canonical WBS docs now live at QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md (commits ed54653197/c3e3e22ae3 + d135d8da81 re-sync); archived wbs-6-synthesis retained as historical record; iteration-2 red-team confirmed N-2 consistency + WBS-TAXONOMY-GAP closed in research/git-github/kaizen; cross-ref git-github v2.12, research v2.62, kaizen v1.18; 2026-08-04) (qnfo-core — v1.10: WBS taxonomy 7 program codes; v1.11: registry relocation; 2026-08-04)

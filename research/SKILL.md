@@ -33,8 +33,12 @@ triggers:
 > (1) [HARD] WBS canonical registry reference updated to live `QNFO/qnfo-ops:WBS/`
 >     (WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md); archived `QNFO/wbs-6-synthesis:docs/`
 >     retained as historical record (2026-08-04).
-> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, kaizen v1.18.
+> Cross-reference: qnfo-core v1.11 N-1, git-github v2.12, kaizen v1.18.
 
+> (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — added CONCRETE
+>     [QNFO.UMP.002.Px]-style update_plan example to execute_plan §WBS INTEGRATION
+>     (was template-only [{WBS}.P{N}]). Working-memory gap, confidence 0.85, now resolved.
+> Cross-reference: qnfo-core v1.11 §N-4, git-github v2.12, kaizen v1.18.
 # RESEARCH — v2.62
 
 > **v2.61 UPDATE (2026-08-04, kaizen — Red-team closeout: surgical draft-discard + token-validation correction):**
@@ -268,6 +272,20 @@ ADR-2026-007). Resolve the project's WBS code from D1 `program_registry` (or the
 WBS.TAXONOMY.md registry) BEFORE executing; never invent codes. Phase numbers map
 1:1 to WBS.TAXONOMY.md §2 (P0 Init → P8 Core Distribution). Canonical docs:
 `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` + `docs/WBS-AGENT-PROTOCOL.md`.
+
+**CONCRETE EXAMPLE (v2.62, iteration-2 kaizen):** for an Ultrametric Physics paper
+project, every plan step carries the literal prefix `[QNFO.UMP.002.P0]`,
+`[QNFO.UMP.002.P4.T3]`, etc. — Portfolio `QNFO`, Program `UMP`, Project `002`,
+Phase `P4`, Task `T3`. Example list:
+
+```python
+update_plan([
+  {"step": "[QNFO.UMP.002.P0] Init: repo branch ump/paper/<slug>, WBS resolution, PROJECT-PLAN.md", "status": "in_progress"},
+  {"step": "[QNFO.UMP.002.P1] Due diligence: KG + D1 + Vectorize cross-ref", "status": "pending"},
+  {"step": "[QNFO.UMP.002.P4] Deep research: adelic QFT core derivation", "status": "pending"},
+  {"step": "[QNFO.UMP.002.P5] Publication: PDF build, Zenodo, D1 insert", "status": "pending"},
+])
+```
 
 update_plan([
   {"step": "[{WBS}.P0] Init: repo scaffold, WBS code resolution, README, PROJECT-PLAN.md, core claim lock", "status": "pending"},
@@ -1127,4 +1145,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.62** (research — ZENODO-DRAFT-DISCARD-SURGICAL-1, ZENODO-ME-404, ZENODO-REQUESTS-POST-201 anti-patterns from red-team audit of session ktmz7cqk publish chain; + v2.60 WBS routing retained; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.10, qnfo-core v1.10; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
+Current: **v2.62** (research — WBS canonical registry relocation: WBS docs now live at QNFO/qnfo-ops:WBS/ (d135d8da81 re-sync); iteration-2 red-team closed WBS-TAXONOMY-GAP by adding CONCRETE [QNFO.UMP.002.Px]-style update_plan example to execute_plan; cross-ref qnfo-core v1.11, git-github v2.12, kaizen v1.18; 2026-08-04) (research — v2.61: ZENODO anti-patterns; v2.62: registry relocation + WBS example; 2026-08-04) `{prog}/{type}/{slug}` branch naming; PROJECT-PLAN.md first-line WBS code mandate; execute_plan uses real WBS program codes; cross-ref git-github v2.12, qnfo-core v1.11; 2026-08-04) (research — v2.59: PHASE0-EMPTY-REPO; v2.60: WBS taxonomy; 2026-08-04; + Zenodo newversion unblock (ZENODO-STALE-DRAFT-BLOCK-1, ZENODO-FILE-ENTRY-SELECTION-1, ZENODO-PUBLISHER-REQUIRED-1 — ODR/QP v2 published 21784489/21784490); 2026-08-04)
