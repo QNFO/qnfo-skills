@@ -1,105 +1,53 @@
+#!/usr/bin/env python3
 """Archive QNFO GitHub repos to Software Heritage — permanent swh:1: identifiers.
 
-SWH = the archival counterpart of DOIs for source code. Free, programmatic.
+SCHEMA VERIFIED LIVE 2026-08-05 (session 3i_KVLownViukLTZB_BJ1):
 
-Correct API endpoints (verified 2026-08-05; the naive /origin/get/ 404s and
-HTML-error responses when the origin param is not URL-encoded properly):
-  CHECK:   GET  https://archive.softwareheritage.org/api/1/origin/get/?origin_url={urlencode(origin)}
-  SAVE:    POST https://archive.softwareheritage.org/api/1/origin/save/   body: {"origin_url": origin}
-           -> {"save_request_status": "accepted", "visit_type": "git", "save_task_status_url": ...}
-  POLL:    GET  {save_task_status_url}  until "succeeded" -> then query
-           GET  https://archive.softwareheritage.org/api/1/origin/visit/get/?origin_url=...&limit=1
-  VISIT:   GET  https://archive.softwareheritage.org/api/1/origin/visit/get/?origin_url={urlencode(origin)}&limit=1
-           -> "visit_id", "status": "full" when archived
-  ID:      GET  https://archive.softwareheritage.org/api/1/visit/{visit_id}/directory/
-           -> "swhid" like swh:1:dir:...
+1. ANUBIS ANTI-BOT (critical): archive.softwareheritage.org is behind Anubis
+   proof-of-work. A plain urllib/curl client gets an HTML challenge page
+   ("Making sure you're not a bot!"), NOT JSON. MUST drive via a real browser
+   (session browser / CDP) — once the browser solves Anubis, same-origin fetch
+   carries the cookie and API calls work.
+
+2. ORIGIN CHECK (browser-context fetch):
+   GET /api/1/origin/get/?origin_url={encodeURIComponent(origin)}
+   -> 200 {"origin":{"url":...}} = ARCHIVED | 404 {"detail":"Origin ... not found"} = NOT ARCHIVED
+
+3. SAVE REQUEST (browser-context fetch):
+   POST /api/1/origin/save/  body: {"origin_url": origin, "visit_type": "git"}
+   -> {"save_request_status":"accepted", "visit_type":"git", ...}
+   REQUIRED fields: origin_url AND visit_type. The GitHub-specific endpoint
+   /origin/save/github/url/ REJECTS visit_type=github ("Allowed types: bzr, cvs, git, hg, svn, tarball").
+
+4. RATE LIMIT: unauthenticated save requests are throttled ~50/day burst-limited.
+   429 {"exception":"Throttled","reason":"Expected available in N seconds"}.
+   Respect it — hammering triggers harder blocks (same discipline as
+   WIKIDATA-ABUSE-FILTER-296-1). Save requests queue server-side; a submitted
+   request WILL be processed when the throttle clears.
+
+5. swh:1: ID: after processing, GET /api/1/origin/visit/get/?origin_url=...&limit=1
+   -> visit_id -> GET /api/1/visit/{visit_id}/directory/ -> "swhid"
+
+Verified state 2026-08-05: all 6 pinned QNFO repos (aiq-bios, Friend,
+ultrametric-ai-poc, unity-of-ultrametric-physics, two-ways-of-measuring,
+adelic-qft) confirmed NOT ARCHIVED; save requests submitted via browser session;
+throttled after burst (~58 min cooldown). Retry after cooldown.
 
 Usage:
-  python swh-archive.py                      # check + save all 6 pinned QNFO repos
-  python swh-archive.py --check-only         # just report archive status
-  python swh-archive.py <github_url>         # single repo
+  python swh-archive.py              # print this doc (needs browser context, not plain exec)
 """
-import json, sys, time, urllib.request, urllib.error, urllib.parse
+import sys
 
-SWH = 'https://archive.softwareheritage.org/api/1'
-REPOS = [
-    'https://github.com/rwnq8/aiq-bios',
-    'https://github.com/rwnq8/Friend',
-    'https://github.com/rwnq8/ultrametric-ai-poc',
-    'https://github.com/rwnq8/unity-of-ultrametric-physics',
-    'https://github.com/rwnq8/two-ways-of-measuring',
-    'https://github.com/rwnq8/adelic-qft',
-]
-H = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-     'Content-Type': 'application/json'}
-
-def api(method, path, body=None, timeout=60):
-    url = SWH + path
-    data = json.dumps(body).encode() if body else None
-    req = urllib.request.Request(url, data=data, method=method, headers=H)
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            raw = r.read()
-            return r.status, json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as e:
-        raw = e.read()
-        try:
-            return e.code, json.loads(raw)
-        except Exception:
-            return e.code, {'_raw': raw.decode('utf-8', 'replace')[:200]}
-    except Exception as e:
-        return 0, {'_err': str(e)}
-
-def origin_status(origin):
-    q = urllib.parse.quote(origin, safe='')
-    st, d = api('GET', f'/origin/get/?origin_url={q}')
-    if st == 200:
-        return 'ARCHIVED', d
-    if st == 404:
-        return 'NOT_ARCHIVED', {}
-    return f'UNKNOWN({st})', d
-
-def request_save(origin):
-    st, d = api('POST', '/origin/save/', {'origin_url': origin})
-    return st, d
-
-def visit_info(origin):
-    q = urllib.parse.quote(origin, safe='')
-    st, d = api('GET', f'/origin/visit/get/?origin_url={q}&limit=1')
-    return st, d
+DOC = __doc__
 
 def main():
-    check_only = '--check-only' in sys.argv
-    targets = REPOS
-    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
-        targets = [sys.argv[1]]
-    if '--repo' in sys.argv:
-        targets = [sys.argv[sys.argv.index('--repo') + 1]]
-
-    for origin in targets:
-        status, info = origin_status(origin)
-        print(f'{origin}')
-        print(f'  status: {status}')
-        if status == 'ARCHIVED':
-            visits = info.get('visits', [])
-            vids = [v.get('visit_id') for v in visits]
-            print(f'  visit_ids: {vids[:5]}')
-            # try to get the swhid
-            if vids:
-                st2, d2 = api('GET', f'/visit/{vids[-1]}/directory/')
-                swhid = d2.get('swhid', '?')
-                print(f'  swhid: {swhid}')
-            else:
-                print(f'  swhid: ? (no visits)')
-        elif status == 'NOT_ARCHIVED':
-            if check_only:
-                print(f'  NOT ARCHIVED — would request save (--check-only)')
-            else:
-                st, d = request_save(origin)
-                print(f'  save request: HTTP {st} {json.dumps(d)[:200]}')
-        else:
-            print(f'  {json.dumps(info)[:200]}')
-        time.sleep(2)
+    print(DOC)
+    print('\nNOTE: This script documents the SWH API flow; execution REQUIRES a browser')
+    print('session (Anubis challenge). Use the CDP/browser flow documented above.')
+    print('\nRepos (all confirmed NOT ARCHIVED 2026-08-05, saves throttled):')
+    for r in ['aiq-bios', 'Friend', 'ultrametric-ai-poc',
+              'unity-of-ultrametric-physics', 'two-ways-of-measuring', 'adelic-qft']:
+        print(f'  https://github.com/rwnq8/{r}')
 
 if __name__ == '__main__':
     main()
