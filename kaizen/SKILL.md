@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.35
+version: 1.36
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -291,6 +291,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.36 UPDATE (2026-08-05, kaizen — Mined Skill Best Practices: fork QNFO/claude-skills, mine don't reinvent):**
+> Red-team: direct parent-agent mining of alirezarezvani/claude-skills (345 skills,
+> 23,845 stars, MIT) — forked to QNFO/claude-skills (separate repo, upstream wired).
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [DESIGN] **Mined Skill Best Practices section added** — 10 authoring patterns,
+>     production pipeline quality gates (eval >=85%, delta >=30%, real-world verify),
+>     quality tiers (POWERFUL/SOLID/GENERIC/WEAK), reference separation <=10KB,
+>     strict-api verification. User directive: mine wisdom, don't reinvent the wheel.
+> (2) [SOFT] **EXTERNAL-SKILL-FORK-1 anti-pattern added** — large third-party skill
+>     repos must be forked to a SEPARATE repo (never qnfo-skills), kept OUT of
+>     DeepChat runtime dirs (app slowdown/crash), and MINED for best practices.
+> (3) [SOFT] **Reference-separation finding** — our skills are LARGE (kaizen 136KB,
+>     cloudflare 127KB, research 118KB) vs the <=10KB standard; recognized gap,
+>     refactor opportunistically (do NOT bulk-rewrite).
+> Cross-reference: QNFO/claude-skills fork, git-github v2.16, user 2026-08-05.
 
 > **v1.35 UPDATE (2026-08-05, kaizen — SKILL-COMMIT-SAME-SESSION-1: version control is 100% the agent's responsibility):**
 > Red-team: direct parent-agent audit (session IZbk2G9P2aA0JH0f0yQjj, user mandate).
@@ -1219,6 +1235,92 @@ system prompt already encodes structured execution, verification, red-teaming, a
 subagent deployment. The user prompt is a trigger, not a specification.
 
 
+## Mined Skill Best Practices (from QNFO/claude-skills, added 2026-08-05)
+
+**Source:** `alirezarezvani/claude-skills` (345 skills, 23,845 stars, MIT) — forked
+to **`QNFO/claude-skills`** (separate repo, upstream wired, NOT in qnfo-skills,
+NOT in DeepChat runtime dirs). Local clone: `C:\Users\LENOVO\Documents\GitHub\claude-skills`.
+The repo is a MINING SOURCE — read its `SKILL-AUTHORING-STANDARD.md` and
+`SKILL_PIPELINE.md` for the full text. Key wisdom distilled below.
+
+### The 10 Authoring Patterns (apply when creating/updating skills)
+
+1. **Context-First** — check for a domain context file before asking questions;
+   ask only for what's missing, one section at a time.
+2. **Practitioner Voice** — open with "You are an expert in X. Your goal is Y."
+   Opinionated, direct ("Do X" beats "You might consider X"). Rewrite anything
+   that sounds like Wikipedia/marketing copy.
+3. **Multi-Mode Workflows** — design 2-3 entry points: Build from Scratch /
+   Optimize Existing / Situation-Specific. Each self-contained.
+4. **Related Skills Navigation** — 3-7 curated references with WHEN and WHEN-NOT
+   disambiguation; bidirectional cross-refs.
+5. **Reference Separation** — SKILL.md <=10KB (workflow + decisions); heavy
+   knowledge in `references/` (loaded on demand, self-contained); templates/;
+   stdlib-only scripts/. If SKILL.md is longer, move content to references.
+6. **Proactive Triggers** — 4-6 "surface this without being asked" conditions,
+   format: condition -> flag -> recommended action. Trigger on hidden risks.
+7. **Output Artifacts** — map common requests to concrete deliverables
+   (scorecard, matrix, plan, audit) with explicit formats.
+8. **Quality Loop** — self-verify (source attribution, assumption audit,
+   confidence scoring); peer-verify cross-functional claims; confidence tags.
+9. **Communication Standard** — BOTTOM LINE first -> WHAT (max 5 bullets) ->
+   WHY THIS MATTERS -> HOW TO ACT (owner + deadline) -> YOUR DECISION (options
+   with trade-offs). No process narration; results only.
+10. **Python Tools** — stdlib-only (zero deps), CLI-first, JSON output,
+    embedded sample data, one tool one job, 0-100 scoring scale.
+    Naming: `snake_case_verb_noun.py`.
+
+### Production Pipeline Quality Gates (from SKILL_PIPELINE.md)
+
+```
+Intent -> Research -> Draft -> Eval -> Iterate -> Compliance -> Package ->
+Deploy -> Verify -> Rollback-Ready
+```
+
+- **Eval gate:** pass rate >=85% with-skill; delta vs baseline >=+30%; variance
+  <20% (no flaky evals). Save evals to `evals/evals.json` (test cases + assertions).
+- **Iteration limits:** max 5 iterations / 3 hours per skill eval loop, then escalate.
+- **Real-world verification NEVER SKIP:** install test, trigger test (3 should /
+  2 should-not), functional test (scripts with sample data), bug-fix protocol
+  (fix immediately, document in CHANGELOG, re-run evals).
+- **Rollback protocol:** `git revert` fast-merge; document `### Reverted` in CHANGELOG.
+- **Semver:** patch 2.1.x (improvements), minor 2.7.0 (new skills), major 3.0.0 (breaking).
+- **CHANGELOG per commit** — every change, every fix. Category README + CLAUDE.md
+  updated per commit; root README + docs per release.
+
+### Quality Tiers (rate skills; only ship POWERFUL)
+
+| Tier | Score | Criteria |
+|:-----|:-----:|:---------|
+| **POWERFUL** | 85%+ | Expert-level, scripts, refs, evals pass, real-world utility |
+| **SOLID** | 70-84% | Good knowledge, some automation, useful |
+| **GENERIC** | 55-69% | Too general, needs domain depth |
+| **WEAK** | <55% | Reject or complete rewrite |
+
+### Strict-API Verification (adopt in code-writing skills)
+
+Before writing any function call/import/method: **"Does this exist in the version
+the user is running?"** If "probably"/"I think so" -> STOP, say so. Blocks
+made-up methods (`fs.readFileLines()`, `csv.read_csv()`), framework confusion
+(Flask render_template vs Django render), deprecated APIs. Flag uncertain with
+inline comment; prefer verbose-but-correct over terse-but-wrong.
+
+### Efficiency Ladder (minimalist skill — adopt in code skills)
+
+Before writing new code, stop at first rung that holds:
+YAGNI -> Reuse existing -> Standard library -> Native platform -> Existing
+dependency -> One-liner -> Minimum code. No unrequested abstractions, no
+unnecessary dependencies, no boilerplate, no unrequested comments/logging.
+
+### Known Gap (recognized, NOT bulk-fixing)
+
+Our skills are LARGE vs the <=10KB standard: kaizen ~136KB, cloudflare ~128KB,
+research ~118KB. Reference-separation is the fix but bulk refactoring risks
+regression (SKILL-WRITE-COLLISION-1). Apply opportunistically: when a skill is
+next edited for another reason, split heavy content into references/ at that
+time. Do NOT launch a mass rewrite.
+
+
 ## Language Consistency Check (AUTOMATIC, added 2026-08-05)
 
 Skills accumulate contradictory, obsolete, or ambiguous language as they evolve.
@@ -1489,6 +1591,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **SKILL-DEATH-FALSE-POSITIVE-1: Declaring a skill "removed"/"NOT-INSTALLED" from skill_list absence alone, without checking .kaizen_history or on-disk state (2026-08-05)** | skill_list (the app's live loader) is the ONLY truth for "is this skill active." Absence from skill_list ≠ removed — it may be: (a) never loaded (file written directly, not installed via app flow), (b) disabled, (c) genuinely removed. Before declaring death: (1) check .kaizen_history — a fresh entry means actively maintained, NOT removed; (2) check on-disk SKILL.md exists + valid; (3) distinguish "never loaded" from "loaded then removed"; (4) if on-disk + maintained but not in skill_list, flag "on-disk but not loaded by app" and reconcile via the app's skill management — do NOT rewrite or delete the file. Canonical case: execution-mandate v2.8 (session IZbk2G9P2aA0JH0f0yQjj) — kaizen v1.24 declared [NOT-INSTALLED] while the skill was being actively kaizened on disk. Cross-ref: deepchat-settings v1.3 Skill Registry Truth-Source. |
 
+| **EXTERNAL-SKILL-FORK-1: Loading a large third-party skill repo into DeepChat runtime dirs or qnfo-skills instead of forking separately + mining (2026-08-05)** | Large third-party skill collections (e.g., alirezarezvani/claude-skills, 345 skills, 23k stars) MUST be forked to a SEPARATE repo (QNFO/<name>) with upstream wired — NEVER copied into qnfo-skills, NEVER into DeepChat runtime dirs (hundreds of skills slow down/crash the app). The fork is a MINING SOURCE: read its standards (SKILL-AUTHORING-STANDARD.md, SKILL_PIPELINE.md), distill best practices, incorporate selectively into our own skills — don't reinvent the wheel. Canonical case (2026-08-05): QNFO/claude-skills fork created; 10 authoring patterns + quality gates mined into kaizen v1.36. Cross-ref: git-github v2.16. |
+
 | **LANGUAGE-CONSISTENCY-1: Updating a skill without scanning it for contradictory/obsolete/ambiguous language (2026-08-05)** | When ANY skill file is touched (kaizen, fix, feature), scan it in the same pass for: deleted-script references, non-installed skill references, undefined KIF tags, contradictory sections, obsolete tool references, duplicate banners. Fix what you find before closing the edit. A skill updated without a language scan accumulates rot — each edit adds new language on top of stale language. Canonical case: the CMD slash commands in custom_prompts.json referenced `qnfo-agent`/`system`/`skill-hygiene.js` (all non-existent) for weeks before the 2026-08-05 audit caught it. |
 | **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. A prompt system the user cannot remember ("too many to keep track of") and that references dead skills is worse than none. Canonical architecture: exactly TWO reusable templates — `CONTINUE` (brainless continuation) + `SKILLS UPDATE` (kaizen trigger). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
 
@@ -1688,7 +1792,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 ## Version
 
-Current: **v1.35** (kaizen — SKILL-COMMIT-SAME-SESSION-1 HARD gate: every skill change MUST be committed to git in the same session; version control is 100% the agent's responsibility; user mandate 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+Current: **v1.36** (kaizen — Mined Skill Best Practices from QNFO/claude-skills fork: 10 authoring patterns, pipeline quality gates, POWERFUL/SOLID/GENERIC/WEAK tiers, reference-separation <=10KB, strict-api verification; user directive 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
