@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.14
+# GIT-GITHUB — v2.15
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -457,6 +457,76 @@ See ADR-026 below.
 
 ---
 
+## GitHub Hygiene Mandate (HARD, added 2026-08-05)
+
+**User mandate:** GitHub IS the canonical skills repo/store/location. Master must
+be pristine, up-to-date, and canonical. It must NEVER drift. Features must be
+pushed to master to merge them.
+
+### Canonical Repository Discipline
+
+1. **The qnfo-skills repo (`QNFO/qnfo-skills`) is the SINGLE canonical store for
+   all skills.** `C:\Users\LENOVO\.deepchat\skills\` (live dir) is a PARTIAL
+   runtime view — it may lack scripts/templates that exist only in git. **Git is
+   the superset. The live dir is a subset. NEVER let the subset overwrite the
+   superset.**
+
+2. **Sync direction is ONE-WAY: git -> live (hydrate runtime), NEVER live -> git
+   (destroys canonical content).** Canonical case (2026-08-05): a "master sync"
+   did rmtree+copy live->git and DELETED 61 canonical files from git
+   (bloat-cleanup/scripts/*, research/scripts/*, research/templates/*) — they
+   existed in git but not on live. Restored via `git checkout <parent> -- <path>`.
+   This is SYNC-OVERWRITE-DESTRUCTION-1.
+
+3. **To update a skill:** edit the file in the LIVE dir (the app loads from it),
+   then commit to git by copying that skill's files INTO the git repo —
+   ADD/UPDATE only, never rmtree the git dir first. If the git skill dir has
+   files the live dir lacks (scripts, templates, references), KEEP them in git
+   (do not delete) and hydrate them to live.
+
+4. **Every session MUST end with:** `git status --short` == clean AND
+   `git rev-parse master` == `git rev-parse origin/master` (in sync). A session
+   that leaves master drifted or dirty is a FAILED session (SKILL-COMMIT-SAME-SESSION-1).
+
+### Push-to-Master Rule
+
+1. **Features/branches MUST be merged to master.** Never leave work sitting in a
+   branch. A branch with unmerged commits is a FAILED closeout.
+   Canonical case (2026-08-05): 5 stale `kaizen/*` branches held 6,008 insertions
+   unmerged; all were superseded by the live-sync (master had newer versions of
+   every file) and deleted after verification.
+2. **Branch lifecycle:** create feature branch -> work -> verify -> merge to
+   master -> push master -> delete branch (local + remote) -> prune. Same session.
+3. **Before deleting a branch, verify it is superseded or merged:**
+   `git log --oneline master..origin/<branch>` (0 unique commits = safe) and
+   version headers on master >= branch. Only unique content requires merge.
+4. **Never delete a branch with unique commits without merging it first.**
+
+### Remote Hygiene
+
+1. **Remove dead remotes.** A remote that returns 403/archived (e.g., rwnq8 mirror
+   archived 2026-08-05) MUST be removed: `git remote remove <name>`. Only origin
+   remains canonical.
+2. **Verify remotes each session:** `git remote -v` — origin = QNFO/qnfo-skills
+   ONLY.
+
+### Post-Push Verification (MANDATORY)
+
+```
+After ANY push:
+1. git status --short          -> must be CLEAN (0 output)
+2. git rev-parse master        -> local hash
+3. git rev-parse origin/master -> remote hash
+4. MUST MATCH. If not: git push origin master again, then re-verify.
+```
+
+
+| **SYNC-OVERWRITE-DESTRUCTION-1: Copying a partial source (live dir) over the canonical git repo with rmtree+copy, deleting git-only files (2026-08-05)** | **HARD GATE.** Git is the canonical superset; the live skills dir is a partial runtime subset. Sync direction is ONE-WAY: git -> live (hydrate), NEVER live -> git with directory replacement. To commit a skill change: ADD/UPDATE that skill's files in git — never rmtree the git skill dir first (that deletes scripts/templates/references that exist only in git). Canonical case: d4b432c deleted 61 canonical files (bloat-cleanup/scripts/*, research/scripts/*, research/templates/springer-nature-latex/*, research/references/*.json, email-composer/scripts/*.pdf, xlsx/scripts/recalc.py); restored from parent commit. Verify after every sync: `git show --name-status <commit>` shows NO unexpected deletions. |
+| **PUSH-TO-MASTER-1: Leaving feature branches unmerged — work sitting in branches instead of master (2026-08-05)** | Features MUST be merged to master in the same session. Branch lifecycle: create -> work -> verify -> merge -> push master -> delete branch (local+remote) -> prune. Canonical case: 5 stale kaizen/* branches with 6,008 insertions left unmerged; all superseded by live-sync and deleted. Before deleting a branch, verify `git log master..origin/<branch>` is empty (0 unique commits) OR merge the unique content first. |
+| **BRANCH-HYGIENE-1: Accumulating stale branches (local or remote) across sessions (2026-08-05)** | Every session ends with ONLY master (plus any active feature branch). Delete merged/superseded branches and prune remote-tracking refs. A branch list with 5+ stale entries is a hygiene failure. |
+| **DEAD-REMOTE-1: Keeping archived/dead remotes configured (2026-08-05)** | Remove remotes that return 403/archived. `git remote remove <name>`. Only origin (QNFO/qnfo-skills) is canonical. rwnq8 mirror was archived (403) and removed 2026-08-05. |
+| **POST-PUSH-VERIFY-1: Pushing without verifying master == origin/master (2026-08-05)** | After ANY push, verify: `git status --short` clean AND `git rev-parse master` == `git rev-parse origin/master`. A push that leaves drift unverified is invisible drift. |
+
 ## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
@@ -491,4 +561,4 @@ See ADR-026 below.
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.14** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.13, windows-command-patterns v3.12; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
+Current: **v2.15** (git-github — GitHub Hygiene mandate: master is CANONICAL for the skills repo, never drift, push features to master, SYNC-OVERWRITE-DESTRUCTION-1/PUSH-TO-MASTER-1/BRANCH-HYGIENE-1/DEAD-REMOTE-1/POST-PUSH-VERIFY-1; user mandate 2026-08-05)
