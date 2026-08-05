@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.58
+version: 1.59
 
 
 
@@ -73,6 +73,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
+
+# KAIZEN — v1.59
+> **v1.59 UPDATE (2026-08-05, kaizen — VERIFY-DONT-ASSUME-1 + Heffner audit retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (session SKILLS UPDATE — Heffner audit v1.0
+> fact-check failure). Watchtower scan: 18 QNFO skills N-2 CLEAN. HARD: 1. SOFT: 1. DESIGN: 1.
+> Changes:
+> (1) [HARD] **VERIFY-DONT-ASSUME-1 anti-pattern added** — existential claims (X exists/doesn't
+>     exist, Y was released/never released) require live verification before publication.
+>     Canonical case: Heffner audit v1.0 §2.2 asserted GPT-5 didn't exist as of August 2026;
+>     GPT-5 was released August 7, 2025. Corrected in v1.1 (DOI 10.5281/zenodo.21812761).
+>     Owner: qnfo-core v1.17. Enforcement: research v2.85 Phase 5 Publication Language Gate
+>     scans for existential-claim patterns ("does not exist," "has not released") and requires
+>     live-verification evidence. Cross-ref: FACT-CHECK-1.
+> (2) [SOFT] **Session retrospective registered** — the Heffner audit session produced a
+>     research publication (DOI 10.5281/zenodo.21812511, superseded by 10.5281/zenodo.21812761)
+>     with an unverified existential claim. The error was caught by the user (not by QNFO gates).
+>     Gap: no gate existed for "X exists/doesn't exist" claims. Closed: qnfo-core v1.17
+>     VERIFY-DONT-ASSUME-1, research v2.85 existential-claim gate, kaizen v1.59 anti-pattern.
+> (3) [DESIGN] **Cross-skill sync** — qnfo-core v1.17 (VERIFY-DONT-ASSUME-1, FACT-CHECK-1,
+>     §0.0 Core Rules rule 7), research v2.85 (Phase 5 existential-claim verification gate).
+> Cross-reference: qnfo-core v1.17, research v2.85, Heffner audit DOI 10.5281/zenodo.21812761,
+> session SKILLS UPDATE 2026-08-05.
 
 # KAIZEN — v1.58
 > **v1.58 UPDATE (2026-08-05, kaizen — SKILLS UPDATE ecosystem audit + cross-ref verification):**
@@ -12990,7 +13012,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.58** (kaizen — SKILLS UPDATE ecosystem audit + cross-ref verification; 2026-08-05)
+Current: **v1.59** (kaizen — VERIFY-DONT-ASSUME-1 + Heffner audit retrospective; 2026-08-05)
 
 
 

@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.16
+version: 1.17
 
 
 
@@ -285,7 +285,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.16 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
+> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.17 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
 
 
 
@@ -2262,6 +2262,8 @@ ALL content produced under QNFO/QWAV authority shall be FACTUAL, not promotional
 
 6. INSTITUTIONAL STATUS IS NOT EVIDENCE (KIF-16). Evaluate claims against evidence, not venue or affiliation.
 
+7. VERIFY EXISTENCE CLAIMS — NEVER ASSUME (v1.17). A factual claim that a system, model, API, standard, paper, or entity exists or does not exist MUST be verified against a live source (API, web search, official documentation) BEFORE appearing in any text. A model release date, a DOI's target, a software version — none of these may be assumed from training knowledge. Every existence claim requires a same-turn tool call showing the verification source. An incorrect existence claim (e.g., 'GPT-5 does not exist') is a factual error indistinguishable from a fabrication. [HARD]
+
 ### Published-Paper Hygiene (v1.16, HARD GATE — NO EXCEPTIONS)
 
 Three user mandates (2026-08-05) govern ALL papers produced under QNFO/QWAV authority. They are
@@ -3647,6 +3649,7 @@ Before beginning work on a QNFO/QWAV deliverable:
 
 
 
+| **VERIFY-FACT-1: Making factual existence claims ("X does not exist" / "X was released on Y") without live source verification (2026-08-05)** | **HARD GATE.** Every existence claim requires a same-turn tool call to a live source. Assumptions from training data are indistinguishable from fabrication when wrong. Canonical case: Heffner audit v1.0 claimed GPT-5 didn't exist; GPT-5 released Aug 7, 2025 (Wikipedia). Cross-ref: research v2.85, kaizen v1.59. |
 | **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` — title twice on page 1 (2026-08-05)** | **HARD.** No body H1 when YAML `title:` exists; exactly ONE title occurrence in rendered output. Cross-ref: research v2.84. |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, or possessive internal refs in published papers. Cite published records only. Cross-ref: research v2.84. |
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf` file naming (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Cross-ref: research v2.84. |
@@ -5702,7 +5705,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.16** (qnfo-core — email-composer on-disk-only reference fix; 2026-08-05)
+Current: **v1.17** (qnfo-core — VERIFY-FACT-1: fact-check existence claims before publishing; 2026-08-05)
 
 
 

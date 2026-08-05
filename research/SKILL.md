@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.84
+version: 2.85
 
 
 
@@ -166,7 +166,19 @@ triggers:
 
 
 
-# RESEARCH — v2.84
+# RESEARCH — v2.85
+> **v2.85 UPDATE (2026-08-05, kaizen — Existential-claim verification gate (VERIFY-DONT-ASSUME-1)):**
+> Red-team: direct parent-agent 5-adversary audit triggered by Heffner audit v1.0 fact-check failure.
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Phase 5 Publication Language Gate extended** — now scans for existential-claim
+>     patterns ("does not exist," "has not released," "no model designated," etc.) and requires
+>     live-verification evidence saved to `artifacts/existential-claim-verification.md`.
+>     KIF-62 gate. Enforcement of qnfo-core v1.17 VERIFY-DONT-ASSUME-1 / VERIFY-FACT-1.
+>     Canonical case: Heffner audit v1.0 §2.2 (DOI 10.5281/zenodo.21812511) — corrected in
+>     v1.1 (DOI 10.5281/zenodo.21812761).
+> Cross-reference: qnfo-core v1.17, kaizen v1.59, user mandate 2026-08-05
+> "FACT-CHECKING IS A STANDARD PART OF RESEARCH."
+
 > **v2.84 UPDATE (2026-08-05, kaizen — PUBLISHED-PAPER HYGIENE: title duplication, internal references, slug files):**
 > Red-team: direct parent-agent 5-adversary audit (user directives 2026-08-05 — fix title
 > duplication on page 1 PERMANENTLY; avoid internal references in published papers; name
@@ -4931,6 +4943,8 @@ status: "draft" | "published"
 
 ### Publication Language Gate (BLOCKING)
 
+**Existential-Claim Verification Gate (KIF-62, v2.85 — HARD):** Before publication, scan the paper for existential-claim patterns: "does not exist," "has not released," "has not been announced," "no model designated," "never existed," "was not deployed," and variants. For EACH existential claim, verify against at least one live authoritative source (Wikipedia, official product pages, news archives, API endpoints, scholarly databases). An unverified existential claim is a research-integrity violation — identical in kind to a fabricated citation. Save verification evidence to `artifacts/existential-claim-verification.md`. Canonical case: Heffner audit v1.0 §2.2 claimed GPT-5 did not exist as of August 2026 (DOI 10.5281/zenodo.21812511); corrected in v1.1 (DOI 10.5281/zenodo.21812761) after Wikipedia verified GPT-5 release date as August 7, 2025. Enforcement of qnfo-core v1.17 VERIFY-FACT-1 / VERIFY-DONT-ASSUME-1.
+
 
 
 
@@ -8775,7 +8789,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.84** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.85** (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
