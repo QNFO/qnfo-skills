@@ -130,6 +130,28 @@
 
 ---
 
+## PLT — QWAV Platform
+> Cloudflare-native research infrastructure, 4-D Distribution, agentic AI
+
+| Tier | Keywords |
+|:-----|:---------|
+| **Cloudflare** | `cloudflare-workers`, `durable-objects`, `cloudflare-d1`, `cloudflare-r2`, `cloudflare-kv`, `cloudflare-queues`, `cloudflare-ai`, `workers-ai`, `vectorize`, `cloudflare-pages`, `cloudflare-browser-rendering` |
+| **Protocol** | `mcp-server`, `model-context-protocol`, `mcp-tool`, `mcp-client`, `mcp-transport`, `mcp-resource` |
+| **Storage** | `content-addressed-storage`, `ipfs`, `arweave`, `filecoin`, `storacha`, `nft-storage`, `web3-storage`, `ipld`, `cid`, `dag-cbor` |
+| **Search** | `semantic-search`, `vector-search`, `hnsw`, `faiss`, `milvus`, `qdrant`, `chromadb`, `weaviate`, `vespa`, `elasticsearch-dense`, `hybrid-search` |
+| **Publish** | `academic-publishing`, `research-repository`, `preprint-server`, `zenodo`, `doi-minting`, `citation-management`, `open-access`, `green-oa` |
+| **Security** | `cloudflare-zero-trust`, `cloudflare-access`, `cloudflare-tunnel`, `turnstile`, `bot-management`, `waf`, `dnssec`, `dmarc`, `spf`, `dkim`, `mta-sts` |
+
+## DEM — QWAV Demos
+> Interactive scientific visualization, Bruhat-Tits tree, p-adic visualization
+
+| Tier | Keywords |
+|:-----|:---------|
+| **Visualization** | `scientific-visualization`, `physics-visualization`, `math-visualization`, `interactive-math`, `explorable-explanation` |
+| **Specific** | `bruhat-tits-tree`, `padic-visualization`, `ultrametric-tree`, `p-adic-tree`, `hierarchical-clustering-tree`, `dendrogram-visualization`, `tropical-geometry-visualization` |
+| **Tech** | `webgl-physics`, `threejs-science`, `wasm-scientific`, `d3-physics`, `observablehq-physics`, `shadertoy-physics`, `gpu-simulation` |
+| **Quantum** | `quantum-circuit-simulator`, `quirk`, `quantum-visualization`, `bloch-sphere`, `quantum-state-visualizer`, `quantum-gate-visualizer` |
+
 ## Cross-Cutting Themes
 
 ### Agentic AI (feeds all programs)

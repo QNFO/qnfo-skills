@@ -3,6 +3,18 @@ name: social-media-management
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 45+ verified researchers, journals, and institutions across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, mathematical physics, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, and integration with linkedin-mcp for LinkedIn connections.
 ---
 
+> **v1.3.0 UPDATE (2026-08-05):** Ecosystem-tier completion.
+> - Registry expanded 75 → **96 accounts** (Bluesky 52 / Mastodon 7 / X 27 / LinkedIn 10).
+> - RES·Autaxys extension: quantum cognition (Hameroff proxy = Arizona Astrobiology Ctr), The Neurocritic.
+> - DEM tier: John D. Cook (golden ratio/applied math, bridged from mathstodon).
+> - INM: +Jens Eisert (quantum thermodynamics — Margolus-Levitin relevance).
+> - CFE·Scenario/Econ: +80,000 Hours, Matt Clancy (Open Phil), Max Roser.
+> - Mastodon +4: @simonmyerson (LoF-adjacent number theorist), @mc (category-cybernetics),
+>   @paolop (applied category theory), @manlius (complexity networks).
+> - X +7 / LinkedIn +3: Friston, Hossenfelder, Hameroff, Smolin, Koch, Lidar, Tononi.
+> - NEW script `discover_accounts.py` — taxonomy-keyword-driven discovery (Bluesky + Mastodon).
+> - Taxonomy reference completed: PLT + DEM sections added (all 7 programs present).
+
 > **v1.2.0 UPDATE (2026-08-05):** Full-scope correction — taxonomy treated as
 > the map of the ENTIRE research ecosystem, not a niche list.
 > - Registry expanded 55 → **75 accounts** (Bluesky 25 → **45**, all live-verified).
@@ -156,9 +168,9 @@ Mastodon accounts are identified as `@user@instance.tld`.
 
 ## Account Registry (`references/qnfo_accounts.json`)
 
-The registry tracks **75 QNFO-aligned accounts** across four platforms (45
-Bluesky / 3 Mastodon / 20 X / 7 LinkedIn). `domain` = canonical QNFO program
-code; `domain_detail` = sub-topic. All 45 Bluesky handles carry live-verified DIDs.
+The registry tracks **96 QNFO-aligned accounts** across four platforms (52
+Bluesky / 7 Mastodon / 27 X / 10 LinkedIn). `domain` = canonical QNFO program
+code; `domain_detail` = sub-topic. All 52 Bluesky handles carry live-verified DIDs.
 
 ### Canonical QNFO Program Codes (from qnfo_taxonomy.md)
 
@@ -177,6 +189,10 @@ Form community is tiny; check second-order cybernetics circles).
 
 ### Discovery Protocol (see qnfo_taxonomy.md for full keyword sets)
 
+0. **Automated**: run `scripts\discover_accounts.py --dry-run` to preview
+   candidate checks per program; add `--add-verified` to append verified
+   Bluesky finds directly into the registry. Mastodon verification requires
+   `MASTODON_TOKEN` (from `mastodon_follow.py auth`).
 1. **Bluesky**: `https://bsky.app/search?q=<keyword>` — centralized search.
 2. **Mastodon**: `GET /api/v2/search?q=<keyword>&resolve=true` on
    `mathstodon.xyz`, `fediscience.org`, `qoto.org` — run per-instance.
