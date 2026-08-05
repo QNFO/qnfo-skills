@@ -950,9 +950,9 @@ After any availability incident (binding loss, 522, redirect intercept, empty zo
 |:------|:------|:---------|
 | Tier-1 Gateway | 4 | qnfo.org, papers.qnfo.org, legal.qnfo.org, graph-api.qnfo.org |
 | Tier-1 Pages | 2 | qwav.org, qwav.tech |
-| Tier-1 Broken | 1 | ipatent.me (KIF-51 redirect) |
+| Tier-1 Broken | 0 | (ipatent.me KIF-51 resolved 2026-07-31 — domain EXPIRED 2026-07-28, DNS removed) |
 | Tier-2 Workers | 7 | qnfo-gateway, qnfo-ai, qnfo-ipatent, qnfo-qwav, qnfo-memory-mcp, qnfo-lifecycle, qnfo-archive |
-| Tier-2 Pages | 5 | qnfo-publications, qwav, qnfo-hub, ipatent-me, ask-qwav |
+| Tier-2 Pages | 5 | qnfo-publications, qwav, qnfo-hub, ask-qwav, qnfo-landing (ipatent-me DELETED 2026-07-31) |
 | Tier-3 Dormant | 8 | qnfo.net, qnfo.uk, q-wave.tech + qwav variants, empoweringchange.today |
 
 > **Full inventory and probe targets are in `scripts/url-health-check.js` — update that script when domains are added/removed.**
@@ -986,7 +986,7 @@ Baseline: 9 (updated 2026-08-02 — live `workers_list` MCP returned 9 incl.
 > See research skill Phase 6 for the canonical battery definition.
 
 ### Pages
-Baseline: 5 projects (post-consolidation 2026-07-17: `qnfo-publications`, `qwav`, `qnfo-hub`, `ipatent-me`, `ask-qwav`).
+Baseline: 5 projects (post-consolidation 2026-07-17: `qnfo-publications`, `qwav`, `qnfo-hub`, `ask-qwav`, `qnfo-landing` — `ipatent-me` DELETED 2026-07-31, domain expired)sk-qwav`).
 
 ### Vectorize
 Baseline: 5 indexes (2026-07-25: added `qnfo-ai-log`, 768-dim cosine — qnfo-ai v4.1 query-log semantic recall; joins `ipatent-disclosures`, `qnfo-handoffs`, `qnfo-tasks`, `qwav-research-v2`).
@@ -1062,7 +1062,7 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 > **LoS baselines added v3.11:** After every `availability-audit.js` run, CRITICAL must be 0 and WARNING should be ≤3. Any drift from these baselines requires a post-incident protocol run. See `references/level-of-service-standards.md` for full standards definitions.
 
 ### DNS Zones (verified 2026-07-18)
-12 active zones: `empoweringchange.today`, `ipatent.me`, `q08.org`, `qnfo.net`, `qnfo.org`, `qnfo.uk`, `q-wave.tech`, `qwave.tech`, `qwav.net`, `qwav.org`, `qwav.tech`, `qwav.uk`. Growth from prior baseline (7) reflects legitimate qwav/ipatent product domain expansion, not drift.
+11 active zones: `empoweringchange.today`, `q08.org`, `qnfo.net`, `qnfo.org`, `qnfo.uk`, `q-wave.tech`, `qwave.tech`, `qwav.net`, `qwav.org`, `qwav.tech`, `qwav.uk`. Growth from prior baseline (7) reflects legitimate qwav/ipatent product domain expansion, not drift.
 
 ### OPEN ITEM — I-05: Unexplained Pages Project Deletions (2026-07-18)
 `audit_pages` D1 table lists 10 projects with `status='active'` as of the last sync, but only 5 exist live. `qnfo-legal` deletion is **explained** (consolidated into `qnfo-gateway` Worker v2.0). The following 4 are **UNEXPLAINED** — no matching `deployment_history` or `audit_trail` row, and Pages project deletion has no soft-delete/undo via API:
