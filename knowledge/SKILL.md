@@ -345,8 +345,11 @@ When discovering "what exists," query in this order:
 | **5. MCP: AI Gateway (query logging)** | `cloudflare-ai-gateway` | Gateway log search, prompt inspection | Trace AI queries, debug prompt/response patterns |
 | **6. R2 (file artifacts)** | wrangler R2 object get/list | `qnfo/` bucket | Canonical file storage (last resort for discovery) |
 | **7. Local filesystem** | `glob`, `grep`, `os.listdir` | CWD | Ephemeral cache -- verify against R2 before trusting |
+| **8. Keyword Taxonomy** | `QNFO/qnfo-research:docs/QNFO-KEYWORD-TAXONOMY.md` (GitHub) + `memory_recall({query:"QNFO keyword taxonomy"})` | Program-keyword map for GitHub discovery | Canonical keyword taxonomy for discovering repos aligned with each QNFO research program (UMP/SLB/INM/CFE/RES/PLT/DEM) — use for GitHub star curation and repo discovery |
 
 **Always query KG first.** Files on disk are an incomplete, stale subset. The KG is the single source of truth for ecosystem topology.
+
+**Keyword Taxonomy (v1.0, 2026-08-05):** When discovering GitHub repos aligned with QNFO programs, consult `QNFO/qnfo-research:docs/QNFO-KEYWORD-TAXONOMY.md` (canonical doc, committed to git) or `memory_recall({query: "QNFO keyword taxonomy {program}"})` (per-program durable memories). The taxonomy maps each WBS program (UMP/SLB/INM/CFE/RES/PLT/DEM) to GitHub-searchable keywords organized by tier (core, geometry, algebra, etc.). It also covers cross-cutting themes: Agentic AI, 4-D Distribution Protocol, and Measurement Stratigraphy.
 
 ### AutoRAG Integration (v2.2)
 
