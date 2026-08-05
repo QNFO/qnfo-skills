@@ -1,6 +1,6 @@
 ---
 name: research
-version: 2.75
+version: 2.76
 description: >
   End-to-end research and publication pipeline. KIF-29 Cross-Domain Consilience
   Gate upgraded from SOFT to HARD (always runs, scope-scaled, with Silo-Failure
@@ -678,6 +678,25 @@ DOIs (S3 pointed at Guo & Lin "BGK Waves"; S2 pointed at Postma "electroweak bar
 Output: `artifacts/citation-audit.md` — entry count, verification method per entry,
 DOI-resolution evidence, duplicate check.
 
+### P3.SOURCE-DISCIPLINE (mined 2026-08-05, from QNFO/claude-skills research router)
+
+Extends P3.AUTHOR-GATE from bibliography fabrication to **every in-text citation**:
+
+1. **Cite only sources returned by THIS session's tool calls.** A source not actually
+   fetched/verified in this session MUST NOT appear as a cited source. Recalled or
+   training-knowledge claims are labeled `[Background — not from search]` and excluded
+   from the cited-source count. This is the citation-level extension of
+   ZENODO-PHANTOM-DOI-1 / CLAIM-VERIFY-1 — never cite what you did not verify.
+2. **Three-count audit** — every research deliverable tracks: queries sent /
+   sources received / sources cited. If cited > received, fabrication is present.
+3. **Source reliability tiers** — label each cited source primary (original data,
+   official docs), secondary (reviews, curated aggregators), tertiary (blog,
+   forum, unreviewed). Tier drives weight in synthesis; disagreements between tiers
+   are surfaced explicitly.
+4. **Thin-results honesty** — when search returns thin results, say so explicitly
+   ("limited public signal on this") — never fabricate to fill a gap.
+
+
 ---
 
 ## Phase 4: Deep Research & Structured Forecast (MANDATORY for all projects)
@@ -1349,4 +1368,4 @@ This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgra
 
 ## Version
 
-Current: **v2.75** (research — v2.75: PyMuPDF EXPUNGED — HARD BLOCK PYMUPDF-1 anti-pattern + 5 stale memories purged + canonical CDP-only memory written; user injunction 2026-08-05) (research — v2.74: Zenodo deposit API live + upload method + bot-403 + phantom-DOI; 2026-08-04)
+Current: **v2.76** (research — mined source-discipline patterns: cite only this-session tool-call sources, [Background] labeling, three-count audit, reliability tiers; adopted from QNFO/claude-skills research router; 2026-08-05)
