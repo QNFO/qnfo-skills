@@ -1,8 +1,16 @@
 ---
 name: social-media-management
-version: 1.3.0
-description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 45+ verified researchers, journals, and institutions across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, mathematical physics, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, and integration with linkedin-mcp for LinkedIn connections.
+version: 1.4.0
+description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 97 QNFO-aligned accounts (52 Bluesky / 8 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and integration with linkedin-mcp for LinkedIn connections.
 ---
+
+> **v1.4.0 UPDATE (2026-08-05, kaizen):** Red-team audit closeout.
+> - Registry actual count reconciled: **97 accounts** (52 Bluesky / 8 Mastodon / 27 X / 10 LinkedIn).
+> - Frontmatter description de-staled (was '45+' from v1.0; now reflects full scope).
+> - Mastodon +1 since v1.3.0: Ivo Velitchkov (@ivl@mathstodon.xyz, SLB re-entry/systems, unverified).
+> - `.kaizen_history` created (protocol compliance).
+> - Audit verified: N-2 triple consistent, 5/5 scripts compile, 7/7 taxonomy sections,
+>   registry canonical (0 bad domains, 0 missing DIDs), no non-installed skill refs.
 
 > **v1.3.0 UPDATE (2026-08-05):** Ecosystem-tier completion.
 > - Registry expanded 75 → **96 accounts** (Bluesky 52 / Mastodon 7 / X 27 / LinkedIn 10).
@@ -41,7 +49,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via linkedin-mcp-tools (5/day cap).
 
-# SOCIAL MEDIA MANAGEMENT — v1.3.0
+# SOCIAL MEDIA MANAGEMENT — v1.4.0
 
 Programmatic social media follow management for Bluesky and Mastodon, with
 a curated QNFO account registry aligned to the QWAV/QNFO research program.
@@ -169,8 +177,8 @@ Mastodon accounts are identified as `@user@instance.tld`.
 
 ## Account Registry (`references/qnfo_accounts.json`)
 
-The registry tracks **96 QNFO-aligned accounts** across four platforms (52
-Bluesky / 7 Mastodon / 27 X / 10 LinkedIn). `domain` = canonical QNFO program
+The registry tracks **97 QNFO-aligned accounts** across four platforms (52
+Bluesky / 8 Mastodon / 27 X / 10 LinkedIn). `domain` = canonical QNFO program
 code; `domain_detail` = sub-topic. All 52 Bluesky handles carry live-verified DIDs.
 
 ### Canonical QNFO Program Codes (from qnfo_taxonomy.md)
@@ -179,7 +187,7 @@ code; `domain_detail` = sub-topic. All 52 Bluesky handles carry live-verified DI
 |:-----|:--------|:-------------------------------|
 | `ump` | Ultrametric Physics | 3 (AMS, LMS community; individuals rare) |
 | `slb` | Laws of Form | **0 accounts — OPEN GAP** |
-| `inm` | Infomatics | 11 (Active Inference Institute, Seth, Allen, Preskill, Wilde…) |
+| `inm` | Infomatics | 12 (Active Inference Institute, Seth, Allen, Eisert, Preskill…) |
 | `cfe` | CFPE / Paradigm Engineering | 8 (forecasters + quantum roadmaps) |
 | `res` | QNFO Research (consilience/Ruliad) | 17 (Carroll, Coecke, Virgo, Hossenfelder, NIST…) |
 | `plt` | QWAV Platform (4-D + agentic AI) | 6 (Protocol Labs, Filecoin, IPFS, LangChain, HF, CF Dev) |
@@ -342,4 +350,4 @@ social-media-management/
 
 ## Version
 
-Current: **v1.3.0** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)
+Current: **v1.4.0** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)

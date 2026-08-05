@@ -447,8 +447,8 @@
       {
         "handle": "@simonmyerson@mathstodon.xyz",
         "name": "Simon L Rydin Myerson",
-        "domain": "ump",
-        "domain_detail": "number-theory-lof",
+        "domain": "slb",
+        "domain_detail": "demarcation-jaffe-quinn: Chalmers number theorist mapping the serious/fringe boundary (found LoF50 proceedings + RH-in-LoF chapter in dept library; tracks Wolfram KCL, Williamson-van der Mark model)",
         "verified": true
       },
       {
@@ -471,6 +471,13 @@
         "domain": "res",
         "domain_detail": "complex-systems-networks",
         "verified": true
+      },
+      {
+        "handle": "@ivl@mathstodon.xyz",
+        "name": "Ivo Velitchkov",
+        "domain": "slb",
+        "domain_detail": "lof-reentry-systems-thinking",
+        "verified": false
       }
     ],
     "x-twitter": [
@@ -767,5 +774,31 @@
     "res": "EXPANDED: +Hameroff proxy (AABC), quantum cognition tier.",
     "plt": "COVERED: 4-D + agentic AI + Cloudflare.",
     "dem": "PARTIALLY FILLED: John D. Cook (bridged) \u2014 golden ratio/applied math. Visualization accounts (threejs/observable) still open."
+  },
+  "references": {
+    "lof50_proceedings": {
+      "title": "Laws of Form: A Fiftieth Anniversary",
+      "publisher": "World Scientific, Series on Knots and Everything Vol. 72",
+      "doi": "10.1142/12563",
+      "isbn": "978-981-12-4742-2",
+      "conference": "LoF50, Aug 8-10 2019, University of Liverpool",
+      "editors": [
+        "Louis H. Kauffman",
+        "Fred Cummins",
+        "Randolph Dible",
+        "Leon Conrad",
+        "Graham Ellsbury",
+        "Andrew Crompton",
+        "Florian Grote"
+      ],
+      "rh_chapter": "Laws of Form and the Riemann Hypothesis (Flagg, Kauffman, Sahoo) - arXiv:2010.13781",
+      "qnfo_relevant_chapters": [
+        "Calculus of Indications as Candidate for Pregeometry of Spacetime (Ellsbury) - RES Bridge",
+        "Klein Bottle Logophysics / Topology of Consciousness (Rapoport) - non-orientable manifolds",
+        "BF Calculus four-valued extension (Collings) - INM logic",
+        "Modulators and Imaginary Values (Kauffman) - SLB re-entry",
+        "Laws of Form and Plato's Theory of Forms (Lewin) - SLB philosophy"
+      ]
+    }
   }
 }
