@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.16
+# GIT-GITHUB — v2.17
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -457,6 +457,57 @@ See ADR-026 below.
 
 ---
 
+## Thin-Client Canonical Asset Protocol (HARD, added 2026-08-05)
+
+**User mandate:** Any reusable script MUST NOT be saved canonically to the local
+filesystem — all local files are ephemeral and may disappear at any time. If a
+script is needed again, it must be recoverable from a canonical store.
+
+### The 4 Tiers
+
+| Tier | Location | Status | What Lives Here |
+|:-----|:---------|:-------|:----------------|
+| **1. Git origin** | `QNFO/qnfo-skills` → local clone `Documents\GitHub\qnfo-skills\<skill>\scripts\` | ⭐ **PRIMARY canonical** | ALL reusable skill scripts (97 today: bloat-cleanup 26, cloudflare 16, research 14, system 10, ...) |
+| **2. R2 (durable mirror)** | `deepchat` bucket (app-settings `cloudSyncConfig`) + `qnfo-releases` bucket | ⭐ **SECONDARY canonical** | skill-sync.js mirror of skills tree; large binaries (PDFs, release artifacts) via rclone |
+| **3. Live skill dirs** | `C:\Users\LENOVO\.deepchat\skills\<name>\scripts\` | ⚠️ **Ephemeral runtime view** | Hydrated copy for the app to run — re-created from git/R2 if lost. NEVER canonical. |
+| **4. One-off `_*.py`** | `%TEMP%` or `.deepchat\_*.py` | 🗑️ **Ephemeral by design** | Analysis/diagnostic scripts — delete after use. Never commit, never persist. |
+
+### The Dual-Store Rule (replaces dead rwnq8)
+
+The thin-client mandate requires durable state in at least two independent stores.
+The rwnq8 mirror is ARCHIVED/removed (2026-08-05) — the pair is now:
+
+```
+ORIGIN (GitHub QNFO/qnfo-skills)  +  R2 (deepchat bucket via skill-sync.js)
+```
+
+Every reusable script MUST reach BOTH: commit+push to origin, and skill-sync.js
+mirror to R2. One store alone is not durable.
+
+### The Sync Flow (HOW)
+
+```
+Edit in live dir (.deepchat\skills\<name>\scripts\)
+   → copy to git clone (Documents\GitHub\qnfo-skills\<name>\scripts\)
+   → git add + commit + push origin            (SKILL-COMMIT-SAME-SESSION-1)
+   → skill-sync.js → R2 deepchat bucket        (durable mirror)
+   → large binaries (>1MB) → rclone → qnfo-releases bucket
+```
+
+### Classification Rules (WHAT goes where)
+
+| Asset type | Canonical home |
+|:-----------|:---------------|
+| Reusable skill script (function, automation, tool) | Tier 1 git origin → Tier 2 R2 |
+| Large binary (PDF, template pack, data artifact) | Tier 2 R2 (`qnfo-releases`), referenced by skill |
+| One-off analysis / diagnostic script | Tier 4 ephemeral — delete after use |
+| Config/secrets (API keys, tokens) | NEVER in git — `.env` / R2-secured / env vars (TOKEN-DISCOVERY-1) |
+| Script inside an official Cloudflare/3rd-party skill | Tier 2 fork repos (cloudflare-skill-forks etc.), PR back to upstream |
+
+**Test:** if a script would be needed again after a full local wipe, it is NOT
+ephemeral — commit it. If it's a one-off diagnostic, delete it after use.
+
+
 ## GitHub Hygiene Mandate (HARD, added 2026-08-05)
 
 **User mandate:** GitHub IS the canonical skills repo/store/location. Master must
@@ -564,4 +615,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.16** (git-github — PLATFORM-DEFAULT-EXPUNGE-1 + CLOUDFLARE-FORK-1: DeepChat platform default skills NEVER in any git repo; official Cloudflare skills forked to QNFO/cloudflare-skill-forks, never qnfo-skills, PRs back to Cloudflare; user mandate 2026-08-05)
+Current: **v2.17** (git-github — Thin-Client Canonical Asset Protocol: git origin = PRIMARY canonical for all reusable scripts; R2 (deepchat bucket via skill-sync.js) = durable second store (rwnq8 dead); live skill dirs + one-off _*.py = ephemeral; user mandate 2026-08-05)
