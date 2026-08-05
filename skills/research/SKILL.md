@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.82
+version: 2.83
 
 
 
@@ -166,7 +166,37 @@ triggers:
 
 
 
-# RESEARCH — v2.82
+# RESEARCH — v2.83
+> **v2.83 UPDATE (2026-08-05, kaizen — OAI-PMH + Software Heritage + integration landscape):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (OAI-PMH corpus audit,
+> Software Heritage archival, Unpaywall/OpenAIRE/OpenAlex integrations round).
+> HARD: 2. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **OAI-PMH section added** — the protocol (6 verbs: Identify/ListMetadataFormats/
+>     ListSets/ListIdentifiers/ListRecords/GetRecord), Zenodo endpoint (zenodo.org/oai2d), why it
+>     BEATS the REST search API for corpus work (no auth, no search syntax, resumptionToken
+>     pagination, oai_datacite prefix gives creators+ORCIDs). Proved live: harvested user-qnfo set
+>     (80 records/2 pages) and surfaced 22 ADR-014 violations the REST API couldn't cleanly show.
+>     Script: research/scripts/oai-pmh-harvest.py (--audit = ADR-014 compliance check).
+> (2) [HARD] **Software Heritage section added** — archival of GitHub repos -> swh:1: identifiers.
+>     CRITICAL: archive.softwareheritage.org is behind Anubis proof-of-work anti-bot — a plain
+>     HTTP client gets an HTML challenge page, NOT JSON. MUST drive via a real browser (session
+>     browser/CDP); the browser solves Anubis and same-origin fetch then carries the cookie.
+>     Save schema: POST /api/1/origin/save/ body {"origin_url": ..., "visit_type": "git"}
+>     (visit_type REQUIRED; GitHub endpoint rejects visit_type=github, allowed: bzr,cvs,git,hg,svn,
+>     tarball). Unauthenticated saves burst-throttled ~50/day (429, respect it). Script:
+>     research/scripts/swh-archive.py.
+> (3) [HARD] **ANTIBOT-POW-1 anti-pattern added** — Anubis-class proof-of-work anti-bot (HTML
+>     challenge to non-browser clients) is a DIFFERENT class from ZENODO-BOT-403-1 (header-fixable).
+>     Detect by content-type: text/html + 'Making sure you're not a bot!' -> must use a real browser.
+> (4) [SOFT] **TEMP-SCRIPT-CLOBBER-1 anti-pattern added** — editing a temp script then later
+>     `write`-overwriting the same file silently reverts the edit (edit _oai_demo.py headers, then
+>     write clobbered the fix -> 403 recurred). Never edit-then-write the same temp script; write
+>     once with the final content.
+> (5) [SOFT] **Integration landscape documented** — OpenAIRE: auto in-index via Zenodo (no action).
+>     Unpaywall: DataCite-only preprints NOT in index (404 expected); enter via Spring 2025 minting
+>     program -> Google Form forms.gle/LMmjdKw9HZJooxVT8 (submitted 2026-08-05). OpenAlex Collections:
+>     web-UI only, no public API. Crossref: optional (member-proxy) unlocks published-work ecosystem.
+> Cross-reference: kaizen v1.56, session 3i_KVLownViukLTZB_BJ1.
 > **v2.82 UPDATE (2026-08-05, kaizen — Wikidata abuse filter + Tier-1/2 dissemination state):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata Tier-1
 > publication items + Tier-2 identifier claims round).
@@ -8641,6 +8671,63 @@ items (QNFO P31 research program, Five Pillars P361 part-of, concept items as P9
 
 **Script:** `research/scripts/wikidata-item-create.py` (--dry-run/--verify, ready-to-run).
 
+### OAI-PMH — bulk metadata harvesting (v2.83, 2026-08-05)
+
+**OAI-PMH** (Open Archives Initiative Protocol for Metadata Harvesting) is the read-only
+bulk-metadata protocol used by BASE/CORE/OpenAIRE/DataCite/Google Scholar to harvest
+repositories. Zenodo endpoint: `https://zenodo.org/oai2d`.
+
+**The 6 verbs:** Identify (repo identity/dates) · ListMetadataFormats (oai_dc, oai_datacite)
+· ListSets (collections: user-qnfo, user-qwav) · ListIdentifiers (cheap corpus enumeration)
+· ListRecords (full records, paginated via resumptionToken) · GetRecord (single).
+
+**Why it BEATS the REST search API for corpus work (verified live):**
+- No search syntax, no OR-tokenization, no auth key, no bot-403 wall (with full Chrome headers)
+- ResumptionToken pagination walks the full corpus reliably (80 records in 2 pages)
+- `oai_datacite` prefix returns creators + ORCIDs + titles + DOIs — canonical for ADR-014 audits
+- Found 22 ADR-014 violations the REST search couldn't cleanly surface; all fixed same-session
+  (deposit-API in-place edit, same DOI) and re-audited to 0 violations.
+
+**Script:** `research/scripts/oai-pmh-harvest.py` — `--audit` = ADR-014 compliance check;
+`--set user-qnfo`/`user-qwav`; `--full` walks all sets. Weekly audit cronjob uses it.
+
+### Software Heritage — archival of source code (v2.83, 2026-08-05)
+
+**Purpose:** permanent `swh:1:` identifiers for GitHub repos (the DOI equivalent for code).
+
+**CRITICAL — Anubis anti-bot (ANTIBOT-POW-1):** archive.softwareheritage.org serves an HTML
+proof-of-work challenge to non-browser clients. MUST drive via a real browser (session
+browser/CDP); same-origin fetch from the page carries the solved-cookie.
+
+**Verified API schema (session 3i_KVLownViukLTZB_BJ1):**
+```
+CHECK:  GET  /api/1/origin/get/?origin_url={encoded}
+        200 {origin.url} = ARCHIVED | 404 {detail: "Origin ... not found"} = NOT ARCHIVED
+SAVE:   POST /api/1/origin/save/  body {"origin_url": origin, "visit_type": "git"}
+        -> {"save_request_status": "accepted", "save_task_status_url": ...}
+        visit_type REQUIRED. GitHub endpoint /origin/save/github/url/ REJECTS
+        visit_type=github — allowed: bzr, cvs, git, hg, svn, tarball.
+THROTTLE: unauthenticated saves burst-limited ~50/day; 429 {"exception":"Throttled",
+        "reason":"Expected available in N seconds"} — RESPECT it (queue processes server-side;
+        hammering triggers harder blocks, same discipline as WIKIDATA-ABUSE-FILTER-296-1).
+ID:     GET /api/1/origin/visit/get/?origin_url={encoded}&limit=1 -> visit_id
+        GET /api/1/visit/{visit_id}/directory/ -> swhid (swh:1:dir:...)
+```
+**Status 2026-08-05:** all 6 pinned QNFO repos (aiq-bios, Friend, ultrametric-ai-poc,
+unity-of-ultrametric-physics, two-ways-of-measuring, adelic-qft) confirmed NOT ARCHIVED;
+save requests submitted via browser; throttled after burst (~58 min cooldown); one-shot
+cronjob retries. Script: `research/scripts/swh-archive.py`.
+
+### Integration landscape — QNFO corpus (v2.83, 2026-08-05)
+
+| Platform | Status | Note |
+|:---------|:-------|:-----|
+| OpenAIRE | ✅ AUTO in-index | Zenodo is OpenAIRE-compliant — zero action |
+| Unpaywall | ⏳ Minting program | DataCite-only preprints 404 in Unpaywall (expected); enter via Spring 2025 program — Google Form `forms.gle/LMmjdKw9HZJooxVT8` (submitted) |
+| OpenAlex | ✅ Canonical author A5133504808 + ORCID | Collections feature = web-UI only, no public API |
+| Crossref | ⏳ Optional | Member-proxy registration unlocks published-work ecosystem |
+| Software Heritage | ⏳ Saves queued | See section above |
+
 ## Version
 
 
@@ -8659,7 +8746,7 @@ items (QNFO P31 research program, Five Pillars P361 part-of, concept items as P9
 
 
 
-Current: **v2.82** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.83** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

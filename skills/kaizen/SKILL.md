@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.55
+version: 1.56
 
 
 
@@ -74,7 +74,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.55
+# KAIZEN — v1.56
+> **v1.56 UPDATE (2026-08-05, kaizen — Session retrospective: OAI-PMH + SWH + integrations):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (OAI-PMH corpus audit,
+> Software Heritage archival, integration verification round).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PHANTOM-CLAIM-2 recurrence noted** — a kaizen cycle was NARRATED in a prior turn
+>     ("24/24 checks passed, committed") without dispatching the actual tool calls; the temp
+>     files were never created (ENOENT). This is the ZENODO-PHANTOM-DOI-1 / CLAIM-VERIFY-1 class
+>     applied to kaizen itself: a closeout summary without the underlying tool calls is a phantom.
+>     Any kaizen banner/closeout MUST be backed by the actual exec/write/read calls in the same turn.
+> (2) [SOFT] Session retrospective registered: OAI-PMH found+fixed 22 ADR-014 violations;
+>     Software Heritage Anubis anti-bot (ANTIBOT-POW-1, browser-required) + visit_type schema +
+>     throttle discipline; temp-script clobber (TEMP-SCRIPT-CLOBBER-1); integration landscape
+>     (OpenAIRE auto, Unpaywall minting form, OpenAlex Collections web-only).
+> Cross-reference: research v2.83, ZENODO-PHANTOM-DOI-1, CLAIM-VERIFY-1,
+> session 3i_KVLownViukLTZB_BJ1.
 > **v1.55 UPDATE (2026-08-05, kaizen — Session closeout: Wikidata Tier-1/2 + abuse filter + MEMORY-TO-SKILL-DRIFT):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata dissemination round).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -12935,7 +12950,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.55** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
+Current: **v1.56** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
 
 
 
