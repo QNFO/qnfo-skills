@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.34
+version: 3.35
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -23,7 +23,21 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.34
+# CLOUDFLARE — v3.35
+
+> **v3.35 UPDATE (2026-08-05, kaizen — Email reclassification gap + qnfo-email v1.6 API docs):**
+> Red-team: direct parent-agent 5-adversary audit (session m_qnIa_aibac3IVnA51L1).
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **EMAIL-RECLASSIFY-ENDPOINT-1 anti-pattern added** — qnfo-email Worker v1.6
+>     has no classification mutation endpoint; classification is ingestion-only.
+>     Canonical case: manuscript solicitation classified "personal" required status→spam
+>     + filter workaround.
+> (2) [SOFT] **EMAIL-FILTER-CREATE-1 anti-pattern added** — POST /filters body format
+>     requires `field` not `type`; 400 on wrong field name.
+> (3) [DESIGN] **QNFO Email Worker API v1.6 endpoints documented** — full endpoint table
+>     with auth, params, and known gaps added to Email section. Stale email-composer v2.0
+>     cross-ref fixed ([NOT-INSTALLED]).
+> Cross-reference: kaizen v1.43, email-composer [NOT-INSTALLED], session m_qnIa_aibac3IVnA51L1.
 
 > **v3.26 UPDATE (2026-08-04, kaizen — infrastructure audit anti-patterns + WBS plan integration):**
 > Red-team: direct parent-agent audit of full infrastructure ecosystem (10 Workers, 12 DNS zones, 37 URLs).
@@ -420,6 +434,25 @@ graph-api    ─┼──► qnfo-gateway v2.0 (17 routes, 7 domains)
 qnfo-legal   ─┘
 ```
 
+### QNFO Email Worker API (v1.6, deployed 2026-08-05)
+
+**Worker:** `qnfo-email.q08.workers.dev` | **Auth:** `Authorization: Bearer <API_KEY>`
+**D1:** `qnfo-email-db` | **Version:** v1.6 (PATCH /emails/status + POST /filters + GET /emails/recent filters)
+
+| Endpoint | Method | Body / Params | Returns | Notes |
+|:---------|:------:|:--------------|:--------|:------|
+| `/health` | GET | — | `{worker, version, endpoints}` | No auth |
+| `/stats` | GET | — | `{total, last24h, byClassification, byStatus}` | Auth required |
+| `/emails/recent` | GET | `?limit=20&offset=0&status=processed` | `{count, emails[]}` | Auth; filter by status |
+| `/emails/body` | GET | `?id=N` | `{id, subject, body_text, body_html, ...}` | Auth |
+| `/emails/search` | GET | `?q=keyword` | `{count, emails[]}` | Auth; full-text search |
+| `/emails/status` | PATCH | `{id: N, status: "spam\|read\|..."}` | `{success, id, status}` | Auth; mutation only — no classification |
+| `/send` | POST | `{to, subject, body, html?, reply_to_id?}` | `{success, messageId}` | Auth |
+| `/filters` | GET | — | `{count, filters[]}` | Auth; list rules |
+| `/filters` | POST | `{field: "from\|subject\|...}", pattern: "...", action: "spam\|reject\|accept"}` | `{success, id}` | Auth; 400 if missing `field`/`pattern` |
+| `/filters/:id` | DELETE | — | `{success}` | Auth |
+
+**Known gap (EMAIL-RECLASSIFY-ENDPOINT-1):** No `PATCH /emails/classification` endpoint — classification is set at ingestion only. Status can be changed but not the class label. Workaround: change status to `"spam"` + create a sender filter.
 ---
 
 ## Reusable Scripts (Copy-Paste into any execution context)
@@ -793,12 +826,12 @@ await env.SEND_EMAIL.send({
 });
 ```
 
-**CRITICAL — EmailMessage API change (2026-08-03, qnfo-email v1.5):**
+**CRITICAL — EmailMessage API change (2026-08-03, qnfo-email v1.6):**
 The old `new EmailMessage(from, to, subject, body, html)` positional constructor is
 DEPRECATED. It silently produces `{"error":"missing From: header"}` because the runtime
 no longer maps positional args to headers. Use the object builder:
 `send({ to, from, subject, text, html })`. Response: `{ messageId: string }`.
-Cross-ref: email-composer v2.0, qnfo-email Worker v1.5, docs
+Cross-ref: qnfo-email Worker v1.6, docs (email-composer skill NOT installed — email API docs live in this skill)
 `/email-service/api/send-emails/workers-api/`.
 
 **Send binding restriction semantics (docs /email-service/configuration/send-bindings/):**
@@ -1282,7 +1315,9 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **SYNCPATH-1: Unauthenticated POST /sync writes to the KG (2026-08-04)** | qnfo-gateway `handleSync` accepts POST /sync at graph-api.qnfo.org and qnfo.org with NO auth — verified live: HTTP 200, `{action:bulk, nodes[], edges[]}` inserts into graph D1. Anyone can create/modify KG nodes+edges. Fix: require a shared-secret header (X-Sync-Token) on /sync before writes; keep read endpoints open. Also note: this endpoint is the executable path for deferred KG-seed tasks (write path exists — awaits node/edge spec). Canonical case: session dXXJ3TxRQ1VHzGdAyp-lo. |
 | **WORKER-CPU-LIMIT-1: Ignoring Free plan CPU budget when designing Workers (2026-08-04)** | `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request. Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan OR paginate D1 queries + stream large payloads via `ReadableStream` + move CPU-heavy work to Queue consumers. Diagnose via `cloudflare-observability` MCP watching for `CPU time exceeded` in invocation logs. See §Workers Execution Limits. |
 
-## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
+
+| **EMAIL-RECLASSIFY-ENDPOINT-1: qnfo-email Worker v1.6 has no classification mutation endpoint (2026-08-05)** | Classification (`"personal"`/`"general"`/`"spam"`) is set at ingestion only — there is no PATCH/PUT endpoint to reclassify an email after processing. `PATCH /emails/status {id, status}` changes status but NOT classification. Fix: add `PATCH /emails/classification {id, classification}` endpoint. Canonical case: manuscript solicitation (id 11) from dr.shrivishnu.msip@gmail.com was classified `"personal"` at ingestion and required manual status change to `"spam"` + filter creation. Cross-ref: qnfo-email Worker v1.6, EMAIL-FILTER-CREATE-1. |
+| **EMAIL-FILTER-CREATE-1: qnfo-email Worker POST /filters requires `field` + `pattern`, NOT `type` (2026-08-05)** | `POST /filters` body must include `{"field": "from", "pattern": "<sender>", "action": "spam"}`. Using `"type"` instead of `"field"` returns 400 `"field and pattern required"`. Verified: 5 existing filters (bounce/spam patterns) + filter id 6 created for dr.shrivishnu.msip@gmail.com. Cross-ref: qnfo-email Worker v1.6.## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
 
 Lessons from building the `personal-life` semantic index (d-drive bucket -> Workers AI bge -> Vectorize). Every one of these cost real debugging time; they are now anti-patterns.
 
@@ -1315,7 +1350,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.34** (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.35** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
