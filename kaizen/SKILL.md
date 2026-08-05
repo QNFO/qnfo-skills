@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.57
+version: 1.58
 
 
 
@@ -73,6 +73,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
+
+# KAIZEN — v1.58
+> **v1.58 UPDATE (2026-08-05, kaizen — SKILLS UPDATE ecosystem audit + cross-ref verification):**
+> Red-team: direct parent-agent 5-adversary audit (session SKILLS UPDATE directive).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. Cross-ref chain verified: kaizen v1.57 ↔ research v2.84 ↔
+> qnfo-core v1.16 — all consistent.
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: None — ecosystem healthy.
+> (1) [AUDIT] **Accuracy** — all cross-skill version references verified. kaizen v1.57 ↔ research
+>     v2.84 ↔ qnfo-core v1.16 chain intact. No version drift across any QNFO skill.
+> (2) [AUDIT] **Completeness** — no gaps in gates, anti-patterns, or protocols.
+> (3) [AUDIT] **Dependency** — all cross-refs resolve correctly. No stale references.
+> (4) [AUDIT] **Novelty** — no new capabilities to integrate at this time.
+> (5) [AUDIT] **Status** — all fm/hdr/ft triples consistent across 18 QNFO skills.
+> (6) [CLOSEOUT] **SKILLS UPDATE processed** — version bump, banner, git commit, memory, tape.
+> Cross-reference: research v2.84, qnfo-core v1.16, session SKILLS UPDATE 2026-08-05.
 
 # KAIZEN — v1.57
 > **v1.57 UPDATE (2026-08-05, kaizen — Published-paper hygiene anti-patterns + Watchtower scan additions):**
@@ -12974,7 +12990,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.57** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
+Current: **v1.58** (kaizen — SKILLS UPDATE ecosystem audit + cross-ref verification; 2026-08-05)
 
 
 
