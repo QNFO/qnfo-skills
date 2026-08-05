@@ -977,6 +977,14 @@ Baseline: 9 (updated 2026-08-02 — live `workers_list` MCP returned 9 incl.
 `qnfo-paper-indexer`, created 2026-08-01; treat any future count ≠ 9 as drift).
 **Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; cron every 30 min + webhook for real-time; v1.0, 2026-08-01), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
 
+> **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** Before ANY Pages
+> deployment (q*.pages.dev / custom domains / GitHub Actions deploys), run
+> `qa-ux-battery.py --urls <production-url>` (research skill script, Chrome for
+> Testing headless). Any FAIL (console errors, broken links, 404 markers, missing
+> title/h1/body) BLOCKS the deployment. Interactive tools (canvas/apps deployed via
+> Pages) MUST show ZERO console/page errors — that is the dead-tool detector.
+> See research skill Phase 6 for the canonical battery definition.
+
 ### Pages
 Baseline: 5 projects (post-consolidation 2026-07-17: `qnfo-publications`, `qwav`, `qnfo-hub`, `ipatent-me`, `ask-qwav`).
 

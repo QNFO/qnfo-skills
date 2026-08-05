@@ -6526,6 +6526,14 @@ After Zenodo publish, download the deposit's `.md` file and verify its YAML fron
 
 
 
+> **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** NO public-facing
+> QNFO/QWAV page deploys without passing `qa-ux-battery.py` first (Chrome for Testing
+> headless). Battery checks: HTTP status, console/page JS errors (dead interactive
+> tools), broken links, 404 markers, interactive elements, title/h1/body presence.
+> ANY FAIL blocks deployment. Canonical case (2026-08-05): GitHub-deployed interactive
+> tools shipped broken — this gate exists so that is impossible. Script:
+> `research/scripts/qa-ux-battery.py` (thin-client canonical, committed to qnfo-skills).
+
 ## Phase 6: Cloudflare Deployment
 
 
