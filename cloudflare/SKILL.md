@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.33
+version: 3.34
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -23,7 +23,7 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.33
+# CLOUDFLARE — v3.34
 
 > **v3.26 UPDATE (2026-08-04, kaizen — infrastructure audit anti-patterns + WBS plan integration):**
 > Red-team: direct parent-agent audit of full infrastructure ecosystem (10 Workers, 12 DNS zones, 37 URLs).
@@ -1315,9 +1315,47 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.33** (cloudflare — VZ-40023-SANITIZE-1: Vectorize 40023 parse-failure from control chars/lone surrogates in chunk text; fix = sanitize() + halving-retry upsert (personal-life v2.3); 2026-08-04) (cloudflare — integrated ALL 11 official Cloudflare skills from github.com/cloudflare/skills: Agents SDK + Sandbox SDK (v3.30) now joined by Durable Objects, Workers Best Practices, Web-Perf, and Turnstile; full official-skill coverage matrix below; + Workers Execution Limits section (v3.32 — Free/Paid plan CPU/wall-clock limits, WORKER-CPU-LIMIT-1 anti-pattern); 2026-08-04)
+Current: **v3.34** (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
+
+## Cloudflare Fork Policy (HARD, added 2026-08-05)
+
+**User directive:** Default Cloudflare skills MUST always be forked separately
+from the official Cloudflare GitHub repo, available to load, and
+documented/referenced/linked in THIS custom skill — but they are NEVER backed up
+in the qnfo-skills repo.
+
+### The Rules
+
+1. **Official Cloudflare skills live in a SEPARATE git repo:**
+   `https://github.com/QNFO/cloudflare-skill-forks`. They are forked from the
+   official Cloudflare GitHub repo (cloudflare/skills ecosystem).
+
+2. **NEVER store official Cloudflare skill content in qnfo-skills.**
+   The qnfo-skills repo contains ONLY this custom consolidated cloudflare skill.
+   Official-skill integration sections below are REFERENCES/COVERAGE MATRICES,
+   not copies of official skill content.
+
+3. **Available to load:** the forked official skills are installed in the DeepChat
+   skills dir (runtime) so they can be loaded — but their canonical home is the
+   fork repo, and they are version-tracked THERE, not in qnfo-skills.
+
+4. **Modifications to forks → PR back to Cloudflare.** If this ecosystem makes
+   separate modifications to a forked official skill, the change SHOULD be
+   pushed as a PR to the official Cloudflare repo for update consideration
+   (per user directive). The fork repo is the working copy for those PRs.
+
+5. **Never customize/update platform-provided DeepChat skills** (per companion
+   directive): DeepChat platform default skills are expunged from all git repos
+   and never version-tracked.
+
+**Canonical case (2026-08-05):** The 11-skill Cloudflare coverage matrix
+(durable-objects, workers-best-practices, web-perf, turnstile-spin, cloudflare-one,
+email-service, sandbox-sdk, agents-sdk, wrangler, deployer, github-manager) is
+documented as integration references below. Official content is forked to
+`QNFO/cloudflare-skill-forks`, never stored in qnfo-skills.
+
 
 ## Agents SDK (Official Skill Integration — v3.30)
 

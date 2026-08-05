@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.15
+# GIT-GITHUB — v2.16
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -521,6 +521,9 @@ After ANY push:
 ```
 
 
+| **PLATFORM-DEFAULT-EXPUNGE-1: Version-tracking or customizing DeepChat platform default skills in any git repo (2026-08-05)** | **HARD GATE.** DeepChat platform default skills (src=builtin in the registry: algorithmic-art, code-review, doc-coauthoring, docx, frontend-design, git-commit, infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx, skill-creator, web-artifacts-builder, xlsx) MUST be expunged from any/all git repos and NEVER version-tracked or customized/updated. They remain available in the app (DeepChat ships them) but are not ours to version. Canonical case (2026-08-05): 14 platform defaults removed from qnfo-skills (commit 4ff764d); deepchat-settings KEPT because substantially refactored into custom QNFO knowledge (Backend Storage Layout, Skill Registry Truth-Source). Exception: a platform default that has been SUBSTANTIALLY refactored into genuinely custom content may be kept — document the decision. |
+| **CLOUDFLARE-FORK-1: Storing official Cloudflare skill content in qnfo-skills instead of a separate fork repo (2026-08-05)** | Official Cloudflare skills (durable-objects, workers-best-practices, web-perf, turnstile-spin, cloudflare-one, email-service, sandbox-sdk, agents-sdk, wrangler, deployer, github-manager) MUST be forked into the SEPARATE repo `QNFO/cloudflare-skill-forks` — NEVER backed up in qnfo-skills. The custom cloudflare skill documents coverage matrices and links to the fork; it does NOT copy official content. Modifications to forks are PR'd back to Cloudflare for update consideration. Canonical case (2026-08-05): fork repo created at github.com/QNFO/cloudflare-skill-forks; cloudflare skill v3.34 documents the policy. |
+
 | **SYNC-OVERWRITE-DESTRUCTION-1: Copying a partial source (live dir) over the canonical git repo with rmtree+copy, deleting git-only files (2026-08-05)** | **HARD GATE.** Git is the canonical superset; the live skills dir is a partial runtime subset. Sync direction is ONE-WAY: git -> live (hydrate), NEVER live -> git with directory replacement. To commit a skill change: ADD/UPDATE that skill's files in git — never rmtree the git skill dir first (that deletes scripts/templates/references that exist only in git). Canonical case: d4b432c deleted 61 canonical files (bloat-cleanup/scripts/*, research/scripts/*, research/templates/springer-nature-latex/*, research/references/*.json, email-composer/scripts/*.pdf, xlsx/scripts/recalc.py); restored from parent commit. Verify after every sync: `git show --name-status <commit>` shows NO unexpected deletions. |
 | **PUSH-TO-MASTER-1: Leaving feature branches unmerged — work sitting in branches instead of master (2026-08-05)** | Features MUST be merged to master in the same session. Branch lifecycle: create -> work -> verify -> merge -> push master -> delete branch (local+remote) -> prune. Canonical case: 5 stale kaizen/* branches with 6,008 insertions left unmerged; all superseded by live-sync and deleted. Before deleting a branch, verify `git log master..origin/<branch>` is empty (0 unique commits) OR merge the unique content first. |
 | **BRANCH-HYGIENE-1: Accumulating stale branches (local or remote) across sessions (2026-08-05)** | Every session ends with ONLY master (plus any active feature branch). Delete merged/superseded branches and prune remote-tracking refs. A branch list with 5+ stale entries is a hygiene failure. |
@@ -561,4 +564,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.15** (git-github — GitHub Hygiene mandate: master is CANONICAL for the skills repo, never drift, push features to master, SYNC-OVERWRITE-DESTRUCTION-1/PUSH-TO-MASTER-1/BRANCH-HYGIENE-1/DEAD-REMOTE-1/POST-PUSH-VERIFY-1; user mandate 2026-08-05)
+Current: **v2.16** (git-github — PLATFORM-DEFAULT-EXPUNGE-1 + CLOUDFLARE-FORK-1: DeepChat platform default skills NEVER in any git repo; official Cloudflare skills forked to QNFO/cloudflare-skill-forks, never qnfo-skills, PRs back to Cloudflare; user mandate 2026-08-05)
