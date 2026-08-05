@@ -4,7 +4,7 @@
 name: kaizen
 
 
-version: 1.43
+version: 1.44
 
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
@@ -16,11 +16,52 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.43
+# KAIZEN — v1.44
+> **v1.44 UPDATE (2026-08-05, kaizen — social-media-management red-team audit):**
+> Red-team: direct parent-agent 5-adversary audit (RCS-3: subagents for audit = HARD BLOCK).
+> HARD: 0. SOFT: 2. DESIGN: 2. Changes:
+> (1) [SOFT] **STALE-COUNT-1 anti-pattern added** — SKILL.md registry-count claims
+>     ("96 accounts", "45+ verified") drifted from actual registry state (97) as
+>     accounts were added incrementally across version bumps. Any skill that maintains
+>     aggregate counts (accounts, tools, references, tables) MUST reconcile the
+>     SKILL.md prose claim against the actual data file in the SAME edit that changes
+>     the data — and the frontmatter description is the FIRST place drift hides.
+> (2) [SOFT] **DOTFILE-TRACK-GAP-1 anti-pattern added** — skill-sync.js walkFiles()
+>     skips dotfiles (`entry.name.startsWith('.')`), so `.kaizen_history` (mandated
+>     per-skill by the Kaizen History Log protocol) is NEVER staged by the canonical
+>     sync tool. Any kaizen closeout that creates/updates `.kaizen_history` MUST
+>     `git add` it MANUALLY (skill-sync.js --targets will silently skip it), then
+>     push. Verified live: v1.4.0 closeout — `?? .kaizen_history` untracked after
+>     sync, committed manually (ec578ae).
+> (3) [DESIGN] **Count-claim audit added to Watchtower** — STALENESS-AXIS scan now
+>     also cross-checks SKILL.md prose counts vs. the skill's data files.
+> (4) [DESIGN] Cross-reference: social-media-management v1.4.0 kaizen banner.
+> Cross-reference: social-media-management v1.4.0, SKILL-COMMIT-SAME-SESSION-1,
+> session 7MOisdpuiwaSwKMX6mZDh.
 
 
 
 
+
+
+
+> **v1.44 UPDATE (2026-08-05, kaizen — Red-team audit: N-2 INCOMPLETE fixes + canonical scanner + committed-tree drift):**
+> Red-team: direct parent-agent audit of session IfYDah5TSY5gNMY0S4OT5 closeout cycle
+> (3 subagents truncated -> direct audit per Subagent Failure Handling rule 4).
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **N-2-FRONTMATTER-DRIFT-1 extended** — drift is now ALSO committed INTO GIT by
+>     concurrent sessions (canonical case: commit 70ab78f bumped 4 skills' hdr/ft but
+>     committed stale fm). Detection is machine-automated via the canonical scanner.
+> (2) [SOFT] **watchtower-version-scan.py promoted to canonical thin-client asset** —
+>     kaizen/scripts/, git PRIMARY + R2 SECONDARY via skill-sync.js. Case-tolerant header
+>     regex (DeepChat Settings/PERSONAL KNOWLEDGE/QNFO Core), LAST-Current footer rule
+>     (first may be a banner quote), nonzero exit for cronjob watchdog integration.
+> (3) [DESIGN] **N-2 INCOMPLETE closure** — 4 QNFO skills brought to full fm/hdr/ft
+>     consistency: bloat-cleanup (hdr+ft added), deepchat-settings (fm+ft added),
+>     social-media-management (STALE hdr 1.0.0->1.3.0 + fm+ft), qnfo-agent (ft added).
+>     Platform-default skills remain INCOMPLETE by design (exempt, not git-tracked).
+> Cross-reference: N-2-FRONTMATTER-DRIFT-1, git-github v2.19 THIN-CLIENT CANONICAL ASSET
+> PROTOCOL, qnfo-core N-2, session IfYDah5TSY5gNMY0S4OT5.
 
 > **v1.43 UPDATE (2026-08-05, kaizen — Red-team audit: research briefing system session):**
 
@@ -2051,6 +2092,7 @@ For each installed skill:
 
 
    - Any skill with score > 0.8: flag as "IMMEDIATE — HARD candidates"
+   - Count-claim reconciliation: for skills with aggregate counts in prose, compare against the data file (STALE-COUNT-1)
 
 
    - Any HARD incident markers: auto-trigger kaizen without user prompt
@@ -5620,11 +5662,15 @@ Session Failure → Session Retrospective detects failure pattern
 | **STALE-MANUAL-ITEM-1: Listing a task as "manual user item" when closeout records show it already done (2026-08-05)** | Agent listed "verify qnfo@qnfo.org" as the last manual item; durable memory showed it verified 2026-08-03 12:09:01Z (user clicked link during email infra closeout). Every manual-item list MUST be cross-checked against closeout records + memory_recall BEFORE being presented. Presenting a stale manual item is a phantom-work violation (user must never redo completed work) and contradicts MANUAL-DELEGATE-1. Canonical case: session 8APhB8pdpgihrWgDLpXIP — corrected same session; live email routing verified (5 rules + catch-all → worker:qnfo-email). |
 
 
-| **N-2-FRONTMATTER-DRIFT-1: Version bump updates header/footer but forgets the FRONTMATTER version field (2026-08-05)** | **HARD GATE.** Three skills drifted the same way in session IfYDah5TSY5gNMY0S4OT5: personal-knowledge fm=1.0 vs hdr=v1.3 (survived 3 bumps), git-github fm=2.16 vs hdr=2.18 (v2.17/v2.18 bumped header/footer only), research hdr=2.75 vs fm=2.76. The frontmatter `version:` line is the FIRST place N-2 scans check — a stale frontmatter breaks machine version detection (Watchtower DRIFT-AXIS, dependency graph). Fix: EVERY version bump must edit ALL THREE locations in the SAME atomic script (frontmatter `version:` + header `# SKILL — vX.Y` + footer `Current: **vX.Y**`), then re-verify all three match before commit. Same class as VERSION-OVERWRITE-1 (version string fragility). Canonical case: session IfYDah5TSY5gNMY0S4OT5 — 6 fixes across 4 skills. Cross-ref: qnfo-core N-2, VERSION-OVERWRITE-1. |
+| **N-2-FRONTMATTER-DRIFT-1: Version bump updates header/footer but forgets the FRONTMATTER version field (2026-08-05)** | **HARD GATE.** Three skills drifted the same way in session IfYDah5TSY5gNMY0S4OT5: personal-knowledge fm=1.0 vs hdr=v1.3 (survived 3 bumps), git-github fm=2.16 vs hdr=2.18 (v2.17/v2.18 bumped header/footer only), research hdr=2.75 vs fm=2.76. The frontmatter `version:` line is the FIRST place N-2 scans check — a stale frontmatter breaks machine version detection (Watchtower DRIFT-AXIS, dependency graph). Fix: EVERY version bump must edit ALL THREE locations in the SAME atomic script (frontmatter `version:` + header `# SKILL — vX.Y` + footer `Current: **vX.Y**`), then re-verify all three match before commit. Same class as VERSION-OVERWRITE-1 (version string fragility). Canonical case: session IfYDah5TSY5gNMY0S4OT5 — 6 fixes across 4 skills. EXTENSION (2026-08-05): drift is also committed INTO GIT by concurrent sessions — commit 70ab78f bumped kaizen v1.43/research v2.77/qnfo-core v1.15/wcp v3.14 headers+footers but committed STALE frontmatter (fm 1.42/2.76/1.14/3.13). Detect via kaizen/scripts/watchtower-version-scan.py (canonical thin-client asset) which checks fm/hdr/ft triple with case-tolerant regex + LAST-Current rule; run it at session start or via cronjob. Cross-ref: qnfo-core N-2, VERSION-OVERWRITE-1, CONCURRENT-KAIZEN-1. |
 
 
 
 
+
+
+| **STALE-COUNT-1: SKILL.md aggregate-count claims drift from the actual data file as content grows incrementally (2026-08-05)** | Any skill that states aggregate counts (account registry sizes, tool counts, reference counts) MUST reconcile the prose claim against the actual data file in the SAME edit that changes the data. The frontmatter description is the FIRST place staleness hides — social-media-management's description said "45+ verified" through 4 version bumps while the registry grew to 97. Fix: after any registry/data change, grep the SKILL.md for the old count and update every occurrence (description, banners' current-state sections, table rows) before commit. Cross-ref: LANGUAGE-CONSISTENCY-1, social-media-management v1.4.0. |
+| **DOTFILE-TRACK-GAP-1: Kaizen closeout creates/updates `.kaizen_history` but the canonical skill-sync.js never stages dotfiles (2026-08-05)** | skill-sync.js walkFiles() skips `entry.name.startsWith('.')`, so `.kaizen_history` (mandated by the Kaizen History Log protocol) is silently excluded from both git staging and R2 upload. Fix: after ANY kaizen closeout that writes `.kaizen_history`, run `git add <skill>/.kaizen_history` + commit + push MANUALLY — do not rely on skill-sync.js. R2 exclusion is by design (history is git-only). Canonical case: social-media-management v1.4.0 — `?? .kaizen_history` untracked post-sync, committed manually (ec578ae). |
 
 ## Cross-Skill Integration
 
@@ -6265,7 +6311,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.43** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.44** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 
 
