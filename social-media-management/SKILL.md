@@ -1,8 +1,18 @@
 ---
 name: social-media-management
-version: 1.4.0
-description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 97 QNFO-aligned accounts (52 Bluesky / 8 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and integration with linkedin-mcp for LinkedIn connections.
+version: 1.4.1
+description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and integration with linkedin-mcp for LinkedIn connections.
 ---
+
+> **v1.4.1 UPDATE (2026-08-05, kaizen — STALE-COUNT-1 live recurrence + phantom-entry removal):**
+> - Phantom entry **@ivl@mathstodon.xyz (Ivo Velitchkov) REMOVED** — Mastodon API lookup
+>   returned HTTP 404 (2026-08-05). It was added unverified during the LoF investigation;
+>   per registry verification discipline, entries MUST be live-verified before addition.
+> - STALE-COUNT-1 demonstrated live: the v1.4.0 closeout left prose claims (97/8) stale
+>   after the registry changed (96/7). ALL prose counts now reconciled to actual data:
+>   desc/section 96-52-7-27-10; table rows ump 3, slb 1, inm 13, cfe 11, res 24, plt 6, dem 1.
+> - Registry enriched: slb_communities (syscoi.com, math4wisdom.com) + lof50_proceedings refs.
+> - Cross-reference: kaizen v1.46 STALE-COUNT-1, DOTFILE-TRACK-GAP-1.
 
 > **v1.4.0 UPDATE (2026-08-05, kaizen):** Red-team audit closeout.
 > - Registry actual count reconciled: **97 accounts** (52 Bluesky / 8 Mastodon / 27 X / 10 LinkedIn).
@@ -49,7 +59,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via linkedin-mcp-tools (5/day cap).
 
-# SOCIAL MEDIA MANAGEMENT — v1.4.0
+# SOCIAL MEDIA MANAGEMENT — v1.4.1
 
 Programmatic social media follow management for Bluesky and Mastodon, with
 a curated QNFO account registry aligned to the QWAV/QNFO research program.
@@ -177,20 +187,21 @@ Mastodon accounts are identified as `@user@instance.tld`.
 
 ## Account Registry (`references/qnfo_accounts.json`)
 
-The registry tracks **97 QNFO-aligned accounts** across four platforms (52
-Bluesky / 8 Mastodon / 27 X / 10 LinkedIn). `domain` = canonical QNFO program
+The registry tracks **96 QNFO-aligned accounts** across four platforms (52
+Bluesky / 7 Mastodon / 27 X / 10 LinkedIn). `domain` = canonical QNFO program
 code; `domain_detail` = sub-topic. All 52 Bluesky handles carry live-verified DIDs.
 
 ### Canonical QNFO Program Codes (from qnfo_taxonomy.md)
 
 | Code | Program | Registry Coverage (2026-08-05) |
 |:-----|:--------|:-------------------------------|
-| `ump` | Ultrametric Physics | 3 (AMS, LMS community; individuals rare) |
-| `slb` | Laws of Form | **0 accounts — OPEN GAP** |
-| `inm` | Infomatics | 12 (Active Inference Institute, Seth, Allen, Eisert, Preskill…) |
-| `cfe` | CFPE / Paradigm Engineering | 8 (forecasters + quantum roadmaps) |
-| `res` | QNFO Research (consilience/Ruliad) | 17 (Carroll, Coecke, Virgo, Hossenfelder, NIST…) |
+| `ump` | Ultrametric Physics | 3 (AMS, LMS, Janssen — Langlands community; individuals rare) |
+| `slb` | Laws of Form | 1 (@simonmyerson — demarcation/Jaffe-Quinn; direct LoF theorists absent) |
+| `inm` | Infomatics | 13 (Preskill, Wilde, Eisert, Seth, Allen, Active Inference…) |
+| `cfe` | CFPE / Paradigm Engineering | 11 (forecasters + quantum roadmaps + scenario/econ) |
+| `res` | QNFO Research (consilience/Ruliad) | 24 (18 BS + 6 MS: Carroll, Coecke, Virgo, Hossenfelder…) |
 | `plt` | QWAV Platform (4-D + agentic AI) | 6 (Protocol Labs, Filecoin, IPFS, LangChain, HF, CF Dev) |
+| `dem` | QWAV Demos | 1 (John D. Cook, golden-ratio applied math) |
 
 **Known gaps:** `ump` (p-adic/ultrametric researchers maintain no public social
 presences — use taxonomy keywords for recurrent discovery) and `slb` (Laws of
@@ -350,4 +361,4 @@ social-media-management/
 
 ## Version
 
-Current: **v1.4.0** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)
+Current: **v1.4.1** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)

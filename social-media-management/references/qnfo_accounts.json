@@ -1,6 +1,6 @@
 {
   "$schema": "https://qnfo.org/schemas/social-registry-v1.json",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "generated": "2026-08-05",
   "description": "QNFO-aligned social media accounts. domain = canonical QNFO program code (ump/slb/inm/cfe/res); domain_detail = sub-topic. Bluesky handles live-verified 2026-08-05 via AT Protocol resolveHandle (17/17).",
   "accounts": {
@@ -471,13 +471,6 @@
         "domain": "res",
         "domain_detail": "complex-systems-networks",
         "verified": true
-      },
-      {
-        "handle": "@ivl@mathstodon.xyz",
-        "name": "Ivo Velitchkov",
-        "domain": "slb",
-        "domain_detail": "lof-reentry-systems-thinking",
-        "verified": false
       }
     ],
     "x-twitter": [
@@ -768,7 +761,7 @@
   },
   "coverage_gaps": {
     "ump": "COVERED via community (AMS/LMS) + @simonmyerson (LoF-adjacent number theorist). Individuals still rare.",
-    "slb": "PARTIALLY FILLED 2026-08-05: @simonmyerson attended Laws of Form 50yr conf; @mc (Capucci) category-cybernetics. Direct LoF theorists still absent.",
+    "slb": "PARTIALLY FILLED: @simonmyerson (LoF-adjacent number theorist, demarcation/jaffe-quinn), @mc (Capucci, category-cybernetics). Direct LoF theorists (Kauffman, Flagg, Sahoo, Ellsbury, Collings) have ZERO social presence \u2014 reachable via communities: syscoi.com, math4wisdom.com. Phantom @ivl@mathstodon.xyz removed 2026-08-05 (resolve 404).",
     "cfe": "FILLED: forecasters + quantum roadmaps + scenario/econ (80k, Matt Clancy, Max Roser).",
     "inm": "FILLED: +Eisert (quantum thermo), Neurocritic, Friston proxy set.",
     "res": "EXPANDED: +Hameroff proxy (AABC), quantum cognition tier.",
@@ -791,14 +784,28 @@
         "Andrew Crompton",
         "Florian Grote"
       ],
-      "rh_chapter": "Laws of Form and the Riemann Hypothesis (Flagg, Kauffman, Sahoo) - arXiv:2010.13781",
+      "rh_chapter": "Laws of Form and the Riemann Hypothesis (Flagg, Kauffman, Sahoo) \u2014 arXiv:2010.13781 (not peer-accepted; Jaffe-Quinn boundary case)",
       "qnfo_relevant_chapters": [
-        "Calculus of Indications as Candidate for Pregeometry of Spacetime (Ellsbury) - RES Bridge",
-        "Klein Bottle Logophysics / Topology of Consciousness (Rapoport) - non-orientable manifolds",
-        "BF Calculus four-valued extension (Collings) - INM logic",
-        "Modulators and Imaginary Values (Kauffman) - SLB re-entry",
-        "Laws of Form and Plato's Theory of Forms (Lewin) - SLB philosophy"
+        "Calculus of Indications as Candidate for Pregeometry of Spacetime (Ellsbury) \u2014 RES Bridge",
+        "Klein Bottle Logophysics / Topology of Consciousness (Rapoport) \u2014 non-orientable manifolds",
+        "BF Calculus four-valued extension (Collings) \u2014 INM logic",
+        "Modulators and Imaginary Values (Kauffman) \u2014 SLB re-entry",
+        "Laws of Form and Plato's Theory of Forms (Lewin) \u2014 SLB philosophy"
       ]
-    }
+    },
+    "slb_communities": [
+      {
+        "name": "Systems Community of Inquiry",
+        "url": "https://stream.syscoi.com",
+        "note": "Open systems discussion explicitly citing Cybernetics + Laws of Form + Mathstodon. Verified live 2026-08-05.",
+        "verified": true
+      },
+      {
+        "name": "Math 4 Wisdom",
+        "url": "https://www.math4wisdom.com",
+        "note": "Kiran Karra's tradition: Grassmann/Clifford/Peirce/Whitehead/Spencer-Brown/Varela/Kauffman. Verified live 2026-08-05.",
+        "verified": true
+      }
+    ]
   }
 }
