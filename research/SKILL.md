@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.78
+version: 2.79
 
 
 
@@ -166,7 +166,21 @@ triggers:
 
 
 
-# RESEARCH — v2.78
+# RESEARCH — v2.79
+> **v2.79 UPDATE (2026-08-05, kaizen — Zenodo API exhaustive documentation — NO MORE TRIAL AND ERROR):**
+> Red-team: direct parent-agent 5-adversary audit of session 3i_KVLownViukLTZB_BJ1
+> (discoverability sprint + Zenodo attribution fix 21789920->21807661).
+> HARD: 2. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **TWO-API METADATA SHAPE DISTINCTION section added** — deposit API
+>     (upload_type/publication_type strings) vs records API (resource_type object).
+>     ~15 failed PUTs this session from shape confusion — now documented up front.
+> (2) [HARD] **ZENODO-DEPOSIT-API-METADATA-1 + ZENODO-SUBJECT-SEARCH-1 anti-patterns added**
+>     — subject search requires `metadata.subjects.subject:` prefix (154 PLACEHOLDER,
+>     17 duplicate-record, 185 QNFO verified 2026-08-05); deposit list endpoint does
+>     NOT return subject-tagged published records.
+> (3) [DESIGN] Subject-audit path documented: records search API (not deposit list).
+> Cross-reference: kaizen v1.51 (API-DOC-GAP-1), social-media-management v1.6.0,
+> session 3i_KVLownViukLTZB_BJ1.
 
 
 
@@ -5298,6 +5312,28 @@ A partial PUT (missing any of these) fails with HTTP 400 on publish — exactly 
 
 documented in ZENODO-PUBLISHER-REQUIRED-1 and ZENODO-METADATA-REQUIRED.
 
+**TWO-API METADATA SHAPE DISTINCTION (v2.79, HARD — READ FIRST):** Zenodo has TWO
+write APIs with DIFFERENT metadata field names. Mixing them up causes the
+"Not a valid string" / "Missing data for required field" 400s this skill
+documents. Determine which API you are driving FIRST, then use ITS field names.
+
+| Field | Deposit API (`/api/deposit/depositions/{id}` PUT) | Records API (`/api/records/{id}/draft` PUT) |
+|:------|:--------------------------------------------------|:---------------------------------------------|
+| resource type | **`upload_type`** (string: "publication") + **`publication_type`** (string: "preprint") | **`resource_type`** (object: `{"id": "publication-preprint"}`) |
+| creators | `{"name": "Family, Given", "affiliation": "...", "orcid": "..."}` | `[{"person_or_org": {"family_name": ..., "given_name": ..., "type": "personal"}}]` |
+| works with | PUT then `POST .../actions/publish` | PUT then `POST .../draft/actions/publish` |
+
+Canonical case (2026-08-05, session 3i_KVLownViukLTZB_BJ1): the Five Pillars
+attribution fix (21789920 -> newversion draft 21807661) burned ~15 failed PUTs
+because the script copied the RECORDS-API `resource_type` object
+(`{"title":"Preprint","type":"publication","subtype":"preprint"}`) into a DEPOSIT-API
+PUT. The deposit API rejected it with 400 "Not a valid string." / "Missing data
+for required field." The fix: send `{"upload_type": "publication", "publication_type":
+"preprint"}` and the PUT + publish succeeded first try. Also note: the RECORDS-API
+read response contains `resource_type` as an object — never copy that shape into a
+deposit-API PUT. Cross-ref: ZENODO-DEPOSIT-API-METADATA-1, ZENODO-METADATA-REQUIRED,
+AD-HOC-ZENODO-METADATA-1, ZENODO-UPLOAD-MULTIPART-1.
+
 
 
 
@@ -8487,7 +8523,7 @@ case + visa flag. Verifiable listings only (institution + URL).
 
 
 
-Current: **v2.78** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.79** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
