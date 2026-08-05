@@ -8479,7 +8479,7 @@ case + visa flag. Verifiable listings only (institution + URL).
 
 
 
-Current: **v2.78** (research — Briefing System completeness: obsidian-intelligence-note.py, cronjob cfe37200, _YYDDDDHHmmss naming, job curation mandate; 2026-08-05)
+Current: **v2.78** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
