@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.53
+version: 1.55
 
 
 
@@ -74,7 +74,37 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.53
+# KAIZEN — v1.55
+> **v1.55 UPDATE (2026-08-05, kaizen — Session closeout: Wikidata Tier-1/2 + abuse filter + MEMORY-TO-SKILL-DRIFT):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata dissemination round).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **MEMORY-TO-SKILL-DRIFT closed (2nd occurrence)** — WIKIDATA-ABUSE-FILTER-296-1 was
+>     stored in durable memory during the session but absent from the research skill until this
+>     kaizen; migrated to research v2.82. Confirms the kaizen v1.7 HARD GATE: any anti-pattern
+>     stored via memory_remember MUST be migrated into the owning SKILL.md the same session.
+>     NOTE: the v1.53 closeout also closed a MEMORY-TO-SKILL-DRIFT (WIKIDATA-BOT-PASSWORD-REQUIRED-1)
+>     — this pattern recurs when item creation hits the abuse filter mid-session and the session
+>     ends before the skill edit. The lesson: run the migration IMMEDIATELY on memory_remember,
+>     not at closeout.
+> (2) [SOFT] Session retrospective: 8/11 Wikidata publication items + 4/4 identifier claims
+>     created and verified; 3 items blocked by abusefilter-warning-296 (new-account gate,
+>     cooldown hours — deferred, not failed). Concurrent session bumped kaizen to v1.54
+>     mid-session (b9bebe6); this closeout merges as v1.55 past the collision (VERSION-OVERWRITE-1).
+> Cross-reference: research v2.82, VERSION-OVERWRITE-1, CONCURRENT-KAIZEN-1,
+> session 3i_KVLownViukLTZB_BJ1.
+> **v1.54 UPDATE (2026-08-05, kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (session wyJg6Q6nvX_Q9KY1QhgMQ).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN, 21 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. HARD: 0. SOFT: 0. DESIGN: 0. Changes:
+> (1) [AUDIT] **Ecosystem N-2 verified** — all 18 QNFO skills fm/hdr/ft consistent via
+>     watchtower-version-scan.py. No version drift. No new anti-patterns discovered.
+> (2) [RETROSPECTIVE] **Session operations** — qnfo-gateway Worker deployed 2x (GA G-LV7RHRVW6R
+>     injection + robots.txt/sitemap/llms/rss handlers), 5 Pages projects redeployed (qwav,
+>     qnfo-landing, ask-qwav, qnfo-hub, qnfo-publications). 12/12 sites verified GA-live,
+>     11/11 robots/sitemap/data-routes verified. Skills touched: cloudflare v3.35, kaizen v1.53,
+>     qnfo-core v1.15, windows-command-patterns v3.15.
+> (3) [CLOSEOUT] **Kaizen v1.54** — version bump, banner insert, git commit, memory register.
+> Cross-reference: cloudflare v3.35, qnfo-core v1.15, session wyJg6Q6nvX_Q9KY1QhgMQ.
 > **v1.53 UPDATE (2026-08-05, kaizen — Session retrospective: Wikidata items + credential case-sensitivity):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata round:
 > Person Q140892265 + Org Q140892267 created and verified; 8-platform identity graph complete).
@@ -12905,7 +12935,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.53** (kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1; 2026-08-05)
+Current: **v1.55** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
 
 
 

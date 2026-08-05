@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.81
+version: 2.82
 
 
 
@@ -166,7 +166,27 @@ triggers:
 
 
 
-# RESEARCH — v2.81
+# RESEARCH — v2.82
+> **v2.82 UPDATE (2026-08-05, kaizen — Wikidata abuse filter + Tier-1/2 dissemination state):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata Tier-1
+> publication items + Tier-2 identifier claims round).
+> HARD: 2. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **WIKIDATA-ABUSE-FILTER-296-1 migrated from durable memory** (MEMORY-TO-SKILL-DRIFT
+>     closed) — Wikidata `abusefilter-warning-296` blocks new-item creation for accounts with
+>     editcount 0 after ~4-8 items per short window. Surfaces as failed-save + filter warning.
+>     Clears after cooldown (hours). DO NOT hammer — harder blocks. Claims (wbcreateclaim) on
+>     EXISTING items are exempt; only wbeditentity new=item ID assignment is filtered.
+>     Strategy: create items 60-120s apart; verify via wbsearchentities 2-5s pacing.
+> (2) [HARD] **Tier-1/2 verified state documented** — 8/11 flagship publication items live
+>     (Q140892430/431/432/433/448/449/451/454, P31+P356+P50+P577+P407 each); 3 pending
+>     (Consilience-NumberTheory 21591660, Zitterbewegung 21214362, Ultrametric Engine 21214775)
+>     blocked by the filter. Tier-2 complete: 4/4 identifier claims (P4285 OpenAlex A5133504808,
+>     P1960 Scholar eHIbqxkAAAAJ, P4012 SemanticScholar 2401393450, P2002 X RowanQuni).
+> (3) [SOFT] **Concurrent-session version check** — a concurrent session bumped kaizen to v1.54
+>     mid-session; re-read current versions before any edit (VERSION-OVERWRITE-1 discipline).
+> (4) [DESIGN] Script reference: wikidata-dissemination.py (--status/--create-missing,
+>     abuse-filter-aware) committed e0b5a06.
+> Cross-reference: kaizen v1.55, session 3i_KVLownViukLTZB_BJ1.
 > **v2.81 UPDATE (2026-08-05, kaizen — Wikidata/MediaWiki: item creation + auth rules + 2 anti-patterns):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata items round:
 > Person Q140892265 + Org Q140892267 created, credential case-sensitivity discovery).
@@ -8639,7 +8659,7 @@ items (QNFO P31 research program, Five Pillars P361 part-of, concept items as P9
 
 
 
-Current: **v2.81** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.82** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
