@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.34
+version: 1.35
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -291,6 +291,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.35 UPDATE (2026-08-05, kaizen — SKILL-COMMIT-SAME-SESSION-1: version control is 100% the agent's responsibility):**
+> Red-team: direct parent-agent audit (session IZbk2G9P2aA0JH0f0yQjj, user mandate).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **SKILL-COMMIT-SAME-SESSION-1 anti-pattern added** — every skill file
+>     change (create/update/kaizen) MUST be committed to the qnfo-skills git repo
+>     (C:\Users\LENOVO\Documents\GitHub\qnfo-skills) and pushed to origin in the
+>     SAME session. Canonical case: kaizen v1.31->v1.34, system v2.11->v2.13,
+>     knowledge v2.5->v2.7, email-composer v2.2->v2.3 were edited on disk for days
+>     without git commits; personal-knowledge v1.0 was NEVER committed. Version
+>     control is 100% the agent's responsibility — the user must never have to ask.
+> (2) [HARD] **Sync direction documented** — live skills dir (.deepchat\skills) is
+>     the app's load source; git repo (Documents\GitHub\qnfo-skills) is the
+>     canonical version store. After ANY skill edit: copy live -> git, commit,
+>     push origin. The rwnq8 mirror is archived/read-only (403) — origin only.
+> Cross-reference: deepchat-settings v1.3, git-github SAME-TURN-COMMIT, user 2026-08-05.
 
 > **v1.34 UPDATE (2026-08-05, kaizen — SKILL-DEATH-FALSE-POSITIVE-1: skill_list is the ONLY truth source; never infer skill removal from loader absence):**
 > Red-team: direct parent-agent forensic audit (session IZbk2G9P2aA0JH0f0yQjj).
@@ -840,6 +856,20 @@ After all fixes applied:
    the closeout. Do not declare kaizen complete with unresolved HARD issues.
 
 ### Phase 5: Closeout
+
+**STEP -2 — SKILL-GIT-COMMIT GATE (HARD, added 2026-08-05):**
+Before ANY closeout, verify every skill touched this session is committed to git:
+
+```
+1. List all skills edited this session (SKILL.md files written/edited)
+2. For EACH: verify git repo (Documents\GitHub\qnfo-skills) has the change:
+   git -C <repo> status --short  -> must be clean (0 uncommitted skill changes)
+3. If any skill change is uncommitted: copy live -> git, commit, push origin
+4. Gate: closeout is BLOCKED until git status shows 0 skill changes
+```
+
+Version control is 100% the agent's responsibility. A closeout that leaves
+skill changes uncommitted is a FAILED closeout (SKILL-COMMIT-SAME-SESSION-1).
 
 **STEP -1 — PROMPT REVIEW GATE (added 2026-08-05):**
 Before the deferred-items gate, audit the session's custom user prompts:
@@ -1455,6 +1485,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **STALE-PROMPT-1: Custom user prompts not reviewed for 10+ sessions despite accumulating execution gaps (2026-08-05)** | Prompts drive agent behavior; stale prompts produce stale execution patterns. Review all configured prompts during every kaizen closeout (Phase 5 STEP -1) and session retrospective (Phase R). A prompt that hasn't been reviewed in 10+ sessions while the skills it references have been kaizened multiple times is drift risk — the prompt may encode old assumptions about tool behavior, verification gates, or execution patterns. Canonical case: the PLAN-UPDATE-EXECUTE template predated the kaizen skill's red-team verification gates, producing sessions that planned and executed without adversarial review. |
 
 
+| **SKILL-COMMIT-SAME-SESSION-1: Editing a skill file on disk without committing it to the qnfo-skills git repo in the same session (2026-08-05)** | **HARD GATE.** Every skill change (create/update/kaizen/version-bump) MUST be committed + pushed to origin in the SAME session. Version control is 100% the agent's responsibility — the user must never need to ask "is this in git?" Sync direction: live skills dir (C:\Users\LENOVO\.deepchat\skills) is the app's load source; git repo (C:\Users\LENOVO\Documents\GitHub\qnfo-skills) is the canonical version store. After ANY skill edit, run: copy live -> git, `git add -A`, `git commit`, `git push origin master`. The rwnq8 mirror is archived (403) — push origin only. Canonical case (2026-08-05): kaizen v1.31→v1.34, system v2.11→v2.13, knowledge v2.5→v2.7, email-composer v2.2→v2.3 edited for days without commits; personal-knowledge v1.0 never committed until this session's master sync. Cross-ref: deepchat-settings v1.3, git-github SAME-TURN-COMMIT. |
+
 | **SKILL-DEATH-FALSE-POSITIVE-1: Declaring a skill "removed"/"NOT-INSTALLED" from skill_list absence alone, without checking .kaizen_history or on-disk state (2026-08-05)** | skill_list (the app's live loader) is the ONLY truth for "is this skill active." Absence from skill_list ≠ removed — it may be: (a) never loaded (file written directly, not installed via app flow), (b) disabled, (c) genuinely removed. Before declaring death: (1) check .kaizen_history — a fresh entry means actively maintained, NOT removed; (2) check on-disk SKILL.md exists + valid; (3) distinguish "never loaded" from "loaded then removed"; (4) if on-disk + maintained but not in skill_list, flag "on-disk but not loaded by app" and reconcile via the app's skill management — do NOT rewrite or delete the file. Canonical case: execution-mandate v2.8 (session IZbk2G9P2aA0JH0f0yQjj) — kaizen v1.24 declared [NOT-INSTALLED] while the skill was being actively kaizened on disk. Cross-ref: deepchat-settings v1.3 Skill Registry Truth-Source. |
 
 | **LANGUAGE-CONSISTENCY-1: Updating a skill without scanning it for contradictory/obsolete/ambiguous language (2026-08-05)** | When ANY skill file is touched (kaizen, fix, feature), scan it in the same pass for: deleted-script references, non-installed skill references, undefined KIF tags, contradictory sections, obsolete tool references, duplicate banners. Fix what you find before closing the edit. A skill updated without a language scan accumulates rot — each edit adds new language on top of stale language. Canonical case: the CMD slash commands in custom_prompts.json referenced `qnfo-agent`/`system`/`skill-hygiene.js` (all non-existent) for weeks before the 2026-08-05 audit caught it. |
@@ -1656,7 +1688,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 ## Version
 
-Current: **v1.34** (kaizen — SKILL-DEATH-FALSE-POSITIVE-1: never declare a skill 'removed' from skill_list absence alone; check .kaizen_history + on-disk state first; skill_list is the ONLY truth source for loaded skills; 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+Current: **v1.35** (kaizen — SKILL-COMMIT-SAME-SESSION-1 HARD gate: every skill change MUST be committed to git in the same session; version control is 100% the agent's responsibility; user mandate 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
