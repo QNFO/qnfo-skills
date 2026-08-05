@@ -1,10 +1,10 @@
 ---
 name: social-media-management
-version: 1.5.0
-description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and integration with linkedin-mcp for LinkedIn connections.
+version: 1.6.0
+description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation path for LinkedIn profile updates.
 ---
 
-> **v1.5.0 UPDATE (2026-08-05, kaizen — UNIFIED CROSS-PLATFORM SOCIAL HUB + linkedin-mcp DEPRECATION):**
+> **v1.5.0 UPDATE (2026-08-05, kaizen — UNIFIED CROSS-PLATFORM SOCIAL HUB + linkedin-mcp DELETED):**
 > Red-team: direct parent-agent audit of session yHXrIYDvUfwQ6twlIaWG5.
 > HARD: 1. SOFT: 2. DESIGN: 1. Changes:
 > (1) [HARD] **linkedin-mcp-tools v2.0.3 DEPRECATED** — never functional on this machine:
@@ -20,7 +20,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 >     a real Bearer token in mcp-settings.json; cross-platform posting path documented.
 > (4) [DESIGN] **Platform Support Matrix updated** — LinkedIn row corrected to
 >     browser-automation (autocomplete selectors); Buffer row added.
-> Cross-reference: linkedin-mcp (DEPRECATED banner), kaizen v1.44 (ZENODO-RAW-UPLOAD-CT-1
+> Cross-reference: linkedin-mcp (DELETED 2026-08-05), kaizen v1.44 (ZENODO-RAW-UPLOAD-CT-1
 > class — same verify-the-auth-chain discipline), session yHXrIYDvUfwQ6twlIaWG5.
 
 > **v1.4.1 UPDATE (2026-08-05, kaizen — STALE-COUNT-1 live recurrence + phantom-entry removal):**
@@ -76,13 +76,22 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > Zero-dependency Python automation for Bluesky and Mastodon follow management.
 > 55 QNFO-aligned accounts across 4 platforms (25 Bluesky / 3 Mastodon / 20 X / 7 LinkedIn).
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
-> LinkedIn: connections via linkedin-mcp-tools (5/day cap).
+> LinkedIn: connections via browser-automation with authenticated Chrome profile.
 
-# SOCIAL MEDIA MANAGEMENT — v1.5.0
+# SOCIAL MEDIA MANAGEMENT — v1.6.0
+> **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **BSKY-300-GRAPHEME-1 anti-pattern added** — 300-grapheme hard limit; post 1
+>     (322 chars) rejected 3x before trim.
+> (2) [DESIGN] **bluesky_post.py added to scripts/** — AT Protocol posting client with
+>     credential auto-discovery (env → keys.json → .env → .bsky_credentials) and threaded
+>     posting. Canonical thread: references/bluesky-thread.txt (5 posts, published live).
+> Cross-reference: kaizen v1.51, research v2.79, session 3i_KVLownViukLTZB_BJ1.
 
 UNIFIED cross-platform social media hub: follow management (Bluesky/Mastodon),
 curated QNFO account registry (97 accounts), Buffer MCP cross-platform posting, and
-LinkedIn browser-automation path (linkedin-mcp deprecated 2026-08-05).
+LinkedIn browser-automation path (linkedin-mcp DELETED 2026-08-05).
 
 ---
 
@@ -206,36 +215,76 @@ Mastodon accounts are identified as `@user@instance.tld`.
 
 ---
 
-## LinkedIn — Browser Automation Path (MCP DEPRECATED)
+## LinkedIn — Browser Automation Path (ONLY method)
 
-**The linkedin-mcp-tools MCP is DEAD** (deprecated 2026-08-05 — never functional:
-no profile dir, no credentials, inert cookie schema). Do NOT use it. LinkedIn has
-NO public profile-edit API, so the ONLY automation path is browser automation
-against the live site with an authenticated Chrome profile.
+**linkedin-mcp-tools MCP DELETED (2026-08-05)** — never functional. The ONLY
+LinkedIn automation path is browser automation via puppeteer-core CDP with an
+authenticated Chrome profile (`~/.linkedin-profile`, one manual sign-in required).
 
-### Requirements
-- Chrome: `C:\Program Files (x86)\Google\Chrome\Application\chrome.exe` (present)
-- Auth: ONE manual sign-in (CAPTCHA/2FA possible) to establish a persistent profile
-  (e.g. `~/.linkedin-profile`), then reuse it
-- **Selectors: `autocomplete` attributes, NOT element IDs** — LinkedIn randomizes
-  IDs (`#username` absent; `input[autocomplete="username"]` present, verified
-  2026-07-31). Same rule for edit fields: `input[autocomplete=...]`,
-  `textarea[autocomplete=...]`.
+---
+
+### What Works (EDITING existing sections only)
+
+| Section | Method | Verified |
+|:--------|:-------|:---------|
+| **Headline** | Navigate `/in/{slug}/edit/intro` → `div[contenteditable="true"].ProseMirror` (TipTap editor) → `execCommand('selectAll')` + `execCommand('insertText')` → Save | ✅ 2026-08-05, live |
+| **About** | Navigate profile page → click `a[aria-label="Edit about"]` (NOT a button!) → wait for TipTap editor → `execCommand('insertText')` → Save | ✅ 2026-08-05, live |
+
+### What Does NOT Work (ADDING new sections — CDP CANNOT automate)
+
+| Section | Blocker |
+|:--------|:--------|
+| **Experience** | Profile has no experience section. "Add a position or career break" button exists but produces NO form/modal via CDP. Requires "Add profile section" → Core → Add experience flow — the popup renders outside detectable DOM containers. LINKEDIN-EXP-NO-FORM-1. |
+| **Skills** | Same blocker — not on main profile. Behind "Add profile section" → Core → Skills panel. |
+| **Education** | Same blocker — not on main profile. |
+| **Certifications** | Same blocker — not on main profile. |
+| **Featured** | Same blocker. |
+| **Any NEW section type** | Profiles WITHOUT a section type CANNOT have it added via CDP. Only existing sections can be EDITED. |
+
+### Working Pipeline
+
+**Script:** `scripts/linkedin-apply-profile.py` — puppeteer-core CDP browser automation.
+**Data:** `scripts/linkedin-profile-update.json` — structured profile data from resume pipeline.
+
+```cmd
+python scripts/linkedin-apply-profile.py ^
+  --package scripts/linkedin-profile-update.json ^
+  --section about   # or headline
+```
+
+**Auth gate:** First run opens Chrome for manual sign-in. Persistent profile survives sessions.
+
+### Verified Selectors (CDP/puppeteer-core)
+
+| Target | Selector | Notes |
+|:-------|:---------|:------|
+| Login username | `input[autocomplete="username"]` | IDs are randomized |
+| Login password | `input[autocomplete="password"]` | |
+| Edit-intro URL | `https://www.linkedin.com/in/{slug}/edit/intro` | NOT /in/edit/intro |
+| Headline editor | `div[contenteditable="true"].ProseMirror` | TipTap/ProseMirror |
+| About edit trigger | `a[aria-label="Edit about"]` | **It is an `<a>`, NOT a `<button>`!** |
+| Save button | `button` with innerText `"Save"` / `"Opslaan"` | |
+| Content insertion | `execCommand('selectAll')` + `execCommand('insertText')` | ProseMirror-compatible. `el.innerText = x` is NOT. |
+| Navigation | `waitUntil: 'domcontentloaded'` | LinkedIn NEVER reaches networkidle0 |
+
+### Safety
+
+Profile edits are unbounded (not gated by connection budget). But LinkedIn bot detection is
+aggressive: pace edits, one section per session, human-in-the-loop for CAPTCHA/2FA. If
+blocked (CLOUDFLARE_BLOCKED / AUTH_REQUIRED), stop and re-authenticate manually — **never
+hammer retries. Retrying the same broken approach risks account lockout.**
 
 ### Profile Update Mapping (from resume pipeline)
+
 | LinkedIn field | Source (resume repo) |
 |:---------------|:---------------------|
 | Headline | RESUME.md subtitle / Target Roles |
 | About | RESUME.md Professional Summary |
-| Experience | RESUME.md Professional Experience (position → description) |
-| Skills | SKILLS-TECHNOLOGY.md matrix |
+| Experience | RESUME.md Professional Experience — **manual only** |
+| Skills | SKILLS-TECHNOLOGY.md matrix — **manual only** |
 
-### Safety
-Profile edits are NOT gated by the connection budget (5/day) — they are unbounded.
-But LinkedIn bot detection is aggressive: pace edits, one section per session,
-human-in-the-loop for CAPTCHA/2FA. If blocked (CLOUDFLARE_BLOCKED / AUTH_REQUIRED),
-stop and re-authenticate manually — never hammer retries.
 
+---
 ---
 
 ## Buffer — Cross-Platform Posting (MCP FUNCTIONAL)
@@ -388,8 +437,11 @@ implemented) or delete the state file to force re-follow.
 | Using your Bluesky account password instead of app password | Create an app password at bsky.app/settings/app-passwords |
 | Running bulk without checking `dry-run` first | Always run `social_follow.py dry-run` before `all` |
 | Following X/Twitter accounts via API | Not supported — removed from Basic/Pro. Manual only. |
-| **LINKEDIN-MCP-NONFUNCTIONAL-1: building on linkedin-mcp-tools v2.0.3 — it NEVER worked (2026-08-05)** | Deprecated. Profile dir missing, creds missing, cookie schema inert. Audit the FULL auth chain (profile dir + credential stores + cookie-injection code) end-to-end BEFORE wiring any tool into a pipeline. |
-| Pasting `li_at` cookies expecting LinkedIn auth | Inert in v2.0.3 (zero addCookies in dist). Use browser automation with an authenticated persistent profile (autocomplete selectors). |
+| **LINKEDIN-MCP-NONFUNCTIONAL-1: building on linkedin-mcp-tools v2.0.3 — it NEVER worked; skill DELETED (2026-08-05)** | linkedin-mcp-tools v2.0.3 MCP server was never functional (profile dir missing, credentials absent, cookie schema inert). Skill directory DELETED from disk and git (5527b41). All surviving LinkedIn automation lives in this skill's browser-automation path. Never build an automation layer on a tool whose auth chain is unverified end-to-end. |
+| **BSKY-300-GRAPHEME-1: Bluesky posts exceed the 300-grapheme hard limit (2026-08-05)** | Bluesky rejects posts over 300 graphemes with `Invalid app.bsky.feed.post record: grapheme too big (maximum 300, got N)`. This is a HARD server-side limit — the API does not truncate. Fix: keep thread posts under 300 graphemes (count characters including URLs and emoji); split long content across more thread posts. Also: thread posts MUST include the replyTo root/parent refs from post 1's uri/cid or the thread breaks. Canonical case: session 3i_KVLownViukLTZB_BJ1 — post 1 (322 chars) rejected 3x until trimmed; 5-post thread then published (DID did:plc:vad2yeqflg5uznmp557zge5c). Cross-ref: bluesky_post.py script in this skill. |
+| **LINKEDIN-EXP-NO-FORM-1: LinkedIn's "Add a position or career break" button produces no modal/form via CDP (2026-08-05)** | Canonical case: session wG__dZyYtV1X4_9mgl4MW — puppeteer-core clicked `button[aria-label="Add a position or career break"]` on `/details/experience/` (confirmed via exact aria-label match). No dialog, modal, or form fields appeared — URL unchanged, `div[role="dialog"]`/`.artdeco-modal` empty. LinkedIn experience-adding requires pre-existing experience section. Profiles without a section type cannot have new sections added via CDP. Only EXISTING sections can be EDITED (About, Headline work fine). Never retry — hammering this risks account lockout. |
+
+| Pasting `li_at` cookies expecting LinkedIn auth | linkedin-mcp-tools is DELETED. Use browser automation with an authenticated persistent Chrome profile (autocomplete selectors). |
 | Hardcoding credentials in scripts | Use `.env` files or environment variables |
 | Rate-limiting by guessing | Bluesky: 1.0s between follows (configurable). Mastodon: 1.5s. |
 | Ignoring federated Mastodon handles | Always use full `@user@instance.tld` format for non-local accounts |
@@ -430,4 +482,4 @@ social-media-management/
 
 ## Version
 
-Current: **v1.5.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, linkedin-mcp deprecated, Buffer MCP posting, QNFO account registry; 2026-08-05)
+Current: **v1.6.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, linkedin-mcp DELETED, Buffer MCP posting, QNFO account registry; 2026-08-05)

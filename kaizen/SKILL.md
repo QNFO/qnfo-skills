@@ -11660,7 +11660,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| `linkedin-mcp` | [DEPRECATED — DO NOT USE (2026-08-05)] | MCP server never functional. All LinkedIn automation → `social-media-management` (browser-automation path) |
+| `linkedin-mcp` | [DELETED 2026-08-05] | Skill deleted per user mandate. Survivors migrated to `social-media-management`. |
 
 
 
