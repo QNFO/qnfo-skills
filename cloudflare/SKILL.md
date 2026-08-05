@@ -1319,42 +1319,50 @@ Current: **v3.34** (cloudflare — Cloudflare Fork Policy: official Cloudflare s
 
 ---
 
-## Cloudflare Fork Policy (HARD, added 2026-08-05)
+## Cloudflare Fork Policy (HARD, updated 2026-08-05)
 
 **User directive:** Default Cloudflare skills MUST always be forked separately
 from the official Cloudflare GitHub repo, available to load, and
 documented/referenced/linked in THIS custom skill — but they are NEVER backed up
 in the qnfo-skills repo.
 
+### The Fork (REAL — fork of official cloudflare/skills)
+
+| Item | Value |
+|:-----|:------|
+| **Fork repo** | `https://github.com/QNFO/cloudflare-skill-forks` (public) |
+| **Upstream (official)** | `https://github.com/cloudflare/skills.git` — remote `upstream`, tracked |
+| **Local clone** | `C:\Users\LENOVO\Documents\GitHub\cloudflare-skill-forks` |
+| **Default branch** | `main` |
+| **Sync state (2026-08-05)** | fork HEAD == origin/main == upstream/main `30553f8` — in sync with official |
+
 ### The Rules
 
-1. **Official Cloudflare skills live in a SEPARATE git repo:**
-   `https://github.com/QNFO/cloudflare-skill-forks`. They are forked from the
-   official Cloudflare GitHub repo (cloudflare/skills ecosystem).
+1. **Official Cloudflare skills live ONLY in the fork repo** — NEVER in qnfo-skills.
+   The qnfo-skills repo contains ONLY this custom consolidated `cloudflare` skill.
 
-2. **NEVER store official Cloudflare skill content in qnfo-skills.**
-   The qnfo-skills repo contains ONLY this custom consolidated cloudflare skill.
-   Official-skill integration sections below are REFERENCES/COVERAGE MATRICES,
-   not copies of official skill content.
+2. **Fork layout:** official skills are under `skills/<name>/SKILL.md` in the fork:
+   agents-sdk, cloudflare-email-service, cloudflare-one, cloudflare-one-migrations,
+   durable-objects, sandbox-sdk, turnstile-spin, web-perf, workers-best-practices,
+   wrangler. (The official `skills/cloudflare/` entry is NOT installed — it would
+   collide with this custom skill.)
 
-3. **Available to load:** the forked official skills are installed in the DeepChat
-   skills dir (runtime) so they can be loaded — but their canonical home is the
-   fork repo, and they are version-tracked THERE, not in qnfo-skills.
+3. **Available to load:** the 10 official skills are hydrated into the DeepChat
+   live skills dir (C:\Users\LENOVO\.deepchat\skills) so they can be loaded —
+   but their canonical version home is the fork repo, version-tracked THERE.
 
-4. **Modifications to forks → PR back to Cloudflare.** If this ecosystem makes
-   separate modifications to a forked official skill, the change SHOULD be
-   pushed as a PR to the official Cloudflare repo for update consideration
-   (per user directive). The fork repo is the working copy for those PRs.
+4. **Modifications → PR back to Cloudflare.** Any modification made to a forked
+   official skill in this ecosystem SHOULD be pushed as a PR to the official
+   `cloudflare/skills` repo (via the `upstream` remote) for update consideration.
 
-5. **Never customize/update platform-provided DeepChat skills** (per companion
-   directive): DeepChat platform default skills are expunged from all git repos
-   and never version-tracked.
+5. **Keep the fork in sync with upstream:** after official Cloudflare updates,
+   `git -C <fork> fetch upstream && git merge upstream/main && git push origin main`.
 
-**Canonical case (2026-08-05):** The 11-skill Cloudflare coverage matrix
-(durable-objects, workers-best-practices, web-perf, turnstile-spin, cloudflare-one,
-email-service, sandbox-sdk, agents-sdk, wrangler, deployer, github-manager) is
-documented as integration references below. Official content is forked to
-`QNFO/cloudflare-skill-forks`, never stored in qnfo-skills.
+6. **Never customize/update platform-provided DeepChat skills** (companion
+   directive): DeepChat platform default skills are expunged from all git repos.
+
+**Canonical case (2026-08-05):** fork created from official cloudflare/skills;
+10 official skills hydrated to runtime; custom skill v3.34 documents coverage.
 
 
 ## Agents SDK (Official Skill Integration — v3.30)
