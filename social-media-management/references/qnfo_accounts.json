@@ -1,0 +1,455 @@
+{
+  "$schema": "https://qnfo.org/schemas/social-registry-v1.json",
+  "version": "1.1.0",
+  "generated": "2026-08-05",
+  "description": "QNFO-aligned social media accounts. domain = canonical QNFO program code (ump/slb/inm/cfe/res); domain_detail = sub-topic. Bluesky handles live-verified 2026-08-05 via AT Protocol resolveHandle (17/17).",
+  "accounts": {
+    "bluesky": [
+      {
+        "handle": "seanmcarroll.bsky.social",
+        "name": "Sean Carroll",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true,
+        "did": "did:plc:7odhgjrqjyqrjqvzxxmqzlz6"
+      },
+      {
+        "handle": "preskill.bsky.social",
+        "name": "John Preskill",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "verified": true,
+        "did": "did:plc:moqj4fdmgwzaxnik637dsccg"
+      },
+      {
+        "handle": "coecke.bsky.social",
+        "name": "Bob Coecke",
+        "domain": "res",
+        "domain_detail": "category-theory",
+        "verified": true,
+        "did": "did:plc:dv5rayydjhnj4uz3oglq22d6"
+      },
+      {
+        "handle": "markwilde.bsky.social",
+        "name": "Mark M. Wilde",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "verified": true,
+        "did": "did:plc:37ke7ssg5rikxfwvme57k5yj"
+      },
+      {
+        "handle": "quantumaephraim.bsky.social",
+        "name": "Aephraim Steinberg",
+        "domain": "res",
+        "domain_detail": "quantum-experiment",
+        "verified": true,
+        "did": "did:plc:kr27hkeidyinruv3olbuqi7l"
+      },
+      {
+        "handle": "paulskrzypczyk.bsky.social",
+        "name": "Paul Skrzypczyk",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "verified": true,
+        "did": "did:plc:7mwle5n5atjectyci27mhobs"
+      },
+      {
+        "handle": "quantummoxie.bsky.social",
+        "name": "Ian Durham",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true,
+        "did": "did:plc:dv3cwj2zdny77yhrbx37p4fs"
+      },
+      {
+        "handle": "kenwharton.bsky.social",
+        "name": "Ken Wharton",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true,
+        "did": "did:plc:ydjdqwha4do6ny6gxmop4mvq"
+      },
+      {
+        "handle": "daanwjanssen.bsky.social",
+        "name": "Daan Janssen",
+        "domain": "ump",
+        "domain_detail": "mathematical-physics",
+        "verified": true,
+        "did": "did:plc:izxihduvuils3hvqj45haiha"
+      },
+      {
+        "handle": "drmichaellevin.bsky.social",
+        "name": "Michael Levin",
+        "domain": "inm",
+        "domain_detail": "information-biology",
+        "verified": true,
+        "did": "did:plc:ercypdmxlorzdsdm47pijwq2"
+      },
+      {
+        "handle": "graemesmith.bsky.social",
+        "name": "Graeme Smith",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "verified": true,
+        "did": "did:plc:s3aq2tq6sfnrailb3b6kjobh"
+      },
+      {
+        "handle": "philipcball.bsky.social",
+        "name": "Philip Ball",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true,
+        "did": "did:plc:a4feceawcvvxstg7pagxnryg"
+      },
+      {
+        "handle": "quantum-journal.bsky.social",
+        "name": "Quantum Journal",
+        "domain": "inm",
+        "domain_detail": "journals",
+        "verified": true,
+        "did": "did:plc:gqppp3axfdexmy5heuswoyfi"
+      },
+      {
+        "handle": "quantum-magazine.bsky.social",
+        "name": "Quantum Magazine",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true,
+        "did": "did:plc:alqcndyppd7ovrfbzvvbpg2q"
+      },
+      {
+        "handle": "quantph-bot.bsky.social",
+        "name": "arXiv quant-ph Bot",
+        "domain": "inm",
+        "domain_detail": "preprints",
+        "verified": true,
+        "did": "did:plc:melooq3pgxglmzuttf2wr5es"
+      },
+      {
+        "handle": "iopp-quantum.bsky.social",
+        "name": "IOP Quantum",
+        "domain": "inm",
+        "domain_detail": "journals",
+        "verified": true,
+        "did": "did:plc:5lqiavma4b4b3uivlsjdpubc"
+      },
+      {
+        "handle": "aspects-quantum.bsky.social",
+        "name": "Aspects Quantum",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true,
+        "did": "did:plc:zybfcafawsmgbt2axjaiufmv"
+      },
+      {
+        "handle": "peterwildeford.bsky.social",
+        "name": "Peter Wildeford",
+        "domain": "cfe",
+        "domain_detail": "forecasting",
+        "verified": true,
+        "did": "did:plc:xfq5tigqntyy3qpnucat3436"
+      },
+      {
+        "handle": "nunosempere.com",
+        "name": "Nuno Sempere",
+        "domain": "cfe",
+        "domain_detail": "forecasting",
+        "verified": true,
+        "did": "did:plc:aqxlbffkvne23wbvrlnpukaq"
+      },
+      {
+        "handle": "deneufville.bsky.social",
+        "name": "Robert de Neufville",
+        "domain": "cfe",
+        "domain_detail": "superforecaster",
+        "verified": true,
+        "did": "did:plc:syqryinf4oqqf3wpulzc55s3"
+      },
+      {
+        "handle": "unjournal.bsky.social",
+        "name": "The Unjournal",
+        "domain": "cfe",
+        "domain_detail": "forecasting-eval",
+        "verified": true,
+        "did": "did:plc:iu2bed5w3ms7kbpspvn4k4il"
+      },
+      {
+        "handle": "yoshuabengio.bsky.social",
+        "name": "Yoshua Bengio",
+        "domain": "cfe",
+        "domain_detail": "ai-safety",
+        "verified": true,
+        "did": "did:plc:3ezp6hkpykqzyexh2kzjybij"
+      },
+      {
+        "handle": "egeerdil.bsky.social",
+        "name": "Ege Erdil",
+        "domain": "cfe",
+        "domain_detail": "forecasting",
+        "verified": true,
+        "did": "did:plc:r4m47wzmmpvuw6iv5m2fdztp"
+      },
+      {
+        "handle": "joshuagrochow.bsky.social",
+        "name": "Joshua Grochow",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "verified": true,
+        "did": "did:plc:pa7qh66jfhgfev77jyz7fogh"
+      },
+      {
+        "handle": "nathanielvirgo.bsky.social",
+        "name": "Nathaniel Virgo",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "verified": true,
+        "did": "did:plc:xpl57er4zbahuoaqis6qatin"
+      }
+    ],
+    "mastodon": [
+      {
+        "handle": "@johncarlosbaez@mathstodon.xyz",
+        "name": "John Baez",
+        "domain": "res",
+        "domain_detail": "mathematical-physics",
+        "verified": true
+      },
+      {
+        "handle": "@Nathaniel@mathstodon.xyz",
+        "name": "Nathaniel Virgo",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "verified": true
+      },
+      {
+        "handle": "@vbuendiar@fediscience.org",
+        "name": "Victor Buendia",
+        "domain": "res",
+        "domain_detail": "statistical-physics",
+        "verified": true
+      }
+    ],
+    "x-twitter": [
+      {
+        "handle": "@preskill",
+        "name": "John Preskill",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "verified": true
+      },
+      {
+        "handle": "@seanmcarroll",
+        "name": "Sean Carroll",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true
+      },
+      {
+        "handle": "@postquantum",
+        "name": "Jonathan Oppenheim",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "verified": true
+      },
+      {
+        "handle": "@carlorovelli",
+        "name": "Carlo Rovelli",
+        "domain": "res",
+        "domain_detail": "quantum-gravity",
+        "verified": true
+      },
+      {
+        "handle": "@scottaaronson",
+        "name": "Scott Aaronson",
+        "domain": "inm",
+        "domain_detail": "quantum-complexity",
+        "verified": true
+      },
+      {
+        "handle": "@chiaramarletto",
+        "name": "Chiara Marletto",
+        "domain": "inm",
+        "domain_detail": "constructor-theory",
+        "verified": true
+      },
+      {
+        "handle": "@stephen_wolfram",
+        "name": "Stephen Wolfram",
+        "domain": "res",
+        "domain_detail": "ruliad-physics",
+        "verified": true
+      },
+      {
+        "handle": "@drmichaellevin",
+        "name": "Michael Levin",
+        "domain": "inm",
+        "domain_detail": "information-biology",
+        "verified": true
+      },
+      {
+        "handle": "@tegmark",
+        "name": "Max Tegmark",
+        "domain": "cfe",
+        "domain_detail": "ai-physics",
+        "verified": true
+      },
+      {
+        "handle": "@NaturePhysics",
+        "name": "Nature Physics",
+        "domain": "res",
+        "domain_detail": "journals",
+        "verified": true
+      },
+      {
+        "handle": "@PRX_Quantum",
+        "name": "PRX Quantum",
+        "domain": "inm",
+        "domain_detail": "journals",
+        "verified": true
+      },
+      {
+        "handle": "@PhysRevX",
+        "name": "Physical Review X",
+        "domain": "res",
+        "domain_detail": "journals",
+        "verified": true
+      },
+      {
+        "handle": "@quant_phys",
+        "name": "Quantum Physics Corner",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true
+      },
+      {
+        "handle": "@mpi_pks",
+        "name": "MPI-PKS Dresden",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "verified": true
+      },
+      {
+        "handle": "@QuantumIQC",
+        "name": "IQC Waterloo",
+        "domain": "inm",
+        "domain_detail": "quantum-computation",
+        "verified": true
+      },
+      {
+        "handle": "@sfiscience",
+        "name": "Santa Fe Institute",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "verified": true
+      },
+      {
+        "handle": "@QuantaMagazine",
+        "name": "Quanta Magazine",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true
+      },
+      {
+        "handle": "@Perimeter",
+        "name": "Perimeter Institute",
+        "domain": "res",
+        "domain_detail": "theoretical-physics",
+        "verified": true
+      },
+      {
+        "handle": "@WolframResearch",
+        "name": "Wolfram Research",
+        "domain": "res",
+        "domain_detail": "ruliad-physics",
+        "verified": true
+      },
+      {
+        "handle": "@quant_ph",
+        "name": "arXiv quant-ph Bot",
+        "domain": "inm",
+        "domain_detail": "preprints",
+        "verified": true
+      }
+    ],
+    "linkedin": [
+      {
+        "name": "John Preskill",
+        "domain": "inm",
+        "domain_detail": "quantum-information",
+        "search": "John Preskill Caltech"
+      },
+      {
+        "name": "Bob Coecke",
+        "domain": "res",
+        "domain_detail": "category-theory",
+        "search": "Bob Coecke Quantinuum"
+      },
+      {
+        "name": "Sean Carroll",
+        "domain": "res",
+        "domain_detail": "quantum-foundations",
+        "search": "Sean Carroll Johns Hopkins"
+      },
+      {
+        "name": "Stephen Wolfram",
+        "domain": "res",
+        "domain_detail": "ruliad-physics",
+        "search": "Stephen Wolfram"
+      },
+      {
+        "name": "Demis Hassabis",
+        "domain": "cfe",
+        "domain_detail": "ai-science",
+        "search": "Demis Hassabis DeepMind"
+      },
+      {
+        "name": "Max Tegmark",
+        "domain": "cfe",
+        "domain_detail": "ai-physics",
+        "search": "Max Tegmark MIT"
+      },
+      {
+        "name": "David Krakauer",
+        "domain": "res",
+        "domain_detail": "complex-systems",
+        "search": "David Krakauer Santa Fe Institute"
+      }
+    ]
+  },
+  "domains": {
+    "ump": "Ultrametric Physics \u2014 p-adic/adelic/non-Archimedean, Bruhat-Tits, Ostrowski",
+    "slb": "Laws of Form \u2014 Spencer-Brown, calculus of indications, distinction",
+    "inm": "Infomatics \u2014 information as physics, Landauer-Bekenstein, quantum info, IIT",
+    "cfe": "CFPE \u2014 technology forecasting, paradigm engineering, post-silicon, AI timelines",
+    "res": "QNFO Research \u2014 consilience, measurement stratigraphy, Ruliad, category theory, complexity"
+  },
+  "starter_packs": {
+    "bluesky": [
+      {
+        "name": "QuantumSky",
+        "creator": "Rishi Sreedhar",
+        "url": "https://bsky.app/starter-pack/quantumsky"
+      },
+      {
+        "name": "Quantum Computing",
+        "creator": "Kartik",
+        "url": "https://bsky.app/starter-pack/quantum-computing"
+      },
+      {
+        "name": "Quantum Error Corr.",
+        "creator": "Mark M. Wilde",
+        "url": "https://bsky.app/starter-pack/qec"
+      },
+      {
+        "name": "Physics (general)",
+        "creator": "Community",
+        "url": "https://blueskydirectory.com/starter-packs/352-physics-accounts-that-physicists-follow"
+      }
+    ]
+  },
+  "coverage_gaps": {
+    "ump": "ZERO social accounts found (p-adic/ultrametric researchers don't maintain public social presences). Use taxonomy keywords for recurrent discovery.",
+    "slb": "ZERO social accounts found (Laws of Form community is tiny; check second-order cybernetics circles).",
+    "cfe": "PARTIALLY FILLED 2026-08-05: +6 CFE accounts (Wildeford, Sempere, de Neufville, Unjournal, Bengio, Erdil). Post-silicon computing roadmaps still thin."
+  }
+}
