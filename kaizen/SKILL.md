@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.39
+version: 1.40
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -291,6 +291,17 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.40 UPDATE (2026-08-05, kaizen — Mined QNFO/qm: independent review, durable-by-default):**
+> Red-team: direct parent-agent mining of QNFO/qm (11,420★ multiplayer agent
+> harness, the parent of the 0★ yc-qm fork the user listed). Forked + cloned.
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **QM patterns added to Mined Workflow Patterns** — independent-review
+>     mandate (never self-review in authoring context; reviewer has last word),
+>     blast-radius-by-callers, fix-every-instance, durable-by-default (extends
+>     thin-client protocol to process-memory level), security postures.
+> Cross-reference: QNFO/qm fork, git-github v2.17 Thin-Client Protocol,
+> user 2026-08-05 mining directive.
 
 > **v1.39 UPDATE (2026-08-05, kaizen — VERSION-OVERWRITE-1 merge):**
 > Two concurrent sessions both bumped kaizen to v1.38 with different content.
@@ -1420,6 +1431,43 @@ directory contents/files).
 - `QNFO/claude-code-aso-skill` (408★) — master orchestrator + specialist agent fleet
 - `QNFO/claude-skills` (23,845★) — skill authoring + pipeline standards (mined into v1.36)
 
+### F. Independent Review & Durability (qm — 11.4k★ multiplayer agent harness)
+
+**Source:** `QNFO/qm` (11,420★, MIT — the parent of the 0★ yc-qm fork). A multiplayer
+agent harness with scoped memory/files/keychain per person and room, security postures,
+and durable sandboxes. Its AGENTS.md coding standards are gold:
+
+1. **Independent-review mandate (HARD):** *"Never merge to main without a fresh-context
+   pass that tries to break the change. Not a blessing — hunt for the bug, the missed
+   edge case, the unstated assumption. Always dispatch an independent review agent that
+   did not watch you write the change: the context that produced a diff already believes
+   it is correct, and that belief is the bias review exists to defeat. Never self-review
+   in the authoring context, however small the diff; a green CI run is not review either."*
+   → This sharpens our Phase 4 gate: the implementer's own verification is insufficient
+   (kaizen already says this) — extend to: reviewer, not author, has the LAST WORD on
+   depth, and escalates on its own initiative when it spots risk it wasn't scoped for.
+2. **Blast radius by callers:** judge a change's risk by checking CALLERS, not by
+   counting files — "a one-line edit to a helper with fifty importers is not a small
+   change." A narrow blast radius warrants one reviewer at modest effort; core control
+   flow / auth / data loss / concurrency / spend / public API contracts warrant several
+   reviewers with distinct lenses.
+3. **Fix every instance:** *"one autocorrected call site with five untouched siblings is
+   a regression waiting to be rediscovered"* — grep the whole ecosystem for the same
+   pattern and fix all of it in the same change. (Extends LANGUAGE-CONSISTENCY-1.)
+4. **Durable by default (HARD):** never stash state the system later reads back in
+   process memory (in-memory Map/ring buffer is per-instance, wiped by every deploy).
+   Anything read back later — audit, logs, resolved config, queued/in-flight work — must
+   live in a DURABLE store. RAM-only is fine only as a cache in front of a durable store,
+   or for genuinely disposable re-derivable state. **This is the code-level twin of the
+   Thin-Client Canonical Asset Protocol (git-github v2.17):** local/process state is
+   ephemeral; durable state lives in git/R2/D1/Postgres.
+5. **Security postures:** Strict (every tool call pauses for human approval except
+   no-effect turn-enders) / Auto (default — classifier screens provenance-labelled
+   external data before it reaches the model) / Dangerous (no screening). Plus a
+   **predeclared command policy** — approval rules and hard denials for recursive
+   deletes and destructive SQL. Maps to stakes-calibrated caution (gaios C): calibrate
+   approval to destructiveness.
+
 ### A. 3-Tier Architecture (tresor) — the right tool per task
 
 | Tier | Name | Invoked by | Characteristics | Our Equivalent |
@@ -1977,7 +2025,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 > Cross-reference: qnfo-core §0.0 Bibliographic Integrity, research P3.AUTHOR-GATE,
 > git-github SAME-TURN-COMMIT, session IfYDah5TSY5gNMY0S4OT5.
 
-Current: **v1.39** (kaizen — merged concurrent v1.38 sessions: (a) Mined Workflow Patterns from QNFO/gaios+tresor+aso-skill — 3-tier architecture, WAT model, stakes-calibrated caution, orchestrator+specialists, connections registry; (b) session IfYDah5TSY5gNMY0S4OT5 retrospective — PROFILE-README-FABRICATE-1, MANUAL-DELEGATE-1, GITHUB-CDN-PROPAGATION-1; version merged past collision per VERSION-OVERWRITE-1; 2026-08-05)
+Current: **v1.40** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
