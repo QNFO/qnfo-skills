@@ -6,13 +6,49 @@
 
 | Code | Program | Social Discovery Priority |
 |:-----|:--------|:--------------------------|
-| **UMP** | Ultrametric Physics (p-adic/adelic/non-Archimedean, Bruhat-Tits) | HIGH — currently 0 accounts |
+| **UMP** | Ultrametric Physics (p-adic/adelic/non-Archimedean, Bruhat-Tits) | HIGH — +2 community accounts (2026-08-05), individuals still rare |
 | **SLB** | Laws of Form (Spencer-Brown, calculus of indications) | HIGH — currently 0 accounts |
-| **INM** | Infomatics (information as physics, Landauer-Bekenstein) | MEDIUM — partial coverage |
-| **CFE** | CFPE (Cascading Foresight / Paradigm Engineering) | HIGH — currently 0 accounts |
-| **RES** | QNFO Research (consilience, measurement stratigraphy, Ruliad) | LOW — well covered |
-| **PLT** | QWAV Platform (Cloudflare infra) | N/A — not social |
+| **INM** | Infomatics (information as physics, Landauer-Bekenstein) | COVERED — 11 accounts (2026-08-05) |
+| **CFE** | CFPE (Cascading Foresight / Paradigm Engineering) | COVERED — 8 accounts (2026-08-05) |
+| **RES** | QNFO Research (consilience, measurement stratigraphy, Ruliad) | COVERED — 17 accounts (2026-08-05) |
+| **PLT** | QWAV Platform (Cloudflare infra + 4-D Distribution + agentic AI) | COVERED — 6 accounts (2026-08-05) |
 | **DEM** | QWAV Demos (visualization) | N/A — not social |
+
+## Corrected Scope (2026-08-05) — every tier maps to real communities
+
+> **The taxonomy is a map of an entire research ecosystem, NOT a niche list.**
+> Full-scope discovery covers: number theory/Langlands (UMP), second-order
+> cybernetics (SLB), free-energy-principle + IIT (INM·Bayesian/Integrated),
+> quantum biology/Autaxys (RES), metrology/NIST (RES·Stratigraphy), QG
+> phenomenology (RES·Bridge), post-silicon/photonic/quantum roadmaps (CFE),
+> IPFS/Filecoin/Arweave/Zenodo (PLT·4-D), MCP/agent frameworks (cross-cutting).
+
+### Per-Tier Coverage Log (2026-08-05 live-verified, 45/45 Bluesky)
+
+| Tier | Accounts Added | Handles |
+|:-----|:---------------|:--------|
+| INM·Bayesian | Active Inference Institute (Friston proxy) | `activeinference.bsky.social` |
+| INM·Integrated | Anil Seth, Allen Institute (Koch/IIT) | `anilseth`, `alleninstitute.org` |
+| RES·Autaxys | Quantum Biology DAO, Clarice Aiello | `quantumbiodao`, `claricedaiello` |
+| RES·Bridge | Hossenfelder, Krauss | `hossenfelder`, `lkrauss1` |
+| RES·Stratigraphy | NIST | `nist` |
+| RES·SciComm | Quanta Magazine, Ananthaswamy | `quantamagazine`, `anilananth` |
+| CFE·Domain | Zlatko Minev (Google QA), James Wootton (IBM QEC) | `zlatko-minev`, `decodoku` |
+| PLT·4-D L1 | Protocol Labs, Filecoin Foundation, IPFS | `protocollabs`, `fil.org`, `ipfs.tech` |
+| PLT·Agentic | LangChain, Hugging Face | `langchain`, `hf.co` |
+| PLT·Cloudflare | Cloudflare Developers | `cloudflare-dev` |
+| UMP·Community | AMS, LMS (Langlands/arithmetic community) | `amermathsoc`, `londmathsoc` |
+
+### Still-Open Gaps (as of 2026-08-05)
+
+- **SLB — Laws of Form**: 0 accounts. Tiny community. Check second-order
+  cybernetics circles (autopoiesis, Maturana-Varela) on mathstodon.
+- **UMP — individuals**: p-adic/ultrametric researchers rarely maintain
+  personal social presences; the Langlands/arithmetic community is reachable
+  via AMS/LMS + mathstodon number theorists.
+- **CFE·Scenario/Econ tiers**: scenario planning (Delphi, cross-impact) and
+  techno-economic (Wright's law, Moore's law) researchers not yet tracked.
+- **DEM**: visualization accounts (threejs, observablehq) not yet tracked.
 
 ---
 

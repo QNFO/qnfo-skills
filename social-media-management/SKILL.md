@@ -3,6 +3,17 @@ name: social-media-management
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 45+ verified researchers, journals, and institutions across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, mathematical physics, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, and integration with linkedin-mcp for LinkedIn connections.
 ---
 
+> **v1.2.0 UPDATE (2026-08-05):** Full-scope correction — taxonomy treated as
+> the map of the ENTIRE research ecosystem, not a niche list.
+> - Registry expanded 55 → **75 accounts** (Bluesky 25 → **45**, all live-verified).
+> - +20 accounts across every program tier: INM (Active Inference Institute,
+>   Anil Seth, Allen Institute), RES·Autaxys (Quantum Biology DAO, Aiello),
+>   RES·Bridge (Hossenfelder, Krauss), RES·Stratigraphy (NIST), CFE·Domain
+>   (Minev, Wootton), PLT·4-D (Protocol Labs, Filecoin, IPFS), PLT·Agentic
+>   (LangChain, Hugging Face), PLT·Cloudflare (CF Dev), UMP·Community (AMS, LMS).
+> - Domain taxonomy extended with `plt` (QWAV Platform) — 6 codes total.
+> - Remaining gaps: SLB (0), UMP individuals (rare), CFE scenario/econ tiers.
+
 > **v1.1.0 UPDATE (2026-08-05):** QNFO taxonomy integration.
 > - All 25 Bluesky handles live-verified via unauth `resolveHandle` (DIDs recorded).
 > - Registry remapped to canonical QNFO program codes (ump/slb/inm/cfe/res).
@@ -145,19 +156,20 @@ Mastodon accounts are identified as `@user@instance.tld`.
 
 ## Account Registry (`references/qnfo_accounts.json`)
 
-The registry tracks **55 QNFO-aligned accounts** across four platforms (25
+The registry tracks **75 QNFO-aligned accounts** across four platforms (45
 Bluesky / 3 Mastodon / 20 X / 7 LinkedIn). `domain` = canonical QNFO program
-code; `domain_detail` = sub-topic. Bluesky handles carry live-verified DIDs.
+code; `domain_detail` = sub-topic. All 45 Bluesky handles carry live-verified DIDs.
 
 ### Canonical QNFO Program Codes (from qnfo_taxonomy.md)
 
 | Code | Program | Registry Coverage (2026-08-05) |
 |:-----|:--------|:-------------------------------|
-| `ump` | Ultrametric Physics | **0 accounts — CRITICAL GAP** |
-| `slb` | Laws of Form | **0 accounts — CRITICAL GAP** |
-| `inm` | Infomatics | 10+ (Preskill, Wilde, Skrzypczyk, Levin, Smith…) |
-| `cfe` | CFPE / Paradigm Engineering | 6+ (Wildeford, Sempere, de Neufville, Unjournal, Bengio, Erdil) |
-| `res` | QNFO Research (consilience/Ruliad) | 15+ (Carroll, Coecke, Wolfram, Virgo, Grochow…) |
+| `ump` | Ultrametric Physics | 3 (AMS, LMS community; individuals rare) |
+| `slb` | Laws of Form | **0 accounts — OPEN GAP** |
+| `inm` | Infomatics | 11 (Active Inference Institute, Seth, Allen, Preskill, Wilde…) |
+| `cfe` | CFPE / Paradigm Engineering | 8 (forecasters + quantum roadmaps) |
+| `res` | QNFO Research (consilience/Ruliad) | 17 (Carroll, Coecke, Virgo, Hossenfelder, NIST…) |
+| `plt` | QWAV Platform (4-D + agentic AI) | 6 (Protocol Labs, Filecoin, IPFS, LangChain, HF, CF Dev) |
 
 **Known gaps:** `ump` (p-adic/ultrametric researchers maintain no public social
 presences — use taxonomy keywords for recurrent discovery) and `slb` (Laws of
@@ -190,7 +202,7 @@ Edit `references/qnfo_accounts.json` — the schema is:
 }
 ```
 
-`domain` must be one of `ump`/`slb`/`inm`/`cfe`/`res`. Then run
+`domain` must be one of `ump`/`slb`/`inm`/`cfe`/`res`/`plt`. Then run
 `verify_bsky_handles.py` to populate the live DID.
 
 ### Bluesky Starter Packs

@@ -1,6 +1,6 @@
 {
   "$schema": "https://qnfo.org/schemas/social-registry-v1.json",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "generated": "2026-08-05",
   "description": "QNFO-aligned social media accounts. domain = canonical QNFO program code (ump/slb/inm/cfe/res); domain_detail = sub-topic. Bluesky handles live-verified 2026-08-05 via AT Protocol resolveHandle (17/17).",
   "accounts": {
@@ -204,6 +204,166 @@
         "domain_detail": "complex-systems",
         "verified": true,
         "did": "did:plc:xpl57er4zbahuoaqis6qatin"
+      },
+      {
+        "handle": "activeinference.bsky.social",
+        "name": "Active Inference Institute",
+        "domain": "inm",
+        "domain_detail": "free-energy-principle",
+        "verified": true,
+        "did": "did:plc:durc2bigue3lvmzxzeoz244c"
+      },
+      {
+        "handle": "anilseth.bsky.social",
+        "name": "Anil Seth",
+        "domain": "inm",
+        "domain_detail": "integrated-information",
+        "verified": true,
+        "did": "did:plc:gzfyavvrsyucvvwzvrdxc4ql"
+      },
+      {
+        "handle": "alleninstitute.org",
+        "name": "Allen Institute",
+        "domain": "inm",
+        "domain_detail": "integrated-information",
+        "verified": true,
+        "did": "did:plc:257mlmai5nguufse56vjeqmr"
+      },
+      {
+        "handle": "quantumbiodao.bsky.social",
+        "name": "Quantum Biology DAO",
+        "domain": "res",
+        "domain_detail": "autaxys-quantum-biology",
+        "verified": true,
+        "did": "did:plc:ydwuinhbgkixugvmcnbw2v2o"
+      },
+      {
+        "handle": "claricedaiello.bsky.social",
+        "name": "Clarice D. Aiello",
+        "domain": "res",
+        "domain_detail": "autaxys-quantum-biology",
+        "verified": true,
+        "did": "did:plc:t4q2hop2253balvzxn45yuqh"
+      },
+      {
+        "handle": "hossenfelder.bsky.social",
+        "name": "Sabine Hossenfelder",
+        "domain": "res",
+        "domain_detail": "quantum-gravity-phenomenology",
+        "verified": true,
+        "did": "did:plc:ujspn5tn56tmudibd2xx2ujf"
+      },
+      {
+        "handle": "lkrauss1.bsky.social",
+        "name": "Lawrence Krauss",
+        "domain": "res",
+        "domain_detail": "foundational-physics",
+        "verified": true,
+        "did": "did:plc:viujry73uwuaeg4wkcgrbo4k"
+      },
+      {
+        "handle": "zlatko-minev.bsky.social",
+        "name": "Zlatko Minev",
+        "domain": "cfe",
+        "domain_detail": "quantum-computing-roadmap",
+        "verified": true,
+        "did": "did:plc:23n4kcgzse3qrjl7oxcyn3b5"
+      },
+      {
+        "handle": "decodoku.bsky.social",
+        "name": "James Wootton",
+        "domain": "cfe",
+        "domain_detail": "quantum-error-correction",
+        "verified": true,
+        "did": "did:plc:gh2ox4awis22s77vc3s3bcxs"
+      },
+      {
+        "handle": "protocollabs.bsky.social",
+        "name": "Protocol Labs",
+        "domain": "plt",
+        "domain_detail": "4d-layer1-ipfs",
+        "verified": true,
+        "did": "did:plc:cy3yloqziuplir3qypfalzjh"
+      },
+      {
+        "handle": "fil.org",
+        "name": "Filecoin Foundation",
+        "domain": "plt",
+        "domain_detail": "4d-layer1-filecoin",
+        "verified": true,
+        "did": "did:plc:2wqb5jjkxli4rcswpyb624xj"
+      },
+      {
+        "handle": "ipfs.tech",
+        "name": "IPFS",
+        "domain": "plt",
+        "domain_detail": "4d-layer1-ipfs",
+        "verified": true,
+        "did": "did:plc:rnt6nsma5ymuxvzfr3n3o4o4"
+      },
+      {
+        "handle": "cloudflare-dev.bsky.social",
+        "name": "Cloudflare Developers",
+        "domain": "plt",
+        "domain_detail": "cloudflare-platform",
+        "verified": true,
+        "did": "did:plc:rneu5rp2cywl45y4g25l7y5n"
+      },
+      {
+        "handle": "langchain.bsky.social",
+        "name": "LangChain",
+        "domain": "plt",
+        "domain_detail": "agentic-ai",
+        "verified": true,
+        "did": "did:plc:zhvfuyqjeecm4rkg644wq7ox"
+      },
+      {
+        "handle": "hf.co",
+        "name": "Hugging Face",
+        "domain": "plt",
+        "domain_detail": "agentic-ai",
+        "verified": true,
+        "did": "did:plc:qcm5pejjqltepp6kztn6pzib"
+      },
+      {
+        "handle": "nist.bsky.social",
+        "name": "NIST",
+        "domain": "res",
+        "domain_detail": "measurement-stratigraphy",
+        "verified": true,
+        "did": "did:plc:amas6n2rvgxxcayebgz3i3ry"
+      },
+      {
+        "handle": "amermathsoc.bsky.social",
+        "name": "American Math Society",
+        "domain": "ump",
+        "domain_detail": "langlands-community",
+        "verified": true,
+        "did": "did:plc:jsocezklcypgbcnlxb7pu65x"
+      },
+      {
+        "handle": "londmathsoc.bsky.social",
+        "name": "London Math Society",
+        "domain": "ump",
+        "domain_detail": "langlands-community",
+        "verified": true,
+        "did": "did:plc:h45e4ic7p4l3bul64xunw37o"
+      },
+      {
+        "handle": "quantamagazine.bsky.social",
+        "name": "Quanta Magazine",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true,
+        "did": "did:plc:vfktz6qe6vy7serr3wqutpzt"
+      },
+      {
+        "handle": "anilananth.bsky.social",
+        "name": "Anil Ananthaswamy",
+        "domain": "res",
+        "domain_detail": "science-communication",
+        "verified": true,
+        "did": "did:plc:orr5jzl3ceptjdtfvbzlimgb"
       }
     ],
     "mastodon": [
@@ -421,7 +581,8 @@
     "slb": "Laws of Form \u2014 Spencer-Brown, calculus of indications, distinction",
     "inm": "Infomatics \u2014 information as physics, Landauer-Bekenstein, quantum info, IIT",
     "cfe": "CFPE \u2014 technology forecasting, paradigm engineering, post-silicon, AI timelines",
-    "res": "QNFO Research \u2014 consilience, measurement stratigraphy, Ruliad, category theory, complexity"
+    "res": "QNFO Research \u2014 consilience, measurement stratigraphy, Ruliad, category theory, complexity",
+    "plt": "QWAV Platform \u2014 Cloudflare infra, 4-D Distribution (IPFS/Filecoin/Arweave/Zenodo), agentic AI/MCP"
   },
   "starter_packs": {
     "bluesky": [
@@ -448,8 +609,11 @@
     ]
   },
   "coverage_gaps": {
-    "ump": "ZERO social accounts found (p-adic/ultrametric researchers don't maintain public social presences). Use taxonomy keywords for recurrent discovery.",
-    "slb": "ZERO social accounts found (Laws of Form community is tiny; check second-order cybernetics circles).",
-    "cfe": "PARTIALLY FILLED 2026-08-05: +6 CFE accounts (Wildeford, Sempere, de Neufville, Unjournal, Bengio, Erdil). Post-silicon computing roadmaps still thin."
+    "ump": "PARTIALLY FILLED 2026-08-05: +2 community accounts (AMS, LMS) for Langlands/arithmetic community. Individual p-adic researchers still rare on social.",
+    "slb": "ZERO accounts still \u2014 Laws of Form community is tiny; check second-order cybernetics circles (autopoiesis, Maturana-Varela).",
+    "cfe": "FILLED 2026-08-05: forecasters + quantum-hardware roadmaps (Minev, Wootton).",
+    "inm": "FILLED 2026-08-05: +3 (Active Inference Institute, Anil Seth, Allen Institute).",
+    "res": "EXPANDED 2026-08-05: +6 (quantum biology x2, Hossenfelder, Krauss, NIST, Quanta, Ananthaswamy).",
+    "plt": "NEW 2026-08-05: 4-D Distribution + agentic AI + Cloudflare (Protocol Labs, Filecoin, IPFS, LangChain, HF, CF Dev)."
   }
 }
