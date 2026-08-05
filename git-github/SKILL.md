@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.17
+# GIT-GITHUB — v2.18
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -457,6 +457,28 @@ See ADR-026 below.
 
 ---
 
+## Owner Routing Rule (HARD, added 2026-08-05)
+
+**User mandate:** GitHub accounts rwnq8 and QNFO are STRICTLY SEPARATE for distinct
+work streams, programs, and focus areas.
+
+| Repo type | Canonical owner | Always |
+|:----------|:---------------|:-------|
+| **QNFO repos** (programs, skills, research) | **QNFO org** (`QNFO/<name>`) | ALWAYS |
+| **PERSONAL repos** (resume, portfolio, personal projects) | **rwnq8** (`rwnq8/<name>`) | ALWAYS |
+
+Rules:
+1. **Never route a QNFO repo to rwnq8, never route a personal repo to QNFO.**
+2. Use EXPLICIT owner prefixes on every `gh repo create`: `QNFO/<name>` or
+   `rwnq8/<name>` — never rely on default owner resolution
+   (CONSOLIDATION-OWNER-RESOLVE-1: bare `gh repo create <name>` can resolve to
+   the wrong owner via redirect).
+3. The rwnq8 account is ALIVE and canonical for personal repos — only the
+   `rwnq8/qnfo-skills-1.git` skill-repo MIRROR was archived (2026-08-05).
+4. Personal profile/resume repos live under rwnq8 (rwnq8/rwnq8 profile README,
+   rwnq8/resume). CLI-created profile repos need "Share to Profile" on the repo
+   page to render on the profile (GITHUB-CDN-PROPAGATION-1 is NOT a CDN issue).
+
 ## Thin-Client Canonical Asset Protocol (HARD, added 2026-08-05)
 
 **User mandate:** Any reusable script MUST NOT be saved canonically to the local
@@ -472,17 +494,23 @@ script is needed again, it must be recoverable from a canonical store.
 | **3. Live skill dirs** | `C:\Users\LENOVO\.deepchat\skills\<name>\scripts\` | ⚠️ **Ephemeral runtime view** | Hydrated copy for the app to run — re-created from git/R2 if lost. NEVER canonical. |
 | **4. One-off `_*.py`** | `%TEMP%` or `.deepchat\_*.py` | 🗑️ **Ephemeral by design** | Analysis/diagnostic scripts — delete after use. Never commit, never persist. |
 
-### The Dual-Store Rule (replaces dead rwnq8)
+### The Dual-Store Rule (rwnq8 account alive — only the qnfo-skills-1 mirror archived)
 
 The thin-client mandate requires durable state in at least two independent stores.
-The rwnq8 mirror is ARCHIVED/removed (2026-08-05) — the pair is now:
+**CORRECTED (2026-08-05):** The rwnq8 ACCOUNT is ALIVE and canonical for personal
+repos. Only the `rwnq8/qnfo-skills-1.git` MIRROR remote of the qnfo-skills repo was
+archived (403) and removed as a remote. For the qnfo-skills skill repo, the durable
+pair is:
 
 ```
-ORIGIN (GitHub QNFO/qnfo-skills)  +  R2 (deepchat bucket via skill-sync.js)
+ORIGIN (QNFO/qnfo-skills)  +  R2 (deepchat bucket via skill-sync.js)
 ```
 
-Every reusable script MUST reach BOTH: commit+push to origin, and skill-sync.js
-mirror to R2. One store alone is not durable.
+Personal repos (resume, portfolio, personal projects) follow OWNER-ROUTING-1:
+canonical home is rwnq8, dual-stored with R2 as the second copy.
+
+Every reusable script MUST reach BOTH: commit+push to its canonical owner, and
+skill-sync.js mirror to R2. One store alone is not durable.
 
 ### The Sync Flow (HOW)
 
@@ -575,6 +603,8 @@ After ANY push:
 | **PLATFORM-DEFAULT-EXPUNGE-1: Version-tracking or customizing DeepChat platform default skills in any git repo (2026-08-05)** | **HARD GATE.** DeepChat platform default skills (src=builtin in the registry: algorithmic-art, code-review, doc-coauthoring, docx, frontend-design, git-commit, infographic-syntax-creator, mcp-builder, memory-management, pdf, pptx, skill-creator, web-artifacts-builder, xlsx) MUST be expunged from any/all git repos and NEVER version-tracked or customized/updated. They remain available in the app (DeepChat ships them) but are not ours to version. Canonical case (2026-08-05): 14 platform defaults removed from qnfo-skills (commit 4ff764d); deepchat-settings KEPT because substantially refactored into custom QNFO knowledge (Backend Storage Layout, Skill Registry Truth-Source). Exception: a platform default that has been SUBSTANTIALLY refactored into genuinely custom content may be kept — document the decision. |
 | **CLOUDFLARE-FORK-1: Storing official Cloudflare skill content in qnfo-skills instead of a separate fork repo (2026-08-05)** | Official Cloudflare skills (durable-objects, workers-best-practices, web-perf, turnstile-spin, cloudflare-one, email-service, sandbox-sdk, agents-sdk, wrangler, deployer, github-manager) MUST be forked into the SEPARATE repo `QNFO/cloudflare-skill-forks` — NEVER backed up in qnfo-skills. The custom cloudflare skill documents coverage matrices and links to the fork; it does NOT copy official content. Modifications to forks are PR'd back to Cloudflare for update consideration. Canonical case (2026-08-05): fork repo created at github.com/QNFO/cloudflare-skill-forks; cloudflare skill v3.34 documents the policy. |
 
+| **OWNER-ROUTING-1: Routing a repo to the wrong GitHub owner — QNFO work to rwnq8 or personal work to QNFO (2026-08-05)** | **HARD GATE.** QNFO repos → QNFO org ALWAYS; PERSONAL repos → rwnq8 ALWAYS. Never route across. Use explicit owner prefixes on every gh repo create (`QNFO/<name>` / `rwnq8/<name>`) — bare names resolve unpredictably (CONSOLIDATION-OWNER-RESOLVE-1). The rwnq8 account is ALIVE and canonical for personal repos; only the rwnq8/qnfo-skills-1.git skill mirror was archived. Canonical case (2026-08-05): v2.17 wrongly implied rwnq8 was dead — corrected; personal repos (resume, portfolio) are rwnq8-canonical, dual-stored with R2. |
+
 | **SYNC-OVERWRITE-DESTRUCTION-1: Copying a partial source (live dir) over the canonical git repo with rmtree+copy, deleting git-only files (2026-08-05)** | **HARD GATE.** Git is the canonical superset; the live skills dir is a partial runtime subset. Sync direction is ONE-WAY: git -> live (hydrate), NEVER live -> git with directory replacement. To commit a skill change: ADD/UPDATE that skill's files in git — never rmtree the git skill dir first (that deletes scripts/templates/references that exist only in git). Canonical case: d4b432c deleted 61 canonical files (bloat-cleanup/scripts/*, research/scripts/*, research/templates/springer-nature-latex/*, research/references/*.json, email-composer/scripts/*.pdf, xlsx/scripts/recalc.py); restored from parent commit. Verify after every sync: `git show --name-status <commit>` shows NO unexpected deletions. |
 | **PUSH-TO-MASTER-1: Leaving feature branches unmerged — work sitting in branches instead of master (2026-08-05)** | Features MUST be merged to master in the same session. Branch lifecycle: create -> work -> verify -> merge -> push master -> delete branch (local+remote) -> prune. Canonical case: 5 stale kaizen/* branches with 6,008 insertions left unmerged; all superseded by live-sync and deleted. Before deleting a branch, verify `git log master..origin/<branch>` is empty (0 unique commits) OR merge the unique content first. |
 | **BRANCH-HYGIENE-1: Accumulating stale branches (local or remote) across sessions (2026-08-05)** | Every session ends with ONLY master (plus any active feature branch). Delete merged/superseded branches and prune remote-tracking refs. A branch list with 5+ stale entries is a hygiene failure. |
@@ -615,4 +645,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.17** (git-github — Thin-Client Canonical Asset Protocol: git origin = PRIMARY canonical for all reusable scripts; R2 (deepchat bucket via skill-sync.js) = durable second store (rwnq8 dead); live skill dirs + one-off _*.py = ephemeral; user mandate 2026-08-05)
+Current: **v2.18** (git-github — OWNER-ROUTING-1: QNFO repos → QNFO org ALWAYS canonical; PERSONAL repos → rwnq8 ALWAYS canonical (account alive — only the qnfo-skills-1 MIRROR was archived); corrected v2.17 Dual-Store wording; user correction 2026-08-05)
