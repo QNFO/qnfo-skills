@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.79
+version: 2.80
 
 
 
@@ -166,7 +166,29 @@ triggers:
 
 
 
-# RESEARCH — v2.79
+# RESEARCH — v2.80
+> **v2.80 UPDATE (2026-08-05, kaizen — Research profile & indexing APIs: IndexNow + OSF + ORCID scope rules):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint:
+> landing pages, Bluesky, Zenodo ADR-014 fix, OSF profile, ORCID client, IndexNow).
+> HARD: 3. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **OSF-API-SCHEMA-1 anti-pattern added** — OSF user social fields are camelCase with
+>     MIXED types (arrays: github/linkedIn/twitter/profileWebsites; strings: scholar/researchGate/
+>     ssrn/impactStory/baiduScholar/academiaProfileID/academiaInstitution/researcherId). NO writable
+>     `bio` field in users API (unknown fields silently ignored, HTTP 200). PATCH requires data.id
+>     (user 6hyj8). ~6 failed PATCHes this session from guessing types.
+> (2) [HARD] **ORCID-PUBLIC-API-SCOPE-1 anti-pattern added** — ORCID Public API free tier supports
+>     ONLY `/authenticate` + `/read-public` in OAuth; write scopes (/person/update, /activities/update,
+>     /read-limited) rejected with "one of the provided scopes is not allowed for this member".
+>     Profile edits must go through the web UI (logged-in session) or Member API.
+> (3) [HARD] **IndexNow protocol section added** — search-engine indexing with NO account: host
+>     {key}.txt at domain root, POST api.indexnow.org/indexnow, HTTP 202 = accepted. Backed by
+>     Bing/Yandex/Seznam/Naver. Google/Bing legacy ping endpoints DEAD (404/410).
+> (4) [SOFT] **GITHUB-PAGES-PROPAGATION-1 anti-pattern added** — GitHub Pages ~1-2 min CDN
+>     propagation after push; initial QA showed stale content. Cloudflare Pages instant.
+>     Re-verify via gh api pages/builds before concluding "not deployed".
+> (5) [DESIGN] Script reference table updated: indexnow-submit.py, osf-profile-update.py,
+>     zenodo-cleanup.py (all committed to qnfo-skills + R2).
+> Cross-reference: kaizen v1.52 (PARALLEL-EXEC-RACE-1), session 3i_KVLownViukLTZB_BJ1.
 > **v2.79 UPDATE (2026-08-05, kaizen — Zenodo API exhaustive documentation — NO MORE TRIAL AND ERROR):**
 > Red-team: direct parent-agent 5-adversary audit of session 3i_KVLownViukLTZB_BJ1
 > (discoverability sprint + Zenodo attribution fix 21789920->21807661).
@@ -8505,6 +8527,50 @@ case + visa flag. Verifiable listings only (institution + URL).
 
 
 
+## Research Profile & Indexing APIs (v2.80 — IndexNow, OSF, ORCID)
+
+### IndexNow — search-engine indexing with NO account (2026-08-05)
+
+**Backed by Bing, Yandex, Seznam, Naver.** Google/Bing legacy sitemap ping endpoints are
+DEAD (Google 404, Bing 410) — never use them. Google discovery = robots.txt `Sitemap:` line + crawl.
+
+```
+PREREQ: host key file at https://{host}/{key}.txt (content == key string, exact match)
+KEY (QNFO): fea6716717dc42059213070adcdf0e53  (deployed to both hosts, verified)
+SUBMIT:  POST https://api.indexnow.org/indexnow
+         {"host": host, "key": key, "keyLocation": "https://{host}/{key}.txt",
+          "urlList": ["https://{host}/", "https://{host}/ai/", ...]}
+RESULT:  HTTP 202 = accepted (Bing validates the key file within hours)
+SCRIPT:  research/scripts/indexnow-submit.py
+```
+
+### OSF API v2 — programmatic profile management (2026-08-05)
+
+```
+AUTH:    Bearer token (C:\Users\LENOVO\.qnfo\osf-token)
+USER ID: 6hyj8
+GET:     https://api.osf.io/v2/users/me/
+PATCH:   https://api.osf.io/v2/users/me/  body {"data": {"id": "6hyj8", "type": "users",
+         "attributes": {"social": {...}}}}   -> HTTP 200
+SOCIAL:  camelCase, MIXED types (see OSF-API-SCHEMA-1): arrays github/linkedIn/twitter/
+         profileWebsites; strings scholar/researchGate/ssrn/impactStory/baiduScholar/
+         academiaProfileID/academiaInstitution/researcherId
+BIO:     NO writable bio field in users API — bio lives only in profile web UI
+ORCID:   external_identity.ORCID shows {id, status: VERIFIED} when linked
+REGISTRATIONS: GET /v2/users/me/nodes/ lists projects; registrations via /v2/registrations/{id}/
+SCRIPT:  research/scripts/osf-profile-update.py (--show, --projects, default=update)
+```
+
+### ORCID Public API — scope rules (2026-08-05)
+
+```
+CLIENT:  APP-QJRSFYTTNOF1497R / secret in keys.json (10 redundant locations)
+FREE TIER SCOPES (OAuth): /authenticate, /read-public  ONLY
+MEMBER-ONLY SCOPES (rejected): /person/update, /activities/update, /read-limited
+CLIENT_CREDENTIALS grant: works with /read-public for public reads (HTTP 200)
+PROFILE EDITS: web UI (logged-in session) — keywords/bio/works via the browser
+```
+
 ## Version
 
 
@@ -8523,7 +8589,7 @@ case + visa flag. Verifiable listings only (institution + URL).
 
 
 
-Current: **v2.79** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.80** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
