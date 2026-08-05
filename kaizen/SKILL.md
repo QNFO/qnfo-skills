@@ -4,7 +4,7 @@
 name: kaizen
 
 
-version: 1.44
+version: 1.45
 
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
@@ -16,7 +16,18 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.44
+# KAIZEN — v1.45
+> **v1.45 UPDATE (2026-08-05, kaizen — SKILLS UPDATE red-team audit closeout):**
+> Red-team: 5 parallel subagents (2 completed: Novelty + Status; 3 truncated —
+> Accuracy/Completeness/Dependency fell back to direct parent-agent audit per
+> Subagent Failure Handling rule 4). Direct audit + watchtower-version-scan.py
+> confirmed ecosystem-wide N-2 consistency across 20 QNFO skills.
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: None — ecosystem healthy.
+> Autonomous v1.44 kaizen already synced calibration register cross-references.
+> This banner documents the SKILLS UPDATE directive processing and closeout.
+> Cross-reference: all core skills (kaizen v1.44→v1.45, research v2.77,
+> qnfo-core v1.15, git-github v2.19, wcp v3.14, knowledge v2.7).
+
 > **v1.44 UPDATE (2026-08-05, kaizen — social-media-management red-team audit):**
 > Red-team: direct parent-agent 5-adversary audit (RCS-3: subagents for audit = HARD BLOCK).
 > HARD: 0. SOFT: 2. DESIGN: 2. Changes:
@@ -5503,6 +5514,9 @@ Session Failure → Session Retrospective detects failure pattern
 | **ZENODO-204: json.load() on empty DELETE response body** (v1.6) | Zenodo's DELETE file API returns HTTP 204 (No Content) with zero-length body. Always check `resp.code == 204` or `len(body) == 0` BEFORE `json.load()`. Canonical case: 2026-08-02 consilient-synthesis upload crashed on DELETE. |
 
 
+| **ZENODO-RAW-UPLOAD-CT-1: api() function sets NO Content-Type when raw=True — Zenodo bucket rejects uploads with HTTP 415 (2026-08-05)** | When uploading binary files to Zenodo deposit bucket via PUT, the api() helper correctly skipped Content-Type: application/json for raw=True calls but FAILED to set Content-Type: application/octet-stream. Zenodo bucket endpoint REQUIRES this header; without it, all binary uploads fail with HTTP 415: "Invalid Content-Type header. Expected one of: application/octet-stream." Fix: when raw=True, set headers[Content-Type] = application/octet-stream. Canonical case: session yHXrIYDvUfwQ6twlIaWG5 — resume v3.11 published with old v3.10 PDF; v3.12 fix set proper Content-Type header. Cross-ref: BLAME-EXTERNAL-1 (the bug is ALWAYS your code until proven otherwise), windows-command-patterns S-1.0.6, ZENODO-204. |
+
+
 | **ZENODO-DRAFT-CONFLICT: newversion 400 files.enabled when a draft already exists with files** (v1.6) | Before `actions/newversion`, check `links.latest_draft`. If a draft exists with files, delete files first (or reuse the draft). Canonical case: 2026-08-02, three ACRP newversions stuck on leftover drafts. |
 
 
@@ -5891,7 +5905,7 @@ dated, falsifiable claims about skill drift risk.
   must be tuned to the user's timezone and agent configuration.
 
 
-- The research skill (currently v2.69) is actively evolving; the canonical
+- The research skill (currently v2.77) is actively evolving; the canonical
 
 
   case study claim may need updating when research reaches v3.0.
@@ -5918,7 +5932,7 @@ score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
 
 
-- Research skill is at v2.69 with many version banners — high drift surface area
+- Research skill is at v2.77 with many version banners — high drift surface area
 
 
 - Cloudflare MCP servers may versions-shift independently
@@ -6311,7 +6325,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.44** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.45** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 
 
