@@ -5,7 +5,7 @@ Usage:
   python research-daily-brief.py --mode weekly    (arXiv + OpenAlex, comprehensive)
 
 Daily mode: Fetches yesterday's arXiv papers, filters by QNFO keyword taxonomy.
-Weekly mode: Same + OpenAlex (3-day window), catches journal papers arXiv misses.
+Weekly mode: Same + OpenAlex (wide window, Python-filtered), catches journal papers arXiv misses.
 """
 import urllib.request, urllib.parse, json, time, sys, re
 from xml.etree import ElementTree as ET
@@ -21,8 +21,11 @@ POLITE = 2  # seconds between API calls
 # arXiv categories to query
 ARXIV_CATS = '(cat:quant-ph OR cat:math-ph OR cat:hep-th OR cat:math.NT OR cat:cs.IT OR cat:math.LO OR cat:math.CT OR cat:physics.soc-ph OR cat:physics.hist-ph)'
 
-# OpenAlex search terms (space-separated = OR logic; filtering happens in Python)
-OPENALEX_SEARCH = 'ultrametric p-adic adelic ostrowski bruhat-tits non-archimedean perfectoid berkovich langlands spencer-brown landauer bekenstein consilience quantum-error-correction quantum-foundations'
+# OpenAlex search terms (explicit OR operators — API rejects pipe |; wide window handled in fetch)
+OPENALEX_SEARCH = ('ultrametric OR p-adic OR adelic OR ostrowski OR bruhat-tits '
+                   'OR non-archimedean OR perfectoid OR berkovich OR langlands '
+                   'OR spencer-brown OR landauer OR bekenstein OR consilience '
+                   'OR quantum-error-correction OR quantum-foundations')
 
 # ── Keyword Taxonomy (canonical from Obsidian _26217115844.md) ──
 DAILY_KW = {
@@ -183,14 +186,18 @@ def fetch_arxiv(date_start, date_end):
 
 # ── OpenAlex ──
 def fetch_openalex(date_start, date_end):
-    """Fetch recent OpenAlex works matching QNFO search terms."""
-    # OpenAlex date filter: from_publication_date
-    from_date = date_start.strftime('%Y-%m-%d')
-    # OpenAlex search: use + for OR, encode properly
+    """Fetch recent OpenAlex works matching QNFO search terms.
+
+    OpenAlex indexing lags publication by ~2-5 days, so we query a WIDE
+    window (14 days before date_start) and filter to the exact window in
+    Python. Explicit OR operators are required (pipe | is rejected by API).
+    """
+    wide_start = date_start - timedelta(days=14)
+    from_date = wide_start.strftime('%Y-%m-%d')
     search_q = urllib.parse.quote(OPENALEX_SEARCH, safe='')
     url = (f'{OPENALEX_BASE}?search={search_q}'
-           f'&filter=from_publication_date:{from_date}'
-           f'&sort=publication_date:desc&per-page=50'
+           f'&filter=from_publication_date:{from_date},type:article'
+           f'&sort=publication_date:desc&per-page=100'
            f'&mailto=research@qnfo.org')
     sleep()
     req = urllib.request.Request(url, headers={'User-Agent': UA})
@@ -199,14 +206,19 @@ def fetch_openalex(date_start, date_end):
             d = json.loads(r.read())
             results = d.get('results', [])
             papers = []
+            window_start = date_start.strftime('%Y-%m-%d')
             for w in results:
                 title = w.get('display_name', 'Untitled')
                 pub_date = w.get('publication_date', '') or ''
+                # Python-side window filter (exact)
+                if not pub_date or pub_date < window_start:
+                    continue
+                if pub_date > date_end.strftime('%Y-%m-%d'):
+                    continue  # drop future-dated records
                 doi = w.get('doi', '') or ''
                 if doi:
                     doi = doi.replace('https://doi.org/', '')
                 abstract = ''
-                # Try to get abstract from inverted abstract
                 inv = w.get('abstract_inverted_index')
                 if inv:
                     words = sorted((pos, word) for word, positions in inv.items() for pos in positions)
@@ -230,8 +242,17 @@ def fetch_openalex(date_start, date_end):
                     'source': 'OpenAlex',
                     'cited': cited,
                 })
-            print(f'  [OpenAlex] {len(papers)} papers (from {from_date})', flush=True)
-            return papers
+            # Dedup within OpenAlex (same title published in multiple versions/repos)
+            unique = []
+            seen_titles = set()
+            for p in papers:
+                key = norm(p['title'])[:70]
+                if key in seen_titles:
+                    continue
+                seen_titles.add(key)
+                unique.append(p)
+            print(f'  [OpenAlex] {len(unique)} unique papers in window (from {window_start}; wide query {from_date})', flush=True)
+            return unique
     except Exception as e:
         print(f'  [OpenAlex] FAILED: {e}', flush=True)
         return []
@@ -339,7 +360,6 @@ def main():
                     help='Days to scan (daily defaults to 1, weekly to 3)')
     args = ap.parse_args()
 
-    # Date range
     if args.mode == 'weekly':
         days = args.days if args.days != 1 else 3  # weekly defaults to 3 days
     else:
@@ -352,20 +372,16 @@ def main():
     print(f'QNFO Research Briefing — mode={args.mode}, window={date_start.strftime("%Y-%m-%d")} → {date_end.strftime("%Y-%m-%d")}', flush=True)
     print()
 
-    # ── Fetch arXiv ──
     arxiv_papers = fetch_arxiv(date_start, date_end)
 
-    # ── Fetch OpenAlex (weekly only) ──
     oa_papers = []
     if args.mode == 'weekly':
         oa_papers = fetch_openalex(date_start, date_end)
 
-    # ── Dedup ──
     all_papers = dedup(arxiv_papers, oa_papers)
     dup_count = len(arxiv_papers) + len(oa_papers) - len(all_papers)
     print(f'\nTotal: {len(all_papers)} unique papers (arXiv: {len(arxiv_papers)}, OpenAlex: {len(oa_papers)}, deduped: {dup_count})', flush=True)
 
-    # ── Keyword matching ──
     kw_config = dict(DAILY_KW)
     if args.mode == 'weekly':
         kw_config.update(WEEKLY_KW)
@@ -373,7 +389,6 @@ def main():
     matched = match_keywords(all_papers, kw_config)
     print(f'Matched: {len(matched)} papers', flush=True)
 
-    # ── Print briefing ──
     print()
     print(briefing(matched, date_start.strftime('%Y-%m-%d'), args.mode))
 
