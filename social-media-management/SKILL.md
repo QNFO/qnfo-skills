@@ -1,8 +1,27 @@
 ---
 name: social-media-management
-version: 1.4.1
+version: 1.5.0
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and integration with linkedin-mcp for LinkedIn connections.
 ---
+
+> **v1.5.0 UPDATE (2026-08-05, kaizen — UNIFIED CROSS-PLATFORM SOCIAL HUB + linkedin-mcp DEPRECATION):**
+> Red-team: direct parent-agent audit of session yHXrIYDvUfwQ6twlIaWG5.
+> HARD: 1. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **linkedin-mcp-tools v2.0.3 DEPRECATED** — never functional on this machine:
+>     profile dir `C:\Users\LENOVO\.linkedin-mcp\profile` MISSING, credential stores
+>     MISSING, auto-login script absent, `LINKEDIN_COOKIE` schema-only/inert (zero
+>     addCookies in dist). User verified: "NON-FUNCTIONAL PIECE OF SHIT". This skill is
+>     now the SINGLE hub for ALL social media: Bluesky, Mastodon, X (manual), LinkedIn
+>     (browser-automation path), and Buffer (functional remote MCP with real token).
+> (2) [SOFT] **LINKEDIN-MCP-NONFUNCTIONAL-1 anti-pattern added** — never build an
+>     automation layer on a tool whose auth chain is unverified end-to-end; audit the
+>     profile dir + credential stores + cookie-injection code BEFORE wiring it in.
+> (3) [SOFT] **Buffer MCP section added** — mcp.buffer.com remote MCP is enabled=True with
+>     a real Bearer token in mcp-settings.json; cross-platform posting path documented.
+> (4) [DESIGN] **Platform Support Matrix updated** — LinkedIn row corrected to
+>     browser-automation (autocomplete selectors); Buffer row added.
+> Cross-reference: linkedin-mcp (DEPRECATED banner), kaizen v1.44 (ZENODO-RAW-UPLOAD-CT-1
+> class — same verify-the-auth-chain discipline), session yHXrIYDvUfwQ6twlIaWG5.
 
 > **v1.4.1 UPDATE (2026-08-05, kaizen — STALE-COUNT-1 live recurrence + phantom-entry removal):**
 > - Phantom entry **@ivl@mathstodon.xyz (Ivo Velitchkov) REMOVED** — Mastodon API lookup
@@ -59,10 +78,11 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via linkedin-mcp-tools (5/day cap).
 
-# SOCIAL MEDIA MANAGEMENT — v1.4.1
+# SOCIAL MEDIA MANAGEMENT — v1.5.0
 
-Programmatic social media follow management for Bluesky and Mastodon, with
-a curated QNFO account registry aligned to the QWAV/QNFO research program.
+UNIFIED cross-platform social media hub: follow management (Bluesky/Mastodon),
+curated QNFO account registry (97 accounts), Buffer MCP cross-platform posting, and
+LinkedIn browser-automation path (linkedin-mcp deprecated 2026-08-05).
 
 ---
 
@@ -73,7 +93,8 @@ a curated QNFO account registry aligned to the QWAV/QNFO research program.
 | Bluesky   | ✅ YES      | App password (AT Protocol)  | `bluesky_follow.py`   | ~100+           |
 | Mastodon  | ✅ YES      | OAuth 2.0 (REST)            | `mastodon_follow.py`  | Instance limit  |
 | X/Twitter | ❌ NO       | OAuth 1.0a/2.0 (removed)    | Manual only           | N/A             |
-| LinkedIn  | ⚠️ PARTIAL  | Browser profile (stealth)   | `linkedin-mcp-tools`   | 5 conns/day     |
+| LinkedIn  | ❌ NO API   | Browser automation (autocomplete selectors) | Manual via browser | N/A — profile edit unbounded |
+| Buffer    | ✅ YES (MCP) | Remote MCP w/ Bearer token (mcp.buffer.com) | `mcp-remote` (Buffer MCP) | Cross-platform scheduler |
 
 > **X/Twitter note:** The Follows and List Follows endpoints were removed from
 > Basic and Pro tiers in August 2023. Only Enterprise tier ($42K+/year) retains
@@ -182,6 +203,53 @@ code for token → persist to `~/.mastodon_creds.json`. Scopes: `read write foll
 
 **Federation:** Handles cross-instance follows via `/api/v2/search?resolve=true`.
 Mastodon accounts are identified as `@user@instance.tld`.
+
+---
+
+## LinkedIn — Browser Automation Path (MCP DEPRECATED)
+
+**The linkedin-mcp-tools MCP is DEAD** (deprecated 2026-08-05 — never functional:
+no profile dir, no credentials, inert cookie schema). Do NOT use it. LinkedIn has
+NO public profile-edit API, so the ONLY automation path is browser automation
+against the live site with an authenticated Chrome profile.
+
+### Requirements
+- Chrome: `C:\Program Files (x86)\Google\Chrome\Application\chrome.exe` (present)
+- Auth: ONE manual sign-in (CAPTCHA/2FA possible) to establish a persistent profile
+  (e.g. `~/.linkedin-profile`), then reuse it
+- **Selectors: `autocomplete` attributes, NOT element IDs** — LinkedIn randomizes
+  IDs (`#username` absent; `input[autocomplete="username"]` present, verified
+  2026-07-31). Same rule for edit fields: `input[autocomplete=...]`,
+  `textarea[autocomplete=...]`.
+
+### Profile Update Mapping (from resume pipeline)
+| LinkedIn field | Source (resume repo) |
+|:---------------|:---------------------|
+| Headline | RESUME.md subtitle / Target Roles |
+| About | RESUME.md Professional Summary |
+| Experience | RESUME.md Professional Experience (position → description) |
+| Skills | SKILLS-TECHNOLOGY.md matrix |
+
+### Safety
+Profile edits are NOT gated by the connection budget (5/day) — they are unbounded.
+But LinkedIn bot detection is aggressive: pace edits, one section per session,
+human-in-the-loop for CAPTCHA/2FA. If blocked (CLOUDFLARE_BLOCKED / AUTH_REQUIRED),
+stop and re-authenticate manually — never hammer retries.
+
+---
+
+## Buffer — Cross-Platform Posting (MCP FUNCTIONAL)
+
+Buffer MCP is **enabled and functional**: `mcp-settings.json` → `buffer` server →
+`npx mcp-remote https://mcp.buffer.com/mcp --header Bearer <token>`. This is the
+cross-platform scheduler for Bluesky / X / LinkedIn / Mastodon posts.
+
+- **Channels:** publish the same QNFO content to all connected profiles from one queue
+- **Workflow:** draft in markdown → post via Buffer MCP → verify in Buffer dashboard
+- **Auth:** the Bearer token lives in `mcp-settings.json` `buffer` server config —
+  never hardcode it in scripts (TOKEN-DISCOVERY-1 order: tokens dir → env → memory → user)
+- **Integration:** pairs with `email-composer` for announcement sequences and with
+  the registry for account targeting
 
 ---
 
@@ -320,7 +388,8 @@ implemented) or delete the state file to force re-follow.
 | Using your Bluesky account password instead of app password | Create an app password at bsky.app/settings/app-passwords |
 | Running bulk without checking `dry-run` first | Always run `social_follow.py dry-run` before `all` |
 | Following X/Twitter accounts via API | Not supported — removed from Basic/Pro. Manual only. |
-| Using `li_at` cookies for LinkedIn auth | linkedin-mcp-tools v2.0.3 uses persistent browser profiles, not cookies |
+| **LINKEDIN-MCP-NONFUNCTIONAL-1: building on linkedin-mcp-tools v2.0.3 — it NEVER worked (2026-08-05)** | Deprecated. Profile dir missing, creds missing, cookie schema inert. Audit the FULL auth chain (profile dir + credential stores + cookie-injection code) end-to-end BEFORE wiring any tool into a pipeline. |
+| Pasting `li_at` cookies expecting LinkedIn auth | Inert in v2.0.3 (zero addCookies in dist). Use browser automation with an authenticated persistent profile (autocomplete selectors). |
 | Hardcoding credentials in scripts | Use `.env` files or environment variables |
 | Rate-limiting by guessing | Bluesky: 1.0s between follows (configurable). Mastodon: 1.5s. |
 | Ignoring federated Mastodon handles | Always use full `@user@instance.tld` format for non-local accounts |
@@ -361,4 +430,4 @@ social-media-management/
 
 ## Version
 
-Current: **v1.4.1** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)
+Current: **v1.5.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, linkedin-mcp deprecated, Buffer MCP posting, QNFO account registry; 2026-08-05)
