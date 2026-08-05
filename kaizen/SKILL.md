@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.50
+version: 1.51
 
 
 
@@ -74,7 +74,41 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.50
+# KAIZEN — v1.52
+> **v1.52 UPDATE (2026-08-05, kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1):**
+> Red-team: direct parent-agent 5-adversary audit (session wG__dZyYtV1X4_9mgl4MW).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN, 19 platform-default INCOMPLETE (exempt).
+> HARD: 1. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **linkedin-mcp cross-skill row corrected** — was "22 tools, credential
+>     redundancy" despite being DEPRECATED since 2026-08-05. Now reads [DEPRECATED — DO
+>     NOT USE] with redirect to `social-media-management`.
+> (2) [SOFT] **Cross-Skill Integration table missing entries added** — `social-media-management`
+>     (unified social hub) and `research` (forecast protocol + calibration register).
+> (3) [SOFT] **LINKEDIN-EXP-NO-FORM-1 anti-pattern added** — current session discovered
+>     LinkedIn's "Add a position or career break" button exists but produces no form/modal
+>     via CDP. The experience section must be added via "Add profile section" → Core →
+>     Add experience first; only then does the "Add" button produce a fillable form.
+>     About section automation (targeting an existing section) works fine.
+> (4) [DESIGN] Session retrospective documented: puppeteer subprocess hangs intermittently
+>     for `--section experience` (exit 1) while `--section about` works (exit 0); direct
+>     Node execution works, Python wrapper subprocess.run fails. EXEC-AUTOBG-DEATH-1 class.
+> Cross-reference: linkedin-mcp v1.1 (DEPRECATED), social-media-management v1.6.0,
+> research v2.79, session wG__dZyYtV1X4_9mgl4MW.
+
+> **v1.51 UPDATE (2026-08-05, kaizen — API-DOC-GAP-1 + session retrospective 3i_KVLownViukLTZB_BJ1):**
+> Red-team: direct parent-agent 5-adversary audit of the discoverability sprint
+> (Zenodo attribution fix, Bluesky thread, thin-client remediation, landing site deploy).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **API-DOC-GAP-1 anti-pattern added** — the ~15 failed Zenodo PUTs and
+>     3+ search-syntax probes this session were trial-and-error caused by the research
+>     skill lacking an exhaustive API dictionary. Now: verify skill docs BEFORE API work;
+>     kaizen the skill first if docs are missing; document new API behavior same-session.
+> (2) [DESIGN] Session retrospective registered: Zenodo TWO-API metadata shape (deposit
+>     upload_type/publication_type vs records resource_type object), subject-search syntax
+>     (metadata.subjects.subject: prefix), Bluesky 300-grapheme limit, thin-client script
+>     placement (qnfo-skills not qnfo-landing), credential redundancy (6 locations).
+> Cross-reference: research v2.79, social-media-management v1.6.0, thin-client protocol,
+> session 3i_KVLownViukLTZB_BJ1.
 
 > **v1.50 UPDATE (2026-08-05, kaizen — CONCURRENT-ROOT-WRITE-1: concurrent sessions pollute .deepchat root):**
 > Red-team: direct parent-agent 5-adversary audit (session current — SKILLS UPDATE + CLOSEOUT cycle).
@@ -11492,6 +11526,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **EXEC-AUTOBG-DEATH-1: Short exec commands auto-background and die ("Session bg_XXX is not running") in this environment (2026-08-05)** | Observed 10+ times in session 8APhB8pdpgihrWgDLpXIP: `exec` on short Python scripts returns "Error: Session bg_XXX is not running" — the output is lost and the script appears not to run (it may have run; output is unrecoverable). Even `yieldMs` does not reliably prevent it. **Reliable workaround — write-file-read-back:** the script WRITES its output to a `.txt` file (e.g., `C:\Users\LENOVO\.deepchat\_result.txt`), `exec` runs it, then the agent `read`s the file back. This pattern succeeded every time. For single-shot diagnostics, make the script print a sentinel to the file and read the file. Cross-ref: windows-command-patterns v3.15, PYTHON-BUFFERING-1. |
 
+| **API-DOC-GAP-1: Trial-and-error API usage when the owning skill lacks exhaustive endpoint/field documentation (2026-08-05)** | Canonical case: session 3i_KVLownViukLTZB_BJ1 — ~15 failed Zenodo PUT attempts (deposit vs records metadata shape), 3+ subject-search syntax probes, and a 322-char Bluesky post rejection. ALL would have been avoided by reading a complete API dictionary first. Fix: (1) before ANY external API work, verify the owning skill documents the EXACT endpoint + field names + error signatures (research v2.79 TWO-API METADATA SHAPE DISTINCTION, Zenodo SUBJECT-SEARCH syntax, BSKY-300-GRAPHEME-1); (2) if the skill is missing the documentation, STOP and kaizen the skill BEFORE proceeding — the trial-and-error IS the anti-pattern; (3) after discovering any new API behavior, document it in the owning skill in the SAME session (SKILL-COMMIT-SAME-SESSION-1). This is the execution-side twin of strict-API verification (kaizen v1.36). Cross-ref: research v2.79, social-media-management v1.6.0, SKILL-COMMIT-SAME-SESSION-1. |
+
 | **CONCURRENT-ROOT-WRITE-1: Concurrent sessions writing ephemeral `_*.py`/`_*.txt` scripts to `.deepchat` root (2026-08-05)** | **SOFT.** Concurrent agent sessions (cronjobs, subagent tasks) write work scripts to `.deepchat` ROOT instead of %TEMP% or their session dir. Every such file triggers a KIF-48 violation in thin_client.py closeout scans, forcing whack-a-mole purge sweeps and risking mid-execution deletion. Observed in ONE session: 7 distinct files (_chk_radar, _disc_outlook, _disc_outlook2, _disc_resume, _send_paul, _verify_sent, _clean_paul). Rule: ephemeral scripts go to %TEMP% — never `.deepchat` root. When closeout flags `_*` strays, check `process list` for a live concurrent session FIRST; purge strays whose names don't match any running task, or wait for the task to finish. Cross-ref: bloat-cleanup v3.3 thin_client.py, KIF-48, EXEC-AUTOBG-DEATH-1. |
 
 | **CRONJOB-DURATION-1: Agentic web-search cronjobs fail with "Cron job exceeded max duration" at 300s default (2026-08-05)** | Conference Radar (dcdc7a6a) + Job Market Watch (a194153f) both FAILED first manual runs at `maxDurationMs: 300000`. Web-search-heavy agentic tasks (multiple curl/browser fetches + synthesis) routinely exceed 5 minutes. Fix: set `runtime: {maxDurationMs: 600000, maxTurns: 20}` for any cronjob whose prompt includes web search; after `run_now`, check `cronjob history` for `status: failed` + error text. Canonical case: session 8APhB8pdpgihrWgDLpXIP — both jobs re-ran successfully at 600s. |
@@ -11523,6 +11559,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **STALE-COUNT-1: SKILL.md aggregate-count claims drift from the actual data file as content grows incrementally (2026-08-05)** | Any skill that states aggregate counts (account registry sizes, tool counts, reference counts) MUST reconcile the prose claim against the actual data file in the SAME edit that changes the data. The frontmatter description is the FIRST place staleness hides — social-media-management's description said "45+ verified" through 4 version bumps while the registry grew to 97. Fix: after any registry/data change, grep the SKILL.md for the old count and update every occurrence (description, banners' current-state sections, table rows) before commit. Cross-ref: LANGUAGE-CONSISTENCY-1, social-media-management v1.4.0. |
 
 | **DOTFILE-TRACK-GAP-1: Kaizen closeout creates/updates `.kaizen_history` but the canonical skill-sync.js never stages dotfiles (2026-08-05)** | skill-sync.js walkFiles() skips `entry.name.startsWith('.')`, so `.kaizen_history` (mandated by the Kaizen History Log protocol) is silently excluded from both git staging and R2 upload. Fix: after ANY kaizen closeout that writes `.kaizen_history`, run `git add <skill>/.kaizen_history` + commit + push MANUALLY — do not rely on skill-sync.js. R2 exclusion is by design (history is git-only). Canonical case: social-media-management v1.4.0 — `?? .kaizen_history` untracked post-sync, committed manually (ec578ae). |
+
+| **LINKEDIN-EXP-NO-FORM-1: LinkedIn's "Add a position or career break" button exists but produces no form/modal via CDP browser automation (2026-08-05)** | Canonical case: session wG__dZyYtV1X4_9mgl4MW — puppeteer-core clicked `button[aria-label="Add a position or career break"]` on `/details/experience/` (confirmed via evaluate + exact aria-label match). Button click succeeded but no dialog, modal, or form fields appeared — the URL didn't change, `div[role="dialog"]`/`.artdeco-modal` both empty, and `querySelectorAll('input,[contenteditable],textarea,select')` returned only page-header elements (Search, language SELECT). LinkedIn's SPA "Add section" popup also eludes CDP detection (popup renders outside detectable containers). Fix: LinkedIn experience-adding requires pre-existing experience section on profile; "Add profile section" → Core → Add experience flow needs the section to be initialized first. The about section automation works fine — it targets an existing section. |
 
 
 
@@ -11622,7 +11660,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| `linkedin-mcp` | Phase 5 (closeout), LinkedIn ops | LinkedIn MCP operations — auth via persistent profile, 22 tools, credential redundancy |
+| `linkedin-mcp` | [DEPRECATED — DO NOT USE (2026-08-05)] | MCP server never functional. All LinkedIn automation → `social-media-management` (browser-automation path) |
 
 
 
@@ -11671,6 +11709,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 | `computer-use` skill | Phase 2 (GUI-driven audits) | Desktop app automation for skills that drive native applications |
+| `social-media-management` | Phase 5 (closeout), LinkedIn ops | UNIFIED social hub — Bluesky/Mastodon follow mgmt, LinkedIn browser-automation, Buffer MCP posting. Supersedes `linkedin-mcp` (deprecated 2026-08-05) |
+| `research` | Phase 0 (forecast protocol), Phase 5 (publication) | Structured Forecast Protocol drives proactive kaizen; calibration register pattern; publication pipeline anti-pattern source |
 
 
 
@@ -12836,7 +12876,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.50** (kaizen — CONCURRENT-ROOT-WRITE-1 + cross-ref bloat-cleanup; 2026-08-05)
+Current: **v1.52** (kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1; 2026-08-05)
 
 
 
