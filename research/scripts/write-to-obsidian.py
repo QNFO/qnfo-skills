@@ -1,5 +1,5 @@
-"""
-write-to-obsidian.py — canonical Obsidian daily-note appender (stdlib only, zero deps).
+r"""
+write-to-obsidian.py -- canonical Obsidian daily-note appender (stdlib only, zero deps).
 
 Usage:
   echo "content" | python write-to-obsidian.py --slug "daily-briefing" --section "Daily Research Briefing"
@@ -7,7 +7,7 @@ Usage:
   python write-to-obsidian.py --slug "conference-radar" --section "Conference Radar" --text "raw text"
 
 Each --slug produces a DESCRIPTIVE, recognizable filename:
-  D:\Obsidian\notes\v1\YYYY\MM\DD\_<slug>-YYYY-MM-DD.md
+  D:/Obsidian/notes/v1/YYYY/MM/DD/_<slug>-YYYY-MM-DD.md
 Examples:
   _daily-briefing-2026-08-05.md
   _job-market-watch-2026-08-05.md
@@ -16,8 +16,8 @@ Examples:
 Same slug on the same day = APPENDS sections to the same file (multiple runs accumulate).
 Different slugs = separate files (each report type is independently identifiable).
 
-GitHub canonical: QNFO/qnfo-skills → research/scripts/write-to-obsidian.py
-Local execution: C:\Users\LENOVO\.deepchat\skills\research\scripts\write-to-obsidian.py
+GitHub canonical: QNFO/qnfo-skills -> research/scripts/write-to-obsidian.py
+Local execution: C:/Users/LENOVO/.deepchat/skills/research/scripts/write-to-obsidian.py
 """
 
 import argparse, datetime, os, sys, subprocess
@@ -69,7 +69,7 @@ def append_section(path, section_title, body):
 def main():
     parser = argparse.ArgumentParser(description='Append content to an Obsidian daily note.')
     parser.add_argument('--slug', required=True,
-                        help='Report slug (e.g. "daily-briefing", "job-market-watch") — determines filename: _<slug>-YYYY-MM-DD.md')
+                        help='Report slug (e.g. "daily-briefing", "job-market-watch") -- determines filename: _<slug>-YYYY-MM-DD.md')
     parser.add_argument('--section', required=True,
                         help='Section heading (e.g. "Daily Research Briefing")')
     parser.add_argument('--file', help='Read content from file (default: stdin)')
