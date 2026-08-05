@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.37
+version: 1.38
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -291,6 +291,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.38 UPDATE (2026-08-05, kaizen — Mined Workflow Patterns from the alirezarezvani ecosystem):**
+> Red-team: direct parent-agent mining of QNFO/gaios (AIOS blueprint, 31★),
+> QNFO/claude-code-tresor (3-tier architecture, 762★), QNFO/claude-code-aso-skill
+> (orchestrator fleet, 408★). All forked separately, upstream wired, NEVER in
+> DeepChat runtime dirs (EXTERNAL-SKILL-FORK-1).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **Mined Workflow Patterns section added** — 5 adoptable patterns:
+>     A. 3-tier Skills→Sub-Agents→Commands architecture + escalation; B. WAT model
+>     (probabilistic reasons, deterministic executes); C. stakes-calibrated caution
+>     (reversible → act + surface assumption; irreversible → confirm); D. master
+>     orchestrator + specialist agents with validated deliverables; E. connections
+>     registry (track reachable systems with last-checked status).
+> Cross-reference: QNFO/gaios, QNFO/claude-code-tresor, QNFO/claude-code-aso-skill forks,
+> user 2026-08-05 mining directive.
 
 > **v1.37 UPDATE (2026-08-05, kaizen — SKILL-CHURN-1: churn is create→delete→recreate cycles, NOT content iteration):**
 > Red-team: direct parent-agent audit (session IZbk2G9P2aA0JH0f0yQjj, user clarification).
@@ -1371,6 +1386,77 @@ directory contents/files).
 5. **Never avoid editing a skill because "it was just updated."** Iteration is the
    point. (Double-kaizen on UNCHANGED content is still wasteful — that is a
    different anti-pattern; iteration on CHANGED content is always correct.)
+
+
+## Mined Workflow Patterns (from alirezarezvani ecosystem, added 2026-08-05)
+
+**Sources (all forked to QNFO, upstream wired, mined 2026-08-05 per user directive):**
+- `QNFO/gaios` (31★) — AI Operating System blueprint: second brain + Chief of Staff
+- `QNFO/claude-code-tresor` (762★) — 3-tier architecture: Skills → Sub-Agents → Commands
+- `QNFO/claude-code-aso-skill` (408★) — master orchestrator + specialist agent fleet
+- `QNFO/claude-skills` (23,845★) — skill authoring + pipeline standards (mined into v1.36)
+
+### A. 3-Tier Architecture (tresor) — the right tool per task
+
+| Tier | Name | Invoked by | Characteristics | Our Equivalent |
+|:-----|:-----|:-----------|:----------------|:---------------|
+| 1 | **Skills** | Agent automatically | Context-activated, lightweight, non-blocking, single-purpose | kaizen skills auto-loading on context |
+| 2 | **Sub-Agents** | User explicitly (`@agent`) | Manual deep analysis, separate context, full tools, expert depth | subagent_orchestrator (explorer/reviewer/implementer) |
+| 3 | **Commands** | User triggers (`/command`) | Multi-agent orchestration, end-to-end workflows, aggregated report | prompt templates (SKILLS UPDATE, CONTINUE) |
+
+**Escalation pattern (tresor):** skill alerts → user decides to investigate → sub-agent deep-dives →
+command orchestrates multiple sub-agents in parallel → aggregated prioritized report with line
+numbers, severity, and fixes. Adopt: our red-team pipeline already dispatches parallel reviewers;
+add the explicit skill-alert → escalate → orchestrate → aggregate-report chain.
+
+### B. WAT Model (gaios) — probabilistic reasons, deterministic executes
+
+**Workflows · Agents · Tools.** "Probabilistic AI reasons; deterministic code executes."
+- **Workflows** = the SOPs (skills + heavier references)
+- **Agents** = read the SOP, call tools in order, recover from failures, ask when unsure
+- **Tools** = deterministic operations (Python scripts, MCP servers); credentials in `.env` only
+- **Reuse before building; on failure → fix the tool → verify → update the SOP.**
+- **Log decisions** to `decisions/log.md` — every decision is auditable.
+
+Adopt: our SKILL-COMMIT-SAME-SESSION-1 + verification gates already encode "fix → verify → update";
+add the decision-log discipline (every material decision logged with rationale).
+
+### C. Stakes-Calibrated Caution (gaios) — the operating discipline
+
+1. **Think before acting.** Don't assume, don't hide confusion. If the ask has multiple readings,
+   name them — don't silently pick. If a simpler path exists, say so and push back.
+2. **Calibrate caution to stakes + reversibility:**
+   - **Reversible/internal** (drafts, notes, plans) → produce your best version + surface the
+     assumption and alternative, so you can be redirected in one line. **Produce, don't pester.**
+   - **External/irreversible/regulated** → stop and confirm first.
+3. **Simplicity first.** Minimum that solves it, nothing speculative. Test: "would a senior person
+   call this overcomplicated?" — if yes, cut it. Simplicity in form only, never in safety.
+4. **Surgical changes.** Touch only what the task requires.
+
+Adopt: this is the missing nuance in our execution-mandate — "produce, don't pester" on reversible
+work + "stop and confirm" on irreversible. Canonical: our verify-then-claim gates (ZENODO-PHANTOM-DOI-1)
+are the irreversible side; plan/draft work should ship + surface assumptions without confirmation loops.
+
+### D. Master Orchestrator + Specialists (aso-skill) — validated deliverables
+
+**aso-master** orchestrates specialist agents (research → optimizer → strategist), each with
+explicit model selection and a defined output contract. Every deliverable is **character-validated**
+(Apple 30/30/100, Google 50/80/4000 limits enforced) — output passes a validation gate before
+handoff. Includes a **47-item pre-launch checklist with success criteria** and real calendar dates.
+
+Adopt: our subagent slots already separate explorer/reviewer/implementer; add the
+**validation-gate-before-handoff** discipline — every subagent deliverable passes a format/limits
+check (like our evals ≥85% gate from claude-skills) before the next phase consumes it.
+
+### E. Connections Registry (gaios) — know what you can reach
+
+A single table tracking every system the agent can reach: domain, tool, mechanism (mcp/script/
+export/key+ref), auth, **last checked**. `/audit` checks this file for coverage + freshness.
+Secrets never persist in the repo — connections pull live at use time.
+
+Adopt: maintain a similar registry for our MCP tool inventory + tokens (extend
+TOKEN-DISCOVERY-1 — the discovery order already exists; add the freshness/last-checked column so
+stale connections are visible).
 
 
 ## Language Consistency Check (AUTOMATIC, added 2026-08-05)
