@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: "2.12"
+version: "2.14"
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -28,14 +28,13 @@ self_sufficient: true
 > verification, use the agent tools `query_graph(endpoint, params)` and
 > `workers_list` (see cloudflare skill §Skill Cross-Reference v3.18). Never rely
 > on durable memory for Cloudflare operational state.
-> Cross-reference: cloudflare v3.18.
+> Cross-reference: cloudflare v3.33
 
 > **v2.6 UPDATE (2026-08-04, kaizen — Red-team skills audit closeout):**
 > Red-team: 5-skill Watchtower scan; git-github flagged for missing N-2 version footer.
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] N-2 version footer added — was the only QNFO core skill without one.
-> Cross-reference: kaizen v1.14, cloudflare v3.25 (cross-ref table updated).
-
+> Cross-reference: kaizen v1.14, cloudflare v3.33 (cross-ref table updated).
 
 > **v2.11 UPDATE (2026-08-04, kaizen — PowerShell remediation + repo consolidation audit):**
 > Red-team: 5-subagent parallel + direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
@@ -43,12 +42,12 @@ self_sufficient: true
 > (1) [HARD] PowerShell references replaced with Python equivalents:
 >     `Remove-Item -Recurse -Force $env:TEMP\<project>` → `python -c "import shutil; shutil.rmtree(...)"`;
 >     `$env:TEMP` → `%TEMP%` in clone instructions.
-> Cross-reference: qnfo-core §0.6 Python-First Execution Mandate, windows-command-patterns v3.9.
+> Cross-reference: qnfo-core §0.6 Python-First Execution Mandate, windows-command-patterns v3.12.
 
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
->     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.11 §N-4.
-# GIT-GITHUB — v2.13
+>     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
+# GIT-GITHUB — v2.14
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -79,6 +78,21 @@ self_sufficient: true
 > **Cloudflare Full-Stack:** Git is version control for the import surface ONLY. R2 + D1 are canonical for project artifacts. GitHub is secondary to D1 for project state. Skills repo (`qnfo-skills`) is for skills exclusively -- NEVER place project data there (ADR-026).
 > **v2.1 UPDATE (2026-07-18):** Added mandatory REPO-TARGET GATE (`git remote -v` before ANY tag/release/commit) after ADR-026 Incident 3 -- a prior session created research-project tags (`v0.1-phase0`, `v1.0.0`) and a Zenodo-DOI GitHub Release inside `qnfo-skills` by mistake. The old "Protected Repositories" section only warned about committing *files*; it did not cover tags/releases, which are independent git refs and slip through file-level checks.
 
+> **v2.14 UPDATE (2026-08-04, kaizen — GIT-COMMIT-M-QUOTE-1 + fresh-clone identity + N-2 frontmatter fix):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR publication pipeline;
+> 6 commits, 4 failed `git commit -m` calls, 2 "Author identity unknown" errors).
+> HARD: 1. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **GIT-COMMIT-M-QUOTE-1 enforced in this skill** — Standard Workflow + TEMP Volatility
+>     sections now mandate `git commit -F <msgfile>` (write tool message file). The old
+>     `git commit -m "ACTION:..."` instructions were the EXACT pattern that failed 4x this
+>     session through cmd.exe (pathspec errors). Cross-ref windows-command-patterns v3.12.
+> (2) [SOFT] **Fresh-clone identity gate added** — new clone fails "Author identity unknown"
+>     (2x this session); git config user.email/user.name required before first commit.
+> (3) [SOFT] **N-2 frontmatter fixed** — frontmatter said 2.12 while header/footer said 2.13
+>     (drift from v2.13 kaizen which bumped header/footer only).
+> Cross-reference: windows-command-patterns v3.12 (GIT-COMMIT-M-QUOTE-1), kaizen v1.20,
+> qnfo-core N-2, session 1tz85-vMiqh2TyFySznBA.
+
 > **v2.13 UPDATE (2026-08-04, kaizen — Watchtower session retrospective):**
 > Red-team: direct parent-agent audit (session hdd6PloLtF_ybqD_CK7EH).
 > HARD: 0. SOFT: 1. DESIGN: 0.
@@ -86,7 +100,6 @@ self_sufficient: true
 > (1) [SOFT] ARCHIVED-REPO-BLOCK-1 anti-pattern added — push/pull to archived repos
 >     fails 403; unarchive via gh API PATCH. Living documents = keep unarchived.
 > Cross-reference: kaizen v1.19, session hdd6PloLtF_ybqD_CK7EH.
-
 
 ## execute_plan
 
@@ -180,6 +193,15 @@ ACTION:DELETE FILE: deprecated/old-script.py RATIONALE: Replaced by new version
 
 ### Standard Workflow
 ```bash
+# 0a. FRESH-CLONE IDENTITY GATE (v2.14): first commit on a new machine/clone fails with
+#    "Author identity unknown" unless git config user.email/user.name is set. Before the
+#    first commit in ANY fresh clone:
+#      git config user.email "rowan@qnfo.org"
+#      git config user.name "Rowan Brad Quni-Gudzinas"
+#    (or one-shot: git -c user.email=... -c user.name=... commit -F <msgfile>)
+#    Configure via a Python subprocess script (windows-command-patterns S0.0) — never
+#    `git config` with quoted values through the exec tool (same GIT-COMMIT-M-QUOTE-1 class).
+
 # 0. REPO-TARGET GATE (HARD, run FIRST -- especially before ANY `git tag` or
 #    `gh release create`, not just commits)
 git remote -v
@@ -199,7 +221,11 @@ git branch --show-current
 git add <files>
 
 # 4. Commit with conventional format
-git commit -m "ACTION:TYPE FILE: path RATIONALE: reason"
+git commit -F C:\Users\LENOVO\AppData\Local\Temp\commit-msg.txt
+#   ^ cmd.exe CANNOT pass quotes/em-dashes/spaces through git commit -m via the exec
+#   tool (GIT-COMMIT-M-QUOTE-1, windows-command-patterns v3.12). ALWAYS write the
+#   message to a file with the write tool, then commit with -F. Never use -m for
+#   anything beyond a single word.
 
 # 5. Verify commit
 git log -1 --oneline
@@ -365,7 +391,8 @@ git clone <url> %TEMP%\<project>
 # Step 2: Apply ALL edits (this turn only)
 
 # Step 3: Commit (MANDATORY SAME TURN — never defer)
-git add <files> ; git commit -m "ACTION:..."
+git add <files> ; git commit -F C:\Users\LENOVO\AppData\Local\Temp\commit-msg.txt
+#   (GIT-COMMIT-M-QUOTE-1: never git commit -m with special chars on cmd.exe)
 
 # Step 4: Push (MANDATORY SAME TURN — never defer)
 git push origin <branch>
@@ -401,7 +428,6 @@ See ADR-026 below.
 ---
 
 ## Protected Repositories
-
 
 ### qnfo-skills (ADR-026)
 - **Git repo is for SKILLS ONLY.** See also KIF-32 above. NEVER place project data, publications, research artifacts, or governance documents.
@@ -459,11 +485,10 @@ See ADR-026 below.
 | **CHECK-FALSE-SWALLOW-1: `check=False` in subprocess.run swallows git failures with no diagnostic output — v2.9, 2026-08-04** | `subprocess.run(cmd, check=False)` returns a CompletedProcess but the caller never inspects `returncode` or prints `stderr`. The failure is invisible. This is especially dangerous with `git subtree add` which can fail for multiple reasons (no HEAD, remote unreachable, branch mismatch). **Fix:** NEVER use `check=False` on git operations without capturing AND printing both stdout and stderr on non-zero returncode. Use `check=True` (fail-fast, visible) as the default; reserve `check=False` ONLY for operations where failure is expected (e.g., `git rev-parse --verify` to check existence). Canonical case: session PMH0kzte — consolidate.py v1 used `check=False` on all 12 subtree adds, all failed, none were diagnosed until post-hoc verification. |
 | **DELETE-BRANCH-DEFAULT-1: `gh pr merge --delete-branch` cannot delete a branch if it was the repo's default at creation — v2.9, 2026-08-04** | When a new repo has only one branch (the feature branch, because main was empty/unborn), GitHub sets that branch as the default. `gh pr merge --delete-branch` refuses to delete the default branch — the branch survives the merge. **Fix:** After PR merge, explicitly set the default branch to `main` via `gh repo edit --default-branch main`, then DELETE the leftover feature branch via API (`gh api -X DELETE repos/owner/repo/git/refs/heads/<branch>`). Verify with `gh api repos/owner/repo/branches`. Canonical case: session PMH0kzte — ultrametric-physics, laws-of-form, cfpe all had leftover `feature/consolidate-projects` branches after merge because they were the repo's default at creation time. |
 
-
 | **ARCHIVED-REPO-BLOCK-1: Push/pull to archived GitHub repo fails 403 (2026-08-04)** | If `git push` returns `remote: This repository was archived so it is read-only.` and `fatal: unable to access`, the repo must be UNARCHIVED before pushing. Use `gh api repos/QNFO/<repo> -X PATCH -f archived=false` OR `gh repo edit QNFO/<repo>` (if gh CLI supports it). After push, decide whether to re-archive: if the repo contains LIVING documents (e.g., research continuity registry), keep it UNARCHIVED. If it's a static publication archive, re-archive. Do NOT leave local commits unpushed — verify remote with `git ls-remote`. Canonical case: session hdd6PloLtF_ybqD_CK7EH — consilient-gap-synthesis archived, RESEARCH-CONTINUITY-REGISTRY.md cross-ref committed locally (a72546e) but blocked from push. odr-thesis was successfully unarchived via GitHub API PATCH. |
 
 ## Version
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.13** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.11, windows-command-patterns v3.9; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
+Current: **v2.14** (git-github — PowerShell remediation: Remove-Item/Test-Path/$env:TEMP replaced with Python/shutil/%%TEMP%% equivalents per qnfo-core §0.6 Python-First mandate; cross-ref qnfo-core v1.13, windows-command-patterns v3.12; 2026-08-04) (git-github — v2.10: WBS taxonomy; v2.11: PowerShell; 2026-08-04)
