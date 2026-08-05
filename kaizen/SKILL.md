@@ -501,6 +501,19 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
   - v1.4: 2026-08-02, self-kaizen — numeracy monitoring + numeracy anti-patterns
   - v1.3: 2026-07-31, deferred-item enforcement
 
+>
+> **v1.39 UPDATE (2026-08-05, kaizen — GITHUB-CDN-PROPAGATION-1 corrected: "Share to Profile" is the real fix):**
+> Red-team: direct parent-agent forensic audit of session IfYDah5TSY5gNMY0S4OT5
+> (rwnq8 profile README not appearing despite correct config).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **GITHUB-CDN-PROPAGATION-1 REVISED** — the "5-30 min CDN wait" was wrong.
+>     CLI/API-created profile repos are not auto-promoted; clicking **"Share to Profile"**
+>     on the repo page promotes them IMMEDIATELY. Wait/force-push/visibility-toggle do
+>     NOT help. Canonical case: rwnq8/rwnq8 — repo page rendered for 40+ min, profile
+>     page empty; after clicking "Share to Profile", profile README live instantly.
+> Cross-reference: personal-knowledge v1.2, git-github v2.16, session IfYDah5TSY5gNMY0S4OT5.
+
+
 ## Overview
 
 Kaizen is a continuous-improvement protocol for skills and configuration
@@ -1749,7 +1762,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **PROFILE-README-FABRICATE-1: Inventing tool/skill badges (MATLAB, Docker, Qiskit, Cirq, etc.) in a profile README with zero resume evidence (2026-08-05)** | **HARD GATE.** Every tool, skill, or technology badge in a personal/landing page README MUST be attested by the user's actual resume or portfolio. Never generate a badge from your training data — every badge requires a same-turn tool call showing the exact phrase in the resume. Fabricating a tool badge (e.g., adding "Docker" or "MATLAB" to a tech stack when the resume never mentions them) is the SAME CLASS as ZENODO-PHANTOM-DOI-1, CLAIM-VERIFY-1, and bibliographic hallucination. Canonical case: session IfYDah5TSY5gNMY0S4OT5 — rwnq8 profile README initially contained badges for MATLAB, Docker, Qiskit, Cirq that the resume never attested; user corrected the agent. Fix: before any badge, `grep the resume/portfolio for the tool name; if absent → NEVER badge it. Cross-ref: qnfo-core §0.0 Bibliographic Integrity, research P3.AUTHOR-GATE. |
 | **MANUAL-DELEGATE-1: Asking the user to perform CLI/git/GitHub operations that the agent can execute autonomously (2026-08-05)** | **HARD GATE.** The user has repeatedly mandated FULLY AUTONOMOUS execution — the agent never delegates manual steps to the user unless the step genuinely requires a web Dashboard, OAuth approval, or a physical action. git clone, git push, gh repo create, editing files, and deploying are ALL agent-executable. Commanding the user to "create the repo named rwnq8" or "copy and push the file" when the agent has `exec`, `gh`, and `git` tools available is a violation. Canonical case: session IfYDah5TSY5gNMY0S4OT5 — agent initially told the user to create the repo and push the file; user corrected the agent; agent executed autonomously with gh CLI + Python deploy script. Fix: every task resolution MUST assume the agent is the executor — escalate a `deepchat_question` ONLY for genuine user-preference decisions, never for tool-executable steps. Cross-ref: git-github SAME-TURN-COMMIT, SKILL-COMMIT-SAME-SESSION-1. |
-| **GITHUB-CDN-PROPAGATION-1: New `username/username` profile README repo takes 5-30 minutes for GitHub CDN to activate on the profile page (2026-08-05)** | The README renders correctly at `github.com/username/username` immediately after push, but the profile overview at `github.com/username` may not display the README for 5-30 minutes. This is a GitHub CDN propagation delay — NOT a broken README, NOT a misconfigured repo, NOT a missing markdown-body element. Do NOT repeatedly reload, rebuild, or push trivial commits — the fix is to wait. Verify: the repo page (`github.com/username/username`) renders correctly → the profile page will follow. Cross-ref: https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme |
+| **GITHUB-CDN-PROPAGATION-1: Profile README not appearing on profile page for CLI/API-created repos — REVISED 2026-08-05 (NOT a CDN wait)** | **The 5-30 min "CDN propagation" theory was WRONG.** Root cause: repos created via `gh repo create` (CLI/API) are NOT auto-promoted to the profile page even though the repo page renders the README and the editor says "is a special repository." **The fix: click "Share to Profile" on the repo page** (`github.com/{user}/{user}`) — the README appears on the profile IMMEDIATELY, server-side rendered (verified via curl on 2026-08-05: rwnq8/rwnq8). Do NOT wait, force-push, or toggle visibility — click the button. Verify: `curl -s https://github.com/{user} | grep profile-readme` returns a match. Cross-ref: https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme, personal-knowledge v1.2 |
 
 ## Cross-Skill Integration
 

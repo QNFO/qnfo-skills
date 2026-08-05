@@ -5,7 +5,7 @@ version: 1.0
 kif_tags: [PERSONAL]
 ---
 
-# PERSONAL KNOWLEDGE — v1.1 (2026-08-05)
+# PERSONAL KNOWLEDGE — v1.2 (2026-08-05)
 
 > **PURPOSE:** The user uses DeepChat as the single interface for ALL information
 > needs. This skill is the integration path for their PERSONAL files — everything
@@ -25,6 +25,23 @@ kif_tags: [PERSONAL]
 > (4) [DESIGN] Personal resume repo is now rwnq8/resume (NOT QNFO/resume) — personal content
 >     stays in the personal account, per user directive.
 > Cross-reference: kaizen v1.38, git-github v2.16, session IfYDah5TSY5gNMY0S4OT5.
+
+> **v1.2 UPDATE (2026-08-05, kaizen — CRITICAL FIX: "Share to Profile" discovery):**
+> Red-team: direct parent-agent forensic audit of session IfYDah5TSY5gNMY0S4OT5
+> (profile README not appearing on github.com/rwnq8 for 40+ min despite correct
+> repo config: name match, public, README.md on main, non-fork).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **GITHUB-CDN-PROPAGATION-1 anti-pattern REVISED** — the 5-30 min "CDN wait"
+>     theory was WRONG. Root cause: CLI/API-created profile repos (gh repo create) are
+>     NOT auto-promoted. The fix is clicking **"Share to Profile"** on the repo page —
+>     profile README appears IMMEDIATELY after. Verified via raw HTML (profile-readme
+>     container present server-side).
+> (2) [DESIGN] **Deploy runbook updated** — step 4 is now a HARD GATE: click
+>     "Share to Profile" after first push. Verification: `curl -s github.com/rwnq8
+>     | grep profile-readme`.
+> Cross-reference: kaizen v1.38 GITHUB-CDN-PROPAGATION-1 (cross-refs point here),
+> git-github v2.16, session IfYDah5TSY5gNMY0S4OT5.
+
 
 ## Separation Mandate (HARD — user directive 2026-08-04)
 
@@ -149,6 +166,14 @@ temp is volatile.
    Never add MATLAB/Docker/Qiskit/etc. badges from training memory.
 3. Run the deploy script. Commit message format:
    `ACTION:EDIT FILE: README.md RATIONALE: <what changed>`
+4. **CRITICAL — CLICK "Share to Profile" (HARD GATE, verified 2026-08-05):**
+   After the push, navigate to `https://github.com/rwnq8/rwnq8` in the logged-in
+   browser and click the **"Share to Profile"** button. Without this, the README
+   renders on the repo page but NEVER appears on the profile page — no amount of
+   waiting, force-pushing, or visibility toggling helps. This is the documented
+   manual-promotion path for repos created via CLI/API (gh repo create). Verify
+   after clicking: `curl -s https://github.com/rwnq8 | grep profile-readme` must
+   return a match.
 
 ### Key facts (2026-08-05)
 
@@ -157,7 +182,7 @@ temp is volatile.
 | Profile repo | `rwnq8/rwnq8` (public, main branch, README.md in root) |
 | Resume/portfolio repo | `rwnq8/resume` (public; transferred from QNFO 2026-08-05) |
 | Social links in README | LinkedIn, ResearchGate, ORCID, Zenodo, Resume DOI (10.5281/zenodo.21737024) |
-| CDN propagation | New/changed profile README can take **5-30 min** to appear on the profile page; the REPO PAGE renders immediately. Do NOT spam rebuild commits — the forced-commit trick helps but waiting is the fix (GITHUB-CDN-PROPAGATION-1). |
+| Profile promotion | **MUST click "Share to Profile"** on the repo page after first push (CLI-created repos are not auto-promoted). Verified: appears immediately after click, server-side rendered (GITHUB-CDN-PROPAGATION-1 revised). |
 
 ### Repo transfer pattern (if user asks to move a repo)
 
@@ -177,7 +202,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 | **PDF-SKIP-1:** telling the user "PDFs aren't indexed" instead of extracting them | Run the extraction helper + rclone to _extracted/ so the indexer picks them up. |
 | **SINGLE-SOURCE-1:** answering from only the search endpoint | Bridge memories + conversations too — DeepChat is the single interface; the answer should be too. |
 | **PROFILE-README-DEPLOY-1:** treating the GitHub profile README as a manual user task | Fully agent-executable: gh CLI + git + Python deploy script. See runbook above. The user has explicitly mandated ZERO manual steps (MANUAL-DELEGATE-1). |
-| **GITHUB-CDN-PROPAGATION-1 (cross-ref):** profile README changes take 5-30 min to appear on the profile page | Repo page renders immediately; profile page follows. Verify repo page first, then wait. A forced commit (append blank line) can accelerate the re-scan but waiting is the fix. |
+| **GITHUB-CDN-PROPAGATION-1 (cross-ref, REVISED 2026-08-05):** profile README does NOT auto-appear for CLI/API-created profile repos | **THE REAL FIX is the "Share to Profile" button** on the repo page (github.com/{username}/{username} -> "Share to Profile"). The repo page renders the README but the PROFILE page stays empty until this button is clicked — it is NOT a 5-30min CDN wait. Verified 2026-08-05: rwnq8/rwnq8 rendered on repo page for 40+ min with zero profile-page markdown; clicking "Share to Profile" made it appear on github.com/rwnq8 IMMEDIATELY (server-side rendered, confirmed via curl). Repos created via `gh repo create` need this manual promotion; the editor banner ("is a special repository") confirms recognition but does NOT promote it. |
 | **PROFILE-README-FABRICATE-1 (cross-ref):** badge/tool claims without resume attestation | HARD GATE. Grep the actual resume/portfolio for every tool badge before adding it. |
 
 ## Related
