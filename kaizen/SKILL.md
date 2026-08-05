@@ -4,7 +4,7 @@
 name: kaizen
 
 
-version: 1.47
+version: 1.48
 
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
@@ -36,7 +36,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.47
+# KAIZEN — v1.48
+> **v1.48 UPDATE (2026-08-05, kaizen — Job Market Watch cron update + red-team skills audit):**
+> Red-team: direct parent-agent 5-adversary audit (session YoWvnm9UpzOWANdyzlgpg — job search kaizen).
+> HARD: 0. SOFT: 4. DESIGN: 1. Changes:
+> (1) [DESIGN] **Job Market Watch cron (a194153f) updated** — taskPrompt rewritten with fit-first mandate,
+>     top-candidate 1-liner requirement, NL/EU priority with relocation cases, and 10-tier institution
+>     target list (Perimeter Institute, CSH Vienna, SFI, MPI-PKS, Anthropic London, DeepMind London,
+>     QuSoft/CWI/QuTech, Quantiki, Academic Positions NL). Description synced to match.
+> (2) [SOFT] **qnfo-agent v3.61 on-disk but not in skill_list** — SKILL-DEATH-FALSE-POSITIVE-1 class.
+>     Skill exists, has version bumps, maintained — just not loaded by the app. Do not treat as removed.
+> (3) [SOFT] **execution-mandate v2.8 on-disk but not in skill_list** — same class as (2). Both skills
+>     need app-level reconciliation (install or document as intentionally excluded).
+> (4) [SOFT] **Research skill PYMUPDF-FORBIDDEN-1 duplicate** — anti-pattern row appears twice in the
+>     research SKILL.md anti-patterns table; dedup on next research skill edit.
+> (5) [SOFT] **kaizen footer structural note** — the last "Current:" line lives within a historical
+>     banner, not as a standalone footer. Resolve on next structural edit.
+> Cross-reference: research v2.78 (Briefing System), cronjob a194153f, session YoWvnm9UpzOWANdyzlgpg.
 > **v1.47 UPDATE (2026-08-05, kaizen — EXEC-AUTOBG-DEATH-1 + CRONJOB-DURATION-1 refinement):**
 > Red-team: direct parent-agent audit of session 8APhB8pdpgihrWgDLpXIP cycle 2
 > (Obsidian note generator + job curation + 3-skill kaizen).
@@ -6381,7 +6397,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.47** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.48** (kaizen — Job Market Watch cron update + red-team skills audit; 2026-08-05): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 
 
