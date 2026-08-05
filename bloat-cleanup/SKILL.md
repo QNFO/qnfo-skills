@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 3.1
+version: 3.2
 triggers:
 - cleanup
 - bloatware
@@ -14,6 +14,26 @@ triggers:
 - free RAM
 - optimize Windows
 ---
+
+> **v3.2 UPDATE (2026-08-05, kaizen — Edge background/startup policies + Widgets MDM + TrustedInstaller lesson):**
+> Red-team: session VBvCOsXhzlQJUubBqtdFz — bloat extermination live-fire test:
+> Edge background mode + startup boost disabled via HKLM/HKCU Group Policy;
+> Edge auto-launch `MicrosoftEdgeAutoLaunch_*` deleted from HKCU\Run;
+> Widgets permanently disabled via PolicyManager MDM path (`AllowNewsAndInterests=0`);
+> Office ClickToRun set to DEMAND_START via `sc`.
+> HARD: 0. SOFT: 4. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **Edge policies documented** — `BackgroundModeEnabled` + `StartupBoostEnabled`
+>     registry keys (HKLM+HKCU, `REG_DWORD 0`); auto-launch deletion from HKCU\Run.
+> (2) [SOFT] **Widgets MDM policy path** — `HKLM\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests`
+>     = 0 is the only working registry path; TrustedInstaller blocks Dsh and ACL blocks Feeds.
+> (3) [SOFT] **TrustedInstaller/key-owner gap** — documented that TrustedInstaller-protected
+>     registry keys (HKLM\Dsh, HKCU\Feeds) CANNOT be written even with admin elevation.
+>     PolicyManager MDM path is the fallback. Don't waste tool calls on icacls/takeown.
+> (4) [SOFT] **Self-elevation via ShellExecute runas** — documented `ctypes.windll.shell32.ShellExecuteW`
+>     as the canonical UAC elevation pattern (cross-ref: windows-command-patterns v3.13 §S-1.0.8).
+> (5) [DESIGN] **kill_bloat.py targets expanded** — now includes Edge auto-launch deletion.
+> Cross-reference: windows-command-patterns v3.13 §S-1.0.8, kaizen v1.31, session VBvCOsXhzlQJUubBqtdFz.
 
 > **v3.1 UPDATE (2026-08-02, kaizen — Thin-Client Enforcement Protocol):**
 > Red-team: KIF-32 thin-client mandate audit found local-only files (stale git clones,
@@ -526,6 +546,103 @@ Orchestrator running all 7 phases in sequence: audit → dynamic service analysi
 9. **KIF-49 (2026-07-29 red-team): FTS orphan leak after session prune.** `agent_db_prune.py` v2.0 skipped `deepchat_tape_search_fts` and `deepchat_tape_search_projection` during deletion (44,853 orphan entries found post-prune red-team audit). Root cause: FTS tables WITH `session_id` column (`tape_search_fts`, `projection`, `_meta` variants) were incorrectly grouped with FTS tables WITHOUT `session_id` (`search_documents_fts`). Fixed in v2.1: FTS_WITH_SESSION_ID list deleted inline; FTS_NO_SESSION_ID uses rebuild-based orphan cleanup. Additionally, orphan FTS meta tables cleaned. Two orphan `usage_stats` rows also fixed. Run `clean_fts_orphans.py` to clean any remaining FTS orphans.
 10. **KIF-50 (2026-07-29 red-team): Budget laptop comprehensive tuner.** No single script covered all budget-laptop optimizations end-to-end. Created `budget_laptop_tune.py`: read-only system audit (RAM, disk, services, VBS, visual effects, agent.db, startup, top processes) with severity-rated recommendations; non-admin auto-apply (power plan, transparency, config cleanup); admin queue (hibernation, VBS/HVCI, defender exclusions, dynamic service disable, AppX removal). Run `python budget_laptop_tune.py` for audit; `--apply` to execute non-admin + queue admin. `apply_budget_opts.py` is the fast-path variant. VACUUM confirmed working with DeepChat live (WAL/SHM locks harmless).
 11. **KIF-51 (2026-07-29 red-team): analyze_agent_db.py column bug + thin_client allowlist gap.** Red-team audit discovered: (a) `analyze_agent_db.py` used `COUNT(te.id)` but `deepchat_tape_entries` has no `id` column (composite key), causing OperationalError; plus undefined variable `tape_count` instead of `count`. Fixed: `COUNT(*)` + correct variable. (b) `thin_client.py` flagged `.gitattributes` and `d1-cache.json` as UNKNOWN FILE in `.deepchat` root. Fixed: added both to `OPERATIONAL_FILES`. Post-kaizen: all scripts exit 0, red-team audit ALL CLEAN.
+12. **KIF-52 (2026-08-05, session VBvCOsXhzlQJUubBqtdFz): TrustedInstaller-protected registry keys.** Windows 11 locks certain keys under `HKLM\SOFTWARE\Policies\Microsoft\Dsh` and `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds` — they're owned by TrustedInstaller, NOT Administrators. Even ShellExecute "runas" UAC elevation cannot write to them. Do NOT waste tool calls on `icacls`/`takeown`. Use the PolicyManager MDM alternative path: `HKLM\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests\AllowNewsAndInterests` = 0 (REG_DWORD). This IS writable with admin elevation. See §Widgets MDM Policy below. Cross-ref: windows-command-patterns v3.13 WIN-TRUSTEDINSTALLER-REG-1, kaizen v1.31 WIN-ELEVATION-PARTIAL-1.
+
+## Edge Background Policies (v3.2)
+
+Edge runs background processes even after all windows are closed, and preloads at Windows
+login via "Startup Boost." Both are bloat — RAM consumption for no user benefit.
+
+**Permanent disable via Group Policy registry (admin required):**
+
+```
+HKLM\SOFTWARE\Policies\Microsoft\Edge\BackgroundModeEnabled  REG_DWORD 0
+HKLM\SOFTWARE\Policies\Microsoft\Edge\StartupBoostEnabled    REG_DWORD 0
+HKCU\SOFTWARE\Policies\Microsoft\Edge\BackgroundModeEnabled  REG_DWORD 0
+HKCU\SOFTWARE\Policies\Microsoft\Edge\StartupBoostEnabled    REG_DWORD 0
+```
+
+These are Group Policy-level settings — Edge cannot override them, even after updates.
+
+**Edge auto-launch deletion (no admin required):**
+```
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+    DELETE: MicrosoftEdgeAutoLaunch_*
+```
+This removes the `--win-session-start` flag that preloads Edge at every login.
+
+**Dispatch pattern (write payload → ShellExecute runas → poll):**
+```python
+import ctypes, sys, tempfile, os, time
+# Write admin payload
+payload = r'''
+import subprocess, os
+for hive in [r"HKLM\SOFTWARE\Policies\Microsoft\Edge",
+             r"HKCU\SOFTWARE\Policies\Microsoft\Edge"]:
+    for val in ["BackgroundModeEnabled", "StartupBoostEnabled"]:
+        subprocess.run(f"reg add {hive} /v {val} /t REG_DWORD /d 0 /f", shell=True)
+with open(os.path.join(os.environ["TEMP"], "_edge_result.txt"), "w") as f:
+    f.write("done")
+'''
+p = os.path.join(tempfile.gettempdir(), "_edge_admin.py")
+with open(p, "w") as f: f.write(payload)
+ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f'"{p}"', None, 1)
+# Poll for completion
+for _ in range(20):
+    time.sleep(0.5)
+    if os.path.exists(os.path.join(tempfile.gettempdir(), "_edge_result.txt")):
+        break
+```
+
+## Widgets MDM Policy (v3.2)
+
+Windows 11 Widgets (`widgets.exe` + `widgetservice.exe`) can be killed without admin,
+but they restart on reboot. The registry keys to permanently disable them are
+TrustedInstaller-protected.
+
+**The WORKING path (admin required):**
+```
+HKLM\SOFTWARE\Microsoft\PolicyManager\default\NewsAndInterests
+    AllowNewsAndInterests  REG_DWORD 0
+```
+This is the MDM/Intune-compatible path. Unlike Dsh and Feeds, it IS writable with
+ShellExecute "runas" admin elevation.
+
+**Paths that DO NOT work (TrustedInstaller / ACL-locked):**
+```
+HKLM\SOFTWARE\Policies\Microsoft\Dsh\AllowNewsAndInterests               ← TRUSTEDINSTALLER
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds\ShellFeedsTaskbarViewMode  ← ACL-LOCKED
+```
+
+**Fallback:** If the MDM path is also blocked, instruct the user:
+Settings → Personalization → Taskbar → Widgets = Off.
+
+## Self-Elevation Pattern (v3.2)
+
+Many bloat operations require admin: writing to HKLM, service control, AppX removal.
+Use `ctypes.windll.shell32.ShellExecuteW` with `"runas"` verb for UAC self-elevation.
+The user clicks "Yes" on the UAC prompt — no typing required.
+
+**Cross-ref:** `windows-command-patterns` v3.13 §S-1.0.8 for the full pattern
+(what works, what doesn't, TrustedInstaller caveat).
+
+```python
+import ctypes, sys, tempfile, os, time
+
+# Write ALL admin operations into ONE payload
+payload = r'''<admin operations as Python script>'''
+p = os.path.join(tempfile.gettempdir(), "_admin.py")
+with open(p, "w") as f: f.write(payload)
+
+# Launch as admin (ONE UAC prompt for ALL operations)
+ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, f'"{p}"', None, 1)
+
+# Poll result file
+for _ in range(20):
+    time.sleep(0.5)
+    if os.path.exists(os.path.join(tempfile.gettempdir(), "_result.txt")):
+        break
+```
 
 
 > **RESTART AFTER SKILL PURGE (2026-08-02):** DeepChat auto-restores deleted
@@ -565,4 +682,5 @@ subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 
   - scripts\full_clean.py (python)
   - scripts\kill_bloat.py (python)
   - scripts\thin_client.py (python)
+- Cross-references: windows-command-patterns v3.13 §S-1.0.8 (ShellExecute runas, sc, taskkill, TrustedInstaller caveat), kaizen v1.31 (WIN-ELEVATION-PARTIAL-1)
 - Do not guess script paths or change directories to locate skill files.
