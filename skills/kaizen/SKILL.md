@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.52
+version: 1.53
 
 
 
@@ -74,7 +74,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.52
+# KAIZEN — v1.53
+> **v1.53 UPDATE (2026-08-05, kaizen — Session retrospective: Wikidata items + credential case-sensitivity):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata round:
+> Person Q140892265 + Org Q140892267 created and verified; 8-platform identity graph complete).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **MEMORY-TO-SKILL-DRIFT closed** — WIKIDATA-BOT-PASSWORD-REQUIRED-1 existed in
+>     durable memory but was absent from the research skill; migrated to research v2.81
+>     anti-pattern table + Wikidata section. Any anti-pattern stored via memory_remember MUST
+>     be migrated into the owning SKILL.md the same session (kaizen v1.7 HARD GATE).
+> (2) [SOFT] Session retrospective registered: ~8 failed Wikidata logins caused by MediaWiki
+>     username case-sensitivity (QNFO vs Qnfo) — MEDIAWIKI-USERNAME-CASE-1 now documents the
+>     read-only list=users diagnosis that resolves it in one call. Items created:
+>     Q140892265 (Person) + Q140892267 (Org), affiliation P1416 linked, verified via EntityData.
+> Cross-reference: research v2.81, MEMORY-TO-SKILL-DRIFT, MEDIAWIKI-USERNAME-CASE-1,
+> session 3i_KVLownViukLTZB_BJ1.
 > **v1.52 UPDATE (2026-08-05, kaizen — PARALLEL-EXEC-RACE-1 + session retrospective 3i_KVLownViukLTZB_BJ1):**
 > Red-team: direct parent-agent audit of the discoverability sprint (landing pages, Schema.org,
 > Bluesky, Zenodo attribution fix, OSF profile, ORCID client, IndexNow).
@@ -12891,7 +12905,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.52** (kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1; 2026-08-05)
+Current: **v1.53** (kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1; 2026-08-05)
 
 
 

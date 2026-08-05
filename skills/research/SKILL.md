@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.80
+version: 2.81
 
 
 
@@ -166,7 +166,25 @@ triggers:
 
 
 
-# RESEARCH — v2.80
+# RESEARCH — v2.81
+> **v2.81 UPDATE (2026-08-05, kaizen — Wikidata/MediaWiki: item creation + auth rules + 2 anti-patterns):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata items round:
+> Person Q140892265 + Org Q140892267 created, credential case-sensitivity discovery).
+> HARD: 2. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **MEDIAWIKI-USERNAME-CASE-1 anti-pattern added** — MediaWiki uppercases the first
+>     character of usernames and is case-sensitive after it (QNFO != Qnfo). The login error
+>     "Incorrect username or password entered" is a COMBINED message for EITHER unknown username
+>     OR wrong password — never distinguishes. Diagnose with read-only
+>     action=query&list=users&ususers=NAME&usprop=editcount (no login needed).
+> (2) [HARD] **WIKIDATA-BOT-PASSWORD-REQUIRED-1 migrated from durable memory** (MEMORY-TO-SKILL-DRIFT
+>     closed) — MediaWiki API programmatic edits REQUIRE a bot password (Special:BotPasswords),
+>     not the account password (account pw + API = 'additional verification step required'/SUL3).
+>     Account password DOES work for browser web login.
+> (3) [SOFT] **wbsetclaim $NEW GUID failure documented** — new statements MUST use wbcreateclaim
+>     (wbsetclaim requires a real GUID; 'Qxxxx$NEW' returns 'Statement does not have a valid GUID').
+> (4) [DESIGN] **Wikidata section added** — item creation flow, QID map, property reference,
+>     SPARQL verification patterns, dissemination tiers (publications, identifiers, programs).
+> Cross-reference: kaizen v1.53, session 3i_KVLownViukLTZB_BJ1.
 > **v2.80 UPDATE (2026-08-05, kaizen — Research profile & indexing APIs: IndexNow + OSF + ORCID scope rules):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint:
 > landing pages, Bluesky, Zenodo ADR-014 fix, OSF profile, ORCID client, IndexNow).
@@ -8571,6 +8589,38 @@ CLIENT_CREDENTIALS grant: works with /read-public for public reads (HTTP 200)
 PROFILE EDITS: web UI (logged-in session) — keywords/bio/works via the browser
 ```
 
+### Wikidata / MediaWiki — item creation & auth (v2.81, 2026-08-05)
+
+**Auth:** programmatic API edits REQUIRE a bot password (Special:BotPasswords). Account
+password works for browser web login only. Login failures: diagnose via read-only
+`list=users` (MEDIAWIKI-USERNAME-CASE-1 — case matters after first char).
+
+**Item creation flow (proven):**
+```
+1. POST action=wbeditentity  new=item  data={"labels","descriptions","aliases"}  -> item QID
+2. POST action=wbcreateclaim entity=QID property=P496 snaktype=value value="0009-0002-4317-5604"
+   (repeat per statement — wbsetclaim rejects $NEW pseudo-GUIDs)
+3. Verify: GET https://www.wikidata.org/wiki/Special:EntityData/QID.json
+   or SPARQL https://query.wikidata.org/sparql
+```
+
+**QID map (verified live):** human=Q5, organization=Q43229, researcher=Q170790,
+scholarly article=Q13442814. **Property map:** ORCID=P496, author=P50, DOI=P356,
+occupation=P106, affiliation=P1416, main subject=P921, official website=P856,
+GitHub username=P2037, OpenAlex author ID=P4285, Google Scholar ID=P1960,
+Semantic Scholar author ID=P4012, publication date=P577, language=P407.
+
+**Created items (2026-08-05):** Person Q140892265 (Rowan Brad Quni-Gudzinas —
+P31/P496/P106/P856/P2037/P1416), Org Q140892267 (Quniverse Research Foundation — P31/P856).
+
+**Dissemination tiers (priority):** (1) publication items per flagship DOI (P356+P50+P921,
+~10-20 items — SPARQL-queryable corpus); (2) identifier claims on person (OpenAlex P4285
+A5133504808, Scholar P1960 eHIbqxkAAAAJ, SemanticScholar P4012, X P2002); (3) program/concept
+items (QNFO P31 research program, Five Pillars P361 part-of, concept items as P921 subjects);
+(4) biographical + sitelinks; (5) Commons media (P18/P373).
+
+**Script:** `research/scripts/wikidata-item-create.py` (--dry-run/--verify, ready-to-run).
+
 ## Version
 
 
@@ -8589,7 +8639,7 @@ PROFILE EDITS: web UI (logged-in session) — keywords/bio/works via the browser
 
 
 
-Current: **v2.80** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.81** (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
