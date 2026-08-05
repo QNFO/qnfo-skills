@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.36
+version: 1.37
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -291,6 +291,19 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.37 UPDATE (2026-08-05, kaizen — SKILL-CHURN-1: churn is create→delete→recreate cycles, NOT content iteration):**
+> Red-team: direct parent-agent audit (session IZbk2G9P2aA0JH0f0yQjj, user clarification).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **SKILL-CHURN-1 anti-pattern added** — skill churn is DEFINED as the
+>     repeated cycle of creating a skill, declaring it obsolete/unnecessary, deleting
+>     it, then usually recreating it. Continuous refinement of a skill's content
+>     (instructions, references, scripts, version bumps, kaizen passes) is the OPPOSITE
+>     of churn — it is the mandatory, expected mode of skill maintenance. Never label
+>     content iteration as churn; never avoid improving a skill out of churn-phobia.
+> (2) [DESIGN] **Skill Churn vs Content Iteration section added** — definitive
+>     discrimination table + rules. Content refinement is always authorized.
+> Cross-reference: LANGUAGE-CONSISTENCY-1, CMD-LEGACY-1, user 2026-08-05 clarification.
 
 > **v1.36 UPDATE (2026-08-05, kaizen — Mined Skill Best Practices: fork QNFO/claude-skills, mine don't reinvent):**
 > Red-team: direct parent-agent mining of alirezarezvani/claude-skills (345 skills,
@@ -1321,6 +1334,45 @@ next edited for another reason, split heavy content into references/ at that
 time. Do NOT launch a mass rewrite.
 
 
+## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
+
+**User clarification:** "Skill churn" PRIMARILY refers to repeated cycles of skill
+CREATION then DELETING the same skill as obsolete or unnecessary (then usually
+RECREATING it again as necessary!). It does NOT refer to the continuous process of
+skill content refinement and iteration (instructions, references, scripts, other
+directory contents/files).
+
+### The Discrimination
+
+| Activity | Is It Churn? | Verdict |
+|:---------|:------------:|:--------|
+| Edit a skill's instructions, add a section, bump version, fix wording | ❌ NO | **MANDATORY** — this is kaizen's core purpose. Always authorized. |
+| Refactor a skill: split into references/, restructure sections, migrate content | ❌ NO | **MANDATORY** — content iteration. Do it freely (with verification gates). |
+| Add new anti-patterns, gates, or best practices to an existing skill | ❌ NO | **MANDATORY** — the skill grows by iteration. |
+| Create a NEW skill | ❌ NO | Normal — when genuinely needed (a real gap, not a duplicate). |
+| Declare a skill obsolete, DELETE it, then recreate it weeks later | ✅ **YES** | **THE anti-pattern.** Never delete-and-recreate. |
+| Disable a legacy prompt/command system that wires to nothing | ❌ NO | Correct removal (CMD-LEGACY-1) — removal of dead weight is not churn. |
+| Expunge platform-default skills from git per user mandate | ❌ NO | Correct policy compliance — not churn (they were never "ours"). |
+
+### The Rules
+
+1. **Content iteration is ALWAYS authorized.** Editing, refining, restructuring,
+   version-bumping, and extending a skill's files is the normal, expected, mandatory
+   mode of maintenance. Never hesitate to improve a skill out of fear of "churn."
+2. **Churn is ONLY the create→delete→recreate cycle.** The harm is the deletion of
+   accumulated knowledge and the wasted re-creation effort. If a skill is genuinely
+   obsolete, its content should be ARCHIVED or MIGRATED (content preserved), never
+   deleted-and-recreated later.
+3. **Deletion requires: (a) confirmed never-loaded or genuinely superseded,
+   (b) content preserved in git history or migrated, (c) no expected near-term
+   recreation.** If you can foresee recreating it, do not delete it — iterate it.
+4. **Never label improvement as churn.** If a session does 10 iterative refinements
+   to a skill, that is 10 kaizen wins, not 10 churn events.
+5. **Never avoid editing a skill because "it was just updated."** Iteration is the
+   point. (Double-kaizen on UNCHANGED content is still wasteful — that is a
+   different anti-pattern; iteration on CHANGED content is always correct.)
+
+
 ## Language Consistency Check (AUTOMATIC, added 2026-08-05)
 
 Skills accumulate contradictory, obsolete, or ambiguous language as they evolve.
@@ -1593,8 +1645,10 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **EXTERNAL-SKILL-FORK-1: Loading a large third-party skill repo into DeepChat runtime dirs or qnfo-skills instead of forking separately + mining (2026-08-05)** | Large third-party skill collections (e.g., alirezarezvani/claude-skills, 345 skills, 23k stars) MUST be forked to a SEPARATE repo (QNFO/<name>) with upstream wired — NEVER copied into qnfo-skills, NEVER into DeepChat runtime dirs (hundreds of skills slow down/crash the app). The fork is a MINING SOURCE: read its standards (SKILL-AUTHORING-STANDARD.md, SKILL_PIPELINE.md), distill best practices, incorporate selectively into our own skills — don't reinvent the wheel. Canonical case (2026-08-05): QNFO/claude-skills fork created; 10 authoring patterns + quality gates mined into kaizen v1.36. Cross-ref: git-github v2.16. |
 
+| **SKILL-CHURN-1: Create→delete→recreate cycles — declaring a skill obsolete/deleting it, then recreating it later (2026-08-05)** | Skill churn is DEFINED as the repeated cycle: create skill → declare obsolete/unnecessary → delete → (usually) recreate. It is NOT content refinement — continuous iteration on a skill's instructions and directory contents is MANDATORY and never churn. Never delete a skill you can foresee recreating; instead iterate/refactor it (content preserved). If genuinely obsolete: archive or migrate content, never delete-and-recreate. Canonical cases: (a) execution-mandate — created, flagged [NOT-INSTALLED], then restored; the correct move was iteration from the start; (b) any skill deleted then re-derived from scratch weeks later. Cross-ref: Skill Churn vs Content Iteration section, LANGUAGE-CONSISTENCY-1. |
+
 | **LANGUAGE-CONSISTENCY-1: Updating a skill without scanning it for contradictory/obsolete/ambiguous language (2026-08-05)** | When ANY skill file is touched (kaizen, fix, feature), scan it in the same pass for: deleted-script references, non-installed skill references, undefined KIF tags, contradictory sections, obsolete tool references, duplicate banners. Fix what you find before closing the edit. A skill updated without a language scan accumulates rot — each edit adds new language on top of stale language. Canonical case: the CMD slash commands in custom_prompts.json referenced `qnfo-agent`/`system`/`skill-hygiene.js` (all non-existent) for weeks before the 2026-08-05 audit caught it. |
-| **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. A prompt system the user cannot remember ("too many to keep track of") and that references dead skills is worse than none. Canonical architecture: exactly TWO reusable templates — `CONTINUE` (brainless continuation) + `SKILLS UPDATE` (kaizen trigger). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
+| **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. Removing such a dead system is NOT churn — it is correct removal of dead weight (removal is not the create→delete→recreate cycle; the system was never recreated). Canonical architecture: exactly TWO reusable templates — `CONTINUE` (brainless continuation) + `SKILLS UPDATE` (kaizen trigger). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
 
 ## Cross-Skill Integration
 
@@ -1792,7 +1846,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 ## Version
 
-Current: **v1.36** (kaizen — Mined Skill Best Practices from QNFO/claude-skills fork: 10 authoring patterns, pipeline quality gates, POWERFUL/SOLID/GENERIC/WEAK tiers, reference-separation <=10KB, strict-api verification; user directive 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+Current: **v1.37** (kaizen — SKILL-CHURN-1: churn = create→delete→recreate cycles ONLY; continuous content refinement/iteration is MANDATORY and never churn; user clarification 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
