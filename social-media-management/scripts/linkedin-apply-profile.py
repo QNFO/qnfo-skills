@@ -8,13 +8,23 @@ The ONLY write path is browser automation against the live site with an
 AUTHENTICATED Chrome profile. This script requires ONE manual sign-in first
 (CAPTCHA/2FA physically needs the user) to establish the persistent profile.
 
-Selectors: `autocomplete` attributes, NOT element IDs — LinkedIn randomizes
-IDs (#username absent; input[autocomplete="username"] present, verified
-2026-07-31). Same rule for edit fields.
+=== VERIFIED SELECTORS (2026-08-05, live-tested on linkedin.com/in/rowan-quni) ===
+- Login form: `input[autocomplete="username"]` / `input[autocomplete="password"]`
+  (element IDs are randomized; autocomplete attributes are stable)
+- Edit-intro URL: `https://www.linkedin.com/in/{SLUG}/edit/intro` (NOT /in/edit/intro)
+- Headline editor: `div[contenteditable="true"].ProseMirror` — LinkedIn uses
+  TipTap/ProseMirror rich-text. The old `[data-contents="true"]` selector is DEAD.
+- About trigger: `a[aria-label="Edit about"]` — it is an <a>, NOT a <button>!
+  (a[aria-label="Bewerk over"] for Dutch UI)
+- Save button: button whose innerText is exactly "Save" / "Opslaan"
+- NAVIGATION: use waitUntil:'domcontentloaded' — LinkedIn NEVER reaches
+  networkidle0 (persistent tracking/websocket traffic). networkidle0 = timeout.
+- CONTENT SET: document.execCommand('selectAll') + execCommand('insertText')
+  IS ProseMirror-compatible. el.innerText = x is NOT (framework won't register).
 
-Pacing: one section per session by default; 3-5s between operations; stops
-and asks the human on any CAPTCHA/verify/checkpoint signal. Bot detection is
-aggressive — never hammer retries.
+=== Pacing ===
+One section per session by default; 3-5s between operations; stops and asks
+the human on any CAPTCHA/verify/checkpoint signal. Bot detection is aggressive.
 
 Usage:
   python linkedin-apply-profile.py --package linkedin-profile-update.json \
@@ -32,14 +42,8 @@ import argparse, json, os, subprocess, sys, tempfile, time
 CHROME_DEFAULT = r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
 PROFILE_DEFAULT = os.path.join(os.path.expanduser('~'), '.linkedin-profile')
 BASE_URL = 'https://www.linkedin.com'
-
-# ── autocomplete selectors (LinkedIn randomizes element IDs) ──────────────
-SEL = {
-    'headline_edit': 'input[autocomplete="headline"]',
-    'about_edit': 'div[contenteditable="true"][data-contents="true"]',
-    'save_btn': 'button[data-control-name="save"]',
-    'cancel_btn': 'button[data-control-name="cancel"]',
-}
+# Profile slug — REQUIRED in edit URLs (verified 2026-08-05)
+PROFILE_SLUG = 'rowan-quni'
 
 
 def log(msg):
@@ -54,7 +58,7 @@ def write_render_js(package_path, profile_dir, chrome_exe, section):
     section_json = json.dumps(section)
 
     js = f'''
-import {{ existsSync }} from 'fs';
+import {{ existsSync, readFileSync }} from 'fs';
 import puppeteer from 'puppeteer-core';
 
 const chrome = '{chrome_abs}';
@@ -62,7 +66,9 @@ const userData = '{prof_abs}';
 const pkgPath = '{pkg_abs}';
 const SECTION = {section_json};
 
-const pkg = JSON.parse(await import('fs').then(m => m.readFile(pkgPath, 'utf-8')));
+const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+
+function log(msg) {{ console.log('[' + new Date().toLocaleTimeString() + '] ' + msg); }};
 
 const browser = await puppeteer.launch({{
   executablePath: chrome,
@@ -102,41 +108,66 @@ function sleep(ms) {{ return new Promise(r => setTimeout(r, ms)); }}
 
 // ── Section applicators ───────────────────────────────────────────────────
 async function applyHeadline() {{
-  await page.goto('{BASE_URL}/in/edit/intro', {{ waitUntil: 'networkidle0' }});
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/edit/intro', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
   await sleep(4000);
-  const sel = '{SEL['headline_edit']}';
+  // TipTap/ProseMirror editor (verified 2026-08-05)
+  const sel = 'div[contenteditable="true"].ProseMirror';
   const el = await page.$(sel);
-  if (!el) {{ log('HEADLINE field not found — LinkedIn may have changed the DOM. Selector: ' + sel); return false; }}
-  await el.click({{ clickCount: 3 }});
-  await page.keyboard.press('Backspace');
-  await page.keyboard.type(pkg.profile.headline, {{ delay: 40 }});
+  if (!el) {{ log('HEADLINE field not found — selector: ' + sel); return false; }}
+  await el.focus();
+  await page.evaluate((txt) => {{
+    const e = document.querySelector('div[contenteditable="true"].ProseMirror');
+    document.execCommand('selectAll', false, null);
+    document.execCommand('insertText', false, txt);
+    e.dispatchEvent(new Event('input', {{ bubbles: true }}));
+  }}, pkg.profile.headline);
   await sleep(1500);
-  const save = await page.$('{SEL['save_btn']}');
-  if (save) {{ await save.click(); log('Headline saved.'); }} else {{ log('Save button not found — saved manually?'); }}
+  const save = await page.evaluate(() => {{
+    const b = [...document.querySelectorAll('button')].find(x => /^(save|opslaan)$/i.test((x.innerText||'').trim()));
+    if (b) {{ b.click(); return true; }}
+    return false;
+  }});
+  log(save ? 'Headline saved.' : 'Save button not found — saved manually?');
   return true;
 }}
 
 async function applyAbout() {{
-  await page.goto('{BASE_URL}/in/edit/about', {{ waitUntil: 'networkidle0' }});
-  await sleep(4000);
-  const sel = '{SEL['about_edit']}';
-  const el = await page.$(sel);
-  if (!el) {{ log('ABOUT field not found — LinkedIn may have changed the DOM. Selector: ' + sel); return false; }}
-  await el.click();
-  await page.keyboard.down('Control');
-  await page.keyboard.press('KeyA');
-  await page.keyboard.up('Control');
-  await page.keyboard.press('Backspace');
-  // LinkedIn About is plain text; line breaks via Shift+Enter
-  for (const para of pkg.about.split('\\n')) {{
-    await page.keyboard.type(para, {{ delay: 25 }});
-    await page.keyboard.down('Shift');
-    await page.keyboard.press('Enter');
-    await page.keyboard.up('Shift');
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
+  await sleep(6000);
+  // About trigger is an <a>, NOT a button (verified 2026-08-05)
+  const clicked = await page.evaluate(() => {{
+    const el = document.querySelector('a[aria-label="Edit about"], a[aria-label="Bewerk over"]');
+    if (!el) return false;
+    el.scrollIntoView({{ block: 'center' }});
+    el.click();
+    return true;
+  }});
+  if (!clicked) {{ log('ABOUT trigger not found'); return false; }}
+
+  // Wait for TipTap editor
+  let ready = false;
+  for (let i = 0; i < 20; i++) {{
+    await sleep(1500);
+    const n = await page.evaluate(() => document.querySelectorAll('div[contenteditable="true"]').length);
+    if (n > 0) {{ ready = true; break; }}
   }}
+  if (!ready) {{ log('About editor did not open'); return false; }}
+
+  await page.evaluate((txt) => {{
+    const el = document.querySelector('div[contenteditable="true"]');
+    el.focus();
+    document.execCommand('selectAll', false, null);
+    document.execCommand('insertText', false, txt);
+    el.dispatchEvent(new Event('input', {{ bubbles: true }}));
+    el.dispatchEvent(new Event('change', {{ bubbles: true }}));
+  }}, pkg.about);
   await sleep(1500);
-  const save = await page.$( '{SEL['save_btn']}');
-  if (save) {{ await save.click(); log('About saved.'); }} else {{ log('Save button not found — saved manually?'); }}
+  const saved = await page.evaluate(() => {{
+    const b = [...document.querySelectorAll('button')].find(x => /^(save|opslaan)$/i.test((x.innerText||'').trim()));
+    if (b) {{ b.click(); return true; }}
+    return false;
+  }});
+  log(saved ? 'About saved.' : 'Save button not found — saved manually?');
   return true;
 }}
 
@@ -169,7 +200,6 @@ def find_node():
     for c in candidates:
         if os.path.exists(c):
             return c
-    # PATH fallback
     import shutil
     n = shutil.which('node')
     return n or (sys.exit('node.exe not found — install Node or pass the full path'))
@@ -184,7 +214,6 @@ def main():
                     help='Section to apply (experience/skills/education/certifications require manual UI steps per section — script opens the edit page)')
     args = ap.parse_args()
 
-    # Auth gate: verify the profile dir exists (has authenticated state)
     if not os.path.isdir(args.profile_dir):
         log(f'NOTE: profile dir {args.profile_dir} does not exist yet — will be created on first headful launch. A manual sign-in will be required.')
     if not os.path.exists(args.chrome):
@@ -196,7 +225,6 @@ def main():
     node = find_node()
     rjs = write_render_js(args.package, args.profile_dir, args.chrome, args.section)
     log(f'Launching browser automation (section={args.section})...')
-    # Run headful; the render script blocks until done or timeout
     r = subprocess.run([node, rjs], capture_output=True, text=True, timeout=420)
     print(r.stdout)
     if r.stderr:
