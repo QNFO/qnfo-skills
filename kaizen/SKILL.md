@@ -1,10 +1,10 @@
 ---
 name: kaizen
-version: 1.41
+version: 1.42
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
-# KAIZEN — v1.41
+# KAIZEN — v1.42
 
 > **v1.25 UPDATE (2026-08-04, kaizen — KIF-60 cross-ref ecosystem sync):**
 > Red-team: Watchtower sweep (28 skills, 42.9% drift, 70% banner-history false positives).
@@ -293,6 +293,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.42 UPDATE (2026-08-05, kaizen — Red-team audit: system skill N-2 drift + template artifact):**
+> Red-team: direct parent-agent 3-adversary audit of session IfYDah5TSY5gNMY0S4OT5
+> cycle 2 (3 subagents truncated -> direct audit per Subagent Failure Handling rule 4).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **system skill N-2 drift fixed** — header `# SYSTEM — 2.12` + footer
+>     `Current: **2.12**` vs frontmatter `version: 2.13`. The v2.13 banner existed but
+>     header/footer were never bumped — the **5th occurrence** of the frontmatter-drift
+>     class, confirming N-2-FRONTMATTER-DRIFT-1 (v1.41) is systemic across QNFO skills.
+>     Direction was REVERSE this time (frontmatter bumped, header/footer stale).
+> (2) [SOFT] **system skill template artifact fixed** — `# SKILL TITLE -- v1.0` (the
+>     skill-authoring template in the system skill) used the DEPRECATED `--` delimiter;
+>     normalized to `—` per qnfo-core N-2 so new skills model the canonical format.
+> (3) [DESIGN] **N-2-FRONTMATTER-DRIFT-1 canonical-case list extended** — now covers
+>     personal-knowledge (1.0->1.3), git-github (2.16->2.18, 2.18->2.19), research
+>     (2.75->2.76), system (2.12->2.13): ANY direction of drift is possible; every bump
+>     MUST verify all three locations regardless of which was edited first.
+> Cross-reference: qnfo-core N-2, N-2-FRONTMATTER-DRIFT-1, system v2.13,
+> session IfYDah5TSY5gNMY0S4OT5.
 
 > **v1.41 UPDATE (2026-08-05, kaizen — Red-team skills audit closeout + N-2 frontmatter drift fixes):**
 > Red-team: direct parent-agent 3-adversary audit of session IfYDah5TSY5gNMY0S4OT5
@@ -2047,7 +2066,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 > Cross-reference: qnfo-core §0.0 Bibliographic Integrity, research P3.AUTHOR-GATE,
 > git-github SAME-TURN-COMMIT, session IfYDah5TSY5gNMY0S4OT5.
 
-Current: **v1.41** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.42** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |

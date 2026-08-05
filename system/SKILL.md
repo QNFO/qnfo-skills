@@ -104,7 +104,7 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 
 
 
-# SYSTEM — 2.12 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
+# SYSTEM — 2.13 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
 
 > **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,
@@ -389,7 +389,7 @@ autonomous: true | false
 self_sufficient: true
 ---
 
-# SKILL TITLE -- v1.0
+# SKILL TITLE — v1.0
 
 > **Merges:** list of merged skills (if consolidated)
 
@@ -756,6 +756,6 @@ Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winr
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
 `EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.10 §S-1.0.2.
-Current: **2.12** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+Current: **2.13** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 
