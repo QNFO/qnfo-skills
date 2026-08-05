@@ -26,12 +26,17 @@ OPERATIONAL_DIRS = {
 }
 
 # KIF-48: Operational files allowed in .deepchat root
+# v2.6 (2026-08-05): added .skill-sync-state.json, CLOSEOUT_POWERSHELL_PURGE.md,
+# restarts.log, system-prompt-v2.6.md — DeepChat operational state files, not
+# project artifacts (KIF-51 allowlist-gap pattern).
 OPERATIONAL_FILES = {
     ".gitignore", ".gitmodules", ".gitattributes", "keys.json",
     "d1-cache.json",
     "verify_skills.ps1", "admin_watcher.ps1",
     "config.json", "package.json", "pnpm-lock.yaml",
-    "CNAME", "README.md"
+    "CNAME", "README.md",
+    ".skill-sync-state.json", "CLOSEOUT_POWERSHELL_PURGE.md",
+    "restarts.log", "system-prompt-v2.6.md"
 }
 
 # KIF-48: Project file extensions that should NEVER be in .deepchat root
