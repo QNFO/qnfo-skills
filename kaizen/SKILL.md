@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.30
+version: 1.31
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
