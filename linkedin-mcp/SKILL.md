@@ -4,10 +4,16 @@ description: LinkedIn MCP integration management — linkedin-mcp-tools v2.0.3 v
 version: 1.1
 ---
 
-> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
-> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
-> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
-> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+> **DEPRECATED (2026-08-05) — DO NOT USE. linkedin-mcp-tools v2.0.3 was never functional
+> on this machine: the persistent profile dir `C:\Users\LENOVO\.linkedin-mcp\profile` is
+> MISSING (auth never established), `LINKEDIN_COOKIE` is schema-only/inert in v2.0.3
+> (zero addCookies calls — verified in dist), and the auto-login script is absent from
+> `.deepchat\scripts`. Audit session yHXrIYDvUfwQ6twlIaWG5: user confirmed "NON-FUNCTIONAL
+> PIECE OF SHIT". No LinkedIn automation is possible via this MCP. All LinkedIn + Buffer
+> + cross-platform guidance now lives in the `social-media-management` skill (the unified
+> social hub). Linkedin MCP server remains enabled=True in mcp-settings.json but contributes
+> nothing — see `social-media-management` for the browser-automation path (autocomplete
+> selectors) and the decision to deprecate.**
 
 
 > **v1.1 UPDATE (2026-08-04, kaizen — N-2 nomenclature + package version verify + first history):**
