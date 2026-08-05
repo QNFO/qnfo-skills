@@ -4,19 +4,39 @@
 name: kaizen
 
 
-version: 1.45
+version: 1.46
 
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
 ---
+> **v1.46 UPDATE (2026-08-05, kaizen — red-team audit closeout: N-2-SCAN-FALSE-POSITIVE-1 + concurrent-bump merge):**
+> Red-team: 3 parallel reviewer subagents (2 deadline-exceeded — direct parent fallback per
+> Subagent Failure Handling rule 4) + direct parent-agent audit (session -WyivBiyZ6xFy4uXS_RNy).
+> HARD: 1. SOFT: 1. DESIGN: 2. Changes:
+> (1) [HARD] **N-2-SCAN-FALSE-POSITIVE-1 anti-pattern added** — regex version scans without MULTILINE
+>     anchors + matching .kaizen_history table versions produced 4 phantom N-2 drift flags; ALL false
+>     positives (raw-line anchors proved every fm/hdr/ft correct). Scan output is a CANDIDATE list —
+>     verify each flag against raw file lines (anchors dump) before editing. Never edit from scan flags alone.
+> (2) [SOFT] **Concurrent-bump merge** — kaizen was bumped 1.42→1.44→1.45 by a concurrent session WHILE
+>     this audit ran (skill-sync.js v4 auto-hydrator + parallel kaizen). This update merges as v1.46 past
+>     the collision, per VERSION-OVERWRITE-1. Re-read current version before ANY edit; never assume the
+>     version you scanned still holds at write time.
+> (3) [DESIGN] **STALE-CLONE-ACCUM-1 + AUTOCRLF-VERIFY-1 cross-refs** — thin-client enforcement
+>     anti-patterns owned by git-github v2.20; bloat-cleanup v3.3 thin_client.py v2.7 now scans %TEMP%
+>     (52 stale clones, 156.7 MB found + deleted this audit).
+> (4) [DESIGN] **Verify-before-claim gate strengthened** — this audit is the canonical case: scan2
+>     flagged 4 skills as N-2 drift, 0 were real. Raw-file anchors are the only authoritative check.
+> Cross-reference: git-github v2.20, bloat-cleanup v3.3, qnfo-core N-2, N-2-FRONTMATTER-DRIFT-1,
+> session -WyivBiyZ6xFy4uXS_RNy.
 
 
 
 
 
-# KAIZEN — v1.45
+
+# KAIZEN — v1.46
 > **v1.45 UPDATE (2026-08-05, kaizen — SKILLS UPDATE red-team audit closeout):**
 > Red-team: 5 parallel subagents (2 completed: Novelty + Status; 3 truncated —
 > Accuracy/Completeness/Dependency fell back to direct parent-agent audit per
@@ -1010,7 +1030,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **system skill N-2 drift fixed** — header `# SYSTEM — 2.12` + footer
 
 
->     `Current: **2.12**` vs frontmatter `version: 2.13`. The v2.13 banner existed but
+>     `Current: **v1.46**` vs frontmatter `version: 2.13`. The v2.13 banner existed but
 
 
 >     header/footer were never bumped — the **5th occurrence** of the frontmatter-drift
@@ -5391,6 +5411,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
+| **N-2-SCAN-FALSE-POSITIVE-1: Editing skills based on regex-scan flags without raw-line verification (2026-08-05)** | **HARD GATE.** Version scans (fm/hdr/ft) are CANDIDATE lists, not findings. A scan without MULTILINE anchors + a regex that matched `.kaizen_history` table versions flagged 4 phantom N-2 drifts (bloat-cleanup, deepchat-settings, qnfo-agent, social-media-management) — ALL false positives; raw-line anchors proved every version correct. Before editing ANY skill for an N-2 flag: dump the actual header/footer lines (read/anchors, not regex counts) and confirm the mismatch exists. Never bump/repair a version from scan output alone. Canonical case: session -WyivBiyZ6xFy4uXS_RNy kaizen v1.46 — scan2 flagged 4 skills, 0 were real; a hasty edit would have introduced churn. Cross-ref: N-2-FRONTMATTER-DRIFT-1 (real drift class), CLAIM-VERIFY-1 (verify before claim), qnfo-core N-2. |
 | Anti-Pattern | Correct |
 
 
@@ -6325,7 +6346,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.45** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.46** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 
 
