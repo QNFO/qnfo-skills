@@ -145,6 +145,19 @@ def check_link(link):
         with urllib.request.urlopen(req, timeout=LINK_CHECK_TIMEOUT) as resp:
             return resp.status
     except urllib.error.HTTPError as e:
+        # doi.org 403 = bot-blocking on some UAs, NOT a dead link.
+        # Verify zenodo DOIs via DataCite API (authoritative per ZENODO-PHANTOM-DOI-1).
+        if e.code == 403 and 'doi.org' in link:
+            m = re.search(r'10\.5281/zenodo\.\d+', link)
+            if m:
+                try:
+                    req2 = urllib.request.Request(
+                        'https://api.datacite.org/dois/' + m.group(0),
+                        headers={'User-Agent': 'Mozilla/5.0 qa-ux-battery/1.0'})
+                    with urllib.request.urlopen(req2, timeout=LINK_CHECK_TIMEOUT) as resp2:
+                        return resp2.status if resp2.status < 400 else e.code
+                except Exception:
+                    return e.code
         return e.code
     except Exception as e:
         return str(e)[:60]
@@ -170,7 +183,12 @@ def verdict(r):
     if r.get('page_errors'):
         issues.append(f'{len(r["page_errors"])} page errors: {r["page_errors"][0][:80]}')
     if r.get('broken_links'):
-        issues.append(f'{len(r["broken_links"])} broken links: {r["broken_links"][0][:80]}')
+        cosmetic = [b for b in r['broken_links'] if '/favicon' in b[0] or b[0].endswith('/robots.txt')]
+        real = [b for b in r['broken_links'] if b not in cosmetic]
+        if real:
+            issues.append(f'{len(real)} broken links: {real[0][:80]}')
+        elif cosmetic:
+            r['_cosmetic'] = cosmetic
     if r.get('_404_markers'):
         issues.append(f'404 markers: {r["_404_markers"][:2]}')
     if not r.get('title'):
