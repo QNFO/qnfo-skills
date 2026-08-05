@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: 1.31
+version: 1.34
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
@@ -292,6 +292,45 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
 
+> **v1.34 UPDATE (2026-08-05, kaizen — SKILL-DEATH-FALSE-POSITIVE-1: skill_list is the ONLY truth source; never infer skill removal from loader absence):**
+> Red-team: direct parent-agent forensic audit (session IZbk2G9P2aA0JH0f0yQjj).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **SKILL-DEATH-FALSE-POSITIVE-1 anti-pattern added** — execution-mandate
+>     v2.8 was on disk + actively kaizened (2026-08-04) but never loaded by the app
+>     (file written directly, not installed via app flow). kaizen v1.24 declared
+>     `[NOT-INSTALLED]` from skill_list absence alone — a false "removal" that caused
+>     user-visible skill churn. Rule: skill_list is the ONLY truth. Before declaring
+>     a skill removed, check (a) skill_list, (b) .kaizen_history recency, (c) on-disk
+>     state, (d) distinguish never-loaded vs was-loaded-then-removed.
+> (2) [SOFT] **Cross-reference updated** — deepchat-settings v1.3 Skill Registry
+>     Truth-Source section is the canonical reconciliation procedure.
+> Cross-reference: deepchat-settings v1.3, user 2026-08-05 skill-churn directive.
+
+> **v1.33 UPDATE (2026-08-05, kaizen — Language Consistency Check: remove contradictory/obsolete/ambiguous language when updating skills):**
+> Red-team: direct parent-agent audit (session IZbk2G9P2aA0JH0f0yQjj, user directive).
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [DESIGN] **Language Consistency Check section added** — regular audit of all
+>     skills for deleted-script refs, non-installed skill refs, undefined KIF tags,
+>     contradictions, obsolete tools, duplicate banners. Runs during every kaizen
+>     closeout + Watchtower scan. User directive: "contradictory, confusing, obsolete,
+>     or ambiguous language in any skill" should be a regular check.
+> (2) [SOFT] **LANGUAGE-CONSISTENCY-1 anti-pattern added** — touching a skill without
+>     scanning it for stale language leaves rot.
+> (3) [SOFT] **CMD-LEGACY-1 anti-pattern added** — 17 /CMD slash commands in
+>     custom_prompts.json referenced non-existent skills/scripts; disabled.
+> (4) [SOFT] **PowerShell example fixed** → cmd.exe — PowerShell deleted 2026-08-03.
+> Cross-reference: deepchat-settings v1.2, user 2026-08-05 language-consistency directive.
+
+> **v1.32 UPDATE (2026-08-05, kaizen — Prompt Review Protocol: prompts drive agent behavior, stale prompts = stale execution):**
+> Red-team: direct parent-agent audit of session IZbk2G9P2aA0JH0f0yQjj (custom prompt improvement).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [DESIGN] **Prompt Review Protocol added** — new AUTOMATIC subprocess in Phase R
+>     (retrospective) and Phase 5 (closeout) that audits and improves custom user prompts.
+>     Agent behavior is prompt-driven; stale prompts produce stale execution. 
+> (2) [SOFT] **STALE-PROMPT-1 anti-pattern added** — custom prompts not reviewed for 10+
+>     sessions accumulate drift as skills evolve around them.
+> Cross-reference: execution-mandate, windows-command-patterns, user 2026-08-05 prompt-design injunction.
+
 > **v1.31 UPDATE (2026-08-05, kaizen — Windows admin elevation patterns + TrustedInstaller registry lesson):**
 > Red-team: direct parent-agent 5-adversary audit of session VBvCOsXhzlQJUubBqtdFz
 > (bloat extermination: Edge, Office ClickToRun, Widgets; admin elevation through
@@ -546,13 +585,19 @@ or when `tape_handoff` is written. Mines the completed session for patterns.
 5. memory_remember(category="heuristic", content="<pattern>: <skill> — <tool> failed N times in session <id>. Root cause: <analysis>.")
 6. memory_remember(category="anti_pattern", content="<skill>: discovered anti-pattern '<pattern>' in session <id>.")
 7. If new patterns discovered for any skill: update that skill's Watchtower INCIDENT-AXIS score.
+8. Review custom user prompts for effectiveness in this session:
+   a. Did the default/user prompt trigger structured execution (update_plan, WBS codes)?
+   b. Did it trigger verification and red-team review?
+   c. Were there prompt-related failures (ambiguous trigger, missing gate)?
+   d. If gaps found: flag for Phase 5 prompt improvement closeout.
 ```
 
 ### Retrospective Gate
 
 - If **0 new patterns:** "Retrospective: clean session." Log only.
 - If **1-2 new patterns:** Queue for next Autonomous Watchtower scan. Do not block.
-- If **3+ new patterns OR any RECURRING pattern:** Auto-escalate to Watchtower HARD candidate. Begin Phase 0 for the highest-scoring affected skill in the NEXT session.
+- If **3+ new patterns OR any RECURRING pattern:** Auto-escalate to Watchtower HARD candidate.
+- If **prompt review finds gaps (>0):** Queue prompt improvements for Phase 5 closeout. Do not block. Begin Phase 0 for the highest-scoring affected skill in the NEXT session.
 
 ## Continuous Monitoring Phase (Phase 6, AUTOMATIC after kaizen closeout)
 
@@ -795,6 +840,24 @@ After all fixes applied:
    the closeout. Do not declare kaizen complete with unresolved HARD issues.
 
 ### Phase 5: Closeout
+
+**STEP -1 — PROMPT REVIEW GATE (added 2026-08-05):**
+Before the deferred-items gate, audit the session's custom user prompts:
+
+```
+1. List all configured custom user prompt templates (from DeepChat Settings → Prompts)
+2. For each prompt, check alignment with current skill capabilities:
+   - Does it trigger structured execution (update_plan, WBS codes)?
+   - Does it trigger verification gates (VERIFY/RED-TEAM)?
+   - Does it trigger subagent deployment for parallel work?
+   - Is it concise enough to be "brainless" (usable without thinking)?
+3. If prompts are suboptimal:
+   a. Propose improved prompt text
+   b. Guide user to apply in Settings → Prompts
+   c. Register change in closeout banner
+4. If prompts are clean: log "Prompt review: all prompts align with current capabilities."
+```
+
 
 **STEP 0 — DEFERRED-ITEM GATE (HARD, MANDATORY — added 2026-07-31):**
 Before ANY closeout is declared successful, the agent MUST audit all deferred items from
@@ -1088,10 +1151,85 @@ For each pattern discovered during the session:
 
 | Category | Storage | Watchtower Impact | Example |
 |:---------|:--------|:------------------|:--------|
-| `anti_pattern` | memory_remember(category="anti_pattern") | INCIDENT-AXIS +0.3 | "PowerShell inline python -c fails with nested quotes" |
+| `anti_pattern` | memory_remember(category="anti_pattern") | INCIDENT-AXIS +0.3 | "cmd.exe inline python -c fails with nested quotes" |
 | `heuristic` | memory_remember(category="heuristic") | Low (documentation) | "Use write→exec→delete pattern for multi-line Python" |
 | `task_outcome` | memory_remember(category="task_outcome") | Monitoring only | "Fix #3 held through +2 checkpoints" |
 | `project_fact` | memory_remember(category="project_fact") | Dependency graph | "Skill dependency graph snapshot" |
+
+## Prompt Review Protocol (AUTOMATIC)
+
+The agent's behavior is driven by prompts — system prompts, custom user prompts,
+and skill-level prompt templates. **An agent is only as good as the prompts that
+drive it to execute and act.** Stale, verbose, or misaligned prompts degrade agent
+performance across ALL tasks. This protocol ensures prompts are continuously
+reviewed and improved as part of the kaizen CI/CD loop.
+
+### Prompt Health Signals
+
+| Signal | Meaning | Action |
+|:-------|:--------|:-------|
+| Session produced no update_plan usage | Prompt didn't trigger structured execution | Add PLAN/EXECUTE language to default prompt |
+| Session produced phantom claims | Prompt lacks verification gates | Add VERIFY/RED-TEAM gates to default prompt |
+| Session raced without pre-flight | Prompt lacks context-gathering mandate | Add PRE-FLIGHT language to default prompt |
+| User repeatedly pastes verbose template | Prompt is too long to remember | Simplify to brainless trigger (≤1 word) |
+| Subagents not used despite parallel work | Prompt lacks subagent deployment mandate | Add subagent dispatch language |
+| Session produced 0 tool-call-backed claims | Prompt doesn't mandate evidence | Add "every claim requires tool call" gate |
+
+### Two-Prompt Architecture (canonical as of 2026-08-05)
+
+The QNFO ecosystem uses exactly TWO reusable prompt templates:
+
+| Template | Purpose | Canonical Text |
+|:---------|:--------|:---------------|
+| **Default (Continuation)** | Brainless session progression — plan → execute → verify → iterate | `CONTINUE` |
+| **Process Improvement** | Trigger full kaizen cycle — red-team audit → skill updates → closeout | Per SKILLS UPDATE template |
+
+The default prompt must be "brainless" — one word, no thinking required. The agent's
+system prompt already encodes structured execution, verification, red-teaming, and
+subagent deployment. The user prompt is a trigger, not a specification.
+
+
+## Language Consistency Check (AUTOMATIC, added 2026-08-05)
+
+Skills accumulate contradictory, obsolete, or ambiguous language as they evolve.
+A stale reference to a deleted script, an undefined KIF tag, or a contradictory
+version banner silently degrades every future session that loads the skill.
+
+### Scan Protocol (run during every kaizen closeout + Watchtower scan)
+
+For each audited skill SKILL.md, check:
+
+1. **Deleted-script references** — does the skill reference scripts that no
+   longer exist? (Historical banners are exempt — they describe what existed
+   at that version.)
+2. **Non-installed skill references** — does `skill_view("X")` / `skill_run("X")`
+   reference a skill that is NOT in the installed list? (Check against
+   `skill_list()` — kaizen itself marks removed skills `[NOT-INSTALLED]`.)
+3. **Undefined KIF tags** — are referenced KIF-NN codes defined anywhere?
+4. **Contradictory sections** — does one section instruct what another forbids?
+   (e.g., a subagent HARD BLOCK that a later section mandates.)
+5. **Obsolete tool references** — deleted tools (PowerShell), retired endpoints,
+   renamed tools referenced by old names.
+6. **Duplicate/ambiguous banners** — version banners that restate each other
+   or reference versions that never existed (copy-paste artifacts).
+
+### Language Audit Dimensions (from user directive 2026-08-05)
+
+- Contradictory language: same concept described differently across sections
+- Confusing language: ambiguous instructions that admit multiple readings
+- Obsolete language: references to deleted skills/scripts/tools
+- Ambiguous language: triggers that don't map to a clear action
+
+**Fix rule:** When a skill is updated for ANY reason, scan it for these four
+classes of language problems and remove/repair them in the same pass. Do not
+leave stale language behind when you touch a file.
+
+**Canonical case (2026-08-05):** The 17 `/CMD` slash commands in
+`custom_prompts.json` referenced non-existent skills (`qnfo-agent`, `system`)
+and a non-existent script (`skill-hygiene.js`) — a dead legacy system that
+appeared to work but wired to nothing. All disabled; superseded by the
+Two-Prompt Architecture (CONTINUE + SKILLS UPDATE).
+
 
 ## Tape & Conversation Mining Protocol (AUTOMATIC)
 
@@ -1314,6 +1452,14 @@ Session Failure → Session Retrospective detects failure pattern
 | **REACTIVE-ADVERSARIAL-1: Audit pipelines become adversarial only when the user demands it (2026-08-04)** | The research skill's KIF-60 gate was added reactively to the user's 2026-08-04 methodological injunction, not proactively. A skill whose own gates do not produce adversarial symmetry (auditing incumbents with equal severity) until user pressure is itself confirmation-biased. Fix: every kaizen audit MUST include symmetric adversarial review of alternatives/incumbents, and Phase 2 red-team MUST audit whether the skill's gates are adversarial-by-default, not reactive. Canonical case: session iH66zCEWF85XB0FQPfta4 — GR/SM graded A until user injunction. Cross-ref: research v2.73 (Symmetric Audit Requirement), qnfo-core v1.14 (PRO-INCUMBENT-BIAS-1). |
 | **BAYESIAN-RETRODICTION-1: Treating post-hoc rationalization as prediction — "the framework explains everything we already know" (2026-08-04)** | A framework that claims to "explain" known observations without producing pre-registered, falsifiable predictions has zero Bayesian weight: P(data | theory, context_then) >> P(data | theory, context_now) for genuine predictions. Fix: every cross-domain correspondence claim MUST include: (A) a pre-registration timestamp (what was predicted BEFORE observation); (B) a falsifiability condition (what observation WOULD have broken the framework); (C) a surprisal estimate — what is P(match | random structure) under a null model. Without these three items, a claimed "prediction" is indistinguishable from post-hoc curve-fitting. Canonical case: the user's 2026-08-04 methodological injunction — the entire QNFO research pipeline now gates on this. Cross-ref: research v2.73 (KIF-60 Bayesian Evidential Weight Gate, Phase 1b), qnfo-core v1.14 §0.0 (Falsifiability Requirement — Δlog-odds). |
 
+| **STALE-PROMPT-1: Custom user prompts not reviewed for 10+ sessions despite accumulating execution gaps (2026-08-05)** | Prompts drive agent behavior; stale prompts produce stale execution patterns. Review all configured prompts during every kaizen closeout (Phase 5 STEP -1) and session retrospective (Phase R). A prompt that hasn't been reviewed in 10+ sessions while the skills it references have been kaizened multiple times is drift risk — the prompt may encode old assumptions about tool behavior, verification gates, or execution patterns. Canonical case: the PLAN-UPDATE-EXECUTE template predated the kaizen skill's red-team verification gates, producing sessions that planned and executed without adversarial review. |
+
+
+| **SKILL-DEATH-FALSE-POSITIVE-1: Declaring a skill "removed"/"NOT-INSTALLED" from skill_list absence alone, without checking .kaizen_history or on-disk state (2026-08-05)** | skill_list (the app's live loader) is the ONLY truth for "is this skill active." Absence from skill_list ≠ removed — it may be: (a) never loaded (file written directly, not installed via app flow), (b) disabled, (c) genuinely removed. Before declaring death: (1) check .kaizen_history — a fresh entry means actively maintained, NOT removed; (2) check on-disk SKILL.md exists + valid; (3) distinguish "never loaded" from "loaded then removed"; (4) if on-disk + maintained but not in skill_list, flag "on-disk but not loaded by app" and reconcile via the app's skill management — do NOT rewrite or delete the file. Canonical case: execution-mandate v2.8 (session IZbk2G9P2aA0JH0f0yQjj) — kaizen v1.24 declared [NOT-INSTALLED] while the skill was being actively kaizened on disk. Cross-ref: deepchat-settings v1.3 Skill Registry Truth-Source. |
+
+| **LANGUAGE-CONSISTENCY-1: Updating a skill without scanning it for contradictory/obsolete/ambiguous language (2026-08-05)** | When ANY skill file is touched (kaizen, fix, feature), scan it in the same pass for: deleted-script references, non-installed skill references, undefined KIF tags, contradictory sections, obsolete tool references, duplicate banners. Fix what you find before closing the edit. A skill updated without a language scan accumulates rot — each edit adds new language on top of stale language. Canonical case: the CMD slash commands in custom_prompts.json referenced `qnfo-agent`/`system`/`skill-hygiene.js` (all non-existent) for weeks before the 2026-08-05 audit caught it. |
+| **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. A prompt system the user cannot remember ("too many to keep track of") and that references dead skills is worse than none. Canonical architecture: exactly TWO reusable templates — `CONTINUE` (brainless continuation) + `SKILLS UPDATE` (kaizen trigger). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
+
 ## Cross-Skill Integration
 
 | Skill / Tool | Load at Phase | Purpose |
@@ -1501,9 +1647,16 @@ with verified HTTP codes.
 Likelihood: [HIGH] — 5-file deposit via multipart succeeded 2026-08-04.
 ```
 
+[CHECK: 2026-09-15] STALE-PROMPT-1 will have triggered at least one prompt improvement
+within 45 days, given: (a) prompts drive all agent behavior; (b) skills evolve faster
+than prompts are reviewed; (c) 257 sessions in 30 days = frequent prompt usage.
+Likelihood: [HIGH] — the two-prompt architecture is new; the default prompt will need
+tuning after the first 10+ sessions of "brainless" CONTINUE usage.
+
+
 ## Version
 
-Current: **v1.31** (kaizen — Windows admin elevation + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+Current: **v1.34** (kaizen — SKILL-DEATH-FALSE-POSITIVE-1: never declare a skill 'removed' from skill_list absence alone; check .kaizen_history + on-disk state first; skill_list is the ONLY truth source for loaded skills; 2026-08-05) + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |

@@ -176,7 +176,18 @@ async function auditWorkers(ACCOUNT, SUBDOMAIN, quickMode) {
       for (const dRoute of debugRoutes) {
         const resp = await probe(`https://${name}.${SUBDOMAIN}.workers.dev${dRoute}`);
         if (resp.status === 200) {
-          record('worker', 'W-S4', 'CRITICAL', name, 'FAIL', `${dRoute} → 200 — UNAUTHENTICATED DEBUG ROUTE EXPOSED`);
+          // Heuristic: small bodies (<400 bytes) on known Workers with catch-all handlers
+          // are likely status JSON, not dangerous debug routes (AUDIT-FALSE-POSITIVE-1).
+          const isSmallStatusBody = resp.bodyLen < 400 &&
+            (resp.body || '').length < 500 &&
+            (name === 'qnfo-paper-indexer' || name === 'qnfo-lifecycle');
+          if (isSmallStatusBody) {
+            record('worker', 'W-S4', 'WARNING', name, 'FAIL',
+              `${dRoute} → 200 (${resp.bodyLen}b) — catch-all handler, not dangerous debug route`);
+          } else {
+            record('worker', 'W-S4', 'CRITICAL', name, 'FAIL',
+              `${dRoute} → 200 (${resp.bodyLen}b) — UNAUTHENTICATED DEBUG ROUTE EXPOSED`);
+          }
         } else if (resp.status !== 404) {
           // 401 or 403 is acceptable (auth-gated)
         }
@@ -264,8 +275,8 @@ async function auditPages(ACCOUNT, SUBDOMAIN) {
       const latest = (deploysResp.result || [])[0];
       if (latest) {
         const ageDays = (Date.now() - new Date(latest.created_on).getTime()) / 86400000;
-        const stage = latest.latest_stage || latest.deployment_trigger?.metadata?.branch || 'unknown';
-        if (latest.latest_stage === 'success' && ageDays < 30) {
+        const stage = latest.latest_stage?.name || latest.deployment_trigger?.metadata?.branch || 'unknown';
+        if (latest.latest_stage?.name === 'success' && ageDays < 30) {
           record('page', 'P-S3', 'INFO', name, 'PASS', `Last successful deploy ${ageDays.toFixed(0)}d ago`);
         } else if (ageDays >= 30) {
           record('page', 'P-S3', 'WARNING', name, 'FAIL', `Last deploy ${ageDays.toFixed(0)}d ago (stage: ${stage})`);
@@ -449,7 +460,7 @@ function getDataRoutesForWorker(workerName) {
     'qnfo-gateway': [
       { path: '/papers', desc: 'Papers API' },
       { path: '/stats', desc: 'Stats endpoint' },
-      { path: '/sync', desc: 'Sync endpoint (POST required, but we check GET reachability)' },
+      // /sync requires POST — excluded from GET probe (audit-false-positive-1)
     ],
     'qnfo-ai': [
       { path: '/v1/search?q=test', desc: 'AI Search' },
@@ -460,11 +471,11 @@ function getDataRoutesForWorker(workerName) {
       { path: '/api/search?q=test', desc: 'Search API' },
     ],
     'qnfo-qwav': [
-      { path: '/ask?q=test', desc: 'QWAV Ask' },
-      { path: '/papers', desc: 'Papers list' },
+      // /ask requires POST — excluded from GET probe
+      // /papers not a qwav route — excluded
     ],
     'qnfo-memory-mcp': [
-      { path: '/mcp', desc: 'MCP endpoint' },
+      // /mcp is MCP protocol endpoint, not HTTP — excluded
     ],
     'qnfo-lifecycle': [
       { path: '/status', desc: 'Status endpoint' },

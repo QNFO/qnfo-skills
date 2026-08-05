@@ -1,273 +1,42 @@
 ---
 name: frontend-design
-description: ULTRA-CONSOLIDATED frontend, creative, and visual design -- UI design, web components, pages, dashboards, React components, HTML/CSS/Tailwind layouts, algorithmic art (p5.js with seeded randomness, flow fields, particles, generative patterns), data visualization (Tufte principles for data-ink ratio and chartjunk elimination, AntV infographic syntax), and BLING usability audits. Use for ANY visual, creative, or design output.
-version: "2.3"
-triggers: ["UI", "design", "frontend", "page", "styling", "visual", "BLING", "web component", "dashboard", "React", "Tailwind", "shadcn", "HTML", "CSS", "landing page", "web app", "beautify", "poster", "art", "generative art", "algorithmic art", "creative coding", "p5.js", "flow field", "particle system", "seeded randomness", "visualization", "chart", "graph", "Tufte", "infographic", "data-ink", "chartjunk", "AntV", "D3", "SVG", "canvas", "WebGL", "data viz", "graphical integrity", "usability audit", "color", "typography", "spacing", "animation", "brand", "layout", "responsive", "accessibility"]
-related: ["cloudflare"]
-priority: 2
-platform: all
-autonomous: false
-self_sufficient: true
----
-> **v2.3 UPDATE (2026-08-02, kaizen — Cloudflare tool discoverability):**
-> Ephemeral-memory mandate: memories are NOT permanent. This skill deploys to
-> Cloudflare Pages/R2/Workers — instructions MUST name the actual agent tools.
-> Deploy verification: `workers_list` (confirm Worker/Pages exists), live `curl`
-> probe of the deployed URL (200 + body), `search_cloudflare_documentation` for
-> Pages/R2 limits. See cloudflare skill §Skill Cross-Reference v3.18 for the full
-> tool map. NEVER rely on durable memory for Cloudflare operational state.
-> Cross-reference: cloudflare v3.18.
-
-
-# FRONTEND -- v2.3 (Ultra-Consolidated Creative + Visual)
-
-> **v2.2 UPDATE (2026-07-30, landing-page content gate):** Added QNFO/QWAV Landing Page
-> Content Gate (7-point governance checklist) under Web UI Design. Enforces qnfo-core 0.1
-> Genre B rules: Forward-Looking Statements footer, Pre-Commercial badge, no inline certainty
-> labels, dagger footnotes for aspirational claims, competitive comparison verification,
-> fabricated-number prohibition, 5th BLING question ("Is every claim verifiable?").
-> Cross-reference: qnfo-core v1.1 0.1.
->
-> **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
-> **Tool-Call Execution Mandate** section below. "Responsive", "accessible",
-> or "renders correctly" claims require an actual build/render check in
-> this turn, not visual inspection of the source code alone.
-
-> **Merges 3:** frontend-design + algorithmic-art + data-visualization
-> **Related:** Load `cloudflare` for deploying frontend assets to Cloudflare Pages/R2/Workers.
-> **Cloudflare Full-Stack:** All web UI deployed to Cloudflare Pages. Static assets on R2. Dynamic rendering via Workers.
-
-## execute_plan
-
-update_plan([
-  {"step": "Identify output type: web UI, algorithmic art, or data visualization", "status": "pending"},
-  {"step": "Design and build with appropriate framework (React, p5.js, D3, AntV)", "status": "pending"},
-  {"step": "Apply Tufte principles if data; verify originality if art; audit if UI", "status": "pending"},
-  {"step": "Verify: design quality, responsiveness, accessibility baseline, deployment", "status": "pending"},
-])
-
+description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
+license: Complete terms in LICENSE.txt
 ---
 
-## Tool-Call Execution Mandate (Anti-Phantom Gate — MANDATORY)
+This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices.
 
-Claiming a UI "renders correctly", is "responsive", "accessible", or
-"deployed" without an invoked tool call showing evidence in this turn is a
-PHANTOM CLAIM (`qnfo-agent` §9.11 Rule 14) — BLOCKED.
+The user provides frontend requirements: a component, page, application, or interface to build. They may include context about the purpose, audience, or technical constraints.
 
-1. **Web UI / React components** — actually build (`npm run build`/bundle step) or load the artifact and report the real build output/errors, not an assumption that the JSX is correct.
-2. **Deployment claims** — after `wrangler pages deploy`/Workers deploy, `curl` the live URL and show the response status; do not claim "deployed" from the CLI's success message alone.
-3. **Algorithmic art** — actually execute/render the p5.js sketch (or describe verified console output) before claiming the seed/animation behaves as designed.
-4. **Data visualization** — verify the chart actually renders with the real dataset (not placeholder data) before claiming "chart complete".
-5. If no execution/build environment is available in this turn, say `[NOT-VERIFIED: reason]` instead of "renders correctly"/"deployed"/"complete".
+## Design Thinking
 
----
+Before coding, understand the context and commit to a BOLD aesthetic direction:
+- **Purpose**: What problem does this interface solve? Who uses it?
+- **Tone**: Pick an extreme: brutally minimal, maximalist chaos, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, soft/pastel, industrial/utilitarian, etc. There are so many flavors to choose from. Use these for inspiration but design one that is true to the aesthetic direction.
+- **Constraints**: Technical requirements (framework, performance, accessibility).
+- **Differentiation**: What makes this UNFORGETTABLE? What's the one thing someone will remember?
 
-## Web UI Design
+**CRITICAL**: Choose a clear conceptual direction and execute it with precision. Bold maximalism and refined minimalism both work - the key is intentionality, not intensity.
 
-### Design System (LOCKED v3.0)
-```css
-:root {
-  --blue: #1a56db;
-  --blue-dark: #1040a8;
-  --blue-light: #dbeafe;
-  --blue-subtle: #eff6ff;
-  --blue-mid: #6094e8;
-  --text: #1a1a2e;
-  --text-muted: #6b7280;
-  --bg: #ffffff;
-  --border: #e5e7eb;
-  --card-bg: #f9fafb;
-  --max-w: 960px;
-  --radius: 8px;
-}
-```
+Then implement working code (HTML/CSS/JS, React, Vue, etc.) that is:
+- Production-grade and functional
+- Visually striking and memorable
+- Cohesive with a clear aesthetic point-of-view
+- Meticulously refined in every detail
 
-### Fonts
-- **Headings/Nav/Meta:** Inter (sans-serif)
-- **Body:** Source Serif 4 (serif)
-- **Code:** JetBrains Mono (monospace)
-- **Dark themes FORBIDDEN.** Light theme only.
+## Frontend Aesthetics Guidelines
 
-### Mandatory Components
-- **Sticky Top Nav:** `backdrop-blur` effect, fixed position
-- **AI Query Box:** Distinct styled input for AI-powered search
-- **Related Papers Section:** Grid of paper cards with hover shadow
-- **Paper Cards:** Title, author, abstract snippet, DOI link
-- **Badges:** DOI (blue), Type (purple), Category (green), Tag (gray), License (orange)
+Focus on:
+- **Typography**: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like Arial and Inter; opt instead for distinctive choices that elevate the frontend's aesthetics; unexpected, characterful font choices. Pair a distinctive display font with a refined body font.
+- **Color & Theme**: Commit to a cohesive aesthetic. Use CSS variables for consistency. Dominant colors with sharp accents outperform timid, evenly-distributed palettes.
+- **Motion**: Use animations for effects and micro-interactions. Prioritize CSS-only solutions for HTML. Use Motion library for React when available. Focus on high-impact moments: one well-orchestrated page load with staggered reveals (animation-delay) creates more delight than scattered micro-interactions. Use scroll-triggering and hover states that surprise.
+- **Spatial Composition**: Unexpected layouts. Asymmetry. Overlap. Diagonal flow. Grid-breaking elements. Generous negative space OR controlled density.
+- **Backgrounds & Visual Details**: Create atmosphere and depth rather than defaulting to solid colors. Add contextual effects and textures that match the overall aesthetic. Apply creative forms like gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows, decorative borders, custom cursors, and grain overlays.
 
-### Framework Stack
-- **React** + TypeScript for component architecture
-- **Tailwind CSS** for utility-first styling
-- **shadcn/ui** for accessible component primitives
-- **No generic AI aesthetics.** Creative, polished, original designs only.
+NEVER use generic AI-generated aesthetics like overused font families (Inter, Roboto, Arial, system fonts), cliched color schemes (particularly purple gradients on white backgrounds), predictable layouts and component patterns, and cookie-cutter design that lacks context-specific character.
 
-### BLING Usability Audit
-After every UI change, answer these 4 questions for EVERY element:
-1. **WHAT'S WORKING?** -- What meets the design spec?
-2. **WHAT'S NOT?** -- What fails the spec or is broken?
-3. **WHAT NEEDS TO BE FIXED?** -- Blocking issues requiring immediate fix
-4. **WHAT CAN BE IMPROVED/ENHANCED?** -- Non-blocking polish items
+Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different fonts, different aesthetics. NEVER converge on common choices (Space Grotesk, for example) across generations.
 
-Audit dimensions: typography, color, spacing, animation, brand distinctiveness, responsive behavior, accessibility baseline (WCAG 2.1 AA contrast minimums).
+**IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
-
-### QNFO/QWAV Landing Page Content Gate (v1.0)
-
-When building or editing a QNFO/QWAV landing page (qwav.org, qnfo.org, ipatent.me, etc.),
-the following content-governance rules apply IN ADDITION to the standard design quality
-gates. These rules enforce qnfo-core §0.1 Genre B (Commercial/Marketing Content).
-
-1. **Forward-Looking Statements footer:** Verify a footer paragraph exists with text
-   similar to: *"This page describes an early-stage, pre-commercial technology platform.
-   Unless explicitly cited to published research, architectural specifications, performance
-   targets, and timeline projections are design goals and should not be relied upon as
-   guarantees."*
-
-2. **"Pre-Commercial" badge:** Verify it is prominent on product pages for unreleased
-   products. Recommended placement: near the hero heading or in the hero subtext.
-
-3. **No inline certainty labels:** Scan the HTML/markup for [speculative], [established],
-   [mainstream interpretation], [my conjecture], [debated], [not yet falsifiable],
-   or .certainty-label CSS classes. These are paper-level markup (Genre A) and do NOT
-   belong on landing pages (Genre B). If found, replace with Genre-B-appropriate signaling:
-   footnote disclaimers and dagger annotations.
-
-4. **Dagger footnotes:** Verify any aspirational technical claims (specific qubit counts,
-   gate fidelities, timeline projections) are linked to footnotes citing the best available
-   evidence. Example: "JPCUB targets 99.9% gate fidelity" with footnote: "Design target:
-   based on simulation results in [citation]. Not yet demonstrated in physical hardware."
-
-5. **Competitive comparison verification:** Every claim about a competitor's product or
-   capability must be traceable to a verifiable public source (press release, product page,
-   published benchmark). "IBM claims X" is a factual claim about IBM's claims, not about X
-   itself - ensure this distinction is clear in the markup.
-
-6. **No fabricated numbers:** Performance metrics, qubit counts, error rates must either:
-   (a) cite a published source, (b) be explicitly labeled as design targets, or (c) not
-   appear. Do NOT generate plausible-sounding numbers from training data.
-
-7. **BLING Usability Audit - 5th question (Genre B landing pages only):** After the standard
-   4 BLING questions, add: **"IS EVERY CLAIM VERIFIABLE?"** Can each specific technical or
-   performance claim be traced to a published source, a design document, or an explicit
-   "design target" label?
-### Responsive Breakpoints
-```css
-/* Mobile first */
-/* sm: 640px, md: 768px, lg: 1024px, xl: 1280px */
-```
-
----
-
-## Algorithmic Art
-
-### Core Principles
-- **Originality:** NEVER copy existing artists' work. Create original generative compositions.
-- **Reproducibility:** All art must use `randomSeed()` with a documented seed value.
-- **Interactivity:** Expose parameters via sliders or query params for exploration.
-
-### p5.js Template
-```javascript
-let seed = 42;
-let particles = [];
-let flowField;
-
-function setup() {
-  createCanvas(800, 800);
-  randomSeed(seed);
-  noiseSeed(seed);
-  
-  // Flow field -- Perlin noise vectors
-  flowField = new Array(floor(width / 10) * floor(height / 10));
-  
-  // Particle system
-  for (let i = 0; i < 200; i++) {
-    particles.push(new Particle(random(width), random(height)));
-  }
-  
-  // Parameter controls
-  createP('Seed').position(10, height + 10);
-  let seedSlider = createSlider(0, 1000, seed);
-  seedSlider.position(60, height + 10);
-  seedSlider.input(() => { seed = seedSlider.value(); reset(); });
-}
-
-function draw() {
-  background(255, 10); // Fade trail
-  for (let p of particles) {
-    p.follow(flowField);
-    p.update();
-    p.show();
-    p.edges();
-  }
-}
-```
-
-### Generative Techniques
-| Technique | p5.js Implementation | Parameters |
-|:----------|:---------------------|:-----------|
-| **Flow Field** | Perlin noise vectors, particle advection | noiseScale, particleCount, trailOpacity |
-| **Particle System** | Array of Particle objects with velocity/acceleration | count, speed, lifespan, color palette |
-| **Voronoi Tessellation** | Random seed points, Fortune's algorithm | siteCount, metric (Euclidean/Manhattan) |
-| **L-System** | Recursive string rewriting | axiom, rules, iterations, angle |
-| **Reaction-Diffusion** | Gray-Scott model on 2D grid | feedRate, killRate, diffusionA, diffusionB |
-| **Wave Function Collapse** | Tile adjacency constraints | tileSet, outputSize, periodic boundary |
-
-### Color Palettes
-Export a `colors` array that the art references. Use `lerpColor()` for smooth transitions. Pre-define palettes; never generate fully random colors.
-
----
-
-## Data Visualization
-
-### Tufte's Five Principles
-1. **Data-Ink Ratio:** Maximize ink devoted to data. Erase non-data ink. Erase redundant data-ink.
-2. **Chartjunk Elimination:** Remove decoration, moire vibration, grids, ornamental borders. Every mark must carry information.
-3. **Graphical Integrity:** Lie Factor = (size of effect in graphic) / (size of effect in data). Must equal 1.0 ± 0.05.
-4. **Small Multiples:** Use repeated small charts for comparison across categories. Same axes, different data.
-5. **Data Density:** Maximize data points per unit area. Graphics should be data-rich.
-
-### Chart Selection Matrix
-| Data Type | Best Chart | Why | Avoid |
-|:----------|:-----------|:----|:------|
-| **Time series** | Line chart | Shows trend direction + rate | Area chart (hides baseline) |
-| **Categories** | Horizontal bar chart | Labels readable, length comparison easy | Vertical bar (cramped labels) |
-| **Parts of whole** | Bar chart | Accurate area comparison | Pie chart (angle comparison is poor) |
-| **Distribution** | Histogram | Shows shape of data | Box plot (hides multimodal) |
-| **Correlation** | Scatter plot | Shows relationship patterns | Bubble chart (area distortion) |
-| **Ranking** | Sorted bar chart | Immediate rank visibility | Dot plot (harder to compare) |
-| **Flow/process** | Sankey diagram | Shows magnitude + direction | Funnel (ordered only) |
-
-### Infographic Syntax (AntV)
-```yaml
-infographic column-chart:
-  title: "Paper Publications by Year"
-  data:
-    - year: 2024, count: 12
-    - year: 2025, count: 47
-    - year: 2026, count: 89
-  theme: light
-  settings:
-    xAxis: year
-    yAxis: count
-    color: "#1a56db"
-    showValues: true
-```
-
-### Graphical Integrity Checklist
-- [ ] Y-axis starts at zero (or truncation is clearly marked)
-- [ ] All axes labeled with units
-- [ ] No 3D effects on 2D data (volume distorts perception)
-- [ ] Gridlines at 10% opacity or removed
-- [ ] Legend present and readable
-- [ ] Data source cited below chart
-
-## Anti-Patterns
-| Anti-Pattern | Fix |
-|:-------------|:----|
-| Generic AI aesthetics | Custom design system (LOCKED v3.0 tokens) |
-| 3D charts for 2D data | 3D distorts perception -- use 2D always |
-| Pie charts with >5 slices | Sorted bar chart |
-| No axis labels | Always label both axes with units |
-| Truncated y-axis without marking | Start at zero OR add break marker |
-| Copying existing artists' work | Original compositions with seeded randomness |
-| Generative art without seed | Always document seed for reproducibility |
+Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.

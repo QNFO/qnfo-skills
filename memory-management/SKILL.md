@@ -1,25 +1,9 @@
 ---
 name: memory-management
-version: "1.0"
 description: Guide the agent to recall, remember, and route durable learning into Memory, Skills, Scheduled Tasks, or Tape.
 ---
 
-
-> **v1.1 UPDATE (2026-08-02, kaizen — restart after prune):**
-> [HARD] agent.db pruning / VACUUM changes the skill index. Schedule a restart
-> after any prune so DeepChat re-reads the DB: `python "<system>\scripts\restart-deepchat.py" --reason "agent.db pruned"`.
-> `--vacuum` specifically requires DeepChat CLOSED — the helper handles the
-> close/relaunch sequence. Cross-reference: system v2.6, bloat-cleanup v2.8.
-
-
 # Memory Management
-
-> **STALE AGENT.DB CACHE (2026-08-02):** When DeepChat skills fail to load after
-> restart despite valid YAML/frontmatter, suspect a stale agent.db cache rather
-> than file errors. A process restart alone may not clear the indexer cache —
-> use the deferred restart: `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py"`.
-> See system skill §Auto-Restart Protocol.
-
 
 Use this skill when a task may produce durable learning or when the user asks you to recall, remember, continue earlier work, preserve an exact statement, capture a reusable procedure, or handle a recurring need.
 
@@ -69,13 +53,3 @@ Before finishing a non-trivial task, check whether there is one durable lesson t
 6. Is this actually a reusable procedure for `skill_manage` or a recurring need for Scheduled Tasks rather than Memory?
 
 Remember only the smallest durable conclusion. Leave raw process in Tape.
-
-> **UPDATE (2026-08-02): MCP-OFFLOAD-1 — QNFO MCP tools (search_papers, query_graph,
-> resolve_paper_id, search_memories, recall_facts, memory_recall) often return "OK"
-> with results offloaded to unreadable files.** Do NOT treat "OK" as evidence of
-> retrieved content. For verification-critical lookups, prefer direct probes
-> (Python urllib + browser UA against live endpoints) or cross-check via the
-> cloudflare skill's agent tool map. Also: DeepChat memories are EPHEMERAL —
-> critical rules belong in SKILL.md; memory is for session outcomes, not authority.
-> Cross-reference: cloudflare v3.18, kaizen v1.4.1.
-

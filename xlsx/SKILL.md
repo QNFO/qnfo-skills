@@ -1,15 +1,8 @@
 ---
 name: xlsx
-version: "1.1"
 description: "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas"
 license: Proprietary. LICENSE.txt has complete terms
 ---
-
-> **v1.1 UPDATE (2026-07-30, kaizen):**
-> Red-team audit: direct parent-agent 5-adversary review.
-> HARD: created scripts/recalc.py (was phantom reference), added version header + .kaizen_history.
-> SOFT: added Windows platform support, skill_run usage for recalc.py, CSV/TSV workflow note.
-> Cross-reference: kaizen v1.2.
 
 # Requirements for Outputs
 
@@ -75,7 +68,7 @@ A user may ask you to create, edit, or analyze the contents of an .xlsx file. Yo
 
 ## Important Requirements
 
-**LibreOffice Required for Formula Recalculation**: You can assume LibreOffice is installed for recalculating formula values using the `recalc.py` script bundled with this skill. The script automatically detects LibreOffice on Windows, Linux, and macOS. Use `skill_run(skill="xlsx", script="scripts/recalc.py", args=[...])` to execute it.
+**LibreOffice Required for Formula Recalculation**: You can assume LibreOffice is installed for recalculating formula values using the `recalc.py` script. The script automatically configures LibreOffice on first run
 
 ## Reading and analyzing data
 
@@ -138,9 +131,9 @@ This applies to ALL calculations - totals, percentages, ratios, differences, etc
 2. **Create/Load**: Create new workbook or load existing file
 3. **Modify**: Add/edit data, formulas, and formatting
 4. **Save**: Write to file
-5. **Recalculate formulas (MANDATORY IF USING FORMULAS)**: Use the `recalc.py` script bundled with this skill:
+5. **Recalculate formulas (MANDATORY IF USING FORMULAS)**: Use the recalc.py script
    ```bash
-   skill_run(skill="xlsx", script="scripts/recalc.py", args=["output.xlsx", "30"])
+   python recalc.py output.xlsx
    ```
 6. **Verify and fix any errors**: 
    - The script returns JSON with error details
@@ -218,7 +211,7 @@ python recalc.py <excel_file> [timeout_seconds]
 
 Example:
 ```bash
-skill_run(skill="xlsx", script="scripts/recalc.py", args=["output.xlsx", "30"])
+python recalc.py output.xlsx 30
 ```
 
 The script:
@@ -226,7 +219,7 @@ The script:
 - Recalculates all formulas in all sheets
 - Scans ALL cells for Excel errors (#REF!, #DIV/0!, etc.)
 - Returns JSON with detailed error locations and counts
-- Works on both Linux, macOS, and Windows
+- Works on both Linux and macOS
 
 ## Formula Verification Checklist
 

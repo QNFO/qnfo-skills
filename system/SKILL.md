@@ -1,7 +1,7 @@
 ---
 name: system
 description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec uses cmd.exe (PSModulePath deleted + Python shim v3). See EXEC-SHELL-FIX.md.
-version: 2.11
+version: 2.13
 kif_tags: [KIF-32]
 ---
 
@@ -9,6 +9,32 @@ kif_tags: [KIF-32]
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
 > infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+> **v2.12 UPDATE (2026-08-04, kaizen — RCLONE-FIRST-1 default for bulk transfers):**
+> [HARD] **rclone is the system default for ANY large or multi-file transfer**
+> (R2/S3/cloud). Not wrangler, not per-object API loops. Verified live: 54k-file
+> D:\Archive sync + R2 bucket-to-bucket server-side copy (0.5s, zero local traffic).
+> Canonical binary `C:\rclone\rclone.exe` (cmount build, v1.74.4). Config:
+> `%APPDATA%\rclone\rclone.conf` (remotes `primary-r2`, `releases`, `archive`).
+> Detached pattern: `subprocess.Popen(..., creationflags=CREATE_NO_WINDOW|DETACHED_PROCESS)`
+> so transfers survive exec teardown. Full protocol: cloudflare skill §R2 Transfer Protocol.
+
+> **v2.13 UPDATE (2026-08-04, kaizen — SKILL-SYNC-GITPATH-1 + desktop boundary + R2 key paths):**
+> Red-team: direct parent-agent audit of session 5ptZtvKLdqr3GzAykql8G (D-drive migration + personal-life build).
+> HARD: 3. SOFT: 2. Changes:
+> (1) [HARD] **SKILL-SYNC-GITPATH-1:** skill-sync.js runs git with `cwd = C:\Users\LENOVO\.deepchat\skills`
+>     which is NOT a git repo → GitHub sync **silently fails** while R2 sync reports OK. The real repo is
+>     `C:\Users\LENOVO\Documents\GitHub\qnfo-skills` (canonical remote `QNFO/qnfo-skills.git`; the rwnq8
+>     mirror is ARCHIVED — 403 on push). Fix: run git ops in the Documents\GitHub\qnfo-skills clone, or
+>     pass a repo-aware cwd; verify with `git log origin/master` after every sync. Cross-ref: system §Autonomous Skill Sync.
+> (2) [HARD] **DESKTOP-BOUNDARY-1:** NEVER place files on the user's Desktop (or Documents root) without
+>     explicit consent — user mandate 2026-08-04. Deliverables go to `C:\rclone\` (technical working dir)
+>     or user-designated locations. Violation case: D-Drive-Migration-Plan.md was written to Desktop; corrected.
+> (3) [HARD] **R2-SKILL-KEYPATH-1:** skills live in the `qnfo-skills` R2 bucket at
+>     `prompts/skills/<name>/SKILL.md` — NOT bucket root (`cloudflare/SKILL.md` is a stale legacy copy).
+>     Verify with `rclone cat primary-r2:qnfo-skills/prompts/skills/<name>/SKILL.md`.
+> (4) [SOFT] **DESKTOP-BOUNDARY-1** also applies to Desktop subfolders and Documents — user reads everything there.
+> (5) [SOFT] Cross-ref: cloudflare v3.32 (Vectorize gotchas), kaizen v1.26, git-github v2.14.
 
 
 
@@ -21,7 +47,7 @@ kif_tags: [KIF-32]
 >     is truthy, cmd.exe when unset. PSModulePath deleted from HKCU. Shim strips the
 >     3 UTF8Encoding preambles, forwards to cmd.exe. Full guide: EXEC-SHELL-FIX.md.
 > (2) [HARD] **EXEC-SHELL-FIX.md reference** — reproducible step-by-step recovery guide.
-> (3) [SOFT] Cross-reference: windows-command-patterns v3.3, deepchat-internals.md,
+> (3) [SOFT] Cross-reference: windows-command-patterns v3.10, deepchat-internals.md,
 >     SESSION_LOG_POWERSHELL_EXTERMINATION.md.
 > Red-team: direct parent-agent audit (subagent truncated — systemic). HARD: 2, SOFT: 1.
 
@@ -60,7 +86,7 @@ kif_tags: [KIF-32]
 >     content-hash state (~/.deepchat/.skill-sync-state.json).
 > (5) [DESIGN] §Autonomous Skill Sync section below documents the cronjob + manual
 >     invocation + failure handling.
-> Cross-reference: cloudflare v3.18, kaizen v1.4.1, research v2.45.
+> Cross-reference: cloudflare v3.29, kaizen v1.4.1, research v2.45.
 
 ## Autonomous Skill Sync (v2.5)
 
@@ -78,7 +104,7 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 
 
 
-# SYSTEM — v2.11 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
+# SYSTEM — 2.12 (Ultra-Consolidated Config + Skills + Desktop + Hygiene + Session Init + Exec Shell Mandate)
 
 > **v2.4 UPDATE (2026-07-31, kaizen — R2 sync tooling hardening):**
 > Red-team: direct parent-agent 5-adversary audit (Accuracy, Completeness,
@@ -100,7 +126,7 @@ Skill changes are synced to GitHub (origin QNFO/qnfo-skills + rwnq8 mirror) and 
 >     (Completeness + Novelty Auditors, parent-agent).
 > (3) [SOFT] `scripts/skill-sync-remaining.js` v1.0 -> v1.1: same wrangler
 >     pinning + shared hash state file. (Dependency Auditor, parent-agent).
-> Cross-reference: kaizen v1.2.5, windows-command-patterns v2.1 (KIF-12
+> Cross-reference: kaizen v1.22, windows-command-patterns v2.1 (KIF-12
 > exec-session reaping), mem-Hbi-G-pFovi8 (npx cache corruption anti-pattern).
 
 > **v2.3 UPDATE (2026-07-26, session initialization + startup integration):**
@@ -729,7 +755,7 @@ in this skill's root directory. Recompile if lost:
 Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winreg REG_EXPAND_SZ.
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
-`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.3 §S-1.0.2.
-Current: **v2.11** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.10 §S-1.0.2.
+Current: **2.12** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 

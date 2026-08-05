@@ -301,7 +301,7 @@ update_plan([
   {"step": "[{WBS}.P2] Literature: 8 parallel sources, dedup, classify, Mandatory Symmetry Template (KIF-18)", "status": "pending"},
   {"step": "[{WBS}.P3] Citations: extract, verify BibTeX (P3.AUTHOR-GATE), auto-generate missing DOIs", "status": "pending"},
   {"step": "[{WBS}.P4] Research: Structured Forecast Protocol (11 stages) + red-team + calibration", "status": "pending"},
-  {"step": "[{WBS}.P5] Publish: paper.md + PDF (build-pdf-pro.py) + BP-1→BP-10 gates + Zenodo DOI", "status": "pending"},
+  {"step": "[{WBS}.P5] Publish: paper.md + PDF (pandoc→MathJax SVG→puppeteer-core CDP) + BP-1→BP-10 gates + Zenodo DOI", "status": "pending"},
   {"step": "[{WBS}.P6] Deploy: D1 living-paper, papers-server Worker, MCP-driven verification", "status": "pending"},
   {"step": "[{WBS}.P7] Disseminate: SEO, Buffer social, papers.qnfo.org, Internet Archive", "status": "pending"},
   {"step": "[{WBS}.P8] Distribute: GitHub tag, Zenodo newversion, R2 archive, D1/KG records, BP-4/5 corrections", "status": "pending"},
@@ -855,7 +855,7 @@ Playwright → Edge → Chrome. `puppeteer.launch({executablePath, headless:true
 locally and inlined. Use `str.replace()` NOT `re.sub()` — MathJax JS contains
 `\u` escapes that crash Python's regex engine.
 
-**Gate:** PDF > 100 KB AND 0 U+FFFD/FFFF → PASS. Anything else → BLOCKED.### Zenodo Upload
+**Gate:** PDF > 100 KB AND 0 U+FFFD/FFFF (binary byte scan — `data.count(b"\xef\xbf\xbd")` for U+FFFD, `b"\xef\xbf\xbf"` for U+FFFF — **NEVER PyMuPDF/fitz**, see PYMUPDF-FORBIDDEN-1) → PASS. Anything else → BLOCKED.### Zenodo Upload
 **METADATA SHAPE MANDATE (v2.67, HARD):** The EXACT metadata shape for ALL Zenodo
 uploads is the REQUIRED METADATA FIELDS table below — do NOT guess it, do NOT
 read-modify-guess the draft. Build the complete object on the first PUT:
@@ -1201,7 +1201,7 @@ All 4 layers verified before status → "published":
 | Classification | All papers classified | Table |
 | Citation | BibTeX verified | Audit output |
 | Publication Language | Zero internal language, zero banned words | Scan: 0 hits |
-| PDF | Renders without errors | build-pdf-pro.py exit 0 |
+| PDF | 0 U+FFFD/FFFF + PDF > 100KB | CDP pipeline verification gate |
 | DOI | Zenodo resolves, preview is PDF | curl HTTP 200 |
 | Deployment | papers-server 200, D1 entry exists | curl + d1-query |
 | SEO | robots.txt, sitemap, meta tags | Verify each URL |
@@ -1240,7 +1240,7 @@ All 4 layers verified before status → "published":
 | Derived quantity not recomputed | BP-6: recompute from first principles |
 | Density gate for one claim but not identical sibling | BP-8: classify all claims uniformly |
 | **Assuming `pandoc` is on PATH — binary at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe`** | Reference full path or prepend to PATH in all build scripts |
-| **Assuming `build-pdf-pro.py` always works — puppeteer bootstrap times out** | DO NOT fall back to xhtml2pdf or Page.printToPDF. Extract cached Chromium zips first (they're pre-downloaded in `~/.cache/puppeteer/chrome/`), or use system Chromium (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`). Only if no Chromium binary exists anywhere: BLOCK the publication — DO NOT publish with substandard renderers. |
+| **PUP-1: Puppeteer bootstrap times out during CDP render** | DO NOT fall back to xhtml2pdf or Page.printToPDF. Extract cached Chromium zips first (they're pre-downloaded in `~/.cache/puppeteer/chrome/`), or use system Chromium (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`). Only if no Chromium binary exists anywhere: BLOCK the publication — DO NOT publish with substandard renderers. |
 | **Zenodo DELETE — assuming JSON response body** | Handle HTTP 204: check `len(content) == 0` before `json.loads()` |
 | **Zenodo `actions/newversion` — assuming clean draft** | Search for existing drafts first; delete stale files; then upload |
 | **Zenodo metadata PUT — partial update** | Always include `upload_type`, `publication_type`, `creators` in metadata PUT |
@@ -1283,6 +1283,8 @@ All 4 layers verified before status → "published":
 | **CONFIRMATION-SEEKING-1: Testing a theory by measuring its own predicted magnitude inside its own formalism (2026-08-04)** | A test designed by the theory's proponents, after the prediction, to measure the predicted effect is confirmation, not falsification (Pound–Rebka, Shapiro, Hulse–Taylor inside GR: parameter measurements within the PPN family; no serious alternative falsified). Fix: for every claimed confirmation, name the alternative the test would have falsified; if none predicts a different value, classify as parameter measurement with capped evidential weight. Cross-ref: KIF-60 Confirmation-Seeking Test, research §5.4. |
 | **PRO-INCUMBENT-BIAS-1: Defaulting to favorable grades for established theories without symmetric adversarial audit (2026-08-04)** | Grading GR/SM as Grade A by default while demanding falsifiability from a new framework is asymmetric. The SM's 19 free parameters are measured, not predicted; the operational GR composite absorbs anomalies via DM/DE/inflation. Fix: apply the identical kill-criteria + null-equivalence standard to incumbents from the start (KIF-29 Symmetric Audit Requirement). Canonical case: the 2026-08-04 falsifiability thread — GR/SM initially graded A, downgraded only after user injunction. |
 | **FORCED-CHERRY-PICK-1: Selecting only supportive confirmations while treating misses as "areas for future work" (2026-08-04)** | Extends CHERRY-PICK-1 to the incumbents: citing GR's confirmed predictions while ignoring its auxiliary-absorption escapes (or the SM's goalpost-moving nulls) is forced cherry-picking. Fix: audit the FULL evidence set for both the new framework and the incumbents, symmetrically. |
+| **PYMUPDF-FORBIDDEN-1: Using PyMuPDF / fitz (or any non-CDP tool) in the PDF publication process (2026-08-04)** | **HARD GATE — user mandate.** PyMuPDF, fitz, xhtml2pdf, weasyprint, reportlab, pdflatex, xelatex, wkhtmltopdf, and browser --print-to-pdf are ALL FORBIDDEN as PDF build/verify pathways for QNFO publications. The ONLY approved pipeline is: `pandoc --mathjax` → MathJax SVG inline (tex-svg-full.js, str.replace not re.sub) → puppeteer-core `page.pdf()` (A4, 2cm margins, printBackground). Verification is a BINARY BYTE SCAN: 0×EF BF BD (U+FFFD), 0×EF BF BF (U+FFFF), size > 100 KB — never PyMuPDF. Canonical case: session ZDdTu9Qf — consilience_framework.pdf rebuilt via CDP with 92 math elements rendered (math=0 caused by overriding MathJax inlineMath config, fixed by removing the config block). Cross-ref: BROWSER-PRINT-TO-PDF-1, TWO-TIER-PDF-1, research v2.72 PDF Building. |
+| **PYMUPDF-FORBIDDEN-1: Using PyMuPDF / fitz (or any non-CDP tool) in the PDF publication process (2026-08-04)** | **HARD GATE — user mandate.** PyMuPDF, fitz, xhtml2pdf, weasyprint, reportlab, pdflatex, xelatex, wkhtmltopdf, and browser --print-to-pdf are ALL FORBIDDEN as PDF build/verify pathways for QNFO publications. The ONLY approved pipeline is: `pandoc --mathjax` → MathJax SVG inline (tex-svg-full.js, str.replace not re.sub) → puppeteer-core `page.pdf()` (A4, 2cm margins, printBackground). Verification is a BINARY BYTE SCAN: 0×EF BF BD (U+FFFD), 0×EF BF BF (U+FFFF), size > 100 KB — never PyMuPDF. Canonical case: session ZDdTu9Qf — consilience_framework.pdf rebuilt via CDP with 92 math elements rendered (math=0 caused by overriding MathJax inlineMath config, fixed by removing the config block). Cross-ref: BROWSER-PRINT-TO-PDF-1, TWO-TIER-PDF-1, research v2.72 PDF Building. |
 | **BROWSER-PRINT-TO-PDF-1: Using `--print-to-pdf` or browser print-to-PDF for production papers (2026-08-04)** | Produces unprofessional headers/footers, unsuitable for finished PDFs. Use the CDP pipeline (puppeteer-core `page.pdf()`) only — A4, 2cm margins, printBackground, zero browser chrome. See PDF Building section. |
 | **TWO-TIER-PDF-1: Documenting multiple PDF workflows — "primary" + "production" tiers (2026-08-04)** | ONE workflow, ONE pipeline. Multiple tiers create ambiguity and divergence. CDP pipeline is the ONLY supported workflow. Remove any alternative descriptions immediately. |
 | **MATH-DELIMITER-1: Source markdown using `\(...\)` / `\[...\]` LaTeX delimiters (2026-08-04)** | Pandoc strips `\(` as escaped parenthesis. Source MUST use `$...$` / `$$...$$` delimiters. Preprocess with `re.sub(r'\\  [', r'$$', source)` before pandoc if source has legacy delimiters. |

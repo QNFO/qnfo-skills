@@ -1,6 +1,5 @@
 ---
 name: git-commit
-version: "1.0"
 description: Generate well-formatted git commit messages following conventional commit standards
 allowedTools:
   - run_terminal_cmd

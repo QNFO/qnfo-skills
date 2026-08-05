@@ -1,9 +1,9 @@
 ---
 name: research
-description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; MathJax-SVG + CDP (build-pdf-pro.py) for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
+description: End-to-end research and publication pipeline -- GitHub + Zenodo + R2 + D1/KG core distribution stack (v2.38, Buffer API v2.14, slug-based naming, mojibake gate). Project initialization, literature search, citation management, deep research, publication, deployment, and core distribution -- project initialization (Phase 0 scaffold, pre-flight checklist, WBS), literature search (OpenAlex, arXiv, Crossref, Zenodo records, Europe PMC, web, Vectorize, KG), paper triage and classification, citation management and BibTeX verification, deep paradigm forecasting (11-stage structured forecast protocol with calibration register, practical applications extension, and counterfactual backcasting), research planning and hypothesis generation, publication formatting and PDF building (Springer Nature LaTeX template `sn-jnl.cls` as the MANDATORY DEFAULT for LaTeX-native journal papers; Pandoc+XeLaTeX for Markdown-native publications), Professional Publication Standards (journal-grade content/tone/structure/copyediting bar), Zenodo DOI upload with robust retry and versioning, Cloudflare deployment (D1 + papers-server Worker), social media dissemination via Buffer (api.buffer.com graphql, createPost mutation, assets:[] required, inline fragments on PostActionPayload union members for error handling), SEO optimization, core distribution stack (GitHub + Zenodo + R2 + D1/KG), and phase closeout protocol with version tagging. Use for ANY research, publication, project lifecycle, or dissemination task.
 triggers: ["research", "paper", "literature", "preprint", "arXiv", "Semantic Scholar", "OpenAlex", "Crossref", "Europe PMC", "Zenodo search", "rate limit", "429", "cite", "citation", "BibTeX", "bibliography", "deep dive", "paradigm forecast", "forecast", "publish", "Zenodo", "DOI", "manuscript", "LaTeX", "build PDF", "social media", "tweet", "post", "Buffer", "LinkedIn", "Bluesky", "SEO", "sitemap", "robots.txt", "discoverability", "llms.txt", "structured data", "meta tags", "IPFS", "filebase", "cid", "pinning", "Web3", "CAR", "DID", "Filecoin", "Arweave", "research plan", "methodology", "hypothesis", "publication", "dissemination", "write paper", "publish paper", "scientific", "academic", "LRAP", "QNFO publication", "QWAV publication"]
 related: ["knowledge", "cloudflare", "git-github"]
-version: "2.45"
+version: "2.38"
 priority: 1
 platform: all
 autonomous: true
@@ -41,52 +41,7 @@ self_sufficient: true
 > See `cloudflare` skill v3.9 for the canonical MCP-Driven Operations decision
 > matrix. Companion update: `cloudflare` v3.9, `code` v2.2, `knowledge` v2.2.
 
-# RESEARCH -- v2.45 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate + GATE P5.CLEAN)
-
-> **v2.45 UPDATE (2026-08-02, kaizen — newversion file-inheritance + preview + D1 slug drift):**
-> Reactive kaizen per user directive following D1/D2/D3 errata publishing session.
-> Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE (no subagents).
-> HARD findings: 1. SOFT findings: 2.
-> Changes:
-> (1) [HARD] **GATE P5.CLEAN:** `actions/newversion` copies ALL files from the source deposit
->   into the new draft. If old files are not deleted before uploading, they persist and can
->   become the preview file — evidenced in this session where ACRP-04 v1.3's preview became
->   `ERRATA.md` (1KB) instead of the intended PDF (80KB), and ACRP-06 v1.1's preview was the
->   `.md` source file instead of the PDF. After every `actions/newversion`, MANDATORILY
->   enumerate and DELETE ALL files before uploading fresh files in preview-first order.
->   Updated Zenodo Versioning step 2 with explicit GET→DELETE→PUT workflow.
-> (2) [SOFT] Anti-patterns: added "Assuming actions/newversion creates a clean draft" (GATE
->   P5.CLEAN, 2026-08-02) and "D1 living-paper slug drifted after terminology correction"
->   (2026-08-02 — ACRP-04 slug changed from `pythagorean-semigroup-audit` to
->   `acrp04-five-smooth-audit` after BP-2 correction; D1 query by old slug returned zero).
-> (3) [SOFT] Session heuristic: PowerShell `python -c` with quotes/dicts/regex (kaizen B1)
->   recurred 4-6 times this session despite being a documented anti-pattern. Escalating
->   severity note — consider a HARD runtime gate that blocks `python -c` if the command
->   contains `"`, `{`, or `(` (deferred — requires DeepChat tool-level enforcement).
-> Cross-reference: kaizen v1.4.1, ACRP-04 v1.3 (10.5281/zenodo.21754151), session KR56igk6tirRGs0kA4r8w.
-> Reactive kaizen from the carry-forward session (ODR v2.1 + Cross-Domain v4.1 execution).
-> Red-team: direct parent-agent 5-adversary audit per kaizen v1.2.5 HARD GATE (no subagents).
-> HARD findings: 4. SOFT: 1.
-> Changes:
-> (1) [HARD] Common Error Signatures: added `actions/newversion` 400 `files.enabled:
->   Please remove all files first` — means a newversion draft ALREADY EXISTS; follow
->   `links.latest_draft` and complete it, never create a parallel newversion (ODR
->   incident: deposit 21751722, draft 21752136, 2026-08-02).
-> (2) [HARD] Zenodo Versioning section: added mandatory PRE-CHECK — query
->   `/api/deposit/depositions?q=<title>` for `state=="unsubmitted"` drafts BEFORE any
->   newversion/publish; a recently-modified unsubmitted draft is a CONCURRENT session's
->   in-flight work — coordinate, do not collide.
-> (3) [HARD] Anti-patterns: 4 new rows — "Treating a Zenodo record ID as proof of
->   paper identity" (record IDs are GLOBAL; a 404 ID can later be claimed by a
->   third party — 21748026; verify TITLE+CREATOR, not existence), "Calling
->   actions/newversion twice because a draft already exists", "Publishing without
->   checking for in-flight unsubmitted drafts", "Syncing D1 body_md from a stale
->   local copy after publish" (Cross-Domain: D1 47,134 chars old table vs published
->   49,515 corrected — re-download from the new record).
-> (4) [SOFT] Frontmatter `version` reconciled 2.38 → 2.44 (had drifted from live
->   header v2.43 — Status Auditor).
-> Cross-reference: kaizen v1.4, ODR v2.1 (10.5281/zenodo.21752136), Cross-Domain v4.1
-> (10.5281/zenodo.21754016).
+# RESEARCH -- v2.43 (Core Pipeline: GitHub + Zenodo + R2 + D1/KG + 17-MCP Verification + Forecast + Applications + Backcasting + Slug-Based Naming + Mojibake Gate + Numeracy Gates)
 
 > **v2.43 UPDATE (2026-08-02, kaizen — Zenodo bucket-URL rule + upload endpoint fix):**
 > Reactive kaizen following the ODR v1.5 Zenodo upload block (session 3YzGvuFkUK, 2026-08-02).
@@ -446,7 +401,7 @@ self_sufficient: true
 > 4 kaizen passes, including one wrong detour. Replaced with ONE script:
 > `scripts/build-paper.py` (preprocess + build + verify, UTF-8 forced on
 > all file I/O to prevent mojibake -- see `qnfo-agent` §8.7). Usage:
-> `python build-pdf-pro.py <slug>.md <slug>.pdf --title "..."`. Independently re-verified
+> `python scripts/build-paper.py <slug>.md`. Independently re-verified
 > against the original problem source (Zenodo 21595214): 0 U+FFFD, 0
 > U+FFFF across 16 pages, checked with a separate verification script
 > (never trust the build tool's own success claim).
@@ -1678,7 +1633,7 @@ misinterpret as a second frontmatter block. Before building, count `---`
 occurrences on their own line at column 0:
 ```bash
 # Windows: write this to _yaml_check.py, then `python _yaml_check.py`; never inline python -c
-# build-pdf-pro.py handles this automatically -- prefer: python build-pdf-pro.py <slug>.md <slug>.pdf
+# Build-paper.py handles this automatically -- prefer: python scripts/build-paper.py <slug>.md
 python _yaml_check.py
 ```
 Where `_yaml_check.py` contains:
@@ -1897,13 +1852,6 @@ Zenodo archives, D1 inserts, and all downstream distribution channels.
 A single U+FFFD in source can survive through Pandoc, XeLaTeX, Zenodo,
 and IPFS, producing a permanently corrupted public artifact.
 
-> **RETIRED (2026-08-02): XeLaTeX + build-paper.py pipeline is SUPERSEDED.**
-> TeX Live was uninstalled (all engines removed). The canonical PDF pipeline is
-> **`build-pdf-pro.py`** (MathJax-SVG -> puppeteer CDP, STIX fonts, page numbers) —
-> see the ODR repo. The sections below are retained as historical audit trail only.
-> **DO NOT invoke xelatex/pdflatex/build-paper.py** — they no longer exist on this
-> machine. Use: `python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Title>"`.
-
 ### PDF Building
 
 **DEFAULT TEMPLATE (MANDATORY, 2026-07-25): the Springer Nature LaTeX
@@ -1930,33 +1878,21 @@ substantive revision.
 
 **For Markdown-native publications** (papers authored and maintained as
 `<slug>.md` rather than `paper.tex` -- e.g., most QNFO working papers prior
-to journal submission), use the MathJax-SVG + CDP pipeline (ODR repo `build-pdf-pro.py`: pandoc `--mathjax` -> HTML -> MathJax SVG -> headless Chrome print-to-PDF) -- the mandated publication process since 2026-08-02 (XeLaTeX retired, TeX Live uninstalled). See MATHJAX_CDP_PDF_BUILD.md in the ODR repo. The legacy XeLaTeX pipeline below is SUPERSEDED and retained for LaTeX-native submissions only. Convert to the Springer Nature LaTeX template at the point of
+to journal submission), continue using Pandoc+XeLaTeX per the pipeline
+below. Convert to the Springer Nature LaTeX template at the point of
 formal journal submission, or immediately if the target venue requires
 LaTeX source at all revision stages.
 
-**SUPERSEDED (2026-08-02) — XeLaTeX route DEPRECATED:** The pipeline below
-(`build-paper.py` + Pandoc/XeLaTeX) is RETIRED. TeX Live was uninstalled
-2026-08-02 — xelatex no longer exists on the canonical QNFO machine. Use the
-**MathJax-SVG + CDP pipeline** (`build-pdf-pro.py` in the ODR repo, or the
-papers.qnfo.org gateway worker) for all Markdown-native PDFs. See
-`MATHJAX_CDP_PDF_BUILD.md` (ODR repo) for the consolidated process. The
-section below is retained for historical record and legacy LaTeX-native work only.
-
-**LEGACY (v2.21, KIF-27 — retained for LaTeX-native submissions only):** The
-old single-script approach preprocessed Unicode math to LaTeX math mode, built
-the PDF, and verified zero rendering errors. It replaced three fragmented
-scripts (`unicode-latex-preprocess.py`, `check-pdf.py`, `build-pdf.py` -- all
-DELETED as of v2.21). For LaTeX-native (`.tex`) submissions to journals that
-require LaTeX source, use the Springer Nature `sn-jnl.cls` template directly
-via `pdflatex` (see the template README). Do NOT use this route for
-Markdown-native papers.
+**CANONICAL SOLUTION (v2.21, KIF-27):** A single script does everything:
+preprocess Unicode math to LaTeX math mode, build the PDF, and verify zero
+rendering errors. This replaces three previously fragmented scripts
+(`unicode-latex-preprocess.py`, `check-pdf.py`, `build-pdf.py` -- all
+DELETED as of v2.21).
 
 ```bash
-# LEGACY route — build-paper.py was DEPRECATED and its pipeline retired (2026-08-02).
-# TeX Live is UNINSTALLED — xelatex/pdflatex/build-paper.py do not exist on this machine.
-# Canonical pipeline for ALL Markdown-native papers:
-python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Paper Title>"
-# LaTeX-native journal submission: reinstall TeX Live, then use sn-jnl.cls + pdflatex.
+python scripts/build-paper.py <slug>.md
+# or with explicit output path:
+python scripts/build-paper.py <slug>.md --output <slug>.pdf
 ```
 
 > **Slug-based naming (v2.38):** Paper files MUST use the project slug, NOT generic `paper.md`/`paper.pdf` names. For project `computing-machines`, the files are `computing-machines.md` and `computing-machines.pdf`. This prevents confusion when multiple paper repos are cloned in the same temp directory. Generic `paper.md` naming is an anti-pattern (see Anti-Patterns table).
@@ -1973,15 +1909,12 @@ This single command:
 3. Groups consecutive subscript/superscript characters into a single
   `_{...}`/`^{...}` block (naive one-character-at-a-time conversion
   produces INVALID LaTeX -- "Double superscript" errors)
-4. Builds the PDF via the canonical MathJax-SVG pipeline (headless Chrome print-to-PDF, STIX fonts)
+4. Builds the PDF via `pandoc --pdf-engine=xelatex`
 5. Verifies the output PDF has zero U+FFFD/U+FFFF characters and zero
   empty pages -- exit code 1 if verification fails, PDF MUST NOT publish
 
-Exit codes (legacy build-paper.py only): `0` = publication-ready, `1` =
-build or verification failed (do not publish), `2` = missing dependency or
-bad invocation. For the canonical MathJax-CDP pipeline, use
-`build-pdf-pro.py` which verifies 0 U+FFFD/0 PUA/0 icon-fonts/0 Times
-fallback before exit 0.
+Exit codes: `0` = publication-ready, `1` = build or verification failed
+(do not publish), `2` = missing dependency or bad invocation.
 
 **Prior approaches, retracted:**
 - v2.18 (KIF-26): dictionary-based conversion with an incomplete character
@@ -2028,7 +1961,7 @@ published to Zenodo, R2, or any public distribution channel.
 As of v2.21, this verification is built INTO `scripts/build-paper.py` --
 it is not a separate step. Running:
 ```bash
-python build-pdf-pro.py <slug>.md <slug>.pdf --title "<Paper Title>"
+python scripts/build-paper.py <slug>.md
 ```
 performs preprocessing, the pandoc/xelatex build, AND verification in one
 invocation. Exit code `0` = publication-ready (proceed to Zenodo/R2
@@ -2436,7 +2369,6 @@ values: `publication`, `dataset`, `software`, `poster`, `presentation`.
 | `metadata.creators: Missing data` | No creators set | Add at least one creator with `name` |
 | `keywords` 400 | Comma-joined string, not array | Wrap in `[...]` |
 | `actions/newversion` 403 | Stale deposit ID | GET deposit first; check `.zenodo_versions.json` |
-| `actions/newversion` 400 `files.enabled: Please remove all files first` | A newversion draft ALREADY EXISTS for this deposit (previous newversion call created it, or a concurrent session left one unsubmitted) | Do NOT call newversion again. GET the deposit and follow `links.latest_draft` to the existing draft; complete it (delete stale files → upload correct files → set metadata → publish). If the draft is a stale leftover, DELETE its files first, then reuse it. Creating a parallel newversion fragments the version chain (2026-08-02 ODR incident: deposit 21751722, draft 21752136). |
 | Upload 415 | Missing Content-Type | Use `Content-Type: application/octet-stream` |
 
 ---
@@ -2659,22 +2591,6 @@ was lost or misremembered.
 
 #### Zenodo Versioning for Phase/Session Conclusions (MANDATORY -- see qnfo-agent §8.5 JIT Thin-Client Protocol, Phase-End and Session/Project-Conclusion Checkpoint subsections)
 
-**PRE-CHECK (HARD, 2026-08-02): BEFORE calling `actions/newversion`, check for an
-existing unsubmitted draft.** A prior newversion call (or a concurrent session) may
-have already created a draft for this deposit. Calling `actions/newversion` again
-returns HTTP 400 `files.enabled: Please remove all files first`. Detection:
-```python
-# 0. Check for existing unsubmitted drafts (authenticated deposit API)
-GET /api/deposit/depositions?q=<title>&size=25
-# Look for any hit with state == "unsubmitted" — that IS the draft to complete.
-# If found, skip the newversion POST entirely and use that draft's ID.
-#   - If its files are stale: DELETE them, upload correct files, set metadata, publish.
-#   - If it is a concurrent session's in-flight work (recently modified): do NOT
-#     touch it — coordinate instead. (2026-08-02 ODR incident: deposit 21751722,
-#     concurrent draft 21752136 left unsubmitted since 08-01T23:26Z.)
-```
-Then proceed with the normal flow:
-
 At every session or phase conclusion for a project with an existing Zenodo
 deposit, create a NEW VERSION rather than a disconnected upload:
 ```python
@@ -2682,13 +2598,9 @@ deposit, create a NEW VERSION rather than a disconnected upload:
 POST https://zenodo.org/api/deposit/depositions/{existing_id}/actions/newversion
 # Response includes a "latest_draft" link -> extract new draft deposit ID
 
-# 2. MANDATORY: DELETE ALL stale files BEFORE uploading new ones (GATE P5.CLEAN, v2.45)
-#    actions/newversion copies old files from the source deposit — they persist
-#    and can become the wrong preview file. DELETE them all first.
-GET https://zenodo.org/api/deposit/depositions/{new_id}/files  # enumerate
-for file in response.json():
-  DELETE https://zenodo.org/api/deposit/depositions/{new_id}/files/{file['id']}
-# THEN upload the full fresh set in preview-first order (PDF, README, slug.md, bundle, REST)
+# 2. Upload the updated files to the NEW draft (remove stale files first if replacing)
+DELETE https://zenodo.org/api/deposit/depositions/{new_id}/files/{stale_file_id}
+PUT https://zenodo.org/api/deposit/depositions/{new_id}/files
 
 # 3. Update metadata (bump version string, e.g. "1.0" -> "1.1")
 PUT https://zenodo.org/api/deposit/depositions/{new_id}
@@ -3261,7 +3173,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | No falsifiability conditions | Every speculative claim: "This would be disconfirmed if..." |
 | Zenodo without retry | Retry 3x with exponential backoff; recover existing drafts |
 | Missing cross-references in Zenodo | related_identifiers for prior versions + cited papers + GitHub |
-| HTML PDF fallback | MathJax-SVG + CDP ONLY for publication-grade PDFs (XeLaTeX retired 2026-08-02) |
+| HTML PDF fallback | Pandoc+XeLaTeX ONLY for publication-grade PDFs |
 | Buffer GraphQL with $var format | Use INLINE parameters -- Buffer silently drops $variables |
 | Single-store publishing | Core stack REQUIRED: GitHub+Zenodo+R2+D1/KG. DNSLink optional. |
 | No DNSLink for publications | Every paper must have `_dnslink.{slug}.qnfo.org` TXT record |
@@ -3301,7 +3213,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | Not storing OSF registration tracking in D1/KG | Store registration_id, doi, status, and dates in D1 + KG for lifecycle tracking and closeout audit. |
 | `python -c "..."` inline scripts on Windows (kaizen fix B1) | Nested double-quotes in f-strings collide with `python -c "..."` outer quotes; Windows escaping of `\n`, dict literals, and Unicode breaks silently. `write` the script to a `_*.py` file first, `exec` it, then delete -- never inline for anything beyond a one-liner with zero quotes/dicts/regex. |
 | `curl` on Windows PowerShell (kaizen fix B3) | PowerShell aliases `curl` to `Invoke-WebRequest`, which has different flags (`-s` is not recognized) and fails. Use `curl.exe` explicitly (the real binary, bypassing the alias). Never pipe to inline `python -c` — write Python to file first per KIF-37 §8.11. |
-| Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `build-pdf-pro.py` before every PDF build (XeLaTeX/build-paper.py retired 2026-08-02) -- see PDF Building section above (v2.21+). |
+| Unicode math left unconverted for XeLaTeX (kaizen fix A1 — SUPERSEDED by KIF-27) | Run `scripts/build-paper.py` before every Pandoc+XeLaTeX build -- see PDF Building section above (v2.21+). |
 | `keywords:` YAML field in Pandoc frontmatter (kaizen fix A2 — SUPERSEDED by KIF-27) | Strip it -- `scripts/build-paper.py` does this automatically (preprocess stage). It crashes some XeLaTeX templates via an undefined `\xmpquote` macro. |
 | Ephemeral scripts with hardcoded API tokens reaching `git add` (kaizen fix A4) | Run `scripts/credential-scan.py --staged` before every commit (Phase Closeout Protocol STEP 0.5). Add `_*.py`/`.env`/`*.token` to `.gitignore` from Phase 0. |
 | Obsidian/external-drive source notes assumed inaccessible or silently skipped (kaizen fix C5/D5) | Document the path limitation and ask the user to copy files in, or use `exec` with explicit `cwd` in Full Access mode. If imported notes mix internal monologue with delivered content and lack YAML frontmatter, load `doc-coauthoring` to help the user separate meta-planning from publishable content before it enters the research pipeline. |
@@ -3365,9 +3277,3 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records" 
 | **Publishing a Zenodo deposit without verifying file contents match the intended paper** | After uploading files but BEFORE `actions/publish`, download the uploaded `paper.md` from the deposit and verify its YAML `title:` matches the target Zenodo concept. Zenodo bucket lock means wrong files are PERMANENTLY tainted in that version DOI (KIF-58). |
 | **Uploading files to Zenodo in arbitrary order without designating a preview file** | Upload `<slug>.pdf` FIRST — Zenodo uses the first file as the landing-page preview/thumbnail. Priority: PDF > README.md > `<slug>.md` > bundle > remaining artifacts. Verify via `GET /deposit/depositions/{id}/files` that `files[0].filename` is the PDF (GATE P5.PREVIEW, v2.41). |
 | **Cross-project paper confusion from handoff ambiguity** | When a session handoff mentions a paper and a DOI but does NOT specify the GitHub repo, query all QNFO repos, find the paper by title, and verify the repo before any cross-population. A handoff that references "paper.md" and a Zenodo DOI is ambiguous — the paper could live in any of multiple QNFO repos (KIF-58). |
-| **Treating a Zenodo record ID as proof of paper identity (2026-08-02)** | Zenodo record IDs are GLOBAL (shared across all users and deposits). A record ID that was 404 yesterday can be claimed by an unrelated third-party deposit tomorrow (21748026: 404 during ACRP-07 phantom-check, later occupied by an unrelated Chinese-language book archive). NEVER verify "the DOI exists" — verify TITLE + CREATOR match. Existence at an ID is not identity. |
-| **Calling `actions/newversion` twice because a draft already exists (2026-08-02)** | HTTP 400 `files.enabled: Please remove all files first` = a newversion draft already exists for this deposit. Follow `links.latest_draft` and complete that draft instead of creating a parallel one (ODR incident: deposit 21751722, draft 21752136). |
-| **Publishing to Zenodo without checking for in-flight unsubmitted drafts (2026-08-02)** | Before ANY publish/newversion, run the unsubmitted-draft pre-check (`GET /api/deposit/depositions?q=<title>` and filter `state=="unsubmitted"`). A recently-modified unsubmitted draft is a CONCURRENT SESSION's in-flight work — do not collide with it; coordinate. A stale one (older than a session) can be completed or discarded. |
-| **Syncing D1 `body_md` from a stale local copy after a Zenodo publish (2026-08-02)** | After publishing a corrected newversion, sync D1 `body_md` from the ACTUAL PUBLISHED FILE (re-download from the new record), not the local pre-edit copy. Cross-Domain incident: D1 body was 47,134 chars with the old wrong mass-ratio table while the published v4.0 file was 49,515 chars corrected — the D1 record silently diverged. Verify `LENGTH(body_md)` ≈ published file size. |
-| **Assuming `actions/newversion` creates a clean draft — old files from prior versions persist and can become the wrong preview file (GATE P5.CLEAN, 2026-08-02)** | **HARD (v2.45):** `actions/newversion` copies ALL files from the source deposit. If those files are not deleted before uploading new ones, they remain in the draft and can appear BEFORE the new PDF in the file list — making an old 798-byte `PROVENANCE-BUNDLE.zip` or a new `ERRATA.md` the preview instead of the 80KB PDF. After newversion, enumerate all files via `GET /deposit/depositions/{id}/files`, DELETE every one, THEN upload fresh files in preview-first order (PDF first). |
-| **D1 living-paper slug drifted after terminology correction — Zenodo filename ≠ D1 slug (2026-08-02)** | After BP-2 terminology corrections that rename paper files (e.g., `pythagorean-semigroup-audit` → `acrp04-five-smooth-audit`), verify the D1 `papers` table slug still matches the Zenodo filename. Use `SELECT slug, title FROM papers WHERE title LIKE '%<keyword>%'` to find the right row if slugs diverge. In this session, the D1 slug was `acrp04-five-smooth-audit` but the old `pythagorean-semigroup-audit` search returned zero results. |

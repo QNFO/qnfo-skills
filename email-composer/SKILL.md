@@ -19,7 +19,7 @@
 ---
 name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
-version: 2.2
+version: 2.3
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 related: ["qnfo-core", "cloudflare", "knowledge"]
 priority: 2
@@ -27,6 +27,8 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+
+# Email Composer — 2.3
 
 > **v2.1 (2026-08-03, red-team — send pipeline fix):**
 > Red-team audit found `POST /send` failing with 500. Root cause: the qnfo-email Worker

@@ -1,40 +1,18 @@
 ---
 name: skill-creator
-version: "1.1"
-description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends the agent's capabilities with specialized knowledge, workflows, or tool integrations.
+description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
 license: Complete terms in LICENSE.txt
 ---
 
-
-> **v1.2 UPDATE (2026-08-02, kaizen — restart on skill create):**
-> [HARD] New/edited skills are INVISIBLE until DeepChat restarts (it scans
-> skillsPath at startup only). After creating or materially editing a skill,
-> schedule a restart: `python "<system>\scripts\restart-deepchat.py" --reason "created/updated skill <name>"`.
-> This makes the skill visible to skill_list/skill_view in the next session.
-> Cross-reference: system v2.6.
-
-> **v1.1 UPDATE (2026-07-30, kaizen):**
-> Red-team audit: direct parent-agent 5-adversary review.
-> HARD: added version header + .kaizen_history. SOFT: generalized "Claude" â†’ "the agent"
-> throughout, added `skill_manage`/`skill_view`/`skill_run` tool references,
-> added kaizen integration note in Step 6 (Iterate).
-> Cross-reference: kaizen v1.2 for quality audit post-creation.
-
 # Skill Creator
-
-> **RESTART REQUIRED after creating a new skill (2026-08-02):** DeepChat indexes
-> skills at startup only — a newly created skill is invisible until restart.
-> Run `python "%USERPROFILE%\.deepchat\skills\system\scripts\schedule-restart.py" --delay 60`
-> (deferred, agent-safe) OR ask the user to restart. See system skill §Auto-Restart Protocol.
- â€” v1.1
 
 This skill provides guidance for creating effective skills.
 
 ## About Skills
 
-Skills are modular, self-contained packages that extend the agent's capabilities by providing
+Skills are modular, self-contained packages that extend Claude's capabilities by providing
 specialized knowledge, workflows, and tools. Think of them as "onboarding guides" for specific
-domains or tasksâ€”they transform the agent from a general-purpose agent into a specialized agent
+domains or tasks—they transform Claude from a general-purpose agent into a specialized agent
 equipped with procedural knowledge that no model can fully possess.
 
 ### What Skills Provide
@@ -44,22 +22,13 @@ equipped with procedural knowledge that no model can fully possess.
 3. Domain expertise - Company-specific knowledge, schemas, business logic
 4. Bundled resources - Scripts, references, and assets for complex and repetitive tasks
 
-### Key Skill Tools (DeepChat)
-
-When a skill is active and has bundled scripts, use `skill_run` to execute them:
-- `skill_run(skill="skill-name", script="scripts/my_tool.py", args=["arg1"])` — preferred over `exec` for skill-bundled scripts
-- `skill_view(name="skill-name")` — inspect a skill's SKILL.md before using it
-- `skill_view(name="skill-name", file_path="references/guide.md")` — read a linked reference file
-- `skill_manage(action="create/edit/delete")` — create or modify draft skills in the conversation draft area
-- `skill_list()` — list all installed skills and their activation status
-
 ## Core Principles
 
 ### Concise is Key
 
-The context window is a public good. Skills share the context window with everything else the agent needs: system prompt, conversation history, other Skills' metadata, and the actual user request.
+The context window is a public good. Skills share the context window with everything else Claude needs: system prompt, conversation history, other Skills' metadata, and the actual user request.
 
-**Default assumption: the agent is already very smart.** Only add context the agent doesn't already have. Challenge each piece of information: "Does Claude really need this explanation?" and "Does this paragraph justify its token cost?"
+**Default assumption: Claude is already very smart.** Only add context Claude doesn't already have. Challenge each piece of information: "Does Claude really need this explanation?" and "Does this paragraph justify its token cost?"
 
 Prefer concise examples over verbose explanations.
 
@@ -73,7 +42,7 @@ Match the level of specificity to the task's fragility and variability:
 
 **Low freedom (specific scripts, few parameters)**: Use when operations are fragile and error-prone, consistency is critical, or a specific sequence must be followed.
 
-Think of the agent as exploring a path: a narrow bridge with cliffs needs specific guardrails (low freedom), while an open field allows many routes (high freedom).
+Think of Claude as exploring a path: a narrow bridge with cliffs needs specific guardrails (low freedom), while an open field allows many routes (high freedom).
 
 ### Anatomy of a Skill
 
@@ -81,15 +50,15 @@ Every skill consists of a required SKILL.md file and optional bundled resources:
 
 ```
 skill-name/
-â”œâ”€â”€ SKILL.md (required)
-â”‚   â”œâ”€â”€ YAML frontmatter metadata (required)
-â”‚   â”‚   â”œâ”€â”€ name: (required)
-â”‚   â”‚   â””â”€â”€ description: (required)
-â”‚   â””â”€â”€ Markdown instructions (required)
-â””â”€â”€ Bundled Resources (optional)
-    â”œâ”€â”€ scripts/          - Executable code (Python/Bash/etc.)
-    â”œâ”€â”€ references/       - Documentation intended to be loaded into context as needed
-    â””â”€â”€ assets/           - Files used in output (templates, icons, fonts, etc.)
+├── SKILL.md (required)
+│   ├── YAML frontmatter metadata (required)
+│   │   ├── name: (required)
+│   │   └── description: (required)
+│   └── Markdown instructions (required)
+└── Bundled Resources (optional)
+    ├── scripts/          - Executable code (Python/Bash/etc.)
+    ├── references/       - Documentation intended to be loaded into context as needed
+    └── assets/           - Files used in output (templates, icons, fonts, etc.)
 ```
 
 #### SKILL.md (required)
@@ -106,20 +75,20 @@ Every SKILL.md consists of:
 Executable code (Python/Bash/etc.) for tasks that require deterministic reliability or are repeatedly rewritten.
 
 - **When to include**: When the same code is being rewritten repeatedly or deterministic reliability is needed
-- **Example**: `scripts/rotate_pdf.py` for PDF rotation tasks
+- **Example**: `scripts/scan-mojibake.py` (from qnfo-core) for pre-commit text integrity checks
 - **Benefits**: Token efficient, deterministic, may be executed without loading into context
-- **Note**: Scripts may still need to be read by the agent for patching or environment-specific adjustments
+- **Note**: Scripts may still need to be read by Claude for patching or environment-specific adjustments
 
 ##### References (`references/`)
 
-Documentation and reference material intended to be loaded as needed into context to inform the agent's process and thinking.
+Documentation and reference material intended to be loaded as needed into context to inform Claude's process and thinking.
 
 - **When to include**: For documentation that Claude should reference while working
 - **Examples**: `references/finance.md` for financial schemas, `references/mnda.md` for company NDA template, `references/policies.md` for company policies, `references/api_docs.md` for API specifications
 - **Use cases**: Database schemas, API documentation, domain knowledge, company policies, detailed workflow guides
-- **Benefits**: Keeps SKILL.md lean, loaded only when the agent determines it's needed
+- **Benefits**: Keeps SKILL.md lean, loaded only when Claude determines it's needed
 - **Best practice**: If files are large (>10k words), include grep search patterns in SKILL.md
-- **Avoid duplication**: Information should live in either SKILL.md or references files, not both. Prefer references files for detailed information unless it's truly core to the skillâ€”this keeps SKILL.md lean while making information discoverable without hogging the context window. Keep only essential procedural instructions and workflow guidance in SKILL.md; move detailed reference material, schemas, and examples to references files.
+- **Avoid duplication**: Information should live in either SKILL.md or references files, not both. Prefer references files for detailed information unless it's truly core to the skill—this keeps SKILL.md lean while making information discoverable without hogging the context window. Keep only essential procedural instructions and workflow guidance in SKILL.md; move detailed reference material, schemas, and examples to references files.
 
 ##### Assets (`assets/`)
 
@@ -173,7 +142,7 @@ Extract text with pdfplumber:
 - **Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns
 ```
 
-the agent loads FORMS.md, REFERENCE.md, or EXAMPLES.md only when needed.
+Claude loads FORMS.md, REFERENCE.md, or EXAMPLES.md only when needed.
 
 **Pattern 2: Domain-specific organization**
 
@@ -181,28 +150,28 @@ For Skills with multiple domains, organize content by domain to avoid loading ir
 
 ```
 bigquery-skill/
-â”œâ”€â”€ SKILL.md (overview and navigation)
-â””â”€â”€ reference/
-    â”œâ”€â”€ finance.md (revenue, billing metrics)
-    â”œâ”€â”€ sales.md (opportunities, pipeline)
-    â”œâ”€â”€ product.md (API usage, features)
-    â””â”€â”€ marketing.md (campaigns, attribution)
+├── SKILL.md (overview and navigation)
+└── reference/
+    ├── finance.md (revenue, billing metrics)
+    ├── sales.md (opportunities, pipeline)
+    ├── product.md (API usage, features)
+    └── marketing.md (campaigns, attribution)
 ```
 
-When a user asks about sales metrics, the agent only reads sales.md.
+When a user asks about sales metrics, Claude only reads sales.md.
 
 Similarly, for skills supporting multiple frameworks or variants, organize by variant:
 
 ```
 cloud-deploy/
-â”œâ”€â”€ SKILL.md (workflow + provider selection)
-â””â”€â”€ references/
-    â”œâ”€â”€ aws.md (AWS deployment patterns)
-    â”œâ”€â”€ gcp.md (GCP deployment patterns)
-    â””â”€â”€ azure.md (Azure deployment patterns)
+├── SKILL.md (workflow + provider selection)
+└── references/
+    ├── aws.md (AWS deployment patterns)
+    ├── gcp.md (GCP deployment patterns)
+    └── azure.md (Azure deployment patterns)
 ```
 
-When the user chooses AWS, the agent only reads aws.md.
+When the user chooses AWS, Claude only reads aws.md.
 
 **Pattern 3: Conditional details**
 
@@ -270,7 +239,7 @@ To turn concrete examples into an effective skill, analyze each example by:
 Example: When building a `pdf-editor` skill to handle queries like "Help me rotate this PDF," the analysis shows:
 
 1. Rotating a PDF requires re-writing the same code each time
-2. A `scripts/rotate_pdf.py` script would be helpful to store in the skill
+2. A bundled script (e.g., `scripts/validation.py`) would be helpful to store in the skill
 
 Example: When designing a `frontend-webapp-builder` skill for queries like "Build me a todo app" or "Build me a dashboard to track my steps," the analysis shows:
 
@@ -375,7 +344,7 @@ The packaging script will:
 
 If validation fails, the script will report the errors and exit without creating a package. Fix any validation errors and run the packaging command again.
 
-### Iterate
+### Step 6: Iterate
 
 After testing the skill, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
 
@@ -385,5 +354,3 @@ After testing the skill, users may request improvements. Often this happens righ
 2. Notice struggles or inefficiencies
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again
-
-**Quality audit:** After significant changes, load the `kaizen` skill and run a red-team review (Phases 0-5) to catch staleness, contradictions, missing gates, and cross-skill drift before distribution.

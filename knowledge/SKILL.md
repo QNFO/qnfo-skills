@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.5
+version: 2.7
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,7 +9,19 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.7 UPDATE (2026-08-04, kaizen — stale KG baseline + N-2 frontmatter fix):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR KG deployment).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Stale cached baseline removed from authoritative positions** — the body's
+>     "Last verified: 2026-07-28 live (2,500 nodes, 1,492 edges, 1,569 Paper nodes)" and
+>     Step 0b's identical claim contradicted this skill's OWN v2.6 banner (2026-08-04 baseline:
+>     2,569/908) and the live tool description (2,518/831). Cached numbers now reference the
+>     v2.6 reconciliation baseline with an explicit "always query live" caveat.
+> (2) [SOFT] **N-2 frontmatter fixed** — frontmatter said 2.5 while header/footer said 2.6.
+> Cross-reference: kaizen v1.20, research v2.65, qnfo-core N-2, KIF-23,
+> session 1tz85-vMiqh2TyFySznBA.
 
+# KNOWLEDGE — v2.7
 > **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
 > HARD: 0. SOFT: 2. DESIGN: 1.
@@ -27,11 +39,13 @@ self_sufficient: true
 > Cross-reference: kaizen v1.18, research v2.62, KIF-23.
 
 
+
+
+
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
 > infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
-
 
 > **v2.3 UPDATE (2026-08-04, kaizen — zenodo_doi ownership gate):**
 > Red-team: blanket `zenodo_url` backfill incident (session dXXJ3TxRQ1VHzGdAyp-lo)
@@ -52,7 +66,7 @@ self_sufficient: true
 > source for memory operations. Updated Cross-System Discovery Hierarchy to include
 > MCP-first retrieval paths. See `cloudflare` skill v3.9 §MCP-Driven Operations.
 
-# KNOWLEDGE — v2.5 (Ultra-Consolidated KG + Memory + AutoRAG)
+# KNOWLEDGE — v2.7 (Ultra-Consolidated KG + Memory + AutoRAG)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A KG edge/node write or a
@@ -103,7 +117,7 @@ for label in stats.get('nodeLabels', []):
     print(f"  {label['label']}: {label['count']}")
 ```
 
-**Current state (live):** Query at session start via `query_graph('stats')`. DO NOT rely on static cached numbers — KG state evolves across sessions. Last verified: 2026-07-28 live (2,500 nodes, 1,492 edges, 1,569 Paper nodes).
+**Current state (live):** Query at session start via `query_graph('stats')`. DO NOT rely on static cached numbers — KG state evolves across sessions. Last verified: 2026-08-04 live (2,569 nodes / 908 edges / 14 GovernancePolicy per v2.6 reconciliation baseline). NOTE: edge count 908 vs ~1,433 prior reflects paper-sync node growth without edge seeding — document in reconciliation runs, not data loss. Tool description may report a newer snapshot (e.g. 2,518/831) — always query live, never cite these cached numbers as current..
 
 ## Reusable Scripts
 
@@ -228,7 +242,7 @@ results = query_graph('query', {
 The Knowledge Graph is the canonical ecosystem registry. MUST query `/stats` before claiming "comprehensive" or "all" discovery.
 
 ### Step 0b: KG Label Counts
-Query live labels at session start. Last verified 2026-07-28 live:
+Query live labels at session start. Last verified 2026-08-04 live (baseline per v2.6 banner — 2,569 nodes / 908 edges; per-label counts below are the 2026-07-28 snapshot, superseded by live query):
 ```
 Paper: 1569, CloudflareAsset: 120, R2Object: 105, Project: 94
 Concept: 66, Skill: 60, ResearchQuestion: 49, Finding: 45
@@ -370,6 +384,5 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | Storing memory without category | Always categorize: user_preference/project_fact/task_outcome/heuristic/anti_pattern |
 | Ignoring search_memories for context | Semantic search finds decisions by meaning, not keywords |
 | **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
-Current: **v2.6**** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
-
+Current: **v2.7****** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 

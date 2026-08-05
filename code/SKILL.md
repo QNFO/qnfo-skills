@@ -1,7 +1,7 @@
 ---
 name: code
 description: Code quality review, security audit, and MCP server building. Analyze code for quality/security/anti-patterns with specific line numbers. Build MCP servers in Python (FastMCP) or Node/TypeScript (MCP SDK) for integrating external APIs. Deploy MCP servers as Cloudflare Workers when possible.
-version: "2.4"
+version: 2.5
 triggers: ["code review", "security audit", "code quality", "best practices", "anti-pattern", "review this code", "audit this", "MCP", "Model Context Protocol", "FastMCP", "MCP server", "API integration", "tool building", "external API", "MCP SDK", "type safety", "SQL injection", "secrets", "race condition", "error handling", "code smell", "refactor"]
 related: ["cloudflare"]
 priority: 2
@@ -30,7 +30,7 @@ self_sufficient: true
 > `cloudflare-auditlogs` (deploy trail). See `cloudflare` skill v3.9
 > §MCP-Driven Operations for the full decision matrix.
 
-# CODE — v2.4
+# CODE — 2.5
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
