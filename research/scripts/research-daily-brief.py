@@ -7,7 +7,7 @@ Usage:
 Daily mode: Fetches yesterday's arXiv papers, filters by QNFO keyword taxonomy.
 Weekly mode: Same + OpenAlex (wide window, Python-filtered), catches journal papers arXiv misses.
 """
-import urllib.request, urllib.parse, json, time, sys, re
+import urllib.request, urllib.parse, json, time, sys, re, os
 from xml.etree import ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
@@ -350,6 +350,64 @@ def briefing(papers, date_str, mode):
     return '\n'.join(out)
 
 
+# ── Email Archive (optional --email flag) ──
+def email_archive(briefing_text, recipient):
+    """POST briefing to qnfo-email Worker /send for durable archive.
+    Key resolution: EMAIL_API_KEY env -> Cloudflare Worker settings API. Never hardcoded."""
+    import json as _json
+    key = os.environ.get('EMAIL_API_KEY', '')
+    if not key:
+        # Fetch from Cloudflare Worker settings (plain_text binding API_KEY)
+        cf_tok = os.environ.get('CLOUDFLARE_API_TOKEN', '')
+        if not cf_tok:
+            try:
+                with open(r'C:\Users\LENOVO\keys.json', 'r', encoding='utf-8') as f:
+                    cf_tok = _json.load(f).get('cloudflare_api_token', '')
+            except Exception:
+                pass
+        if not cf_tok:
+            print('  [email] No CLOUDFLARE_API_TOKEN — skipping email archive', flush=True)
+            return False
+        try:
+            acct_req = urllib.request.Request('https://api.cloudflare.com/client/v4/accounts',
+                                              headers={'Authorization': f'Bearer {cf_tok}', 'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(acct_req, timeout=15) as r:
+                acct = _json.loads(r.read())['result'][0]['id']
+            s_req = urllib.request.Request(f'https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/qnfo-email/settings',
+                                           headers={'Authorization': f'Bearer {cf_tok}', 'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(s_req, timeout=15) as r:
+                bindings = _json.loads(r.read()).get('result', {}).get('bindings', [])
+            for b in bindings:
+                if b.get('name') == 'API_KEY':
+                    key = b.get('text', '')
+                    break
+        except Exception as e:
+            print(f'  [email] Key fetch failed: {e} — skipping email archive', flush=True)
+            return False
+    if not key:
+        print('  [email] No API key — skipping email archive', flush=True)
+        return False
+    try:
+        payload = _json.dumps({
+            'to': recipient,
+            'subject': f'QNFO Research Briefing — {datetime.now(timezone.utc).strftime("%Y-%m-%d")}',
+            'body': briefing_text,
+        }).encode()
+        req = urllib.request.Request('https://qnfo-email.q08.workers.dev/send', method='POST', data=payload, headers={
+            'Authorization': f'Bearer {key}',
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0',
+        })
+        with urllib.request.urlopen(req, timeout=20) as r:
+            resp = r.read().decode('utf-8', errors='replace')
+            ok = '"success":true' in resp or '"success": true' in resp
+            print(f'  [email] Archived to {recipient}: {"OK" if ok else resp[:150]}', flush=True)
+            return ok
+    except Exception as e:
+        print(f'  [email] Send failed: {e} — skipping', flush=True)
+        return False
+
+
 # ── Main ──
 def main():
     import argparse
@@ -358,6 +416,8 @@ def main():
                     help='daily = arXiv only | weekly = arXiv + OpenAlex (default: daily)')
     ap.add_argument('--days', type=int, default=1,
                     help='Days to scan (daily defaults to 1, weekly to 3)')
+    ap.add_argument('--email', default='',
+                    help='Email address to archive the briefing to (e.g. alerts@qnfo.org)')
     args = ap.parse_args()
 
     if args.mode == 'weekly':
@@ -390,7 +450,11 @@ def main():
     print(f'Matched: {len(matched)} papers', flush=True)
 
     print()
-    print(briefing(matched, date_start.strftime('%Y-%m-%d'), args.mode))
+    brief_text = briefing(matched, date_start.strftime('%Y-%m-%d'), args.mode)
+    print(brief_text)
+
+    if args.email:
+        email_archive(brief_text, args.email)
 
 
 if __name__ == '__main__':
