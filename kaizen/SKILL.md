@@ -5898,6 +5898,22 @@ from one that has never been audited.
 
 ## Calibration Register (DESIGN — forward-looking fragility predictions)
 
+```
+[CHECK: 2026-08-12] N-2-SCAN-FALSE-POSITIVE-1 will hold through +3 monitoring checkpoints: no skill
+version will be edited based on regex-scan flags alone without raw-line anchor verification. Risk of
+regression: [MODERATE] — regex scans are convenient; the verify step adds friction.
+Likelihood: [HIGH] — canonical case (scan2 phantom drifts) documented in v1.46 banner + anti-pattern table.
+
+[CHECK: 2026-08-12] STALE-CLONE-ACCUM-1 will hold: thin_client.py v2.7 %TEMP% scan will flag any future
+stale clone at closeout (52 clones/156.7MB found at introduction). Risk of regression: [LOW] — scan
+category now part of the standard audit; proven live same-session.
+Likelihood: [HIGH] — the scan found 52 immediately; the enforcement loop is closed.
+
+[CHECK: 2026-08-12] AUTOCRLF-VERIFY-1 will prevent at least one false 'skill out of sync' claim: no
+raw-byte diff will be used to declare git/live drift on Windows. Risk of regression: [MODERATE] — git
+status output is habitually trusted.
+Likelihood: [HIGH] — 21 of 24 copied files were proven blob-identical in the canonical case.
+```
 
 
 
