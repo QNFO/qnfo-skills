@@ -5,7 +5,7 @@ version: 1.0
 kif_tags: [PERSONAL]
 ---
 
-# PERSONAL KNOWLEDGE — v1.2 (2026-08-05)
+# PERSONAL KNOWLEDGE — v1.3 (2026-08-05)
 
 > **PURPOSE:** The user uses DeepChat as the single interface for ALL information
 > needs. This skill is the integration path for their PERSONAL files — everything
@@ -41,6 +41,22 @@ kif_tags: [PERSONAL]
 >     | grep profile-readme`.
 > Cross-reference: kaizen v1.38 GITHUB-CDN-PROPAGATION-1 (cross-refs point here),
 > git-github v2.16, session IfYDah5TSY5gNMY0S4OT5.
+
+> **v1.3 UPDATE (2026-08-05, kaizen — THIN-CLIENT CANONICAL ASSET: deploy script):**
+> Red-team: direct parent-agent audit of session IfYDah5TSY5gNMY0S4OT5 closeout
+> (thin-client mandate enforcement — reusable scripts MUST NOT live on local disk).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **Canonical deploy script created** — `scripts/deploy-profile-readme.py`,
+>     committed to QNFO/qnfo-skills (PRIMARY canonical) + mirrored to R2 deepchat
+>     via skill-sync.js (SECONDARY durable). Live-dir copy is runtime view only.
+>     Script performs the full pipeline in ONE turn (clone -> copy -> commit -F ->
+>     push -> ls-remote -> curl profile verify -> rmdir) and auto-prints
+>     SHARE-TO-PROFILE-REQUIRED when the profile page is not yet serving.
+> (2) [DESIGN] **Runbook updated** — deploy pipeline now references the canonical
+>     script instead of an inline code pattern.
+> Cross-reference: git-github v2.17 THIN-CLIENT CANONICAL ASSET PROTOCOL, kaizen
+> v1.39, session IfYDah5TSY5gNMY0S4OT5.
+
 
 
 ## Separation Mandate (HARD — user directive 2026-08-04)
@@ -146,11 +162,15 @@ The personal resume/portfolio repo is **rwnq8/resume** (transferred from QNFO/re
 
 ### Deploy pipeline (fully agent-executable, zero manual steps)
 
-```python
+```bash
 # 1. Source file: C:\Users\LENOVO\AppData\Local\Temp\resume-build\rwnq8-README.md
 #    (or wherever the latest README draft lives)
-# 2. One-shot deploy script pattern (git-github TEMP volatility compliant):
-#    clone -> overwrite README.md -> git commit -F <msgfile> -> push -> ls-remote verify -> rmdir
+# 2. CANONICAL DEPLOY SCRIPT (thin-client asset — lives in git + R2, NEVER on local disk):
+python "C:\Users\LENOVO\.deepchat\skills\personal-knowledge\scripts\deploy-profile-readme.py" --src <path-to-README.md>
+#    Canonical location: QNFO/qnfo-skills:personal-knowledge/scripts/deploy-profile-readme.py
+#    (primary) + R2 deepchat bucket via skill-sync.js (secondary durable mirror).
+#    The script performs the full pipeline: clone -> overwrite README.md -> commit -F
+#    -> push -> ls-remote verify -> curl profile-page verify -> rmdir cleanup, all in ONE turn.
 ```
 
 Use the SAME deploy script shape as `git-github` SAME-TURN-COMMIT: clone to %TEMP%,
@@ -182,7 +202,8 @@ temp is volatile.
 | Profile repo | `rwnq8/rwnq8` (public, main branch, README.md in root) |
 | Resume/portfolio repo | `rwnq8/resume` (public; transferred from QNFO 2026-08-05) |
 | Social links in README | LinkedIn, ResearchGate, ORCID, Zenodo, Resume DOI (10.5281/zenodo.21737024) |
-| Profile promotion | **MUST click "Share to Profile"** on the repo page after first push (CLI-created repos are not auto-promoted). Verified: appears immediately after click, server-side rendered (GITHUB-CDN-PROPAGATION-1 revised). |
+| Profile promotion | **MUST click "Share to Profile"** on the repo page after first push (CLI-created repos are not auto-promoted). Verified: appears immediately after click, server-side rendered (GITHUB-CDN-PROPAGATION-1 revised). The deploy script auto-detects this and prints SHARE-TO-PROFILE-REQUIRED when the profile page is not yet serving the README. |
+| Canonical deploy script | `personal-knowledge/scripts/deploy-profile-readme.py` — PRIMARY: QNFO/qnfo-skills git; SECONDARY: R2 deepchat via skill-sync.js; runtime: live skill dir. Full pipeline: clone -> copy -> commit -F -> push -> ls-remote -> curl verify -> rmdir. |
 
 ### Repo transfer pattern (if user asks to move a repo)
 
@@ -201,7 +222,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 | **PERSONAL-STATS-ONLY-1:** reporting "filesIndexed: N" without actually searching | The user wants ANSWERS, not index stats. Always run /search?q= for their actual question. |
 | **PDF-SKIP-1:** telling the user "PDFs aren't indexed" instead of extracting them | Run the extraction helper + rclone to _extracted/ so the indexer picks them up. |
 | **SINGLE-SOURCE-1:** answering from only the search endpoint | Bridge memories + conversations too — DeepChat is the single interface; the answer should be too. |
-| **PROFILE-README-DEPLOY-1:** treating the GitHub profile README as a manual user task | Fully agent-executable: gh CLI + git + Python deploy script. See runbook above. The user has explicitly mandated ZERO manual steps (MANUAL-DELEGATE-1). |
+| **PROFILE-README-DEPLOY-1:** treating the GitHub profile README as a manual user task | Fully agent-executable: run the canonical script `personal-knowledge/scripts/deploy-profile-readme.py` (git primary / R2 secondary). The user has explicitly mandated ZERO manual steps (MANUAL-DELEGATE-1). |
 | **GITHUB-CDN-PROPAGATION-1 (cross-ref, REVISED 2026-08-05):** profile README does NOT auto-appear for CLI/API-created profile repos | **THE REAL FIX is the "Share to Profile" button** on the repo page (github.com/{username}/{username} -> "Share to Profile"). The repo page renders the README but the PROFILE page stays empty until this button is clicked — it is NOT a 5-30min CDN wait. Verified 2026-08-05: rwnq8/rwnq8 rendered on repo page for 40+ min with zero profile-page markdown; clicking "Share to Profile" made it appear on github.com/rwnq8 IMMEDIATELY (server-side rendered, confirmed via curl). Repos created via `gh repo create` need this manual promotion; the editor banner ("is a special repository") confirms recognition but does NOT promote it. |
 | **PROFILE-README-FABRICATE-1 (cross-ref):** badge/tool claims without resume attestation | HARD GATE. Grep the actual resume/portfolio for every tool badge before adding it. |
 
