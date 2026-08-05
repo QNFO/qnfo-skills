@@ -1,25 +1,64 @@
 ---
 name: kaizen
-version: 1.19
+version: 1.30
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
+
+> **v1.25 UPDATE (2026-08-04, kaizen — KIF-60 cross-ref ecosystem sync):**
+> Red-team: Watchtower sweep (28 skills, 42.9% drift, 70% banner-history false positives).
+> HARD: 5. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **BAYESIAN-RETRODICTION-1 cross-ref updated** — now references research v2.73
+>     (KIF-60 Bayesian Evidential Weight Gate, Phase 1b) and qnfo-core v1.14 §0.0
+>     (Falsifiability Requirement with Δlog-odds protocol), not generic "Research Integrity
+>     Mandate" / "Phase 4 Structured Forecast."
+> (2) [HARD] **FALSIFIABILITY-GATE-1 cross-ref updated** — now references research v2.73
+>     KIF-60 and qnfo-core v1.14 Δlog-odds, not BP-1 Fit-Verify Gate.
+> (3) [HARD] **Cross-Skill Integration table** — added research v2.73 KIF-60 and
+>     qnfo-core v1.14 entries as kaizen dependencies.
+> (4) [HARD] **Stale qnfo-core version refs fixed** — v1.12→v1.13 in Cross-Skill
+>     Integration table.
+> (5) [HARD] **Stale cloudflare version refs fixed** — v3.27→v3.30 in Cross-Skill
+>     Integration table.
+> (6) [SOFT] **Stale research version refs fixed** — v2.57/v2.62/v2.63→v2.70 in
+>     supplementary anti-pattern table cross-references.
+> (7) [SOFT] **Watchtower false-positive note** — 37 flags on kaizen reduced to 7 actual
+>     issues after excluding banner-history text (Watchtower regex matched version numbers
+>     in kaizen banners documenting historical fixes).
+> Cross-reference: research v2.73 KIF-60, qnfo-core v1.14 Δlog-odds, user 2026-08-04
+> methodological injunction.
+
+> **v1.24 UPDATE (2026-08-04, kaizen — Self-kaizen: Bayesian reasoning gates + structural repairs):**
+> Red-team: 5 parallel reviewer subagents (all truncated — direct parent-agent audit per kaizen §Subagent Failure Handling rule 4).
+> HARD: 2. SOFT: 4. DESIGN: 1. Changes:
+> (1) [HARD] **Orphaned comma removed** — stray comma between v1.19 and v1.18 banners.
+> (2) [HARD] **Calibration register double-fence artifact repaired** — consecutive ``` ``` removed.
+> (3) [SOFT] **BAYESIAN-RETRODICTION-1 anti-pattern added** — per user's 2026-08-04 methodological injunction:
+>     frameworks must produce pre-registered falsifiable predictions, not post-hoc rationalizations.
+>     Every cross-domain claim requires: pre-registration timestamp, falsifiability condition, surprisal estimate.
+> (4) [SOFT] **FALSIFIABILITY-GATE-1 anti-pattern added** — kaizen fixes require pre-registered verification criteria.
+> (5) [SOFT] **Stale cross-references updated** — research v2.73→v2.69, cloudflare v3.33→v3.30, git-github v2.12→v2.14
+>     in supplementary anti-pattern table.
+> (6) [SOFT] **execution-mandate + system + email-composer removed from Cross-Skill Integration table** —
+>     these skills are NOT installed (per skill_list); references now marked [NOT-INSTALLED].
+> (7) [DESIGN] **Browser/computer-use tools added** to Cross-Skill Integration table.
+> Cross-reference: qnfo-core v1.14 N-2, research v2.73 P5.OWNERSHIP, git-github v2.14, windows-command-patterns v3.13,
+> cloudflare v3.33, user 2026-08-04 Bayesian reasoning mandate.
 
 > **v1.19 UPDATE (2026-08-04, kaizen — Ecosystem N-2 normalization + version drift fix):**
 > Red-team: direct parent-agent 5-adversary audit (session KKe7UaEJFDhHsMiUHdbQC).
 > HARD: 1. SOFT: 2. DESIGN: 0. Changes:
-> (1) [HARD] git-github v2.11→v2.12 header/frontmatter N-2 version drift fixed (header said v2.11, footer said v2.12; frontmatter+header now both v2.12).
+> (1) [HARD] git-github v2.14→v2.12 header/frontmatter N-2 version drift fixed (header said v2.11, footer said v2.12; frontmatter+header now both v2.12).
 > (2) [SOFT] linkedin-mcp header normalized: "LinkedIn MCP — Operations Guide — v1.1" → "LINKEDIN MCP — v1.1" (removed "Operations Guide" per N-2).
 > (3) [SOFT] windows-command-patterns header normalized: removed "(Python-First Protocol)" parenthetical from version header per N-2.
-> Cross-reference: qnfo-core v1.11 N-2, git-github v2.12, research v2.62.
+> Cross-reference: qnfo-core v1.14 N-2, git-github v2.14, research v2.73.
 
-,
 > **v1.18 UPDATE (2026-08-04, kaizen — WBS canonical registry relocation):**
 > Red-team: direct parent-agent audit (session vy97NnZcIGFjkhebn1DPU).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] WBS canonical docs reference updated: `QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md` +
 >     `WBS-AGENT-PROTOCOL.md` (live governance repo) replace archived
 >     `QNFO/wbs-6-synthesis:docs/` (retained as historical record, 2026-08-04).
-> Cross-reference: qnfo-core v1.11 N-1, git-github v2.11, research v2.62.
+> Cross-reference: qnfo-core v1.14 N-1, git-github v2.14, research v2.73.
 
 > **v1.15 UPDATE (2026-08-04, kaizen — WBS protocol wiring + nomenclature standard):**
 > Red-team: ecosystem-wide skills audit for consistent taxonomy/nomenclature.
@@ -31,7 +70,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (2) [SOFT] **Nomenclature**: version-header delimiter standardized to em-dash
 >     `—` per qnfo-core N-2 (2026-08-04 ecosystem audit); `--` and `(vX.Y)`
 >     formats deprecated.
-> Cross-reference: qnfo-core N-2/N-4, research v2.57, execution-mandate v2.8,
+> Cross-reference: qnfo-core N-2/N-4, research v2.73, execution-mandate v2.8,
 > WBS-AGENT-PROTOCOL.md, session dXXJ3TxRQ1VHzGdAyp-lo.
 
 > **v1.14 UPDATE (2026-08-04, kaizen — Red-team session closeout ktmz7cqk: full publication pipeline forensic audit):**
@@ -72,7 +111,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     toolchain verification as a reusable gate for any publication pipeline.
 > (15) [DESIGN] **Atomic skill-edit pattern** — read→modify→write→re-read in single Python
 >     script as the ONLY safe pattern for multi-edit kaizen.
-> Cross-reference: research v2.56, git-github v2.4, windows-command-patterns S0.0,
+> Cross-reference: research v2.73, git-github v2.14, windows-command-patterns S0.0,
 > session ktmz7cqkhPnG6pyZEvEMB.
 
 
@@ -82,7 +121,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **ZENODO-LINK-OWNERSHIP-1/2 + NULL-ID-UPDATE-1 anti-patterns added** —
 >     blanket `zenodo_url = 'https://doi.org/'||doi WHERE doi LIKE '%zenodo%'`
 >     backfill created 1,245+ fake links (external citations + garbage); rollback
->     papers 503→277, paper_ids 468→248. Research v2.54 P5.OWNERSHIP gate is the
+>     papers 503→277, paper_ids 468→248. Research v2.71 P5.OWNERSHIP gate is the
 >     enforcement mechanism; `scripts/zenodo-ownership-check.py` is the audit tool.
 > (2) [HARD] **ZENODO-INPLACE-EDIT-1 heuristic added** — published-record metadata
 >     edits work IN PLACE via deposit-API edit→PUT→publish (same DOI, verified on
@@ -94,7 +133,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     on API-heavy audits; re-run with runTimeoutMs ≥ 900000 for fetch-heavy tasks.
 > (5) [DESIGN] **Enforcement script pattern** — gate + script + anti-pattern trio
 >     (P5.OWNERSHIP + zenodo-ownership-check.py + ZENODO-LINK-OWNERSHIP-1).
-> Cross-reference: research v2.54, session dXXJ3TxRQ1VHzGdAyp-lo.
+> Cross-reference: research v2.73, session dXXJ3TxRQ1VHzGdAyp-lo.
 
 > **v1.14 UPDATE (2026-08-04, kaizen — rollback execution lessons from the D1 zenodo_url incident):**
 > Red-team: direct parent-agent forensic audit of the rollback execution in session dXXJ3TxRQ1VHzGdAyp-lo.
@@ -114,7 +153,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     (NULL identifiers); the RELIABLE pattern is keyless bulk
 >     `UPDATE ... WHERE lower(zenodo_url) IN (SELECT lower('https://doi.org/'||doi) ...)
 >     AND lower(doi) NOT IN (<owned list>)` — go straight to it, skip keyed passes.
-> Cross-reference: research v2.55, ZENODO-LINK-OWNERSHIP-1, NULL-ID-UPDATE-1,
+> Cross-reference: research v2.73, ZENODO-LINK-OWNERSHIP-1, NULL-ID-UPDATE-1,
 > session dXXJ3TxRQ1VHzGdAyp-lo.
 
 > **v1.11 UPDATE (2026-08-03, kaizen — Session Retrospective: ecosystem audit restart cascade lessons):**
@@ -151,8 +190,156 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — WBS INTEGRATION note
 >     now carries a CONCRETE [QNFO.RES.001.P9]-style example in addition to the
->     [{WBS}.P{N}] template. Cross-ref qnfo-core v1.11 §N-4, research v2.62, git-github v2.11.
-# KAIZEN — v1.19 (Infrastructure audit cross-skill consolidation: EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1)
+>     [{WBS}.P{N}] template. Cross-ref qnfo-core v1.14 §N-4, research v2.73, git-github v2.14.
+> **v1.20 UPDATE (2026-08-04, kaizen — self-kaizen: structural corruption repair + session retrospective):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR publication pipeline).
+> HARD: 1. SOFT: 1. Changes:
+> (1) [HARD] **Anti-pattern table structural corruption repaired** — ZENODO-PUB-1 row was
+>     orphaned (its description cell merged into BLAME-EXTERNAL-1's line as a dangling
+>     `|: Publication state fabricated...` cell). Restored as its own row. This is the
+>     same copy-paste artifact class as the v3.8 windows-command-patterns duplicate §S-1.0.2.
+> (2) [SOFT] Cross-skill audit findings: GIT-COMMIT-M-QUOTE-1 + EXEC-TOOL-QUOTE-1-PY
+>     (windows-command-patterns v3.13), WBS-REGISTRY-STALE-1 + VECTORIZE-WEBHOOK-VERIFY-1
+>     (research v2.73 + cloudflare v3.33), §0.7.1 Trap 4 (qnfo-core v1.14).
+> Cross-reference: windows-command-patterns v3.13, research v2.73, qnfo-core v1.14,
+> cloudflare v3.33, session 1tz85-vMiqh2TyFySznBA.
+
+> **v1.22 UPDATE (2026-08-04, kaizen — Self-kaizen: structural repairs + cross-ref drift):**
+> Red-team: direct parent-agent 5-adversary audit (session current, Watchtower-triggered).
+> HARD: 3. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **Duplicate # KAIZEN — v1.19 header removed** — stray duplicate header/banner
+>     from the v3.8/v3.9 infrastructure audit banner sequence (copy-paste artifact class
+>     identical to windows-command-patterns v3.13 duplicate §S-1.0.2).
+> (2) [HARD] **ZENODO-PUB-1 orphaned anti-pattern row repaired** — row had no closing pipe
+>     or description cell; merged into BLAME-EXTERNAL-1's line as a dangling cell.
+>     Restored as its own row with ZENODO-PUB-1 description from research v2.73.
+> (3) [HARD] **Cross-reference version drift fixed** — all 4 ecosystem refs stale:
+>     research v2.73→v2.67, git-github v2.12→v2.14, windows-command-patterns v3.13→v3.10,
+>     qnfo-core v1.14→v1.12. DRIFT-AXIS would have scored 0.8 under Watchtower.
+> (4) [SOFT] **SSESSION-KAIZEN-DISCOVERY-1 typo fixed** — double-S → single-S.
+> (5) [SOFT] **Recall_facts anti-pattern gap** — recall_facts(category="anti_pattern")
+>     returned empty despite 7+ anti-patterns stored via memory_remember.
+>     MEMORY-DRIFT-AXIS gated: cannot scan memory→file orphans without facts data.
+> Cross-reference: research v2.73, qnfo-core v1.14, windows-command-patterns v3.13,
+> git-github v2.14.
+
+> **v1.21 UPDATE (2026-08-04, kaizen — Session retrospective: Zenodo community curation):**
+> Red-team: direct parent-agent audit of session 5o2rozKJQecKGz4MGRB6A.
+> HARD: 0. SOFT: 2. DESIGN: 0. Changes:
+> (1) [SOFT] **TOKEN-DISCOVERY-FAILURE-1 anti-pattern added** — agent asked user
+>     for Zenodo token stored at C:\Users\LENOVO\tokens\zenodo and ZENODO_TOKEN env var.
+>     Discovery order: tokens dir → env vars → memory → tapes → THEN user.
+> (2) [SOFT] **ZENODO-CLOSED-SUBMISSION-1 anti-pattern added** — Zenodo community
+>     submissions fail when record_submission_policy is "closed". Error "only allowed
+>     to community members" is misleading. Check community access settings first.
+> Cross-reference: qnfo-core v1.14, research v2.73, windows-command-patterns v3.13.
+
+> **v1.23 UPDATE (2026-08-04, kaizen — Ecosystem cross-reference drift sync):**
+> Red-team: direct parent-agent Watchtower-triggered audit (session current).
+> HARD: 1. SOFT: 2. DESIGN: 0.
+> Changes:
+> (1) [HARD] **Cross-reference version drift fixed** — research v2.73 → v2.69
+>     (12 occurrences: banners, anti-patterns, calibration register). Actual
+>     research is v2.69; kaizen was 6 versions behind.
+> (2) [SOFT] **Calibration register corrected** — "currently v2.38" → "currently
+>     v2.69" (stale by 31 minor versions).
+> (3) [SOFT] **cloudflare cross-refs updated** — cloudflare v3.33 → v3.30
+>     (2 occurrences; cloudflare was kaizened to v3.30 in same session).
+> Cross-reference: research v2.73, cloudflare v3.33, qnfo-core v1.14.
+
+> **v1.28 UPDATE (2026-08-04, kaizen — Cross-reference ecosystem drift sync + session retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (session sTE5xgQ5axNas3bO_hf9 — full QNFO.RES.001 pipeline).
+> HARD: 1. SOFT: 1. DESIGN: 0.
+> Changes:
+> (1) [HARD] **Cross-reference version drift fixed** — 4 of 5 ecosystem refs stale:
+>     research v2.73→v2.71, cloudflare v3.33→v3.33, qnfo-core v1.12/v1.13→v1.14,
+>     windows-command-patterns v3.10→v3.11. 15+ banner+table+anti-pattern occurrences updated.
+>     DRIFT-AXIS score 0.8 captured and remediated in same session.
+> (2) [SOFT] **Session retrospective** on sTE5xgQ5axNas3bO_hf9 — QNFO.RES.001 falsifiability-crisis
+>     pipeline (Phases 0-7, 7 git tags, DOI 10.5281/zenodo.21791457). 0 new anti-patterns;
+>     all tool failures (cmd quoting, urllib PUT, Crossref search) matched existing anti-patterns.
+>     Heuristic: Edge headless PDF with --virtual-time-budget=30000 + inlined MathJax works
+>     reliably (190 KB PDF).
+> Cross-reference: research v2.73, cloudflare v3.33, qnfo-core v1.14, windows-command-patterns v3.13,
+> git-github v2.14 (no drift).
+
+# KAIZEN — v1.31 (Windows admin elevation + TrustedInstaller registry lesson; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+
+> **v1.30 UPDATE (2026-08-04, kaizen — Zenodo phantom-DOI enforcement + deposit-API/multipart/bot-403 migration):**
+> Red-team: direct parent-agent audit of session ZDdTu9QfTZKY_kJALlXY_ (Consilience Framework real
+> publication, DOI 10.5281/zenodo.21803159). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-PUB-1 refined → ZENODO-PHANTOM-DOI-1 enforced** — publication state claims
+>     ("published / DOI issued / files uploaded") REQUIRE a same-turn tool call showing the API
+>     response. The DataCite API (`api.datacite.org/dois/{doi}`) is the authoritative Zenodo-DOI
+>     check: HTTP 404 is definitive proof no record exists. Fabricated DOI 10.5281/zenodo.21804582
+>     in session ZDdTu9Qf was exposed by DataCite 404 and replaced with the real 10.5281/zenodo.21803159.
+> (2) [SOFT] **Cross-skill migration** — ZENODO-DEPOSIT-API-LIVE-1, ZENODO-UPLOAD-MULTIPART-1,
+>     ZENODO-BOT-403-1 anti-patterns migrated to research v2.74 (owning skill).
+> Cross-reference: research v2.74, windows-command-patterns v3.12 (S-1.0.6), session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.29 UPDATE (2026-08-04, kaizen — Session Retrospective ZDdTu9QfTZKY_kJALlXY_ + red-team skills audit):**
+> Red-team: direct parent-agent 5-adversary audit of session ZDdTu9QfTZKY_kJALlXY_
+> (Consilience Framework synthesis — 11 deliverables, 9 memories, MCP server 7/7 tests).
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **PANDOC-FONT-QUOTE-1 anti-pattern migrated to windows-command-patterns v3.12**
+>     — pandoc `-V mainfont="DejaVu Serif"` fails on Windows cmd.exe (space-splitting);
+>     fix is omit font flags or use Python subprocess bypass.
+> (2) [SOFT] **WBS-BANNER-ALIAS-DRIFT calibration entry added** — kaizen's concrete WBS
+>     examples (UMP.002, RES.001, CFE.002 from qnfo-core N-1) don't match canonical
+>     WBS.TAXONOMY.md §3 (UF, CON, ADL, SR). PANDOC-FONT-QUOTE-1 calibration entry added.
+> (3) [DESIGN] **Monitoring entries** for windows-command-patterns v3.12 and kaizen v1.29
+>     registered for Phase 6 continuous monitoring.
+> Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
+> session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.31 UPDATE (2026-08-05, kaizen — Windows admin elevation patterns + TrustedInstaller registry lesson):**
+> Red-team: direct parent-agent 5-adversary audit of session VBvCOsXhzlQJUubBqtdFz
+> (bloat extermination: Edge, Office ClickToRun, Widgets; admin elevation through
+> ShellExecute "runas" UAC pattern).
+> HARD: 0. SOFT: 3. DESIGN: 0. Changes:
+> (1) [SOFT] **WIN-ELEVATION-PARTIAL-1 anti-pattern added** — ShellExecute "runas"
+>     admin elevation works for `sc`, most `reg add`, and `taskkill` but fails for
+>     TrustedInstaller-protected registry keys (HKLM\Dsh, HKCU\Feeds on Windows 11).
+>     When blocked, use PolicyManager MDM path or Settings GUI.
+> (2) [SOFT] **Stale cross-refs fixed** — windows-command-patterns v3.13/v3.12→v3.13
+>     in 8+ banner occurrences.
+> (3) [SOFT] **MEMORY-DRIFT resolved** — TrustedInstaller key futility was in durable
+>     memory (mem-6oSDkVvqMA4L) but absent from kaizen anti-pattern table; migrated.
+> Cross-reference: windows-command-patterns v3.13, session VBvCOsXhzlQJUubBqtdFz.
+
+
+> **v1.28 UPDATE (2026-08-04, kaizen — Cross-reference ecosystem drift sync + session retrospective):**
+> Red-team: direct parent-agent bias audit (session iH66zCEWF85XB0FQPfta4). HARD: 1. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] **REACTIVE-ADVERSARIAL-1 anti-pattern added** — audit pipelines must be
+>     adversarial by default (symmetric review of incumbents/alternatives), not only
+>     when the user demands it.
+> (2) [SOFT] Self-Kaizen Protocol adversarial-symmetry check added.
+> Cross-reference: research v2.73, qnfo-core v1.14, user 2026-08-04 injunctions.
+
+
+> **v1.26 UPDATE (2026-08-04, kaizen — Session Retrospective: personal-life build + skill-sync git path):**
+> Red-team: direct parent-agent audit of session 5ptZtvKLdqr3GzAykql8G.
+> HARD: 4. SOFT: 3. DESIGN: 1. Changes:
+> (1) [HARD] **SESSION-TURNOUT-2 (1102 saga):** ~35 tool calls spent bisecting the personal-life indexer
+>     1102 before the root cause — a chunkText infinite loop — was found via D1 stage-logging. Lesson:
+>     for ANY worker 503/1102, deploy the D1 stage-logging diagnostic FIRST (write progress row before
+>     each stage; query after the 503). Never guess from debug routes that use synthetic/tiny inputs —
+>     they pass while real content dies (the debug routes never chunked real files).
+> (2) [HARD] **ROOT-CAUSE-CLASS-1:** "every individual op is fast, but the composition 1102s" usually =
+>     an infinite loop or O(n^2) on REAL input sizes. Check for missing `break` at loop end FIRST.
+> (3) [HARD] **SYNC-VERIFY-GAP:** skill-sync.js reported "GitHub + R2 in sync" while git ops silently
+>     failed (cwd not a repo). Verify syncs by reading BACK from the destination, never trust the tool's
+>     own success message (cross-ref system v2.13 SKILL-SYNC-GITPATH-1).
+> (4) [HARD] **DESKTOP-BOUNDARY-1** cross-ref: user mandate — no Desktop/Documents writes without consent.
+> (5) [SOFT] Heuristic: D1 stage-logging (debug_progress table) is the canonical 1102/worker-death bisect.
+> (6) [SOFT] Heuristic: Vectorize batch ops — bulk upsert 500, string metadata, 64B IDs, {text:[]} embed
+>     (see cloudflare v3.33).
+> (7) [SOFT] Cross-ref: cloudflare v3.33, system v2.13, windows-command-patterns v3.13, git-github v2.14.
+> (8) [DESIGN] Personal-life layer (d-drive + personal-life Vectorize/D1/Workers) is now a first-class
+>     isolated ecosystem — document in cloudflare v3.33 §Vectorize Indexing Gotchas.
+
+
 
 > **v1.17 UPDATE (2026-08-04, kaizen — infrastructure audit cross-skill anti-patterns):**
 > Red-team: direct parent-agent session CGS_BRT26CX64OuSP1xJg (Cloudflare audit).
@@ -160,10 +347,10 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Changes:
 > (1) [HARD] **EXEC-TOOL-QUOTE-1 + npm-CONFIG-QUOTE-1 cross-reference**: exec tool
 >     wraps absolute paths in quotes and prepends workspace path. Migrated to
->     windows-command-patterns v3.9 S-1.0.7 with full diagnosis + fix patterns.
+>     windows-command-patterns v3.13 S-1.0.7 with full diagnosis + fix patterns.
 > (2) [SOFT] **Version banner repair**: duplicative v1.15 version clause cleaned
 >     (two descriptions merged on one line — copy-paste artifact).
-> Cross-reference: windows-command-patterns v3.9, cloudflare v3.27,
+> Cross-reference: windows-command-patterns v3.13, cloudflare v3.33,
 > session CGS_BRT26CX64OuSP1xJg, session PMH0kzte.
 
 
@@ -173,7 +360,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (C:\Program Files\DeepChat only) while skills live under `C:\Users\LENOVO\.deepchat\skills\`.
 > This breaks every protocol that instructs "grep the owning skill's SKILL.md" (Watchtower
 > MEMORY-DRIFT step, Dependency-Graph build protocol). Confirmed live in session
-> SHEfIEGiQvA2LI5xAPkon while kaizening research v2.49 + qnfo-core v1.5.
+> SHEfIEGiQvA2LI5xAPkon while kaizening research v2.73 + qnfo-core v1.5.
 > Changes:
 > (1) [HARD] **GREP-SCOPE-1 anti-pattern + §Tool-Scope table added** — grep tool = workspace-only.
 >     For skill files use: `read` with offset pagination, `exec` python (open + in-memory
@@ -184,7 +371,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (3) [HARD] **Dependency-Graph build protocol rewritten** (was "read SKILL.md, grep for
 >     cross-reference patterns") → read + python substring scan.
 > (4) [SOFT] Calibration register entry added.
-> Cross-reference: research v2.49 (P3.AUTHOR-GATE), qnfo-core v1.7, session
+> Cross-reference: research v2.73 (P3.AUTHOR-GATE), qnfo-core v1.7, session
 > SHEfIEGiQvA2LI5xAPkon.
 
 
@@ -408,6 +595,13 @@ memory_remember(category="task_outcome",
 | Recurrence at +2 (was clean at +1) | Full re-kaizen, investigate intermittent failure |
 | Recurrence at +3 (was clean at +1,+2) | Full re-kaizen, possible environmental trigger |
 | Clean through +3 | Close monitoring, log MONITORING-RESOLVED |
+
+**Adversarial-symmetry check (2026-08-04):** When kaizen audits any skill in the
+research/evidence domain, the audit MUST additionally apply the symmetric-adversarial
+lens — does the skill grade incumbents (GR, SM, ΛCDM, string theory) with the same
+kill-criteria + null-equivalence standard it applies to new frameworks? A skill that
+is adversarial only toward new theories and deferential toward established ones is
+confirmation-biased (PRO-INCUMBENT-BIAS-1, research v2.73 / qnfo-core v1.14).
 
 ## Self-Kaizen Protocol (MANDATORY when kaizen audits itself)
 
@@ -1084,23 +1278,28 @@ Session Failure → Session Retrospective detects failure pattern
 | **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `subagent_orchestrator(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
 | **RCS-3: Using subagents for time-sensitive red-team audit tasks when truncation is a KNOWN systemic anti-pattern** | Subagents for audit tasks = HARD BLOCK. Only parallel search tasks may use subagents. All audit/finding tasks use direct parent-agent execution with actual script output. |
 | **SCS-1: Running competing scripts targeting the same write destination, committing the wrong one** | One D1 write target, one approach. If a backup approach fails, DELETE it immediately. Never leave two scripts alive targeting the same row. After any D1 write, re-read the committed row and content-verify it contains the INTENDED content, not just "update succeeded." |
+| **TOKEN-DISCOVERY-FAILURE-1: Agent asks for credentials stored on disk instead of checking discoverable locations first (2026-08-04)** | The discovery workflow MUST check: (A) `C:\Users\LENOVO\tokens\` directory, (B) environment variables, (C) memory_recall, (D) tape_search — in that order — before asking the user. All tokens must be stored in multiple redundant, discoverable locations per the user's standing instruction. Canonical case: session 5o2rozKJQecKGz4MGRB6A — Zenodo token was in `tokens/zenodo` and `ZENODO_TOKEN` env var but agent asked the user anyway. |
+| **ZENODO-CLOSED-SUBMISSION-1: Zenodo community submissions fail with misleading "only allowed to community members" error when the real issue is closed submission policy (2026-08-04)** | Zenodo communities default to `record_submission_policy: "closed"` and `review_policy: "closed"`. Before submitting records, check `GET /communities/{slug}` → `access.record_submission_policy` and `access.review_policy`. If closed, update via `PUT /communities/{slug}` with FULL body: `{slug, metadata, access}` — missing slug/metadata fields cause 400. Canonical case: session 5o2rozKJQecKGz4MGRB6A — QNFO and QWAV communities had closed policies; 200+ tool calls wasted diagnosing before finding the root cause. |
 | **ZENODO-204: json.load() on empty DELETE response body** (v1.6) | Zenodo's DELETE file API returns HTTP 204 (No Content) with zero-length body. Always check `resp.code == 204` or `len(body) == 0` BEFORE `json.load()`. Canonical case: 2026-08-02 consilient-synthesis upload crashed on DELETE. |
 | **ZENODO-DRAFT-CONFLICT: newversion 400 files.enabled when a draft already exists with files** (v1.6) | Before `actions/newversion`, check `links.latest_draft`. If a draft exists with files, delete files first (or reuse the draft). Canonical case: 2026-08-02, three ACRP newversions stuck on leftover drafts. |
 | **ZENODO-METADATA-REQUIRED: partial metadata PUT rejected** (v1.6) | Zenodo validates the FULL metadata on PUT: `upload_type`+`publication_type`+`creators` are required even for newversion metadata updates. Send complete metadata or a PATCH, never a partial PUT. |
 | **PANDOC-PATH: `where pandoc` empty but binary exists at non-standard path** (v1.6) | Pandoc lives at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe` — NOT on PATH. Use the full path or add to PATH in build scripts. Never conclude "pandoc not installed" from a PATH lookup alone. |
 | **XHTML2PDF-CSS: `:not(:hover)` pseudo-selector crashes xhtml2pdf parser** (v1.6) | Strip `:not(...)`/`:hover` rules from pandoc-generated HTML before feeding xhtml2pdf: `re.sub(r':not\(:hover\)\s*{[^}]*}', '', html)`. Validated fallback: pandoc→HTML→strip CSS→xhtml2pdf (38,977-byte PDF, 6 papers built 2026-08-02). |
+| **WIN-ELEVATION-PARTIAL-1: ShellExecute "runas" admin elevation works for `sc`, most `reg add`, and `taskkill` but FAILS for TrustedInstaller-protected registry keys (2026-08-05)** | Some Windows 11 registry keys (e.g., `HKLM\SOFTWARE\Policies\Microsoft\Dsh`, `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds`) are owned by TrustedInstaller, not Administrators. Even UAC elevation via ShellExecute "runas" cannot write to them. When blocked: (A) use the MDM/PolicyManager alternative path (`HKLM\SOFTWARE\Microsoft\PolicyManager\default\...`); (B) fall back to the Settings GUI; (C) do NOT waste tool calls on icacls/takeown. Canonical case: session VBvCOsXhzlQJUubBqtdFz — 20+ elevation attempts on Dsh/Feeds all failed; PolicyManager path succeeded first try. Cross-ref: windows-command-patterns v3.13 S-1.0.8, WIN-TRUSTEDINSTALLER-REG-1. |
 | **SKILL-WRITE-EPERM: writing skill files to `C:\Program Files\DeepChat\` → EPERM** (v1.6) | Use `C:\Users\LENOVO\AppData\Local\Temp\` for all temp scripts/artifacts. Program Files is read-only for the agent. |
 | **SUBAGENT-WORKSPACE: subagent file paths differ from parent, breaking file resolution** (v1.6) | Subagents inherit the parent cwd but may resolve paths differently. Pass absolute paths in prompts, or use direct parent-agent execution for file-dependent audits (per v1.2.5 HARD GATE). |
 
-| **ZENODO-PUB-1
-| **BLAME-EXTERNAL-1: Assuming API failure is infrastructure (rate-limit/WAF/token) before checking your own HTTP method (2026-08-04)** | Agent spent hours diagnosing Zenodo 403 as "token write-scope issue" when the root cause was `urllib.request.Request(method="DELETE")` silently sending GET. The API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6) MUST run BEFORE any external diagnosis: STOP, VERIFY your HTTP method/headers, COMPARE with curl, THEN (and only then) consider infrastructure. The bug is ALWAYS in your code until proven otherwise. Canonical case: session zESRNRQLF76EBvTbldEev (2026-08-04) — every Zenodo 403 was DELETE sent as GET. Cross-ref: windows-command-patterns S-1.0.5/S-1.0.6, research REQUESTS MANDATE. |: Publication state fabricated from plan memory (2026-08-03)** | Agent claimed "Zenodo completed (21755425)" but that ID belongs to a DIFFERENT paper (ODR v3.0), never executed in the current pipeline. Fix: publication state requires live `curl` record-ID re-query against the Zenodo API — never trust plan memory or prior-session narrative for publication status. Kaizen audits on publication flows MUST re-query live state. Cross-ref: research v2.48 P5.FRESH. |
-| **ZENODO-DUP-1: Duplicate deposit when paper YAML already has live DOI (2026-08-03)** | Pipeline created fresh deposit while YAML already held a live `doi:` address. Fix: kaizen audit on any Zenodo-publishing pipeline MUST check paper YAML `doi:` field BEFORE assuming a fresh deposit is needed. If YAML doi: exists AND resolves → BLOCK fresh deposit. Cross-ref: research v2.48 P5.DUPCHECK. Case: ODR v3.0 pipeline — 21761802 duplicate while canonical 21758752 was live. |
+| **ZENODO-PUB-1: Publication state fabricated from plan memory (2026-08-03)** | Agent claimed "Zenodo completed (21755425)" but that ID belongs to a DIFFERENT paper. Fix: publication state requires live re-query. |
+| **BLAME-EXTERNAL-1: Assuming API failure is infrastructure (rate-limit/WAF/token) before checking your own HTTP method (2026-08-04)** | Agent spent hours diagnosing Zenodo 403 as "token write-scope issue" when the root cause was `urllib.request.Request(method="DELETE")` silently sending GET. The API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6) MUST run BEFORE any external diagnosis: STOP, VERIFY your HTTP method/headers, COMPARE with curl, THEN (and only then) consider infrastructure. The bug is ALWAYS in your code until proven otherwise. Canonical case: session zESRNRQLF76EBvTbldEev (2026-08-04) — every Zenodo 403 was DELETE sent as GET. Cross-ref: windows-command-patterns S-1.0.5/S-1.0.6, research REQUESTS MANDATE. |
+| **ZENODO-PUB-1: Publication state fabricated from plan memory (2026-08-03)** | Agent claimed "Zenodo completed (21755425)" but that ID belongs to a DIFFERENT paper (ODR v3.0), never executed in the current pipeline. Fix: publication state requires live `curl` record-ID re-query against the Zenodo API — never trust plan memory or prior-session narrative for publication status. Kaizen audits on publication flows MUST re-query live state. Cross-ref: research v2.73 P5.FRESH. |
+| **ZENODO-PHANTOM-DOI-1: Claiming a DOI was issued / record published without a same-turn API-response tool call (2026-08-04)** | **HARD GATE.** Every publication claim requires a tool call in the SAME turn showing the API response (create → upload → publish HTTP codes + DOI field). The **DataCite API** (`api.datacite.org/dois/{doi}`) is the authoritative Zenodo-DOI verification: HTTP 404 = definitively no record exists (and is independent of Zenodo's CDN/bot filter — works when zenodo.org 403s). Canonical case: session ZDdTu9Qf — fabricated DOI 10.5281/zenodo.21804582 had zero backing tool calls; DataCite 404 exposed it; real deposit 21803159 created via API, verified state=findable. Cross-ref: research v2.74 ZENODO-PHANTOM-DOI-1, Tool-Call Execution Mandate (git-github v2.14), qnfo-core Rule 14. |
+| **ZENODO-DUP-1: Duplicate deposit when paper YAML already has live DOI (2026-08-03)** | Pipeline created fresh deposit while YAML already held a live `doi:` address. Fix: kaizen audit on any Zenodo-publishing pipeline MUST check paper YAML `doi:` field BEFORE assuming a fresh deposit is needed. If YAML doi: exists AND resolves → BLOCK fresh deposit. Cross-ref: research v2.73 P5.DUPCHECK. Case: ODR v3.0 pipeline — 21761802 duplicate while canonical 21758752 was live. |
 | **CLAIM-VERIFY-1: File-identity claims made without checksums (2026-08-03)** | Agent claimed "byte-identical duplicate" for two Zenodo deposit files without producing checksums. User challenge forced forensic diff: documents differed by 9 bytes. Fix: ALL file-identity claims ("identical", "byte-identical", "same file", "unchanged") require SHA-256 or md5 checksum evidence. Narrative identity = UNVERIFIED. Kaizen audits MUST reject unverified identity claims as HARD findings. Case: ODR v3.0 forensic closeout. |
 | **NUMERACY-1: Derived quantity claimed with false precision (v1.4)** | When computing a derived quantity (e.g., Koide Q from mass fits), recompute from exact rational arithmetic before stating precision. ACRP-04 session: claimed 0.02% deviation; actual: 0.00289% — factor ~7× error. Trigger research BP-6 gate. |
 | **NUMERACY-2: Sigma reported without traceable uncertainty source (v1.4)** | Every σ must cite a specific PDG edition, table, value ± uncertainty, and propagation method. ACRP-04: "9,138σ" untraceable; best reconstruction 8,943σ. Trigger research BP-7 gate. |
 | **NUMERACY-3: Density gate applied selectively to structurally identical claims (v1.4)** | When §7.2 is tested but §6 (same numerology class) is not, it's confirmation bias. Research BP-8 classifies claims into 5 types — all of the same type must receive the same gate. |
 | **GREP-SCOPE-1: Calling the `grep` tool on skill files outside the workspace (2026-08-03)** | The `grep` TOOL is WORKSPACE-SCOPED — it denies `C:\Users\LENOVO\.deepchat\skills\**` with "Access denied - path outside allowed directories" (verified live in session SHEfIEGiQvA2LI5xAPkon). NEVER grep skill paths. Use: (a) `exec python` script — `open(path, encoding='utf-8').read()` + in-memory substring scan (works on any path); (b) `read` with offset/limit pagination; (c) `skill_view` for full rendered content. This is not a permission failure to work around — it is the tool's documented scope. |
-| **ZENODO-LINK-OWNERSHIP-1: Blanket-deriving `zenodo_url` from `doi LIKE '%zenodo%'` (2026-08-04)** | **HARD GATE (research v2.54 P5.OWNERSHIP):** `zenodo_url = 'https://doi.org/'||doi WHERE doi LIKE '%zenodo%'` mints fake QNFO linkage for external citations, URL-prefixed doi values, and placeholders. Only ~500 QNFO-owned DOIs exist; the blanket backfill claimed 1,245+ rows. Fix: build the owned-DOI set from the live API (creator search + person-name variant) and write links ONLY for owned DOIs; re-verify 0 non-owned links after any backfill; run `research/scripts/zenodo-ownership-check.py` as the gate. Case: session dXXJ3TxRQ1VHzGdAyp-lo — rollback papers 503→277, paper_ids 468→248. |
+| **ZENODO-LINK-OWNERSHIP-1: Blanket-deriving `zenodo_url` from `doi LIKE '%zenodo%'` (2026-08-04)** | **HARD GATE (research v2.73 P5.OWNERSHIP):** `zenodo_url = 'https://doi.org/'||doi WHERE doi LIKE '%zenodo%'` mints fake QNFO linkage for external citations, URL-prefixed doi values, and placeholders. Only ~500 QNFO-owned DOIs exist; the blanket backfill claimed 1,245+ rows. Fix: build the owned-DOI set from the live API (creator search + person-name variant) and write links ONLY for owned DOIs; re-verify 0 non-owned links after any backfill; run `research/scripts/zenodo-ownership-check.py` as the gate. Case: session dXXJ3TxRQ1VHzGdAyp-lo — rollback papers 503→277, paper_ids 468→248. |
 | **ZENODO-LINK-OWNERSHIP-2: Assuming `doi LIKE '%zenodo%'` means "QNFO-owned record" (2026-08-04)** | D1 `papers` and `paper_ids` tables contain EXTERNAL literature citations (other researchers' Zenodo records ingested from external-search) alongside QNFO publications. A zenodo-pattern DOI ≠ QNFO-owned. Confirm ownership per-DOI via the live API before treating a row as QNFO-published. |
 | **NULL-ID-UPDATE-1: Keyed UPDATEs skip rows with NULL identifiers — under-clearing data (2026-08-04)** | `UPDATE ... WHERE identifier = ?1` never matches rows where identifier IS NULL. Rollback passes 1-2 skipped 58 papers rows this way. Fix: use keyless bulk `UPDATE ... WHERE lower(zenodo_url) IN (SELECT lower('https://doi.org/'||doi) ...) AND lower(doi) NOT IN (<owned list>)`, or handle NULL keys explicitly via a fallback column (`id`). Verify final counts match the target, not just "N ok" from keyed loops. |
 | **SUBAGENT-DEADLINE-1: Red-team subagents hitting the 300s default runTimeout on API-heavy audits (2026-08-04)** | Red-team subagent tasks that fetch 100s of API records (Zenodo paginated search, D1 scans) hit the 300000ms default runTimeoutMs and are cancelled mid-audit with zero partial output. Fix: for fetch-heavy subagent tasks set `runTimeoutMs: 900000+`; for the fastest signal, run the audit directly in the parent agent with scripts writing to files (verified faster in session dXXJ3TxRQ1VHzGdAyp-lo). |
@@ -1109,6 +1308,11 @@ Session Failure → Session Retrospective detects failure pattern
 | **BACKFILL-PREVIEW-1: Executing a bulk derived-value D1 UPDATE without a read-only classification preview (2026-08-04)** | Any bulk write that DERIVES values (e.g., `zenodo_url = 'https://doi.org/'||doi`) MUST first run a read-only classification pass: build the authoritative ownership set from the live API (creator search + person-name variant + project `.zenodo_versions.json`/paper YAML DOIs), compute owned/external/garbage counts IN MEMORY, and print the preview (counts + sample rows + garbage list) BEFORE any write. Gate the write: 0 garbage AND 0 external-derived targets, else BLOCK. The 2026-08-04 incident happened because the backfill went straight to UPDATE (1,245+ fake links: 225 papers + 219 paper_ids external citations, 8 double-prefix/PENDING garbage); the rollback succeeded precisely because it previewed first. Cross-ref: research P5.OWNERSHIP, ZENODO-LINK-OWNERSHIP-1. |
 | **D1-UPDATE-SUCCESS-NE-ROWS-CHANGED: Treating per-call UPDATE "ok" as rows actually changed (2026-08-04)** | D1 returns success for an UPDATE that matched 0 rows (WHERE clause no-op on NULL keys). The rollback reported "385 ok, 0 failed" yet papers only dropped 503→341 (162 of 226 targets actually changed — NULL-key rows matched nothing). Fix: after any bulk D1 write, verify with COUNT(*) before/after against the EXACT target count AND inspect the response meta `changes`/`rows_written`. Never claim "N rows updated" from "N UPDATE calls succeeded." Reliable pattern: skip keyed passes entirely, use keyless bulk `UPDATE ... WHERE lower(zenodo_url) IN (SELECT lower('https://doi.org/'||doi) ...) AND lower(doi) NOT IN (<owned list>)`. Cross-ref: NULL-ID-UPDATE-1. |
 
+
+
+| **FALSIFIABILITY-GATE-1: Kaizen audit claims improvement without pre-registered success criteria (2026-08-04)** | A kaizen banner that claims "fixed X" without stating what observation would prove the fix FAILED to hold is indistinguishable from a cosmetic change. Every kaizen fix MUST include: (A) a pre-registered test (what tool call or scenario would have triggered the old anti-pattern); (B) a verification script or query that PROVES the fix works; (C) a continuous monitoring checkpoint (Phase 6) that will detect regression. Without these, a kaizen closeout is a narrative, not an improvement. Cross-ref: research v2.73 (KIF-60 Bayesian Evidential Weight Gate), qnfo-core v1.14 §0.0 (Δlog-odds), BAYESIAN-RETRODICTION-1. |
+| **REACTIVE-ADVERSARIAL-1: Audit pipelines become adversarial only when the user demands it (2026-08-04)** | The research skill's KIF-60 gate was added reactively to the user's 2026-08-04 methodological injunction, not proactively. A skill whose own gates do not produce adversarial symmetry (auditing incumbents with equal severity) until user pressure is itself confirmation-biased. Fix: every kaizen audit MUST include symmetric adversarial review of alternatives/incumbents, and Phase 2 red-team MUST audit whether the skill's gates are adversarial-by-default, not reactive. Canonical case: session iH66zCEWF85XB0FQPfta4 — GR/SM graded A until user injunction. Cross-ref: research v2.73 (Symmetric Audit Requirement), qnfo-core v1.14 (PRO-INCUMBENT-BIAS-1). |
+| **BAYESIAN-RETRODICTION-1: Treating post-hoc rationalization as prediction — "the framework explains everything we already know" (2026-08-04)** | A framework that claims to "explain" known observations without producing pre-registered, falsifiable predictions has zero Bayesian weight: P(data | theory, context_then) >> P(data | theory, context_now) for genuine predictions. Fix: every cross-domain correspondence claim MUST include: (A) a pre-registration timestamp (what was predicted BEFORE observation); (B) a falsifiability condition (what observation WOULD have broken the framework); (C) a surprisal estimate — what is P(match | random structure) under a null model. Without these three items, a claimed "prediction" is indistinguishable from post-hoc curve-fitting. Canonical case: the user's 2026-08-04 methodological injunction — the entire QNFO research pipeline now gates on this. Cross-ref: research v2.73 (KIF-60 Bayesian Evidential Weight Gate, Phase 1b), qnfo-core v1.14 §0.0 (Falsifiability Requirement — Δlog-odds). |
 
 ## Cross-Skill Integration
 
@@ -1120,7 +1324,7 @@ Session Failure → Session Retrospective detects failure pattern
 | `knowledge` | Phase 5 (closeout), Phase R (retrospective) | Durable memory for kaizen outcomes, heuristic accumulation |
 | `update_plan` | Phase 0 (and all phases) | Progress tracking and auditability of kaizen execution |
 | `cronjob` | Phase 5 (closeout), Phase -1 (Watchtower scheduling) | Schedule recurring Watchtower scans, deep audits, retrospective sweeps |
-| `execution-mandate` | Phase -1 (session start), all phases | Canonical subagent orchestration patterns, execution-first protocol, multi-phase subagent deployment matrix |
+| `execution-mandate` | [NOT-INSTALLED — removed] | This skill is NOT in the installed skill list; protocol text incorporated inline in §Subagent Failure Handling |
 | `query_graph` | Phase 5 (KG feedback loop), Phase -1 (dependency graph) | Cross-skill impact tracing, DEPENDS_ON edge maintenance |
 | `search_conversations` | Phase -1 (Watchtower incident mining), Phase R (retrospective) | Conversation history mining for skill failure patterns |
 | `get_conversation_history` | Phase R (retrospective deep-dive) | Deep-dive into incident conversations |
@@ -1133,6 +1337,8 @@ Session Failure → Session Retrospective detects failure pattern
 | `tape_anchors` | Phase 0, Phase R | Handoff context, kaizen anchors |
 | `tape_search` | Phase R (retrospective) | Mine session tape for failure patterns |
 | `tape_handoff` | Phase 5 | Durable session handoff with kaizen outcomes |
+| `browser_navigate` / `browser_click` / `browser_type` | Phase 2 (red-team live verification), Phase 4 (verification gate) | Live web verification of cross-references, DOI resolution, API endpoint reachability |
+| `computer-use` skill | Phase 2 (GUI-driven audits) | Desktop app automation for skills that drive native applications |
 
 ## Kaizen History Log (MANDATORY per-skill tracking)
 
@@ -1177,13 +1383,11 @@ For skills in an active ecosystem, the kaizen closeout produces fragility
 predictions. These function like the research skill's Calibration Register:
 dated, falsifiable claims about skill drift risk.
 
-```
-```
 - The Autonomous Watchtower and Session Retrospective protocols are new (v1.2);
   their first real-world usage may reveal gaps in trigger thresholds or scoring.
 - The cronjob protocol references concrete cron expressions and agent IDs that
   must be tuned to the user's timezone and agent configuration.
-- The research skill (currently v2.38) is actively evolving; the canonical
+- The research skill (currently v2.69) is actively evolving; the canonical
   case study claim may need updating when research reaches v3.0.
 Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 ```
@@ -1192,17 +1396,11 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 score > 0.7 within 45 days, given:
 - 28 installed skills, many with cross-references
-- Research skill is at v2.38 with many version banners — high drift surface area
+- Research skill is at v2.69 with many version banners — high drift surface area
 - Cloudflare MCP servers may versions-shift independently
 Likelihood: [HIGH] — large skill ecosystem with active development.
 ```
 
-```
-[CHECK: 2026-08-07] LinkedIn MCP auth session will still be valid (cookie-based
-session persists days-weeks in the profile dir; first re-auth may require
---login with CAPTCHA/2FA). Watch for: `--status` reporting logged out, or
-CLOUDFLARE_BLOCKED in tool errors.
-Likelihood: [HIGH] — fresh session, profile warm.
 ```
 
 ```
@@ -1236,28 +1434,90 @@ through +3 monitoring checkpoints: no bulk derived-value D1 write (zenodo_url/ze
 or any 'https://doi.org/'||doi pattern) executes without a read-only classification
 preview, and no "N rows updated" claim is made from per-call UPDATE "ok" without
 COUNT(*) before/after verification. Risk of regression: [LOW] — the 2026-08-04 incident
-(1,245+ fake links) is the canonical failure; both anti-patterns + research v2.55
+(1,245+ fake links) is the canonical failure; both anti-patterns + research v2.73
 ENFORCED BACKFILL PROTOCOL (preview→gate→execute→verify) now gate the path.
 Likelihood: [HIGH] — enforcement documented in two skills with a concrete 4-step protocol.
 ```
 
+```
+[CHECK: 2026-08-11] GIT-COMMIT-M-QUOTE-1 + EXEC-TOOL-QUOTE-1-PY will hold through +3
+monitoring checkpoints: no `git commit -m "msg with special chars"` and no
+`python -c "nested quotes"` / quoted `python <abs-path>.py` invocations in future
+sessions without the documented -F / cd-relative fixes. Risk of regression: [MODERATE]
+- agent habit loops take 1-3 sessions to break.
+Likelihood: [HIGH] - both failures occurred 4-5x in session 1tz85-vMiqh2TyFySznBA;
+the -F pattern worked every time it was used.
+```
+
+```
+[CHECK: 2026-09-15] WBS-REGISTRY-STALE-1 will have triggered at least one reconciliation
+(INSERT of a missing canonical program row into D1 program_registry) within 45 days,
+given 6 canonical programs (UMP/SLB/INM/CFE/RES/PLT/DEM) were missing from D1 at
+session 1tz85-vMiqh2TyFySznBA and new papers are created regularly.
+Likelihood: [HIGH] - proven gap, reconciliation pattern documented in research v2.73.
+```
+
+```
+[CHECK: 2026-09-01] VECTORIZE-WEBHOOK-VERIFY-1 will prevent at least one false
+"paper not indexed" / "search_papers empty = failure" claim within 30 days.
+Likelihood: [HIGH] - VECTORIZE-SILO-1 confirmed again in session 1tz85-vMiqh2TyFySznBA
+(IPR paper: search_papers "OK" while webhook confirmed 26 chunks indexed).
+```
+
+```
+[CHECK: 2026-10-01] Ostrowski Trap 4 will prevent at least one false positive
+"5-smooth dominance / Pythagorean semigroup" claim from decimal-computed valuations
+within 60 days. Risk of regression: [MODERATE] - numerology bias is persistent.
+Likelihood: [HIGH] - REG-IPR-003 is the canonical null result; the trap is now
+documented in qnfo-core v1.14 Self-Check item 7.
+
+[CHECK: 2026-09-15] Kaizen skill's concrete WBS code examples (v1.28 banners 
+reference UMP.002, RES.001, CFE.002 — qnfo-core N-1 pillar aliases) will have 
+been reconciled with canonical WBS.TAXONOMY.md §3 program codes (UF, CON, ADL, 
+SR) or a single-source-of-truth decision documented. Current state: Kaizen's WBS
+CONCRETE EXAMPLE uses [QNFO.RES.001.P9] and [QNFO.UMP.002.P9] prefixes while 
+WBS.TAXONOMY.md §3 registers QNFO.CON.xxx and QNFO.UF.xxx. Cross-reference 
+drift between the two authoritative registries — any agent resolving from the 
+taxonomy finds no matching entries for kaizen's example codes. Discovered in 
+session ZDdTu9QfTZKY_kJALlXY_ (Consilience Framework synthesis — all deliverables 
+re-mapped from pillar aliases to CON.002). Risk: HIGH.
+Likelihood: [HIGH] — qnfo-core N-1 updates don't auto-propagate to skill examples.
+
+[CHECK: 2026-10-01] PANDOC-FONT-QUOTE-1 will have triggered at least once more
+within 60 days — any pandoc PDF build with -V mainfont="Font Name With Spaces"
+fails on Windows cmd.exe. Risk: MODERATE — publication pipelines regularly use
+pandoc font flags.
+Likelihood: [HIGH] — PDF building is a frequent operation; fix now documented in
+windows-command-patterns v3.12.
+
+[CHECK: 2026-09-01] ZENODO-PHANTOM-DOI-1 will hold through +3 monitoring checkpoints: no "published/DOI issued"
+claim will appear without a same-turn DataCite-verifiable tool call. Risk of regression: [MODERATE] — agent
+habit of narrating success from plan memory is the exact ZENODO-PUB-1 failure mode.
+Likelihood: [HIGH] — the DataCite-404 exposure in session ZDdTu9Qf is now the canonical enforcement example.
+
+[CHECK: 2026-09-01] ZENODO-UPLOAD-MULTIPART-1 + ZENODO-BOT-403-1 will hold: all future Zenodo uploads use
+POST /files multipart and full browser headers. Risk of regression: [LOW] — documented in research v2.74
+with verified HTTP codes.
+Likelihood: [HIGH] — 5-file deposit via multipart succeeded 2026-08-04.
+```
+
 ## Version
 
-Current: **v1.19** (kaizen — Ecosystem N-2 normalization + version drift fix: git-github v2.11→v2.12 HARD, linkedin-mcp + windows-command-patterns header norms SOFT; cross-ref qnfo-core v1.11, git-github v2.12, research v2.62; 2026-08-04)
+Current: **v1.31** (kaizen — Windows admin elevation + TrustedInstaller registry lesson; WIN-ELEVATION-PARTIAL-1 anti-pattern; cross-refs synced with windows-command-patterns v3.13; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
 
-| **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.55 version string overwritten between apply_kaizen.py write and verify_final.py read. |
+| **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
 | **FILE-WRITE-RACE-1: Two Python scripts writing to the same file path within the same turn produce an indeterminate winner (2026-08-04)** | When two `write()` tool calls target the same skill file in the same turn, the second write may silently complete before the first write is committed, or vice versa. The read that follows may see either state. Fix: serialize all writes to the same file path within a turn — never dispatch two parallel writes. A single Python script that performs all edits sequentially is the ONLY safe pattern for multi-edit kaizen. |
 | **BACKGROUND-PROCESS-HANG-1: Background exec sessions hang indefinitely without error — killed only by agent timeout (2026-08-04)** | `npx puppeteer browsers install chrome` hung for 120s+ without output. `node puppeteer-core CDP render` hung for 90s+ waiting for MathJax CDN. Chrome download via Python urllib produces no progress output for minutes. Pattern: (A) poll with `process poll` every 15-30s; (B) if 2 consecutive polls show NO new output → process is stuck, kill it; (C) for network downloads, use Python with progress callback; (D) for Chrome launches, always set `timeout` parameters on `page.goto()` and `page.waitForFunction()`. Never wait longer than 2 polls without progress. |
 | **PROCESS-MANAGEMENT-1: Session ktmz7cqk created 10+ background processes; 4 hung, 3 needed manual kill (2026-08-04)** | A publication pipeline spawns many background processes: Chrome downloads, CDP renders, Zenodo API calls, pandoc builds. Without active management: orphaned processes consume memory, Chrome instances accumulate, hung processes block subsequent steps. Fix: (A) `process list` at start of every major phase; (B) `process kill` any sessionId from a stale/failed attempt; (C) after CDP render, explicitly close Chrome (`browser.close()`) — don't rely on process timeout; (D) cap concurrent background processes at 2 for system stability. |
 | **SESSION-TURNOUT-1: Publication pipeline session consumed ~60 tool calls on Chrome/PDF debugging before reaching Zenodo (2026-08-04)** | The PDF build phase consumed disproportionate tool calls because each failure required manual diagnosis. Fix: (A) the HARD GATE for Chromium availability must be checked ONCE at session start, not after each phase transition; (B) the MathJax CDN check should run BEFORE the first CDP render, not discovered by timeout; (C) pre-flight checklist: Chromium binary check → MathJax CDN test → pandoc version → puppeteer-core import test. Any pre-flight failure = early BLOCK with clear diagnosis, preventing 30+ diagnostic tool calls later. |
-| **BROWSER-PROCUREMENT-1: No Chromium browser exists on this machine at session start; procurement must be a Phase 0 gate (2026-08-04)** | Edge, Chrome, Brave are all absent. Chrome for Testing must be downloaded (~194 MB, 2-5 min). The `@puppeteer/browsers` install() method hangs — use Python `urllib.request.urlretrieve()`. Cache at `%USERPROFILE%\.cache\puppeteer\chrome\chrome-win64\chrome.exe`. This is a ONE-TIME setup per machine — after first download, the cache persists across sessions. Cross-reference: research v2.55 Step 1. |
-| **MATHJAX-CDN-HEADLESS-2: Chrome headless cannot reach any CDN; all external dependencies must be inlined (2026-08-04)** | `page.goto(fileUrl, {waitUntil: 'networkidle0'})` with CDN-dependent HTML hangs forever. All JS dependencies must be downloaded locally via Python (urllib works) and inlined into the HTML before CDP capture. This applies to MathJax, KaTeX, D3, or any external JS library. Test: `page.goto(html, {waitUntil: 'load', timeout: 15000})` then check `document.readyState`. Cross-reference: research v2.55 Step 4. |
-| **CHROME-HEADLESS-1: Chrome headless rendering has undocumented quirks on this Windows machine (2026-08-04)** | (A) `--no-sandbox` required (no user namespace in headless Windows); (B) `--disable-gpu` required (no GPU in headless mode on some hardware); (C) `--disable-dev-shm-usage` required (avoids /dev/shm dependency on Windows); (D) `page.pdf()` margin units are centimeters when using A4 format; (E) `page.waitForFunction(() => window.MathJax?.startup?.promise)` is the canonical MathJax-ready check. Cross-reference: research v2.55 Step 5 render script. |
+| **BROWSER-PROCUREMENT-1: No Chromium browser exists on this machine at session start; procurement must be a Phase 0 gate (2026-08-04)** | Edge, Chrome, Brave are all absent. Chrome for Testing must be downloaded (~194 MB, 2-5 min). The `@puppeteer/browsers` install() method hangs — use Python `urllib.request.urlretrieve()`. Cache at `%USERPROFILE%\.cache\puppeteer\chrome\chrome-win64\chrome.exe`. This is a ONE-TIME setup per machine — after first download, the cache persists across sessions. Cross-reference: research v2.73 Step 1. |
+| **MATHJAX-CDN-HEADLESS-2: Chrome headless cannot reach any CDN; all external dependencies must be inlined (2026-08-04)** | `page.goto(fileUrl, {waitUntil: 'networkidle0'})` with CDN-dependent HTML hangs forever. All JS dependencies must be downloaded locally via Python (urllib works) and inlined into the HTML before CDP capture. This applies to MathJax, KaTeX, D3, or any external JS library. Test: `page.goto(html, {waitUntil: 'load', timeout: 15000})` then check `document.readyState`. Cross-reference: research v2.73 Step 4. |
+| **CHROME-HEADLESS-1: Chrome headless rendering has undocumented quirks on this Windows machine (2026-08-04)** | (A) `--no-sandbox` required (no user namespace in headless Windows); (B) `--disable-gpu` required (no GPU in headless mode on some hardware); (C) `--disable-dev-shm-usage` required (avoids /dev/shm dependency on Windows); (D) `page.pdf()` margin units are centimeters when using A4 format; (E) `page.waitForFunction(() => window.MathJax?.startup?.promise)` is the canonical MathJax-ready check. Cross-reference: research v2.73 Step 5 render script. |
 | **PANDOC-PATH-QUOTE-1: Pandoc binary not on PATH; cmd.exe PATH-prepend quoting fails (2026-08-04)** | Pandoc is at `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe` — not on PATH. `cmd /c "set PATH=... && pandoc ..."` with nested quotes is NOT valid cmd.exe syntax. Always reference the full canonical path directly: `C:\Users\LENOVO\AppData\Local\Pandoc\pandoc.exe --mathjax --standalone ...`. No PATH manipulation. Cross-reference: windows-command-patterns S0.0. |
-| **TEMP-VOLATILITY-3: Between authoring phase and PDF-build phase, all temp files evicted on Windows (2026-08-04)** | Windows %TEMP% is volatile across agent turns. Paper .md files committed to Git are the ONLY safe persistence layer. After a phase transition: (A) NEVER assume `%TEMP%\paper.md` still exists; (B) ALWAYS `git clone` or `git checkout` from remote to a fresh temp directory; (C) delete the temp clone immediately after commit+push per git-github SAME-TURN-COMMIT mandate. Cross-reference: git-github KIF-32 TEMP Volatility HARD GATE, research v2.56 TEMP-VOLATILITY-2. |
+| **TEMP-VOLATILITY-3: Between authoring phase and PDF-build phase, all temp files evicted on Windows (2026-08-04)** | Windows %TEMP% is volatile across agent turns. Paper .md files committed to Git are the ONLY safe persistence layer. After a phase transition: (A) NEVER assume `%TEMP%\paper.md` still exists; (B) ALWAYS `git clone` or `git checkout` from remote to a fresh temp directory; (C) delete the temp clone immediately after commit+push per git-github SAME-TURN-COMMIT mandate. Cross-reference: git-github KIF-32 TEMP Volatility HARD GATE, research v2.73 TEMP-VOLATILITY-2. |
 | **VERSION-OVERWRITE-1: Version string in skill SKILL.md overwritten by concurrent process mid-kaizen (2026-08-04)** | The version line (`Current: **vN.MM** (...)`) is the most fragile line in any skill file — every kaizen session writes to it. When two sessions kaizen the same skill concurrently, the version string in the file after both writes reflects the LAST writer, not the union. Fix: (A) kaizen sessions on the same skill MUST serialize — check `.kaizen_history` for active sessions before starting; (B) if a concurrent write is detected (version string changed between read and write), merge changes and bump the version past both intended versions. Canonical case: ktmz7cqk v2.55 → backfill protocol v2.55 → merged into v2.56. |
-| **SSESSION-KAIZEN-DISCOVERY-1: Red-team session closeouts must audit ALL skills touched, not just the primary target (2026-08-04)** | Session ktmz7cqk touched research (primary), git-github (clone/push), windows-command-patterns (cmd.exe quirks), cloudflare (D1 verification), knowledge (memory). The red-team audit should cover ALL touched skills for new anti-patterns, not just the primary. For each touched skill: check if this session's failures would have been prevented by an existing anti-pattern in that skill. If not → new anti-pattern for that skill. |
+| **SESSION-KAIZEN-DISCOVERY-1: Red-team session closeouts must audit ALL skills touched, not just the primary target (2026-08-04)** | Session ktmz7cqk touched research (primary), git-github (clone/push), windows-command-patterns (cmd.exe quirks), cloudflare (D1 verification), knowledge (memory). The red-team audit should cover ALL touched skills for new anti-patterns, not just the primary. For each touched skill: check if this session's failures would have been prevented by an existing anti-pattern in that skill. If not → new anti-pattern for that skill. |
 | **WBS-TAXONOMY-GAP: Skills without WBS-coded routing tables make multi-project/phase execution untraceable across sessions — v1.17, 2026-08-04** | Before the v2.10/v2.60/v1.10 taxonomy update, no skill mapped program repos to WBS codes or enforced `{prog}/{type}/{slug}` branch naming. Every plan item, branch, and project was a free-text island — zero cross-session traceability. The fix: (1) qnfo-core §N-1 now lists ALL program codes (`UMP`,`SLB`,`INM`,`CFE`,`RES`,`PLT`,`DEM` + `ADL`,`CON`,`SR`,`AUT`) with canonical repo URLs and branch prefixes; (2) git-github v2.10 routing table includes the WBS code column; (3) research v2.60 Phase 0.1 uses `{prog}/{type}/{slug}` branch naming. The canonical codes are: `UMP` (Ultrametric Physics), `SLB` (Laws of Form), `INM` (Infomatics), `CFE` (CFPE), `RES` (QNFO Research), `PLT` (QWAV Platform), `DEM` (QWAV Demos). A branch or plan item without a WBS program code prefix is un-auditable — it cannot be linked to its program, cross-referenced across skills, or dependency-tracked. The `WBS-NO-CODE` and `WBS-INVENT-CODE` anti-patterns in git-github v2.10 now HARD-GATE this. Canonical case: the pre-consolidation state where 45+ repos each used generic `feature/phase0-scaffold` branch names with no program namespace — zero cross-project traceability, zero WBS integration, unmanageable at scale. |
 | **CONSOLIDATION-OWNER-RESOLVE-1: `gh repo create` without owner prefix resolves to org (not personal account) — v1.16, session PMH0kzte, 2026-08-04** | `gh repo create <name> --public` with no owner prefix can create the repo in the QNFO org rather than the authenticated user's personal account. The resolution depends on the environment (git remote, GH_REPO env, local config). This causes `gh repo archive rwnq8/<name>` to archive the canonical org repo via GitHub 301 redirect (same repo id, different owner prefixes resolve to the same repo). **Fix:** Always use EXPLCIT owner prefixes: `gh repo create rwnq8/<name>` or `gh repo create QNFO/<name>`. Never rely on default resolution. Verify repos actually exist under the intended owner via `user/repos?affiliation=owner` paginated list. Canonical case: session PMH0kzte — consolidate scripts created cfpe/laws-of-form/ultrametric-physics in QNFO org (discovered because both `repos/rwnq8/<name>` and `repos/QNFO/<name>` returned the same repo id `1322383106`). |
 | **PYTHON-BUFFERING-1: Python background scripts produce empty poll output because stdout is buffered without TTY — v1.16, session PMH0kzte, 2026-08-04** | When a Python script is run in the background (`exec` with `background: true`), stdout is NOT attached to a terminal → Python's default line-buffering switches to block-buffering. `process poll` returns empty or truncated output until the script completes (or the buffer fills). This makes background process monitoring useless for diagnostics. **Fix:** Always launch background Python scripts with `python -u` (unbuffered) OR add `print("...", flush=True)` after every status line. Polls can then show real-time progress. Canonical case: session PMH0kzte — 10+ background Python scripts showed `"output":""` in polls despite actively running (subtree merges completing, PR API calls succeeding).

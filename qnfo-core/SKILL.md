@@ -1,6 +1,6 @@
 ---
 name: qnfo-core
-version: 1.11
+version: 1.14
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
@@ -19,7 +19,6 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
 > infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
-
 
 > **v1.7 UPDATE (2026-08-03, kaizen — Proprietary Nomenclature Integrity):**
 > Added §0.0 Proprietary Nomenclature Integrity clause — project names/slugs (QNFO, ODR,
@@ -40,10 +39,9 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 >     regex-based version scans (Watchtower DRIFT-AXIS, dependency graph).
 >     Skills using deprecated formats (cloudflare, system, knowledge, linkedin-mcp)
 >     must normalize on their next kaizen pass.
-> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — Governance
->     Foundation (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
+> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.14 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
 >     violator); footer deduplicated.
-> Cross-reference: research v2.57 (WBS-coded execute_plan), kaizen v1.15,
+> Cross-reference: research v2.63 (WBS-coded execute_plan), kaizen v1.15,
 > execution-mandate v2.8 (WBS subagent routing), WBS-AGENT-PROTOCOL.md,
 > session dXXJ3TxRQ1VHzGdAyp-lo.
 
@@ -54,16 +52,56 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > (1) [SOFT] §N header disambiguated — "(v2.0, HARD — 2026-08-04)" → "(v2.0, HARD — 2026-08-04; §N internal version, not skill version)"
 > (2) [HARD] N-5 pipeline table: "pandoc → build-pdf-pro.py → xhtml2pdf fallback" →
 >     "pandoc → MathJax SVG inline → puppeteer-core CDP (NO xhtml2pdf — permanently
->     deprecated per research v2.51)"
+>     deprecated per research v2.63)"
 > (3) [SOFT] N-2 version footer added (was missing — only header displayed version)
-> Cross-reference: research v2.51, kaizen v1.14, windows-command-patterns S1.0.5.
+> Cross-reference: research v2.63, kaizen v1.14, windows-command-patterns S1.0.5.
 
 > **v1.6 UPDATE (2026-08-03, kaizen — skill merge):**
 > Merged `deepchat-settings` skill (71 lines) into this skill.
 > Red-team: direct parent-agent ecosystem audit. HARD: 0. SOFT: 0. DESIGN: 1.
 > Content appended as ## DeepChat Settings Modification (merged from deepchat-settings skill, 2026-08-03).
 
-# QNFO Core — v1.11
+> **v1.13 UPDATE (2026-08-04, kaizen — Bayesian Evidential Weight Protocol in §0.0):**
+> Red-team: direct parent-agent audit. User's 2026-08-04 methodological injunction
+> demanded Δlog-odds Bayesian evidential weight baked into the QNFO research protocol.
+> HARD: 1. SOFT: 0. DESIGN: 3. Changes:
+> (1) [HARD] **§0.0 Falsifiability Requirement rewritten** — now includes Bayesian
+>     Evidential Weight Protocol: Δlog-odds = log[P(O|T)/P(O|¬T)], three concrete
+>     tests (pre-registration/falsifiability gradient/surprise accounting), and the
+>     Tautology Trap (overfitting/cherry-picking/absorption). Previously the
+>     requirement only said "state what would disconfirm" — this is insufficient
+>     without the Bayesian update framework.
+> (2) [DESIGN] **Four new anti-patterns** — BAYESIAN-RETRODICTION-1, OVERFITTING-1,
+>     CHERRY-PICK-1, ABSORPTION-1 with cross-references.
+> (3) [DESIGN] **KIF-60 cross-reference** — §0.0 is the foundation; research v2.73
+>     KIF-60 gate is the enforcement mechanism.
+> (4) [DESIGN] **Tautology Trap documented** — three failure modes for theories with
+>     excess degrees of freedom.
+> Cross-reference: research v2.73 (KIF-60, Phase 1b), kaizen v1.24
+> (BAYESIAN-RETRODICTION-1, FALSIFIABILITY-GATE-1), user Obsidian note 2026-08-04.
+
+> **v1.12 UPDATE (2026-08-04, kaizen — Ostrowski Trap 4: valuation artifact):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (REG-IPR-003 execution).
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **§0.7.1 Trap 4 added** — p-adic valuations from decimal-precision masses are
+>     base-10 representation artifacts (10^k denominators inflate v2/v5); residual valuations
+>     depend on the digit string, not the particle. "v_p ≠ 0 at ALL primes" is impossible
+>     for any rational (finite support). Valuation claims require exact rational sources.
+> Cross-reference: research v2.63 (BP-3 density gate), kaizen v1.20, REG-IPR-003 null result,
+> session 1tz85-vMiqh2TyFySznBA.
+
+# QNFO Core — v1.14
+
+> **v1.14 UPDATE (2026-08-04, kaizen — Null-Equivalence gate + pro-incumbent-bias anti-patterns):**
+> Red-team: direct parent-agent bias audit (session iH66zCEWF85XB0FQPfta4). HARD: 3. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] **Null-Equivalence test added to §0.0 Three Concrete Tests** — every
+>     claim must state O_N and O_T; if identical at all feasible observations →
+>     [VACUOUS — not falsifiable].
+> (2) [HARD] **Anti-patterns PRO-INCUMBENT-BIAS-1 + NULL-EQUIVALENCE-GAP-1 +
+>     CONFIRMATION-SEEKING-1 added.**
+> Cross-reference: research v2.71, kaizen v1.27, user 2026-08-04 injunctions.
+
 
 > **v1.5 UPDATE (2026-08-03, kaizen — Bibliographic Integrity GATE triggered by fabrication incident):**
 > Red-team: direct parent-agent 5-adversary audit (odr-thesis Phases 0-3, session SHEfIEGiQvA2LI5xAPkon).
@@ -76,7 +114,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 > Crossref/OpenAlex before inclusion; DOI title-match required; no phantom tool claims;
 > duplicate-key check after merges; violation response protocol (correct → red-team → kaizen).
 > (2) [HARD] Anti-pattern table updated (CITING-1..5 cross-reference).
-> Cross-reference: research v2.49 (P3.AUTHOR-GATE), kaizen v1.8, odr-thesis v0.5-redteam-fix.
+> Cross-reference: research v2.63 (P3.AUTHOR-GATE), kaizen v1.8, odr-thesis v0.5-redteam-fix.
 
 > **v1.4 UPDATE (2026-08-02, kaizen — Real-Number Trap clause + Archimedean decimal ban):**
 > Added §0.7.1 "Real Numbers Are Not 'Real'" clause. Due diligence (Continuum Trilogy,
@@ -229,7 +267,7 @@ failures. Canonical decisions (current):
 
 | Operation | Canonical Path | Ambiguity Source |
 |:----------|:---------------|:-----------------|
-| Markdown→PDF | pandoc `--mathjax` → MathJax SVG inline → puppeteer-core CDP (NO xhtml2pdf — permanently deprecated per research v2.51) | multiple renderers / substandard fallback risk |
+| Markdown→PDF | pandoc `--mathjax` → MathJax SVG inline → puppeteer-core CDP (NO xhtml2pdf — permanently deprecated per research v2.63) | multiple renderers / substandard fallback risk |
 | Zenodo update published record | **newversion** (`POST /records/{id}/versions`) — edit-drafts have LOCKED buckets | edit-draft vs newversion |
 | Zenodo API non-GET | `requests` library ONLY (urllib drops DELETE/PUT) | urllib vs requests |
 | D1 content update | `UPDATE ... WHERE slug=?` (NOT DELETE+INSERT) | FTS5 shadow tables |
@@ -244,6 +282,13 @@ include the canonical cross-reference or be flagged PIPELINE-AMBIGUITY.
 | Anti-Pattern | Fix |
 |:-------------|:----|
 | Plan steps without WBS codes (NO-WBS-CODE) | Prefix every update_plan step with `[QNFO.{PROG}.{NNN}.P{N}]` |
+| **Presenting post-hoc rationalization as prediction — "the framework explains everything we already know" (BAYESIAN-RETRODICTION-1)** | Every cross-domain correspondence MUST pass the KIF-60 Δlog-odds gate: pre-registration timestamp + falsifiability condition + surprise accounting. Without all three → [RETRODICTION — not evidence]. See §0.0 Falsifiability Requirement. |
+| **Framework has more free parameters than independent matches (OVERFITTING-1)** | Count dof vs. independent data points. If dof ≥ matches → Δlog-odds ≤ 0 → ZERO evidential weight. Pre-register parameters; use holdout sets. See §0.0 Tautology Trap. |
+| **Reporting only hits; misses are "areas for future work" (CHERRY-PICK-1)** | Report hit/miss ratio. Misses = negative evidential weight. State denominator: how many structures were checked? See §0.0 Tautology Trap. |
+| **Every counterexample absorbed as "special case" or new duality map (ABSORPTION-1)** | Pre-declare ALLOWED duality maps. Newly-invented duality to absorb counterexample = falsification admission. See §0.0 Tautology Trap. |
+| **PRO-INCUMBENT-BIAS-1: Defaulting to favorable falsifiability grades for established theories (2026-08-04)** | GR/SM are de-facto unfalsifiable (SM: 19+ measured parameters, particle-hunting goalpost history; GR composite: DM/DE/inflation auxiliary absorption; even bare GR's 1919 Eddington confirmation was biased). Fix: symmetric adversarial grading required — same kill-criteria + null-equivalence standard for incumbents as for new frameworks. |
+| **NULL-EQUIVALENCE-GAP-1: Declaring a claim falsifiable without stating O_N (2026-08-04)** | "This would be disconfirmed if we observed X" is insufficient when the null predicts the same X. Fix: always state O_N and O_T; if identical at all feasible scales → [VACUOUS — not falsifiable]. |
+| **CONFIRMATION-SEEKING-1: Testing a theory by measuring its own predicted magnitude inside its own formalism (2026-08-04)** | Tests designed by proponents to measure a framework's predicted effect (Pound–Rebka, Shapiro, Hulse–Taylor inside GR) are parameter measurements within a presupposed family, not theory discriminations. Fix: name the alternative each test would have falsified; if none predicts a different value, cap evidential weight. |
 | **Inventing a non-canonical WBS format** (e.g. `QNFO.{PROG}.{NNN}.P{N}`) | Use the ADR-2026-007 canonical format ONLY — never create a parallel taxonomy |
 | Guessing WBS code without D1 lookup | Resolve from program_registry before executing |
 | Version drift across fm/hdr/ft | N-2: bump all three in one edit |
@@ -276,8 +321,49 @@ reality, fundamental, essence, truly, deeply, profoundly, actually, basically, m
 ### Certainty Calibration (MANDATORY)
 Every non-textbook claim: `[established]` | `[mainstream interpretation]` | `[speculative]` | `[my conjecture]` | `[debated]` | `[not yet falsifiable]`
 
-### Falsifiability Requirement
-For any speculative claim: "This would be disconfirmed if we observed X." Cannot write that → label `[not yet falsifiable]`.
+### Falsifiability Requirement (v1.13 — Bayesian Evidential Weight Protocol)
+
+For any speculative claim: "This would be disconfirmed if we observed X." Cannot write
+that → label `[not yet falsifiable]`.
+
+**Bayesian Evidential Weight (KIF-60, HARD — 2026-08-04):** The Falsifiability Requirement
+is necessary but NOT sufficient. A framework that "explains" known observations by design
+has not constrained the hypothesis space — it is post-hoc curve-fitting, not prediction.
+Every claimed cross-domain or novel-structure correspondence MUST pass the Bayesian update check:
+
+```
+Δ log-odds = log[ P(observation | theory) / P(observation | NOT-theory) ]
+
+If P(O|¬T) ≈ 1 (O was already known; T was built around it):
+    Δ log-odds ≈ 0  →  ZERO evidential weight — retrodiction, not prediction
+
+If P(O|¬T) ≪ 1 (O is genuinely surprising without T):
+    Δ log-odds ≫ 0  →  Positive evidential weight — genuine risky prediction
+```
+
+**Three Concrete Tests (MANDATORY):**
+
+| Test | Requirement | Failure Mode |
+|:-----|:------------|:-------------|
+| **Pre-registration** | Prediction MUST be stated BEFORE observational access — timestamped, immutable record of what was predicted and when | [RETRODICTION] — claim is indistinguishable from post-hoc rationalization |
+| **Falsifiability gradient** | At least ONE concrete observation that WOULD kill the theory, stated in advance | [UNFALSIFIABLE] — theory makes no risky predictions; zero empirical content |
+| **Surprise accounting** | For each claimed match: estimate P(match \| random structure of comparable complexity) under stated null model | [TAUTOLOGICAL] — match is expected under null; no evidential weight |
+| **Null-Equivalence test** | State O_N (null prediction) and O_T (test prediction); if O_T = O_N at all feasible observations the criterion is VACUOUS | Claim carries zero empirical content — the theory predicts exactly what the null predicts; label [VACUOUS — not falsifiable] |
+
+**The Tautology Trap:** If a framework has enough degrees of freedom to "explain" ANY
+observations, it explains NONE of them. Three failure modes:
+
+1. **Overfitting:** More free parameters than independent matches → Δlog-odds ≤ 0
+2. **Cherry-picking:** Reporting only hits; treating misses as "areas for future work"
+3. **Absorption:** Every counterexample = "special case" or new duality map → zero empirical content
+
+**Integration:** This is the foundation for the research skill's KIF-60 Bayesian
+Evidential Weight Gate (research v2.73+). Every QNFO paper's due diligence (Phase 1)
+must pass the gate before claiming cross-domain correspondences as evidence.
+
+**Cross-reference:** kaizen v1.24 (BAYESIAN-RETRODICTION-1, FALSIFIABILITY-GATE-1),
+research v2.73 (KIF-60, RETRODICTION-1/OVERFITTING-1/CHERRY-PICK-1/ABSORPTION-1),
+user 2026-08-04 methodological injunction (Obsidian note `_26216121020.md`).
 
 ### Philosophy Boundary
 [PHILOSOPHY] at paragraph start when stepping from physics into philosophy.
@@ -308,7 +394,7 @@ numerical result.
 **Canonical incident (2026-08-03, odr-thesis red-team v1):** C4 entry contained three
 fabricated authors ("Gao, Ping; S.~Ning; Watanabe, Hikaru"); C5 listed the wrong authors
 (real: Hung, Li, Melby-Thompson); S2/S3 DOIs resolved to unrelated papers. Triggered the
-automatic red-team + kaizen directive. Cross-ref: research v2.49, session SHEfIEGiQvA2LI5xAPkon.
+automatic red-team + kaizen directive. Cross-ref: research v2.63, session SHEfIEGiQvA2LI5xAPkon.
 
 **Violation response:** any discovered fabrication triggers (a) immediate correction of the
 affected artifact, (b) red-team audit of the producing workflow, (c) kaizen update of
@@ -585,6 +671,16 @@ Real numbers are the Archimedean completion of ℚ — ONE place among all compl
 
 **Trap 3 — Running couplings (scale-dependent "constants" are functions):** α, sin²θ_W, G_F are not fixed numbers — they are RUNNING FUNCTIONS of the dimensionless energy scale Q̃ = Q/E_P. α(Q̃²) runs 7.14% from 1/137.036 (IR, Q̃→0) to 1/127.9 (Q̃ = M_Z/E_P) `[established — PDG]`. Any formula presenting these as a fixed decimal silently uses the deep-IR Archimedean value at one scale. The compliant presentation: α(Q̃²) = r_e(Q̃)/λ̄_C(Q̃) with the evaluation scale stated. A fixed-decimal presentation of a running coupling is a HARD BLOCK unless accompanied by the running-ratio form AND its evaluation scale.
 
+**Trap 4 — Valuation artifact (v1.12, 2026-08-04):** p-adic valuations computed from
+decimal-precision measured masses are BASE-10 representation artifacts: decimal strings
+carry 10^k denominators (inflating v2/v5), and residual valuations at other primes (e.g.
+electron denominator {7:2, 11:1, 67:1}) come from the digit string, not the physical
+invariant. Additionally, "v_p(nu) ≠ 0 at ALL primes" is mathematically IMPOSSIBLE for
+any rational (finite prime support). Any valuation claim MUST state the exact rational
+source (a theory-predicted ratio), never a measured decimal. REG-IPR-003 (QNFO.UMP.003,
+2026-08-04) returned NULL for exactly this reason — the apparent 5-smooth dominance was
+a look-elsewhere base-10 artifact (research BP-3 density gate triggered).
+
 ### Rewrite Protocol
 
 | Dimensional Form | Dimensionless Form (Planck units) |
@@ -623,7 +719,6 @@ The 2026-08-01 OC paper v1.2 reformatted the Bekenstein bound from $\mathcal{I} 
 
 **No exceptions.** A dimensional formula without a dimensionless equivalent and Ostrowski rationale in a QNFO publication is a style violation equivalent to a banned word (§0.0) or mojibake (§0.2) — HARD BLOCK.
 
-
 ## §3 DUE DILIGENCE PROTOCOL — KG-First Discovery Gate
 
 Before ANY task involving "what exists":
@@ -636,7 +731,6 @@ GATE: If KG was NOT queried before claiming "comprehensive" → cherry-picking v
 1. Load `email-composer` via `skill_view("email-composer")` for business communication
 2. Load `knowledge` via `skill_view("knowledge")` for KG + memory
 3. This skill is ALWAYS loaded at session start (visible in skill_list)
-
 
 ---
 
@@ -704,4 +798,4 @@ Settings navigation (open-only):
 
 ## Version
 
-Current: **v1.11** (qnfo-core — WBS canonical registry relocation: canonical WBS docs now live at QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md (commits ed54653197/c3e3e22ae3 + d135d8da81 re-sync); archived wbs-6-synthesis retained as historical record; iteration-2 red-team confirmed N-2 consistency + WBS-TAXONOMY-GAP closed in research/git-github/kaizen; cross-ref git-github v2.12, research v2.62, kaizen v1.19; 2026-08-04) (qnfo-core — v1.10: WBS taxonomy 7 program codes; v1.11: registry relocation; 2026-08-04)
+Current: **v1.14** (qnfo-core — WBS canonical registry relocation: canonical WBS docs now live at QNFO/qnfo-ops:WBS/WBS.TAXONOMY.md + WBS-AGENT-PROTOCOL.md (commits ed54653197/c3e3e22ae3 + d135d8da81 re-sync); archived wbs-6-synthesis retained as historical record; iteration-2 red-team confirmed N-2 consistency + WBS-TAXONOMY-GAP closed in research/git-github/kaizen; cross-ref git-github v2.12, research v2.62, kaizen v1.19; 2026-08-04) (qnfo-core — v1.10: WBS taxonomy 7 program codes; v1.11: registry relocation; 2026-08-04)

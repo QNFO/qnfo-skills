@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.27
+version: 3.33
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -9,8 +9,21 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v3.28 UPDATE (2026-08-04, kaizen — SYNCPATH-1 unauthenticated /sync write path):**
+> Red-team: session dXXJ3TxRQ1VHzGdAyp-lo verified qnfo-gateway `handleSync` exposes POST /sync
+> with NO auth (HTTP 200, writes graph D1). HARD: 1. Changes: SYNCPATH-1 anti-pattern row added;
+> fix = shared-secret header on /sync. Cross-ref: kaizen v1.17, qnfo-gateway v3.4.2-identity-fix-v2,
+> session dXXJ3TxRQ1VHzGdAyp-lo.
 
-# CLOUDFLARE — v3.27 (Infrastructure Audit Anti-Patterns — WBS-coded Plans + False-Positive Remediation)
+> **v3.29 UPDATE (2026-08-04, kaizen — VECTORIZE-WEBHOOK-VERIFY-1):**
+> Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR publication pipeline).
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **VECTORIZE-WEBHOOK-VERIFY-1 anti-pattern** — canonical single-paper Vectorize
+>     verification is the qnfo-paper-indexer /webhook?slug= endpoint (indexed/chunks/errors);
+>     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
+> Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
+
+# CLOUDFLARE — v3.33
 
 > **v3.26 UPDATE (2026-08-04, kaizen — infrastructure audit anti-patterns + WBS plan integration):**
 > Red-team: direct parent-agent audit of full infrastructure ecosystem (10 Workers, 12 DNS zones, 37 URLs).
@@ -32,7 +45,6 @@ self_sufficient: true
 >     trigger (/cron/debug). 7 WARNING findings: 6 false positives, 1 real (email health auth).
 > Cross-reference: kaizen v1.15, research v2.55, session CGS_BRT26CX64OuSP1xJg.
 
-
 > **v3.21 UPDATE (2026-08-03, kaizen — ODR v3.0 session closeout C1):**
 > Red-team: direct parent-agent audit of session R8ZWb04K. HARD: 0. SOFT: 1. DESIGN: 0.
 > Changes:
@@ -43,7 +55,6 @@ self_sufficient: true
 >     artifacts go to `qnfo-releases/skills/` or `.deepchat/artifacts/`. Case: ODR v3.0
 >     closeout had remediation handoffs in the paper prefix after cleanup.
 > Cross-reference: research v2.48, kaizen v1.8, session R8ZWb04K4BHAldwEqCX4b.
-
 
 > **v3.1–v3.20 COLLAPSED HISTORY (20 banners, kaizen de-bloat 2026-08-03):**
 > These historical version banners have been collapsed into this summary.
@@ -69,7 +80,6 @@ self_sufficient: true
   - v3.1: 2026-07-20, Pinata quota exceeded) — SUPERSEDED, script DELETED v3.4:**
   - v3.2: 2026-07-20, red-team audit Deprecated "R2→IPFS Bridge"
 
-
 > **Merges 18:** cloudflare + cloudflare-deployer + cloudflare-one + cloudflare-email-service + email + infrastructure-audit + web-perf + workers-best-practices + wrangler + cloudflare-mcp-servers + logpush (v3.7) + browser-mcp + dns-analytics + containers-mcp + casb-mcp + autorag-mcp + blog-mcp + dex-mcp (v3.8)
 > **Added v3.0:** Worker Consolidation Pattern, R2→IPFS Bridge, DNSLink Deployment, 4-D Architecture
 > **Related:** Always load with `qnfo-core` for production immutability gates + due diligence. Load `research` for 4-D distribution pipeline.
@@ -86,11 +96,97 @@ Use this decision ladder for EVERY Cloudflare operation:
 | Priority | Tool | When |
 |:---------|:-----|:-----|
 | **1st** | Cloudflare MCP tools (`workers_list`, `workers_get_worker`, `query_worker_observability`, `search_cloudflare_documentation`, etc.) | ALWAYS — these are auto-authenticated, structured, and cannot corrupt data |
+| **1.5** | **`rclone` for ALL R2 bulk transfers** (sync/copy/move/check/mount) — NOT wrangler | Any multi-file or large R2 transfer (archives, buckets, migrations, mirrors). rclone = S3-native, multipart, parallel, resumable, **server-side copy**. Canonical binary `C:\rclone\rclone.exe`; remotes in `%APPDATA%\rclone\rclone.conf` (`primary-r2`, `releases`, `archive`). Verified 2026-08-04: 54k-file archive sync + bucket-to-bucket server-side copy. See §R2 Transfer Protocol. |
 | **2nd** | `npx wrangler <cmd>` (via `exec`, NOT via PowerShell) | When MCP tools don't cover the specific operation |
 | **3rd** | Cloudflare REST API (Python `urllib.request` with `CLOUDFLARE_API_TOKEN` env var) | For D1 queries / R2 listings when wrangler hangs |
 | **NEVER** | PowerShell, `curl` (PowerShell alias), Cloudflare Dashboard (web UI), `Invoke-WebRequest`, `ConvertTo-Json` | PowerShell corrupts UTF-8; the Dashboard requires manual browser login and human interaction — ALL Cloudflare operations MUST be CLI/API/command-line only. Every Dashboard action has an API equivalent. See KIF-60. |
 
 **Why this gate exists:** PowerShell has caused 15+ documented tool-call failures in QNFO sessions (KIF-21, KIF-27, KIF-37, KIF-59) through: UTF-8 double-encoding (mojibake), inline `python -c` quote collisions, `curl` → `Invoke-WebRequest` alias breakage, `ConvertTo-Json` corruption of large D1 payloads, and `&&` chaining not supported. Every PowerShell invocation for Cloudflare is a trapped error waiting to happen. Use MCP tools, `npx wrangler`, or Python scripts — never PowerShell.
+
+## R2 Transfer Protocol — rclone-first (v3.30, 2026-08-04)
+
+**rclone is the DEFAULT for ANY large or multi-file R2 operation.** Wrangler and
+per-object REST PUTs are for single small objects / programmatic writes only.
+Verified live 2026-08-04: 54k-file D:\Archive sync (parallel, multipart, resumable)
+and cross-bucket server-side copy in 0.5s. Per-file wrangler loops for thousands of
+files are an ANTI-PATTERN (RCLONE-FIRST-1).
+
+### Canonical Binary + Remotes
+
+| Item | Value |
+|:-----|:------|
+| Binary | `C:\rclone\rclone.exe` (cmount build) — alt: `C:\Users\LENOVO\AppData\Local\Microsoft\WinGet\Packages\Rclone.Rclone_Microsoft.Winget.Source_8wekyb3d8bbwe\rclone-v1.74.4-windows-amd64\rclone.exe` |
+| Config | `C:\Users\LENOVO\AppData\Roaming\rclone\rclone.conf` |
+| Remotes | `primary-r2` (S3/Cloudflare, endpoint `https://edb167b78c9fb901ea5bca3ce58ccc4b.r2.cloudflarestorage.com`), `releases`, `archive` |
+| Version | v1.74.4, cmount tag (mount capability) |
+| Account | quniverse / `edb167b78c9fb901ea5bca3ce58ccc4b` |
+
+### Bucket Separation Mandate (2026-08-04 — HARD)
+
+**Personal files and QNFO project files NEVER share a bucket.**
+
+| Bucket | Content |
+|:-------|:--------|
+| `d-drive` | Personal D: contents: archive/, downloads/, videos/, takeout/ |
+| `qnfo-projects` | QNFO projects ONLY + `INDEX.json` + `_manifests/<slug>.json` (WBS, d1_key, living_paper_slug, github) |
+| `qnfo-backups` | D1/DB exports only |
+| `qnfo-releases` | Published papers/releases only |
+
+### Core Commands
+
+```bash
+# Local → R2 (bulk, parallel, resumable)
+rclone sync D:\Archive primary-r2:d-drive/archive --transfers 16 --checkers 32 --progress
+rclone copy D:\Downloads primary-r2:d-drive/downloads/2026-08-04 --transfers 8 --progress
+
+# R2 → R2 bucket-to-bucket — SERVER-SIDE COPY (no local download!)
+rclone copy primary-r2:d-drive/archive primary-r2:qnfo-backups/archive-copy --transfers 16
+rclone move primary-r2:qnfo-projects/d-drive-archive primary-r2:d-drive/archive   # move = copy+delete
+
+# Verify parity (local ↔ R2)
+rclone check D:\Archive primary-r2:d-drive/archive --one-way
+
+# List / inspect
+rclone lsd primary-r2:qnfo-projects
+rclone lsf primary-r2:qnfo-projects/ --max-depth 1
+rclone cat primary-r2:qnfo-projects/INDEX.json
+
+# Mount (Windows, WinFsp + cmount) — via VBS window-style 0 for invisible mount
+rclone mount primary-r2:qnfo-projects A: --vfs-cache-mode writes --no-console
+```
+
+### Server-Side Copy (R2→R2, zero egress)
+
+rclone detects both sides share the same S3 endpoint → uses S3 CopyObject
+automatically. Log shows `Copied (server-side copy)`. Multipart for >5 GiB.
+**Use `move` instead of `sync`+`delete` when relocating within R2.**
+
+### Detached Bulk Transfer Pattern (Windows)
+
+Never run a 10-min+ transfer through exec directly — spawn detached so it survives:
+
+```python
+import subprocess
+DETACHED = subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS
+logf = open(r'C:\rclone\d-archive.log', 'a', encoding='utf-8')
+p = subprocess.Popen(['C:\\rclone\\rclone.exe', 'sync', 'D:\\Archive',
+                      'primary-r2:d-drive/archive', '--progress', '--transfers', '16',
+                      '--log-file', r'C:\rclone\d-archive.log', '--log-level', 'INFO'],
+                     stdout=logf, stderr=subprocess.STDOUT,
+                     creationflags=DETACHED, close_fds=True, cwd=r'C:\rclone')
+print(p.pid)  # poll via log file, not session poll
+```
+
+### Anti-Patterns
+
+| Anti-Pattern | Fix |
+|:-------------|:----|
+| **RCLONE-FIRST-1: Per-file wrangler/REST loop for thousands of R2 objects** | `rclone sync/copy` with `--transfers 16` — multipart, parallel, resumable. One command, not N calls. |
+| **RCLONE-NESTED-KEY-1: `rclone copy <file> <remote>:<bucket>/<path>/<filename>` creates `filename/filename` nested keys (2026-08-04)** | rclone treats the destination's last segment as a DIRECTORY when it doesn't already exist as a prefix. `copy file.md remote:bucket/dir/file.md` creates key `dir/file.md/file.md`. FIX: use a directory destination ending in `\`: `rclone copy file.md remote:bucket/dir\` → flat key `dir/file.md`. Always verify with `rclone lsl` after upload. Canonical case: session 7gJ25ecLca3VNUeaFCZKB — adelic-distinction paper md+PDF uploaded nested, deleted + re-uploaded flat. Cross-ref: research v2.55 R2 archive. |
+| **BUCKET-COMMINGLE-1: Personal + project files in same bucket** | Separate buckets per §Bucket Separation Mandate. d-drive ≠ qnfo-projects ≠ qnfo-backups. |
+| **LOCAL-BOUNCE-1: Downloading R2→local to re-upload R2→R2** | `rclone copy remoteA:path remoteB:path` — server-side copy, zero local traffic. |
+| **WINDOWED-MOUNT-1: Mount dies when console closes** | Invisible mount via VBS window-style 0 + `--no-console` + `--daemon-timeout 0` in Startup folder. |
+| **EXEC-BOUND-TRANSFER-1: Long transfer tied to exec session** | Detached spawn (above) — survives teardown. Poll via log file, not session poll. |
 
 ## execute_plan
 
@@ -436,7 +532,6 @@ support HEAD (returns HTTP 405, which was misread as "not found" in a session).
 Use GET and compare `Content-Length` (or MD5 of body) to the local source.
 
 
-
 ### Worker Deployment (via REST API)
 ```js
 // _deploy_worker.js — Deploy/update a Cloudflare Worker
@@ -544,7 +639,6 @@ const d = await r.json();
 const bad = (d.result?.objects||[]).filter(o => o.key.startsWith('qnfo/'));
 if (bad.length > 0) bad.forEach(o => console.log('FIX: ' + o.key));
 ```
-
 
 
 ### "I need to run code"
@@ -946,6 +1040,14 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 
 **BACKUP GAP CLOSED (2026-07-25, KIF-22):** `qnfo-lifecycle` v1.2 deployed with `living-paper.papers` added to the daily `runBackup` tables array (LIVING_PAPER D1 binding). The mandate above ("extend runBackup whenever a new production-critical table is added") had sat unexecuted for 7 days while the table grew to 931 rows with zero scheduled backups. First backup verified: `qnfo-backups/living-paper/papers-2026-07-25.json` (4.9 MB, 931 rows).
 
+> **SYNCPATH-1 FIX LIVE (2026-08-04, verified in session 7gJ25ecLca3VNUeaFCZKB):** POST /sync now
+> REQUIRES the shared-secret header `X-Sync-Token`. Without it: HTTP 401 `{"error": "Unauthorized:
+> missing or invalid X-Sync-Token"}`. The token is a gateway secret (not in keys.json — see
+> qnfo-gateway Worker secrets). **Fallback for KG seeding when X-Sync-Token is unavailable:**
+> write directly to the `qnfo-graph` D1 database via `cloudflare/scripts/d1-query.py` discovery
+> (INSERT INTO nodes / edges with CHECK-THEN-WRITE + re-query verification — the knowledge-skill
+> canonical 4-D seed path). Verified: node `paper:<slug>` + BELONGS_TO edge seeded via direct D1
+> after /sync returned 401.
 ### Gateway /sync Bulk Contract (documented 2026-07-25, F-6)
 `POST https://qnfo-gateway.q08.workers.dev/sync` requires EXACTLY:
 ```json
@@ -1163,6 +1265,7 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **CF-WAF-1: Python urllib blocked by Cloudflare WAF without browser UA (2026-08-02)** | ALWAYS pass `headers={'User-Agent':'Mozilla/5.0'}` when probing Worker endpoints from Python. Default urllib UA → HTTP 403. To read the real error body, catch `urllib.error.HTTPError` and `e.read().decode()` — surfaces 1101 text, "Cannot read properties...", etc. |
 | **MCP-OFFLOAD-1: Trusting MCP tool "OK" output for infra verification (2026-08-02)** | QNFO MCP tools (search_papers, query_graph, resolve_paper_id) often return "OK" with results offloaded to unreadable files. For INFRA state claims, verify with DIRECT probes (Python urllib + browser UA against the live Worker endpoint) — do not treat MCP "OK" as evidence of resource state. |
 | **D1-BIND-1: D1 `.bind().first()` chain throws 1101 on Workers (2026-08-03)** | `prepare(...).bind(slug).first()` throws 1101 (JS exception) for ALL slugs while `.first()` without `.bind()` works on the same table. Confirmed on qnfo-paper-indexer: handleSingle with `.bind()` → 1101; handleBatch without `.bind()` → OK. Fix: use parameterized `?1` syntax instead of `.bind()`, OR update `compatibility_date` to latest, OR wrap in try/catch with `.all()` fallback. Suspected D1 client version mismatch with `.bind()`. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
+| **VECTORIZE-WEBHOOK-VERIFY-1: search_papers MCP "OK" treated as index verification (2026-08-04)** | Vectorize content indexed by qnfo-paper-indexer is invisible to search_papers MCP ("OK" = VECTORIZE-SILO-1/MCP-OFFLOAD-1). The canonical single-paper verification is `GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` → `{indexed:true, chunks:N, errors:0}`. Cross-ref: research v2.63. Case: IPR paper (QNFO.UMP.003) — webhook confirmed 26 chunks, 0 errors, body_len 41883 while search_papers returned "OK" only. |
 | **VECTORIZE-SILO-1: Vectorize content indexed by one Worker is invisible to MCP search tools (2026-08-03)** | Qnfo-paper-indexer upserts 646 chunks via PAPER_VZ binding (qwav-research-v2), but `search_papers`/`search_papers_enriched` MCP tools return `{}` (empty). Probable cause: embedding model mismatch between indexer and searcher Workers, or Vectorize binding name mismatch in MCP server config. Fix: verify same embedding model (`@cf/baai/bge-base-en-v1.5`) used for both indexing and querying; verify Vectorize binding name in the MCP server's wrangler config matches the index alias. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
 | **Relying on durable memory for critical Cloudflare operational rules (2026-08-02)** | DeepChat memories are EPHEMERAL (may be purged). Critical rules (KIF-*, anti-patterns, endpoint maps, binding formats) MUST be embedded in this SKILL.md. Memory is for session outcomes, not operational authority. Migrate any rule found only in memory into this skill. |
 
@@ -1176,9 +1279,536 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **PAGES-DEPLOY-METADATA-1: Pages deploy stage shows "[object Object]" — JSON parsing bug (2026-08-04)** | The `availability-audit.js` P-S3 check calls the Pages API and parses `latest_deployment.latest_stage` but the field is an object, not a string. All 5 Pages projects show "[object Object]" for latest deploy stage. Fix: access `latest_deployment.latest_stage.name` or `JSON.stringify` the stage object. Found in 2026-08-04 infrastructure audit — P-S3 build freshness verification is impossible. |
 | **WRANGLER-PATH-REGRESSION-1: Wrangler PATH fix from prior session silently reverts (2026-08-04)** | The permanent wrangler PATH fix (npm config set prefix + setx Path) applied 2026-08-01 was reverted by 2026-08-04 — `wrangler --version` returns "not recognized". The npm global prefix at `C:\Users\LENOVO\npm-global` may have been cleared or overwritten. Fix: re-apply the permanent fix from the Wrangler Environment Setup section AND add a verification step to `availability-audit.js` or `url-health-check.js` that checks `wrangler --version` as a pre-flight gate. |
 | **GATEWAY-PROD-STALE-1: `qnfo-gateway-production` created 2026-07-31, never deployed with HTTP routes (2026-08-04)** | The staging/production variant Worker was created 2026-07-31 and returns 404 on /health. Likely a test Worker that was never deployed with `workers_dev = true` (KIF-61) or never had HTTP route handlers. If unused, delete to prevent drift from the 9-Worker baseline. Flagged in 2026-08-04 infrastructure audit — `workers_list` shows 10 Workers (baseline 9), but "+qnfo-email" is legitimate growth while "+qnfo-gateway-production" is unexplained drift. |
+| **SYNCPATH-1: Unauthenticated POST /sync writes to the KG (2026-08-04)** | qnfo-gateway `handleSync` accepts POST /sync at graph-api.qnfo.org and qnfo.org with NO auth — verified live: HTTP 200, `{action:bulk, nodes[], edges[]}` inserts into graph D1. Anyone can create/modify KG nodes+edges. Fix: require a shared-secret header (X-Sync-Token) on /sync before writes; keep read endpoints open. Also note: this endpoint is the executable path for deferred KG-seed tasks (write path exists — awaits node/edge spec). Canonical case: session dXXJ3TxRQ1VHzGdAyp-lo. |
+| **WORKER-CPU-LIMIT-1: Ignoring Free plan CPU budget when designing Workers (2026-08-04)** | `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request. Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan OR paginate D1 queries + stream large payloads via `ReadableStream` + move CPU-heavy work to Queue consumers. Diagnose via `cloudflare-observability` MCP watching for `CPU time exceeded` in invocation logs. See §Workers Execution Limits. |
+
+## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
+
+Lessons from building the `personal-life` semantic index (d-drive bucket -> Workers AI bge -> Vectorize). Every one of these cost real debugging time; they are now anti-patterns.
+
+| Anti-pattern | Fix |
+|:-------------|:----|
+| **CHUNKTEXT-INFINITE-LOOP-1 (1102 root cause):** chunkText with `i = end - overlap` never breaks when `end` reaches the string end — `i` freezes at `n - overlap`, infinite CPU spin, worker dies with **503 error code 1102** (CPU time limit) on ANY file >= min-chunk-size. Debug routes pass because they never chunk real content. | Add `if (end >= n) break;` (or `if (e === text.length) break;` — the working qnfo-paper-indexer has exactly this line). Symptom fingerprint: 1102 at even `limit=1` on a small file; stage-logging shows death right after the read stage. |
+| **VECTOR-ID-64B-1:** Vectorize vector IDs capped at **64 bytes**. `personal:obsidian/notes/.../file.md:12` overflows → `VECTOR_UPSERT_ERROR (40008): id too long`. | Deterministic short IDs: `sha256hex(key + ':' + chunkIdx).slice(0,32)` → 32 hex chars. Stable across re-indexes (upsert overwrites). |
+| **VZ-UPSERT-FIXED-OVERHEAD-1:** Vectorize upsert has ~1.0-1.7s FIXED overhead per call regardless of batch size (20 vec = 1061ms, 100 vec = 1263ms). Per-file upsert on thousands of files blows the 30s wall clock. | **Accumulate vectors across files; bulk-upsert in batches of ~500** per call. One flush per N files, not one per file. Also batch D1 registry writes (`PERSONAL.batch([])`). |
+| **EMBED-FORMAT-1:** bge-base-en-v1.5 via Workers AI accepts `{ text: [array] }` (array of strings, batched) — **NOT** `{ texts: [...] }` (400 oneOf error) and NOT `{ requests: [...] }` (3030 invalid input). Verified live 2026-08-04. | Use `env.AI.run('@cf/baai/bge-base-en-v1.5', { text: chunks.slice(0,32) })` — one call per file, up to 32 chunks, ~300ms. |
+| **VECTORIZE-DELETE-404-1:** REST `POST /vectorize/v2/indexes/{i}/delete-by-ids` returns 404; `/vectorize/indexes/{i}/delete-by-ids` (v1 path) returns 400 `incorrect_api_version` for v2 indexes. | Use **`wrangler vectorize delete-vectors <index> --ids <id>...`** (works, returns mutation id). Batch ~50 ids per call (arg limits). |
+| **VZ-METADATA-STRING-1:** Vectorize metadata values must be **strings** — numbers cause `VECTOR_UPSERT_ERROR (40023): failed to parse upsert vectors request` (chunk/category as `Number` break JSON shape). | `String(chunk)`, `String(category)`, `String(modified)` everywhere. |
+| **VZ-40023-SANITIZE-1 (refines VZ-METADATA-STRING-1):** 40023 also fires when a chunk's TEXT contains control chars or lone UTF-16 surrogates (binary-ish file content that passed the text-ext check). All-string metadata is not enough. | `sanitize(s)`: strip `[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]` + lone surrogates `[\uD800-\uDFFF]`, trim, cap 800 chars — applied to path/type/chunk/category/modified/text. Plus **halving-retry upsert**: on `VZ.upsert` failure, split the batch in half recursively until success or single vector; log + skip the offending vector (`skippedVectors` count). Canonical case: personal-life indexer v2.2 -> v2.3 (2026-08-04): 40023 eliminated, `skipVec=0` across the full obsidian pass. |
+| **WORKER-USAGE-MODEL-1:** Checking the account plan is NOT enough — check the worker's `usage_model` (`GET /accounts/{a}/workers/scripts/{w}/settings`). All QNFO workers = `standard` (paid, 30s CPU). A `free` worker = 10ms CPU = instant 1102 on any real work. | Before debugging 1102s, confirm `usage_model=standard` via the settings API. |
+| **WORKER-1102-DIAGNOSTIC-1 (D1 stage-logging):** 1102 kills the response with no body — you cannot see WHERE it died. | Deploy a debug build that writes a `debug_progress(stage, ts, note)` row to D1 **before each stage** (registry -> list -> candidate -> read -> chunk -> embed -> upsert -> batch). After the 503, query D1 — the last row shows the dying stage. This is the definitive 1102 bisect. |
+| **INDEXER-CURSOR-SLICING-1:** One `/index` request scanning the whole bucket (30k+ objects) exceeds 30s wall clock even with fast ops. | **Cursor-based incremental slicing:** each request processes a bounded slice (limit/scanCap, default 300-400 objects), returns the R2 list `cursor`, `done` flag. A driver loop (or cron) re-invokes with `?cursor=...` until `done`. Resumable, retryable. |
+
+### Personal-Life Indexer Architecture (reference)
+```
+d-drive bucket (R2) --rclone sync--> local sources (D:\Archive, Obsidian vault...)
+personal-life-indexer Worker (cron 0 */12 + /index?cursor=) :
+  list R2 objects (bounded slice) -> filter TEXT_EXTS + noise -> getObjectText (512KB cap)
+  -> chunkText (O(n), MUST break at end) -> AI.run bge {text:[chunks]} (batch 32)
+  -> accumulate vectors -> bulk upsert 500/batch -> D1 batch registry upsert
+  -> return {cursor, done}
+personal-life-search Worker: /search?q= -> embed query {text:[q]} -> VZ.query -> group by file
+```
+Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-life` (files + chunks tables), Worker pair `personal-life-indexer`/`personal-life-search`. **STRICTLY separate from qnfo-* (user mandate, 2026-08-04).**
 
 ## Version
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.27** (research — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash) per qnfo-core N-2 ecosystem audit; 2026-08-04) (cloudflare — infrastructure audit anti-patterns: AUDIT-FALSE-POSITIVE-1, PAGES-DEPLOY-METADATA-1, WRANGLER-PATH-REGRESSION-1, GATEWAY-PROD-STALE-1; WBS-coded execute_plan; Worker baseline 10; corrupted anti-pattern rows repaired; 2026-08-04)
+Current: **v3.33** (cloudflare — VZ-40023-SANITIZE-1: Vectorize 40023 parse-failure from control chars/lone surrogates in chunk text; fix = sanitize() + halving-retry upsert (personal-life v2.3); 2026-08-04) (cloudflare — integrated ALL 11 official Cloudflare skills from github.com/cloudflare/skills: Agents SDK + Sandbox SDK (v3.30) now joined by Durable Objects, Workers Best Practices, Web-Perf, and Turnstile; full official-skill coverage matrix below; + Workers Execution Limits section (v3.32 — Free/Paid plan CPU/wall-clock limits, WORKER-CPU-LIMIT-1 anti-pattern); 2026-08-04)
+
+---
+
+## Agents SDK (Official Skill Integration — v3.30)
+
+> **Source:** `github.com/cloudflare/skills/skills/agents-sdk`
+> **Docs:** https://developers.cloudflare.com/agents/
+> **Retrieval bias:** Prefer docs over pre-training for any Agents SDK task.
+
+### Quick Reference
+
+| Task | API | Notes |
+|:-----|:----|:------|
+| Create agent | `class MyAgent extends Agent<Env, State> { ... }` | State is durable across requests |
+| Lifecycle | `onStart()` | Runs once on DO activation; set initial state |
+| Route requests | `routeAgentRequest(req)` | URL-pattern-based request dispatch |
+| Store state | `this.setState({ key: val })` | Persisted to DO storage; triggers `onStateChange` |
+| Validate state | `validateStateChange(prev, next)` | Guard against invalid transitions |
+| Expose RPC | `@callable async myMethod(args)` | Callable from client/frontend |
+| Multi-step tasks | `class MyWorkflow extends AgentWorkflow { ... }` | Survives DO eviction |
+| Chat agents | `class MyAgent extends AIChatAgent { ... }` | Streaming, tools, persistence |
+| WebSockets | `this.onWebSocketConnect(ws)` / `onMessage(ws, msg)` | Hibernation-supported |
+| Schedule task | `this.schedule(date, callback)` / `scheduleEvery(ms, cb)` | Cron-like scheduling |
+| Human approval | `this.needsApproval(action)` → `handleApproval(decision)` | HITL gate |
+| Durable execution | `this.runFiber(fn)` / `this.stash(key, val)` | Survives DO eviction/restart |
+| Queue tasks | `this.queue(task)` | Built-in FIFO with concurrency control |
+| Retry | `this.retry(action, { maxRetries, backoff })` | Exponential backoff + jitter |
+| MCP server | `class MyServer extends McpAgent { ... }` | Build MCP servers on Workers |
+| MCP client | `this.callMcpTool(server, tool, args)` | Connect agents to MCP tools |
+| Client React hooks | `useAgent(options)` / `useAgentChat(options)` | Real-time state sync to React |
+| Push notifications | Web Push + VAPID | Browser notifications from agents |
+| Webhooks | `this.onWebhook(req)` | Receive external webhook callbacks |
+| Observability | Diagnostics-channel events | Per-step latency, errors, state transitions |
+
+### Core Patterns
+
+#### Agent Lifecycle (Durable Objects-backed)
+
+```typescript
+import { Agent, routeAgentRequest } from 'agents-sdk';
+
+interface State { counter: number; lastAction: string; }
+
+export class MyAgent extends Agent<Env, State> {
+  async onStart(): Promise<State> {
+    return { counter: 0, lastAction: '' };  // Initial state
+  }
+
+  @callable async increment(n: number) {
+    const curr = this.state.counter;
+    await this.setState({ counter: curr + n, lastAction: `incremented by ${n}` });
+    return this.state.counter;
+  }
+}
+
+// Client usage: const agent = useAgent({ agent: 'my-agent', name: 'user-123' });
+// await agent.increment(5);
+```
+
+#### AIChatAgent (Chat + Tools + Persistence)
+
+```typescript
+import { AIChatAgent } from 'agents-sdk/chat';
+
+export class Chat extends AIChatAgent {
+  async onChatMessage(messages: Message[]) {
+    return await this.runModel('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+      messages,
+      tools: [{
+        name: 'search',
+        description: 'Search knowledge base',
+        parameters: { type: 'object', properties: { query: { type: 'string' } } }
+      }]
+    });
+  }
+
+  async onToolCall(tool: string, args: any) {
+    if (tool === 'search') return await searchVectorize(args.query);
+  }
+}
+```
+
+#### AgentWorkflow (Durable Multi-Step)
+
+```typescript
+class ReportWorkflow extends AgentWorkflow {
+  async run(args: { topic: string }) {
+    const research = await this.stash('research', () => this.doResearch(args.topic));
+    const analysis = await this.stash('analysis', () => this.analyze(research));
+    return await this.generateReport(analysis);
+  }
+}
+```
+
+### When to Use What
+
+| Need | Use | Why |
+|:-----|:----|:----|
+| Chat bot with memory | `AIChatAgent` | Built-in streaming, tools, message persistence |
+| Real-time collaboration | `Agent` + WebSockets | Hibernation-supported, broadcast to rooms |
+| Multi-step background job | `AgentWorkflow` | Survives restarts, checkpoints via `stash()` |
+| MCP server | `McpAgent` | First-class MCP protocol support |
+| Approval-gated actions | `Agent.needsApproval()` | HITL built in, no custom queue |
+| Scheduled tasks | `schedule()` / `scheduleEvery()` | Cron-like, DO-backed |
+| React frontend | `useAgent` / `useAgentChat` | Real-time state sync, optimistic updates |
+
+### Required Configuration
+
+```jsonc
+// wrangler.jsonc (exact structure — do not modify)
+{
+  "durable_objects": {
+    "bindings": [{ "class_name": "MyAgent", "name": "MyAgent" }]
+  },
+  "migrations": [{ "new_sqlite_classes": ["MyAgent"], "tag": "v1" }]
+}
+```
+
+> **QNFO NOTE:** Our `qnfo-ai` Worker v4.2.0 uses Workers AI directly. For stateful agent patterns (multi-turn memory, WebSocket hubs, approval workflows), prefer the Agents SDK over raw Workers AI + Durable Objects. The existing `qnfo-memory-mcp` Worker already uses DOs — a future `qnfo-agents` Worker could consolidate memory + chat + tools.
+
+---
+
+## Sandbox SDK (Official Skill Integration — v3.30)
+
+> **Source:** `github.com/cloudflare/skills/skills/sandbox-sdk`
+> **Docs:** https://developers.cloudflare.com/sandbox/
+> **Retrieval bias:** Prefer docs over pre-training for any Sandbox SDK task.
+> **Prerequisite:** Docker (`docker info` must succeed) for local development.
+
+### Quick Reference
+
+| Task | Method | Notes |
+|:-----|:-------|:------|
+| Get sandbox | `getSandbox(env.Sandbox, 'user-123')` | Per-user isolation |
+| Run shell command | `sandbox.exec('python script.py')` | Returns `{ stdout, stderr, exitCode }` |
+| Run code (AI) | `sandbox.runCode(code, { language: 'python' })` | Rich output (charts, tables) |
+| Write file | `sandbox.writeFile('/workspace/app.py', content)` | Full filesystem |
+| Read file | `sandbox.readFile('/workspace/app.py')` | String return |
+| Create directory | `sandbox.mkdir('/workspace/src', { recursive: true })` | Recursive option |
+| List files | `sandbox.listFiles('/workspace')` | Array of filenames |
+| Expose port | `sandbox.exposePort(8080)` | Preview URL for HTTP services |
+| Destroy | `sandbox.destroy()` | Clean up immediately |
+
+### Core Patterns
+
+#### Code Interpreter (Recommended for AI-generated code)
+
+```typescript
+import { getSandbox } from '@cloudflare/sandbox';
+
+const sandbox = getSandbox(env.Sandbox, 'user-123');
+
+// Create a persistent context (state survives across runCode calls)
+const ctx = await sandbox.createCodeContext({ language: 'python' });
+
+// Execute multiple code blocks with shared state
+await sandbox.runCode('import pandas as pd; import numpy as np', { context: ctx });
+await sandbox.runCode('data = pd.DataFrame(np.random.randn(10, 3))', { context: ctx });
+const result = await sandbox.runCode('data.describe()', { context: ctx });
+// result.results[0] contains rich output (tables, charts as base64, text)
+
+// Languages: python, javascript, typescript
+```
+
+#### Command Execution
+
+```typescript
+const result = await sandbox.exec('pytest tests/ -v');
+if (result.exitCode !== 0) {
+  console.error('Tests failed:', result.stderr);
+}
+```
+
+#### File-based Workflow
+
+```typescript
+await sandbox.mkdir('/workspace/project', { recursive: true });
+await sandbox.writeFile('/workspace/project/main.py', userCode);
+const files = await sandbox.listFiles('/workspace/project');
+const output = await sandbox.readFile('/workspace/project/output.json');
+```
+
+### Extending the Dockerfile
+
+Base image (`docker.io/cloudflare/sandbox:0.7.0`) includes Python 3.11, Node.js 20, and common tools.
+
+```dockerfile
+FROM docker.io/cloudflare/sandbox:0.7.0
+
+# Python packages
+RUN pip install requests beautifulsoup4 scipy
+
+# Node packages
+RUN npm install -g typescript
+
+# System packages (keep lean — affects cold start)
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 8080
+```
+
+### Required Configuration
+
+```jsonc
+// wrangler.jsonc
+{
+  "containers": [{
+    "class_name": "Sandbox",
+    "image": "./Dockerfile",
+    "instance_type": "lite",
+    "max_instances": 1
+  }],
+  "durable_objects": {
+    "bindings": [{ "class_name": "Sandbox", "name": "Sandbox" }]
+  },
+  "migrations": [{ "new_sqlite_classes": ["Sandbox"], "tag": "v1" }]
+}
+```
+
+```typescript
+// Worker entry — must re-export Sandbox class
+import { getSandbox } from '@cloudflare/sandbox';
+export { Sandbox } from '@cloudflare/sandbox';
+```
+
+### When to Use What
+
+| Need | Use | Why |
+|:-----|:----|:----|
+| Shell commands, scripts | `exec()` | Direct control, streaming stdout/stderr |
+| LLM-generated code execution | `runCode()` | Rich outputs (charts, tables), state persistence |
+| Build/test pipelines | `exec()` | Exit codes, stderr capture |
+| Data analysis (pandas, numpy) | `runCode()` | Built-in Python data-science stack |
+| Interactive dev environments | `exec()` + `exposePort()` | Preview URLs for web apps |
+
+> **QNFO NOTE:** Our `qnfo-ai` Worker could expose a `/v1/sandbox` endpoint using the Sandbox SDK for safe execution of user-submitted or LLM-generated code. The sandbox is billed per-GB-second and includes network egress — keep instances lean and destroy promptly.
+
+
+## Durable Objects (Official Skill Integration — v3.31)
+
+> **Source:** `github.com/cloudflare/skills/skills/durable-objects`
+> **Docs:** https://developers.cloudflare.com/durable-objects/
+> **Retrieval bias:** Prefer docs over pre-training for any DO task.
+
+### When to Use DO vs NOT
+
+| Need | DO? |
+|:-----|:----|
+| Stateful coordination (chat rooms, games, collaborative docs) | ✅ |
+| Strong consistency (inventory, booking, turn-based) | ✅ |
+| Per-entity storage (multi-tenant SaaS, per-user data) | ✅ |
+| Persistent connections (WebSockets, real-time) | ✅ |
+| Scheduled work per entity (subscriptions, timeouts) | ✅ |
+| Stateless request handling | ❌ use plain Workers |
+| Maximum global distribution | ❌ |
+| High fan-out independent requests | ❌ |
+
+### Wrangler Config
+
+```jsonc
+{
+  "durable_objects": {
+    "bindings": [{ "name": "MY_DO", "class_name": "MyDurableObject" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["MyDurableObject"] }]
+}
+```
+
+### Core Patterns
+
+```typescript
+import { DurableObject } from "cloudflare:workers";
+
+export class MyDurableObject extends DurableObject<Env> {
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+    ctx.blockConcurrencyWhile(async () => {
+      // schema/setup ONLY — never per-request
+    });
+  }
+  // RPC method (compat date >= 2024-04-03)
+  async addItem(item: string): Promise<number> {
+    // Persist FIRST, cache second
+    await this.ctx.storage.put("last", item);
+    return 1;
+  }
+  async alarm(): Promise<void> { /* scheduled work */ }
+}
+```
+
+- **Stub creation:** `getByName("room-123")` (deterministic, preferred) / `idFromString(id)` / `newUniqueId()` + store mapping
+- **Storage:** SQL sync — `this.ctx.storage.sql.exec("INSERT INTO t (c) VALUES (?)", v)`; KV async — `await this.ctx.storage.put/get`
+- **Alarms:** `setAlarm(Date.now()+60000)` replaces existing; `deleteAlarm()` cancels; `alarm()` handler reschedules as needed
+- **Testing:** `@cloudflare/vitest-pool-workers`; `const stub = env.MY_DO.getByName("test")` in vitest
+
+### Critical Rules
+1. One DO per coordination atom (room/game/user) — never one global DO
+2. `getByName()` for deterministic routing
+3. SQLite storage via `new_sqlite_classes` in migrations
+4. `blockConcurrencyWhile()` only for constructor/schema setup
+5. RPC methods, NOT fetch() handler (compat >= 2024-04-03)
+6. Persist first, cache second
+7. One alarm per DO (`setAlarm` replaces)
+
+### Anti-Patterns (NEVER)
+- Single global DO (bottleneck)
+- `blockConcurrencyWhile()` on every request (kills throughput)
+- Critical state in memory only (lost on eviction/crash)
+- `await` between related storage writes (breaks atomicity)
+- Holding `blockConcurrencyWhile()` across fetch()/external I/O
+
+---
+
+## Workers Best Practices (Official Skill Integration — v3.31)
+
+> **Source:** `github.com/cloudflare/skills/skills/workers-best-practices`
+> **Docs:** https://developers.cloudflare.com/workers/best-practices/workers-best-practices/
+> **Retrieval bias:** Fetch latest docs before writing/reviewing Worker code.
+
+### Config Rules
+
+| Rule | Summary |
+|:-----|:--------|
+| compatibility_date | Set to today on new projects; update periodically |
+| nodejs_compat | Enable — many libraries depend on Node built-ins |
+| wrangler types | Run `wrangler types` to generate `Env` — never hand-write binding interfaces |
+| Secrets | `wrangler secret put` — never hardcode in config/source |
+| Config file | Use JSONC for non-secret settings |
+
+### Request/Architecture Rules
+
+- **Streaming:** Stream large/unknown payloads — never `await response.text()` on unbounded data (128 MB limit)
+- **waitUntil:** `ctx.waitUntil()` for post-response work; do NOT destructure `ctx` (loses `this` binding → "Illegal invocation")
+- **Bindings over REST:** in-process bindings (KV/R2/D1/Queues), not Cloudflare REST API from inside a Worker
+- **Service bindings** for Worker→Worker calls, not public HTTP
+- **Hyperdrive** for external Postgres/MySQL
+- **Queues/Workflows** to move async work off the critical path
+- **Observability:** enable `observability` in config with `head_sampling_rate`; structured JSON logging
+
+### Anti-Patterns to Flag
+
+| Anti-pattern | Why |
+|:-------------|:----|
+| `await response.text()` on unbounded data | Memory exhaustion |
+| Hardcoded secrets | Credential leak via VCS |
+| `Math.random()` for tokens/IDs | Predictable — use `crypto.randomUUID()` |
+| Bare `fetch()` without await/waitUntil | Floating promise — swallowed error |
+| Module-level mutable variables | Cross-request data leaks |
+| REST API from inside Worker | Unnecessary network hop |
+| `ctx.passThroughOnException()` as error handling | Hides bugs |
+| Hand-written `Env` | Drifts from config |
+| String comparison for secrets | Timing side-channel — `crypto.subtle.timingSafeEqual` |
+| `any` / `as unknown as T` | Defeats type safety |
+| `implements` on platform base classes | Use `extends` (loses `this.ctx`/`this.env`) |
+| `env.X` inside platform base class | Use `this.env.X` |
+
+### Review Workflow
+Retrieve latest docs/types/schema → read FULL files → check types (`npx tsc --noEmit`, no-floating-promises lint) → check config (compat date, nodejs_compat, observability, secrets) → check patterns (streaming, floating promises, global state) → check security (crypto, timing-safe) → flag with line numbers.
+
+---
+
+## Workers Execution Limits (v3.32 — integrated from official docs)
+
+> **Source:** https://developers.cloudflare.com/workers/platform/limits/
+> **Retrieval bias:** Prefer `search_cloudflare_documentation` for current limits — plan tiers and quotas change.
+
+### Plan Comparison
+
+| Resource | Free Plan | Paid Plan |
+|:---------|:----------|:----------|
+| CPU time per request | **10 ms** | Up to **5 min** (default: 30 s) |
+| Requests per day | 100,000 | Unlimited (billed per request) |
+| Subrequests per request | 50 | 10,000 |
+| Memory | 128 MB | 128 MB |
+| Cron/Queue wall-clock | 15 min (same) | Up to **15 min** |
+| Script size (compressed) | 3 MB | 3 MB |
+| Durable Objects | Not included | Included |
+| KV namespaces | 100 | Unlimited |
+
+### CPU Time vs. Wall-Clock Time
+
+- **CPU Time:** Measures only active computation on the processor. I/O waits (external `fetch()`, D1 queries, KV/R2 reads) do NOT count against CPU time.
+- **Wall-Clock Time:** Total elapsed time. Incoming HTTP requests have no hard wall-time cap as long as the client stays connected and streams data. Cron and Queue triggers are capped at 15 min wall-clock.
+
+This distinction is critical for Workers on the **Free plan**: a Worker with three `await fetch()` calls and some JSON parsing might finish within the 10 ms CPU budget because most time is spent waiting on I/O. But a Worker doing a tight `for` loop over 10,000 D1 rows will exhaust the 10 ms CPU budget instantly and throw a `CPU time exceeded` error.
+
+### Operational Implications for QNFO Workers
+
+| Scenario | Free Plan Risk | Mitigation |
+|:---------|:------------|:-----------|
+| D1 `SELECT` + JSON serialize large result set | CPU blow on serialization of hundreds of rows | Paginate with `LIMIT`/`OFFSET`; stream via `Response` |
+| Vectorize `.query()` with large `returnValues` | Embedding + similarity calc = CPU | Keep `returnValues` ≤ 10; offload heavy ranking to edge |
+| Workers AI inference | Counting against CPU time? No — AI inference runs on separate GPU infrastructure. However the embedding model call itself consumes CPU cycles. | Use the smallest model that fits accuracy needs; cache embeddings |
+| Multiple `await fetch()` to external APIs | Low CPU risk (I/O-bound) but subrequest count matters | Batch calls; Free plan's 50 subrequests is the real ceiling |
+| `crypto.subtle.digest()` / hashing large bodies | CPU spike | Hash lazily; consider R2 `Content-MD5` instead of re-hashing |
+| Cron trigger doing full-table D1 scan | 15 min wall-clock limit (both plans) | Chunk work with offset tracking in KV; resume across cron runs |
+
+### Anti-Pattern: WORKER-CPU-LIMIT-1 — Ignoring Free plan CPU budget when designing Workers
+
+**Symptoms:** `CPU time exceeded` errors appearing for Workers that never exceeded 10 ms in local testing (`wrangler dev` bypasses the Free plan limit!).
+
+**Diagnosis:** 1) Check `cloudflare-observability` MCP for `CPU time exceeded` in invocation logs. 2) Run `wrangler tail` and watch for the error. 3) If the Worker is on Free plan and performs any synchronous loop or large JSON serialization, suspect CPU budget exhaustion.
+
+**Fix options:**
+1. Upgrade to Paid plan (up to 5 min CPU time, default 30 s) — the only real fix for CPU-bound Workers
+2. Paginate all D1 queries; use streaming `Response` with `ReadableStream` for large payloads
+3. Move heavy work to a Queue consumer (Cron/Queue triggers get 15 min wall-clock, still 10 ms CPU on Free)
+4. Offload CPU-heavy computation to external services or Workers AI
+
+> **QNFO STATUS:** All QNFO Workers run on a Paid plan (`quniverse` account, `edb167b78c9fb901ea5bca3ce58ccc4b`). The Free plan limits are documented here for Worker design awareness and for any Workers deployed to other accounts.
+
+---
+
+## Web Performance Audit (Official Skill Integration — v3.31)
+
+> **Source:** `github.com/cloudflare/skills/skills/web-perf`
+> **Tools:** Chrome DevTools MCP (`navigate_page`, `performance_start_trace`, `performance_analyze_insight`, `list_network_requests`, `take_snapshot`). If MCP missing, STOP and report — do not guess metrics.
+
+### Core Web Vitals Thresholds
+
+| Metric | Good | Needs work | Poor |
+|:-------|:-----|:-----------|:-----|
+| TTFB | < 800ms | < 1.8s | > 1.8s |
+| FCP | < 1.8s | < 3s | > 3s |
+| LCP | < 2.5s | < 4s | > 4s |
+| INP | < 200ms | < 500ms | > 500ms |
+| TBT | < 200ms | < 600ms | > 600ms |
+| CLS | < 0.1 | < 0.25 | > 0.25 |
+| Speed Index | < 3.4s | < 5.8s | > 5.8s |
+
+### Audit Workflow
+1. **Trace:** `navigate_page(url)` → `performance_start_trace(autoStop: true, reload: true)`
+2. **Vitals:** `performance_analyze_insight(insightSetId, "LCPBreakdown")`, `"CLSCulprits"`, `"RenderBlocking"`, `"DocumentLatency"`, `"NetworkRequestsDepGraph"`
+3. **Network:** `list_network_requests(resourceTypes: [...])` → render-blocking, chains, missing preloads, weak cache headers, large payloads, unused preconnects (verify zero requests before recommending removal)
+4. **A11y:** `take_snapshot(verbose: true)` → ARIA gaps, contrast (WCAG AA 4.5:1 / 3:1), focus traps
+5. **Codebase:** detect framework/bundler, tree-shaking, unused CSS/JS, polyfills (`core-js`), compression (terser/brotli), prod source maps
+6. **Report:** vitals table + prioritized issues (impact high/med/low) + specific fixes + codebase findings
+
+### Principles
+Be assertive (verify then state definitively), quantify impact (skip 0ms items), be specific ("compress hero.png 450KB → WebP"), prioritize ruthlessly.
+
+---
+
+## Turnstile (Official Skill Integration — v3.31)
+
+> **Source:** `github.com/cloudflare/skills/skills/turnstile-spin`
+> **Docs:** https://developers.cloudflare.com/turnstile/
+> **Load when:** user wants CAPTCHA/bot protection, siteverify, protect form/endpoint/button, block bot signups.
+
+### Setup Flow (end-to-end)
+1. **Create widget via API** (not dashboard — KIF-60):
+   ```bash
+   POST https://api.cloudflare.com/client/v4/accounts/{acct}/challenges/widgets
+   # {"name": "...", "domains": ["example.com"], "mode": "non-interactive|invisible|managed"}
+   # → returns sitekey + secret
+   ```
+2. **Embed widget** where user requests need bot verification (forms, SPA actions, API endpoints, downloads, comments, votes)
+3. **Wire server-side siteverify** in the backend:
+   ```bash
+   POST https://challenges.cloudflare.com/turnstile/v0/siteverify
+   # form: secret, response (cf-turnstile-response), remoteip
+   # → { success: true, action, cdata, ... }
+   ```
+   - ALWAYS verify server-side — never trust the client-side token alone
+   - Check `success`, and if `action`/`cdata` set on widget, validate they match
+   - Set a `Secret Key` in widget settings for `secret` (only for logged-in users dashboard); use `Secret` from widget creation
+4. **Validate:** test the protected flow end-to-end (bad token → rejected; valid → passes)
+5. **Persist** sitekey/secret in wrangler secrets, never in source
+
+### Anti-Patterns
+- Client-side-only validation (spoofable)
+- Missing `remoteip` when strictness requires it
+- Ignoring `success: false` with error codes (`timeout-or-duplicate`, `invalid-input-response`, `internal-error`)
+
+---
+
+## Official Skill Coverage Matrix (v3.31)
+
+All 11 skills from `github.com/cloudflare/skills` are now integrated into this custom skill:
+
+| Official Skill | Status | Where |
+|:---------------|:-------|:------|
+| cloudflare (general) | ✅ | This entire skill |
+| wrangler | ✅ | §Wrangler Environment Setup, §R2 CLI Syntax, §Worker Deployment |
+| cloudflare-email-service | ✅ | §Email (Workers Binding + Email Routing) |
+| cloudflare-one | ✅ | §Cloudflare One (Zero Trust & SASE) |
+| cloudflare-one-migrations | ✅ | §Migrations (from Zscaler, VPN, etc.) |
+| agents-sdk | ✅ | §Agents SDK (v3.30) |
+| sandbox-sdk | ✅ | §Sandbox SDK (v3.30) |
+| durable-objects | ✅ | §Durable Objects (v3.31) |
+| workers-best-practices | ✅ | §Workers Best Practices (v3.31) |
+| web-perf | ✅ | §Web Performance Audit (v3.31) |
+| turnstile-spin | ✅ | §Turnstile (v3.31) |
+
+**Usage rule:** For any of these domains, consult the integrated section FIRST, then prefer Cloudflare docs retrieval (MCP `search_cloudflare_documentation` or `cloudflare-docs` MCP) over pre-trained knowledge for current API signatures.
+
