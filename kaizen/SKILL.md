@@ -1479,7 +1479,7 @@ and durable sandboxes. Its AGENTS.md coding standards are gold:
    Anything read back later — audit, logs, resolved config, queued/in-flight work — must
    live in a DURABLE store. RAM-only is fine only as a cache in front of a durable store,
    or for genuinely disposable re-derivable state. **This is the code-level twin of the
-   Thin-Client Canonical Asset Protocol (git-github v2.17):** local/process state is
+   Thin-Client Canonical Asset Protocol (git-github v2.19):** local/process state is
    ephemeral; durable state lives in git/R2/D1/Postgres.
 5. **Security postures:** Strict (every tool call pauses for human approval except
    no-effect turn-enders) / Auto (default — classifier screens provenance-labelled
@@ -1773,7 +1773,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **Subagent reads input files but parent treats file-read-only as "audit complete"** | When a subagent reads the target file but its output is truncated before it produces findings, the parent MUST fall back to direct audit. The subagent READING a file is NOT evidence that it COMPLETED the audit. The signal is: subagent reads input files in log → no findings produced → truncated. See §Subagent Failure Handling rule 4: fall back on the SECOND poll, not the tenth. |
 | **Repeated polling of subagents that produced zero findings** | When subagent output shows file-reads but no findings after the first poll, do NOT poll again. The subagent is truncated — polling again wastes tool calls. One poll confirms the truncation pattern. Fall back to direct audit immediately on the second tool call. |
 | **Pasting LinkedIn cookies expecting MCP auth to work** | In linkedin-mcp-tools v2.0.3, `LINKEDIN_COOKIE` is schema-only and never injected (zero addCookies/cookieSet calls). Use the persistent-profile `--login` flow and set `LINKEDIN_PROFILE_DIR`. See `linkedin-mcp` skill. |
-| **Starting long-running browser/login processes via plain exec** | Exec-session reaping kills them (KIF-12). Use the S1.6 detached-process pattern from windows-command-patterns v2.1. |
+| **Starting long-running browser/login processes via plain exec** | Exec-session reaping kills them (KIF-12). Use the S1.6 detached-process pattern from windows-command-patterns v3.13. |
 | **RCS-1: Producing audit findings from assumed subagent completion while tasks are still `running`/`queued`** | **HARD GATE:** After dispatching subagents or background exec, call `info`/`wait`/`log`. If ANY task is `running`, response MUST read `[BLOCKED: N tasks still running]`. Findings may only be claimed from READ output. |
 | **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `subagent_orchestrator(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
 | **RCS-3: Using subagents for time-sensitive red-team audit tasks when truncation is a KNOWN systemic anti-pattern** | Subagents for audit tasks = HARD BLOCK. Only parallel search tasks may use subagents. All audit/finding tasks use direct parent-agent execution with actual script output. |
