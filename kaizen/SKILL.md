@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.49
+version: 1.50
 
 
 
@@ -74,7 +74,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.49
+# KAIZEN — v1.50
+
+> **v1.50 UPDATE (2026-08-05, kaizen — CONCURRENT-ROOT-WRITE-1: concurrent sessions pollute .deepchat root):**
+> Red-team: direct parent-agent 5-adversary audit (session current — SKILLS UPDATE + CLOSEOUT cycle).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **CONCURRENT-ROOT-WRITE-1 anti-pattern added** — concurrent agent sessions
+>     (cronjobs, subagent tasks, parallel sessions) wrote 7 distinct ephemeral `_*.py`/`_*.txt`
+>     work scripts to `.deepchat` ROOT in ONE session (_chk_radar, _disc_outlook, _disc_outlook2,
+>     _disc_resume, _send_paul, _verify_sent, _clean_paul). Each triggered KIF-48 violations in
+>     thin_client.py closeout scans, forcing repeated purge sweeps (whack-a-mole) and risking
+>     deletion of an in-use script mid-execution. Rule: ephemeral work scripts go to %TEMP% or the
+>     session's own directory — NEVER .deepchat root. When a closeout scan flags _* strays, first
+>     check whether a concurrent session is live (process list) before deleting — purge after the
+>     task completes, or delete only files whose names don't match any running task.
+> (2) [DESIGN] **bloat-cleanup cross-ref registered** — thin_client.py v2.7+ should tolerate
+>     concurrent-session strays (documented in bloat-cleanup v3.3; add a concurrent-write note
+>     on next thin_client.py edit).
+> Cross-reference: bloat-cleanup v3.3 (thin_client.py), EXEC-AUTOBG-DEATH-1, KIF-48,
+> session current.
 
 > **v1.49 UPDATE (2026-08-05, kaizen — v1.48 SOFT closeout + EXEC-AUTOBG-DEATH-1 recurrence verification):**
 > Red-team: direct parent-agent 5-adversary audit (session current — SKILLS UPDATE kaizen cycle).
@@ -11472,7 +11490,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| **EXEC-AUTOBG-DEATH-1: Short exec commands auto-background and die ("Session bg_XXX is not running") in this environment (2026-08-05)** | Observed 10+ times in session 8APhB8pdpgihrWgDLpXIP: `exec` on short Python scripts returns "Error: Session bg_XXX is not running" — the output is lost and the script appears not to run (it may have run; output is unrecoverable). Even `yieldMs` does not reliably prevent it. **Reliable workaround — write-file-read-back:** the script WRITES its output to a `.txt` file (e.g., `C:\Users\LENOVO\.deepchat\_result.txt`), `exec` runs it, then the agent `read`s the file back. This pattern succeeded every time. For single-shot diagnostics, make the script print a sentinel to the file and read the file. Cross-ref: windows-command-patterns v3.15, PYTHON-BUFFERING-1. |
+| **EXEC-AUTOBG-DEATH-1: Short exec commands auto-background and die ("Session bg_XXX is not running") in this environment (2026-08-05)** | Observed 10+ times in session 8APhB8pdpgihrWgDLpXIP: `exec` on short Python scripts returns "Error: Session bg_XXX is not running" — the output is lost and the script appears not to run (it may have run; output is unrecoverable). Even `yieldMs` does not reliably prevent it. **Reliable workaround — write-file-read-back:** the script WRITES its output to a `.txt` file (e.g., `C:\Users\LENOVO\.deepchat\_result.txt`), `exec` runs it, then the agent `read`s the file back. This pattern succeeded every time. For single-shot diagnostics, make the script print a sentinel to the file and read the file. Cross-ref: windows-command-patterns v3.15, PYTHON-BUFFERING-1. |
+| **CONCURRENT-ROOT-WRITE-1: Concurrent sessions writing ephemeral `_*.py`/`_*.txt` scripts to `.deepchat` root (2026-08-05)** | **SOFT.** Concurrent agent sessions (cronjobs, subagent tasks) write work scripts to `.deepchat` ROOT instead of %TEMP% or their session dir. Every such file triggers a KIF-48 violation in thin_client.py closeout scans, forcing whack-a-mole purge sweeps and risking mid-execution deletion. Observed in ONE session: 7 distinct files (_chk_radar, _disc_outlook, _disc_outlook2, _disc_resume, _send_paul, _verify_sent, _clean_paul). Rule: ephemeral scripts go to %TEMP% — never `.deepchat` root. When closeout flags `_*` strays, check `process list` for a live concurrent session FIRST; purge strays whose names don't match any running task, or wait for the task to finish. Cross-ref: bloat-cleanup v3.3 thin_client.py, KIF-48, EXEC-AUTOBG-DEATH-1. |
 
 | **CRONJOB-DURATION-1: Agentic web-search cronjobs fail with "Cron job exceeded max duration" at 300s default (2026-08-05)** | Conference Radar (dcdc7a6a) + Job Market Watch (a194153f) both FAILED first manual runs at `maxDurationMs: 300000`. Web-search-heavy agentic tasks (multiple curl/browser fetches + synthesis) routinely exceed 5 minutes. Fix: set `runtime: {maxDurationMs: 600000, maxTurns: 20}` for any cronjob whose prompt includes web search; after `run_now`, check `cronjob history` for `status: failed` + error text. Canonical case: session 8APhB8pdpgihrWgDLpXIP — both jobs re-ran successfully at 600s. |
 
@@ -12816,7 +12835,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.49** (kaizen — v1.48 SOFT closeout + false-positive verification + EXEC-AUTOBG-DEATH-1 recurrence; 2026-08-05): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.50** (kaizen — CONCURRENT-ROOT-WRITE-1 + cross-ref bloat-cleanup; 2026-08-05)
 
 
 
