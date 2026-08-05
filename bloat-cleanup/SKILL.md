@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 3.2
+version: 3.3
 triggers:
 - cleanup
 - bloatware
@@ -15,8 +15,19 @@ triggers:
 - optimize Windows
 ---
 
-# BLOAT CLEANUP — v3.2
+# BLOAT CLEANUP — v3.3
 
+
+> **v3.3 UPDATE (2026-08-05, kaizen — TEMP stale-clone scan + STALE-CLONE-ACCUM-1):**
+> Red-team: kaizen red-team skills audit (session -WyivBiyZ6xFy4uXS_RNy).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [DESIGN] **thin_client.py v2.7 — %TEMP% stale-clone scan** — new STALE_CLONE
+>     category scans %TEMP% for qnfo-*/repo-pattern dirs and any dir containing .git.
+>     Prior sessions left 52 stale clones (156.7 MB) invisible to the old scan.
+>     Verified: scan found 52, all deleted, audit fully clean.
+> (2) [SOFT] **Cross-reference** — STALE-CLONE-ACCUM-1 documented in git-github v2.20;
+>     every temp clone MUST use the force_rmtree pattern (chmod-sweep + \\?\ prefix).
+> Cross-reference: git-github v2.20, kaizen v1.45, session -WyivBiyZ6xFy4uXS_RNy.
 
 > **v3.2 UPDATE (2026-08-05, kaizen — Edge background/startup policies + Widgets MDM + TrustedInstaller lesson):**
 > Red-team: session VBvCOsXhzlQJUubBqtdFz — bloat extermination live-fire test:
@@ -690,4 +701,4 @@ subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 
 
 ## Version
 
-Current: **v3.2** (bloat-cleanup — thin-client bloat enforcement, Edge/Widgets MDM, TrustedInstaller patterns; 2026-08-05)
+Current: **v3.3** (bloat-cleanup — thin-client bloat enforcement, Edge/Widgets MDM, TrustedInstaller patterns; 2026-08-05)

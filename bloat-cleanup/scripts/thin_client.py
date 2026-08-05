@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enforce DeepChat thin-client mandate (KIF-32 + KIF-48 compliance).
+"""Enforce DeepChat thin-client mandate (KIF-32 + KIF-48 compliance). v2.7: +%TEMP% stale-clone scan (STALE-CLONE-ACCUM-1).
 
 KIF-32: No local project files or archives in .deepchat, AppData, or anywhere
          in the local file system. Staging files locally with intent to sync
@@ -297,12 +297,47 @@ def main(clean=False):
                 print(f"  ERROR: {s['id']} - {e}")
     
     # ============================================================
+    # %TEMP% STALE CLONE SCAN (v2.7, 2026-08-05 — STALE-CLONE-ACCUM-1)
+    # Prior sessions left 18 stale %TEMP%\qnfo-* clones (197.4 MB) — thin-client
+    # violations invisible to the old scan. Any dir matching qnfo-*/repo-pattern
+    # or containing .git is a leftover clone.
+    # ============================================================
+    print("\n--- TEMP Stale Clone Scan (%TEMP%) ---")
+    temp_dir = os.environ.get("TEMP", os.path.join(os.environ.get("USERPROFILE", ""), "AppData", "Local", "Temp"))
+    temp_clones = []
+    if os.path.isdir(temp_dir):
+        try:
+            entries = os.listdir(temp_dir)
+        except OSError:
+            entries = []
+        for e in entries:
+            ep = os.path.join(temp_dir, e)
+            if not os.path.isdir(ep):
+                continue
+            is_clone = e.lower().startswith("qnfo-") or e.lower().startswith("qnfo_") or "clone" in e.lower()
+            if not is_clone:
+                # deep check: .git dir present
+                if not os.path.isdir(os.path.join(ep, ".git")):
+                    continue
+                is_clone = True
+            sz_bytes, _fc = dir_size(ep) if is_clone else (0, 0)
+            sz = sz_bytes
+            temp_clones.append({"path": ep, "size_mb": round(sz/1048576, 1), "name": e})
+            violations.append({
+                "status": "STALE_CLONE", "path": ep,
+                "size_mb": round(sz/1048576, 1), "detail": f"TEMP clone: {e}"
+            })
+            print(f"  \u26a1 STALE CLONE: {e:<40} {sz/1048576:>6.1f} MB  (in %TEMP%)")
+    if not temp_clones:
+        print("  \u2713  no stale clones in %TEMP%")
+
+    # ============================================================
     # Summary
     # ============================================================
     print(f"\n=== THIN-CLIENT SUMMARY (KIF-32 + KIF-48) ===")
     critical = [v for v in violations if v["status"] in (
         "UNPUSHED", "ARCHIVE_VIOLATION", "NO_GIT",
-        "KIF-48_ROGUE_DIR", "KIF-48_PROJECT_FILE", "KIF-48_ORPHAN_ARCHIVE"
+        "KIF-48_ROGUE_DIR", "KIF-48_PROJECT_FILE", "KIF-48_ORPHAN_ARCHIVE", "STALE_CLONE"
     )]
     if critical:
         print(f"  ⚡ {len(critical)} CRITICAL violation(s):")

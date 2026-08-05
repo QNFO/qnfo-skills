@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: 2.19
+version: 2.20
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.19
+# GIT-GITHUB — v2.20
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -427,13 +427,18 @@ R2 holds deliverables, not executables.
 
 | Layer | Location | Run Protocol |
 |:------|:---------|:-------------|
-| Skill-bound scripts | `QNFO/qnfo-skills` → `skills/<name>/scripts/` (hydrated live) | `skill_run <skill> scripts/<name>.py` or exec python against live path |
+| Skill-bound scripts | git: `QNFO/qnfo-skills` → `<name>/scripts/` (FLAT root, no /skills/ subtree — stale legacy removed 9591280); live: `skills/<name>/scripts/` | `skill_run <skill> scripts/<name>.py` or exec python against live path |
 | Ops toolbox | `QNFO/qnfo-ops/scripts/` (bootstrapped 2026-08-05, commit b54a983) | Clone to %TEMP% → run → delete clone, ONE turn |
 | One-shot | `%TEMP%\_task.py` | write → exec python → del (never committed) |
 | R2 (artifacts only) | `qnfo-releases/`, `qnfo-projects/`, `qnfo-backups/` | Archive + SHA-256 verify → delete local |
 
 **Classification rules:**
 1. Domain-tied to one skill → qnfo-skills skill dir (git is superset, live dir is subset).
+   **GIT PATH IS FLAT ROOT:** qnfo-skills repo stores skills at repo ROOT (`/<name>/`), NOT under
+   `skills/`. A legacy `/skills/` subtree existed (stale duplicate paths) and was REMOVED in commit
+   9591280 (2026-08-05). Commits to `skills/<name>/...` land in a non-canonical path — always use
+   `/<name>/...` when targeting git. The LIVE hydrated dir uses `skills/<name>/` — the two paths
+   differ by design (git flat root vs live skills/ namespace).
 2. Cross-cutting reusable → qnfo-ops/scripts/. If it doesn't exist there, WRITE it,
    commit to qnfo-ops (same-turn), then clone-to-TEMP to run.
 3. One-shot never reused → %TEMP% only. NEVER commit throwaways to any repo.
@@ -655,6 +660,13 @@ After ANY push:
 | **POST-PUSH-VERIFY-1: Pushing without verifying master == origin/master (2026-08-05)** | After ANY push, verify: `git status --short` clean AND `git rev-parse master` == `git rev-parse origin/master`. A push that leaves drift unverified is invisible drift. |
 
 ## Anti-Patterns
+
+| Anti-Pattern | Correct |
+|:-------------|:--------|
+| **AUTOCRLF-VERIFY-1: Raw byte comparison flags 'modified' for every file on Windows (2026-08-05)** | `core.autocrlf=true` makes git check out working files as CRLF while the live/hydrated dir stores LF. `git status` after copying live→git shows 20+ 'M' flags that are pure line-ending artifacts — the content is blob-identical. VERIFY with `git hash-object <live-file>` vs `git rev-parse HEAD:<path>` (blob comparison) — if equal, the file IS in sync. Never trust raw byte diff or `git status` alone on Windows. Canonical case: session -WyivBiyZ6xFy4uXS_RNy cycle 2 — 24 copied files flagged M, all proven blob-identical; only 3 genuine diffs existed. |
+| **STALE-CLONE-ACCUM-1: Temp clones from prior sessions accumulate in %TEMP% — thin-client violations (2026-08-05)** | 18 stale `%TEMP%\qnfo-*` clones (197.4 MB: qnfo-pdf-v2/v3, qnfo-research-ph1-6, qnfo-skills, qnfo-ops-*, qnfo-github-repo…) survived multiple session closeouts — the pre-closeout scan has NO %TEMP% clone category. Fix: (a) thin_client.py now scans %TEMP% for `qnfo-*` / repo-pattern dirs (STALE_CLONE category, bloat-cleanup v3.3); (b) every temp clone MUST use the force_rmtree pattern (chmod-sweep + `\\?\` prefix, handles read-only git pack files) same-turn. Canonical case: session -WyivBiyZ6xFy4uXS_RNy — 18 clones deleted at closeout, 197.4 MB freed. |
+
+## Anti-Patterns
 | Anti-Pattern | Fix |
 |:-------------|:----|
 | Creating a new repo for a single paper/project | **HARD GATE (Project Branch Policy):** Branch from the appropriate program repo (see routing table). NEVER create a new repo for an individual paper, audit, or project. All QNFO/QWAV content lives in the consolidated program repos. |
@@ -688,4 +700,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.19** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)
+Current: **v2.20** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)
