@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.52
+version: 1.54
 
 
 
@@ -74,7 +74,49 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.52
+# KAIZEN — v1.54
+> **v1.54 UPDATE (2026-08-05, kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (session wyJg6Q6nvX_Q9KY1QhgMQ).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN, 21 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. HARD: 0. SOFT: 0. DESIGN: 0. Changes:
+> (1) [AUDIT] **Ecosystem N-2 verified** — all 18 QNFO skills fm/hdr/ft consistent via
+>     watchtower-version-scan.py. No version drift. No new anti-patterns discovered.
+> (2) [RETROSPECTIVE] **Session operations** — qnfo-gateway Worker deployed 2x (GA G-LV7RHRVW6R
+>     injection + robots.txt/sitemap/llms/rss handlers), 5 Pages projects redeployed (qwav,
+>     qnfo-landing, ask-qwav, qnfo-hub, qnfo-publications). 12/12 sites verified GA-live,
+>     11/11 robots/sitemap/data-routes verified. Skills touched: cloudflare v3.35, kaizen v1.53,
+>     qnfo-core v1.15, windows-command-patterns v3.15.
+> (3) [CLOSEOUT] **Kaizen v1.54** — version bump, banner insert, git commit, memory register.
+> Cross-reference: cloudflare v3.35, qnfo-core v1.15, session wyJg6Q6nvX_Q9KY1QhgMQ.
+> **v1.53 UPDATE (2026-08-05, kaizen — Session retrospective: Wikidata items + credential case-sensitivity):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata round:
+> Person Q140892265 + Org Q140892267 created and verified; 8-platform identity graph complete).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **MEMORY-TO-SKILL-DRIFT closed** — WIKIDATA-BOT-PASSWORD-REQUIRED-1 existed in
+>     durable memory but was absent from the research skill; migrated to research v2.81
+>     anti-pattern table + Wikidata section. Any anti-pattern stored via memory_remember MUST
+>     be migrated into the owning SKILL.md the same session (kaizen v1.7 HARD GATE).
+> (2) [SOFT] Session retrospective registered: ~8 failed Wikidata logins caused by MediaWiki
+>     username case-sensitivity (QNFO vs Qnfo) — MEDIAWIKI-USERNAME-CASE-1 now documents the
+>     read-only list=users diagnosis that resolves it in one call. Items created:
+>     Q140892265 (Person) + Q140892267 (Org), affiliation P1416 linked, verified via EntityData.
+> Cross-reference: research v2.81, MEMORY-TO-SKILL-DRIFT, MEDIAWIKI-USERNAME-CASE-1,
+> session 3i_KVLownViukLTZB_BJ1.
+> **v1.52 UPDATE (2026-08-05, kaizen — PARALLEL-EXEC-RACE-1 + session retrospective 3i_KVLownViukLTZB_BJ1):**
+> Red-team: direct parent-agent audit of the discoverability sprint (landing pages, Schema.org,
+> Bluesky, Zenodo attribution fix, OSF profile, ORCID client, IndexNow).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PARALLEL-EXEC-RACE-1 anti-pattern added** — dispatching a verification GET in the
+>     same parallel batch as the PATCH it verifies races them: the GET can read the pre-PATCH
+>     state and produce a false "not persisted / update failed" conclusion. Canonical case:
+>     OSF profile update — parallel --show GET returned the OLD profileWebsites (qnfo.org) while
+>     the PATCH had succeeded; sequential re-run confirmed 4 URLs persisted. Fix: sequence
+>     dependent exec calls (PATCH, THEN verify) in separate turns; never batch write+verify.
+> (2) [SOFT] Session retrospective registered: research v2.80 anti-patterns OSF-API-SCHEMA-1,
+>     ORCID-PUBLIC-API-SCOPE-1, GITHUB-PAGES-PROPAGATION-1; 6 interlinked programmatic profiles
+>     (OSF/Zenodo/ORCID/GitHub/Bluesky/IndexNow) verified live; credentials in 10+ locations.
+> Cross-reference: research v2.80, SKILL-WRITE-COLLISION-1, EXEC-AUTOBG-DEATH-1,
+> session 3i_KVLownViukLTZB_BJ1.
 > **v1.52 UPDATE (2026-08-05, kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1):**
 > Red-team: direct parent-agent 5-adversary audit (session wG__dZyYtV1X4_9mgl4MW).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN, 19 platform-default INCOMPLETE (exempt).
@@ -12876,7 +12918,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.52** (kaizen — Red-team skills audit + linkedin-mcp deprecation + LINKEDIN-EXP-NO-FORM-1; 2026-08-05)
+Current: **v1.54** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
 
 
 
