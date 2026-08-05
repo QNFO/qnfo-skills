@@ -26,7 +26,7 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.76
+# RESEARCH — v2.77
 
 > **v2.75 UPDATE (2026-08-05, user injunction — PyMuPDF EXPUNGED):**
 > Red-team: direct user injunction — "PyMuPDF IS NOT PART OF APPROVED PDF PUBLICATION PROCESS."
@@ -1366,6 +1366,43 @@ The full research skill archive is maintained at `deploy/history/research-v2.45-
 
 This de-bloated v2.46 retains the complete core pipeline, the v2.46 KIF-29 upgrade, and the last 12 months of anti-patterns. For version history beyond v2.46, audit the archive file.
 
+## Research Briefing System (2026-08-05, v2.77)
+
+QNFO operates an automated external-research monitoring stack — the replacement
+for social-media/manual-wading research discovery. Six cronjobs, zero user action:
+
+| Job | Schedule | Delivers |
+|:----|:---------|:---------|
+| Daily Briefing (fdf1403c) | 08:00 UTC daily | arXiv (8 categories) filtered by QNFO keyword taxonomy, 3-tier ranked, emailed to alerts@qnfo.org |
+| Weekly Deep Scan (a3c0c2b4) | Mon 09:00 UTC | arXiv + OpenAlex journals + math-heavy UMP tiers (Berkovich, perfectoid, Galois, p-adic Hodge, Langlands) |
+| Conference Radar (dcdc7a6a) | 1st of month | Agentic web search: FQXi, Perimeter, CWI, IQOQI + p-adic/ultrametric/LoF/QEC events |
+| Job Market Watch (a194153f) | 1st+15th | Academic + industry-executive roles matched to Rowan Quni-Gudzinas profile |
+| Citation Watch (8d1292ce) | 1st+15th | New papers citing QNFO key DOIs via OpenAlex (replaces Google Scholar) |
+| Email Inbox Check | every 3h | qnfo.org mail summaries incl. archived briefings |
+
+**Canonical script (thin-client compliant):** GitHub `QNFO/qnfo-skills` →
+`research/scripts/research-daily-brief.py`. Execution from the skill dir
+(`C:\Users\LENOVO\.deepchat\skills\research\scripts\`); cronjob prompts
+carry a self-healing git-restore fallback if the local copy is evicted.
+
+**Script capabilities (zero external deps, stdlib only):**
+- arXiv API: 8 categories, `submittedDate` window filtering
+- OpenAlex API: explicit `OR` operators (pipe `|` rejected with 400),
+  wide 14-day query window (indexing lags 2-5 days) + Python-side exact-window
+  filter, `type:article` filter (kills Zenodo E8/CosmosBeating self-pub spam),
+  future-date cap, intra-source title dedup
+- Keyword taxonomy: canonical from Obsidian `_26217115844.md` v1.0
+  (UMP/RES/INM/QEC/SLB/CFE daily tiers + UMP-DEEP/RES-DEEP weekly tiers)
+- 3-tier relevance ranking (HIGH >=10, MEDIUM 5-9, LOW <5) by weighted keyword hits
+- `--email <addr>` flag: POSTs briefing to qnfo-email Worker /send for durable
+  archive; key resolved from env EMAIL_API_KEY → Cloudflare Worker settings API
+  (never hardcoded)
+- Hyphen→space normalization for robust keyword matching
+
+**Cronjob runtime rule:** agentic web-search cronjobs need
+`maxDurationMs >= 600000` (CRONJOB-DURATION-1, kaizen v1.43).
+
 ## Version
 
-Current: **v2.76** (research — mined source-discipline patterns: cite only this-session tool-call sources, [Background] labeling, three-count audit, reliability tiers; adopted from QNFO/claude-skills research router; 2026-08-05)
+
+Current: **v2.77** (research — Research Briefing System section + header N-2 drift fix; 2026-08-05) (research — mined source-discipline patterns: cite only this-session tool-call sources, [Background] labeling, three-count audit, reliability tiers; adopted from QNFO/claude-skills research router; 2026-08-05)

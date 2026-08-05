@@ -15,6 +15,9 @@ triggers:
 - optimize Windows
 ---
 
+# BLOAT CLEANUP — v3.2
+
+
 > **v3.2 UPDATE (2026-08-05, kaizen — Edge background/startup policies + Widgets MDM + TrustedInstaller lesson):**
 > Red-team: session VBvCOsXhzlQJUubBqtdFz — bloat extermination live-fire test:
 > Edge background mode + startup boost disabled via HKLM/HKCU Group Policy;
@@ -684,3 +687,7 @@ subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 
   - scripts\thin_client.py (python)
 - Cross-references: windows-command-patterns v3.13 §S-1.0.8 (ShellExecute runas, sc, taskkill, TrustedInstaller caveat), kaizen v1.31 (WIN-ELEVATION-PARTIAL-1)
 - Do not guess script paths or change directories to locate skill files.
+
+## Version
+
+Current: **v3.2** (bloat-cleanup — thin-client bloat enforcement, Edge/Widgets MDM, TrustedInstaller patterns; 2026-08-05)

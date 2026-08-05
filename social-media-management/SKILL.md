@@ -1,5 +1,6 @@
 ---
 name: social-media-management
+version: 1.3.0
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 45+ verified researchers, journals, and institutions across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, mathematical physics, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, and integration with linkedin-mcp for LinkedIn connections.
 ---
 
@@ -40,7 +41,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via linkedin-mcp-tools (5/day cap).
 
-# SOCIAL MEDIA MANAGEMENT — v1.0.0
+# SOCIAL MEDIA MANAGEMENT — v1.3.0
 
 Programmatic social media follow management for Bluesky and Mastodon, with
 a curated QNFO account registry aligned to the QWAV/QNFO research program.
@@ -338,3 +339,7 @@ social-media-management/
 | Date       | Version | Changes |
 |:-----------|:--------|:--------|
 | 2026-08-05 | v1.0.0  | Initial skill: Bluesky + Mastodon scripts, QNFO registry, unified CLI |
+
+## Version
+
+Current: **v1.3.0** (social-media-management — Bluesky/Mastodon/X/LinkedIn follow management, QNFO account registry; 2026-08-05)

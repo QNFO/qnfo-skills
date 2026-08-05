@@ -951,3 +951,7 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 - [ ] All safety-net protocols embedded (EXECUTE, Anti-Hyperbole, DoD, JIT, Immutability)
 - [ ] Physics Writing Standards + Publication Language Gate present
 - [ ] Cloudflare Full-Stack Mandate enforced
+
+## Version
+
+Current: **v3.61** (qnfo-agent — core QNFO agent identity, 24-skill trigger table, safety, discovery; 2026-08-05)

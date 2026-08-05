@@ -1,5 +1,6 @@
 ---
 name: deepchat-settings
+version: 1.3
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -241,3 +242,7 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 - "把 Windows 的系统代理改成..."
 - "帮我改 VS Code 的字体"
 - "把电脑的声音关掉"
+
+## Version
+
+Current: **v1.3** (deepchat-settings — app settings modification, backend storage layout, skill registry truth-source; 2026-08-05)

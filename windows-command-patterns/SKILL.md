@@ -39,7 +39,19 @@ kif_tags: [KIF-32]
 >     of path depth (verified: Archive 54,239 files + 6.2 GB deleted in one pass).
 >     See §WIN-LONGPATH-1.
 
-# windows-command-patterns — v3.13
+# windows-command-patterns — v3.14
+
+> **v3.14 UPDATE (2026-08-05, kaizen — GH-API-HANG-1):**
+> Red-team: direct parent-agent audit of session 8APhB8pdpgihrWgDLpXIP
+> (research briefing system build — GitHub star backlog execution).
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **GH-API-HANG-1 anti-pattern row added** — `gh api` (especially with
+>     `--paginate`) hangs indefinitely in this environment (exec session never
+>     returns, must be killed). Token-based urllib calls (GITHUB_TOKEN env or
+>     `gh auth token`) complete reliably. Canonical case: session 8APhB8pdpgihrWgDLpXIP
+>     — gh api -X GET user/starred --paginate hung 3x; same op via Python urllib
+>     with GITHUB_TOKEN completed instantly; 4 repos starred successfully.
+> Cross-reference: kaizen v1.43, git-github, session 8APhB8pdpgihrWgDLpXIP.
 
 > **v3.12 UPDATE (2026-08-04, kaizen — PANDOC-FONT-QUOTE-1 + session retrospective ZDdTu9Qf):**
 > Red-team: direct parent-agent audit of session ZDdTu9QfTZKY_kJALlXY_ (Consilience Framework
@@ -244,6 +256,7 @@ Key files: `backgroundExecSessionManager.ts`, `shellEnvHelper.ts`, `shellOutputE
   Win32 registry (`winreg`) for PATH persistence instead of `setx`. | (v3.5) | `elevate.exe` ships with DeepChat at `C:\Program Files\DeepChat\resources\elevate.exe`. Use `elevate.exe -wait cmd.exe /c "..."` for operations requiring admin privileges. Requires UAC confirmation. |
 | **GIT-COMMIT-M-QUOTE-1: `git commit -m "msg with special chars"` fails on cmd.exe (2026-08-04)** | Any message containing em-dashes, parens, quotes, or multiple words → Node.js spawn() re-quotes, cmd.exe strips quotes, git sees fragmented args ("pathspec 'add' did not match", "pathspec '→' did not match"). ALWAYS: (1) `write` tool creates `%TEMP%\commit-msg.txt`; (2) `git commit -F %TEMP%\commit-msg.txt`. Same for `git tag -a -F`. Verified: 4 failures in session 1tz85-vMiqh2TyFySznBA before the -F pattern worked every time. Cross-ref: git-github SAME-TURN-COMMIT. |
 | **EXEC-TOOL-QUOTE-1-PY: exec wraps `python <abs-path>.py` in quotes too (2026-08-04)** | When exec prepends the workspace path and quotes the python file path, python reports: `can't open file 'C:\...\workspaces\"C:\...\_task.py"'`. Fix: `cd` into the target dir first then `exec python _task.py` (bare relative path, no quotes). `python -c "..."` with nested quotes ALWAYS fails ("X was unexpected at this time") — S0.0 rule 2 (ABORT). Verified: 5 failures in session 1tz85-vMiqh2TyFySznBA. Cross-ref: S0.0, EXEC-TOOL-QUOTE-1, research PYTHON-C-AMPERSAND-1. |
+| **GH-API-HANG-1: `gh api` hangs indefinitely in this environment (2026-08-05)** | `gh api` — especially with `--paginate` or long-running GETs — hangs with no output and must be killed (exec session never returns). Verified 3x in session 8APhB8pdpgihrWgDLpXIP. Fix: use token-based Python urllib: get token via `gh auth token` (or GITHUB_TOKEN env), then `urllib.request.Request(url, headers={'Authorization': f'token {tok}'})` — completes reliably. For pagination, parse `Link` headers or use `per_page=100` + loop. Canonical case: gh api user/starred --paginate hung; identical op via urllib starred 4 repos (JulianDelBel/Adelic, PerretB/ultrametric-fitting, mmasdeu/darmonpoints, agent0ai/agent-zero) instantly. |
 | **PANDOC-FONT-QUOTE-1: pandoc `-V mainfont="Font Name With Spaces"` fails on Windows cmd.exe (2026-08-04)** | `pandoc paper.md -o out.pdf --pdf-engine=xelatex -V mainfont="DejaVu Serif"` fails with `pandoc: Serif": withBinaryFile: invalid argument` — cmd.exe or pandoc's argument parser splits on the space in the quoted font name. **Fix: (A) omit -V mainfont and let XeLaTeX use defaults (works on all platforms); (B) use a font without spaces (e.g., `-V mainfont=DejaVuSans`); (C) if the font name MUST have spaces, use `-V mainfont:"DejaVu Serif"` through a Python subprocess bypassing exec quoting.** Canonical case: session ZDdTu9QfTZKY_kJALlXY_ — pandoc failed on font arg, succeeded with defaults (37-page PDF built). Cross-ref: S-1.0.4 CMD.exe space-splitting bug, §PDF building in S1.1 operation table. |
 
 ---
@@ -470,4 +483,4 @@ For PATH persistence, use winreg instead of setx.
 
 ## Version
 
-Current: **v3.13** (windows-command-patterns — Windows admin elevation section + TrustedInstaller registry pattern; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05) anti-pattern: pandoc font name with spaces fails on Windows cmd.exe; fix = default fonts or bypass exec quoting; session ZDdTu9QfTZKY_kJALlXY_ Consilience Framework synthesis; 2026-08-04)
+Current: **v3.14** (windows-command-patterns — GH-API-HANG-1 anti-pattern; 2026-08-05) (windows-command-patterns — Windows admin elevation section + TrustedInstaller registry pattern; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05) anti-pattern: pandoc font name with spaces fails on Windows cmd.exe; fix = default fonts or bypass exec quoting; session ZDdTu9QfTZKY_kJALlXY_ Consilience Framework synthesis; 2026-08-04)

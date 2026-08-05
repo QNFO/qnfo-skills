@@ -4,7 +4,26 @@ version: 1.42
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
 
-# KAIZEN — v1.42
+# KAIZEN — v1.43
+
+> **v1.43 UPDATE (2026-08-05, kaizen — Red-team audit: research briefing system session):**
+> Red-team: direct parent-agent 5-adversary audit of session 8APhB8pdpgihrWgDLpXIP
+> (QNFO Research Briefing system build: 6 cronjobs, arXiv+OpenAlex, email archive).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **CRONJOB-DURATION-1 anti-pattern added** — agentic web-search cronjobs
+>     (Conference Radar dcdc7a6a, Job Market Watch a194153f) FAILED first manual runs
+>     with "Cron job exceeded max duration (300000 ms)". Fix: web-search-heavy tasks
+>     need `runtime.maxDurationMs >= 600000` + `maxTurns >= 20`; verify via cronjob
+>     history after run_now. Canonical case: session 8APhB8pdpgihrWgDLpXIP — both
+>     jobs failed at 300s, succeeded after bump to 600s.
+> (2) [SOFT] **STALE-MANUAL-ITEM-1 anti-pattern added** — agent listed "verify
+>     qnfo@qnfo.org" as a manual item when the closeout record showed it verified
+>     2026-08-03 12:09:01Z. Manual-item lists MUST check closeout records / durable
+>     memory for prior verification BEFORE listing. A stale manual item violates
+>     MANUAL-DELEGATE-1 (never delegate what is already done).
+> Cross-reference: research v2.77 (Briefing System section), email-composer v2.4,
+> windows-command-patterns v3.14 (GH-API-HANG-1), qnfo-core v1.15,
+> session 8APhB8pdpgihrWgDLpXIP.
 
 > **v1.25 UPDATE (2026-08-04, kaizen — KIF-60 cross-ref ecosystem sync):**
 > Red-team: Watchtower sweep (28 skills, 42.9% drift, 70% banner-history false positives).
@@ -1851,6 +1870,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **MANUAL-DELEGATE-1: Asking the user to perform CLI/git/GitHub operations that the agent can execute autonomously (2026-08-05)** | **HARD GATE.** The user has repeatedly mandated FULLY AUTONOMOUS execution — the agent never delegates manual steps to the user unless the step genuinely requires a web Dashboard, OAuth approval, or a physical action. git clone, git push, gh repo create, editing files, and deploying are ALL agent-executable. Commanding the user to "create the repo named rwnq8" or "copy and push the file" when the agent has `exec`, `gh`, and `git` tools available is a violation. Canonical case: session IfYDah5TSY5gNMY0S4OT5 — agent initially told the user to create the repo and push the file; user corrected the agent; agent executed autonomously with gh CLI + Python deploy script. Fix: every task resolution MUST assume the agent is the executor — escalate a `deepchat_question` ONLY for genuine user-preference decisions, never for tool-executable steps. Cross-ref: git-github SAME-TURN-COMMIT, SKILL-COMMIT-SAME-SESSION-1. |
 | **GITHUB-CDN-PROPAGATION-1: Profile README not appearing on profile page for CLI/API-created repos — REVISED 2026-08-05 (NOT a CDN wait)** | **The 5-30 min "CDN propagation" theory was WRONG.** Root cause: repos created via `gh repo create` (CLI/API) are NOT auto-promoted to the profile page even though the repo page renders the README and the editor says "is a special repository." **The fix: click "Share to Profile" on the repo page** (`github.com/{user}/{user}`) — the README appears on the profile IMMEDIATELY, server-side rendered (verified via curl on 2026-08-05: rwnq8/rwnq8). Do NOT wait, force-push, or toggle visibility — click the button. Verify: `curl -s https://github.com/{user} | grep profile-readme` returns a match. Cross-ref: https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme, personal-knowledge v1.2 |
 
+| **CRONJOB-DURATION-1: Agentic web-search cronjobs fail with "Cron job exceeded max duration" at 300s default (2026-08-05)** | Conference Radar (dcdc7a6a) + Job Market Watch (a194153f) both FAILED first manual runs at `maxDurationMs: 300000`. Web-search-heavy agentic tasks (multiple curl/browser fetches + synthesis) routinely exceed 5 minutes. Fix: set `runtime: {maxDurationMs: 600000, maxTurns: 20}` for any cronjob whose prompt includes web search; after `run_now`, check `cronjob history` for `status: failed` + error text. Canonical case: session 8APhB8pdpgihrWgDLpXIP — both jobs re-ran successfully at 600s. |
+| **STALE-MANUAL-ITEM-1: Listing a task as "manual user item" when closeout records show it already done (2026-08-05)** | Agent listed "verify qnfo@qnfo.org" as the last manual item; durable memory showed it verified 2026-08-03 12:09:01Z (user clicked link during email infra closeout). Every manual-item list MUST be cross-checked against closeout records + memory_recall BEFORE being presented. Presenting a stale manual item is a phantom-work violation (user must never redo completed work) and contradicts MANUAL-DELEGATE-1. Canonical case: session 8APhB8pdpgihrWgDLpXIP — corrected same session; live email routing verified (5 rules + catch-all → worker:qnfo-email). |
 | **N-2-FRONTMATTER-DRIFT-1: Version bump updates header/footer but forgets the FRONTMATTER version field (2026-08-05)** | **HARD GATE.** Three skills drifted the same way in session IfYDah5TSY5gNMY0S4OT5: personal-knowledge fm=1.0 vs hdr=v1.3 (survived 3 bumps), git-github fm=2.16 vs hdr=2.18 (v2.17/v2.18 bumped header/footer only), research hdr=2.75 vs fm=2.76. The frontmatter `version:` line is the FIRST place N-2 scans check — a stale frontmatter breaks machine version detection (Watchtower DRIFT-AXIS, dependency graph). Fix: EVERY version bump must edit ALL THREE locations in the SAME atomic script (frontmatter `version:` + header `# SKILL — vX.Y` + footer `Current: **vX.Y**`), then re-verify all three match before commit. Same class as VERSION-OVERWRITE-1 (version string fragility). Canonical case: session IfYDah5TSY5gNMY0S4OT5 — 6 fixes across 4 skills. Cross-ref: qnfo-core N-2, VERSION-OVERWRITE-1. |
 
 ## Cross-Skill Integration
@@ -2066,7 +2087,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 > Cross-reference: qnfo-core §0.0 Bibliographic Integrity, research P3.AUTHOR-GATE,
 > git-github SAME-TURN-COMMIT, session IfYDah5TSY5gNMY0S4OT5.
 
-Current: **v1.42** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.43** (kaizen — CRONJOB-DURATION-1 + STALE-MANUAL-ITEM-1 anti-patterns from research briefing session; 2026-08-05) (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
