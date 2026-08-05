@@ -1,8 +1,10 @@
 ---
 name: kaizen
-version: 1.40
+version: 1.41
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 ---
+
+# KAIZEN — v1.41
 
 > **v1.25 UPDATE (2026-08-04, kaizen — KIF-60 cross-ref ecosystem sync):**
 > Red-team: Watchtower sweep (28 skills, 42.9% drift, 70% banner-history false positives).
@@ -263,7 +265,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.73, cloudflare v3.33, qnfo-core v1.14, windows-command-patterns v3.13,
 > git-github v2.14 (no drift).
 
-# KAIZEN — v1.31 (Windows admin elevation + TrustedInstaller registry lesson; session VBvCOsXhzlQJUubBqtdFz; 2026-08-05)
+> **v1.31 UPDATE (2026-08-05, kaizen — Windows admin elevation + TrustedInstaller registry lesson; session VBvCOsXhzlQJUubBqtdFz):**
 
 > **v1.30 UPDATE (2026-08-04, kaizen — Zenodo phantom-DOI enforcement + deposit-API/multipart/bot-403 migration):**
 > Red-team: direct parent-agent audit of session ZDdTu9QfTZKY_kJALlXY_ (Consilience Framework real
@@ -291,6 +293,24 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     registered for Phase 6 continuous monitoring.
 > Cross-reference: windows-command-patterns v3.12, WBS.TAXONOMY.md §3, WBS-AGENT-PROTOCOL.md,
 > session ZDdTu9QfTZKY_kJALlXY_.
+
+> **v1.41 UPDATE (2026-08-05, kaizen — Red-team skills audit closeout + N-2 frontmatter drift fixes):**
+> Red-team: direct parent-agent 3-adversary audit of session IfYDah5TSY5gNMY0S4OT5
+> (rwnq8 profile README deploy + skill updates; 3 subagents truncated -> direct audit).
+> HARD: 2. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **N-2-FRONTMATTER-DRIFT-1 anti-pattern added** — version bumps kept
+>     forgetting the frontmatter `version:` field. 3 skills drifted this session
+>     (personal-knowledge fm=1.0/hdr=1.3, git-github fm=2.16/hdr=2.18, research
+>     hdr=2.75/fm=2.76). Every bump must edit fm+header+footer in ONE atomic script.
+> (2) [HARD] **personal-knowledge frontmatter 1.0->1.3** + **git-github header
+>     v2.18->v2.19** + **research header v2.75->v2.76** fixed.
+> (3) [SOFT] **kaizen mid-file v1.31 header artifact normalized** to banner quote
+>     (was the only '# KAIZEN —' line — real header missing entirely; added).
+> (4) [SOFT] **personal-knowledge footer added** (had no Current: line).
+> (5) [DESIGN] Watchtower scan upgraded to check fm/hdr/ft triple — the v1.39
+>     single-regex scan missed frontmatter drift.
+> Cross-reference: qnfo-core N-2, VERSION-OVERWRITE-1, git-github v2.19,
+> research v2.76, personal-knowledge v1.3, session IfYDah5TSY5gNMY0S4OT5.
 
 > **v1.40 UPDATE (2026-08-05, kaizen — Mined QNFO/qm: independent review, durable-by-default):**
 > Red-team: direct parent-agent mining of QNFO/qm (11,420★ multiplayer agent
@@ -1812,6 +1832,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **MANUAL-DELEGATE-1: Asking the user to perform CLI/git/GitHub operations that the agent can execute autonomously (2026-08-05)** | **HARD GATE.** The user has repeatedly mandated FULLY AUTONOMOUS execution — the agent never delegates manual steps to the user unless the step genuinely requires a web Dashboard, OAuth approval, or a physical action. git clone, git push, gh repo create, editing files, and deploying are ALL agent-executable. Commanding the user to "create the repo named rwnq8" or "copy and push the file" when the agent has `exec`, `gh`, and `git` tools available is a violation. Canonical case: session IfYDah5TSY5gNMY0S4OT5 — agent initially told the user to create the repo and push the file; user corrected the agent; agent executed autonomously with gh CLI + Python deploy script. Fix: every task resolution MUST assume the agent is the executor — escalate a `deepchat_question` ONLY for genuine user-preference decisions, never for tool-executable steps. Cross-ref: git-github SAME-TURN-COMMIT, SKILL-COMMIT-SAME-SESSION-1. |
 | **GITHUB-CDN-PROPAGATION-1: Profile README not appearing on profile page for CLI/API-created repos — REVISED 2026-08-05 (NOT a CDN wait)** | **The 5-30 min "CDN propagation" theory was WRONG.** Root cause: repos created via `gh repo create` (CLI/API) are NOT auto-promoted to the profile page even though the repo page renders the README and the editor says "is a special repository." **The fix: click "Share to Profile" on the repo page** (`github.com/{user}/{user}`) — the README appears on the profile IMMEDIATELY, server-side rendered (verified via curl on 2026-08-05: rwnq8/rwnq8). Do NOT wait, force-push, or toggle visibility — click the button. Verify: `curl -s https://github.com/{user} | grep profile-readme` returns a match. Cross-ref: https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme, personal-knowledge v1.2 |
 
+| **N-2-FRONTMATTER-DRIFT-1: Version bump updates header/footer but forgets the FRONTMATTER version field (2026-08-05)** | **HARD GATE.** Three skills drifted the same way in session IfYDah5TSY5gNMY0S4OT5: personal-knowledge fm=1.0 vs hdr=v1.3 (survived 3 bumps), git-github fm=2.16 vs hdr=2.18 (v2.17/v2.18 bumped header/footer only), research hdr=2.75 vs fm=2.76. The frontmatter `version:` line is the FIRST place N-2 scans check — a stale frontmatter breaks machine version detection (Watchtower DRIFT-AXIS, dependency graph). Fix: EVERY version bump must edit ALL THREE locations in the SAME atomic script (frontmatter `version:` + header `# SKILL — vX.Y` + footer `Current: **vX.Y**`), then re-verify all three match before commit. Same class as VERSION-OVERWRITE-1 (version string fragility). Canonical case: session IfYDah5TSY5gNMY0S4OT5 — 6 fixes across 4 skills. Cross-ref: qnfo-core N-2, VERSION-OVERWRITE-1. |
+
 ## Cross-Skill Integration
 
 | Skill / Tool | Load at Phase | Purpose |
@@ -2025,7 +2047,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 > Cross-reference: qnfo-core §0.0 Bibliographic Integrity, research P3.AUTHOR-GATE,
 > git-github SAME-TURN-COMMIT, session IfYDah5TSY5gNMY0S4OT5.
 
-Current: **v1.40** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
+Current: **v1.41** (kaizen — Mined QNFO/qm (11.4k★ multiplayer agent harness, yc-qm parent): independent-review mandate, blast-radius-by-callers, fix-every-instance, durable-by-default (code twin of thin-client protocol), security postures; 2026-08-05)
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |

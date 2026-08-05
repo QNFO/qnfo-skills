@@ -26,7 +26,7 @@ triggers:
   - forecast
 ---
 
-# RESEARCH — v2.75
+# RESEARCH — v2.76
 
 > **v2.75 UPDATE (2026-08-05, user injunction — PyMuPDF EXPUNGED):**
 > Red-team: direct user injunction — "PyMuPDF IS NOT PART OF APPROVED PDF PUBLICATION PROCESS."

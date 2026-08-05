@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: 2.18
+version: 2.19
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -47,7 +47,7 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.18
+# GIT-GITHUB — v2.19
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -419,6 +419,49 @@ python -c "import shutil; shutil.rmtree(r'%TEMP%\<project>', ignore_errors=True)
 scratchpad. Never treat temp as persistent storage.
 - After `git push`, delete local project files (per JIT thin-client protocol).
 
+### Script Canonical Layers (v2.19, verified 2026-08-05)
+
+Per KIF-32, the local filesystem is NEVER canonical for scripts. Reusable
+scripts live in exactly TWO git layers; throwaways live in %TEMP% and die;
+R2 holds deliverables, not executables.
+
+| Layer | Location | Run Protocol |
+|:------|:---------|:-------------|
+| Skill-bound scripts | `QNFO/qnfo-skills` → `skills/<name>/scripts/` (hydrated live) | `skill_run <skill> scripts/<name>.py` or exec python against live path |
+| Ops toolbox | `QNFO/qnfo-ops/scripts/` (bootstrapped 2026-08-05, commit b54a983) | Clone to %TEMP% → run → delete clone, ONE turn |
+| One-shot | `%TEMP%\_task.py` | write → exec python → del (never committed) |
+| R2 (artifacts only) | `qnfo-releases/`, `qnfo-projects/`, `qnfo-backups/` | Archive + SHA-256 verify → delete local |
+
+**Classification rules:**
+1. Domain-tied to one skill → qnfo-skills skill dir (git is superset, live dir is subset).
+2. Cross-cutting reusable → qnfo-ops/scripts/. If it doesn't exist there, WRITE it,
+   commit to qnfo-ops (same-turn), then clone-to-TEMP to run.
+3. One-shot never reused → %TEMP% only. NEVER commit throwaways to any repo.
+4. Deliverables (corpora, PDFs, archives) → R2 buckets, SHA-256 round-trip verified,
+   THEN delete local. R2 does NOT hold executable scripts.
+
+**Ops-script clone cleanup (NEW — 2026-08-05):** git pack files are read-only
+(0o444). `shutil.rmtree(path, ignore_errors=True)` SILENTLY FAILS on them,
+leaving a thin-client-violating leftover clone. Mandatory pattern:
+```python
+def force_rmtree(path):
+    for root, dirs, files in os.walk(path):
+        for n in dirs + files:
+            try: os.chmod(os.path.join(root, n), 0o777)
+            except Exception: pass
+    shutil.rmtree("\\\\?\\" + os.path.abspath(path), ignore_errors=False)
+```
+Canonical case: session -WyivBiyZ6xFy4uXS_RNy — leftover qnfo-ops-verify clone
+survived 2 rmtree attempts until the `\\?\` + chmod-sweep pattern.
+
+**REPO-DEFAULT-BRANCH-1 (NEW — 2026-08-05):** QNFO/qnfo-ops default branch is
+`main`, NOT `master` (same for qwav-platform). Verify `git branch --show-current`
+after clone before pushing; a `git push origin master` on a main-default repo
+fails with "src refspec master does not match any". Canonical case: session
+-WyivBiyZ6xFy4uXS_RNy — bootstrap commit pushed to a temp branch, remote branch
+deleted before the main push, causing a transient data-loss incident recovered
+by re-committing both files directly to main.
+
 ### Skills Repository (qnfo-skills) is PROTECTED
 
 The skills repo survives thin-client cleanups (ADR-021/ADR-025). NEVER place
@@ -645,4 +688,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.18** (git-github — OWNER-ROUTING-1: QNFO repos → QNFO org ALWAYS canonical; PERSONAL repos → rwnq8 ALWAYS canonical (account alive — only the qnfo-skills-1 MIRROR was archived); corrected v2.17 Dual-Store wording; user correction 2026-08-05)
+Current: **v2.19** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)

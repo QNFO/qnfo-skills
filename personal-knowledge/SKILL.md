@@ -1,7 +1,7 @@
 ---
 name: personal-knowledge
 description: Query the PERSONAL semantic layer (personal-life Vectorize/D1/Workers) from DeepChat. Use when the user asks about their own files, documents, life admin, Obsidian vault, personal archives, or anything NOT QNFO/QWAV research. Bridges personal-search endpoint + durable memories + conversation history + Obsidian vault. STRICTLY personal domain — never mixes with qnfo-* (user mandate 2026-08-04).
-version: 1.0
+version: 1.3
 kif_tags: [PERSONAL]
 ---
 
@@ -230,3 +230,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 - cloudflare v3.32 §Vectorize Indexing Gotchas (indexer anti-patterns)
 - knowledge skill (QNFO memory/KG — different layer, never merged)
 - system v2.13 (skill-sync, desktop boundary)
+
+## Version
+
+Current: **v1.3** (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)
