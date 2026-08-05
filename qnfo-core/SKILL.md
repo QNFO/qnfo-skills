@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.15
+version: 1.16
 
 
 
@@ -285,7 +285,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.15 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
+> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.16 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
 
 
 
@@ -642,7 +642,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.15
+# QNFO Core — v1.16
 
 
 
@@ -656,7 +656,19 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-> **v1.15 UPDATE (2026-08-05, kaizen — email-composer on-disk-only reference):**
+> **v1.16 UPDATE (2026-08-05, kaizen — Published-Paper Hygiene Mandate):**
+> Red-team: direct parent-agent 5-adversary audit (user directives 2026-08-05). HARD: 3. SOFT: 0. DESIGN: 1.
+> Changes:
+> (1) [HARD] **§0.0 Published-Paper Hygiene clause added** — published papers must NOT duplicate the
+>     title on page 1 (no body H1 when YAML `title:` exists), must NOT reference internal QNFO processes
+>     (repo paths, skill sections, internal program names, internal conferences), and MUST name files as
+>     project slugs (`<slug>.md/.pdf/.html`, never `paper.*`). Cross-ref: research skill TITLE-DUPLICATION-1,
+>     INTERNAL-REF-1, FILE-SLUG-1 (v2.84).
+> (2) [HARD] **Anti-pattern rows added** — TITLE-DUPLICATION-1, INTERNAL-REF-1, FILE-SLUG-1 (owner-level
+>     enforcement mirroring the research skill's publication gates).
+> (3) [SOFT] **Integration table updated** — research skill v2.84 publication-hygiene gates.
+> Cross-reference: research v2.84 (TITLE-DUPLICATION-1/INTERNAL-REF-1/FILE-SLUG-1), kaizen v1.57,
+> user directive 2026-08-05. Canonical case: QNFO.UMP.004 v1.2/v1.3.
 
 
 
@@ -2250,6 +2262,28 @@ ALL content produced under QNFO/QWAV authority shall be FACTUAL, not promotional
 
 6. INSTITUTIONAL STATUS IS NOT EVIDENCE (KIF-16). Evaluate claims against evidence, not venue or affiliation.
 
+### Published-Paper Hygiene (v1.16, HARD GATE — NO EXCEPTIONS)
+
+Three user mandates (2026-08-05) govern ALL papers produced under QNFO/QWAV authority. They are
+enforced by the research skill's publication gates (TITLE-DUPLICATION-1, INTERNAL-REF-1,
+FILE-SLUG-1, research v2.84) and mirrored here as owner-level rules:
+
+1. **NO TITLE DUPLICATION.** When the YAML frontmatter carries a `title:` field, the paper body
+   MUST NOT contain a top-level H1 with the same title — pandoc renders the YAML title as the
+   page heading, so a body H1 duplicates it on page 1. Rendered output must contain EXACTLY ONE
+   title occurrence. [HARD]
+
+2. **NO INTERNAL REFERENCES IN PUBLISHED PAPERS.** Published papers MUST NOT reference internal
+   QNFO processes: no repo paths (`QNFO/xxx`), no skill sections (`QNFO Core §0.7`), no internal
+   program names used as prose (`the Kepler Program`, `the Continuum Trilogy` as process refs),
+   no internal conference/workshop mentions, no possessive internal refs (`QNFO's research
+   program`). Cite only PUBLISHED records by numbered reference. [HARD]
+
+3. **SLUG-NAMED FILES.** All published paper files MUST be named as the project slug:
+   `<slug>.md`, `<slug>.pdf`, `<slug>.html` (e.g. `qec-darwinism-ultrametric.md`). Generic
+   `paper.md`/`paper.pdf`/`paper.html` naming is FORBIDDEN. Applies to repo files, Zenodo
+   deposit filenames, and R2 keys. [HARD]
+
 
 
 
@@ -3612,6 +3646,10 @@ Before beginning work on a QNFO/QWAV deliverable:
 
 
 
+
+| **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` — title twice on page 1 (2026-08-05)** | **HARD.** No body H1 when YAML `title:` exists; exactly ONE title occurrence in rendered output. Cross-ref: research v2.84. |
+| **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, or possessive internal refs in published papers. Cite published records only. Cross-ref: research v2.84. |
+| **FILE-SLUG-1: Generic `paper.md`/`paper.pdf` file naming (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Cross-ref: research v2.84. |
 
 | **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for CP1252 double-encoded hex patterns (0xE2 0x80 0x93/0x94/0x98/0x99/0x9C/0x9D/0xA2/0xA6, 0xE2 0x84 0xA2, 0xC3 0x8x) BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
 
@@ -5664,7 +5702,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.15** (qnfo-core — email-composer on-disk-only reference fix; 2026-08-05)
+Current: **v1.16** (qnfo-core — email-composer on-disk-only reference fix; 2026-08-05)
 
 
 

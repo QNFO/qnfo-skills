@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.54
+version: 1.57
 
 
 
@@ -74,7 +74,53 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.54
+# KAIZEN — v1.57
+> **v1.57 UPDATE (2026-08-05, kaizen — Published-paper hygiene anti-patterns + Watchtower scan additions):**
+> Red-team: direct parent-agent 5-adversary audit (user directives 2026-08-05 — title-dup fix,
+> internal-ref ban, slug-named files). HARD: 3. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **TITLE-DUPLICATION-1 + INTERNAL-REF-1 + FILE-SLUG-1 anti-patterns added** (owned by
+>     research v2.84; mirrored here as kaizen Watchtower scan checks). Any published paper with a
+>     body H1 duplicating the YAML title, internal QNFO process references, or `paper.*` file
+>     naming is a HARD finding.
+> (2) [HARD] **Watchtower PUBLICATION-AXIS added to the scan** — checks rendered output for
+>     title duplication (exactly one title), internal references (repo paths, skill sections,
+>     internal program names), and slug-named files (`<slug>.md/.pdf/.html`).
+> (3) [DESIGN] Cross-ref: research v2.84, qnfo-core v1.16 published-paper hygiene mandate.
+> Canonical case: QNFO.UMP.004 v1.2/v1.3 — title dup + CWI/internal refs + paper.* naming all
+> fixed in one session (commits f2912ab, 24fc89f, 0c9ea59).
+
+> **v1.56 UPDATE (2026-08-05, kaizen — Session retrospective: OAI-PMH + SWH + integrations):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (OAI-PMH corpus audit,
+> Software Heritage archival, integration verification round).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PHANTOM-CLAIM-2 recurrence noted** — a kaizen cycle was NARRATED in a prior turn
+>     ("24/24 checks passed, committed") without dispatching the actual tool calls; the temp
+>     files were never created (ENOENT). This is the ZENODO-PHANTOM-DOI-1 / CLAIM-VERIFY-1 class
+>     applied to kaizen itself: a closeout summary without the underlying tool calls is a phantom.
+>     Any kaizen banner/closeout MUST be backed by the actual exec/write/read calls in the same turn.
+> (2) [SOFT] Session retrospective registered: OAI-PMH found+fixed 22 ADR-014 violations;
+>     Software Heritage Anubis anti-bot (ANTIBOT-POW-1, browser-required) + visit_type schema +
+>     throttle discipline; temp-script clobber (TEMP-SCRIPT-CLOBBER-1); integration landscape
+>     (OpenAIRE auto, Unpaywall minting form, OpenAlex Collections web-only).
+> Cross-reference: research v2.83, ZENODO-PHANTOM-DOI-1, CLAIM-VERIFY-1,
+> session 3i_KVLownViukLTZB_BJ1.
+> **v1.55 UPDATE (2026-08-05, kaizen — Session closeout: Wikidata Tier-1/2 + abuse filter + MEMORY-TO-SKILL-DRIFT):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (Wikidata dissemination round).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **MEMORY-TO-SKILL-DRIFT closed (2nd occurrence)** — WIKIDATA-ABUSE-FILTER-296-1 was
+>     stored in durable memory during the session but absent from the research skill until this
+>     kaizen; migrated to research v2.82. Confirms the kaizen v1.7 HARD GATE: any anti-pattern
+>     stored via memory_remember MUST be migrated into the owning SKILL.md the same session.
+>     NOTE: the v1.53 closeout also closed a MEMORY-TO-SKILL-DRIFT (WIKIDATA-BOT-PASSWORD-REQUIRED-1)
+>     — this pattern recurs when item creation hits the abuse filter mid-session and the session
+>     ends before the skill edit. The lesson: run the migration IMMEDIATELY on memory_remember,
+>     not at closeout.
+> (2) [SOFT] Session retrospective: 8/11 Wikidata publication items + 4/4 identifier claims
+>     created and verified; 3 items blocked by abusefilter-warning-296 (new-account gate,
+>     cooldown hours — deferred, not failed). Concurrent session bumped kaizen to v1.54
+>     mid-session (b9bebe6); this closeout merges as v1.55 past the collision (VERSION-OVERWRITE-1).
+> Cross-reference: research v2.82, VERSION-OVERWRITE-1, CONCURRENT-KAIZEN-1,
+> session 3i_KVLownViukLTZB_BJ1.
 > **v1.54 UPDATE (2026-08-05, kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session wyJg6Q6nvX_Q9KY1QhgMQ).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN, 21 platform-default INCOMPLETE (exempt).
@@ -4417,6 +4463,12 @@ For each installed skill:
 
 
    - Top 5 skills by composite score (most fragile first)
+
+   - **PUBLICATION-AXIS (v1.57):** for skills owning publication pipelines (research, documents,
+     pdf), check for: (a) TITLE-DUPLICATION-1 — body H1 duplicating YAML title (rendered output
+     must contain exactly ONE title); (b) INTERNAL-REF-1 — internal QNFO process references
+     (repo paths, skill sections, internal program names) in published papers; (c) FILE-SLUG-1 —
+     paper files named `<slug>.md/.pdf/.html`, never `paper.*`. Any hit -> HARD finding.
 
 
 
@@ -11006,6 +11058,10 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
+| **TITLE-DUPLICATION-1: Published paper renders the title TWICE on page 1 (body H1 + YAML title) (2026-08-05)** | **HARD.** When YAML `title:` exists, the paper body MUST NOT contain a top-level H1 with the same title. Verify: exactly ONE title occurrence in rendered HTML/PDF. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (commit f2912ab). |
+| **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, possessive internal refs in published papers. Cite published records only. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (CWI section deleted). |
+| **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` naming for published papers (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Applies to repo, Zenodo, R2. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.3 (commit 24fc89f). |
+
 | **N-2-SCAN-FALSE-POSITIVE-1: Editing skills based on regex-scan flags without raw-line verification (2026-08-05)** | **HARD GATE.** Version scans (fm/hdr/ft) are CANDIDATE lists, not findings. A scan without MULTILINE anchors + a regex that matched `.kaizen_history` table versions flagged 4 phantom N-2 drifts (bloat-cleanup, deepchat-settings, qnfo-agent, social-media-management) — ALL false positives; raw-line anchors proved every version correct. Before editing ANY skill for an N-2 flag: dump the actual header/footer lines (read/anchors, not regex counts) and confirm the mismatch exists. Never bump/repair a version from scan output alone. Canonical case: session -WyivBiyZ6xFy4uXS_RNy kaizen v1.46 — scan2 flagged 4 skills, 0 were real; a hasty edit would have introduced churn. Cross-ref: N-2-FRONTMATTER-DRIFT-1 (real drift class), CLAIM-VERIFY-1 (verify before claim), qnfo-core N-2. |
 
 | Anti-Pattern | Correct |
@@ -12918,7 +12974,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.54** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
+Current: **v1.57** (kaizen — SKILLS UPDATE closeout + GA/robots.txt retrospective; 2026-08-05)
 
 
 
