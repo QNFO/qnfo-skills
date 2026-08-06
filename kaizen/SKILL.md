@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.83
+version: 1.84
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -175,7 +175,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.88, knowledge v2.8, mem-eoKxBfeViioJ (arXiv endorsement gap),
 > ZENODO-PHANTOM-DOI-1, session ktkjFggX5vMt1h4ogDIwh.
 
-# KAIZEN — v1.83
+
+> **v1.84 UPDATE (2026-08-06, kaizen — deferred-resolution closeout: EMAIL-ROUTE-STRIP-1 RESOLVED + D1 handoff EXTERNAL-BLOCK):**
+> Red-team: direct parent-agent 5-adversary audit (CONTINUE/RESOLVE DEFERRED/CLOSEOUT, session SFkcXsRZjmvs4TMr9Fo_m).
+> Merge past concurrent v1.83 (VERSION-OVERWRITE-1); v1.83 banner verified present. Deferred items resolved:
+> (1) [DESIGN] **EMAIL-ROUTE-STRIP-1 RESOLVED** — worker source scoped strip applied
+>     (`p === '/email' || p.startsWith('/email/')`), deployed (version c95134cc-ef57-44f0-bf9b-3183a96b8060), live-verified 2026-08-06:
+>     plain /emails/recent + /emails/body now return real data; /email/emails/* still works for the
+>     qnfo.org/email/* custom-domain route. Owner: email-composer v2.8. Commits: qnfo-skills 8865bc7,
+>     qwav-platform main (worker fix). Calibration [CHECK 2026-08-13] updated to REGRESSION-monitoring, risk [LOW].
+> (2) [EXTERNAL-BLOCK] **D1 qnfo-audit.handoffs insert** — no worker endpoint for handoffs/wbs_state exists in
+>     any qnfo worker repo (verified: qnfo-cloudflare-workers = config + qnfo-email only; recursive grep
+>     'handoffs|wbs_state' across qwav-platform + qnfo-ops = 0 hits). Durable record: Obsidian handoff
+>     `_handoff-2026-08-06-email-kaizen-closeout.md`. Retry trigger: if a handoff endpoint is ever added.
+> Cross-reference: email-composer v2.8, qnfo-email worker, EMAIL-ROUTE-STRIP-1, calibration [CHECK 2026-08-13],
+> session SFkcXsRZjmvs4TMr9Fo_m.
+# KAIZEN — v1.84
 > **v1.83 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #5: closeout reconciliation + VERSION-OVERWRITE-1 merge validation):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SKILLS AUDIT
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (email-composer 2.7/2.7/2.7, kaizen 1.82/1.82/1.82 pre-edit).
@@ -13608,7 +13623,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.83** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.84** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
