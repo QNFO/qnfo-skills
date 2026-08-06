@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.65
+version: 1.66
 
 
 
@@ -74,7 +74,29 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.65
+# KAIZEN — v1.66
+> **v1.66 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge: cycle-2 retrospective restored):**
+> A concurrent session (f93b598, "research v2.86 current-state ref sync") claimed kaizen v1.65 with
+> its own content WHILE this session's cycle-2 banner (STRUCTURAL-VS-FUNCTIONAL-1 retrospective) was
+> in flight; the concurrent file overwrote the live copy before sync, losing the cycle-2 banner text.
+> Per VERSION-OVERWRITE-1 (v1.14), merged past the collision to v1.66. v1.65 content (research v2.86
+> ref sync, PROSE-GATE-ADVISORY-1) verified present. Restored content from cycle 2:
+> (1) [HARD] **STRUCTURAL-VS-FUNCTIONAL-1 cross-skill principle** — user directive: ""has canvas/scripts"
+>     is not the gate. The gate is: do the controls actually work?" Element-presence checks (canvas
+>     exists, marker string in HTML) are STRUCTURAL and prove nothing about control function. The
+>     functional gate: click every control, assert output == engine-predicted value. Canonical case:
+>     2026-08-06 cycle 1 verified A1-A5 live by marker presence; A5's 14-vs-40-atom bug passed every
+>     structural check; only the scripted verifyMath() caught it. Enforcement: qwav-demo-kit v1.3
+>     STRUCTURAL-VS-FUNCTIONAL-1. Phase 2 red-team now audits whether a skill's gate is functional
+>     or structural (structural = HARD finding).
+> (2) [SOFT] **Session functional-verification evidence** — cycle 2 re-verified all four live demos
+>     functionally: A1 6/7 (IEEE-754 underflow artifact at p=5/d=5, physically ~1e-430), A3 7/7,
+>     A4 7/8 (coincidental root-LCA pair; math-consistency checks passed), A5 9/9. 0 dead controls
+>     across 29 assertions. Test-harness note: top-level `const S` does NOT attach to window.
+> Cross-reference: qwav-demo-kit v1.3, VERSION-OVERWRITE-1 (v1.14), CONCURRENT-KAIZEN-1 (v1.14),
+> session f9oRzNJ9WzVVFz7KXuaTK, session f93b598.
+
+
 > **v1.65 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: research v2.86 current-state ref sync):**
 > Red-team: direct parent-agent 5-adversary audit (session gkrNtiglcHtagahkY6_tC — SKILLS UPDATE
 > directive). Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), platform-default INCOMPLETE
@@ -13187,7 +13209,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.65** (kaizen — SKILLS UPDATE: research v2.86 current-state ref sync; 2026-08-06) (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.66** (kaizen — SKILLS UPDATE: research v2.86 current-state ref sync; 2026-08-06) (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 
