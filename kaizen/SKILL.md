@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.63
+version: 1.64
 
 
 
@@ -74,7 +74,37 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.63
+# KAIZEN — v1.64
+> **v1.64 UPDATE (2026-08-06, kaizen — SKILLS UPDATE session retrospective: demo-rebuild pipeline + TREE-STRUCTURE-COUNT-1):**
+> Red-team: direct parent-agent 5-adversary audit (session f9oRzNJ9WzVVFz7KXuaTK — SKILLS UPDATE
+> directive; qwav-demo-kit red-team audit + four QWAV demo rebuilds A1/A3/A4/A5).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. Concurrent-session merge: v1.63 (PROSE-GATE-ADVISORY-1)
+> claimed by session bwt-Jv0EdLebno9QonKIa while this audit ran — merged past the collision per
+> VERSION-OVERWRITE-1; v1.63 banner content verified present.
+> HARD: 0. SOFT: 2. DESIGN: 2. Changes:
+> (1) [SOFT] **qwav-demo-kit red-team findings applied** — frontmatter `version:` field missing
+>     (N-2-FRONTMATTER-DRIFT-1 class, fm=- in scan) fixed to 1.2; TREE-STRUCTURE-COUNT-1
+>     anti-pattern added to qwav-demo-kit (canonical case: A5 buildAtoms 14 vs 40 atoms);
+>     interactive-poc-builder marked SUPERSEDED (registry phantom: listed in skill_list, dir
+>     absent, skill_view fails — consolidated into qwav-demo-kit v1.1).
+> (2) [SOFT] **Session retrospective registered** — the demo-rebuild session proved the value of
+>     scripted math gates: the in-page verifyMath() (7 checks incl. atom count + per-depth
+>     distribution) caught a real structural bug (A5: 1+1+3+9=14 atoms vs required 1+3+9+27=40)
+>     that the README prose claim ("40 atoms") did not. This is the POSITIVE validation case for
+>     v1.63's PROSE-GATE-ADVISORY-1: scripted gates catch what prose claims miss.
+> (3) [DESIGN] **EXEC-AUTOBG-DEATH-1 recurrence noted (8x)** — short exec commands auto-backgrounded
+>     and died throughout the demo rebuild; the write-file-read-back pattern (script writes .txt,
+>     exec runs, agent reads) succeeded 100% of the time. No fix needed — workaround is reliable.
+>     Also: findstr multi-pattern invocations fail on cmd.exe; use Python or single-pattern findstr.
+> (4) [DESIGN] **GitHub Pages deployment verification pattern documented** — native gh-pages branch
+>     deploys (qwav-demo-kit v1.1 canonical) take 1-3+ min; verify via Pages API
+>     (GET /repos/{owner}/{repo}/pages/builds/latest -> status=built, commit SHA) THEN fetch live
+>     page and check for content markers; never trust deploy exit codes (PAGES-BUILD-LATENCY-1).
+> Cross-reference: qwav-demo-kit v1.2, N-2-FRONTMATTER-DRIFT-1 (v1.41), PROSE-GATE-ADVISORY-1
+> (v1.63), EXEC-AUTOBG-DEATH-1 (v1.47), TREE-STRUCTURE-COUNT-1, session f9oRzNJ9WzVVFz7KXuaTK.
+
+
 > **v1.63 UPDATE (2026-08-06, kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -13141,7 +13171,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.63** (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.64** (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 
