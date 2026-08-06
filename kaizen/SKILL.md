@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.61
+version: 1.62
 
 
 
@@ -74,7 +74,38 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.61
+# KAIZEN — v1.62
+> **v1.62 UPDATE (2026-08-06, kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs to find legitimate convergence, never force it):**
+> Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06 synthesis cycle).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft). Recall_facts: 0 orphan anti-patterns. Git clean.
+> Concurrent-session merge: v1.61 was claimed by session gpgLR3KXSZxQQkEG_G2HW (PROMPT-KEY-SCHEMA-ASYMMETRY-1)
+> while this audit ran — merged past the collision per VERSION-OVERWRITE-1. v1.60 (Obsidian D:-drive workflow)
+> and v1.61 (prompt architecture) content both verified present.
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **SYNTHESIS-DILIGENCE-1 anti-pattern added** — given a batch of seemingly unrelated input
+>     notes, the agent MUST work through ALL of them and search for legitimate synthesis/convergence/
+>     consilience — while never forcing connections without evidence. Two failure modes: (a) cargo-cult
+>     synthesis — asserting a causal/structural link between ALL inputs (e.g., photic sneeze ↔ BT tree)
+>     with zero evidence, producing a paper that "connects everything" and proves nothing (ODR v0.1);
+>     (b) premature dismissal — discarding notes as "unrelated" without the diligence pass, missing real
+>     convergence (tensor-network notes 83952/83854/83929 genuinely converged on BT-tree computation).
+>     Canonical case: ODR 2026-08-06 v0.1→v0.3 — v0.1 forced the photic sneeze into the BT-tree narrative;
+>     v0.3 restructured to a single evidenced thesis (tensor networks = BT-tree computation) and moved
+>     readout/Casimir to Open Questions. Protocol: enumerate ALL inputs → extract each note's core claim
+>     → build the evidence graph → keep only evidenced edges → explicitly classify non-converging inputs
+>     ("not part of this synthesis") rather than forcing or ignoring them.
+> (2) [SOFT] **Session retrospective registered** — ODR 2026-08-06 v0.3 overhaul: "Pythagorean semigroup"
+>     → Rosetta Stone T_{2,3,5} (term already corrected in ACRP-04, 2026-08-02; agent failed due-diligence
+>     by not checking prior QNFO corrections); Trap 4 valuation-artifact qualification added (REG-IPR-003
+>     NULL result); first clean CDP PDF build (260 KB, U+FFFD=0, U+FFFF=0) after v0.1 (1x FFFD) and v0.2
+>     (2x FFFF) Chromium font artifacts; DOI chain 10.5281/zenodo.21819742 → 21819931 → 21819981.
+> (3) [DESIGN] **Consilience-gate integration note** — research skill KIF-29 cross-domain gate:
+>     minimum-viable-finding requirement means synthesis papers MUST have ≥1 non-trivial evidenced
+>     isomorphism per domain; unsupported links are [NOT YET EVIDENCE]. SYNTHESIS-DILIGENCE-1 is the
+>     kaizen-side twin of the research skill's RETRODICTION-1 / NOT-YET-EVIDENCE discipline.
+> Cross-reference: research v2.85 (KIF-29, RETRODICTION-1), qnfo-core v1.17 (Trap 4, falsifiability),
+> ODR DOI 10.5281/zenodo.21819981, VERSION-OVERWRITE-1, session bwt-Jv0EdLebno9QonKIa.
+
 > **v1.61 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1):**
 > Red-team: direct parent-agent 5-adversary audit (session gpgLR3KXSZxQQkEG_G2HW SKILLS UPDATE directive).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 20 platform-default INCOMPLETE (exempt).
@@ -11138,6 +11169,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 ## Anti-Patterns
+| **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
+
 
 
 
@@ -13084,7 +13117,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.61** (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.62** (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 
