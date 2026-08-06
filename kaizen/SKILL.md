@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.71
+version: 1.72
 
 
 
@@ -140,8 +140,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.71
+# KAIZEN — v1.72
 
+> **v1.72 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: CLOSEOUT — git sync + VERSION-OVERWRITE-1 merge):**
+> Red-team: direct parent-agent 5-adversary audit (session Gk9vm0CR-VlUvhvXFk_Xugd — CLOSEOUT
+> directive). Concurrent session (4b1cee3) claimed v1.71 (structural H1→H2 fixes + ecosystem health
+> audit) WHILE this audit ran — both banners merged past the collision per VERSION-OVERWRITE-1 to v1.72.
+> HARD: 0. SOFT: 0. DESIGN: 0. Verdict: ecosystem healthy.
+> (1) [CLOSEOUT] **JPCUB dissemination sprint closed** — Bluesky 5-post thread (DID
+>     did:plc:vad2yeqflg5uznmp557zge5c), IndexNow (HTTP 202), Internet Archive (HTTP 200 both papers).
+> (2) [CLOSEOUT] **P0 deliverables git-committed** — QNFO/qnfo-research (res/paper/jpcub-cl-v3 +
+>     res/paper/jpcub-standard-v1) + QNFO/qwav-platform (plt/infra/jpcub-gate +
+>     plt/infra/jpcub-preregistration). Total 30,946 bytes across 4 files.
+> (3) [CLOSEOUT] **Deferred items (2) documented** — Mastodon (EXTERNAL-BLOCK: no OAuth creds) +
+>     Buffer (EXTERNAL-BLOCK: no MCP tools available).
+> Cross-reference: JPCUB CL v2.0 DOI 10.5281/zenodo.21821767, P0 DOI 10.5281/zenodo.21637028,
+> VERSION-OVERWRITE-1 (v1.14), session Gk9vm0CR-VlUvhvXFk_Xugd.
+>
 > **v1.67 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: A1 demo rebuild + session retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session hu5N0aI2_herajxZ2Bku6 — SKILLS UPDATE
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default
@@ -13364,7 +13379,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.71** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
+Current: **v1.72** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
 
 
 
