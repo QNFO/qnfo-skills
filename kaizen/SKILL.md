@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.64
+version: 1.65
 
 
 
@@ -74,7 +74,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.64
+# KAIZEN — v1.65
+> **v1.65 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: research v2.86 current-state ref sync):**
+> Red-team: direct parent-agent 5-adversary audit (session gkrNtiglcHtagahkY6_tC — SKILLS UPDATE
+> directive). Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), platform-default INCOMPLETE
+> (exempt). Recall_facts: 0 orphan anti-patterns. Git clean (2014b96). X-ref audit: 15,369 chars
+> of flags = all historical banner text (EXEMPT per v1.25); 1 genuine current-state finding.
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **Calibration Register current-state ref fixed** — "research skill (currently v2.77)"
+>     -> v2.86 (research was bumped 2.85->2.86 by concurrent session for check-title-duplication.py,
+>     PROSE-GATE-ADVISORY-1 scripted gate; the calibration prose predates it). Confirmed via raw-line
+>     anchors (LINE 12317) per N-2-SCAN-FALSE-POSITIVE-1; banner-history refs (LINE 2131 and ~200
+>     others) left untouched per v1.25 exemption.
+> (2) [AUDIT] **Watchtower v1.65 results** — 18/18 QNFO skills fm/hdr/ft consistent; research v2.86
+>     verified current; no orphan anti-patterns in memory; qnfo-skills repo clean at 2014b96.
+> Cross-reference: research v2.86 (check-title-duplication.py), N-2-SCAN-FALSE-POSITIVE-1,
+> PROSE-GATE-ADVISORY-1 (v1.63), session gkrNtiglcHtagahkY6_tC.
+
 > **v1.64 UPDATE (2026-08-06, kaizen — SKILLS UPDATE session retrospective: demo-rebuild pipeline + TREE-STRUCTURE-COUNT-1):**
 > Red-team: direct parent-agent 5-adversary audit (session f9oRzNJ9WzVVFz7KXuaTK — SKILLS UPDATE
 > directive; qwav-demo-kit red-team audit + four QWAV demo rebuilds A1/A3/A4/A5).
@@ -12314,7 +12330,7 @@ dated, falsifiable claims about skill drift risk.
 
 
 
-- The research skill (currently v2.77) is actively evolving; the canonical
+- The research skill (currently v2.86) is actively evolving; the canonical
 
 
 
@@ -13171,7 +13187,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.64** (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.65** (kaizen — SKILLS UPDATE: research v2.86 current-state ref sync; 2026-08-06) (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 
