@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.60
+version: 1.61
 
 
 
@@ -74,7 +74,30 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.60
+# KAIZEN — v1.61
+> **v1.61 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1):**
+> Red-team: direct parent-agent 5-adversary audit (session gpgLR3KXSZxQQkEG_G2HW SKILLS UPDATE directive).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 20 platform-default INCOMPLETE (exempt).
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **PROMPT-KEY-SCHEMA-ASYMMETRY-1 anti-pattern added** — agent.db customPrompts store prompt text
+>     under key `content`; app-settings.json customPrompts store it under `template`. Reading the wrong key
+>     produces a false "empty prompt" flag (this audit burned 7 tool calls + one false finding before the
+>     schema was confirmed). Both stores verified consistent: SKILLS UPDATE (278 ch) + CONTINUE (8 ch) in both.
+> (2) [SOFT] **System prompt v2.7 verified current** — agent.db systemPrompts == app-settings.json
+>     default_system_prompt == system-prompt-v2.7.md (48,598 chars, IDENTICAL: True, "Last updated 2026-08-05").
+>     v2.7 merges standard DeepChat structure (Core Principles/How You Work/Code Quality/What You Don't Do/
+>     Communication/Error Handling) WITH all execution mandates (ENGLISH-ONLY, thin-client, EXECUTION OVER
+>     CHAT, PLANNED ITEMS, SUBAGENT RED-TEAM, SKILL ENFORCEMENT, STEP-BY-STEP, EXEC SHELL FIX). Resolves the
+>     v2.6 enriched-variant discrepancy (mem-NNA13ubWR_d5). Runtime-appended tool docs (Permission Rules,
+>     File and Command Tools, Tape Tools) are by design, not drift.
+> (3) [SOFT] **deepchat-settings v1.4 sync** — stale "44156 chars as of v2.6" reference corrected to v2.7
+>     (48,598); PROMPT-KEY-SCHEMA-ASYMMETRY-1 row added.
+> (4) [DESIGN] **KIF-48 strays purged** — 18 ephemeral `_*.py`/`_*.txt` files removed from .deepchat root
+>     (orcid/cont/cmdkey leftovers; no concurrent sessions active per process list). CONCURRENT-ROOT-WRITE-1
+>     recurrence cleaned.
+> Cross-reference: deepchat-settings v1.4, system-prompt-v2.7.md, PROMPT-REDISCOVERY-1,
+> CONCURRENT-ROOT-WRITE-1, session gpgLR3KXSZxQQkEG_G2HW.
+
 > **v1.60 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: Obsidian D:-drive workflow + ecosystem health audit):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 20 platform-default INCOMPLETE (exempt).
@@ -11130,6 +11153,8 @@ Session Failure → Session Retrospective detects failure pattern
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, possessive internal refs in published papers. Cite published records only. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (CWI section deleted). |
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` naming for published papers (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Applies to repo, Zenodo, R2. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.3 (commit 24fc89f). |
 
+
+| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts from only ONE store or the wrong key (2026-08-06)** | **HARD GATE.** agent.db `app_settings.customPrompts` entries carry the prompt text under `content`; app-settings.json `customPrompts` entries carry it under `template`. Verifying prompt content with a single-key read produces a FALSE "empty prompt" flag — and acting on that flag (rewriting with empty content) would blank the templates. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — 7 tool calls + one false finding burned before the asymmetry was confirmed. Fix: when auditing/updating prompts, read BOTH stores and BOTH keys (`content` in agent.db, `template` in app-settings.json); confirm content length > 0 in each before declaring anything empty. Cross-ref: deepchat-settings v1.4, PROMPT-REDISCOVERY-1. |
 | **N-2-SCAN-FALSE-POSITIVE-1: Editing skills based on regex-scan flags without raw-line verification (2026-08-05)** | **HARD GATE.** Version scans (fm/hdr/ft) are CANDIDATE lists, not findings. A scan without MULTILINE anchors + a regex that matched `.kaizen_history` table versions flagged 4 phantom N-2 drifts (bloat-cleanup, deepchat-settings, qnfo-agent, social-media-management) — ALL false positives; raw-line anchors proved every version correct. Before editing ANY skill for an N-2 flag: dump the actual header/footer lines (read/anchors, not regex counts) and confirm the mismatch exists. Never bump/repair a version from scan output alone. Canonical case: session -WyivBiyZ6xFy4uXS_RNy kaizen v1.46 — scan2 flagged 4 skills, 0 were real; a hasty edit would have introduced churn. Cross-ref: N-2-FRONTMATTER-DRIFT-1 (real drift class), CLAIM-VERIFY-1 (verify before claim), qnfo-core N-2. |
 
 | Anti-Pattern | Correct |
@@ -13042,7 +13067,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.60** (kaizen — SKILLS UPDATE: Obsidian D:-drive workflow + ecosystem health audit; 2026-08-06)
+Current: **v1.61** (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 

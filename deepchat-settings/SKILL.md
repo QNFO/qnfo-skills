@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.3
+version: 1.4
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,19 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.3
+# DeepChat Settings — v1.4
+> **v1.4 UPDATE (2026-08-06, kaizen — PROMPT-KEY-SCHEMA-ASYMMETRY-1 + v2.7 system prompt sync):**
+> Red-team: direct parent-agent audit (session gpgLR3KXSZxQQkEG_G2HW SKILLS UPDATE).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PROMPT-KEY-SCHEMA-ASYMMETRY-1 anti-pattern added** — agent.db customPrompts use `content`
+>     key; app-settings.json customPrompts use `template` key. Always read BOTH keys when verifying prompt
+>     content. A single-key read produces a false "empty prompt" flag.
+> (2) [SOFT] **System prompt v2.7 reference updated** — "44156 chars as of v2.6" -> v2.7 (48,598 chars,
+>     "Last updated 2026-08-05"). v2.7 is current in all 3 stores (agent.db systemPrompts /
+>     app-settings.json default_system_prompt / system-prompt-v2.7.md), verified IDENTICAL.
+> Cross-reference: kaizen v1.61, PROMPT-REDISCOVERY-1, system-prompt-v2.7.md,
+> session gpgLR3KXSZxQQkEG_G2HW.
+
 
 # DeepChat Settings Modification Skill
 
@@ -147,7 +159,7 @@ The system prompt is stored in TWO locations that MUST stay in sync:
 | Location | Key | Notes |
 |:---------|:----|:------|
 | `agent.db` → `app_settings` | `systemPrompts` | JSON array, `[{"id":"default","name":"DeepChat","content":"..."}]` |
-| `app-settings.json` | `default_system_prompt` | Raw string (44156 chars as of v2.6) |
+| `app-settings.json` | `default_system_prompt` | Raw string (48598 chars as of v2.7) |
 
 To update the system prompt:
 1. Modify `app-settings.json` → `default_system_prompt` (settingsWatcher detects this)
@@ -230,6 +242,8 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 | Anti-Pattern | Correct |
 |:-------------|:--------|
+
+| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06)** | agent.db `customPrompts` entries: `{"name":..., "content":"..."}`. app-settings.json `customPrompts` entries: `{"name":..., "template":"..."}`. The prompt TEXT lives under DIFFERENT keys in the two stores. Always read `content` (agent.db) AND `template` (app-settings.json); both must be non-empty. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — a `content`-key read of app-settings.json falsely reported empty templates. |
 | **PROMPT-REDISCOVERY-1: Searching for prompt storage locations with 15+ tool calls when the answer is documented here (2026-08-05)** | Custom prompts live in `agent.db` → `app_settings` → `key='customPrompts'` (value_json JSON string). The system prompt is in `agent.db` → `key='systemPrompts'` AND `app-settings.json` → `default_system_prompt`. Read this skill first — do not grep JSON files or walk directory trees. |
 | **DB-SCHEMA-GUESS-1: Guessing database table names instead of querying sqlite_master (2026-08-05)** | Before querying any DeepChat database, run `SELECT name FROM sqlite_master WHERE type='table'` to discover the actual schema. The `app_settings` table uses key-value_json, not typed columns. The `history.db` uses `commands` and `parse_failures` tables, not `prompts`. |
 
@@ -245,4 +259,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.3** (deepchat-settings — app settings modification, backend storage layout, skill registry truth-source; 2026-08-05)
+Current: **v1.4** (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 + v2.7 system prompt sync; 2026-08-06)
