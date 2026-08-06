@@ -140,7 +140,13 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.72
+> **v1.73 UPDATE (2026-08-06, kaizen — PARALLEL-WRITE-EXEC-RACE-1 + SINGLE-BATCH-SEQUENTIAL-1 hardening; session nRNLsnj-ytLg_xHL768uG):**
+> Red-team: direct parent-agent 5-adversary audit (EXECUTE RED TEAM SKILLS AUDIT directive; JPCUB CL v2.3 closeout; 10+ exec FileNotFoundError races in one session).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
+> Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
+
+# KAIZEN — v1.73
 
 > **v1.72 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: CLOSEOUT — git sync + VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (session Gk9vm0CR-VlUvhvXFk_Xugd — CLOSEOUT
@@ -11410,6 +11416,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 ## Anti-Patterns
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
+| **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
+
 | **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
 
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
@@ -13379,7 +13387,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.72** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
+Current: **v1.73** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
 
 
 

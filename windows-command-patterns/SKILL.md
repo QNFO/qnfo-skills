@@ -125,7 +125,7 @@ kif_tags: [KIF-32]
 
 
 
-# windows-command-patterns — v3.16
+# windows-command-patterns — v3.17
 
 > **v3.16 UPDATE (2026-08-06, kaizen — CUA tools integration: Computer Use as GUI automation path):**
 > Red-team: direct parent-agent 5-adversary audit (session QPBAVeVkU0Y5qkMNG6CC9).
@@ -908,6 +908,8 @@ The cumulative damage caused by PowerShell exceeds every other tooling failure c
 DECISION TREE (exactly 2 branches):
 
 
+0. **SINGLE-BATCH-SEQUENTIAL-1 (HARD GATE):** NEVER dispatch `write` and `exec` that reads that file in the SAME parallel tool batch — the exec can fire before the write completes (FileNotFoundError). Sequence: write in batch N, exec in batch N+1. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures.
+
 1. Write to .py file → exec python → DONE.
 
 
@@ -1494,4 +1496,4 @@ PYTHON-BUFFERING-1.
 
 
 
-Current: **v3.16** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.17** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
