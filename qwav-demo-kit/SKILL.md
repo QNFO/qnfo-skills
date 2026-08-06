@@ -1,10 +1,45 @@
 ---
 name: qwav-demo-kit
-version: 1.3
 description: Build, test, and deploy interactive scientific demos that prove published research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering self-explanatory UX, math verification against golden values, extensive automated testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native gh-pages branch deployment with same-turn anti-phantom verification, and complete documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes), every control wired to real computation (no dead buttons). Use when building interactive demos, computational PoCs, scientific visualizations, or publishing research that must execute in code.
 ---
 
-# QWAV Demo Kit — v1.3
+# QWAV Demo Kit — v1.4
+
+> **v1.4 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge + FUNCTIONALITY GATE + audit-tool suite):**
+> Red-team: direct parent-agent 5-adversary audit (session s5A91BkILVruZwf361xxc — user directive:
+> ""has canvas/scripts" is not the gate. The gate is: do the controls actually work?";
+> EXECUTE RED TEAM SKILLS AUDIT → EXECUTE KAIZEN SKILLS UPDATES).
+> A concurrent session (f9oRzNJ9WzVVFz7KXuaTK) bumped to v1.3 (STRUCTURAL-VS-FUNCTIONAL-1) while
+> this audit ran; merged past the collision per VERSION-OVERWRITE-1. Both contributions present.
+> HARD: 2. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **FUNCTIONALITY GATE added to Phase 3 (DEM-E0-T03)** — presence is NOT the gate.
+>     Audit evidence: all 4 legacy demos FAIL (ultrametric-convergence 5/14 buttons + 14 console
+>     errors `variance() is not a function`; error-confinement 2/16 + blank canvas;
+>     hardware-visualizer 2/9 + blank canvas; tree-distance 2/13 + blank canvas). Hard thresholds:
+>     ≥50% of buttons AND sliders change state, canvas non-blank, zero console errors, light theme.
+> (2) [HARD] **`scripts/generic-click-test.py` added** — selector-agnostic functionality gate:
+>     clicks EVERY button/input/select/range on ANY demo, asserts page state changes (full
+>     innerText comparison — NOT length, which can coincide on digit swaps like "156"->"781"),
+>     canvas non-blank, zero console errors, light theme, desktop+mobile. Verified live:
+>     PASS on qwav-demo-bt-qec control (ALL CHECKS PASSED), FAIL on legacy error-confinement.
+>     Run against BOTH localhost and deployed URL.
+> (3) [SOFT] **Anti-patterns PRESENCE-OVER-FUNCTION-1 + HARDCODED-AUDIT-1 added** — presence
+>     checks (element exists) prove only that a page loaded; the gate is whether controls work.
+>     Demo-specific suites (playwright-click-test.py) are ADDITIONAL depth; generic-click-test.py
+>     is the minimum universal gate.
+> (4) [DESIGN] **Frontmatter `version:` key removed** — skill-creator validator forbids it
+>     (allowed: name, description, license, metadata, allowed-tools); header+footer carry the
+>     version per N-2. The v1.2 "fm version fix" would have BLOCKED packaging.
+> (5) [DESIGN] **Gate-tool bug fixed during verification** — Playwright `fill()` throws on
+>     `<input type=range>`; use evaluate+dispatchEvent. Length-based change detection misses
+>     digit-swap state changes; use full-text comparison.
+> Cross-reference: kaizen v1.65 (STRUCTURAL-VS-FUNCTIONAL-1), PRESENCE-OVER-FUNCTION-1,
+> HARDCODED-AUDIT-1, DEAD-BUTTON-1, session f9oRzNJ9WzVVFz7KXuaTK, session s5A91BkILVruZwf361xxc.
+
+name: qwav-demo-kit
+version: 1.3
+description: Build, test, and deploy interactive scientific demos that prove published research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering self-explanatory UX, math verification against golden values, extensive automated testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native gh-pages branch deployment with same-turn anti-phantom verification, and complete documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes), every control wired to real computation (no dead buttons). Use when building interactive demos, computational PoCs, scientific visualizations, or publishing research that must execute in code.
+---
 
 Complete framework for building interactive scientific demos that prove published
 research actually executes in code and demonstrates real-world physics viability.
@@ -532,7 +567,7 @@ update_plan([
 
 ## Version
 
-Current: **v1.3** (2026-08-06)
+Current: **v1.4** (2026-08-06)
 v1.2: kaizen — frontmatter version field (N-2 fix), TREE-STRUCTURE-COUNT-1 anti-pattern,
 interactive-poc-builder SUPERSEDED note, PROSE-GATE-ADVISORY-1 validation case.
 v1.1: consolidated from interactive-poc-builder (2026-08-06 session) — added
