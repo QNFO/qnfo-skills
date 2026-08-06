@@ -13368,6 +13368,16 @@ system-prompt-v2.7.md) through +3 monitoring checkpoints. Risk of regression: [L
 byte-identical 2026-08-06; v2.7 already merges standard structure + execution mandates (resolves
 mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is understood.
 
+
+```
+[CHECK: 2026-08-13] EMAIL-ROUTE-STRIP-1 will hold through +3 monitoring checkpoints: no qnfo-email
+API call will use plain /emails/* on the workers.dev host (which silently returns the endpoint index,
+HTTP 200 wrong payload); the /email/emails/* form is used and/or the worker strip is fixed to
+`p === '/email' || p.startsWith('/email/')`. Risk of regression: [MODERATE] — the silent failure is
+invisible without read-back. Likelihood: [HIGH] — canonical case (session SFkcXsRZjmvs4TMr9Fo_m,
+~15 probes burned) documented in email-composer v2.5 + kaizen v1.80.
+```
+
 ## Version
 
 
