@@ -1,5 +1,6 @@
 ---
 name: qwav-demo-kit
+version: 1.4
 description: Build, test, and deploy interactive scientific demos that prove published research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering self-explanatory UX, math verification against golden values, extensive automated testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native gh-pages branch deployment with same-turn anti-phantom verification, and complete documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes), every control wired to real computation (no dead buttons). Use when building interactive demos, computational PoCs, scientific visualizations, or publishing research that must execute in code.
 ---
 
@@ -85,7 +86,37 @@ Every demo must be: **self-explanatory**, **mathematically verified**,
 > (4) [DESIGN] **interactive-poc-builder SUPERSEDED** — this skill consolidated interactive-poc-builder
 >     (per v1.1 banner); the old skill is a registry phantom (listed in skill_list, dir absent,
 >     skill_view fails). Do NOT load interactive-poc-builder; use qwav-demo-kit for all demo/PoC work.
-> Cross-reference: kaizen v1.63 (PROSE-GATE-ADVISORY-1), N-2-FRONTMATTER-DRIFT-1 (kaizen v1.41),
+> Cross-reference: kaizen v1.63 (PROSE-GATE-ADVISORY-1), N-2-FRONTMATTER-DRIFT-1 (kaizen v1.41),>
+> **v1.4 SUPPLEMENT (2026-08-06, session f9oRzNJ9WzVVFz7KXuaTK — gate hardened by live execution + A3 validation):**
+> The FUNCTIONALITY GATE was EXECUTED against all four live demos; `generic-click-test.py` was
+> hardened through 4 real findings, and it CAUGHT a real deployed bug.
+> (1) [HARD] **Gate hardening (4 fixes from live execution):**
+>     (a) Tour-dismissal timing — first-run guided-tour overlays (full-screen, pointer-events:all,
+>         setTimeout(startTour, 800)) swallow real pointer clicks on fresh contexts; dismissal at
+>         load+0ms is UNDONE at +800ms (canonical: A1 scored 3/16 -> 2/16 -> 1/16 across runs =
+>         racy overlay, not dead buttons). Fix: wait 1200ms, dismiss via the overlay's actual
+>         Skip/close button (sets localStorage -> never reappears), second pass for longer tours.
+>     (b) 0-slider conditional — `max(1, 0//2)` force-failed demos with zero sliders (A4/A5).
+>         Now `if interactives['sliders'] > 0` else print N/A.
+>     (c) 800ms per-click wait — 200ms missed async updates (Monte Carlo sim, collapse animation).
+>     (d) toDataURL canvas check — getImageData on a 0-sized backing store threw/returned empty
+>         (false 'blank'); toDataURL().length > 1000 is layout-independent (A1 proved 130KB+).
+> (2) [HARD] **STRUCTURAL-VS-FUNCTIONAL-1 VALIDATED (A3 canonical case)** — the gate caught a real
+>     deployed bug: A3 ultrametric-convergence threw 13x `variance(...) is not a function` on every
+>     interaction. Root cause: `updateReadouts()` collapse-ratio line wrapped an IIFE in a variance()
+>     call — `variance(()=>{...})()` should be `(()=>{...})()`. Fired on EVERY interaction yet:
+>     marker checks passed ('has canvas/scripts'), verifyMath() passed 6/6 (tests engine directly,
+>     bypassing updateReadouts). ONLY the functional gate (real clicks + console listener) caught it.
+>     Fixed in fcccc47, deployed, live re-run ALL PASS (10/14 buttons, 0 console errors).
+> (3) [SOFT] **All four live demos now pass the hardened gate** — A1 12/16 (75% >= 50%), A3 10/14,
+>     A4 11/13, A5 5/9; sliders N/A where absent; canvas non-blank; zero console errors everywhere.
+>     Unchanged buttons are by-design no-ops (already-active defaults, deterministic reseed).
+> (4) [DESIGN] **Real pointer clicks vs CDP DOM-click** — DOM .click() bypasses overlays (why earlier
+>     CDP functional tests passed); real pointer clicks are the correct fidelity for what a user
+>     experiences. The gate uses Playwright real clicks.
+> Cross-reference: STRUCTURAL-VS-FUNCTIONAL-1 (v1.3 banner), A3 fix commit fcccc47,
+> kaizen v1.66, session f9oRzNJ9WzVVFz7KXuaTK, session s5A91BkILVruZwf361xxc.
+
 > A5 fix commit fa84f93, session f9oRzNJ9WzVVFz7KXuaTK.
 
 
@@ -568,6 +599,7 @@ update_plan([
 ## Version
 
 Current: **v1.4** (2026-08-06)
+v1.4 (supplement): gate hardened by live execution — tour-dismissal timing, 0-slider conditional, 800ms async wait, toDataURL canvas; A3 variance(IIFE)() TypeError caught + fixed (fcccc47); all four live demos passing the gate.
 v1.2: kaizen — frontmatter version field (N-2 fix), TREE-STRUCTURE-COUNT-1 anti-pattern,
 interactive-poc-builder SUPERSEDED note, PROSE-GATE-ADVISORY-1 validation case.
 v1.1: consolidated from interactive-poc-builder (2026-08-06 session) — added
