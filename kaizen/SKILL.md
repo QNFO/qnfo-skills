@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.81
+version: 1.82
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -175,7 +175,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.88, knowledge v2.8, mem-eoKxBfeViioJ (arXiv endorsement gap),
 > ZENODO-PHANTOM-DOI-1, session ktkjFggX5vMt1h4ogDIwh.
 
-# KAIZEN — v1.81
+# KAIZEN — v1.82
+> **v1.82 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #4: email hygiene + archive protocol + HTTP-HEADER-NONE-1):**
+> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive, session SFkcXsRZjmvs4TMr9Fo_m).
+> Concurrent-session merge: v1.81 (EMAIL-ADDRESS-PROLIFERATION-1) claimed by session Nff8tKtjHf6VDCfRejuNd
+> while this cycle ran — merged past the collision per VERSION-OVERWRITE-1 to v1.82; v1.81 content verified present.
+> Watchtower: email-composer v2.6 N-2 CLEAN pre-edit, v2.7 CLEAN post-edit (fm/hdr/ft 2.7, raw-line anchors).
+> HARD: 1 (email-composer-side). SOFT: 2. DESIGN: 1. Changes (in email-composer v2.7, this banner documents the cycle):
+> (1) [HARD] **HTTP-HEADER-NONE-1 anti-pattern added (owner: email-composer v2.7)** — urllib Request with a
+>     None header value raises TypeError ("expected string or bytes-like object, got 'NoneType'"); build
+>     headers conditionally. Canonical case: this session's hygiene script (inventory GET failed first run).
+> (2) [SOFT] **Archive & Email-Check Hygiene Protocol added to email-composer** — user mandate
+>     "don't re-surface emails / what is the archiving procedure": PATCH /email/emails/status archive workflow,
+>     valid-status vocabulary, delta-based reporting (only NEW actionable inbound; quiet report), POST /filters
+>     schema (field/pattern/action accept|reject|spam) + proven spam-filter examples. Operationally proven:
+>     51/51 emails batched archived(48)/spam(3), 4 filters added (10 total), 0 remaining non-archived/non-spam.
+> (3) [SOFT] **EMAIL-CHECK-RESURFACING-1 anti-pattern added (owner: email-composer v2.7)** — never re-report
+>     emails the user declared no-action on; archive-on-no-action same session.
+> (4) [DESIGN] **Monitoring checkpoint +1: EMAIL-ROUTE-STRIP-1 PASS** — /email/emails/* form used for all 51
+>     PATCHes + 4 filter POSTs + verification GETs, zero route-strip failures this cycle.
+> Cross-reference: email-composer v2.7, qnfo-email worker, N-2-FRONTMATTER-DRIFT-1, EMAIL-ROUTE-STRIP-1 (v1.80),
+> mem-YoM6-BSfCW_K, session SFkcXsRZjmvs4TMr9Fo_m.
+
 > **v1.81 UPDATE (2026-08-06, kaizen — EXECUTE RED TEAM: email-address proliferation incident + email-composer N-2 fix):**
 > Red-team: direct parent-agent 5-adversary audit (user directive: "DON'T GO CRAZY WITH ALL THESE EMAIL ADDRESSES... 3-5 MAX. QNFO@QWAV.ORG IS ENTIRELY SUPERFLUOUS" + EXECUTE RED TEAM).
 > Watchtower scan: email-composer fm=2.4/hdr=2.5/ft=2.5 DRIFT found (v2.5 EMAIL-ROUTE-STRIP-1 bump never synced frontmatter) — confirmed via raw-line anchors, fixed in same cycle (N-2-FRONTMATTER-DRIFT-1). All other QNFO skills N-2 CLEAN.
@@ -13383,6 +13404,16 @@ invisible without read-back. Likelihood: [HIGH] — canonical case (session SFkc
 ~15 probes burned) documented in email-composer v2.5 + kaizen v1.80.
 ```
 
+
+```
+[CHECK: 2026-08-13] EMAIL-HYGIENE will hold through +3 monitoring checkpoints: every email the user declares
+no-action on is PATCHed to archived (junk -> spam) the same session; [EMAIL-CHECK] reports only NEW actionable
+inbound (never re-surfacing archived/spam/sent); recurring junk senders are auto-spammed via /filters.
+Risk of regression: [MODERATE] — re-surfacing is a habit; the protocol is prose until scripted.
+Likelihood: [HIGH] — operational proof this cycle (51/51 archived-spam, 10 filters, 0 remaining) + user
+mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
+```
+
 ## Version
 
 
@@ -13554,7 +13585,7 @@ invisible without read-back. Likelihood: [HIGH] — canonical case (session SFkc
 
 
 
-Current: **v1.81** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.82** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
