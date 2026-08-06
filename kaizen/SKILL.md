@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.79
+version: 1.80
 
 
 
@@ -180,7 +180,30 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.88, knowledge v2.8, mem-eoKxBfeViioJ (arXiv endorsement gap),
 > ZENODO-PHANTOM-DOI-1, session ktkjFggX5vMt1h4ogDIwh.
 
-# KAIZEN — v1.79
+# KAIZEN — v1.80
+> **v1.80 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #3: email follow-up + EMAIL-ROUTE-STRIP-1 + ecosystem audit):**
+> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive; session SFkcXsRZjmvs4TMr9Fo_m
+> — email check + follow-up + kaizen cycle). Watchtower scan: 42 skills on disk (fm/hdr/ft + .kaizen_history
+> + git). system scanner flag = FALSE POSITIVE (header `# SYSTEM — 2.13` bare version; raw-line anchors
+> CLEAN per N-2-SCAN-FALSE-POSITIVE-1). Git clean at 7ed9e6b.
+> HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **EMAIL-ROUTE-STRIP-1 anti-pattern added (owner: email-composer v2.4->v2.5)** — qnfo-email
+>     Worker route-strip `if (p.startsWith('/email')) { p = p.replace('/email','') }` mangles `/emails/*`
+>     on the workers.dev host: plain `/emails/recent`, `/emails/body?id=N`, `/emails/search` return the
+>     catch-all ENDPOINT INDEX (HTTP 200, wrong payload — SILENT failure); `/email/emails/*` routes
+>     correctly. Canonical case: 2026-08-06 follow-up session — ~15 probes burned. Worker fix: scope the
+>     strip to `p === '/email' || p.startsWith('/email/')`.
+> (2) [SOFT] **system skill stale cross-ref fixed** — `windows-command-patterns v3.10 §S-1.0.2` -> v3.17
+>     (section verified present in v3.17).
+> (3) [DESIGN] **Session retrospective (email follow-up)** — #26 nicolasqu@alice.it (Nicola = Franco
+>     Ivaldi's collaborator; courtesy reply optional); #24 "ENv2 Registry Migration" = ENS v2 PHISHING
+>     (Dokuv2 via ccsend bounce alias; do NOT click/authenticate; recommend spam); #25 paperworkspot =
+>     predatory-journal spam (Revista Signa, revistasigna.cc; recommend spam like #11); #9 GitHub 2FA
+>     acknowledged by user (closed). Inbox 27->51 (send-path/routing tests, invitation batch, arXiv
+>     replies). EMAIL-ROUTE-STRIP-1 discovered during body-fetch.
+> Cross-reference: email-composer v2.5, qnfo-email worker, system v2.13, API-DOC-GAP-1,
+> N-2-SCAN-FALSE-POSITIVE-1, session SFkcXsRZjmvs4TMr9Fo_m.
+
 > **v1.77 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: git-github v2.22 TOPICS-API-1 + GH-API-STDIN-NOOP-1; VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive). Watchtower scan:
 > 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 21 platform-default INCOMPLETE (exempt).
@@ -12116,6 +12139,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
+| **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on workers.dev — plain `/emails/*` returns catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | Use `/email/emails/*` on the workers.dev host; fix worker strip to `p === '/email' || p.startsWith('/email/')`. Owner: email-composer v2.5. Cross-ref: API-DOC-GAP-1. |
 ## Cross-Skill Integration
 
 
@@ -13515,7 +13539,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.79** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.80** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
@@ -13666,7 +13690,6 @@ Current: **v1.79** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipelin
 
 
 - Do not guess script paths or change directories to locate skill files.
-
 
 
 

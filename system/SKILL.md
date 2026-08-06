@@ -47,7 +47,7 @@ kif_tags: [KIF-32]
 >     is truthy, cmd.exe when unset. PSModulePath deleted from HKCU. Shim strips the
 >     3 UTF8Encoding preambles, forwards to cmd.exe. Full guide: EXEC-SHELL-FIX.md.
 > (2) [HARD] **EXEC-SHELL-FIX.md reference** — reproducible step-by-step recovery guide.
-> (3) [SOFT] Cross-reference: windows-command-patterns v3.10, deepchat-internals.md,
+> (3) [SOFT] Cross-reference: windows-command-patterns v3.17, deepchat-internals.md,
 >     SESSION_LOG_POWERSHELL_EXTERMINATION.md.
 > Red-team: direct parent-agent audit (subagent truncated — systemic). HARD: 2, SOFT: 1.
 
@@ -755,7 +755,7 @@ in this skill's root directory. Recompile if lost:
 Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winreg REG_EXPAND_SZ.
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
-`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.10 §S-1.0.2.
+`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.17 §S-1.0.2.
 Current: **2.13** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 
