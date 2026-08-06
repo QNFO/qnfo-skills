@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.67
+version: 1.68
 
 
 
@@ -74,7 +74,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.67
+> **v1.68 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: session retrospective + ecosystem scan):**
+> Red-team: direct parent-agent 5-adversary audit (session Lix-MUWJTX69KVWScl01C — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default
+> INCOMPLETE (exempt). Recall_facts: 0 orphan anti-patterns (RECALL-FACTS-GAP known, v1.22).
+> Git clean. Process list: 0 orphaned sessions. Tape search: 0 tool failures.
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: None — ecosystem healthy.
+> (1) [RETROSPECTIVE] **JPCUB strategic assessment session** — comprehensive red-team audit +
+>     portfolio plan for measurable-thermodynamics benchmark strategy (Genre C internal).
+>     See DOI 10.5281/zenodo.21821093 (CL v2.0) + 10.5281/zenodo.21637028 (P0). Skills loaded:
+>     research v2.86, qnfo-core v1.17, kaizen v1.67. Key deliverable: 8-phase roadmap with
+>     WBS codes (QWAV.PLT.JPCUB / QNFO.RES.JPCUB), 5-item calibration register, messaging
+>     architecture. Core strategic finding: QWAV must be JPCUB's first adopter, not its owner
+>     — separation of governance preserves benchmark credibility.
+> (2) [OBSERVATION] **Zenodo content access pattern** — browser CDP + cookies (`Runtime.evaluate` +
+>     `fetch()` with authenticated session) reliably retrieves Zenodo paper content; urllib gets
+>     403 bot-blocked. Pattern already documented in research v2.74 (ZENODO-BOT-403-1).
+> (3) [AUDIT] **Watchtower v1.68 results** — 18/18 QNFO skills fm/hdr/ft consistent; all
+>     cross-skill references verified current; no orphan anti-patterns; 0 deferred items.
+> Cross-reference: research v2.86, qnfo-core v1.17, JPCUB CL v2.0 DOI 10.5281/zenodo.21821767,
+> JPCUB P0 DOI 10.5281/zenodo.21637028, session Lix-MUWJTX69KVWScl01C.
+
+# KAIZEN — v1.68
 
 > **v1.67 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: A1 demo rebuild + session retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session hu5N0aI2_herajxZ2Bku6 — SKILLS UPDATE
@@ -13279,7 +13300,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.67** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
+Current: **v1.68** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
 
 
 
