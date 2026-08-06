@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.86
+version: 2.87
 
 
 
@@ -166,7 +166,27 @@ triggers:
 
 
 
-# RESEARCH — v2.86
+> **v2.87 UPDATE (2026-08-06, kaizen — ZENODO-RECORDS-API-DROPS-METADATA-1 + P5.FRESH self-DOI ordering + INTERNAL-REF-1 extension):**
+> Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
+> directive; qwave-qudit-advantage QNFO.UMP.005 red-team). HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-RECORDS-API-DROPS-METADATA-1 anti-pattern added** — the records-API
+>     `PUT /api/records/{id}/draft` returns HTTP 200 but silently drops `license` + `keywords`.
+>     Fix: deposit-API metadata shape (`PUT /api/deposit/depositions/{id}` with upload_type/
+>     publication_type strings, plain-string license, plain-list keywords); verify via DataCite
+>     subjects/rights read-back. Canonical case: qwave-qudit-advantage v0.3 (21827347) — 11 keywords
+>     + cc-by-nc-sa-4.0 stored only via deposit shape.
+> (2) [HARD] **INTERNAL-REF-1 extended** — WBS codes (`QNFO.UMP.005`-style) in body/calibration
+>     registers/pre-registration scaffolds and quoted internal program names ("QEC Darwinism") now
+>     explicitly banned; Publication Language Gate scan list extended. Canonical case: qwave-qudit-
+>     advantage v0.2 leaked `QNFO.UMP.005` (calibration register) + "QEC Darwinism" (prose) — fixed
+>     in v0.3.
+> (3) [SOFT] **P5.FRESH newversion self-DOI ordering rule** — newversion .md MUST be updated to its
+>     own pre-reserved DOI BEFORE upload (upload-first ordering ships a deposited file one version
+>     stale). Canonical case: v0.2 deposited .md carried v0.1 DOI; v0.3 fixed via pre-fetch order.
+> Cross-reference: kaizen v1.78, TWO-API METADATA SHAPE DISTINCTION, ZENODO-INPLACE-EDIT-1,
+> session ktkjFggX5vMt1h4ogDIwh.
+
+# RESEARCH — v2.87
 > **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -214,7 +234,7 @@ triggers:
 >     same title. Verify in the rendered HTML/PDF: exactly ONE title occurrence.
 > (2) [HARD] **INTERNAL-REF-1 anti-pattern added** — published papers MUST NOT reference
 >     internal QNFO processes: no repo paths (`QNFO/xxx`), no skill sections (`QNFO Core
->     §0.7`), no internal program names as prose (`the Kepler Program`, `the Continuum
+>     §0.7`), no internal program names as prose (`the Kepler Program`, `the Continuum Trilogy` as process refs), **WBS codes (`QNFO.UMP.005`-style), quoted internal program names ("QEC Darwinism")**,  (`the Kepler Program`, `the Continuum
 >     Trilogy` as process refs), no internal conference/workshop mentions, no possessive
 >     internal refs (`QNFO's research program`). Convert to generic phrasing + numbered
 >     citations of PUBLISHED records only.
@@ -4973,7 +4993,7 @@ status: "draft" | "published"
 
 
 
-Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, **internal references (repo paths, skill sections, internal program names — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
+Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, **internal references (repo paths, skill sections, internal program names, WBS codes like `QNFO.UMP.005`, quoted internal program names like "QEC Darwinism" — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
 
 
 
@@ -6378,6 +6398,18 @@ After Zenodo publish, download the deposit's `.md` file and verify its YAML fron
 
 
 4. If verification fails: re-upload corrected `.md` + re-publish (or newversion)
+
+**NEWVERSION SELF-DOI ORDERING RULE (v2.87, HARD — R-A1 canonical case):** When a newversion is
+created to correct an embedded-YAML DOI, the uploaded `.md` MUST carry ITS OWN pre-reserved DOI —
+not the parent version's DOI. Procedure: (1) `POST /api/records/{id}/versions` → get new draft id;
+(2) fetch the draft's `prereserve_doi` (via `GET /api/records/{id}/draft` OR the deposit-API view);
+(3) UPDATE the LOCAL `.md` YAML `doi:` to that pre-reserved DOI **BEFORE uploading**; (4) upload
+`.md` + files; (5) publish; (6) verify the deposited `.md` YAML `doi:` == the PUBLISHED record DOI.
+FAILURE MODE: a script that uploads the local `.md` first and updates local YAML AFTER upload ships
+a deposited file whose `doi:` points at the parent version — P5.FRESH passes (doi != TBD) but the
+deposited file is stale by one version. Canonical case: qwave-qudit-advantage v0.2 (21827268)
+deposited .md carried 21826679 (v0.1) instead of its own DOI; fixed in v0.3 (21827347) via this
+ordering.
 
 
 
@@ -8264,6 +8296,7 @@ All 4 layers verified before status → "published":
 
 
 
+| **ZENODO-RECORDS-API-DROPS-METADATA-1: Records-API metadata PUT silently drops license + keywords (2026-08-06)** | **HARD GATE.** `PUT /api/records/{id}/draft` returns HTTP 200 but SILENTLY DISCARDS `license` and `keywords` (verified live: read-back shows `license: None, keywords: 0` while version/description/creators persist; DataCite subjects=0, rights=0). This is a discoverability killer (PhilPapers/OpenAlex keyword pipeline) and a licensing gap that only surfaces in DataCite read-back. FIX: use the DEPOSIT-API metadata PUT shape — `PUT /api/deposit/depositions/{id}` with `upload_type`/`publication_type` STRINGS, plain-string `license` (e.g. `cc-by-nc-sa-4.0`), plain-list `keywords` — then publish via `POST /api/records/{id}/draft/actions/publish`. VERIFY after any metadata PUT: read back via deposit view AND check DataCite `subjects`/`rightsList` are populated. Canonical case: qwave-qudit-advantage v0.3 (21827347) — records-API PUT dropped license+keywords (200 OK, silent); deposit-API shape stored 11 keywords + cc-by-nc-sa-4.0, DataCite subjects=11/rights=1. Corpus norm: predecessor 21821767 also uses the deposit shape (license cc-by-nc-sa-4.0, 18 keywords). Cross-ref: TWO-API METADATA SHAPE DISTINCTION, ZENODO-INPLACE-EDIT-1. |
 | **ZENODO-BOT-403-1: Treating Zenodo 403 "unusual traffic" as an IP/network block (2026-08-04)** | The 403 is bot-detection triggered by the minimal `Mozilla/5.0` User-Agent — NOT a datacenter/IP block (machine IP 195.240.135.72 is residential KPN, Enschede NL). Fix: full Chrome UA + `Accept-Language` + `Referer` + `Origin` headers → HTTP 200. Canonical case: session ZDdTu9Qf — same endpoint 403 with minimal UA, 200 with browser headers. Cross-ref: S-1.0.6 API-Failure protocol. Note: a false 'IP block' diagnosis from this 403 previously escalated 3 support emails — test full browser headers BEFORE any IP-block conclusion. |
 
 
@@ -8560,7 +8593,7 @@ carry a self-healing git-restore fallback if the local copy is evicted.
 
 
 
-- Keyword taxonomy: canonical from Obsidian `_26217115844.md` v1.0
+- Keyword taxonomy: canonical `references/keyword-taxonomy-v1.0.md` (self-contained in this skill)
 
 
 
@@ -8815,7 +8848,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.86** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.87** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
