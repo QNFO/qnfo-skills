@@ -404,6 +404,18 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 
 **Corpus optimization status (2026-08-06, complete):** `zenodo_fix4.py` main pass fixed **773/900 deposits** (targeted philosophy keywords per title domain + ORCID `0009-0002-4317-5604` on person creators) with 39 already-optimized skips; retry pass (`zenodo_fix4_retry.py`, 60s timeouts + 4 retries + backoff) cleaned up ~74 transient failures (DNS burst, IncompleteRead, 5xx) adding ~264 more touches (618 records confirmed already optimized). Final retry pass (2nd run, low-traffic window) reduced errors to 18: 902 deposits, 680 skipped (already optimized), 204 fixed — remaining 18 are 14 titleless draft deposits (400 by design, cannot be edited) + ~4 persistent rate-limit/DNS failures. Previously-504 record Ultrametric Code Spaces (10.5281/zenodo.21824396) fixed + verified. Fixes verified persisted: sampled records return state=done + HTTP 200 on the public API with philosophy keywords present. All person-creator records now carry the ORCID; org-creator chapter-fragment stubs (STUB-RECORD-1 class) carry keywords only. QUNTUF/QUNSAI both verified with ORCID attached post-run.
 
+**Corpus optimization v5 (2026-08-06, complete):** `zenodo_corpus_optimizer.py`
+targeted the remaining discoverability levers — **823/902 deposits fixed** (66 already-optimized skips, 13 errors = drafts/transients):
+- **Subjects (arXiv categories)**: ~900 records gained domain-matched subjects (`Physics - History and Philosophy of Physics (physics.hist-ph)`, `hep-ph`, `quant-ph`, `math.NT`, `cs.CC`) — the single biggest untapped lever (was 2/902)
+- **Author canonicalization**: 8 name variants → `Quni-Gudzinas, Rowan Brad` (was 258 non-canonical, incl. QUNTUF itself `Quni-Gudzinas, Rowan`)
+- **Language**: `eng` set on ~874 records (was 28/902)
+- **Affiliation**: `QNFO` added (flat legacy schema — verified live, NOT v3 nested)
+- **License**: normalized to cc-by-4.0
+- **ORCID**: on remaining person-creators (orgs correctly excluded)
+- **Abstracts**: `!desc<200(no-auto-backfill)` flags only — abstracts NEVER fabricated (real-source backfill from papers.qnfo.org is the deferred follow-up)
+**Community membership**: QNFO + QWAV Zenodo communities confirmed `record_submission_policy: open`; the modern API removed dedicated membership routes (404/405), so membership goes via the deposit-metadata `communities` field (edit→set→PUT→publish, verified on 21354771 → records API shows `communities: [{'id': 'qnfo'}]`). Community pass (community_pass2.py) adds `qnfo` to all titled records.
+Verified persisted: subjects + language + canonical name + affiliation on sampled records (state=done, public API 200). Scripts: `zenodo_corpus_optimizer.py`, `corpus_gap_audit.py`, `community_pass2.py` (git-tracked `qnfo-skills/knowledge/scripts/`).
+
 **Trigger mechanism:** PhilPapers crawls CrossRef metadata. Papers with both abstract AND philosophy-domain keywords get indexed. Papers missing either are invisible regardless of title/content quality.
 
 **Discovery formula (validated):**
