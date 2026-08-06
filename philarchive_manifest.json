@@ -1,0 +1,64 @@
+{
+  "submitter": {
+    "name": "Rowan Brad Quni-Gudzinas",
+    "orcid": "0009-0002-4317-5604",
+    "email": "SET_YOUR_EMAIL"
+  },
+  "papers": [
+    {
+      "title": "The Ultrametric Foundation: A Unified Thesis on Number, Time, Knowledge, and Computation",
+      "authors": [
+        {
+          "name": "Rowan Brad Quni-Gudzinas",
+          "orcid": "0009-0002-4317-5604"
+        }
+      ],
+      "abstract": "Positional notation is inherently an ultrametric tree of nested cycles. The Archimedean line is a derived abstraction. Recovering the native ultrametric resolves cascading errors across number, time, knowledge, and computation.",
+      "doi": "10.5281/zenodo.21208346",
+      "year": "2026",
+      "keywords": [
+        "ultrametric",
+        "p-adic",
+        "positional notation",
+        "epistemology",
+        "cyclic time",
+        "Zitterbewegung",
+        "quantum computing",
+        "Laws of Form"
+      ],
+      "categories": [
+        "Philosophy of Physical Science"
+      ],
+      "type": "preprint",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "title": "Scaffolds and Invariants: An Epistemic Hygiene Audit of pi, Number Bases, and Geometric Centers",
+      "authors": [
+        {
+          "name": "Rowan Brad Quni-Gudzinas",
+          "orcid": "0009-0002-4317-5604"
+        }
+      ],
+      "abstract": "This paper applies epistemic hygiene -- the systematic separation of human-imposed conventions (scaffolds) from relational structures that persist across representations (invariants) -- to the foundations of mathematics. Through five critical experiments, we demonstrate that pi-the-constant is an invariant forced by the complex exponential period, while its association with planar circles, decimal digits, and Pi Day are pure scaffolds.",
+      "doi": "10.5281/zenodo.21255344",
+      "year": "2026",
+      "keywords": [
+        "epistemic hygiene",
+        "scaffold",
+        "invariant",
+        "pi",
+        "number bases",
+        "positional notation",
+        "spherical geometry",
+        "philosophy of mathematics",
+        "center-free geometry"
+      ],
+      "categories": [
+        "Philosophy of Mathematics"
+      ],
+      "type": "preprint",
+      "license": "CC-BY-4.0"
+    }
+  ]
+}
