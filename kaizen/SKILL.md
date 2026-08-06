@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.78
+version: 1.79
 
 
 
@@ -161,7 +161,26 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.87, ZENODO-RECORDS-API-DROPS-METADATA-1, TWO-API METADATA SHAPE
 > DISTINCTION, session ktkjFggX5vMt1h4ogDIwh.
 
-# KAIZEN — v1.78
+> **v1.79 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #2: research v2.88 — dissemination legs + ERRATA ordering):**
+> Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
+> directive; QNFO.UMP.005 dissemination work: 5 outreach emails sent via qnfo-email Worker, arXiv
+> BLOCKED by endorsement, journal pivot, PhilPapers keywords added). Watchtower scan: research v2.87
+> N-2 clean pre-edit; research v2.88 N-2 clean post-edit (fm/hdr/ft 2.88, raw-line anchors per
+> N-2-SCAN-FALSE-POSITIVE-1). HARD: 1 (research-side). SOFT: 3 (research-side). DESIGN: 0.
+> Changes (in research v2.88, this banner documents the cycle):
+> (1) [HARD] **Phase 7 journal-submission leg added** — arXiv not guaranteed (endorsement gap);
+>     documents the no-ArXiv discovery layer (Zenodo→DataCite→OpenAlex), journal shortlist
+>     (Frontiers in Physics ★), cover-letter falsifiability protocol, isPublishedIn newversion.
+> (2) [SOFT] **Phase 7 targeted-outreach protocol** — arXiv-SOURCE recipient verification (title-match
+>     returned wrong paper: Fischer vs recalled Gokhale), corresponding-author addressing, test-send
+>     first, individual sends, message_id logging, adversarial-validation framing.
+> (3) [SOFT] **Phase 7 PhilPapers cross-ref** — knowledge v2.8 >=3 philosophy-domain keyword rule.
+> (4) [SOFT] **BP-4 ERRATA ordering rule** — never pre-claim correcting newversion published before
+>     the 202 publish call in the same turn. Canonical case: this session's own ERRATA phantom claim.
+> Cross-reference: research v2.88, knowledge v2.8, mem-eoKxBfeViioJ (arXiv endorsement gap),
+> ZENODO-PHANTOM-DOI-1, session ktkjFggX5vMt1h4ogDIwh.
+
+# KAIZEN — v1.79
 > **v1.77 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: git-github v2.22 TOPICS-API-1 + GH-API-STDIN-NOOP-1; VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive). Watchtower scan:
 > 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 21 platform-default INCOMPLETE (exempt).
@@ -13304,6 +13323,13 @@ is used and DataCite subjects/rights read-back verified. Risk of regression: [MO
 API accepts 200 silently, so the failure is invisible without read-back. Likelihood: [HIGH] — two
 skills (research v2.87 + kaizen v1.78) now carry the rule.
 
+[CHECK: 2026-08-13] research v2.88 dissemination legs will hold through +3 monitoring checkpoints:
+every published paper with philosophy-of-physics framing carries >=3 PhilPapers philosophy-domain
+keywords (verified DataCite subjects), and no ERRATA.md pre-claims a correcting newversion published
+before the 202 publish call. Risk of regression: [MODERATE] — both rules are prose until scripted;
+the ERRATA-ordering rule is the higher-risk (phantom-claim class). Likelihood: [HIGH] — the v2.88
+canonical case (qwave-qudit-advantage v0.4) is documented in both research and this banner.
+
 [CHECK: 2026-08-13] PROMPT-KEY-SCHEMA-ASYMMETRY-1 will hold through +3 monitoring checkpoints: no
 custom-prompt audit will flag "empty content" from a single-key read; both stores (agent.db `content`,
 app-settings.json `template`) will be read before any empty-prompt claim. Risk of regression:
@@ -13489,7 +13515,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.78** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.79** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
