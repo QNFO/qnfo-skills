@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.87
+version: 2.88
 
 
 
@@ -186,7 +186,27 @@ triggers:
 > Cross-reference: kaizen v1.78, TWO-API METADATA SHAPE DISTINCTION, ZENODO-INPLACE-EDIT-1,
 > session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.87
+> **v2.88 UPDATE (2026-08-06, kaizen — DISSEMINATION LEGS: journal submission + targeted outreach + PhilPapers cross-ref + ERRATA ordering):**
+> Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
+> cycle #2; QNFO.UMP.005 dissemination work: 5 outreach emails sent, arXiv BLOCKED by endorsement,
+> journal pivot). HARD: 1. SOFT: 3. DESIGN: 0. Changes:
+> (1) [HARD] **Phase 7 journal-submission leg added** — arXiv is NOT a guaranteed publication leg
+>     (author lacks endorsement; standing preference = journals directly). Documents Zenodo→DataCite→
+>     OpenAlex auto-index as the no-ArXiv discovery layer, journal shortlist (Frontiers in Physics ★),
+>     cover-letter protocol (lead with pre-registered falsifiability), post-acceptance isPublishedIn.
+> (2) [SOFT] **Phase 7 targeted-outreach protocol added** — verify recipient emails from arXiv SOURCE
+>     tarballs (title-match alone returned the WRONG paper — Fischer et al. vs recalled Gokhale),
+>     address corresponding author, test-send first via qnfo-email Worker, individual sends, message_id
+>     logging to outreach-log.md, adversarial-validation framing.
+> (3) [SOFT] **Phase 7 PhilPapers cross-ref added** — knowledge v2.8 requirement (>=3 philosophy-domain
+>     keywords via deposit-API in-place edit; DataCite subjects verify). Canonical case: v0.4 (21827737).
+> (4) [SOFT] **BP-4 ERRATA ordering rule added (HARD severity)** — never pre-claim a correcting
+>     newversion is published before the 202 publish call in the same turn. Canonical case: this
+>     session's own ERRATA.md phantom claim (caught by red team, made true with v0.4).
+> Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
+> API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
+
+# RESEARCH — v2.88
 > **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -6857,6 +6877,55 @@ Cross-MCP chain: cloudflare-builds → cloudflare-observability → cloudflare-b
 
 ## Phase 7: Dissemination
 
+### Journal Submission (v2.88, HARD — the peer-review leg)
+
+**arXiv is NOT a guaranteed publication leg.** The author may lack arXiv endorsement (standing
+preference: papers target journals directly — durable memory `mem-eoKxBfeViioJ`). Phase 7 MUST
+therefore include direct journal submission as the peer-review path:
+
+1. **Preprint discoverability without arXiv:** Zenodo → DataCite → OpenAlex auto-indexing (author
+   profile exists) + Google Scholar/Semantic Scholar DOI pickup + PhilPapers (keywords below) +
+   papers.qnfo.org. An arXiv listing is NOT required for scholarly-index presence.
+2. **Journal shortlist** (independent-researcher friendly): Frontiers in Physics (Quantum Computing
+   section — ★★★★★: same venue as the cited qudit reviews), EPJ Quantum Technology (★★★),
+   Quantum (diamond OA, ★★★★), QST (IOP), AVS Quantum Science, Entropy. Full strategy:
+   `artifacts/journal-submission-strategy.md` pattern (created QNFO.UMP.005, d72415f).
+3. **Cover letter protocol:** lead with the paper's pre-registered falsification/disconfirmation
+   condition — it is the strongest peer-review asset; state independence + ORCID; explicitly
+   invite adversarial validation; keep `[speculative]` labels (they signal calibration).
+4. **Post-acceptance:** newversion with `related_identifiers: isPublishedIn` (journal DOI).
+
+### Targeted Outreach (v2.88, SOFT — independent-researcher legitimacy)
+
+Cold outreach to researchers whose work the paper builds on is the highest legitimacy-per-effort
+channel for an independent researcher. Protocol (proven QNFO.UMP.005, 2026-08-06):
+
+1. **Verify recipient identity + email from the arXiv SOURCE tarball** (`https://arxiv.org/e-print/{id}`,
+   parse `.tex` for `\email{}` / contact addresses) — NEVER from a title-match alone. Title matches
+   can return the WRONG paper (canonical case: QNFO.UMP.005 outreach Letter 3 matched an IBM-Zurich
+   paper (Fischer et al.) when the author had been recalled as Gokhale — corrected before send).
+2. **Address the corresponding author** of the target paper (arXiv source contact email), not a
+   recalled author name.
+3. **Test-send first** to your own inbox via the qnfo-email Worker `/send` endpoint (SPF+DKIM+DMARC
+   verified on the sending domain), THEN send to recipients.
+4. **Send individually** (no BCC), one follow-up max after 7-10 days.
+5. **Log every send** — recipient, status, message_id — to `artifacts/outreach-log.md`
+   (Tool-Call Execution Mandate: the API response IS the proof).
+6. **Invite adversarial validation** in every letter; never imply validation you don't have.
+
+### PhilPapers Discoverability (v2.88, SOFT — cross-ref knowledge v2.8)
+
+PhilPapers crawls Zenodo→DataCite→CrossRef and only indexes records with BOTH an abstract AND
+>=3 philosophy-domain keywords (`philosophy of physics`, `foundations of quantum mechanics`,
+`consilience`, `philosophy of science`, `philosophy of mathematics`, etc. — full list in knowledge
+v2.8 PHILPAPERS-DISCOVERABILITY-GAP). For any paper with philosophy-of-physics framing: after
+publish, add philosophy keywords via the deposit-API in-place metadata edit
+(ZENODO-RECORDS-API-DROPS-METADATA-1 compliant — deposit shape only), then verify DataCite
+`subjects` count. Canonical case: qwave-qudit-advantage v0.4 (21827737) — 15 keywords incl. 4
+philosophy-domain, DataCite subjects=15 verified.
+
+
+
 
 
 
@@ -7486,6 +7555,14 @@ All 4 layers verified before status → "published":
 
 
 **BP-4 Correction-on-Discovery:** GitHub ERRATA.md → Zenodo newversion + `obsoletes` → KG CORRECTS/SUPERSEDES edge.
+
+**ERRATA ORDERING RULE (v2.88, HARD — no pre-claims):** the ERRATA.md or any correction-on-discovery
+record MUST NOT claim the correcting newversion is "published" until the publish call has returned
+202 in the SAME turn. Write the ERRATA AFTER the newversion publishes, or write it with explicit
+`STATUS: PENDING` and update it post-publish. Canonical case: QNFO.UMP.005 ERRATA.md claimed
+"Newversion v0.4 published" while v0.4 did not yet exist on Zenodo — a ZENODO-PHANTOM-DOI-1 class
+error in the audit trail itself, caught by red team, then made true (v0.4 = 10.5281/zenodo.21827737).
+Cross-ref: Tool-Call Execution Mandate, ZENODO-PHANTOM-DOI-1.
 
 
 
@@ -8848,7 +8925,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.87** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.88** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
