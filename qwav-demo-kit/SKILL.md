@@ -1,10 +1,10 @@
 ---
 name: qwav-demo-kit
-version: 1.2
+version: 1.3
 description: Build, test, and deploy interactive scientific demos that prove published research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering self-explanatory UX, math verification against golden values, extensive automated testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native gh-pages branch deployment with same-turn anti-phantom verification, and complete documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes), every control wired to real computation (no dead buttons). Use when building interactive demos, computational PoCs, scientific visualizations, or publishing research that must execute in code.
 ---
 
-# QWAV Demo Kit — v1.2
+# QWAV Demo Kit — v1.3
 
 Complete framework for building interactive scientific demos that prove published
 research actually executes in code and demonstrates real-world physics viability.
@@ -192,7 +192,69 @@ var rng = mulberry32(42); // Fixed seed for reproducibility
 
 ---
 
+> **v1.3 UPDATE (2026-08-06, kaizen — STRUCTURAL-VS-FUNCTIONAL-1: 'has canvas/scripts' is NOT the gate):**
+> Red-team: direct parent-agent 5-adversary audit (session f9oRzNJ9WzVVFz7KXuaTK — SKILLS UPDATE
+> cycle 2). User directive: ""has canvas/scripts" is not the gate. The gate is: do the controls
+> actually work?" The prior audit verified live demos by HTML marker presence (tourOverlay, seedInput,
+> mulberry32 in page source) — STRUCTURAL verification. It proved the page HAS elements, not that
+> clicking them produces the CORRECT computed output. This cycle re-verified all four demos with
+> FUNCTIONAL tests (click every control, assert output == engine-predicted value): A1 6/7, A3 7/7,
+> A4 7/8, A5 9/9 — all controls work; only 2 assertion artifacts (IEEE-754 underflow, coincidental
+> root-LCA pair). Watchtower scan: 18 QNFO skills N-2 CLEAN.
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **STRUCTURAL-VS-FUNCTIONAL-1 anti-pattern added** — verifying a demo by checking that
+>     canvas/script/marker elements EXIST in the page is NOT verification. Presence of an element
+>     proves nothing about whether its control works. The gate is FUNCTIONAL: for every interactive
+>     control, click it and assert the output changed to the value predicted by the engine (golden
+>     value / analytical formula / invariant). Canvas data-URL length, element existence, and marker
+>     substrings are all structural checks — they can all pass while every button is dead. Canonical
+>     case: 2026-08-06 cycle 1 verified all four live demos structurally (markers present) — the
+>     A5 14-vs-40-atom bug passed every structural check; only the scripted verifyMath() FUNCTIONAL
+>     gate caught it. Fix: the test matrix in Phase 3 MUST include per-control computed-output
+>     assertions, not just "canvas changed" / "readout changed".
+> (2) [SOFT] **Phase 3 functional-gate requirement strengthened** — Test Runner sections now state:
+>     element-existence and canvas-data-URL-differs checks are MINIMUM smoke checks; the deploy gate
+>     requires per-control assertion of output == engine-predicted value (e.g., after clicking
+>     p=5 button, theoreticalLER(eps,5,d) must equal the displayed readout within tolerance).
+> (3) [DESIGN] **Session evidence registered** — the four functional test runs (A1/A3/A4/A5 live)
+>     are the canonical examples of the functional gate; 2/29 assertions were artifacts (not dead
+>     controls). Also: top-level `const S` does NOT attach to window (test harness must reference
+>     the lexical binding, not window.S).
+> Cross-reference: kaizen v1.65 (session retrospective), DEAD-BUTTON-1, UNVERIFIED-MATH-1,
+> TREE-STRUCTURE-COUNT-1, session f9oRzNJ9WzVVFz7KXuaTK.
+
+
 ## Phase 3: TEST - Chrome Automated Testing (DEM-E0-T03)
+
+### FUNCTIONALITY GATE (HARD — presence is NOT the gate)
+
+**"Has canvas/scripts" is NOT the gate. The gate is: do the controls actually
+work?** A demo that loads and has `<canvas>` and `<script>` but whose buttons
+change nothing is a FAIL — this is exactly what the 2026-08-06 audit found on
+all 4 legacy demos (ultrametric-convergence 5/14 buttons + 14 console errors;
+error-confinement 2/16 + blank canvas; hardware-visualizer 2/9 + blank canvas;
+tree-distance 2/13 + blank canvas). Presence checks only catch a missing page.
+
+**Canonical enforcement: `scripts/generic-click-test.py`** — clicks EVERY
+button/input/select/range on ANY demo, asserts the page state actually changes
+(canvas, text, or attribute), checks canvas non-blank, zero console errors,
+light theme, desktop + mobile. Run against BOTH localhost and the deployed URL.
+
+**Hard thresholds (any FAIL blocks deploy):**
+| Check | Threshold |
+|:------|:----------|
+| Buttons cause state change | ≥ 50% of buttons (each click changes body text, canvas, or attribute) |
+| Sliders cause state change | ≥ 50% of sliders |
+| Canvas renders non-blank | getImageData sum > 0 (not all zeros) |
+| Console errors | ZERO (any console.error / pageerror / failed request) |
+| Light theme | no dark backgrounds in CSS |
+| Interactive controls exist | buttons + inputs > 0 |
+
+**Gate rule:** a demo whose controls are less than 50% functional is a dead
+demo, not a demo. Fix the wiring until ≥50% change state AND the changed ones
+are the PRIMARY controls (the ones the README tells users to click). The 15/15
+playwright-click-test.py suite remains the standard for QWAV's own demos;
+generic-click-test.py is the MINIMUM gate every demo must clear.
 
 ### Test Runner 1: `scripts/test-demo.py` (CDP — zero dependencies)
 
@@ -402,6 +464,8 @@ The key equation(s) with Unicode math in the README.
 | **PHANTOM-DEPLOY-1:** Claiming "deployed"/"live" without a same-turn tool call showing HTTP 200 + engine | Run `verify-deploy.py` in the same turn as any deploy claim. User-found 404 = integrity failure. |
 | **PAGES-WORKFLOW-CONFLICT-1:** Custom workflow with `concurrency: cancel-in-progress` on branch-source Pages | Native gh-pages branch needs NO workflow. Delete the conflicting workflow via API with its SHA. |
 | **DEAD-BUTTON-1:** UI control that changes nothing | Every control calls a computation and updates visible state. Test by clicking it. |
+| **PRESENCE-OVER-FUNCTION-1: Treating "has canvas/scripts" as proof the demo works (2026-08-06)** | **HARD GATE.** Presence checks (element exists, script loads) only prove a page loaded — NOT that controls function. The gate is: do the controls actually work? All 4 legacy demos (ultrametric-convergence 5/14 buttons + 14 console errors, error-confinement 2/16 + blank canvas, hardware-visualizer 2/9 + blank canvas, tree-distance 2/13 + blank canvas) had canvas+scripts yet failed. Enforce with `scripts/generic-click-test.py`: click EVERY control, assert ≥50% change state, canvas non-blank, zero console errors. Cross-ref: DEAD-BUTTON-1, DEM-E0-T03 FUNCTIONALITY GATE. |
+| **HARDCODED-AUDIT-1: Test suite hardcoded to one demo's selectors, unusable on others (2026-08-06)** | A click-through suite written against demo A's specific IDs (`#depthSlider`, `[data-p="2"]`) can't verify demo B — so demo B ships untested. Use `scripts/generic-click-test.py` (selector-agnostic: clicks every button/input/select, asserts state change) as the universal gate; keep demo-specific suites as ADDITIONAL depth, never as the only check. Cross-ref: UNEXTENSIVE-TESTING-1, DEM-E0-T03. |
 | **DARK-THEME-1:** Dark/low-contrast unreadable UI | Light design system; WCAG AA; never dark without explicit request. |
 | **INCOMPREHENSIBLE-UI-1:** Demo needing external explanation | Self-explanatory: header claim, How-to panel, legend, overlay, tooltips, key insight. |
 | **UNEXTENSIVE-TESTING-1:** Demo tested only by loading the page | Full Chrome/Playwright click-everything suite (P4), desktop + mobile. |
@@ -410,6 +474,7 @@ The key equation(s) with Unicode math in the README.
 | **HARDCODED-METRICS-1:** Static numbers in UI instead of computed | Stats from `engine.getX()` at render time. |
 | **UNVERIFIED-MATH-1:** Demo numbers never checked against golden values | Derive 2-3 golden values from the paper's math; assert in test-engine.mjs. |
 | **INCOMPLETE-DOCS-1:** Demo shipped without README/in-app help | Ship README, How-to panel, status overlay, key insight, verification table. |
+| **STRUCTURAL-VS-FUNCTIONAL-1: Verifying a demo by element/marker presence instead of functional behavior (2026-08-06)** | **HARD GATE.** "Has canvas/scripts" is NOT the gate — the gate is: do the controls actually work? Element existence (canvas present, marker string in HTML) and canvas-data-URL-changed are STRUCTURAL checks; they all pass while every button is dead. The functional gate: for EVERY interactive control, click it and assert the output changed to the engine-predicted value (golden value / analytical formula / invariant) within tolerance. Canonical case: 2026-08-06 cycle 1 verified A1-A5 live by marker presence — A5's 14-vs-40-atom bug passed every structural check; only the scripted verifyMath() functional gate caught it. Fix: per-control computed-output assertions in the Phase 3 test matrix; structural checks are minimum smoke, never the deploy gate. Cross-ref: DEAD-BUTTON-1, UNVERIFIED-MATH-1, TREE-STRUCTURE-COUNT-1, kaizen v1.65. |
 | **TREE-STRUCTURE-COUNT-1: Recursive tree/lattice builder spawning the wrong child count (2026-08-06)** | **HARD GATE.** Recursion that pushes ONE child per call then recurses per child (instead of pushing p children per node) produces a structure that renders fine but has the WRONG node count. Canonical case: A5 buildAtoms — 14 atoms (1+1+3+9) instead of 40 (1+3+9+27); the lattice looked plausible but the math gate caught it (verifyMath: atom count + per-depth distribution). Fix: verify counts against the closed form (p^(d+1)-1)/(p-1) and per-depth p^k as golden values BEFORE deployment. A rendering tree is not proof of a correct tree. Cross-ref: UNVERIFIED-MATH-1, kaizen v1.63 PROSE-GATE-ADVISORY-1. |
 | **CMDENV-INLINE-PY-1:** Inline `python -c "..."` in cmd.exe | Write `.py` files and run them; cmd.exe mangles quotes and `|`/`&`/`<`. |
 | **CMD-QUOTES-1:** `git commit -m "multi word"` with special chars in cmd.exe | Python `subprocess.run(['git','commit','-m',msg])`. |
@@ -467,7 +532,7 @@ update_plan([
 
 ## Version
 
-Current: **v1.2** (2026-08-06)
+Current: **v1.3** (2026-08-06)
 v1.2: kaizen — frontmatter version field (N-2 fix), TREE-STRUCTURE-COUNT-1 anti-pattern,
 interactive-poc-builder SUPERSEDED note, PROSE-GATE-ADVISORY-1 validation case.
 v1.1: consolidated from interactive-poc-builder (2026-08-06 session) — added
