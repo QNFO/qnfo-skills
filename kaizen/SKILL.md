@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.69
+version: 1.71
 
 
 
@@ -95,6 +95,30 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.86, qnfo-core v1.17, JPCUB CL v2.0 DOI 10.5281/zenodo.21821767,
 > JPCUB P0 DOI 10.5281/zenodo.21637028, session Lix-MUWJTX69KVWScl01C.
 
+
+> **v1.71 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: JPCUB dissemination + P0 git commits + VERSION-OVERWRITE-1 merge):**
+> Red-team: direct parent-agent 5-adversary audit (session Gk9vm0CR-VlUvhvXFk_Xugd — SKILLS UPDATE
+> directive). Concurrent-session merge: v1.70 was claimed by a concurrent session (structural H1→H2
+> fixes + ecosystem health audit + phantom registry cleanup) WHILE this audit ran — merged past the
+> collision per VERSION-OVERWRITE-1 to v1.71. v1.70 content verified present. Watchtower scan: 17/17
+> QNFO skills N-2 CLEAN (fm/hdr/ft), 22 platform-default INCOMPLETE (exempt). Recall_facts: 0 orphan
+> anti-patterns (RECALL-FACTS-GAP). HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [RETROSPECTIVE] **JPCUB dissemination sprint** — Bluesky 5-post thread published (DID
+>     did:plc:vad2yeqflg5uznmp557zge5c, 5 posts spanning 17 platforms/7 vendors/3 architectures);
+>     IndexNow submitted (HTTP 202 ACCEPTED, Bing/Yandex/Seznam/Naver); Internet Archive submitted
+>     (HTTP 200 for both JPCUB P0 + CL v2.0). Mastodon deferred (no OAuth credentials). Buffer
+>     deferred (no MCP tools available).
+> (2) [RETROSPECTIVE] **P0 deliverables git-committed** — 4 branches pushed to origin:
+>     QNFO/qnfo-research (res/paper/jpcub-cl-v3: CL v3.0 scoping, res/paper/jpcub-standard-v1:
+>     Standard v1.0) + QNFO/qwav-platform (plt/infra/jpcub-gate: Gate Protocol,
+>     plt/infra/jpcub-preregistration: Pre-Registration). Total 30,946 bytes across 4 files.
+> (3) [DESIGN] **VERSION-OVERWRITE-1 canonical case** — concurrent session bumped fm=1.70/header
+>     NOT bumped/ft=1.70 while this session ran; merged to v1.71 with all content preserved.
+>     Raw-line verification (N-2-SCAN-FALSE-POSITIVE-1) confirmed the true drift was hdr stale
+>     (v1.69 while fm/ft at 1.70), not the scanner-reported fm=1.70/hdr=1.70/ft=1.69 pattern.
+> Cross-reference: JPCUB CL v2.0 DOI 10.5281/zenodo.21821767, JPCUB P0 DOI 10.5281/zenodo.21637028,
+> social-media-management v1.6.0, N-2-FRONTMATTER-DRIFT-1, VERSION-OVERWRITE-1, session Gk9vm0CR-VlUvhvXFk_Xugd.
+>
 > **v1.69 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: Obsidian access fix + session retrospective):**
 > Red-team: 4 parallel subagents (all truncated — direct parent fallback per Subagent Failure Handling rule 4) 
 > + direct parent-agent 5-adversary audit (session f2hAXRcmcXZ4m5_VDCsNI).
@@ -116,7 +140,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.69
+# KAIZEN — v1.71
 
 > **v1.67 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: A1 demo rebuild + session retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session hu5N0aI2_herajxZ2Bku6 — SKILLS UPDATE
@@ -13321,7 +13345,26 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.70** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
+> **v1.71 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit):**
+> Red-team: direct parent-agent 5-adversary audit (session RV42gZ5b_KKvXNXLv8i2t — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default
+> INCOMPLETE (exempt). Recall_facts: RECALL-FACTS-GAP known (v1.22). Tape clean. Concurrent-session
+> merge: header/footer bumped to v1.71 by concurrent closeout mid-session; merged past per
+> VERSION-OVERWRITE-1.
+> HARD: 0. SOFT: 3. DESIGN: 1. Changes:
+> (1) [SOFT] **Duplicate H1 headers downgraded to H2** — kaizen body had standalone
+>     `# KAIZEN — v1.58` and `# KAIZEN — v1.57` H1-level headers within the collapsed
+>     history section, competing with the real header. Downgraded both to `##` (H2).
+> (2) [SOFT] **interactive-poc-builder phantom registry confirmed** — skill_list lists
+>     interactive-poc-builder but directory absent. Already SUPERSEDED per kaizen v1.64.
+> (3) [SOFT] **dist/ directory in skills folder removed** — stale non-skill artifact.
+> (4) [DESIGN] **code-review partial N-2 noted** — ft=1.1, no fm/hdr; exempt.
+> Cross-reference: VERSION-OVERWRITE-1, N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1,
+> session RV42gZ5b_KKvXNXLv8i2t.
+
+
+
+Current: **v1.71** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
 
 
 
