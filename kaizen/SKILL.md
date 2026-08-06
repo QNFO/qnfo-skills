@@ -10,12 +10,7 @@ name: kaizen
 
 
 
-version: 1.80
-
-
-
-
-
+version: 1.81
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -180,7 +175,16 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.88, knowledge v2.8, mem-eoKxBfeViioJ (arXiv endorsement gap),
 > ZENODO-PHANTOM-DOI-1, session ktkjFggX5vMt1h4ogDIwh.
 
-# KAIZEN — v1.80
+# KAIZEN — v1.81
+> **v1.81 UPDATE (2026-08-06, kaizen — EXECUTE RED TEAM: email-address proliferation incident + email-composer N-2 fix):**
+> Red-team: direct parent-agent 5-adversary audit (user directive: "DON'T GO CRAZY WITH ALL THESE EMAIL ADDRESSES... 3-5 MAX. QNFO@QWAV.ORG IS ENTIRELY SUPERFLUOUS" + EXECUTE RED TEAM).
+> Watchtower scan: email-composer fm=2.4/hdr=2.5/ft=2.5 DRIFT found (v2.5 EMAIL-ROUTE-STRIP-1 bump never synced frontmatter) — confirmed via raw-line anchors, fixed in same cycle (N-2-FRONTMATTER-DRIFT-1). All other QNFO skills N-2 CLEAN.
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **EMAIL-ADDRESS-PROLIFERATION-1 anti-pattern added (owner: email-composer v2.5→v2.6)** — canonical case: 2026-08-06 session provisioned 5 literal rules × 11 domains (~55 addresses: qnfo@qwav.org, research@q-wave.tech, alerts@qnfo.uk...) when the user wanted 3-5 max. User directive cut it back: 8 domains reverted to catch-all drop (40 rules deleted), only the canonical set remains (qnfo.org ×5 + pre-existing qwav.tech ×2 + q08.org ×1). Rule: never create a routing rule/address beyond the canonical set without explicit user approval; verify-before-claim per N-2-SCAN-FALSE-POSITIVE-1.
+> (2) [SOFT] **email-composer N-2 frontmatter drift fixed** — fm 2.4→2.5 synced to header/footer (v2.5 EMAIL-ROUTE-STRIP-1 bump). Canonical Address Registry section + EMAIL-ADDRESS-PROLIFERATION-1 added to email-composer SKILL.md.
+> (3) [DESIGN] **Session retrospective (email audit)** — paper WAS shared: 3 outreach emails (ids 30/31/32) sent 2026-08-06T16:58Z from rowan.quni@qnfo.org to Maity (Gmail), Onggadinata, Koh — all status: sent, D1-archived. Final routing state verified across all 11 domains via wrangler list (scripted audit, exit 0).
+> Cross-reference: email-composer v2.6, N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, EMAIL-ROUTE-STRIP-1 (v1.80), session Nff8tKtjHf6VDCfRejuNd.
+
 > **v1.80 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #3: email follow-up + EMAIL-ROUTE-STRIP-1 + ecosystem audit):**
 > Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive; session SFkcXsRZjmvs4TMr9Fo_m
 > — email check + follow-up + kaizen cycle). Watchtower scan: 42 skills on disk (fm/hdr/ft + .kaizen_history
@@ -12140,6 +12144,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 | **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on workers.dev — plain `/emails/*` returns catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | Use `/email/emails/*` on the workers.dev host; fix worker strip to `p === '/email' || p.startsWith('/email/')`. Owner: email-composer v2.5. Cross-ref: API-DOC-GAP-1. |
+| **EMAIL-ADDRESS-PROLIFERATION-1: Creating email routing rules/addresses beyond the canonical set without user direction (2026-08-06)** | **HARD.** Only the canonical set is allowed (qnfo.org x5: qnfo/rowan.quni/research/alerts/publications; pre-existing qwav.tech x2 + q08.org x1). 8 inert domains (qwav.org/qwav.net/qwav.uk/q-wave.tech/qwave.tech/qnfo.net/qnfo.uk/empoweringchange.today) are catch-all DROP. Never self-authorize a new address/rule. Canonical case: ~55 addresses provisioned across 11 domains in one session; user directive cut to 3-5 max, 40 rules deleted. Owner: email-composer v2.6. Cross-ref: N-2-SCAN-FALSE-POSITIVE-1. |
 ## Cross-Skill Integration
 
 
@@ -13549,7 +13554,7 @@ invisible without read-back. Likelihood: [HIGH] — canonical case (session SFkc
 
 
 
-Current: **v1.80** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.81** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 

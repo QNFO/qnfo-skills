@@ -75,9 +75,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.4
-
-
+version: 2.5
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -401,6 +399,27 @@ curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
 
 
 
+
+## Canonical Address Registry (2026-08-06 red-team — user directive: 3-5 addresses MAX)
+
+**User directive (2026-08-06):** "DON'T GO CRAZY WITH ALL THESE EMAIL ADDRESSES. WE NEED 3-5 MAX. QNFO@QWAV.ORG IS ENTIRELY SUPERFLUOUS AND UNNECESSARY."
+
+**The live routing set — do NOT provision beyond this without explicit user approval:**
+
+| Domain | Custom rules | Catch-all | Status |
+|:-------|:-------------|:----------|:-------|
+| **qnfo.org** | `qnfo@`, `rowan.quni@`, `research@`, `alerts@`, `publications@` → worker:qnfo-email | forward → qnfo@qnfo.org | CANONICAL (5 — at the user's 3-5 upper bound) |
+| **qwav.tech** | `info@`, `rowan.quni@` → worker:qnfo-email | forward → qnfo@qnfo.org | PRE-EXISTING 2025, functional |
+| **q08.org** | `noreply@` → worker:qnfo-email | forward → qnfo@qnfo.org | PRE-EXISTING, platform/bounce use |
+| qwav.org, qwav.net, qwav.uk, q-wave.tech, qwave.tech, qnfo.net, qnfo.uk, empoweringchange.today | — (zero) | **drop** | EMAIL-INERT (reverted 2026-08-06) |
+
+**Rules:**
+1. Only the 5 qnfo.org addresses are canonical identities. qwav.tech/q08.org are legacy-functional and kept ONLY while they carry real traffic (info@qwav.tech + rowan.quni@qwav.tech since 2025; noreply@q08.org platform use).
+2. NEVER create a routing rule on an inert domain. NEVER create an address the user did not ask for.
+3. Any new address proposal goes to the user FIRST — never self-authorize.
+
+### EMAIL-ADDRESS-PROLIFERATION-1 (HARD, 2026-08-06)
+Creating email routing rules / addresses beyond the canonical set without explicit user direction. Canonical case: 2026-08-06 — agent provisioned 5 literal rules × 11 domains (~55 addresses: qnfo@qwav.org, research@q-wave.tech, alerts@qnfo.uk, ...) when the user wanted 3-5 max. User directive cut it back: 8 domains reverted to catch-all drop (40 rules deleted), only the canonical set remains. Fix: before creating ANY routing rule, ask — "is this address in the canonical set, or explicitly requested?" If no, do not create it. Cross-ref: kaizen v1.81, N-2-SCAN-FALSE-POSITIVE-1 (verify before claim).
 
 ## Core Workflow
 
