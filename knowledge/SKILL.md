@@ -412,11 +412,12 @@ abstract_with_philosophy_terms + domain_keywords + ORCID + community + reference
 
 **ORCID:** `0009-0002-4317-5604` (Rowan Brad Quni-Gudzinas). **Author name inconsistency:** "Quni-Gudzinas, Rowan" vs "Rowan Brad Quni-Gudzinas" across Zenodo records — canonicalize to "Rowan Brad Quni-Gudzinas".
 
-**Automation scripts (Python):**
+**Automation scripts (Python, git-tracked at `qnfo-skills/knowledge/scripts/` — canonical thin-client location):**
 - `zenodo_philpapers_optimizer.py` — batch metadata fix (ORCID, keywords, community, author name)
+- `zenodo_fix4.py` — deposit-API-only fixer (paginated, targeted keywords, ORCID for person creators)
 - `philpapers_submit.py` — strategy guide + CSV generator + PhilArchive manifest
 - `philpapers_monitor.py` — autonomous PhilPapers index watchtower (daily check for new entries)
-Location: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\`
+Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatile — always restore from git).
 
 **Direct submission path:** Upload to https://philarchive.org for guaranteed indexing in days (bypasses crawl delay).
 
