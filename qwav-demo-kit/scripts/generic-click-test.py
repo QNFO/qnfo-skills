@@ -73,7 +73,11 @@ def main():
             }
             return out;
         })()""")
-        dark_indicators = ["#0a0a0f", "#08090d", "#0d1117", "#000", "black"]
+        dark_indicators = [
+            "#0a0a0f", "#08090d", "#0d1117", "#07080f", "#0b0f1c", "#0e1425",
+            "#1d2a46", "#2b3d6b", "#00e5a0", "#00ffa3", "#00e5ff", "#ffb300",
+            "#b388ff", "#7dd8ff", "#dce6ff", "#8295c0", "#000", "black",
+            "background-color: #0", "background: #0", "background:black"]
         dark_hits = [d for d in dark_indicators if d in css.lower()]
         check("light theme (no dark bg)", len(dark_hits) == 0, f"dark hints: {dark_hits}")
 
