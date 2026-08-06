@@ -12187,7 +12187,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on workers.dev — plain `/emails/*` returns catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | Use `/email/emails/*` on the workers.dev host; fix worker strip to `p === '/email' || p.startsWith('/email/')`. Owner: email-composer v2.5. Cross-ref: API-DOC-GAP-1. |
+| **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on workers.dev — plain `/emails/*` returns catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | Use `/email/emails/*` on the workers.dev host; fix worker strip to `p === '/email' || p.startsWith('/email/')`. Owner: email-composer v2.8. Cross-ref: API-DOC-GAP-1. **[RESOLVED 2026-08-06** — worker scoped strip deployed (c95134cc-ef57-44f0-bf9b-3183a96b8060), plain /emails/* live-verified].** |
 | **EMAIL-ADDRESS-PROLIFERATION-1: Creating email routing rules/addresses beyond the canonical set without user direction (2026-08-06)** | **HARD.** Only the canonical set is allowed (qnfo.org x5: qnfo/rowan.quni/research/alerts/publications; pre-existing qwav.tech x2 + q08.org x1). 8 inert domains (qwav.org/qwav.net/qwav.uk/q-wave.tech/qwave.tech/qnfo.net/qnfo.uk/empoweringchange.today) are catch-all DROP. Never self-authorize a new address/rule. Canonical case: ~55 addresses provisioned across 11 domains in one session; user directive cut to 3-5 max, 40 rules deleted. Owner: email-composer v2.6. Cross-ref: N-2-SCAN-FALSE-POSITIVE-1. |
 ## Cross-Skill Integration
 
@@ -13424,7 +13424,7 @@ API call will use plain /emails/* on the workers.dev host (which silently return
 HTTP 200 wrong payload); the /email/emails/* form is used and/or the worker strip is fixed to
 `p === '/email' || p.startsWith('/email/')`. Risk of regression: [MODERATE] — the silent failure is
 invisible without read-back. Likelihood: [HIGH] — canonical case (session SFkcXsRZjmvs4TMr9Fo_m,
-~15 probes burned) documented in email-composer v2.5 + kaizen v1.80.
+~15 probes burned) documented in email-composer v2.5 + kaizen v1.80. **STATUS 2026-08-06: RESOLVED** — scoped strip deployed (c95134cc-ef57-44f0-bf9b-3183a96b8060), plain /emails/* live-verified; calibration now monitors for REGRESSION, risk [LOW].
 ```
 
 

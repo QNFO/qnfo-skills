@@ -1,3 +1,14 @@
+> **v2.8 UPDATE (2026-08-06, kaizen — EMAIL-ROUTE-STRIP-1 RESOLVED: worker source fix applied, deployed, live-verified):**
+> Red-team: direct parent-agent 5-adversary audit (CONTINUE/RESOLVE DEFERRED/CLOSEOUT, session SFkcXsRZjmvs4TMr9Fo_m).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **EMAIL-ROUTE-STRIP-1 resolved at the source** — worker strip scoped to
+>     `p === '/email' || p.startsWith('/email/')` in qnfo-email.js, deployed (wrangler 4.118.0,
+>     version c95134cc-ef57-44f0-bf9b-3183a96b8060), live-verified 2026-08-06: plain `/emails/recent` and `/emails/body?id=N` now return
+>     real data (previously the catch-all endpoint index); `/email/emails/*` prefixed form still works
+>     for the qnfo.org/email/* custom-domain route. Anti-pattern row + Archive & Hygiene route note updated.
+> Cross-reference: kaizen v1.83, qnfo-email worker (qwav-platform commit), EMAIL-ROUTE-STRIP-1 (v2.5),
+> session SFkcXsRZjmvs4TMr9Fo_m.
+
 > **v2.7 UPDATE (2026-08-06, kaizen — Archive & Email-Check Hygiene Protocol + filter API schema + HTTP-HEADER-NONE-1):**
 > Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE cycle #4, session SFkcXsRZjmvs4TMr9Fo_m).
 > Trigger: user mandate — "don't re-surface emails; what is the archiving procedure?" (archive-on-no-action,
@@ -96,7 +107,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.7
+version: 2.8
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -121,7 +132,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.7
+# Email Composer — v2.8
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1073,7 +1084,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
   `archived`, `spam`, `read`, `rejected`.
 - **Bulk hygiene:** fetch `GET /email/emails/recent?limit=100`, PATCH each id in one loop, then re-fetch and
   assert ZERO emails remain outside `archived`/`spam` (verification gate).
-- **Route quirk:** always use the `/email/emails/*` prefixed path on the workers.dev host (EMAIL-ROUTE-STRIP-1).
+- **Route quirk:** the `/email/emails/*` prefixed path and plain `/emails/*` both work on the workers.dev host since the EMAIL-ROUTE-STRIP-1 worker fix (deployed 2026-08-06, version c95134cc-ef57-44f0-bf9b-3183a96b8060); the prefixed form remains safe for the qnfo.org/email/* custom-domain route.
 
 ### Reporting rule (what [EMAIL-CHECK] must do)
 1. Report ONLY new actionable inbound: `received`/`processed`, non-archived, non-spam, since last check.
@@ -1154,7 +1165,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 | **HTTP-HEADER-NONE-1: Passing None as a value in a urllib header dict — TypeError "expected string or bytes-like object, got 'NoneType'" (2026-08-06)** | Build request headers conditionally: only add `Content-Type` (or any header) when the value is a real string. `urllib.request.Request(..., headers={...})` does NOT tolerate None values — it crashes on join. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m hygiene script — first run failed on the inventory GET because `Content-Type` was set to `None` when there was no body. Fix pattern: `hdr = {...}; if body is not None: hdr["Content-Type"]="application/json"`. Cross-ref: BLAME-EXTERNAL-1 (bug is always your code). |
 | **EMAIL-CHECK-RESURFACING-1: Re-reporting emails the user already declared no-action on (2026-08-06)** | Archive-on-no-action + delta-based reporting: once the user says "don't care" about an email (or a whole class), PATCH it to `archived` (or `spam`) in the same session and exclude archived/spam/sent from all future [EMAIL-CHECK] reports. Quiet report = one line. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — user: "SO THEREFORE I DON'T CARE ABOUT ANY OF THESE... DON'T WASTE MY TIME"; 48 archived + 3 spammed same session. Cross-ref: mem-YoM6-BSfCW_K. |
-| **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on the workers.dev host — plain `/emails/*` returns the catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | On the workers.dev host use the `/email`-prefixed form (`/email/emails/recent`, `/email/emails/body?id=N`) — the strip normalizes it to `/emails/*`. Fix in worker source: scope strip to `p === '/email' || p.startsWith('/email/')`. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — ~15 probes burned. Cross-ref: API-DOC-GAP-1. |
+| **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on the workers.dev host — plain `/emails/*` returns the catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | On the workers.dev host use the `/email`-prefixed form (`/email/emails/recent`, `/email/emails/body?id=N`) — the strip normalizes it to `/emails/*`. Fix in worker source: scope strip to `p === '/email' || p.startsWith('/email/')`. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — ~15 probes burned. Cross-ref: API-DOC-GAP-1. **[RESOLVED 2026-08-06** — worker source scoped strip deployed (version c95134cc-ef57-44f0-bf9b-3183a96b8060); plain `/emails/*` live-verified returning real data; prefixed form still supported].** |
 ## References
 
 
@@ -1197,5 +1208,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.7** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.8** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
