@@ -642,7 +642,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.16
+# QNFO Core — v1.17
 
 
 
