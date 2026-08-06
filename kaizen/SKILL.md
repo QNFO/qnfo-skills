@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.66
+version: 1.67
 
 
 
@@ -74,7 +74,27 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.66
+# KAIZEN — v1.67
+
+> **v1.67 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: A1 demo rebuild + session retrospective):**
+> Red-team: direct parent-agent 5-adversary audit (session hu5N0aI2_herajxZ2Bku6 — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default
+> INCOMPLETE (exempt). Recall_facts: 0 orphan anti-patterns. Git clean. HARD: 0. SOFT: 2. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **Session retrospective** — A1 (qwav-demo-error-confinement) fully rebuilt per qwav-demo-kit
+>     v1.4: light theme index.html (38,214 bytes), 2/2 functionality gates passed (local 5/8 buttons +
+>     1/1 slider + 0 errors; deployed 12/16 buttons + 1/1 slider + 0 errors), native gh-pages deploy,
+>     same-turn verify-deploy (HTTP 200, marker FOUND), README deployed, QNFO/QWAV landing page +
+>     strategy/3.0.md URLs updated. All 5 pipeline phases (DEM-E0-T01-T05) passed.
+> (2) [SOFT] **EXEC-AUTOBG-DEATH-1 recurrence noted (3x)** — git status and other short exec calls
+>     auto-backgrounded and died; write-file-read-back pattern worked 100%. Anti-pattern remains ACTIVE
+>     — no regression from v1.47, no fix needed (workaround reliable). Observed in 4+ concurrent
+>     sessions per process list; thin-client scan will need to handle concurrent session temp strays.
+> (3) [DESIGN] **cmd.exe quoting issues recurrent** — `python -c` inline, `findstr` multi-pattern,
+>     and `gh --jq` all consistently fail in cmd.exe; Python subprocess.run with capture_output is
+>     the stable alternative. All 5 phases used Python .py files + exec pattern successfully.
+> Cross-reference: qwav-demo-kit v1.4, A1 DOI 10.5281/zenodo.20134944,
+> EXEC-AUTOBG-DEATH-1 (v1.47), session hu5N0aI2_herajxZ2Bku6.
 > **v1.67 UPDATE (2026-08-06, kaizen — PRESENCE-OVER-FUNCTION-1: the demo-audit gate is FUNCTIONAL, not structural):**
 > Red-team: direct parent-agent 5-adversary audit (session s5A91BkILVruZwf361xxc — user directive:
 > ""has canvas/scripts" is not the gate. The gate is: do the controls actually work?";
@@ -13259,7 +13279,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.66** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
+Current: **v1.67** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
 
 
 
