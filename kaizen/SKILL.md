@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.59
+version: 1.60
 
 
 
@@ -74,7 +74,37 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.59
+# KAIZEN — v1.60
+> **v1.60 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: Obsidian D:-drive workflow + ecosystem health audit):**
+> Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa).
+> Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 20 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. Git status: clean. HARD: 0. SOFT: 0. DESIGN: 1.
+> Changes:
+> (1) [DESIGN] **Obsidian D:-drive workflow documented** — `exec` with `cwd: D:\...` works reliably
+>     on this system (verified with 6 successful calls across `D:\Obsidian\notes\v1\2026\08\`).
+>     `glob` tool returns `[]` for D: drive paths (non-workspace scope, similar to GREP-SCOPE-1).
+>     Canonical access pattern: `exec` with `cwd: D:\<path>` + `command: dir /b`. The Obsidian
+>     vault at `D:\Obsidian\notes\v1` holds today's 13 research notes spanning ultrametric
+>     computing, quantum supremacy rivals, quantum readout bottlenecks, ZPE/Casimir theory;
+>     accessible via `read` with absolute paths (e.g., `D:\Obsidian\notes\v1\2026\08\06\_*.md`).
+> (2) [AUDIT] **Ecosystem health verified** — all 18 QNFO skills N-2 consistent: bloat-cleanup (3.3),
+>     cloudflare (3.35), code (2.5), deepchat-settings (1.3), documents (2.5), email-composer (2.4),
+>     execution-mandate (2.8), git-github (2.20), kaizen (1.59→1.60), knowledge (2.7),
+>     personal-knowledge (1.3), qnfo-agent (3.61), qnfo-core (1.17), research (2.85),
+>     social-media-management (1.6.0), system (2.13), web-artifacts-builder (0.3),
+>     windows-command-patterns (3.15). Zero version drift across cross-references.
+> (3) [OBSERVATION] **EXEC-AUTOBG-DEATH-1 recurred** — git status exec auto-backgrounded mid-session;
+>     resolved via write-file-read-back pattern (write .py → exec → read .txt). Anti-pattern remains
+>     ACTIVE — no regression from v1.47, no fix needed (workaround reliable).
+> (4) [DESIGN] **Session retrospective** — Obsidian vault at D:\Obsidian\notes\v1\2026\08\06\
+>     contains 13 notes (\_26218083350 through \_26218084027) covering ultrametric computing team bios,
+>     quantum supremacy rival implications, quantum readout bottleneck explanation, general-purpose
+>     sequential computation taxonomy, Casimir/ZPE clarification, and photic sneeze-photosynthesis
+>     synthesis. write-to-obsidian.py (git 044e0c8) is the canonical delivery path for cron task
+>     reports landing as `_daily-briefing-YYYY-MM-DD.md` or `_<slug>.md` files.
+> Cross-reference: research v2.85, qnfo-core v1.17, EXEC-AUTOBG-DEATH-1 (kaizen v1.47),
+> session bwt-Jv0EdLebno9QonKIa.
+
 > **v1.59 UPDATE (2026-08-05, kaizen — VERIFY-DONT-ASSUME-1 + Heffner audit retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session SKILLS UPDATE — Heffner audit v1.0
 > fact-check failure). Watchtower scan: 18 QNFO skills N-2 CLEAN. HARD: 1. SOFT: 1. DESIGN: 1.
@@ -13012,7 +13042,7 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
-Current: **v1.59** (kaizen — VERIFY-DONT-ASSUME-1 + Heffner audit retrospective; 2026-08-05)
+Current: **v1.60** (kaizen — SKILLS UPDATE: Obsidian D:-drive workflow + ecosystem health audit; 2026-08-06)
 
 
 
