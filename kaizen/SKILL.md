@@ -12953,6 +12953,23 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 
+
+
+```
+[CHECK: 2026-08-13] PROMPT-KEY-SCHEMA-ASYMMETRY-1 will hold through +3 monitoring checkpoints: no
+custom-prompt audit will flag "empty content" from a single-key read; both stores (agent.db `content`,
+app-settings.json `template`) will be read before any empty-prompt claim. Risk of regression:
+[MODERATE] - the content-vs-template key split is non-obvious; the v1.61 canonical case (7 tool calls +
+one false finding) is now documented in both kaizen and deepchat-settings. Likelihood: [HIGH] - two
+skills carry the anti-pattern row; deepchat-settings v1.4 documents both key names explicitly.
+```
+
+[CHECK: 2026-08-13] System prompt v2.7 (48,598 ch, "Last updated 2026-08-05") will remain IDENTICAL
+across all 3 stores (agent.db systemPrompts / app-settings.json default_system_prompt /
+system-prompt-v2.7.md) through +3 monitoring checkpoints. Risk of regression: [LOW] - verified
+byte-identical 2026-08-06; v2.7 already merges standard structure + execution mandates (resolves
+mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is understood.
+
 ## Version
 
 
