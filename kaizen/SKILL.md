@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.62
+version: 1.63
 
 
 
@@ -74,7 +74,29 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 
-# KAIZEN — v1.62
+# KAIZEN — v1.63
+> **v1.63 UPDATE (2026-08-06, kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline):**
+> Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
+> publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
+> DUPLICATE TITLES IN GENERATED PDFS?" TITLE-DUPLICATION-1 existed in research v2.84 and qnfo-core
+> v1.16 as a HARD anti-pattern, yet ODR v0.1/v0.2/v0.3 ALL shipped with the duplicated title. The
+> gate was never SCRIPTED into the PDF build — it remained a manual prose check, and manual prose
+> checks fail under publication pressure.
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **PROSE-GATE-ADVISORY-1 anti-pattern added** — any HARD gate that guards a build/release
+>     pipeline (publication, deployment, sync) MUST be a SCRIPTED, machine-enforced check in that
+>     pipeline — a prose rule in a skill is advisory and WILL be skipped under pressure. Canonical
+>     case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions with the violation
+>     until research v2.86 scripted it as `check-title-duplication.py` (build-time BLOCK). Audit
+>     rule: for every HARD anti-pattern guarding a pipeline, ask "is there a script that enforces
+>     this?" If not, the gate is advisory — script it.
+> (2) [DESIGN] **Gate-scripting audit added to Phase 2 red-team** — the red-team now checks: does
+>     every HARD gate that guards a pipeline have a corresponding script referenced in that pipeline?
+>     Prose-only HARD gates are flagged as PROSE-GATE-ADVISORY-1 findings.
+> Cross-reference: research v2.86 (check-title-duplication.py), TITLE-DUPLICATION-1,
+> qnfo-core v1.16 (published-paper hygiene), N-2-SCAN-FALSE-POSITIVE-1 (scripted checks must
+> count rendered elements, not meta tags), session bwt-Jv0EdLebno9QonKIa.
+
 > **v1.62 UPDATE (2026-08-06, kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs to find legitimate convergence, never force it):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06 synthesis cycle).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft). Recall_facts: 0 orphan anti-patterns. Git clean.
@@ -11169,6 +11191,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 ## Anti-Patterns
+| **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
+
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
 
 
@@ -13117,7 +13141,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.62** (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.63** (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
 
 
 

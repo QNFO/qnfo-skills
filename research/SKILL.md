@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.85
+version: 2.86
 
 
 
@@ -166,7 +166,31 @@ triggers:
 
 
 
-# RESEARCH — v2.85
+# RESEARCH — v2.86
+> **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
+> Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
+> publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
+> DUPLICATE TITLES IN GENERATED PDFS?" ODR v0.1/v0.2/v0.3 ALL published with the TITLE-DUPLICATION-1
+> violation (body `# <Title>` H1 + YAML `title:` = title TWICE on page 1) — the anti-pattern
+> documented in v2.84 was prose-advisory, never enforced at build time.
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **TITLE-DUPLICATION-1 gate SCRIPTED** — new `research/scripts/check-title-duplication.py`:
+>     scans the pandoc-rendered HTML, counts rendered `<h1>` tags WITH attributes (excludes the
+>     `<head><title>` meta tag — browser-tab only, NOT a rendered heading, prevents the
+>     N-2-SCAN-FALSE-POSITIVE-1 class of false positive). PASS = exactly ONE `<h1 class="title">`
+>     AND zero body `<h1>`. FAIL = exit 1 with FIX instruction. Added as a MANDATORY step in the
+>     PDF Building pipeline (step 2.5: run after pandoc, before MathJax inline + CDP render) and
+>     to the PDF verification Gate. Any build producing a duplicated title is BLOCKED — this is
+>     the enforcement TITLE-DUPLICATION-1 always required.
+> (2) [DESIGN] **Author-time rule strengthened** — the anti-pattern row now reads: when YAML
+>     `title:` exists, the body MUST NOT contain a top-level H1 with the same title; the scripted
+>     gate makes "verify exactly ONE title occurrence" a build-time check, not a manual scan.
+> Canonical case: ODR 2026-08-06 v0.4 (DOI 10.5281/zenodo.21820137) — body H1 removed, single
+> rendered title verified by the scripted gate; v0.1-v0.3 (21819742/21819931/21819981) superseded.
+> Cross-reference: qnfo-core v1.16 (published-paper hygiene), kaizen v1.63 (recurrence lesson:
+> prose gates are advisory until scripted), N-2-SCAN-FALSE-POSITIVE-1,
+> session bwt-Jv0EdLebno9QonKIa.
+
 > **v2.85 UPDATE (2026-08-05, kaizen — Existential-claim verification gate (VERIFY-DONT-ASSUME-1)):**
 > Red-team: direct parent-agent 5-adversary audit triggered by Heffner audit v1.0 fact-check failure.
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -4949,7 +4973,7 @@ status: "draft" | "published"
 
 
 
-Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, **internal references (repo paths, skill sections, internal program names — INTERNAL-REF-1)**, **title duplication (exactly ONE title occurrence in rendered output — TITLE-DUPLICATION-1)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
+Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, **internal references (repo paths, skill sections, internal program names — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
 
 
 
@@ -5345,6 +5369,8 @@ No `--print-to-pdf`. No "primary tier." No fallback. One pipeline, every time.
 
 
 
+2.5. **TITLE-DUPLICATION-1 GATE (HARD, v2.86):** run `python research/scripts/check-title-duplication.py <slug>.html` after pandoc, before MathJax inline + CDP render. PASS = exactly ONE rendered `<h1 class="title">`, zero body `<h1>`. FAIL = BLOCK the build (body `# <Title>` H1 must be removed — the YAML title is the single page-1 title).
+
 6. Verify: 0 U+FFFD, 0 U+FFFF, PDF > 100 KB
 
 
@@ -5399,7 +5425,7 @@ locally and inlined. Use `str.replace()` NOT `re.sub()` — MathJax JS contains
 
 
 
-**Gate:** PDF > 100 KB AND 0 U+FFFD/FFFF (binary byte scan — `data.count(b"\xef\xbf\xbd")` for U+FFFD, `b"\xef\xbf\xbf"` for U+FFFF — **NEVER PyMuPDF/fitz**, see PYMUPDF-FORBIDDEN-1) → PASS. Anything else → BLOCKED.### Zenodo Upload
+**Gate (v2.86):** title-duplication check PASSED (check-title-duplication.py — exactly one rendered title) AND PDF > 100 KB AND 0 U+FFFD/FFFF (binary byte scan — `data.count(b"\xef\xbf\xbd")` for U+FFFD, `b"\xef\xbf\xbf"` for U+FFFF — **NEVER PyMuPDF/fitz**, see PYMUPDF-FORBIDDEN-1) → PASS. Anything else → BLOCKED.### Zenodo Upload
 
 
 
@@ -7644,7 +7670,7 @@ All 4 layers verified before status → "published":
 
 
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` file naming for published papers (2026-08-05)** | **HARD GATE.** Published paper files MUST be named as the PROJECT SLUG: `<slug>.md`, `<slug>.pdf`, `<slug>.html` (e.g. `qec-darwinism-ultrametric.md`). Applies to repo files, Zenodo deposit filenames, and R2 keys. Canonical case: QNFO.UMP.004 v1.3 — files renamed `paper.*` → `qec-darwinism-ultrametric.*` (commit 24fc89f). |
-| **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` field — title renders TWICE on page 1 (2026-08-05)** | **HARD GATE.** Pandoc emits the YAML `title:` as `<h1 class="title">`; a body H1 with the same title duplicates it on page 1. When YAML frontmatter has `title:`, the paper body MUST NOT contain a top-level H1 with the same title. Verify: exactly ONE title occurrence in rendered HTML/PDF (e.g. `python -c` scan or manual check of page 1). Canonical case: QNFO.UMP.004 v1.2 — body H1 removed (commit f2912ab). |
+| **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` field — title renders TWICE on page 1 (2026-08-05)** | **HARD GATE.** Pandoc emits the YAML `title:` as `<h1 class="title">`; a body H1 with the same title duplicates it on page 1. When YAML frontmatter has `title:`, the paper body MUST NOT contain a top-level H1 with the same title. Verify: run `research/scripts/check-title-duplication.py <slug>.html` — PASS requires exactly ONE rendered `<h1 class="title">` and zero body `<h1>` (v2.86 scripted gate, build-time BLOCK on failure). Canonical case: QNFO.UMP.004 v1.2 — body H1 removed (commit f2912ab). |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (repo paths, skill sections, internal program names, conferences) (2026-08-05)** | **HARD GATE.** Published papers MUST NOT reference: repo paths (`QNFO/xxx`), skill sections (`QNFO Core §0.7`), internal program names as prose (`the Kepler Program`, `the Continuum Trilogy` as process refs), internal conference/workshop mentions, possessive internal refs (`QNFO's research program`). Convert to generic phrasing + numbered citations of PUBLISHED records only. Canonical case: QNFO.UMP.004 v1.2 — CWI section deleted, Kepler prose → "prior published work", refs 10-13 cited properly (commit f2912ab). |
 
 
@@ -8789,7 +8815,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.85** (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.86** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
