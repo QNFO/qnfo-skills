@@ -13,6 +13,8 @@ triggers:
 - disk cleanup
 - free RAM
 - optimize Windows
+version: 3.4
+
 ---
 
 # BLOAT CLEANUP — v3.4

@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.16
+version: 3.17
 
 
 kif_tags: [KIF-32]

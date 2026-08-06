@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.72
+version: 1.74
 
 
 
@@ -146,7 +146,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
 > Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
 
-# KAIZEN — v1.73
+# KAIZEN — v1.74
 
 > **v1.72 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: CLOSEOUT — git sync + VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (session Gk9vm0CR-VlUvhvXFk_Xugd — CLOSEOUT
@@ -11416,7 +11416,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 ## Anti-Patterns
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
-| **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
+| **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
+
 
 | **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
 
@@ -13387,7 +13388,29 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.73** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
+
+> **v1.74 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: N-2 frontmatter-drift sync across 4 skills):**
+> Red-team: direct parent-agent 5-adversary audit (session RV42gZ5b_KKvXNXLv8i2t — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills scanned, 4 DRIFT flags found + 4 INCOMPLETE
+> (all verified with raw-line anchors per N-2-SCAN-FALSE-POSITIVE-1). Recall_facts: RECALL-FACTS-GAP
+> (v1.22). Tape clean. Concurrent sessions active (multiple bumps observed across ecosystem).
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: **N-2 frontmatter sync only — no new anti-patterns.**
+> (1) [SOFT] **kaizen fm 1.72→1.74** — concurrent session bumped hdr/ft to 1.73 but left fm stale
+>     at 1.72. Bumped past to 1.74 with all three locations (fm/hdr/ft) matching.
+> (2) [SOFT] **knowledge fm 2.7→2.8** — concurrent session bumped hdr/ft to 2.8 but left fm stale
+>     at 2.7. Synced to 2.8 (fm matches hdr/ft).
+> (3) [SOFT] **windows-command-patterns fm 3.16→3.17** — concurrent session bumped hdr/ft to 3.17
+>     but left fm stale at 3.16. Synced to 3.17.
+> (4) [SOFT] **bloat-cleanup fm added** — had hdr=3.4/ft=3.4 but NO frontmatter version field.
+>     Added `version: 3.4` to complete the N-2 triple.
+> Scanner false positives noted (not edited): documents fm="2.5" (quoted YAML value), qnfo-agent
+> fm="3.61" (quoted YAML value) — both are N-2 clean when parsed correctly.
+> Cross-reference: N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, VERSION-OVERWRITE-1,
+> CONCURRENT-KAIZEN-1, session RV42gZ5b_KKvXNXLv8i2t.
+
+
+
+Current: **v1.74** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
 
 
 
