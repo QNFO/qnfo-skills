@@ -1,7 +1,7 @@
 ---
 name: git-github
 description: Git workflow operations and GitHub project management -- conventional commits, branch recovery, merge conflicts, detached HEAD, stash recovery, GitHub Issues, PRs, Wikis, Releases, Milestones, project boards, and GitHub-D1 sync. GitHub is CANONICAL for skills repository and project files/archives.
-version: 2.20
+version: 2.22
 triggers: ["git", "commit", "merge", "rebase", "branch", "push", "pull", "detached HEAD", "conflict", "stash", "reflog", "GitHub", "Issues", "PRs", "pull request", "wiki", "releases", "Milestones", "project board", "GitHub sync", "D1 sync", "repo", "repository", "fork", "clone", "remote", "origin", "main", "master", "feature branch"]
 related: []
 priority: 2
@@ -47,7 +47,26 @@ self_sufficient: true
 > (2) [HARD] **WBS-TAXONOMY-GAP closed (iteration-2 red-team)** — execute_plan now
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
-# GIT-GITHUB — v2.20
+# GIT-GITHUB — v2.22
+> **v2.22 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge + GH-API-STDIN-NOOP-1):**
+> Concurrent session's .kaizen_history claimed v2.21 with GITHUB-TOPICS-PATCH-NOOP-1 + GH-API-STDIN-NOOP-1,
+> but the file was still v2.20 at scan time (phantom/aspirational history claim, PHANTOM-CLAIM-2 class).
+> This session's v2.21 (TOPICS-API-1, the canonical PATCH-topics silent-noop finding) landed first; merged
+> past the collision per VERSION-OVERWRITE-1 to v2.22, preserving ALL content. GH-API-STDIN-NOOP-1 folded
+> in as a verified anti-pattern (stdin body PATCH returned 0 without persisting).
+> Changes: (1) [SOFT] Topics API documented (PUT /repos/{x}/topics replace-all; PATCH-topics no-op).
+> (2) [SOFT] GH-API-STDIN-NOOP-1 anti-pattern added. (3) [DESIGN] TOPICS-API-1 anti-pattern added.
+> Cross-reference: TOPICS-API-1, GH-API-STDIN-NOOP-1, MEMORY-TO-SKILL-DRIFT (mem-blydRPUvzC0Z),
+> kaizen API-DOC-GAP-1, VERSION-OVERWRITE-1, session repo-tagging (2026-08-06).
+> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive; session repo-tagging run).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **Topics API documented** in Repository Operations — `PUT /repos/{owner}/{repo}/topics`
+>     with `{"names":[...]}` (replace-all) is the working endpoint; `PATCH /repos/{owner}/{repo}` with
+>     `{"topics":[...]}` is SILENTLY IGNORED (HTTP 200, topics unchanged). Canonical case: 150-repo
+>     taxonomy tagging run 2026-08-06 — 2 false-positive rounds burned before the dedicated Topics
+>     endpoint was confirmed. Memory mem-blydRPUvzC0Z migrated here per MEMORY-TO-SKILL-DRIFT.
+> (2) [DESIGN] **TOPICS-API-1 anti-pattern added** to the anti-patterns table.
+> Cross-reference: kaizen API-DOC-GAP-1, BLAME-EXTERNAL-1, session repo-tagging (2026-08-06).
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
@@ -340,7 +359,8 @@ git reset --hard HEAD~1
 - **Clone:** `git clone <url>`
 - **Push:** `git push origin <branch>`
 - **Pull:** `git pull origin <branch>`
-- **Archive:** `gh repo archive {owner/repo} --yes` — **WARNING**: `gh repo archive` follows GitHub HTTP 301 redirects. Always verify the repo's actual owner via `gh api repos/<owner>/<name> --jq .owner.login` AND confirm it's in the `user/repos?affiliation=owner` list before archiving. Archiving the wrong copy (org repo via redirect) can be undone with `gh repo unarchive`. See ARCHIVE-REDIRECT-1 anti-pattern.
+- **Archive:** `gh repo archive {owner/repo} --yes`
+- **Topics (repo tags):** `PUT /repos/{owner}/{repo}/topics` with body `{"names": ["topic1", "topic2"]}` (replace-all semantics — always send existing + new). **WARNING — TOPICS-API-1:** `PATCH /repos/{owner}/{repo}` with `{"topics": [...]}` is SILENTLY IGNORED (HTTP 200, topics unchanged) — do not use it. Verify with `GET /repos/{owner}/{repo}/topics`. Discovered 2026-08-06 during the 150-repo taxonomy tagging run. — **WARNING**: `gh repo archive` follows GitHub HTTP 301 redirects. Always verify the repo's actual owner via `gh api repos/<owner>/<name> --jq .owner.login` AND confirm it's in the `user/repos?affiliation=owner` list before archiving. Archiving the wrong copy (org repo via redirect) can be undone with `gh repo unarchive`. See ARCHIVE-REDIRECT-1 anti-pattern.
 
 ### Issues
 Create, update, close Issues. Template: title (actionable, specific), body (description, steps, expected behavior, environment).
@@ -668,6 +688,8 @@ After ANY push:
 
 ## Anti-Patterns
 | Anti-Pattern | Fix |
+| **TOPICS-API-1: PATCH /repos/{x} with `{"topics":[...]}` returns 200 but never changes topics (2026-08-06)** |
+| **GH-API-STDIN-NOOP-1: `gh api --input -` (stdin body) can return exit 0 without persisting — do not trust it for verification (2026-08-06)** | When a gh API PATCH with `--input -` (body via stdin) returns 0, independently re-query with `GET /repos/{x}/topics` before claiming success. In the 2026-08-06 tagging run, the stdin PATCH path reported OK for .deepchat/QWAV yet re-fetch showed topics unchanged. (Primary root cause was TOPICS-API-1 — PATCH-topics silent no-op — but stdin bodies are not a reliable write path either.) Prefer `--input <file>` or urllib with explicit JSON, and ALWAYS verify by re-query. Cross-ref: TOPICS-API-1, API-FAILURE PROTOCOL, BLAME-EXTERNAL-1. | GitHub silently ignores the `topics` field on the repo PATCH endpoint. The working endpoint is `PUT /repos/{owner}/{repo}/topics` with `{"names": [...]}` (replace-all — union existing + new). Canonical case: 2026-08-06 repo-tagging run — 2 false-positive rounds (PATCH returned 200, topics stayed []) before the dedicated Topics endpoint was confirmed; 150 repos tagged via PUT. Verify with GET /repos/{x}/topics. Cross-ref: API-DOC-GAP-1 (kaizen), BLAME-EXTERNAL-1 (bug is your code until proven otherwise). |
 |:-------------|:----|
 | Creating a new repo for a single paper/project | **HARD GATE (Project Branch Policy):** Branch from the appropriate program repo (see routing table). NEVER create a new repo for an individual paper, audit, or project. All QNFO/QWAV content lives in the consolidated program repos. |
 | Using generic branch names (`feature/phase0-scaffold`) | Use `{type}/{canonical-slug}` — e.g. `paper/measurable-vs-imaginable`, `audit/acrp04-five-smooth`. The slug must match the paper's canonical short name used everywhere (Zenodo, D1, R2, filename). |
@@ -700,4 +722,4 @@ After ANY push:
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v2.20** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)
+Current: **v2.22** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)

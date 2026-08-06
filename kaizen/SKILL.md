@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.76
+version: 1.77
 
 
 
@@ -146,7 +146,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
 > Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
 
-# KAIZEN — v1.76
+# KAIZEN — v1.77
+> **v1.77 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: git-github v2.22 TOPICS-API-1 + GH-API-STDIN-NOOP-1; VERSION-OVERWRITE-1 merge):**
+> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive). Watchtower scan:
+> 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 21 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns (RECALL-FACTS-GAP known). Process list: 0 live concurrent
+> exec sessions. HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **git-github v2.20→v2.22** — TOPICS-API-1 (PATCH /repos/{x} with {"topics":[...]} returns
+>     200 but silently no-ops; working endpoint PUT /repos/{x}/topics with {"names":[...]}) documented
+>     in Repository Operations; anti-pattern row added. Canonical case: 150-repo taxonomy tagging run
+>     2026-08-06 (2 false-positive rounds). MEMORY-TO-SKILL-DRIFT closed (mem-blydRPUvzC0Z migrated).
+> (2) [SOFT] **GH-API-STDIN-NOOP-1 added** — `gh api --input -` stdin bodies can exit 0 without
+>     persisting; always verify by re-query. VERSION-OVERWRITE-1 merge: concurrent session's
+>     .kaizen_history claimed v2.21 (phantom — file was v2.20); merged past collision to v2.22.
+> (3) [DESIGN] **Audit methodology** — 320 version-ref + 111 script-ref + 1 mojibake candidates from
+>     the scripted scan: ALL false positives/banner-history-exempt (verified via canonical
+>     scan-mojibake.py PASS on qnfo-agent; research/scripts cross-refs all resolve). This cycle
+>     confirms N-2-SCAN-FALSE-POSITIVE-1 discipline: scan output is a candidate list, raw anchors
+>     are authoritative. Cross-ref: git-github v2.22, API-DOC-GAP-1, PHANTOM-CLAIM-2,
+>     session repo-tagging (2026-08-06).
 
 > **v1.75 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8):**
 > Red-team: direct parent-agent 5-adversary audit (session mT7Pt1u7wsjWzs0nTxqPb — SKILLS UPDATE directive).
@@ -13450,7 +13468,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.76** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.77** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
