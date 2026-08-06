@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.74
+version: 1.75
 
 
 
