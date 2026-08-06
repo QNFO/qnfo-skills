@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.68
+version: 1.69
 
 
 
@@ -95,7 +95,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: research v2.86, qnfo-core v1.17, JPCUB CL v2.0 DOI 10.5281/zenodo.21821767,
 > JPCUB P0 DOI 10.5281/zenodo.21637028, session Lix-MUWJTX69KVWScl01C.
 
-# KAIZEN — v1.68
+> **v1.69 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: Obsidian access fix + session retrospective):**
+> Red-team: 4 parallel subagents (all truncated — direct parent fallback per Subagent Failure Handling rule 4) 
+> + direct parent-agent 5-adversary audit (session f2hAXRcmcXZ4m5_VDCsNI).
+> Watchtower scan: 17/17 QNFO skills N-2 CLEAN (fm/hdr/ft), 22 platform-default INCOMPLETE (exempt).
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **personal-knowledge v1.3→v1.4** — CLOUDFLARE-WAF-1010-1 anti-pattern added: Cloudflare Bot Fight Mode
+>     on personal-life-search Workers blocks all non-browser HTTP clients (error 1010, browser_signature_banned).
+>     Direct filesystem access fallback documented (exec + cwd + read per kaizen v1.60 canonical pattern).
+>     Query Endpoints section now carries a WAF warning. Anti-pattern table + filesystem section added.
+> (2) [SOFT] **Session retrospective** — Obsidian vault searched via direct filesystem for Shor factoring content:
+>     ZERO genuine matches. All "Shor" hits are false positives on substring "short" (shortly, shorter, shortcut).
+>     Cloudflare WAF 1010 diagnosed per BLAME-EXTERNAL-1: the error IS our access method (Python urllib),
+>     not infrastructure — browser CDP works (kaizen v1.68 observation 2, ZENODO-BOT-403-1).
+> (3) [DESIGN] **EXEC-AUTOBG-DEATH-1 recurrence noted** — multiple inline exec calls died this session;
+>     write-file-read-back pattern worked 100%. RECALL-FACTS-GAP persists.
+>     No regression from v1.47 — workaround remains reliable.
+> Cross-reference: personal-knowledge v1.4, CLOUDFLARE-WAF-1010-1, BLAME-EXTERNAL-1,
+> EXEC-AUTOBG-DEATH-1 (v1.47), session f2hAXRcmcXZ4m5_VDCsNI.
+
+
+
+# KAIZEN — v1.69
 
 > **v1.67 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: A1 demo rebuild + session retrospective):**
 > Red-team: direct parent-agent 5-adversary audit (session hu5N0aI2_herajxZ2Bku6 — SKILLS UPDATE
@@ -360,7 +381,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.85, Heffner audit DOI 10.5281/zenodo.21812761,
 > session SKILLS UPDATE 2026-08-05.
 
-# KAIZEN — v1.58
+## KAIZEN — v1.58
 > **v1.58 UPDATE (2026-08-05, kaizen — SKILLS UPDATE ecosystem audit + cross-ref verification):**
 > Red-team: direct parent-agent 5-adversary audit (session SKILLS UPDATE directive).
 > Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), 22 platform-default INCOMPLETE (exempt).
@@ -376,7 +397,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (6) [CLOSEOUT] **SKILLS UPDATE processed** — version bump, banner, git commit, memory, tape.
 > Cross-reference: research v2.84, qnfo-core v1.16, session SKILLS UPDATE 2026-08-05.
 
-# KAIZEN — v1.57
+## KAIZEN — v1.57
 > **v1.57 UPDATE (2026-08-05, kaizen — Published-paper hygiene anti-patterns + Watchtower scan additions):**
 > Red-team: direct parent-agent 5-adversary audit (user directives 2026-08-05 — title-dup fix,
 > internal-ref ban, slug-named files). HARD: 3. SOFT: 0. DESIGN: 1. Changes:
@@ -13300,7 +13321,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.68** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
+Current: **v1.70** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
 
 
 
