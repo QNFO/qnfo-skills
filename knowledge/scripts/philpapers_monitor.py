@@ -43,7 +43,9 @@ HEADERS = {
     "Accept": "text/html,application/json",
 }
 
-STATE_FILE = "philpapers_monitor_state.json"
+import os as _os
+STATE_FILE = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                          "philpapers_monitor_state.json")
 
 
 def load_state():
