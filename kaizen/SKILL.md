@@ -75,6 +75,34 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 # KAIZEN — v1.66
+> **v1.67 UPDATE (2026-08-06, kaizen — PRESENCE-OVER-FUNCTION-1: the demo-audit gate is FUNCTIONAL, not structural):**
+> Red-team: direct parent-agent 5-adversary audit (session s5A91BkILVruZwf361xxc — user directive:
+> ""has canvas/scripts" is not the gate. The gate is: do the controls actually work?";
+> EXECUTE RED TEAM SKILLS AUDIT → EXECUTE KAIZEN SKILLS UPDATES → LOAD → UPDATE KAIZEN).
+> Trigger: all 4 legacy QWAV demos were previously "verified" by structural checks (canvas present,
+> scripts present) yet EVERY control-based audit failed them: ultrametric-convergence 5/14 buttons
+> change state + 14 console errors (`variance() is not a function`); error-confinement 2/16 + blank
+> canvas; hardware-visualizer 2/9 + blank canvas; tree-distance 2/13 + blank canvas.
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **PRESENCE-OVER-FUNCTION-1 cross-skill rule** — for ANY interactive artifact, presence
+>     checks (element exists, script loads, marker present) prove only that a page loaded. The gate
+>     is FUNCTIONAL: click every control and assert the output changed to the engine-predicted value.
+>     This applies to demos (qwav-demo-kit v1.4 generic-click-test.py), published papers
+>     (render-check scripts, not meta-tag scans), and any deployed UI. Canonical case: 2026-08-06 —
+>     4 legacy demos passed structural checks, 0 passed functional checks; BT-Tree QEC passed both.
+> (2) [SOFT] **Audit-tool discipline** — the generic audit tool must be selector-agnostic
+>     (HARDCODED-AUDIT-1): a suite written against one demo's IDs can't verify another. Use
+>     generic-click-test.py (clicks every button/input/select, full-innerText change detection —
+>     length can coincide on digit swaps like "156"->"781") as the universal gate.
+> (3) [DESIGN] **Gate-tool verification catches tool bugs too** — the gate script itself had 2 bugs
+>     found by running it (Playwright fill() throws on input[type=range]; length-based detection
+>     misses digit-swap state changes). Scripted gates must be validated against a KNOWN-PASS
+>     control AND a KNOWN-FAIL artifact before trust.
+> Cross-reference: qwav-demo-kit v1.4 (FUNCTIONALITY GATE, PRESENCE-OVER-FUNCTION-1,
+> HARDCODED-AUDIT-1, generic-click-test.py), STRUCTURAL-VS-FUNCTIONAL-1 (v1.65),
+> DEAD-BUTTON-1, session f9oRzNJ9WzVVFz7KXuaTK, session s5A91BkILVruZwf361xxc.
+
+
 > **v1.66 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge: cycle-2 retrospective restored):**
 > A concurrent session (f93b598, "research v2.86 current-state ref sync") claimed kaizen v1.65 with
 > its own content WHILE this session's cycle-2 banner (STRUCTURAL-VS-FUNCTIONAL-1 retrospective) was
@@ -97,7 +125,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > session f9oRzNJ9WzVVFz7KXuaTK, session f93b598.
 
 
-> **v1.65 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: research v2.86 current-state ref sync):**
+> **v1.66 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration + anti-pattern header note):**
+> Red-team: direct parent-agent 5-adversary audit (session QPBAVeVkU0Y5qkMNG6CC9 — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN, 22/22 platform-default INCOMPLETE (exempt).
+> Recall_facts: 0 orphan anti-patterns. Git clean. GitHub mining: claude-skills (dev branch, productivity
+> fixes) — patterns already incorporated. Cross-ref audit: all cross-skill references consistent.
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **windows-command-patterns v3.15→v3.16** — CUA tools reference added to
+>     WIN-TRUSTEDINSTALLER-REG-1 anti-pattern row (Settings GUI path now references
+>     `list_apps` → `launch_app` → `get_window_state` → `click`/`type_text` as programmatic
+>     GUI automation). GUI automation row added to Operation Replacement table. Load
+>     `computer-use` skill for full CUA protocol.
+> (2) [SOFT] **CUA tools gap noted** — bloat-cleanup v3.3 could also benefit from CUA
+>     programmatic GUI for Settings panels and app uninstall dialogs; deferred to next
+>     bloat-cleanup edit per SKILL-CHURN-1 (opportunistic, not bulk rewrite).
+> (3) [DESIGN] **kaizen anti-pattern table header note added** — clarifies that the kaizen
+>     anti-pattern table is a cross-skill index; canonical definitions live in the owning skill
+>     (research, windows-command-patterns, git-github, cloudflare, bloat-cleanup). Helps
+>     agents navigate the large table by pointing to authoritative sources.
+> Cross-reference: windows-command-patterns v3.16, computer-use skill, bloat-cleanup v3.3,
+> session QPBAVeVkU0Y5qkMNG6CC9.
+
+>> **v1.65 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: research v2.86 current-state ref sync):**
 > Red-team: direct parent-agent 5-adversary audit (session gkrNtiglcHtagahkY6_tC — SKILLS UPDATE
 > directive). Watchtower scan: 18 QNFO skills N-2 CLEAN (fm/hdr/ft), platform-default INCOMPLETE
 > (exempt). Recall_facts: 0 orphan anti-patterns. Git clean (2014b96). X-ref audit: 15,369 chars
@@ -11259,6 +11308,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 ## Anti-Patterns
+**NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
 | **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
 
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
@@ -13209,7 +13259,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.66** (kaizen — SKILLS UPDATE: research v2.86 current-state ref sync; 2026-08-06) (kaizen — PROSE-GATE-ADVISORY-1: a gate written in prose is advisory until scripted into the pipeline; TITLE-DUPLICATION-1 recurrence; 2026-08-06) (kaizen — SYNTHESIS-DILIGENCE-1: work through ALL inputs for legitimate convergence, never force it; ODR v0.3 canonical case; 2026-08-06) (kaizen — SKILLS UPDATE: prompt architecture verification + PROMPT-KEY-SCHEMA-ASYMMETRY-1; 2026-08-06)
+Current: **v1.66** (kaizen — SKILLS UPDATE: red-team ecosystem audit + CUA integration in WCP v3.16 + anti-pattern table header note; 2026-08-06)
 
 
 
