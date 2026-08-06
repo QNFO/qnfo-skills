@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 3.3
+version: 3.4
 triggers:
 - cleanup
 - bloatware
@@ -15,10 +15,25 @@ triggers:
 - optimize Windows
 ---
 
-# BLOAT CLEANUP — v3.3
+# BLOAT CLEANUP — v3.4
 
+> **v3.4 UPDATE (2026-08-06, kaizen — CUA tools integration for GUI cleanup + stale cross-ref fix):**
+> Red-team: direct parent-agent 5-adversary audit (session QPBAVeVkU0Y5qkMNG6CC9 — CONTINUE
+> deferred SOFT item from kaizen v1.66 closeout). HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **CUA tools reference added** — Widgets Settings GUI fallback now references
+>     DeepChat Computer Use (CUA) tools (`list_apps` → `launch_app` → `get_window_state` →
+>     `click`/`type_text`) as a programmatic GUI automation path for Settings dialogs,
+>     app uninstall, and other GUI-only operations. Load `computer-use` skill for full CUA
+>     protocol.
+> (2) [SOFT] **Stale cross-references fixed** — windows-command-patterns v3.13→v3.16,
+>     kaizen v1.31→v1.66 in Runtime Context and Self-Elevation references.
+> (3) [DESIGN] **GUI automation pattern documented** — same pattern as WCP v3.16:
+>     CUA tools provide a programmatic alternative to "or use the Settings GUI" fallback
+>     text found throughout the skill.
+> Cross-reference: windows-command-patterns v3.16, kaizen v1.66, computer-use skill,
+> session QPBAVeVkU0Y5qkMNG6CC9.
 
-> **v3.3 UPDATE (2026-08-05, kaizen — TEMP stale-clone scan + STALE-CLONE-ACCUM-1):**
+>> **v3.3 UPDATE (2026-08-05, kaizen — TEMP stale-clone scan + STALE-CLONE-ACCUM-1):**
 > Red-team: kaizen red-team skills audit (session -WyivBiyZ6xFy4uXS_RNy).
 > HARD: 0. SOFT: 1. DESIGN: 1. Changes:
 > (1) [DESIGN] **thin_client.py v2.7 — %TEMP% stale-clone scan** — new STALE_CLONE
@@ -629,7 +644,11 @@ HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds\ShellFeedsTaskbarViewMode  
 ```
 
 **Fallback:** If the MDM path is also blocked, instruct the user:
-Settings → Personalization → Taskbar → Widgets = Off.
+Settings → Personalization → Taskbar → Widgets = Off. When
+the Settings GUI path is needed, DeepChat's Computer Use (CUA) tools
+(`list_apps` → `launch_app` → `get_window_state` → `click`/`type_text`) can drive
+the Settings app programmatically — load the `computer-use` skill for the full CUA
+protocol.
 
 ## Self-Elevation Pattern (v3.2)
 
@@ -637,7 +656,7 @@ Many bloat operations require admin: writing to HKLM, service control, AppX remo
 Use `ctypes.windll.shell32.ShellExecuteW` with `"runas"` verb for UAC self-elevation.
 The user clicks "Yes" on the UAC prompt — no typing required.
 
-**Cross-ref:** `windows-command-patterns` v3.13 §S-1.0.8 for the full pattern
+**Cross-ref:** `windows-command-patterns` v3.16 §S-1.0.8 for the full pattern
 (what works, what doesn't, TrustedInstaller caveat).
 
 ```python
@@ -696,9 +715,9 @@ subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 
   - scripts\full_clean.py (python)
   - scripts\kill_bloat.py (python)
   - scripts\thin_client.py (python)
-- Cross-references: windows-command-patterns v3.13 §S-1.0.8 (ShellExecute runas, sc, taskkill, TrustedInstaller caveat), kaizen v1.31 (WIN-ELEVATION-PARTIAL-1)
+- Cross-references: windows-command-patterns v3.16 §S-1.0.8 (ShellExecute runas, sc, taskkill, TrustedInstaller caveat, CUA tools), kaizen v1.66 (WIN-ELEVATION-PARTIAL-1)
 - Do not guess script paths or change directories to locate skill files.
 
 ## Version
 
-Current: **v3.3** (bloat-cleanup — thin-client bloat enforcement, Edge/Widgets MDM, TrustedInstaller patterns; 2026-08-05)
+Current: **v3.4** (bloat-cleanup — CUA tools integration for GUI cleanup + stale cross-ref fix; 2026-08-06)
