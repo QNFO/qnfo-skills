@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.77
+version: 1.78
 
 
 
@@ -146,7 +146,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
 > Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
 
-# KAIZEN — v1.77
+> **v1.78 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: research v2.87 — ZENODO-RECORDS-API-DROPS-METADATA-1 + INTERNAL-REF-1 WBS extension + P5.FRESH self-DOI ordering):**
+> Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
+> directive; qwave-qudit-advantage QNFO.UMP.005 red-team; research skill audited for R-A1/R-A2/R-A4
+> coverage). Watchtower scan: research v2.86 N-2 clean pre-edit; research v2.87 N-2 clean post-edit
+> (fm/hdr/ft 2.87, raw-line anchors per N-2-SCAN-FALSE-POSITIVE-1). HARD: 0 (kaizen-side). SOFT: 0.
+> DESIGN: 0. Changes (in research v2.87, this banner documents the cycle):
+> (1) [HARD] **ZENODO-RECORDS-API-DROPS-METADATA-1** — records-API PUT /records/{id}/draft returns
+>     200 but silently drops license+keywords; fix = deposit-API metadata shape + DataCite read-back.
+> (2) [HARD] **INTERNAL-REF-1 extended** — WBS codes (QNFO.UMP.005) in body/calibration registers +
+>     quoted internal program names ("QEC Darwinism") explicitly banned.
+> (3) [SOFT] **P5.FRESH newversion self-DOI ordering** — update local .md to pre-reserved DOI BEFORE
+>     upload so the deposited .md carries its own DOI.
+> Cross-reference: research v2.87, ZENODO-RECORDS-API-DROPS-METADATA-1, TWO-API METADATA SHAPE
+> DISTINCTION, session ktkjFggX5vMt1h4ogDIwh.
+
+# KAIZEN — v1.78
 > **v1.77 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: git-github v2.22 TOPICS-API-1 + GH-API-STDIN-NOOP-1; VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive). Watchtower scan:
 > 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 21 platform-default INCOMPLETE (exempt).
@@ -13283,6 +13298,12 @@ tuning after the first 10+ sessions of "brainless" CONTINUE usage.
 
 
 ```
+[CHECK: 2026-08-13] ZENODO-RECORDS-API-DROPS-METADATA-1 will hold through +3 monitoring checkpoints:
+no future Zenodo metadata PUT uses the records-API shape for license/keywords; the deposit-API shape
+is used and DataCite subjects/rights read-back verified. Risk of regression: [MODERATE] — the records
+API accepts 200 silently, so the failure is invisible without read-back. Likelihood: [HIGH] — two
+skills (research v2.87 + kaizen v1.78) now carry the rule.
+
 [CHECK: 2026-08-13] PROMPT-KEY-SCHEMA-ASYMMETRY-1 will hold through +3 monitoring checkpoints: no
 custom-prompt audit will flag "empty content" from a single-key read; both stores (agent.db `content`,
 app-settings.json `template`) will be read before any empty-prompt claim. Risk of regression:
@@ -13468,7 +13489,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.77** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.78** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
