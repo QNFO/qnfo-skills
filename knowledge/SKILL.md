@@ -66,7 +66,7 @@ self_sufficient: true
 > source for memory operations. Updated Cross-System Discovery Hierarchy to include
 > MCP-first retrieval paths. See `cloudflare` skill v3.9 §MCP-Driven Operations.
 
-# KNOWLEDGE — v2.7 (Ultra-Consolidated KG + Memory + AutoRAG)
+## KNOWLEDGE — v2.7 (Ultra-Consolidated KG + Memory + AutoRAG)
 
 > **v2.1 UPDATE (2026-07-21, phantom-claim audit):** Added the
 > **Tool-Call Execution Mandate** section below. A KG edge/node write or a
@@ -424,5 +424,5 @@ Location: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\`
 
 **Scheduled monitoring:** Run `philpapers_monitor.py` daily. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs Zenodo corpus.
 
-Current: **v2.8** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+Current: **v2.8** (PhilPapers Discoverability Pipeline — Zenodo→DataCite→CrossRef→PhilPapers indexing confirmed via QUNTUF/QUNSAI; 2026-08-06)
 

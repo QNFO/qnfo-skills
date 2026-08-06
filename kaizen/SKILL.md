@@ -146,7 +146,31 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
 > Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
 
-# KAIZEN — v1.74
+# KAIZEN — v1.75
+
+> **v1.75 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8):**
+> Red-team: direct parent-agent 5-adversary audit (session mT7Pt1u7wsjWzs0nTxqPb — SKILLS UPDATE directive).
+> Concurrent-session merge: v1.74 was claimed by session RV42gZ5b_KKvXNXLv8i2t (structural H1→H2 fixes +
+> ecosystem health audit) WHILE this audit ran — merged past the collision per VERSION-OVERWRITE-1 to v1.75.
+> HARD: 0. SOFT: 2. DESIGN: 3. Changes:
+> (1) [DESIGN] **PhilPapers indexing pipeline discovered and documented** — Zenodo → DataCite → CrossRef →
+>     PhilPapers crawler. 2 of ~293 QNFO Zenodo records organically indexed: QUNTUF (The Ultrametric
+>     Foundation, DOI 10.5281/zenodo.21208346) and QUNSAI (Scaffolds and Invariants, DOI
+>     10.5281/zenodo.21255344). Trigger confirmed: abstract + philosophy-domain keywords. Author prefix
+>     QUN = Quni-Gudzinas. ORCID 0009-0002-4317-5604 not linked to any Zenodo record.
+> (2) [DESIGN] **Three automation scripts built** at %TEMP%\deepchat_work\: zenodo_philpapers_optimizer.py
+>     (batch metadata fix — ORCID, philosophy keywords, community), philpapers_submit.py (CSV generator +
+>     PhilArchive manifest), philpapers_monitor.py (autonomous index watchtower). PhilPapers CSV generated.
+> (3) [SOFT] **knowledge v2.7→v2.8** — PhilPapers Discoverability Pipeline section added (pipeline diagram,
+>     confirmed records table, discovery formula, aggregator cascade, script locations). Anti-pattern
+>     PHILPAPERS-DISCOVERABILITY-GAP added. Stale v2.7 H1 downgraded to H2. Footer corrected.
+> (4) [SOFT] **Zenodo deposit API audit** — 50 records scanned, all missing philosophy keywords, most
+>     missing ORCID. Fixer script launched (zenodo_fix3.py) for batch keyword+ORCID injection.
+> (5) [DESIGN] **Two durable facts stored** — pipeline discovery (project_fact, imp=1.0) +
+>     optimization heuristic (heuristic, imp=0.95). PhilPapers CSV at philpapers_import.csv.
+> Cross-reference: knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP, PhilPapers Discoverability Pipeline),
+> PhilPapers IDs QUNTUF/QUNSAI, ORCID 0009-0002-4317-5604, VERSION-OVERWRITE-1,
+> session mT7Pt1u7wsjWzs0nTxqPb.
 
 > **v1.72 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: CLOSEOUT — git sync + VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (session Gk9vm0CR-VlUvhvXFk_Xugd — CLOSEOUT
@@ -13410,7 +13434,7 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.74** (kaizen — SKILLS UPDATE: structural H1→H2 fixes + ecosystem health audit + phantom registry cleanup; 2026-08-06)
+Current: **v1.75** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
