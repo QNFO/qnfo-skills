@@ -15,6 +15,8 @@ triggers:
 - optimize Windows
 version: 3.4
 
+version: 3.4
+
 ---
 
 # BLOAT CLEANUP — v3.4

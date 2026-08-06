@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.75
+version: 1.76
 
 
 
@@ -146,7 +146,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **PARALLEL-WRITE-EXEC-RACE-1 anti-pattern added (mirror; canonical = windows-command-patterns v3.17 SINGLE-BATCH-SEQUENTIAL-1)** — dispatching a `write` and an `exec` that reads that file in the SAME parallel tool batch races them: the exec can fire before the write completes and fail with FileNotFoundError. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, every one a write+exec parallel-batch race. Fix: sequence dependent calls — write in batch N, exec in batch N+1; NEVER batch write+verify in one turn. Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52, verify-after-PATCH races), FILE-WRITE-RACE-1 (v1.14, write+write races), windows-command-patterns v3.17.
 > Cross-reference: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1), PARALLEL-EXEC-RACE-1, FILE-WRITE-RACE-1, session nRNLsnj-ytLg_xHL768uG.
 
-# KAIZEN — v1.75
+# KAIZEN — v1.76
 
 > **v1.75 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8):**
 > Red-team: direct parent-agent 5-adversary audit (session mT7Pt1u7wsjWzs0nTxqPb — SKILLS UPDATE directive).
@@ -13434,7 +13434,23 @@ mem-NNA13ubWR_d5). Likelihood: [HIGH] - the v2.6 enriched-variant drift cause is
 
 
 
-Current: **v1.75** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+
+
+> **v1.76 UPDATE (2026-08-06, kaizen — SKILLS UPDATE: ecosystem audit — bloat-cleanup fm regression fix):**
+> Red-team: direct parent-agent 5-adversary audit (session RV42gZ5b_KKvXNXLv8i2t — SKILLS UPDATE
+> directive). Watchtower scan: 18/18 QNFO skills scanned, 14 OK, 2 scanner FP (documents/qnfo-agent
+> quoted YAML values), 1 regression (bloat-cleanup), 1 concurrent bump (kaizen v1.74→1.75).
+> Tape clean. Process list: 0 orphans. Deferred: 0 unblocked.
+> HARD: 0. SOFT: 1. DESIGN: 0.
+> (1) [SOFT] **bloat-cleanup frontmatter regression fixed** — the `version: 3.4` field added in
+>     v1.74 (bcbef3c) was reverted by a concurrent session overwrite. Re-added `version: 3.4`
+>     to complete the N-2 fm/hdr/ft triple (hdr=3.4, ft=3.4 were never lost).
+> Cross-reference: N-2-FRONTMATTER-DRIFT-1, VERSION-OVERWRITE-1, CONCURRENT-KAIZEN-1,
+> N-2-SCAN-FALSE-POSITIVE-1, session RV42gZ5b_KKvXNXLv8i2t.
+
+
+
+Current: **v1.76** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
