@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.84
+version: 1.85
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -190,7 +190,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     `_handoff-2026-08-06-email-kaizen-closeout.md`. Retry trigger: if a handoff endpoint is ever added.
 > Cross-reference: email-composer v2.8, qnfo-email worker, EMAIL-ROUTE-STRIP-1, calibration [CHECK 2026-08-13],
 > session SFkcXsRZjmvs4TMr9Fo_m.
-# KAIZEN — v1.84
+> **v1.85 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN):**
+> Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
+> directive). Watchtower scan: 17/17 QNFO skills N-2 CLEAN (fm/hdr/ft), 23/23 platform-default
+> INCOMPLETE (exempt). Recall_facts: RECALL-FACTS-GAP (v1.22). Process list: 0 orphans.
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: None — ecosystem healthy.
+> (1) [AUDIT] **Watchtower v1.85 results** — 17/17 QNFO skills fm/hdr/ft consistent:
+>     bloat-cleanup (3.4), cloudflare (3.35), code (2.5), deepchat-settings (1.4),
+>     documents (2.5), email-composer (2.8), execution-mandate (2.8), git-github (2.22),
+>     kaizen (1.84→1.85), knowledge (2.8), personal-knowledge (1.4), qnfo-agent (3.61),
+>     qnfo-core (1.17), qwav-demo-kit (1.4), research (2.88), social-media-management (1.6.0),
+>     system (2.13), web-artifacts-builder (0.3), windows-command-patterns (3.17).
+>     Zero version drift across all cross-references. 23 platform-default skills
+>     INCOMPLETE (exempt — not QNFO-owned, not in git).
+> (2) [AUDIT] **Deferred items reviewed** — 7 deferred from prior sessions, all
+>     documented as EXTERNAL-BLOCK (Zenodo WAF 403, D1 HTTP 400, duplicate record,
+>     KG seed, Red-Team Audit v3 G2/G4 etc.). This session's count: 0.
+> (3) [AUDIT] **Cross-reference chain verified** — qnfo-core v1.17 ↔ research v2.88
+>     ↔ kaizen v1.84 intact. No language consistency gaps found.
+> Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
+> RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
+
+# KAIZEN — v1.85
 > **v1.83 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #5: closeout reconciliation + VERSION-OVERWRITE-1 merge validation):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SKILLS AUDIT
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (email-composer 2.7/2.7/2.7, kaizen 1.82/1.82/1.82 pre-edit).
@@ -13623,7 +13644,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.84** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.85** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
