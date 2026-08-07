@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.88
+version: 2.89
 
 
 
@@ -186,6 +186,17 @@ triggers:
 > Cross-reference: kaizen v1.78, TWO-API METADATA SHAPE DISTINCTION, ZENODO-INPLACE-EDIT-1,
 > session ktkjFggX5vMt1h4ogDIwh.
 
+> **v2.89 UPDATE (2026-08-07, kaizen — KIF-29 Synthesis Mode cross-reference + kaizen v1.86 convergence architecture):**
+> Red-team: 2 parallel subagents dispatched (both truncated — direct parent fallback per kaizen rule 4).
+> Direct parent-agent audit confirmed research v2.88 lacks any reference to kaizen v1.86 Synthesis Mode
+> / Convergence Architecture. HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **KIF-29 gate cross-referenced to kaizen v1.86 Synthesis Mode** — Phase 1b Consilience
+>     Gate now includes an explicit reference: for multi-thread sessions, apply the Convergence
+>     Architecture (kaizen v1.86) to map cross-pillar merges before executing isolated research
+>     tasks. The synthesis mode transforms KIF-29 from a vetting gate into an execution methodology.
+> Cross-reference: kaizen v1.86 (Synthesis Mode / Convergence Architecture, Mined Workflow Pattern G),
+> qnfo-core §0.7 (Ostrowski Mandate), session MerOabc5KO_W9Q8BP47ok.
+
 > **v2.88 UPDATE (2026-08-06, kaizen — DISSEMINATION LEGS: journal submission + targeted outreach + PhilPapers cross-ref + ERRATA ordering):**
 > Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
 > cycle #2; QNFO.UMP.005 dissemination work: 5 outreach emails sent, arXiv BLOCKED by endorsement,
@@ -206,7 +217,7 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.88
+# RESEARCH — v2.89
 > **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -2798,6 +2809,13 @@ If 2+ AI evaluations converge on dismissing a claim → flag `[AI-CONVERGENCE-WA
 
 
 ## Phase 1b: Cross-Domain Consilience & Silo-Failure Detection Gate (KIF-29, HARD)
+
+> **Multi-thread synthesis (v2.89):** For sessions spanning multiple research threads,
+> apply kaizen v1.86 Synthesis Mode / Convergence Architecture BEFORE executing isolated
+> tasks. Map cross-pillar merges (UMP×INM, UMP×CFE, INM×CFE, ALL×RES) and produce a
+> convergence map — every task has a merge target. KIF-29 is the GATE; the Convergence
+> Architecture is the METHODOLOGY. Cross-ref: kaizen v1.86 Mined Workflow Pattern G.
+
 
 
 
@@ -8925,7 +8943,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.88** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.89** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

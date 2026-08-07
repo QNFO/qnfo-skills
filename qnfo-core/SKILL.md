@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.17
+version: 1.18
 
 
 
@@ -285,7 +285,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.17 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
+> (2) [SOFT] **qnfo-core own header reconciled** — `# QNFO Core — v1.18 (v1.8)` → `# QNFO Core — v1.9` (was itself a deprecated-format
 
 
 
@@ -655,6 +655,18 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
+
+> **v1.18 UPDATE (2026-08-07, kaizen — Convergence Architecture cross-reference + synthesis-first mandate):**
+> Red-team: 2 parallel subagents dispatched (both truncated — direct parent fallback per kaizen rule 4).
+> Direct parent-agent audit confirmed qnfo-core v1.17 lacks synthesis/convergence references.
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **§0.5 Priority Stack updated** — "Convergence Architecture (kaizen v1.86)" added
+>     as a NEVER-VIOLATE item. Synthesis-first: seek cross-pillar convergence before executing
+>     isolated tasks. Cross-ref: kaizen v1.86 (Synthesis Mode / Convergence Architecture,
+>     Mined Workflow Pattern G).
+> (2) [SOFT] **§3 Due Diligence Protocol** — cross-reference to kaizen v1.86 Synthesis Mode
+>     added. Before claiming comprehensive coverage, map multi-thread convergence.
+> Cross-reference: kaizen v1.86, research v2.89, KIF-29, session MerOabc5KO_W9Q8BP47ok.
 
 > **v1.16 UPDATE (2026-08-05, kaizen — Published-Paper Hygiene Mandate):**
 > Red-team: direct parent-agent 5-adversary audit (user directives 2026-08-05). HARD: 3. SOFT: 0. DESIGN: 1.
@@ -4116,7 +4128,7 @@ See `scripts/scan-mojibake.py` in this skill's root directory. The script scans 
 
 
 
-1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims, **Source Encoding Integrity (§0.2)**, **Python-First Execution (§0.6)**
+1. NEVER VIOLATE: Research Integrity, Safety, No Fabrication, No Phantom Claims, **Source Encoding Integrity (§0.2)**, **Python-First Execution (§0.6)**, **Convergence Architecture (kaizen v1.86)**
 
 
 
@@ -5196,6 +5208,10 @@ Before ANY task involving "what exists":
 
 GATE: If KG was NOT queried before claiming "comprehensive" → cherry-picking violation.
 
+**Multi-thread synthesis (v1.18):** For sessions spanning multiple programs, apply
+kaizen v1.86 Synthesis Mode / Convergence Architecture before task execution.
+Map cross-pillar merges; every task has a merge target. Cross-ref: research KIF-29.
+
 
 
 
@@ -5705,7 +5721,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.17** (qnfo-core — VERIFY-FACT-1: fact-check existence claims before publishing; 2026-08-05)
+Current: **v1.18** (qnfo-core — VERIFY-FACT-1: fact-check existence claims before publishing; 2026-08-05)
 
 
 
