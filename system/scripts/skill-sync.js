@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * skill-sync.js v4.0.9 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
+ * skill-sync.js v4.0.10 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.10 (2026-08-07, kaizen — fix push-message check: git push writes to stderr, not stdout)
  * v4.0.9 (2026-08-07, kaizen — git add -u for tracked deletions; honest push messaging)
  * v4.0.8 (2026-08-07, kaizen — truthful completion message; gitOk flag)
  * v4.0.7 (2026-08-07, kaizen — auto-recover missing .git from canonical clone)
@@ -39,7 +40,7 @@
  *     skipped, idempotent re-runs.
  *   - --targets filter, per-file retry, failure cause classification.
  *
- * @version 4.0.9
+ * @version 4.0.10
  * @date 2026-08-02
  */
 
@@ -251,7 +252,7 @@ async function pool(items, worker, concurrency) {
       } catch (e) { console.log('○ No changes to commit'); }
       for (const remote of ['origin', 'rwnq8']) {
         try {
-          const out = execSync(`git push ${remote} master`, { cwd: skillsRoot, stdio: 'pipe' }).toString();
+          const out = execSync(`git push ${remote} master 2>&1`, { cwd: skillsRoot, stdio: 'pipe' }).toString();
           if (/Everything up.to.date/i.test(out)) console.log(`○ ${remote} already up-to-date`);
           else console.log(`✓ Pushed to ${remote}`);
         } catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
