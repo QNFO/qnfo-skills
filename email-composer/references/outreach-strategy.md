@@ -319,6 +319,22 @@ The agent loads this document, identifies the paper and audience, executes the p
 | "Outreach report" | Generate stats: sent, responded, response rate by audience, active conversations |
 | "Weekly outreach routine" | Execute the Monday/Wednesday/Friday cadence |
 
+### Cronjob Integration (operational, 2026-08-06)
+
+The outreach cadence is wired into two scheduled tasks — it runs **autonomously**, not just on-demand.
+
+**Task 1: `qnfo-email-inbox-check` (every 3 hours, id `3851f539`)**
+After the standard inbox check, this task handles the full outreach cadence:
+- **Every run**: Detects outreach replies (email subjects matching QNFO paper titles), checks follow-up readiness (>14 days no response)
+- **Monday** (first run after 08:00 UTC): Scans arXiv for researchers whose recent work connects to QNFO papers published in the last 90 days; presents 3-5 outreach candidates
+- **Wednesday**: Reports drafting-ready contacts; runs "Outreach batch for [paper]" readiness check
+- **Friday**: Generates weekly outreach report (sent/responded/follow-ups/active conversations) + drafts follow-up emails per the No Response Protocol
+
+**Task 2: `QNFO Research Daily Briefing` (daily 08:00 UTC, id `fdf1403c`)**
+After the arXiv scan completes, identifies researchers whose recent work connects to QNFO papers from the last 90 days. On Monday: presents full contact details. On other days: summary only.
+
+**Safety**: Neither task sends emails autonomously. All follow-up drafts in notifications require user approval in an interactive email-composer session before sending.
+
 ---
 
 ## Cross-References
