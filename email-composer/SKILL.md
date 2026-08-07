@@ -1,11 +1,36 @@
-> **> **> **v2.10 UPDATE (2026-08-06, kaizen — Red-team fixes: outreach templates + paper-audience matrix + deferred DESIGN items):**
+> **v2.11 UPDATE (2026-08-07, kaizen — MEMORY-TO-SKILL-DRIFT migration: email red-team audit anti-patterns + rowan.quni@ architecture):**
+> Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
+> directive triggered by email infrastructure audit findings). Watchtower: all 17 QNFO skills N-2
+> CLEAN. MEMORY-TO-SKILL-DRIFT found: 3 anti-patterns in durable memory, 0 in email-composer v2.10.
+> HARD: 0. SOFT: 2. DESIGN: 2. Changes:
+> (1) [SOFT] **PROCESSED-STUCK-SPAM-1 anti-pattern added** — emails stuck in "processed" status
+>     may be spam that leaked through filters; any red-team audit must check processed-status items
+>     for spam keywords. Canonical case: session MerOabc5KO_W9Q8BP47ok — 7 email audit found 6/7
+>     "processed" items were journal solicitations/spam; archived + filters added same-session.
+>     Cross-ref: mem-rOoe9DeExL_g.
+> (2) [SOFT] **PER-RECIPIENT-FILTER-GAP-1 anti-pattern added** — qnfo-email Worker filters are
+>     GLOBAL (apply to ALL recipients); per-recipient routing (e.g., human-only at rowan.quni@)
+>     requires Cloudflare Email Routing dashboard configuration. Do not assume Worker filters can
+>     segregate by recipient. Cross-ref: mem-O25LuZJ_LBtQ, email-composer Anti-Patterns table.
+> (3) [DESIGN] **HUMAN-ONLY-ROWAN-QUNI architecture note** — user mandate: rowan.quni@qnfo.org
+>     is STRICTLY human-to-human. Newsletters, automated notifications, journal solicitations,
+>     outbound copies, test emails, and briefing reports must NEVER reach this address. Architecture
+>     fix requires CF Email Routing rules at the dashboard level. Until then, audit reports must
+>     surface ONLY human-sent email at this address.
+> (4) [DESIGN] **User preferences codified** — email digests must be CONCISE + ACTION-ORIENTED:
+>     no spam, no already-dispatched, no internals. Only NEW actionable inbound. Cross-ref:
+>     mem-Ccw6Aiu0TWC2, mem-O25LuZJ_LBtQ.
+> Cross-reference: kaizen v1.85, mem-rOoe9DeExL_g, mem-O25LuZJ_LBtQ, mem-Ccw6Aiu0TWC2,
+> session MerOabc5KO_W9Q8BP47ok.
+
+> **v2.10 UPDATE (2026-08-06, kaizen — Red-team fixes: outreach templates + paper-audience matrix + deferred DESIGN items):**
 > Red-team: direct parent-agent audit (session Nff8tKtjHf6VDCfRejuNd — CONTINUE: apply red-team findings).
 > 3 concrete fixes applied, 2 deferred with documented blockers. HARD: 0. SOFT: 2. DESIGN: 1. Changes:
 > (1) [SOFT] Funder template added (concrete fill-in, differentiated from academic: lead with record, cite infrastructure, call-to-action=15-min call). (2) [SOFT] Investor template added (differentiated from funder: lead with problem/market-failure, cite Manifesto+JPCUB, pre-empt risk, portfolio-rejection handling). (3) [DESIGN] Paper-to-audience mapping matrix added at §4 of outreach-strategy.md: 4 paper categories x 4 audiences + 5 quick decision rules, golden rule = never send paper to audience it wasn't written for. (4) [DEFERRED/DESIGN] Multi-channel integration (social-media-management v1.6.0 for Bluesky/LinkedIn) — deferred pending cross-skill wiring. (5) [DEFERRED/DESIGN] Gatekeeping auto-classification — Blind Inbox Architecture claims auto-archive but no Worker-side semantic classifier exists; documented as manual-via-agent pending automation.
 > Cross-reference: kaizen v1.83, outreach-strategy.md, qnfo-email-inbox-check cronjob (3851f539), QNFO Research Daily Briefing cronjob (fdf1403c), session Nff8tKtjHf6VDCfRejuNd.
 
 
-v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind Inbox Architecture):**
+> **v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind Inbox Architecture):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — user directive:
 > systematic outreach strategy for paper sharing, academic networking, funder/investor outreach).
 > Trigger: user identified the blind inbox as an emotional shield enabling fearless outreach despite
@@ -31,7 +56,7 @@ v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind I
 > session Nff8tKtjHf6VDCfRejuNd.
 
 
-v2.8 UPDATE (2026-08-06, kaizen — EMAIL-ROUTE-STRIP-1 RESOLVED: worker source fix applied, deployed, live-verified):**
+> **v2.8 UPDATE (2026-08-06, kaizen — EMAIL-ROUTE-STRIP-1 RESOLVED: worker source fix applied, deployed, live-verified):**
 > Red-team: direct parent-agent 5-adversary audit (CONTINUE/RESOLVE DEFERRED/CLOSEOUT, session SFkcXsRZjmvs4TMr9Fo_m).
 > HARD: 0. SOFT: 0. DESIGN: 1. Changes:
 > (1) [DESIGN] **EMAIL-ROUTE-STRIP-1 resolved at the source** — worker strip scoped to
@@ -140,7 +165,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.10
+version: 2.11
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -165,7 +190,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.10
+# Email Composer — v2.11
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1294,5 +1319,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.10** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.11** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
