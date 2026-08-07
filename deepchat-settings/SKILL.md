@@ -284,4 +284,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.4** (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 + v2.7 system prompt sync; 2026-08-06)
+Current: **v1.5** (deepchat-settings — CMD template architecture + system prompt v2.8 sync; 2026-08-07)

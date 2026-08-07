@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.88
+version: 1.89
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,24 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.88
+# KAIZEN — v1.89
+
+> **v1.89 UPDATE (2026-08-07, kaizen — CMD template architecture + system prompt v2.8 sync; VERSION-OVERWRITE-1 merge):**
+> Red-team: direct parent-agent 5-adversary audit (session 5gsgy_E4umEpfGejRgDD4 — CMD CONTINUE
+> continuation; ecosystem consistency pass). Concurrent-session merge: v1.88 (RED-TEAM hardcoded/
+> cosmetic audit #2) landed while this pass ran — merged past the collision per VERSION-OVERWRITE-1.
+> HARD: 0. SOFT: 3. DESIGN: 0. Changes:
+> (1) [SOFT] **Two-Prompt Architecture superseded** — canonical prompt architecture is now the NINE
+>     CMD-prefixed templates (CMD CONTINUE, CMD EXECUTE, CMD RED TEAM, CMD RED TEAM SUB,
+>     CMD RESEARCH, CMD SKILLS UPDATE, CMD PUBLISH, CMD DEPLOY, CMD CLOSEOUT; 2026-08-07).
+>     Section renamed "CMD Template Architecture". All share `CMD ` prefix for / dropdown grouping.
+> (2) [SOFT] **CMD-LEGACY-1 canonical reference updated** — no longer "exactly TWO templates";
+>     now the nine-template CMD set. Original lesson (17 dead /CMD commands) unchanged.
+> (3) [SOFT] **Cross-Skill Integration Commands row updated** — CMD-prefixed names.
+> (4) [SOFT] **deepchat-settings v1.5 sync** — same architecture documented there.
+> Cross-reference: deepchat-settings v1.5, system-prompt-v2.7.md (content v2.8), CMD-LEGACY-1,
+> session 5gsgy_E4umEpfGejRgDD4.
+
 > **v1.83 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #5: closeout reconciliation + VERSION-OVERWRITE-1 merge validation):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SKILLS AUDIT
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (email-composer 2.7/2.7/2.7, kaizen 1.82/1.82/1.82 pre-edit).
@@ -13761,7 +13778,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.88** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
+Current: **v1.89** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
 
 
 
