@@ -101,6 +101,46 @@ QNFO Research Collective
 - Infrastructure (6 databases, 31 Workers, 10 Pages projects — this IS capability)
 - Falsifiability commitment (pre-registered predictions, null-results published)
 
+### Funder Template
+
+```
+Subject: QNFO Research Collective — [Research Area] Programme
+
+Dear [Name/Title],
+
+I'm writing from the QNFO Research Collective, an open-science
+research program producing peer-reviewable, DOI-archived work in
+[field: theoretical physics / quantum foundations / philosophy of
+science]. I wanted to share our recent publication record and
+infrastructure, which may align with [Foundation]'s [specific
+program/focus area].
+
+[2-3 sentences: what we've published. Cite 1-2 DOIs. Mention the
+cumulative record — e.g., "293 Zenodo records, 850+ pages of
+research across 6 programs."]
+
+Our work is falsification-driven and pre-registration-based: every
+finding carries a pre-registered test condition and a null-result
+publication track.
+
+We are seeking [specific funding need: research time / equipment /
+collaboration support] to advance [specific program/paper]. I'd
+welcome the opportunity to discuss whether this aligns with
+[Foundation]'s priorities.
+
+The full publication record is at [DOI list or Zenodo community].
+A 15-minute call would let me present the research programme.
+
+Thank you for your consideration,
+Rowan Quni
+QNFO Research Collective
+research@qnfo.org | qnfo.org
+```
+
+**Key differences from academic template**: Lead with the publication RECORD (not a research question). Cite infrastructure numbers. Explicitly name the funding need before the close. Call-to-action is a 15-minute call (funders expect this; academics don't).
+
+---
+
 ### C. Investors & Industry
 
 **Who**: VCs, angel investors, industry R&D leads, technology scouts.
@@ -117,6 +157,47 @@ QNFO Research Collective
 - The metric: JPCUB (joules-per-solution) — falsifiable, measurable, universal
 - The evidence: 6-paper Manifesto chain, all DOI-archived
 - What QWAV IS and IS NOT (see qnfo-qwav-strategy.md)
+
+### Investor Template
+
+```
+Subject: QWAV — [Thesis: "Substrate IS Algorithm" computing platform]
+
+Dear [Name],
+
+I'm writing because [specific connection: you invest in deep-tech
+computing / you've written about quantum computing's challenges /
+your portfolio includes hardware platforms].
+
+QWAV addresses a well-defined market failure: the $35 billion
+quantum computing industry has delivered zero broadly viable
+machines. Our thesis, published in the peer-reviewed 6-paper
+Manifesto for Honest Computation (DOI [manifesto_DOI]), is that
+this failure is epistemic, not engineering — the qubit model is
+wrong for general computation.
+
+QWAV builds computing systems where the physical substrate IS the
+algorithm — thermodynamic, optical, and neuromorphic platforms
+selected by Problem-Substrate Mapping, not by marketing. Everything
+competes on JPCUB (joules-per-solution), a falsifiable metric.
+
+We are currently [stage: seeking seed funding / building prototype /
+identifying fabrication partners]. The whitepaper (DOI
+[whitepaper_DOI]) details platform architecture and positioning.
+
+I'd welcome a brief conversation to discuss whether this aligns
+with your investment thesis.
+
+Rowan Quni
+Founder, QWAV
+rowan.quni@qwav.tech | qwav.tech
+```
+
+**Key differences from funder template**: Open with the PROBLEM (market failure), not the record. Cite the Manifesto + JPCUB metric. State what QWAV is BUILDING, not what QNFO has published. Address risk pre-emptively. The ask is a conversation about alignment, not a specific funding ask.
+
+**Portfolio-rejection handling**: If the VC says "we don't invest in quantum" — they've misunderstood. QWAV is NOT quantum computing — it's post-quantum, honest computation. If they persist: archive, don't argue.
+
+---
 
 ### D. Collaborators & Potential Partners
 
@@ -248,6 +329,27 @@ When the research skill's Phase 7 (Dissemination) completes a new publication:
 2. Outreach protocol triggers: identify the paper's audience, find 5-10 relevant researchers
 3. Draft batch, review, send over 3-5 days
 4. Track responses in D1
+
+---
+
+### Paper-to-Audience Mapping
+
+**Which paper goes to whom?** Not every paper is for every audience. Use this matrix:
+
+| Paper Category | Primary Audience | Secondary Audience | NOT for |
+|---|---|---|---|
+| **Physics results** (Adelic Programme, QEC audits, ultrametric foundations) | Academic physicists, mathematicians | Funders (shows rigor) | Investors, general public |
+| **Philosophy/methodology** (Consilience Framework, Five Pillars, Spencer-Brown) | Philosophers of science, epistemologists | Academic physicists (if they've published on foundations) | Investors |
+| **Platform/commercial** (Qubit Delusion series, Manifesto, Whitepaper) | Investors, industry partners | Funders (shows commercial viability), physicists (public critique) | Academic philosophers |
+| **Infrastructure/meta** (Notation Problem, Communications Framework) | Computer scientists, infrastructure builders | Funders (shows capability) | Investors |
+
+**Quick Decision Rules:**
+
+1. **If the paper has "ultrametric" or "p-adic" in the title:** → Academic physicists only. Never send to investors (jargon overload).
+2. **If the paper critiques the quantum computing industry:** → Investors (commercial thesis) + academics (public critique). The Qubit Delusion series serves BOTH audiences but with different templates.
+3. **If the paper proposes a new framework/methodology:** → Philosophers + interdisciplinary researchers. Physicists only if they've published on foundations of physics.
+4. **If the paper describes infrastructure/notation:** → Funders (capability signal) + computer scientists. Not a standalone outreach paper.
+5. **The golden rule: Never send a paper to an audience it wasn't written for.** A physicist receiving a manifesto gets confused. An investor receiving a p-adic paper stops reading after the title.
 
 ---
 

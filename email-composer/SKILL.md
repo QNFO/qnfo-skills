@@ -1,4 +1,11 @@
-> **> **v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind Inbox Architecture):**
+> **> **> **v2.10 UPDATE (2026-08-06, kaizen — Red-team fixes: outreach templates + paper-audience matrix + deferred DESIGN items):**
+> Red-team: direct parent-agent audit (session Nff8tKtjHf6VDCfRejuNd — CONTINUE: apply red-team findings).
+> 3 concrete fixes applied, 2 deferred with documented blockers. HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] Funder template added (concrete fill-in, differentiated from academic: lead with record, cite infrastructure, call-to-action=15-min call). (2) [SOFT] Investor template added (differentiated from funder: lead with problem/market-failure, cite Manifesto+JPCUB, pre-empt risk, portfolio-rejection handling). (3) [DESIGN] Paper-to-audience mapping matrix added at §4 of outreach-strategy.md: 4 paper categories x 4 audiences + 5 quick decision rules, golden rule = never send paper to audience it wasn't written for. (4) [DEFERRED/DESIGN] Multi-channel integration (social-media-management v1.6.0 for Bluesky/LinkedIn) — deferred pending cross-skill wiring. (5) [DEFERRED/DESIGN] Gatekeeping auto-classification — Blind Inbox Architecture claims auto-archive but no Worker-side semantic classifier exists; documented as manual-via-agent pending automation.
+> Cross-reference: kaizen v1.83, outreach-strategy.md, qnfo-email-inbox-check cronjob (3851f539), QNFO Research Daily Briefing cronjob (fdf1403c), session Nff8tKtjHf6VDCfRejuNd.
+
+
+v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind Inbox Architecture):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — user directive:
 > systematic outreach strategy for paper sharing, academic networking, funder/investor outreach).
 > Trigger: user identified the blind inbox as an emotional shield enabling fearless outreach despite
@@ -133,7 +140,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.9
+version: 2.10
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -158,7 +165,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.9
+# Email Composer — v2.10
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1287,5 +1294,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.9** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.10** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
