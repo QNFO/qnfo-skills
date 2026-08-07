@@ -4,6 +4,7 @@
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.8 (2026-08-07, kaizen — truthful completion message; gitOk flag)
  * v4.0.7 (2026-08-07, kaizen — auto-recover missing .git from canonical clone)
  * v4.0.6 (2026-08-02, kaizen — chunk check-ignore call; Windows cmd line limit)
  * v4.0.5 (2026-08-02, kaizen — normalize git paths to forward slashes; check-ignore sep mismatch)
@@ -37,7 +38,7 @@
  *     skipped, idempotent re-runs.
  *   - --targets filter, per-file retry, failure cause classification.
  *
- * @version 4.0.6
+ * @version 4.0.8
  * @date 2026-08-02
  */
 
@@ -145,6 +146,7 @@ async function pool(items, worker, concurrency) {
   const args = process.argv.slice(2);
   let skillsRoot = path.join(process.env.USERPROFILE || process.env.HOME, '.deepchat', 'skills');
   let targets = null, force = false, verify = true, skipGit = false;
+  let gitOk = false;
   for (const a of args) {
     if (a.startsWith('--targets=')) targets = a.slice(10).split(',');
     else if (a === '--force') force = true;
@@ -249,6 +251,7 @@ async function pool(items, worker, concurrency) {
         try { execSync(`git push ${remote} master`, { cwd: skillsRoot, stdio: 'pipe' }); console.log(`✓ Pushed to ${remote}`); }
         catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
       }
+      gitOk = true;
     } catch (e) { console.log('✗ Git error:', e.message.split('\n')[0]); }
     } // close inner if (!skipGit) after pre-flight
   }
@@ -299,5 +302,13 @@ async function pool(items, worker, concurrency) {
     for (const [k, c] of Object.entries(failureCauses)) console.log(`  ${k}: ${c}`);
     process.exit(1);
   }
-  console.log('✓ Skill sync complete — GitHub + R2 in sync');
+  if (gitOk) {
+    console.log('✓ Skill sync complete — GitHub (origin + rwnq8) + R2 in sync');
+  } else if (skipGit && process.argv.includes('--skip-git')) {
+    console.log('✓ Skill sync complete — R2 in sync (git skipped by --skip-git)');
+  } else if (!gitOk && !skipGit) {
+    console.log('⚠ Skill sync partial — R2 in sync, but git sync failed (see errors above)');
+  } else {
+    console.log('✓ Skill sync complete — R2 in sync (git unavailable)');
+  }
 })();

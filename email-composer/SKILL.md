@@ -1,4 +1,32 @@
-> **v2.11 UPDATE (2026-08-07, kaizen — MEMORY-TO-SKILL-DRIFT migration: email red-team audit anti-patterns + rowan.quni@ architecture):**
+> **> **v2.12 UPDATE (2026-08-07, kaizen — AUTONOMOUS OUTREACH: cronjob now SENDS, not just drafts + red-team subagent audit):**
+> Red-team: 4 parallel subagents (Accuracy/Completeness/Novelty/Status — all completed) + direct
+> parent-agent audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SUBAGENTS).
+> User mandate: "AUTOMATE OUTREACH CONTACTS ENTIRELY, I'M NOT GOING TO TELL YOU TO INITIATE OUTREACH."
+> VERSION-OVERWRITE-1 merge past concurrent v2.11 (session MerOabc5KO_W9Q8BP47ok, MEMORY-TO-SKILL-DRIFT:
+> PROCESSED-STUCK-SPAM-1, PER-RECIPIENT-FILTER-GAP-1, HUMAN-ONLY-ROWAN-QUNI). HARD: 0. SOFT: 1. DESIGN: 2.
+> Changes:
+> (1) [HARD conversion] **Cronjob upgraded to autonomous sending** — the qnfo-email-inbox-check
+>     (id 3851f539) now autonomously SENDS outreach emails on Monday (scan Zenodo→arXiv→find emails→
+>     draft→send 3-5 per paper) and Friday (auto-send follow-ups to 14d silent contacts). Previously
+>     drafted for user approval — now sends directly, reporting what was sent. Notification changed
+>     from "drafts ready" to "Sent N emails to: [recipient list]." Dedup: checks D1 before sending
+>     (same recipient + same paper DOI = skip). Email verification via Google Scholar; unreachable
+>     contacts reported as [SKIPPED: no email found].
+> (2) [DESIGN] **Cronjob ping cronjob-ping** — weak exec verification: saved to
+>     %TEMP%\ec_cronjob_show.txt and read-back confirmed the autonomous taskPrompt.
+> (3) [DESIGN] **Subagent red-team methodology** — 4 parallel reviewers completed; accuracy auditor
+>     found subagent-access gap (cronjob tool unavailable in child sessions — parent-verified).
+>     Completeness auditor correctly identified draft-only→send gap as HARD. Status auditor
+>     discovered concurrent v2.11 bump. Novelty auditor identified multi-channel/D1-tracking/
+>     auto-classification/audience-auto-match gaps (all DESIGN, deferred).
+> (4) [SOFT] **Kaizen v1.84** — this cycle's retrospective: autonomous outreach pivot, subagent
+>     red-team integration, VERSION-OVERWRITE-1 merge validation.
+> Cross-reference: kaizen v1.84, outreach-strategy.md, qnfo-email Worker, qnfo-email-inbox-check
+> cronjob (3851f539), session Nff8tKtjHf6VDCfRejuNd, subagent sessions (HO-6WyYLOHSGjb_jAH3UI,
+> l7gByLaHxlxD1pXOaKxnG, YeG0ZGSBTT2BBD7mzmxGs, caixgX3FFJYjVsELh03Ip).
+
+
+v2.11 UPDATE (2026-08-07, kaizen — MEMORY-TO-SKILL-DRIFT migration: email red-team audit anti-patterns + rowan.quni@ architecture):**
 > Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
 > directive triggered by email infrastructure audit findings). Watchtower: all 17 QNFO skills N-2
 > CLEAN. MEMORY-TO-SKILL-DRIFT found: 3 anti-patterns in durable memory, 0 in email-composer v2.10.
@@ -165,7 +193,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.11
+version: 2.12
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -190,7 +218,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.11
+# Email Composer — v2.12
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1319,5 +1347,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.11** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.12** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
