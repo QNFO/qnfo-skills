@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.4
+version: 1.5
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,23 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.4
+# DeepChat Settings — v1.5
+
+> **v1.5 UPDATE (2026-08-07, kaizen — CMD template architecture + system prompt v2.8 sync):**
+> Red-team: direct parent-agent audit (session 5gsgy_E4umEpfGejRgDD4 — CMD CONTINUE).
+> HARD: 0. SOFT: 2. DESIGN: 0. Changes:
+> (1) [SOFT] **Canonical template architecture updated** — the prompt inventory is now NINE
+>     CMD-prefixed templates (CMD CONTINUE, CMD EXECUTE, CMD RED TEAM, CMD RED TEAM SUB,
+>     CMD RESEARCH, CMD SKILLS UPDATE, CMD PUBLISH, CMD DEPLOY, CMD CLOSEOUT), replacing the
+>     former two-template set (SKILLS UPDATE + CONTINUE). All share the `CMD ` prefix so they
+>     group together in the / slash-command dropdown. Sync example updated accordingly.
+> (2) [SOFT] **System prompt v2.8 reference updated** — "48,598 chars as of v2.7" -> v2.8
+>     (49,419 chars, "Last updated 2026-08-07"). v2.8 adds the auto-search mandate (Phase 0
+>     now includes search_conversations / search_messages / tape_search / memory_recall) and
+>     fixes the LANGUAGE CONTRADICTION. All 3 stores verified IDENTICAL.
+> Cross-reference: kaizen v1.86, system-prompt-v2.7.md (content v2.8), CMD-LEGACY-1,
+> session 5gsgy_E4umEpfGejRgDD4.
+
 > **v1.4 UPDATE (2026-08-06, kaizen — PROMPT-KEY-SCHEMA-ASYMMETRY-1 + v2.7 system prompt sync):**
 > Red-team: direct parent-agent audit (session gpgLR3KXSZxQQkEG_G2HW SKILLS UPDATE).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -143,9 +159,18 @@ ap = r'C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json'
 with open(ap, encoding='utf-8') as f:
     d = json.load(f)
 d['customPrompts'] = [
-    {"name": "SKILLS UPDATE", "template": "...", "parameters": []},
-    {"name": "CONTINUE",     "template": "CONTINUE", "parameters": []},
+    {"name": "CMD CONTINUE",      "template": "CMD CONTINUE: update_plan -> execute -> verify -> iterate. Complete autonomously. `update_plan` `exec`", "parameters": []},
+    {"name": "CMD EXECUTE",       "template": "CMD EXECUTE: PLAN/EXECUTE/RED-TEAM/VERIFY/ITERATE with WBS codes...", "parameters": []},
+    {"name": "CMD RED TEAM",      "template": "CMD RED TEAM: 5-adversary direct audit... READ-ONLY", "parameters": []},
+    {"name": "CMD RED TEAM SUB",  "template": "CMD RED TEAM SUB: subagent_orchestrator(run, parallel)...", "parameters": []},
+    {"name": "CMD RESEARCH",      "template": "CMD RESEARCH: skill_view research -> Phase 1 (Due Diligence)...", "parameters": []},
+    {"name": "CMD SKILLS UPDATE", "template": "CMD SKILLS UPDATE: EXECUTE RED TEAM SKILLS AUDIT...", "parameters": []},
+    {"name": "CMD PUBLISH",       "template": "CMD PUBLISH: skill_view research -> Phase 5 pipeline...", "parameters": []},
+    {"name": "CMD DEPLOY",        "template": "CMD DEPLOY: skill_view cloudflare -> wrangler deploy...", "parameters": []},
+    {"name": "CMD CLOSEOUT",      "template": "CMD CLOSEOUT: verify git clean -> audit deferred tasks...", "parameters": []},
 ]
+# Canonical 9-template CMD architecture (2026-08-07): ALL templates share the CMD prefix so they
+# group alphabetically in the / slash-command dropdown. Full content synced live to both stores.
 with open(ap, 'w', encoding='utf-8') as f:
     json.dump(d, f, indent=2, ensure_ascii=False)
 ```
@@ -159,7 +184,7 @@ The system prompt is stored in TWO locations that MUST stay in sync:
 | Location | Key | Notes |
 |:---------|:----|:------|
 | `agent.db` → `app_settings` | `systemPrompts` | JSON array, `[{"id":"default","name":"DeepChat","content":"..."}]` |
-| `app-settings.json` | `default_system_prompt` | Raw string (48598 chars as of v2.7) |
+| `app-settings.json` | `default_system_prompt` | Raw string (49,419 chars as of v2.8) |
 
 To update the system prompt:
 1. Modify `app-settings.json` → `default_system_prompt` (settingsWatcher detects this)

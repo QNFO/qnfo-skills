@@ -9047,7 +9047,7 @@ reviewed and improved as part of the kaizen CI/CD loop.
 
 
 
-### Two-Prompt Architecture (canonical as of 2026-08-05)
+### CMD Template Architecture (canonical as of 2026-08-07)
 
 
 
@@ -9059,7 +9059,7 @@ reviewed and improved as part of the kaizen CI/CD loop.
 
 
 
-The QNFO ecosystem uses exactly TWO reusable prompt templates:
+The DeepChat prompt inventory uses NINE CMD-prefixed templates (2026-08-07 architecture): CMD CONTINUE, CMD EXECUTE, CMD RED TEAM, CMD RED TEAM SUB, CMD RESEARCH, CMD SKILLS UPDATE, CMD PUBLISH, CMD DEPLOY, CMD CLOSEOUT. All share the `CMD ` prefix for slash-command dropdown grouping. The core two remain:
 
 
 
@@ -9083,13 +9083,13 @@ The QNFO ecosystem uses exactly TWO reusable prompt templates:
 
 
 
-| **Default (Continuation)** | Brainless session progression — plan → execute → verify → iterate | `CONTINUE` |
+| **Default (Continuation)** | Brainless session progression — plan → execute → verify → iterate | `CMD CONTINUE` |
 
 
 
 
 
-| **Process Improvement** | Trigger full kaizen cycle — red-team audit → skill updates → closeout | Per SKILLS UPDATE template |
+| **Process Improvement** | Trigger full kaizen cycle — red-team audit → skill updates → closeout | `CMD SKILLS UPDATE` |
 
 
 
@@ -10250,7 +10250,7 @@ and durable sandboxes. Its AGENTS.md coding standards are gold:
 
 
 
-| 3 | **Commands** | User triggers (`/command`) | Multi-agent orchestration, end-to-end workflows, aggregated report | prompt templates (SKILLS UPDATE, CONTINUE) |
+| 3 | **Commands** | User triggers (`/command`) | Multi-agent orchestration, end-to-end workflows, aggregated report | prompt templates (CMD SKILLS UPDATE, CMD CONTINUE, ...) |
 
 
 
@@ -12264,7 +12264,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. Removing such a dead system is NOT churn — it is correct removal of dead weight (removal is not the create→delete→recreate cycle; the system was never recreated). Canonical architecture: exactly TWO reusable templates — `CONTINUE` (brainless continuation) + `SKILLS UPDATE` (kaizen trigger). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
+| **CMD-LEGACY-1: Maintaining a large set of slash-command prompts that wire to nothing (2026-08-05)** | The 17 `/CMD` commands in `custom_prompts.json` duplicated the Two-Prompt Architecture and referenced non-existent skills/scripts. Removing such a dead system is NOT churn — it is correct removal of dead weight (removal is not the create→delete→recreate cycle; the system was never recreated). Canonical architecture: the NINE CMD-prefixed templates (CMD CONTINUE, CMD EXECUTE, CMD RED TEAM, CMD RED TEAM SUB, CMD RESEARCH, CMD SKILLS UPDATE, CMD PUBLISH, CMD DEPLOY, CMD CLOSEOUT — 2026-08-07). When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. When adding a prompt, ask: would the user use this daily? Does it wire to an existing skill? If not, don't add it. |
 
 
 
