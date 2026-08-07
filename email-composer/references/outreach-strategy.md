@@ -433,9 +433,9 @@ After the standard inbox check, this task handles the full outreach cadence:
 - **Friday**: Generates weekly outreach report (sent/responded/follow-ups/active conversations) + drafts follow-up emails per the No Response Protocol
 
 **Task 2: `QNFO Research Daily Briefing` (daily 08:00 UTC, id `fdf1403c`)**
-After the arXiv scan completes, identifies researchers whose recent work connects to QNFO papers from the last 90 days. On Monday: presents full contact details. On other days: summary only.
+Runs `research-daily-brief.py --mode daily --email alerts@qnfo.org` — the daily arXiv scan + briefing delivered to alerts@. NOTE: this task does NOT perform outreach contact scanning (corrected 2026-08-07 — prior text claimed it did; the functionality lives in Task 1's Monday arXiv scan instead).
 
-**Safety**: Neither task sends emails autonomously. All follow-up drafts in notifications require user approval in an interactive email-composer session before sending.
+**Safety / SEND POLICY (updated 2026-08-07)**: Task 1 (`3851f539`) SENDS outreach emails AUTONOMOUSLY per the user's standing mandate — no per-instance approval required; the notification is a receipt, not a request. Sends are verified (status=sent, D1-archived) and message_ids logged. Never fabricate sends; never send to unverified addresses. Follow-ups go ONCE at 14-21 days, never twice (No Response Protocol). rowan.quni@ is human-to-human only.
 
 ---
 
