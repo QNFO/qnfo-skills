@@ -193,8 +193,8 @@ hosting) with assets archived to R2. **Never deploy without verifying.**
 4. **Verify (Anti-Phantom Gate — mandatory):** probe the deployed URL live (HTTP 200) and
    re-GET the R2 object comparing size/hash. Never claim "deployed" from exit code alone.
 
-**Cross-refs:** cloudflare skill v3.23 (§MCP-Driven Operations, §KIF-50/51/52), research v2.51
-(Phase 6 deployment + Phase 8 core distribution), qnfo-core v1.7 (integrity gates).
+**Cross-refs:** cloudflare skill v3.35 (§MCP-Driven Operations, §KIF-50/51/52), research v2.89
+(Phase 6 deployment + Phase 8 core distribution), qnfo-core v1.18 (integrity gates).
 
 ---
 
