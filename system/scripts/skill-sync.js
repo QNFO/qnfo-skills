@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * skill-sync.js v4.0.7 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
+ * skill-sync.js v4.0.9 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.9 (2026-08-07, kaizen — git add -u for tracked deletions; honest push messaging)
  * v4.0.8 (2026-08-07, kaizen — truthful completion message; gitOk flag)
  * v4.0.7 (2026-08-07, kaizen — auto-recover missing .git from canonical clone)
  * v4.0.6 (2026-08-02, kaizen — chunk check-ignore call; Windows cmd line limit)
@@ -38,7 +39,7 @@
  *     skipped, idempotent re-runs.
  *   - --targets filter, per-file retry, failure cause classification.
  *
- * @version 4.0.8
+ * @version 4.0.9
  * @date 2026-08-02
  */
 
@@ -244,12 +245,16 @@ async function pool(items, worker, concurrency) {
         execSync(['git', 'add', '--', ...chunk].join(' '), { cwd: skillsRoot, stdio: 'pipe' });
       }
       try {
+        execSync('git add -u', { cwd: skillsRoot, stdio: 'pipe' });  // stage tracked deletions too (v4.0.9)
         execSync('git commit -m "ACTION:SYNC FILES: skills/* RATIONALE: automated skill-sync.js v4 run -- propagate local SKILL.md/script edits to git history"', { cwd: skillsRoot, stdio: 'pipe' });
         console.log('✓ Git commit created');
       } catch (e) { console.log('○ No changes to commit'); }
       for (const remote of ['origin', 'rwnq8']) {
-        try { execSync(`git push ${remote} master`, { cwd: skillsRoot, stdio: 'pipe' }); console.log(`✓ Pushed to ${remote}`); }
-        catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
+        try {
+          const out = execSync(`git push ${remote} master`, { cwd: skillsRoot, stdio: 'pipe' }).toString();
+          if (/Everything up.to.date/i.test(out)) console.log(`○ ${remote} already up-to-date`);
+          else console.log(`✓ Pushed to ${remote}`);
+        } catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
       }
       gitOk = true;
     } catch (e) { console.log('✗ Git error:', e.message.split('\n')[0]); }
