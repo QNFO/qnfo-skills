@@ -10,7 +10,8 @@ name: kaizen
 
 
 
-version: 1.90
+version: 1.91
+
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +266,26 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.90
+# KAIZEN — v1.91
+
+> **v1.91 UPDATE (2026-08-07, kaizen — RED-TEAM: SKILLS UPDATE audit — 3 genuine cross-ref drifts fixed):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive, this session).
+> Watchtower N-2 scan: 18/18 QNFO skills fm/hdr/ft CLEAN (raw anchors), 23 platform-default
+> INCOMPLETE (exempt). Git: concurrent session (5gsgy_E4umEpfGejRgDD4) left .kaizen_history
+> reconciliation + deepchat-settings footer + outreach-strategy.md uncommitted — verified,
+> committed this closeout (DOTFILE-TRACK-GAP-1: skill-sync.js never stages dotfiles).
+> Cross-ref scan: 100+ raw candidates, ALL but 3 classified EXEMPT (banner-history,
+> anti-pattern attribution, historical metrics per N-2-SCAN-FALSE-POSITIVE-1 + v1.25).
+> HARD: 0. SOFT: 3. DESIGN: 0. Changes:
+> (1) [SOFT] **knowledge SKILL.md L198** — "research v2.54 P5.OWNERSHIP" -> v2.89 (current-state
+>     cross-ref in Zenodo-ownership enforcement section; P5.OWNERSHIP lives in research >=v2.71).
+> (2) [SOFT] **web-artifacts-builder SKILL.md L196-197** — Cross-refs section: cloudflare v3.23 ->
+>     v3.35, research v2.51 -> v2.89, qnfo-core v1.7 -> v1.18 (all three current-state stale).
+> (3) [SOFT] **kaizen SKILL.md L10201** — Mined Workflow Patterns (F. Independent Review):
+>     "git-github v2.19" -> v2.22 (Thin-Client Canonical Asset Protocol current reference).
+> Cross-reference: N-2-SCAN-FALSE-POSITIVE-1, VERSION-OVERWRITE-1, DOTFILE-TRACK-GAP-1,
+> knowledge v2.8, web-artifacts-builder v0.3, session this.
+
 
 > **v1.90 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: ecosystem audit + .kaizen_history reconciliation):**
 > Red-team: 2/3 reviewer subagents completed (Accuracy: research fm=2.89 confirmed; Dependency:
@@ -10198,7 +10218,7 @@ and durable sandboxes. Its AGENTS.md coding standards are gold:
 
 
 
-   Thin-Client Canonical Asset Protocol (git-github v2.19):** local/process state is
+   Thin-Client Canonical Asset Protocol (git-github v2.22):** local/process state is
 
 
 
@@ -13799,7 +13819,8 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.90** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
+Current: **v1.91** (kaizen — RED-TEAM: SKILLS UPDATE audit — 3 genuine cross-ref drifts fixed; 2026-08-07)
+
 
 
 

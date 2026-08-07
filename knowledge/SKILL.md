@@ -195,7 +195,7 @@ creator search). NEVER write `zenodo_doi` derived from a raw `doi LIKE '%zenodo%
 match — D1 `papers`/`paper_ids` contain EXTERNAL citations. Canonical incident:
 session dXXJ3TxRQ1VHzGdAyp-lo blanket backfill created 1,245+ fake links.
 Enforcement script: `research/scripts/zenodo-ownership-check.py`.
-Cross-ref: research v2.54 P5.OWNERSHIP, kaizen v1.13.
+Cross-ref: research v2.89 P5.OWNERSHIP, kaizen v1.13.
 
 **KG dual-schema note (2026-08-07):** the KG stores Zenodo linkage two ways —
 `properties.zenodo_doi` (legacy 4-D seed, was 11 nodes) and `properties.doi` + `type: "zenodo"`
