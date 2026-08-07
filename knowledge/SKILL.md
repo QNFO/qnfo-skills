@@ -197,6 +197,14 @@ session dXXJ3TxRQ1VHzGdAyp-lo blanket backfill created 1,245+ fake links.
 Enforcement script: `research/scripts/zenodo-ownership-check.py`.
 Cross-ref: research v2.54 P5.OWNERSHIP, kaizen v1.13.
 
+**KG dual-schema note (2026-08-07):** the KG stores Zenodo linkage two ways —
+`properties.zenodo_doi` (legacy 4-D seed, was 11 nodes) and `properties.doi` + `type: "zenodo"`
+(bulk seed, 1,113 nodes). Querying `zenodo_doi` alone returns a false "not indexed" verdict.
+Reconciled 2026-08-07: backfilled `properties.zenodo_doi` onto all 726 distinct DOI-bearing nodes
+(now 1,113 nodes carry both keys), ownership-verified against the live Zenodo API (10/10 sampled).
+Future audits MUST query BOTH `properties.doi` and `properties.zenodo_doi`, or match node `name` = DOI.
+D1 living-paper likewise: `zenodo_doi` backfilled from the canonical `doi` column (209 -> 412 distinct).
+
 ### /nodes -- Query by Label
 ```python
 # Find all papers, projects, concepts...
