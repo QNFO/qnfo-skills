@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.85
+version: 1.86
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -190,6 +190,24 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     `_handoff-2026-08-06-email-kaizen-closeout.md`. Retry trigger: if a handoff endpoint is ever added.
 > Cross-reference: email-composer v2.8, qnfo-email worker, EMAIL-ROUTE-STRIP-1, calibration [CHECK 2026-08-13],
 > session SFkcXsRZjmvs4TMr9Fo_m.
+> **v1.86 UPDATE (2026-08-07, kaizen — Synthesis Mode + Convergence Architecture: self-audit + QNFO-original operating paradigm):**
+> Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
+> directive; self-kaizen triggered by synthesis-mode gap). Watchtower: 17/17 QNFO skills N-2 CLEAN.
+> Kaizen v1.85 clean. MEMORY-TO-SKILL-DRIFT migration completed for email-composer v2.10→v2.11
+> earlier this session. HARD: 0. SOFT: 0. DESIGN: 2. Changes:
+> (1) [DESIGN] **Synthesis Mode / Convergence Architecture (G) added to Mined Workflow Patterns**
+>     — the git-branch-merge model applied to research synthesis. Every research thread is a branch;
+>     the merge at cross-pillar intersections produces insights invisible to single-branch execution.
+>     The Consilience Framework (CON.002) is the master branch. Core principles: convergence-first,
+>     common root (Ostrowski → adele ring → all completions), cross-pillar merges (UMP×INM,
+>     UMP×CFE, INM×CFE, ALL×RES), convergence-map-before-execution, synthesis-is-default-posture.
+>     Canonical case: this session's 13-thread convergence map. Cross-ref: qnfo-core §0.7
+>     (Ostrowski Mandate), research KIF-29 (Cross-Domain Consilience), CON.002.
+> (2) [DESIGN] **Self-kaizen audit structure verified** — kaizen v1.85 N-2 CLEAN, all cross-refs
+>     current (research v2.88, qnfo-core v1.17, email-composer v2.11). No structural drift.
+>     Anti-pattern table current. The SYNTHESIS gap was the ONLY missing content — now filled.
+> Cross-reference: qnfo-core v1.17, research v2.88, KIF-29, CON.002, session MerOabc5KO_W9Q8BP47ok.
+
 > **v1.85 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN):**
 > Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
 > directive). Watchtower scan: 17/17 QNFO skills N-2 CLEAN (fm/hdr/ft), 23/23 platform-default
@@ -211,7 +229,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.85
+# KAIZEN — v1.86
 > **v1.83 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #5: closeout reconciliation + VERSION-OVERWRITE-1 merge validation):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SKILLS AUDIT
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (email-composer 2.7/2.7/2.7, kaizen 1.82/1.82/1.82 pre-edit).
@@ -9593,6 +9611,69 @@ time. Do NOT launch a mass rewrite.
 
 
 
+
+### G. Synthesis Mode / Convergence Architecture (QNFO-original — 2026-08-07)
+
+**The git-branch-merge model applied to research synthesis.** Every research
+thread develops independently (like a git branch); the merge produces insights
+invisible to any single branch. The Consilience Framework (CON.002) is the
+master branch — EVERYTHING eventually merges into it.
+
+**Core principles:**
+
+1. **Convergence-first.** Before executing any isolated task, map how it
+   converges with other pending threads. Never execute in isolation — always
+   seek the merge that produces novel cross-pillar insight.
+
+2. **Common root.** Every QNFO thread traces to Ostrowski's theorem (ℚ has
+   completions at ALL places, not just the Archimedean ∞). The adele ring is
+   the product of ALL completions. All QNFO programs are systematic development
+   of this single insight across domains: UMP (physics at all completions),
+   INM (information at all completions), CFE (forecasting at all completions),
+   RES (consilience as the master merge).
+
+3. **Cross-pillar merges.** The highest-value insights emerge at pillar
+   intersections that no single-branch execution can produce:
+   - **UMP × INM:** Kolmogorov complexity graded by p-adic valuation on the
+     Bruhat–Tits tree — the depth of a distinction at prime p IS its
+     information content.
+   - **UMP × CFE:** The Bayesian update over the adelic product space
+     formalizes BOTH physical constraint AND strategic forecasting as a
+     single operator — the universal consilience operator.
+   - **INM × CFE:** Measurement stratigraphy (INM) provides the calibration
+     baseline for CFPE forecasts — the hierarchy of measurement precision IS
+     the forecast's error model.
+   - **ALL × RES:** The 29 schisms (QM/GR, fine-tuning, measurement, etc.)
+     are not separate problems — they are ALL Archimedean-completion artifacts.
+     Doing physics at ALL completions dissolves them simultaneously.
+
+4. **Convergence map.** Before executing a multi-thread session: (a) inventory
+   all pending threads across programs, (b) identify the common root (Ostrowski),
+   (c) propose cross-pillar merges with concrete insight hypotheses, (d) produce
+   a visual convergence architecture (tree diagram showing threads → merges →
+   unified outputs), (e) execute merges in dependency order. A task list IS a
+   convergence map — every item has a merge target.
+
+5. **Default posture.** SYNTHESIS is the default operating mode, not an
+   occasional technique. The first question for any pending work is not "which
+   item should I execute?" but "what does this thread produce when merged with
+   which other threads?" A task list without a convergence map is an
+   un-merged branch — it may produce output but it cannot produce novel
+   cross-pillar insight.
+
+**Canonical case (2026-08-07, session MerOabc5KO_W9Q8BP47ok):** 13 pending
+threads across 4 programs (11 sub-papers, Tate's Thesis P5-8, Particle Mass
+Spectrum, 29-schism-synthesis, No Thing There, Consilience↔Adelic bridge,
+3 DOI verification gaps, 5 infrastructure blocks) — all trace to Ostrowski
+as common root; all converge through CON.002 as master. The synthesis mode
+discovered 4 cross-pillar merges (UMP×INM, UMP×CFE, INM×CFE, ALL×RES) that
+no single-branch execution could have produced. The convergence architecture
+replaces a sequential task list with a merge-driven execution plan.
+
+**Cross-reference:** qnfo-core §0.7 (Ostrowski Dimensionless Mandate),
+research KIF-29 (Cross-Domain Consilience Gate), CON.002 (Consilience
+Framework), SYNTHESIS-DILIGENCE-1 (kaizen v1.62).
+
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
 
@@ -13644,7 +13725,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.85** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.86** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
 
 
 
