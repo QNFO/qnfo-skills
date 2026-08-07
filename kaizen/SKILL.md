@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.89
+version: 1.90
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,28 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.89
+# KAIZEN — v1.90
+
+> **v1.90 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: ecosystem audit + .kaizen_history reconciliation):**
+> Red-team: 2/3 reviewer subagents completed (Accuracy: research fm=2.89 confirmed; Dependency:
+> kaizen fm=1.89 confirmed), 1 cancelled (Completeness — deadline, direct parent-agent fallback
+> per Subagent Failure Handling rule 4). Watchtower N-2 scan: 20/20 QNFO skills fm/hdr/ft CLEAN,
+> 22 platform-default INCOMPLETE (exempt). Cross-ref scan: 94 raw hits, 0 genuine stale refs
+> (13 banner-history exempt + 1 section-version attribution). Session: 5gsgy_E4umEpfGejRgDD4.
+> HARD: 0. SOFT: 2. DESIGN: 0. Changes:
+> (1) [SOFT] **.kaizen_history drift reconciled (10 files)** — email-composer (v2.8→2.13, 5 versions
+>     behind), research (2.86→2.89), qnfo-core (1.16→1.18), system (2.11→2.13), cloudflare (3.30→3.35),
+>     code (2.4→2.5), knowledge (2.7→2.8), git-github (2.21→2.22), windows-command-patterns (3.15→3.17),
+>     bloat-cleanup (placeholder→3.4). Retroactive entries appended; hybrid JSON+plain-text files
+>     matched to the existing plain-text convention (no JSON rewrite — concurrent-entry safe).
+> (2) [SOFT] **3 missing .kaizen_history files created** — personal-knowledge (v1.4), qnfo-agent (v3.61),
+>     qwav-demo-kit (v1.4) — initialization entries with Watchtower trigger note.
+> (3) [AUDIT] **kaizen excluded from targets** — kaizen v1.89 + deepchat-settings v1.5 bumped earlier
+>     THIS session (RECENT-KAIZEN double-kaizen anti-pattern). Concurrent v1.88 audit (session
+>     95Hi-MvT2AlV7MOURhE0w) verified: 108 scan candidates ALL false positives, ecosystem healthy.
+> Cross-reference: deepchat-settings v1.5, system-prompt-v2.7.md (content v2.8), CMD Template Architecture,
+> N-2-SCAN-FALSE-POSITIVE-1, VERSION-OVERWRITE-1, session 5gsgy_E4umEpfGejRgDD4.
+
 
 > **v1.89 UPDATE (2026-08-07, kaizen — CMD template architecture + system prompt v2.8 sync; VERSION-OVERWRITE-1 merge):**
 > Red-team: direct parent-agent 5-adversary audit (session 5gsgy_E4umEpfGejRgDD4 — CMD CONTINUE
@@ -13778,7 +13799,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.89** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
+Current: **v1.90** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
 
 
 
