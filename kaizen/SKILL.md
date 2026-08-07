@@ -10,7 +10,8 @@ name: kaizen
 
 
 
-version: 1.90
+version: 1.92
+
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +266,47 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.90
+# KAIZEN — v1.92
+
+> **v1.92 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: email-composer v2.14 — OUTREACH-SENT-AS-ARCHIVED-1 + RECEIPT-PLACEHOLDER-TOKEN-1 + CONNECTION-POINT-UNVERIFIED-1 + Sent-Email Detection section):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive, this session — continuation
+> of the CMD RED TEAM email/outreach audit: 8 outreach emails sent 08-06, 2 replies received, user challenge
+> on `[IBM]`/`[Caltech]` receipt tokens). Watchtower: email-composer fm/hdr/ft 2.13 CLEAN pre-edit, 2.14 CLEAN
+> post-edit (raw-line anchors per N-2-SCAN-FALSE-POSITIVE-1). HARD: 3 (email-composer-side). SOFT: 2. DESIGN: 1.
+> Changes (in email-composer v2.14, this banner documents the cycle):
+> (1) [HARD] **OUTREACH-SENT-AS-ARCHIVED-1** — Worker stores outbound sends with status="archived"; no "sent"
+>     status exists; detection must classify by sender-domain. Canonical case: this session — 9 real outreach
+>     emails invisible to status-based detection; human positive reply (Smigliani) + OOO auto-reply (Ringbauer)
+>     nearly missed. Sent-Email Detection section added to email-composer.
+> (2) [HARD] **RECEIPT-PLACEHOLDER-TOKEN-1** — never emit unresolved `[Name]` tokens in receipts; resolve
+>     identities or report address-only. Wire payloads were clean; the report misrepresented them. User
+>     (correctly) read the receipt as garbage.
+> (3) [HARD] **CONNECTION-POINT-UNVERIFIED-1** — personalization claims must be arXiv-verified pre-send.
+>     Email 41's Heydeman 2018 p-adic claim could not be confirmed — 1/8 emails carried it.
+> (4) [SOFT] Stale Quick Start API-key path fixed (WORKER-SOURCE-EVICTED-1 -> CF API fallback, v2.4).
+> (5) [SOFT] outreach-strategy.md §7 drift flagged (cronjob fdf1403c has no outreach scanning — mem-ljXgBV_PXC_).
+> (6) [DESIGN] Sent-Email Detection section documents classification rule + follow-up eligibility + thread state.
+> Cross-reference: email-composer v2.14, qnfo-core v1.18 (VERIFY-FACT-1), N-2-SCAN-FALSE-POSITIVE-1,
+> SKILL-CHURN-1, PROFILE-README-FABRICATE-1, session this.
+
+> **v1.91 UPDATE (2026-08-07, kaizen — RED-TEAM: SKILLS UPDATE audit — 3 genuine cross-ref drifts fixed):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive, this session).
+> Watchtower N-2 scan: 18/18 QNFO skills fm/hdr/ft CLEAN (raw anchors), 23 platform-default
+> INCOMPLETE (exempt). Git: concurrent session (5gsgy_E4umEpfGejRgDD4) left .kaizen_history
+> reconciliation + deepchat-settings footer + outreach-strategy.md uncommitted — verified,
+> committed this closeout (DOTFILE-TRACK-GAP-1: skill-sync.js never stages dotfiles).
+> Cross-ref scan: 100+ raw candidates, ALL but 3 classified EXEMPT (banner-history,
+> anti-pattern attribution, historical metrics per N-2-SCAN-FALSE-POSITIVE-1 + v1.25).
+> HARD: 0. SOFT: 3. DESIGN: 0. Changes:
+> (1) [SOFT] **knowledge SKILL.md L198** — "research v2.54 P5.OWNERSHIP" -> v2.89 (current-state
+>     cross-ref in Zenodo-ownership enforcement section; P5.OWNERSHIP lives in research >=v2.71).
+> (2) [SOFT] **web-artifacts-builder SKILL.md L196-197** — Cross-refs section: cloudflare v3.23 ->
+>     v3.35, research v2.51 -> v2.89, qnfo-core v1.7 -> v1.18 (all three current-state stale).
+> (3) [SOFT] **kaizen SKILL.md L10201** — Mined Workflow Patterns (F. Independent Review):
+>     "git-github v2.19" -> v2.22 (Thin-Client Canonical Asset Protocol current reference).
+> Cross-reference: N-2-SCAN-FALSE-POSITIVE-1, VERSION-OVERWRITE-1, DOTFILE-TRACK-GAP-1,
+> knowledge v2.8, web-artifacts-builder v0.3, session this.
+
 
 > **v1.90 UPDATE (2026-08-07, kaizen — SKILLS UPDATE: ecosystem audit + .kaizen_history reconciliation):**
 > Red-team: 2/3 reviewer subagents completed (Accuracy: research fm=2.89 confirmed; Dependency:
@@ -10198,7 +10239,7 @@ and durable sandboxes. Its AGENTS.md coding standards are gold:
 
 
 
-   Thin-Client Canonical Asset Protocol (git-github v2.19):** local/process state is
+   Thin-Client Canonical Asset Protocol (git-github v2.22):** local/process state is
 
 
 
@@ -12380,6 +12421,9 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on workers.dev — plain `/emails/*` returns catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | Use `/email/emails/*` on the workers.dev host; fix worker strip to `p === '/email' || p.startsWith('/email/')`. Owner: email-composer v2.8. Cross-ref: API-DOC-GAP-1. **[RESOLVED 2026-08-06** — worker scoped strip deployed (c95134cc-ef57-44f0-bf9b-3183a96b8060), plain /emails/* live-verified].** |
 | **EMAIL-ADDRESS-PROLIFERATION-1: Creating email routing rules/addresses beyond the canonical set without user direction (2026-08-06)** | **HARD.** Only the canonical set is allowed (qnfo.org x5: qnfo/rowan.quni/research/alerts/publications; pre-existing qwav.tech x2 + q08.org x1). 8 inert domains (qwav.org/qwav.net/qwav.uk/q-wave.tech/qwave.tech/qnfo.net/qnfo.uk/empoweringchange.today) are catch-all DROP. Never self-authorize a new address/rule. Canonical case: ~55 addresses provisioned across 11 domains in one session; user directive cut to 3-5 max, 40 rules deleted. Owner: email-composer v2.6. Cross-ref: N-2-SCAN-FALSE-POSITIVE-1. |
+| **OUTREACH-SENT-AS-ARCHIVED-1: Worker stores outbound sends with status="archived" — status-based detection sees ZERO outreach (2026-08-07)** | **HARD.** Classify sent/replies by SENDER-DOMAIN (qnfo.org sender + external recipient = sent), never by status field. Canonical case: 9 real outreach emails sent 08-06 invisible to status detection; Smigliani positive reply + Ringbauer OOO auto-reply nearly missed. Owner: email-composer v2.14. |
+| **RECEIPT-PLACEHOLDER-TOKEN-1: Unresolved `[Name]` tokens in outreach receipts read as garbage — even when sent emails are clean (2026-08-07)** | **HARD.** Resolve identities before reporting; address-only if unresolvable. Canonical case: receipt showed `[IBM]`/`[Caltech]`/`[Lihan]` while wire payloads were clean ("Dear Dr. Tavernelli/Heydeman/Lei"). Owner: email-composer v2.14. |
+| **CONNECTION-POINT-UNVERIFIED-1: Personalization claim sent without arXiv verification (2026-08-07)** | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
 ## Cross-Skill Integration
 
 
@@ -13799,7 +13843,8 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.90** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
+Current: **v1.92** (kaizen — RED-TEAM: SKILLS UPDATE audit — 3 genuine cross-ref drifts fixed; 2026-08-07)
+
 
 
 

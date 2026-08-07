@@ -23,6 +23,41 @@
 > Cross-reference: kaizen v1.86, outreach-strategy.md, qnfo-email Worker, qnfo-email-inbox-check cronjob
 > (3851f539), ZENODO-PHANTOM-DOI-1, CLAIM-VERIFY-1, session Nff8tKtjHf6VDCfRejuNd.
 
+> **v2.14 UPDATE (2026-08-07, kaizen — OUTREACH-SENT-AS-ARCHIVED-1 + RECEIPT-PLACEHOLDER-TOKEN-1 + CONNECTION-POINT-UNVERIFIED-1; red-team of the first autonomous outreach run):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive, this session — 8 outreach emails
+> sent 2026-08-06, 2 replies received). Trigger: user challenge — "Dr. [IBM] / Dr. [Caltech] ... REALLY? HOW AM
+> I SUPPOSED TO BE TAKEN SERIOUSLY WHEN YOU SEND SHIT LIKE THIS FROM MY PERSONAL EMAIL?" Forensic audit of the
+> actual wire payloads + arXiv identity verification. HARD: 3. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **OUTREACH-SENT-AS-ARCHIVED-1 anti-pattern added** — the qnfo-email Worker stores OUTBOUND sends
+>     with status="archived" (there is NO "sent" status in the D1 schema; /stats byStatus shows only
+>     archived/processed/spam). Reply/follow-up detection MUST classify by SENDER-DOMAIN (qnfo.org/qwav.tech/
+>     qwave.tech sender + external recipient = sent), never by status field. Canonical case: this session —
+>     9 real outreach emails sent 2026-08-06 were invisible to status-based detection; 1 human positive reply
+>     (Smigliani ID=26) + 1 OOO auto-reply (Ringbauer ID=42) nearly missed. See Sent-Email Detection section.
+> (2) [HARD] **RECEIPT-PLACEHOLDER-TOKEN-1 anti-pattern added** — NEVER emit unresolved `[Name]` placeholder
+>     tokens in outreach receipts/reports. Resolve the recipient's identity (arXiv author query, institutional
+>     page) BEFORE reporting; if unresolvable, report the address only. Canonical case: this session's receipt
+>     table showed `Dr. [IBM]`, `Dr. [Caltech]`, `[Lihan]` — the user (correctly) read it as if the SENT emails
+>     contained placeholders. The wire payloads were CLEAN (verified: "Dear Dr. Tavernelli/Heydeman/Lei/...");
+>     the report misrepresented them. A report that looks like garbage is a credibility failure equal to sending
+>     garbage. Cross-ref: qnfo-core §0.0 Bibliographic Integrity, PROFILE-README-FABRICATE-1.
+> (3) [HARD] **CONNECTION-POINT-UNVERIFIED-1 anti-pattern added** — every personalization claim in an outreach
+>     email ("your 2018 work connecting tensor networks to p-adic fields and the Bruhat-Tits tree") MUST be
+>     verified against a live source (arXiv au: query + title match) BEFORE send. Canonical case: email 41's
+>     Heydeman 2018 p-adic claim could not be confirmed (au:Heydeman returned only black-hole/SYK papers) —
+>     1 of 8 emails carried an unverified connection point. Verify-before-send per qnfo-core VERIFY-FACT-1.
+> (4) [SOFT] **Stale Quick Start API-key line fixed** — "API key: `~/.deepchat/workers/qnfo-email/wrangler.toml`"
+>     -> CF API fallback (WORKER-SOURCE-EVICTED-1, v2.4): GET /accounts/{acct}/workers/scripts/qnfo-email/
+>     settings -> bindings[].name=="API_KEY". Local wrangler.toml is EVICTED (thin-client 2026-08-05).
+> (5) [SOFT] **outreach-strategy.md §7 drift flagged** — claims cronjob fdf1403c "identifies researchers for
+>     outreach"; verified taskPrompt contains NO outreach scanning (mem-ljXgBV_PXC_-). Documented, fix pending.
+> (6) [DESIGN] **Sent-Email Detection section added** — canonical classification rule + Friday follow-up
+>     eligibility + outreach thread state as of 2026-08-07 (8 sent, 1 positive reply, 1 OOO auto-reply, 7 silent
+>     <14d; follow-ups due from 2026-08-20).
+> Cross-reference: kaizen v1.92, qnfo-core v1.18 (VERIFY-FACT-1, §0.0), outreach-strategy.md,
+> ZENODO-PHANTOM-DOI-1, PROFILE-README-FABRICATE-1, session this.
+
+
 
 v2.12 UPDATE (2026-08-07, kaizen — AUTONOMOUS OUTREACH: cronjob now SENDS, not just drafts + red-team subagent audit):**
 > Red-team: 4 parallel subagents (Accuracy/Completeness/Novelty/Status — all completed) + direct
@@ -219,7 +254,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.13
+version: 2.14
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -244,7 +279,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.13
+# Email Composer — v2.14
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -426,6 +461,31 @@ For the full outreach strategy, cadence, audience segmentation, and response pro
 
 ---
 
+
+## Sent-Email Detection (v2.14, HARD — OUTREACH-SENT-AS-ARCHIVED-1)
+
+The qnfo-email Worker records ALL emails (inbound AND outbound) in the same D1 `emails` table.
+Outbound sends are stored with `status="archived"` and `classification="general"`. There is
+**NO "sent" status** — `/stats` byStatus reports only archived/processed/spam.
+
+**Canonical classification rule (use this, never status-field filtering):**
+
+```
+sent      = sender in {qnfo.org, qwav.tech, qwave.tech, q08.org} AND recipient is external
+            AND subject not in {test, smoke, routing, briefing} AND not to own addresses
+replies   = sender external AND recipient in {qnfo.org, qwav.tech, ...}
+internal  = sender qnfo-domain AND recipient own-address (tests, briefings, routing)
+```
+
+**Why this matters:** the 2026-08-06 outreach batch (3x arXiv:2608.03944 audit + 5x qudit JPCUB
+invitations, IDs 30-32/38-43) was invisible to any status-based query. Follow-up eligibility
+(>14 days silent, no prior follow-up) MUST be computed from `received_at` on sender-domain-classified
+sent emails — never from a status filter.
+
+**Thread state 2026-08-07 (after first autonomous run):** 8 outreach sent 08-06 (1 day old — no
+follow-ups due; first eligibility 2026-08-20). Replies: 1 human positive (Nicola Smigliani, ID=26 —
+accepts Five Pillars offer, requires human reply, NOT auto-sent per policy), 1 auto-reply (Ringbauer
+OOO, ID=42 — alternate contact Patricia Moser quantumoptics-blatt@uibk.ac.at). 7 silent <14d.
 ## Quick Start
 
 
@@ -456,7 +516,9 @@ For the full outreach strategy, cadence, audience segmentation, and response pro
 > **ALL Worker requests require auth (v1.6+).** Send `Authorization: Bearer <API_KEY>` on every call.
 
 
-> API key: `~/.deepchat/workers/qnfo-email/wrangler.toml` → `[vars] API_KEY`
+> API key: **EVICTED local wrangler.toml** (WORKER-SOURCE-EVICTED-1) — CF API fallback (v2.4):
+> GET `https://api.cloudflare.com/client/v4/accounts/{acct}/workers/scripts/qnfo-email/settings` (Bearer CLOUDFLARE_API_TOKEN)
+> -> `result.bindings[]` find `name == "API_KEY"` -> `text`
 
 
 > **NOTE (v2.4): local wrangler.toml may be thin-client EVICTED. Fallback:
@@ -1331,6 +1393,9 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **HTTP-HEADER-NONE-1: Passing None as a value in a urllib header dict — TypeError "expected string or bytes-like object, got 'NoneType'" (2026-08-06)** | Build request headers conditionally: only add `Content-Type` (or any header) when the value is a real string. `urllib.request.Request(..., headers={...})` does NOT tolerate None values — it crashes on join. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m hygiene script — first run failed on the inventory GET because `Content-Type` was set to `None` when there was no body. Fix pattern: `hdr = {...}; if body is not None: hdr["Content-Type"]="application/json"`. Cross-ref: BLAME-EXTERNAL-1 (bug is always your code). |
 | **EMAIL-CHECK-RESURFACING-1: Re-reporting emails the user already declared no-action on (2026-08-06)** | Archive-on-no-action + delta-based reporting: once the user says "don't care" about an email (or a whole class), PATCH it to `archived` (or `spam`) in the same session and exclude archived/spam/sent from all future [EMAIL-CHECK] reports. Quiet report = one line. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — user: "SO THEREFORE I DON'T CARE ABOUT ANY OF THESE... DON'T WASTE MY TIME"; 48 archived + 3 spammed same session. Cross-ref: mem-YoM6-BSfCW_K. |
 | **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on the workers.dev host — plain `/emails/*` returns the catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | On the workers.dev host use the `/email`-prefixed form (`/email/emails/recent`, `/email/emails/body?id=N`) — the strip normalizes it to `/emails/*`. Fix in worker source: scope strip to `p === '/email' || p.startsWith('/email/')`. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — ~15 probes burned. Cross-ref: API-DOC-GAP-1. **[RESOLVED 2026-08-06** — worker source scoped strip deployed (version c95134cc-ef57-44f0-bf9b-3183a96b8060); plain `/emails/*` live-verified returning real data; prefixed form still supported].** |
+| **OUTREACH-SENT-AS-ARCHIVED-1: The qnfo-email Worker stores OUTBOUND sends with status="archived" — there is NO "sent" status; detection that filters on status sees ZERO outreach (2026-08-07)** | **HARD.** Reply/follow-up detection MUST classify by sender-domain: sender in (qnfo.org, qwav.tech, qwave.tech, q08.org) AND recipient external = SENT outreach. /stats byStatus shows only archived/processed/spam — a 0-sent reading is a DETECTION BUG, not an empty pipeline. Canonical case: 2026-08-07 — 9 real outreach emails sent 08-06 were invisible; the human positive reply (Smigliani) + OOO auto-reply (Ringbauer) nearly missed. Owner: email-composer v2.14. See Sent-Email Detection section. |
+| **RECEIPT-PLACEHOLDER-TOKEN-1: Emitting unresolved `[Name]` placeholder tokens in outreach receipts/reports — the report looks like garbage even when the sent emails are clean (2026-08-07)** | **HARD.** NEVER put `[IBM]`/`[Caltech]`/`[Lihan]`-style tokens in a receipt. Resolve identities (arXiv author query, institutional page) before reporting; if unresolvable, report the address only. The user cannot distinguish "placeholder in report" from "placeholder in sent email" — a sloppy receipt reads as sloppy sends. Canonical case: this session — wire payloads were clean ("Dear Dr. Tavernelli/Heydeman/Lei"), receipt showed unresolved tokens. Owner: email-composer v2.14. Cross-ref: qnfo-core §0.0, PROFILE-README-FABRICATE-1. |
+| **CONNECTION-POINT-UNVERIFIED-1: Sending an outreach email whose personalization claim ("your 2018 work connecting tensor networks to p-adic fields...") was never verified against a live source (2026-08-07)** | **HARD.** Every connection-point claim MUST be verified pre-send: arXiv au: query + exact title match + (for institutions) address plausibility. Unverifiable -> [SKIPPED: no verified connection]. Canonical case: email 41's Heydeman 2018 p-adic/Bruhat-Tits claim could not be confirmed — 1/8 emails carried it. Owner: email-composer v2.14. Cross-ref: qnfo-core VERIFY-FACT-1. |
 ## References
 
 
@@ -1373,5 +1438,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.13** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.14** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
