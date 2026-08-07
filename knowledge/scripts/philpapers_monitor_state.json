@@ -1,0 +1,17 @@
+{
+  "known_indexed": {
+    "QUNTUF": {
+      "title": "The Ultrametric Foundation: A Unified Thesis on Number, Time, Knowledge, and Computation",
+      "doi": "10.5281/zenodo.21208346",
+      "first_seen": "2026-08-06"
+    },
+    "QUNSAI": {
+      "title": "Scaffolds and Invariants: An Epistemic Hygiene Audit of pi, Number Bases, and Geometric Centers",
+      "doi": "10.5281/zenodo.21255344",
+      "first_seen": "2026-08-06"
+    }
+  },
+  "last_check": "2026-08-06T17:13:35.459378+00:00",
+  "total_checks": 0,
+  "new_discoveries": []
+}

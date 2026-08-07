@@ -171,17 +171,120 @@ async function applyAbout() {{
   return true;
 }}
 
+async function applyExperience() {{
+  log('Experience: navigating to details page...');
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/details/experience/', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
+  await sleep(5000);
+
+  // Try clicking "Add a position" — known aria-label from previous run
+  const clicked = await page.evaluate(() => {{
+    const btn = document.querySelector('button[aria-label="Add a position or career break"]');
+    if (btn) {{ btn.click(); return true; }}
+    // fallback
+    for (const el of document.querySelectorAll('span, button, a')) {{
+      if (/add.*(position|experience)/i.test((el.innerText||'').trim())) {{ el.click(); return true; }}
+    }}
+    return false;
+  }});
+
+  if (clicked) {{
+    log('Add position modal opened.');
+    await sleep(3000);
+    await page.screenshot({{ path: userData + '/experience-modal.png' }});
+    log('Screenshot: ' + userData + '/experience-modal.png');
+
+    // Dump the modal form fields
+    const fields = await page.evaluate(() => [...document.querySelectorAll('input:not([type="hidden"]),[contenteditable="true"],select')].filter(e=>e.offsetParent!==null).map(e=>({{tag:e.tagName,type:e.getAttribute('type')||'ce',name:e.getAttribute('name')||'',aria:(e.getAttribute('aria-label')||'').slice(0,60),placeholder:(e.getAttribute('placeholder')||'').slice(0,60),autocomplete:e.getAttribute('autocomplete')||'',id:e.getAttribute('id')||''}})));
+    log('Form fields: ' + JSON.stringify(fields));
+  }} else {{
+    log('Could not open add-position modal.');
+    await page.screenshot({{ path: userData + '/experience-page.png' }});
+  }}
+
+  log('');
+  log('=== EXPERIENCE DATA TO FILL ===');
+  for (let i=0; i<pkg.experience.length; i++) {{
+    const e = pkg.experience[i];
+    log((i+1)+'. '+e.title+' @ '+e.company);
+    log('   Location: '+e.location+' | Dates: '+e.dates);
+    log('   Description: '+e.description.slice(0,150)+'...');
+    log('');
+  }}
+  log('Open the Chrome window to add these 5 experiences manually.');
+  log('Waiting 300s (5 min) — press Ctrl+C to skip...');
+  await sleep(300000);
+  return true;
+}}
+
+async function applyEducation() {{
+  log('Education: navigating...');
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/details/education/', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
+  await sleep(5000);
+  await page.screenshot({{ path: userData + '/education-page.png' }});
+  log('');
+  log('=== EDUCATION DATA ===');
+  for (const e of pkg.education) {{
+    log(e.degree+' — '+e.school+' ('+e.dates+')');
+  }}
+  log('');
+  log('Add these 2 entries in the Chrome window. Waiting 180s...');
+  await sleep(180000);
+  return true;
+}}
+
+async function applyCertifications() {{
+  log('Certifications: navigating...');
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/details/certifications/', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
+  await sleep(5000);
+  await page.screenshot({{ path: userData + '/certifications-page.png' }});
+  log('');
+  log('=== CERTIFICATION DATA ===');
+  for (const c of pkg.certifications) {{
+    log(c.name+' — '+c.issuer+' ('+c.year+')');
+  }}
+  log('');
+  log('Add these 3 entries in the Chrome window. Waiting 180s...');
+  await sleep(180000);
+  return true;
+}}
+
+async function applySkills() {{
+  log('Skills: navigating...');
+  await page.goto('{BASE_URL}/in/{PROFILE_SLUG}/details/skills/', {{ waitUntil: 'domcontentloaded', timeout: 45000 }});
+  await sleep(5000);
+  await page.screenshot({{ path: userData + '/skills-page.png' }});
+  log('');
+  log('=== SKILLS DATA (45 total) ===');
+  log(pkg.skills.join(', '));
+  log('');
+  log('Add skills in the Chrome window. Waiting 300s...');
+  await sleep(300000);
+  return true;
+}}
+
 // ── Main ──────────────────────────────────────────────────────────────────
 await ensureLoggedIn();
 let ok = true;
 if (SECTION === 'headline') ok = await applyHeadline();
 if (SECTION === 'about') ok = await applyAbout();
+if (SECTION === 'experience') ok = await applyExperience();
+if (SECTION === 'education') ok = await applyEducation();
+if (SECTION === 'certifications') ok = await applyCertifications();
+if (SECTION === 'skills') ok = await applySkills();
 if (SECTION === 'all') {{
   ok = await applyHeadline() && ok;
   await sleep(8000);
   ok = await applyAbout() && ok;
+  await sleep(8000);
+  ok = await applyExperience() && ok;
+  await sleep(8000);
+  ok = await applyEducation() && ok;
+  await sleep(8000);
+  ok = await applyCertifications() && ok;
+  await sleep(8000);
+  ok = await applySkills() && ok;
 }}
-if (!ok) {{ log('One or more sections could NOT be auto-applied (DOM drift). Apply manually from the JSON package.'); }}
+if (!ok) {{ log('One or more sections could NOT be auto-applied. Apply manually from the JSON package.'); }}
 await browser.close();
 log('Done.');
 '''
@@ -192,8 +295,9 @@ log('Done.');
 
 
 def find_node():
-    """Locate the DeepChat-bundled node.exe (same one used by the CDP PDF pipeline)."""
+    """Locate node.exe — prefer system install over DeepChat-bundled."""
     candidates = [
+        r'C:\Program Files\nodejs\node.exe',
         r'C:\Program Files\DeepChat\resources\app.asar.unpacked\runtime\node\node.EXE',
         r'C:\Program Files\DeepChat\resources\app.asar.unpacked\runtime\node\node.exe',
     ]

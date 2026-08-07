@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * skill-sync.js v4.0.0 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
+ * skill-sync.js v4.0.7 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.7 (2026-08-07, kaizen — auto-recover missing .git from canonical clone)
  * v4.0.6 (2026-08-02, kaizen — chunk check-ignore call; Windows cmd line limit)
  * v4.0.5 (2026-08-02, kaizen — normalize git paths to forward slashes; check-ignore sep mismatch)
  * v4.0.4 (2026-08-02, kaizen — check-ignore arg form; --stdin no-op on Windows)
@@ -174,6 +175,38 @@ async function pool(items, worker, concurrency) {
   //    walkFiles output (same set as R2 upload) + root .gitignore, so the git
   //    commit and R2 upload are identical by construction.
   if (!skipGit) {
+    // ---- Pre-flight: auto-recover from missing .git (v4.0.7 kaizen) ----
+    const gitDir = path.join(skillsRoot, '.git');
+    if (!fs.existsSync(gitDir)) {
+      console.log('! .git missing — auto-recovering from canonical clone');
+      const canonicalGit = path.join(process.env.USERPROFILE || process.env.HOME, 'Documents', 'GitHub', 'qnfo-skills', '.git');
+      if (fs.existsSync(canonicalGit)) {
+        // Copy .git from canonical clone (robocopy on Windows, cp -r elsewhere)
+        try {
+          if (process.platform === 'win32') {
+            execSync(`robocopy "${canonicalGit}" "${gitDir}" /E /NFL /NDL /NJH /NJS /R:1 /W:1`, { stdio: 'pipe' });
+          } else {
+            execSync(`cp -r "${canonicalGit}" "${gitDir}"`, { stdio: 'pipe' });
+          }
+          console.log('✓ .git restored from canonical clone');
+        } catch (e) {
+          // robocopy exit code >= 8 is a real error; 0-7 = success
+          if (process.platform === 'win32' && e.status <= 7) {
+            console.log('✓ .git restored from canonical clone');
+          } else {
+            console.log(`✗ Failed to restore .git: ${e.message.split('\\n')[0]}`);
+            console.log('  → git sync skipped (re-create or re-clone the repo to restore)');
+            skipGit = true;
+          }
+        }
+      } else {
+        console.log('✗ Canonical clone not found at Documents/GitHub/qnfo-skills');
+        console.log('  → git sync skipped (clone QNFO/qnfo-skills to restore)');
+        skipGit = true;
+      }
+    }
+    // ---- End pre-flight ----
+    if (!skipGit) {
     console.log('--- Git sync ---');
     try {
       const gitAddPaths = [];
@@ -217,6 +250,7 @@ async function pool(items, worker, concurrency) {
         catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
       }
     } catch (e) { console.log('✗ Git error:', e.message.split('\n')[0]); }
+    } // close inner if (!skipGit) after pre-flight
   }
 
   // 2. R2 sync

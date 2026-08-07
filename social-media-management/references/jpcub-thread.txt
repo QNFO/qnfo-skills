@@ -1,0 +1,17 @@
+JPCUB Competitive Landscape v2.0 — joules-per-solution estimates for 17 quantum computing platforms from published specifications.
+
+Key finding: gate speed, not cooling cost, dominates energy efficiency. A 15 kW superconducting platform with 300 ns gates outperforms a 3.5 kW trapped-ion platform with 100 us gates by ~100x.
+
+DOI 10.5281/zenodo.21821767
+
+Ranking: Google Willow 0.05 J/sol → QuEra Aquila 0.32 J/sol → IBM Eagle 0.59 J/sol → Rigetti 0.61–0.71 → Quantinuum H1-1 8.5 → IonQ Forte 16.3.
+
+Superconducting (0.05–0.71 J/sol) via 30–500 ns gates. Neutral atoms (0.32–0.62 J/sol) balance Rydberg-gate speed with room-temp operation. Trapped ions (8.5–16.3 J/sol) — room-temp cannot overcome 50–100 us gate times.
+
+Only ONE published, empirically measured JPCUB value: IBM Eagle at 0.89 J/sol per the P0 protocol. All other 16 entries are model-derived conservative upper bounds pending independent adversarial validation.
+
+The P0 framework paper: DOI 10.5281/zenodo.21637028
+
+Joules don't lie. Every computation costs energy. Measure it.
+
+17 platforms, 7 vendors, 3 architectures, 1 universal metric. Reproducible computation script + full specification traceability included.
