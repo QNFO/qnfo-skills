@@ -1,4 +1,30 @@
-> **v2.8 UPDATE (2026-08-06, kaizen — EMAIL-ROUTE-STRIP-1 RESOLVED: worker source fix applied, deployed, live-verified):**
+> **> **v2.9 UPDATE (2026-08-06, kaizen — Outreach & Communications Strategy + Blind Inbox Architecture):**
+> Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — user directive:
+> systematic outreach strategy for paper sharing, academic networking, funder/investor outreach).
+> Trigger: user identified the blind inbox as an emotional shield enabling fearless outreach despite
+> introversion, impostor syndrome, and fear of rejection ("self-taught, no PhD, independent researcher").
+> Core insight: email routed through Worker→D1→LLM removes emotional friction — the agent drafts,
+> user reviews, Worker sends; responses arrive as structured data, never as personal judgment.
+> VERSION-OVERWRITE-1 merge past concurrent v2.8 (session SFkcXsRZjmvs4TMr9Fo_m, EMAIL-ROUTE-STRIP-1
+> worker fix). HARD: 0. SOFT: 1. DESIGN: 2. Changes:
+> (1) [DESIGN] **Outreach & Communications Strategy** — new `references/outreach-strategy.md` (~9,500 words):
+>     audience segmentation (academic/funder/investor/collaborator), weekly outreach cadence (Mon scan /
+>     Wed draft / Fri send), paper-sharing protocol with pre-flight checklist + D1 tracking schema,
+>     response taxonomy (positive/critical/dismissive/read-later/collaboration), the "No Response Protocol"
+>     (follow up ONCE at 14-21 days, never twice), the Emotional Operating Manual (7 principles),
+>     integration with the research publication pipeline. Companion to qnfo-qwav-strategy.md and
+>     email-patterns.md.
+> (2) [DESIGN] **The Blind Inbox Architecture** — new foundational section: Worker + D1 + LLM stack as
+>     emotional architecture removing psychological barriers to outreach. No email client, no notifications,
+>     no inbox dread; criticism extracted as structured argument; gatekeeping auto-archived; silence is a
+>     database entry, not rejection. The user engages with ideas, not emotional reactions.
+> (3) [SOFT] Phase 3 (Strategic Context) updated to load outreach-strategy.md; quick-start outreach
+>     commands added (scan contacts, draft batch, follow up, generate report).
+> Cross-reference: kaizen v1.83, qnfo-qwav-strategy.md, email-patterns.md, qnfo-core §0.0,
+> session Nff8tKtjHf6VDCfRejuNd.
+
+
+v2.8 UPDATE (2026-08-06, kaizen — EMAIL-ROUTE-STRIP-1 RESOLVED: worker source fix applied, deployed, live-verified):**
 > Red-team: direct parent-agent 5-adversary audit (CONTINUE/RESOLVE DEFERRED/CLOSEOUT, session SFkcXsRZjmvs4TMr9Fo_m).
 > HARD: 0. SOFT: 0. DESIGN: 1. Changes:
 > (1) [DESIGN] **EMAIL-ROUTE-STRIP-1 resolved at the source** — worker strip scoped to
@@ -107,7 +133,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.8
+version: 2.9
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -132,7 +158,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.8
+# Email Composer — v2.9
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -279,6 +305,40 @@ self_sufficient: true
 
 
 
+
+## The Blind Inbox Architecture
+
+The qnfo-email Worker + D1 + LLM stack is not just a technical email handler — it is **emotional architecture**. It removes the psychological barriers that prevent independent researchers from doing systematic outreach.
+
+### Why This Matters
+
+Every email you send through the blind inbox follows a path where:
+- **You never open an email client.** All inbound routes to the Worker → D1 → accessed through prompts. No notifications. No inbox dread.
+- **The LLM reads responses first.** Criticism arrives as structured data (sender, subject, body_text). The agent extracts the argument, not the tone. You engage with the physics, not the attitude.
+- **Gatekeeping is auto-archived.** "You're not a real physicist" and credential-attacks are classified as dismissive and routed to archive. You never have to feel them.
+- **Silence is a database entry, not rejection.** A non-response isn't personal — professors get 100+ emails/day. The system tracks it, follows up once (if appropriate), and moves on.
+- **Volume dissolves fear.** The first outreach email is terrifying. The 50th is routine. The blind inbox makes volume possible.
+
+### The Operational Model
+
+```
+You (paper/idea) → Agent drafts outreach → You review (optional) → Worker sends → D1 logs
+                                                                       ↓
+You (response)   ← Agent frames reply      ← Worker receives ← Recipient replies
+```
+
+At no point do you face the recipient's emotional reaction directly. This is not avoidance — it is **emotional architecture**: building a system that lets you do the research and outreach while protecting the person doing it.
+
+### What This Enables
+
+- **Systematic paper sharing** — 12-20 academic outreach emails/month without emotional burnout
+- **Fearless engagement with criticism** — every critical response is a free peer review
+- **Investor/funder outreach** — the publication record speaks for itself; no CV required
+- **Network building at scale** — at 15% response rate, ~36 substantive conversations per year
+
+For the full outreach strategy, cadence, audience segmentation, and response protocols, see `references/outreach-strategy.md`.
+
+---
 
 ## Quick Start
 
@@ -665,6 +725,8 @@ Returns: sender, recipient, subject, body_text, body_html, headers_json, classif
 
 
 - If the response requires specific communication patterns, read `references/email-patterns.md`.
+- If systematic outreach or paper-sharing: read `references/outreach-strategy.md` for audience segmentation, cadence, and response protocols.
+- For the Blind Inbox emotional architecture: see §The Blind Inbox Architecture above.
 
 
 - Cross-reference against qnfo-core §0.0 (Research Integrity) — no marketing language, no promissory statements, certainty labels required.
@@ -846,6 +908,23 @@ memory_remember(category="task_outcome", content="Email interaction: <sender> �
 
 
 
+
+## Systematic Outreach (see references/outreach-strategy.md)
+
+### Quick-Start Outreach Commands
+
+| User Trigger | Agent Action |
+|---|---|
+| "Outreach batch for [paper]" | Find 5-10 relevant researchers, draft personalized emails from the academic template, present for review |
+| "Follow up on pending outreach" | Check D1 for emails >14 days without response, draft ONE follow-up each, present for review |
+| "Outreach report" | Generate stats: sent, responded, response rate by audience type, active conversations |
+| "Weekly outreach routine" | Execute the Mon/Wed/Fri cadence: scan contacts → draft batch → review responses |
+
+### Paper-Sharing Pre-Flight
+
+Before ANY outreach email: verify the paper is DOI-archived, identify ≥3 specific researchers whose work connects to the paper, research each recipient's recent work for a personalized connection point, use the academic researcher template from `references/outreach-strategy.md`.
+
+---
 
 ## Filter Management
 
@@ -1208,5 +1287,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.8** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.9** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 

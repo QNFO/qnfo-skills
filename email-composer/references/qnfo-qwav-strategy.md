@@ -79,5 +79,6 @@ Open-science research collective. Focus: publications, knowledge graph, theoreti
 - QWAV needs fabrication partners (photonic, thermodynamic, neuromorphic) — not platform evaluation partners
 - JPCUB is a differentiator, not a service product
 - Research integrity (qnfo-agent §0.0) applies to ALL business communication — no hype, no promissory language, no unverifiable claims
+- For systematic outreach strategy (paper-sharing, network building, funder/investor outreach): see `references/outreach-strategy.md` for audience segmentation, weekly cadence, response taxonomy, and the Blind Inbox emotional architecture that enables fearless communication at scale
 - QWAV is UK-based but seeks international partnerships
 - The Qubit Delusion series is public, peer-reviewed critique — external parties may have read it; assume they know QWAV's position on the quantum computing industry
