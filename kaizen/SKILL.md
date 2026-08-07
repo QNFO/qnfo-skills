@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.87
+version: 1.88
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -208,6 +208,24 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: SKILL-CHURN-1, HARDCODED-AUDIT-1, HARDCODED-METRICS-1, credential-scan.py,
 > commit 3fff68f, session MerOabc5KO_W9Q8BP47ok.
 
+> **v1.88 UPDATE (2026-08-07, kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification):**
+> Red-team: direct parent-agent 5-adversary audit (session 95Hi-MvT2AlV7MOURhE0w — user directive
+> "FIX ALL HARDCODED/COSMETIC SKILLS RESPONSES/CODE. EXECUTE RED TEAM. UPDATE KAIZEN SKILL").
+> Watchtower: 17/17 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default INCOMPLETE (exempt).
+> Hardcoded scan: 42 skills, 108 candidates (81 PH + 21 FS + 6 SR + 0 HC) — ALL FALSE POSITIVES:
+> PH = CLI examples (wrangler my-bucket/my-database), domain concepts (pptx placeholder types),
+> API docs (cloudflare example.com/<API_KEY>); FS/SR = anti-pattern documentation quoting the
+> pattern they forbid. Orphan scan: 40 scripts — legitimate helpers in scripts/ dirs, not dead code.
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **Kaizen v1.87→v1.88 version bump** — banner + fm/hdr/ft sync. No skill-content changes
+>     needed — ecosystem confirmed healthy with zero real hardcoded/cosmetic findings. Notable
+>     ecosystem drift since v1.87: qnfo-core 1.17→1.18, research 2.88→2.89, email-composer
+>     2.8→2.13 (concurrent sessions). All banner-history cross-references EXEMPT per
+>     N-2-SCAN-FALSE-POSITIVE-1. The 108-candidate scanner output is the canonical confirmation
+>     of the v1.87 methodology: scanners flag their own anti-pattern documentation as "findings" —
+>     raw-line verification is the only authoritative check.
+> Cross-reference: N-2-SCAN-FALSE-POSITIVE-1, HARDCODED-AUDIT-1, session 95Hi-MvT2AlV7MOURhE0w.
+
 > **v1.86 UPDATE (2026-08-07, kaizen — Synthesis Mode + Convergence Architecture: self-audit + QNFO-original operating paradigm):**
 > Red-team: direct parent-agent 5-adversary audit (session MerOabc5KO_W9Q8BP47ok — SKILLS UPDATE
 > directive; self-kaizen triggered by synthesis-mode gap). Watchtower: 17/17 QNFO skills N-2 CLEAN.
@@ -247,7 +265,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.87
+# KAIZEN — v1.88
 > **v1.83 UPDATE (2026-08-06, kaizen — SKILLS UPDATE cycle #5: closeout reconciliation + VERSION-OVERWRITE-1 merge validation):**
 > Red-team: direct parent-agent 5-adversary audit (session Nff8tKtjHf6VDCfRejuNd — EXECUTE RED TEAM SKILLS AUDIT
 > directive). Watchtower scan: 18/18 QNFO skills N-2 CLEAN (email-composer 2.7/2.7/2.7, kaizen 1.82/1.82/1.82 pre-edit).
@@ -13743,7 +13761,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.87** (kaizen — SKILLS UPDATE: PhilPapers discoverability pipeline + Zenodo metadata optimization + knowledge v2.8; VERSION-OVERWRITE-1 merge past concurrent v1.74; 2026-08-06)
+Current: **v1.88** (kaizen — RED-TEAM: hardcoded/cosmetic skills audit #2 + ecosystem health verification; 2026-08-07)
 
 
 
