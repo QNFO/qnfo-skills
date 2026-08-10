@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.17
+version: 3.18
 
 
 kif_tags: [KIF-32]
@@ -125,7 +125,17 @@ kif_tags: [KIF-32]
 
 
 
-# windows-command-patterns — v3.17
+# windows-command-patterns — v3.18
+
+> **v3.18 UPDATE (2026-08-10, kaizen — exec space-path false negatives + cleanup-claim masking + pywin32 COM):**
+> Red-team: direct parent-agent 5-adversary audit (session FqszmI7iAvYDr6_X3C2qv — CMD SKILLS UPDATE).
+> HARD: 3. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **EXEC-PATH-SPACE-FALSE-NEGATIVE-1** — broken-quoted probes on space-containing paths
+>     produced a FALSE 'Outlook not installed' claim; user corrected the agent. 8.3 short names / os.listdir are the fix.
+> (2) [HARD] **CMD-ECHO-SUCCESS-MASK-1** — `2>nul & echo CLEANED` faked exit 0 while files remained (H1 red-team finding).
+> (3) [HARD] **WSH-OUTLOOK-COM-MEM-1** — cscript/WSH fails on this host; pywin32 COM is the verified Outlook path.
+> (4) [SOFT] **CUA-DRIVER-QUARANTINE-1** — quarantined cua-driver kills list_apps; COM/filesystem fallback documented.
+> Cross-reference: kaizen v1.95, S-1.0.4, computer-use skill, qnfo-core VERIFY-DONT-ASSUME-1.
 
 > **v3.16 UPDATE (2026-08-06, kaizen — CUA tools integration: Computer Use as GUI automation path):**
 > Red-team: direct parent-agent 5-adversary audit (session QPBAVeVkU0Y5qkMNG6CC9).
@@ -794,7 +804,11 @@ Key files: `backgroundExecSessionManager.ts`, `shellEnvHelper.ts`, `shellOutputE
 
 
 | **EXEC-AUTOBG-DEATH-1: Short exec commands auto-background and die — "Session bg_XXX is not running" (2026-08-05)** | Observed 10+ times in session 8APhB8pdpgihrWgDLpXIP: `exec` on short Python scripts returns "Error: Session bg_XXX is not running" with output lost (the script may have run; output is unrecoverable). `yieldMs` does not reliably prevent it. **Fix — write-file-read-back pattern (§S-1.0.9):** the script WRITES its output to a `.txt` file, `exec` runs it, then the agent `read`s the file back. Succeeded every time in the canonical session. Cross-ref: kaizen v1.47 EXEC-AUTOBG-DEATH-1, PYTHON-BUFFERING-1. |
-| **GH-API-HANG-1: `gh api` hangs indefinitely in this environment (2026-08-05)** | `gh api` — especially with `--paginate` or long-running GETs — hangs with no output and must be killed (exec session never returns). Verified 3x in session 8APhB8pdpgihrWgDLpXIP. Fix: use token-based Python urllib: get token via `gh auth token` (or GITHUB_TOKEN env), then `urllib.request.Request(url, headers={'Authorization': f'token {tok}'})` — completes reliably. For pagination, parse `Link` headers or use `per_page=100` + loop. Canonical case: gh api user/starred --paginate hung; identical op via urllib starred 4 repos (JulianDelBel/Adelic, PerretB/ultrametric-fitting, mmasdeu/darmonpoints, agent0ai/agent-zero) instantly. |
+| **GH-API-HANG-1: `gh api` hangs indefinitely in this environment (2026-08-05)**
+| **EXEC-PATH-SPACE-FALSE-NEGATIVE-1: Broken-quoted exec probes on paths with spaces produce FALSE 'not installed' conclusions (2026-08-10)** | **HARD.** `where outlook`, `reg query App Paths`, and `dir "C:\Program Files"` ALL failed this session while Outlook WAS installed (ClickToRun Office16 at `C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE`). ClickToRun does NOT register App Paths or an `Outlook.Application` class. User had to correct the agent. **Fix:** for ANY path containing spaces use 8.3 short names (`dir C:\Progra~1\...`) or Python `os.listdir`; never conclude 'not installed' from `where`/App-Paths alone; verify against real install dirs (`dir /b C:\Progra~1` lists `Microsoft Office`). Cross-ref: S-1.0.4, EXEC-TOOL-QUOTE-1, VERIFY-DONT-ASSUME-1 (qnfo-core). |
+| **CMD-ECHO-SUCCESS-MASK-1: `2>nul & echo SUCCESS` masks failures and fakes exit 0 (2026-08-10)** | **HARD.** `del a.py b.py 2>nul & echo CLEANED` returned exit 0 + 'CLEANED' while the files REMAINED (deletion failed silently). Same class as GH-API-STDIN-NOOP-1 / PHANTOM-CLAIM-2 at the shell level. **Fix:** use `&&` (short-circuits on failure) or verify with `dir` afterward; NEVER chain `2>nul & echo <SUCCESS>` — the `&` always runs the echo regardless. Canonical case: session FqszmI7iAvYDr6_X3C2qv — 4 temp scripts falsely reported cleaned; red-team caught it. |
+| **WSH-OUTLOOK-COM-MEM-1: cscript/WSH fails with 'Not enough memory resources' — use pywin32 for Outlook COM (2026-08-10)** | **HARD.** `cscript //nologo` fails on this host even for trivial `WScript.Echo` ("Execution of the Windows Script Host failed. Not enough memory resources"). **Fix:** use Python `win32com.client` (pywin32, verified available py3.12.10) — `Dispatch("Outlook.Application")` + `GetNamespace("MAPI")` + `GetDefaultFolder(9)` for calendar automation. Verified 2026-08-10: 7 appointments created + read-back verified. Outlook binary: `C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE`. |
+| **CUA-DRIVER-QUARANTINE-1: computer-use plugin 'cua-driver' quarantined after unclean exit — list_apps dies (2026-08-10)** | **SOFT.** When the cua-driver plugin runtime is quarantined, `list_apps` fails with 'use Retry runtime to authorize one controlled attempt' (5 failures this session). **Fix:** fall back to COM automation (pywin32) or filesystem/registry probes; the user must click 'Retry runtime' in DeepChat to re-enable GUI automation. Cross-ref: computer-use skill, WSH-OUTLOOK-COM-MEM-1. | | `gh api` — especially with `--paginate` or long-running GETs — hangs with no output and must be killed (exec session never returns). Verified 3x in session 8APhB8pdpgihrWgDLpXIP. Fix: use token-based Python urllib: get token via `gh auth token` (or GITHUB_TOKEN env), then `urllib.request.Request(url, headers={'Authorization': f'token {tok}'})` — completes reliably. For pagination, parse `Link` headers or use `per_page=100` + loop. Canonical case: gh api user/starred --paginate hung; identical op via urllib starred 4 repos (JulianDelBel/Adelic, PerretB/ultrametric-fitting, mmasdeu/darmonpoints, agent0ai/agent-zero) instantly. |
 
 
 | **PANDOC-FONT-QUOTE-1: pandoc `-V mainfont="Font Name With Spaces"` fails on Windows cmd.exe (2026-08-04)** | `pandoc paper.md -o out.pdf --pdf-engine=xelatex -V mainfont="DejaVu Serif"` fails with `pandoc: Serif": withBinaryFile: invalid argument` — cmd.exe or pandoc's argument parser splits on the space in the quoted font name. **Fix: (A) omit -V mainfont and let XeLaTeX use defaults (works on all platforms); (B) use a font without spaces (e.g., `-V mainfont=DejaVuSans`); (C) if the font name MUST have spaces, use `-V mainfont:"DejaVu Serif"` through a Python subprocess bypassing exec quoting.** Canonical case: session ZDdTu9QfTZKY_kJALlXY_ — pandoc failed on font arg, succeeded with defaults (37-page PDF built). Cross-ref: S-1.0.4 CMD.exe space-splitting bug, §PDF building in S1.1 operation table. |
@@ -1496,4 +1510,4 @@ PYTHON-BUFFERING-1.
 
 
 
-Current: **v3.17** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.18** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)

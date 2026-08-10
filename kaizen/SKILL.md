@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.94
+version: 1.95
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -266,7 +266,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.94
+# KAIZEN — v1.95
+
+> **v1.95 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: exec/cleanup/COM patterns from LoF26 session; calibration ref sync):**
+> Red-team: direct parent-agent 5-adversary audit (session FqszmI7iAvYDr6_X3C2qv — CMD SKILLS UPDATE).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit; 19/19 CLEAN post-edit (raw-line anchors).
+> HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **Calibration Register current-state ref fixed** — 'research skill (currently v2.86)' -> v2.89
+>     (research was bumped 2.88->2.89 by concurrent session; same drift class as v1.65 fix — recurring).
+> (2) [DESIGN] **4 new anti-pattern mirrors added** (owners: windows-command-patterns v3.18):
+>     EXEC-PATH-SPACE-FALSE-NEGATIVE-1 (false 'not installed' from broken quoting), CMD-ECHO-SUCCESS-MASK-1
+>     (`2>nul & echo SUCCESS` fakes exit 0), WSH-OUTLOOK-COM-MEM-1 (pywin32 COM is the Outlook path),
+>     CUA-DRIVER-QUARANTINE-1 (quarantined cua-driver blocks list_apps). Canonical case: session FqszmI7iAvYDr6_X3C2qv —
+>     Outlook calendar automation via COM + .ics + LoF26 reminder cron. H1/H2 findings from the session's own red team.
+> Cross-reference: windows-command-patterns v3.18, research v2.89, computer-use skill,
+> N-2-SCAN-FALSE-POSITIVE-1, VERSION-OVERWRITE-1.
 
 > **v1.94 UPDATE (2026-08-10, kaizen — Cloudflare cost incident closure: cloudflare v3.36 permanent fix + 6 anti-patterns):**
 > Red-team: direct parent-agent 5-adversary audit (session qxo_RCq4Y_tPZVkBQVmZb — CMD SKILLS UPDATE).
@@ -12464,7 +12478,11 @@ Session Failure → Session Retrospective detects failure pattern
 | **EMAIL-ADDRESS-PROLIFERATION-1: Creating email routing rules/addresses beyond the canonical set without user direction (2026-08-06)** | **HARD.** Only the canonical set is allowed (qnfo.org x5: qnfo/rowan.quni/research/alerts/publications; pre-existing qwav.tech x2 + q08.org x1). 8 inert domains (qwav.org/qwav.net/qwav.uk/q-wave.tech/qwave.tech/qnfo.net/qnfo.uk/empoweringchange.today) are catch-all DROP. Never self-authorize a new address/rule. Canonical case: ~55 addresses provisioned across 11 domains in one session; user directive cut to 3-5 max, 40 rules deleted. Owner: email-composer v2.6. Cross-ref: N-2-SCAN-FALSE-POSITIVE-1. |
 | **OUTREACH-SENT-AS-ARCHIVED-1: Worker stores outbound sends with status="archived" — status-based detection sees ZERO outreach (2026-08-07)** | **HARD.** Classify sent/replies by SENDER-DOMAIN (qnfo.org sender + external recipient = sent), never by status field. Canonical case: 9 real outreach emails sent 08-06 invisible to status detection; Smigliani positive reply + Ringbauer OOO auto-reply nearly missed. Owner: email-composer v2.14. |
 | **RECEIPT-PLACEHOLDER-TOKEN-1: Unresolved `[Name]` tokens in outreach receipts read as garbage — even when sent emails are clean (2026-08-07)** | **HARD.** Resolve identities before reporting; address-only if unresolvable. Canonical case: receipt showed `[IBM]`/`[Caltech]`/`[Lihan]` while wire payloads were clean ("Dear Dr. Tavernelli/Heydeman/Lei"). Owner: email-composer v2.14. |
-| **CONNECTION-POINT-UNVERIFIED-1: Personalization claim sent without arXiv verification (2026-08-07)** | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
+| **CONNECTION-POINT-UNVERIFIED-1: Personalization claim sent without arXiv verification (2026-08-07)**
+| **EXEC-PATH-SPACE-FALSE-NEGATIVE-1: false 'not installed' from broken-quoted exec probes (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.18). `where`/App-Paths/broken-quoted `dir` all failed while Outlook WAS installed (ClickToRun). Use 8.3 short names or os.listdir; verify real install dirs. Canonical case: session FqszmI7iAvYDr6_X3C2qv — user corrected the agent's false negative. |
+| **CMD-ECHO-SUCCESS-MASK-1: `2>nul & echo SUCCESS` fakes exit 0 (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.18). Deletion/cleanup claims must be verified with `dir` or `&&` chaining; a chained echo after `2>nul` is not evidence. Canonical case: 4 temp scripts falsely 'CLEANED' — H1 red-team catch. |
+| **WSH-OUTLOOK-COM-MEM-1: cscript fails on this host — pywin32 COM is the Outlook path (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.18). cscript/WSH dies with 'Not enough memory resources'; pywin32 win32com verified (7 Outlook appointments). |
+| **CUA-DRIVER-QUARANTINE-1: quarantined cua-driver blocks list_apps (2026-08-10)** | **SOFT** (mirror; owner windows-command-patterns v3.18). Fall back to COM/filesystem; user clicks Retry runtime to re-enable. | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
 ## Cross-Skill Integration
 
 
@@ -12937,7 +12955,7 @@ dated, falsifiable claims about skill drift risk.
 
 
 
-- The research skill (currently v2.86) is actively evolving; the canonical
+- The research skill (currently v2.89) is actively evolving; the canonical
 
 
 
@@ -13884,7 +13902,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.94** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v1.95** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
 
 
 
