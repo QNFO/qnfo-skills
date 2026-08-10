@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.9
+version: 2.10
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,7 +9,11 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
-> **v2.9 UPDATE (2026-08-10, user directive — judicious labeling + monthly cadence):**
+> **v2.10 UPDATE (2026-08-10, kaizen — PAPER-CONTEXT-TOOL-EMPTY-1: direct D1 query is the canonical paper-body path):**
+> Red-team: direct parent-agent 5-adversary audit follow-up (session 0SnaUK-QccIJkohojGMQS). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **PAPER-CONTEXT-TOOL-EMPTY-1 anti-pattern added** — `get_paper_context` and `search_papers_enriched` return EMPTY in this environment (verified repeatedly 2026-08-10) even when the paper body exists in D1 living-paper. An empty tool result does NOT mean the paper is missing (VECTORIZE-SILO-1 class). Canonical case: JPCUB verification — all get_paper_context probes returned empty; the same bodies were retrieved by direct Cloudflare D1 HTTP API query (papers table, body_md column). Working path: token `C:\Users\LENOVO\tokens\cloudflare`; POST https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{db}/query with acct=edb167b78c9fb901ea5bca3ce58ccc4b, db=70a58cb3-b2cd-498d-877f-ecca86859a22 (living-paper), SQL `SELECT slug, doi, body_md FROM papers WHERE lower(doi) LIKE ?`.
+> (2) [DESIGN] **Paper Context & Search section updated** — get_paper_context remains the documented tool, but a direct-D1 fallback block now precedes it when the tool returns empty.
+> Cross-reference: kaizen v1.94, VECTORIZE-SILO-1, D1 living-paper > **v2.9 UPDATE (2026-08-10, user directive — judicious labeling + monthly cadence):**
 > Red-team: 5-adversary audit of the PhilPapers monitor scheduled task (session _YeVIWmYVfkpQao_Ujkh0).
 > Changes:
 > (1) [HARD] **Judicious labeling policy (user directive 2026-08-10):** only papers that ARE
@@ -43,7 +47,8 @@ self_sufficient: true
 > Cross-reference: kaizen v1.20, research v2.65, qnfo-core N-2, KIF-23,
 > session 1tz85-vMiqh2TyFySznBA.
 
-# KNOWLEDGE — v2.9
+# KNOWLEDGE — v2.10
+(70a58cb3-b2cd-498d-877f-ecca86859a22), session 0SnaUK-QccIJkohojGMQS.
 > **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
 > HARD: 0. SOFT: 2. DESIGN: 1.
@@ -359,6 +364,11 @@ papers = search_papers({
 })
 # Returns: [{slug, title, score, snippet}, ...] ranked by meaning similarity
 ```
+# FALLBACK (PAPER-CONTEXT-TOOL-EMPTY-1): if get_paper_context returns empty, the body exists in D1 living-paper. Query directly via Cloudflare D1 HTTP API:
+#   POST https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{db}/query
+#   acct=edb167b78c9fb901ea5bca3ce58ccc4b, db=70a58cb3-b2cd-498d-877f-ecca86859a22 (living-paper)
+#   SELECT slug, doi, body_md FROM papers WHERE lower(doi) LIKE '%<fragment>%'
+# token: C:\Users\LENOVO\tokens\cloudflare
 
 ---
 
@@ -416,6 +426,7 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | Skipping impact analysis before modifying entity | Query `/impact/{id}` to check downstream dependents |
 | Storing memory without category | Always categorize: user_preference/project_fact/task_outcome/heuristic/anti_pattern |
 | Ignoring search_memories for context | Semantic search finds decisions by meaning, not keywords |
+| **PAPER-CONTEXT-TOOL-EMPTY-1: Treating an empty get_paper_context / search_papers_enriched result as 'paper not in D1' (2026-08-10)** | **HARD GATE (v2.10):** these tools return EMPTY in this environment even when the paper body exists (VECTORIZE-SILO-1 class; canonical case: JPCUB verification 2026-08-10). An empty result is a TOOL gap, not a DATA gap. Fallback: direct Cloudflare D1 HTTP API query against living-paper DB 70a58cb3-b2cd-498d-877f-ecca86859a22 (papers table, body_md) using token C:\Users\LENOVO\tokens\cloudflare. Verify presence with SELECT slug,doi,body_md before concluding missing. Cross-ref: VECTORIZE-SILO-1, kaizen v1.94. |
 | **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
 | **PHILPAPERS-DISCOVERABILITY-GAP: Zenodo records without keywords AND abstract are invisible to PhilPapers crawlers (2026-08-06)** | **HARD GATE (v2.9):** PhilPapers discovers papers via Zenodo → DataCite → CrossRef → PhilPapers crawler pipeline. Trigger: abstract (≥200 chars with philosophy-domain terms) + keywords. **JUDICIOUS LABELING (user directive 2026-08-10):** only papers that ARE philosophy papers may carry philosophy-class labels — non-philosophy QNFO records (physics, engineering, licensing, patents, finance) must NOT be tagged as philosophy. Existing records left AS-IS (over-tagging incident: 675/680 from the 2026-08-06 batch — no retroactive edits). Confirmed indexed: QUNTUF/QUNSAI (2 of ~293). Future optimizer runs gate injection behind `is_philosophy_core_record()`; monitor runs MONTHLY (not daily). Direct path: PhilArchive upload → guaranteed indexing in days. Scripts (git-tracked at `qnfo-skills/knowledge/scripts/`): `zenodo_philpapers_optimizer.py`, `zenodo_fix4.py`, `philpapers_submit.py`, `philpapers_monitor.py` (v2). Cross-ref: author ORCID 0009-0002-4317-5604, PhilPapers IDs QUNTUF/QUNSAI. |
 
@@ -469,5 +480,5 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 **Scheduled monitoring:** Run `philpapers_monitor.py` **monthly** (1st of month 06:00 UTC — scheduled task "PhilPapers Index Monitor (Monthly)"; the old "daily cron ffc8f08f" never existed). The crawl cycle is days-to-weeks, so daily polling is waste. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs the philosophy-eligible Zenodo subset (judicious-labeling denominator).
 
-Current: **v2.9** (PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; user directive 2026-08-10; QUNTUF/QUNSAI indexed, 2 of ~293)
+Current: **v2.10** (PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; user directive 2026-08-10; QUNTUF/QUNSAI indexed, 2 of ~293)
 
