@@ -351,7 +351,7 @@ def briefing(papers, date_str, mode):
 
 
 # ── Email Archive (optional --email flag) ──
-def email_archive(briefing_text, recipient):
+def email_archive(briefing_text, recipient, from_addr=''):
     """POST briefing to qnfo-email Worker /send for durable archive.
     Key resolution: EMAIL_API_KEY env -> Cloudflare Worker settings API. Never hardcoded."""
     import json as _json
@@ -392,7 +392,12 @@ def email_archive(briefing_text, recipient):
             'to': recipient,
             'subject': f'QNFO Research Briefing — {datetime.now(timezone.utc).strftime("%Y-%m-%d")}',
             'body': briefing_text,
-        }).encode()
+        })
+        # Sender override: qnfo@qnfo.org default is BROKEN platform-side 2026-08-10
+        # (EMAIL-SENDING-DOMAIN-10002, CF error 10002). --from rowan.quni@qwav.tech works.
+        if from_addr:
+            payload['from'] = from_addr
+        payload = _json.dumps(payload).encode()
         req = urllib.request.Request('https://qnfo-email.q08.workers.dev/send', method='POST', data=payload, headers={
             'Authorization': f'Bearer {key}',
             'Content-Type': 'application/json',
@@ -418,6 +423,9 @@ def main():
                     help='Days to scan (daily defaults to 1, weekly to 3)')
     ap.add_argument('--email', default='',
                     help='Email address to archive the briefing to (e.g. alerts@qnfo.org)')
+    ap.add_argument('--from', dest='from_addr', default='',
+                    help='Sender override for the archive email (default: Worker default qnfo@qnfo.org '
+                         '— BROKEN platform-side 2026-08-10; use rowan.quni@qwav.tech until fixed)')
     args = ap.parse_args()
 
     if args.mode == 'weekly':
@@ -454,7 +462,7 @@ def main():
     print(brief_text)
 
     if args.email:
-        email_archive(brief_text, args.email)
+        email_archive(brief_text, args.email, getattr(args, 'from_addr', ''))
 
 
 if __name__ == '__main__':

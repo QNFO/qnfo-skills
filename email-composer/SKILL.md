@@ -1,3 +1,16 @@
+> **v2.15 UPDATE (2026-08-10, kaizen — CMD RED TEAM 5-adversary audit: OUTREACH-SENT-AS-ARCHIVED-1 premise CORRECTED + EMAIL-SENDING-DOMAIN-10002 + SEARCH-Q-EMAIL-TOKEN-1 + MESSAGE-ID-NE-DELIVERY-1 + Sender-Domain Fallback):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive, this session — daily briefing + outreach execution 2026-08-10). Trigger: live evidence contradicted the v2.14 "no sent status" claim. Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 4. SOFT: 3. DESIGN: 2. Changes:
+> (1) [HARD] **OUTREACH-SENT-AS-ARCHIVED-1 premise CORRECTED** — the v2.14 claim "Worker stores outbound sends with status='archived'; NO 'sent' status exists" is FACTUALLY FALSE. Live evidence 2026-08-10: Worker v1.8 source line 174 binds `status='sent'`; GET /emails/recent shows ids 59-62 status=sent (incl. today's Patel/Emeriau outreach); /stats byStatus reports archived=55, sent=1, spam=3. The OPERATIONAL rule (classify by sender-domain, never status alone) REMAINS canonical — it is defensive against pre-v1.6 rows and mislabelled records — but the stated rationale is corrected in the Sent-Email Detection section + anti-pattern row.
+> (2) [HARD] **EMAIL-SENDING-DOMAIN-10002 anti-pattern added** — an onboarded Email Sending domain can return `email.sending.error.internal_server` (code 10002) on ALL addresses while sibling domains work. Canonical case 2026-08-10: qnfo.org fails on all 4 addresses (verified via Worker binding + REST API + wrangler CLI); qwav.org/qwav.tech succeed. DNS/onboarding/binding all intact; CF status page shows "operational" (NOT per-zone authoritative). Fix: reproduce via REST `POST /accounts/{acct}/email/sending/send` across 2+ onboarded domains to isolate domain vs account; check `wrangler email sending dns get`; file CF ticket; use Sender-Domain Fallback meanwhile.
+> (3) [HARD] **Sender-Domain Fallback protocol added (Canonical Address Registry)** — when the canonical sending domain fails (10002), fall back in order: qnfo.org → qwav.tech → qwav.org (all Email Sending onboarded, full SPF/DKIM/DMARC). FLAG every deviation in outreach-log.md. Canonical case: 2026-08-10 — 2 outreach emails (Patel/Emeriau) sent from rowan.quni@qwav.tech (Qudit Advantage is QWAV-branded JPCUB work, thematically consistent).
+> (4) [HARD] **research-daily-brief.py --from override (cross-ref research v2.90)** — the briefing email leg now accepts --from so it no longer silently fails on the broken default sender.
+> (5) [SOFT] **SEARCH-Q-EMAIL-TOKEN-1 anti-pattern added** — GET /emails/search?q=<full-email-with-@> returns count:0 for real records (the @ tokenizes away; verified live: tp53@rice.edu → 0 while /emails/recent shows id=61). Use bare tokens or /emails/recent + recipient filter for dedup.
+> (6) [SOFT] **MESSAGE-ID-NE-DELIVERY-1 anti-pattern added** — Worker /send returns its OWN UUID (crypto.randomUUID), NOT Cloudflare delivered/permanent_bounces/queued. 200 + message_id = ACCEPTED, not delivered. Delivery monitoring via REST /email/sending or deliverability.md endpoints.
+> (7) [SOFT] **/send `from` override documented** — Worker v1.8 accepts `from` restricted to ALLOWED_DOMAINS (11 QNFO/QWAV domains). Quick Start schema + endpoint table updated.
+> (8) [DESIGN] **Worker source canonical path corrected** — WORKER-SOURCE-EVICTED-1: canonical source is now `QNFO/qwav-platform/qnfo-cloudflare-workers/qnfo-email/` (commits 6a58b37, 00ea399; v1.8), NOT the evicted local path.
+> (9) [DESIGN] **outreach-log.md established** — canonical at `qnfo-skills/email-composer/references/outreach-log.md`; every send logged with message_id + D1 verification (H10).
+> Cross-reference: kaizen v1.95 (mirror row corrected), research v2.90 (--from), cloudflare-email-service (REST send), qnfo-core VERIFY-FACT-1, session this.
+
 > **v2.13 UPDATE (2026-08-07, kaizen — DAILY MULTI-AUDIENCE OUTREACH: the agent hunts every day, not just Monday):**
 > Red-team: direct parent-agent audit (session Nff8tKtjHf6VDCfRejuNd — CONTINUE after "WHY ONLY MONDAY?" directive).
 > User directive: "WHY ONLY MONDAY? YOU SHOULD BE ACTIVELY SEARCHING DAILY FOR ANYONE IN A POSITION TO ADVANCE MY
@@ -254,7 +267,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.14
+version: 2.15
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -279,7 +292,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.14
+# Email Composer — v2.15
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -465,8 +478,12 @@ For the full outreach strategy, cadence, audience segmentation, and response pro
 ## Sent-Email Detection (v2.14, HARD — OUTREACH-SENT-AS-ARCHIVED-1)
 
 The qnfo-email Worker records ALL emails (inbound AND outbound) in the same D1 `emails` table.
-Outbound sends are stored with `status="archived"` and `classification="general"`. There is
-**NO "sent" status** — `/stats` byStatus reports only archived/processed/spam.
+**CORRECTION (v2.15, 2026-08-10):** outbound sends ARE stored with `status="sent"` (Worker v1.8
+source line 174 binds 'sent'; verified live — /emails/recent ids 59-62 show status=sent; /stats
+byStatus reports archived/processed/sent/spam). The v2.14 "no sent status exists" claim was
+factually wrong. The classification RULE below remains canonical: sender-domain classification is
+defensive against pre-v1.6 rows and ambiguous status values — but /emails/recent + /emails/body
+are now the authoritative per-row source, and `status="sent"` IS a valid signal for outbound rows.
 
 **Canonical classification rule (use this, never status-field filtering):**
 
@@ -652,6 +669,18 @@ curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
 1. Only the 5 qnfo.org addresses are canonical identities. qwav.tech/q08.org are legacy-functional and kept ONLY while they carry real traffic (info@qwav.tech + rowan.quni@qwav.tech since 2025; noreply@q08.org platform use).
 2. NEVER create a routing rule on an inert domain. NEVER create an address the user did not ask for.
 3. Any new address proposal goes to the user FIRST — never self-authorize.
+
+### Sender-Domain Fallback (HARD, 2026-08-10 — EMAIL-SENDING-DOMAIN-10002)
+
+When the canonical sending domain fails platform-side (10002 internal_server), fall back in order:
+
+| Priority | Sender | Status 2026-08-10 | Use for |
+|:---------|:-------|:------------------|:--------|
+| 1 | `rowan.quni@qnfo.org` / `qnfo@qnfo.org` | ❌ BROKEN (10002, CF ticket filed) | Academic outreach (strategy §1) — restore when fixed |
+| 2 | `rowan.quni@qwav.tech` | ✅ verified working (SPF/DKIM/DMARC + 200 message_id) | QWAV-branded work (Qudit Advantage/JPCUB) + any send while #1 is down |
+| 3 | `qnfo@qwav.org` | ✅ verified working | Last resort |
+
+**Rules:** (1) FLAG every deviation in outreach-log.md with the reason; (2) verify the fallback domain's SPF/DKIM/DMARC before first use (`wrangler email sending dns get`); (3) switch back to qnfo.org when Cloudflare resolves (monitor via a test send); (4) never fabricate the From domain — only onboarded Email Sending domains are valid.
 
 ### EMAIL-ADDRESS-PROLIFERATION-1 (HARD, 2026-08-06)
 Creating email routing rules / addresses beyond the canonical set without explicit user direction. Canonical case: 2026-08-06 — agent provisioned 5 literal rules × 11 domains (~55 addresses: qnfo@qwav.org, research@q-wave.tech, alerts@qnfo.uk, ...) when the user wanted 3-5 max. User directive cut it back: 8 domains reverted to catch-all drop (40 rules deleted), only the canonical set remains. Fix: before creating ANY routing rule, ask — "is this address in the canonical set, or explicitly requested?" If no, do not create it. Cross-ref: kaizen v1.81, N-2-SCAN-FALSE-POSITIVE-1 (verify before claim).
@@ -844,6 +873,8 @@ Returns: sender, recipient, subject, body_text, body_html, headers_json, classif
 
    - `curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=<sender_email>"`
 
+   - **q= TOKENIZATION WARNING (SEARCH-Q-EMAIL-TOKEN-1):** a full email address in q= (`tp53@rice.edu`) returns count:0 — the @ tokenizes away. Search by bare token (`rice`) or subject keyword, or use `/emails/recent?limit=N` + recipient filter. count:0 ≠ no prior contact.
+
 
    - Or: `curl -s -H "Authorization: Bearer $KEY" "https://qnfo-email.q08.workers.dev/emails/search?q=<subject_keyword>"`
 
@@ -971,6 +1002,8 @@ curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $K
 
 
 | `reply_to_id` | No | D1 email ID this is replying to — marks original as "replied" |
+| `from` (v1.8+) | No | Sender override — MUST be on an ALLOWED_DOMAINS domain (qnfo.org, qwav.org, qwav.tech, qwav.net, qwav.uk, q-wave.tech, qwave.tech, q08.org, qnfo.net, qnfo.uk, empoweringchange.today); invalid/absent → defaults to qnfo@qnfo.org. **NOTE (2026-08-10): qnfo@qnfo.org currently fails platform-side (EMAIL-SENDING-DOMAIN-10002) — pass an explicit working domain (e.g., rowan.quni@qwav.tech) for sends until resolved.** |
+| `message_id` (response) | — | Worker's OWN uuid — acceptance proof only, NOT Cloudflare delivery state (MESSAGE-ID-NE-DELIVERY-1) |
 
 
 
@@ -1191,7 +1224,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | `/emails/status` | PATCH | Update status | `curl -s -X PATCH -H "Authorization: Bearer $KEY" ... -d '{"id":1,"status":"read"}'` |
 
 
-| `/send` | POST | Send email | `curl -s -X POST -H "Authorization: Bearer $KEY" ... -d '{"to":"...","subject":"...","body":"..."}'` |
+| `/send` | POST | Send email | `curl -s -X POST -H "Authorization: Bearer $KEY" ... -d '{"to":"...","subject":"...","body":"...","from":"rowan.quni@qwav.tech"}'` (optional `from` on ALLOWED_DOMAINS; returns Worker UUID, not CF delivery state) |
 
 
 | `/filters` | GET/POST | List/create filters | `curl -s -H "Authorization: Bearer $KEY" .../filters` |
@@ -1393,9 +1426,12 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **HTTP-HEADER-NONE-1: Passing None as a value in a urllib header dict — TypeError "expected string or bytes-like object, got 'NoneType'" (2026-08-06)** | Build request headers conditionally: only add `Content-Type` (or any header) when the value is a real string. `urllib.request.Request(..., headers={...})` does NOT tolerate None values — it crashes on join. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m hygiene script — first run failed on the inventory GET because `Content-Type` was set to `None` when there was no body. Fix pattern: `hdr = {...}; if body is not None: hdr["Content-Type"]="application/json"`. Cross-ref: BLAME-EXTERNAL-1 (bug is always your code). |
 | **EMAIL-CHECK-RESURFACING-1: Re-reporting emails the user already declared no-action on (2026-08-06)** | Archive-on-no-action + delta-based reporting: once the user says "don't care" about an email (or a whole class), PATCH it to `archived` (or `spam`) in the same session and exclude archived/spam/sent from all future [EMAIL-CHECK] reports. Quiet report = one line. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — user: "SO THEREFORE I DON'T CARE ABOUT ANY OF THESE... DON'T WASTE MY TIME"; 48 archived + 3 spammed same session. Cross-ref: mem-YoM6-BSfCW_K. |
 | **EMAIL-ROUTE-STRIP-1: qnfo-email Worker route-strip mangles `/emails/*` on the workers.dev host — plain `/emails/*` returns the catch-all endpoint index (HTTP 200, silent wrong payload) (2026-08-06)** | On the workers.dev host use the `/email`-prefixed form (`/email/emails/recent`, `/email/emails/body?id=N`) — the strip normalizes it to `/emails/*`. Fix in worker source: scope strip to `p === '/email' || p.startsWith('/email/')`. Canonical case: session SFkcXsRZjmvs4TMr9Fo_m — ~15 probes burned. Cross-ref: API-DOC-GAP-1. **[RESOLVED 2026-08-06** — worker source scoped strip deployed (version c95134cc-ef57-44f0-bf9b-3183a96b8060); plain `/emails/*` live-verified returning real data; prefixed form still supported].** |
-| **OUTREACH-SENT-AS-ARCHIVED-1: The qnfo-email Worker stores OUTBOUND sends with status="archived" — there is NO "sent" status; detection that filters on status sees ZERO outreach (2026-08-07)** | **HARD.** Reply/follow-up detection MUST classify by sender-domain: sender in (qnfo.org, qwav.tech, qwave.tech, q08.org) AND recipient external = SENT outreach. /stats byStatus shows only archived/processed/spam — a 0-sent reading is a DETECTION BUG, not an empty pipeline. Canonical case: 2026-08-07 — 9 real outreach emails sent 08-06 were invisible; the human positive reply (Smigliani) + OOO auto-reply (Ringbauer) nearly missed. Owner: email-composer v2.14. See Sent-Email Detection section. |
+| **OUTREACH-SENT-AS-ARCHIVED-1: Status-field-only outreach detection misses real sends (premise CORRECTED v2.15)** | **HARD.** Worker v1.8 DOES write `status="sent"` for outbound (source line 174; verified /emails/recent ids 59-62; /stats byStatus reports sent) — the v2.14 "no sent status" claim was wrong. Detection still MUST classify by sender-domain (sender in qnfo.org/qwav.tech/qwave.tech/q08.org + external recipient = SENT), because status is ambiguous for pre-v1.6 rows and inbound/outbound can share values — but status="sent" on a qnfo-domain sender + external recipient is now a confirmable signal. Canonical case: 2026-08-07 — 9 outreach emails invisible to the then-status classifier; Smigliani reply + Ringbauer OOO nearly missed. Owner: email-composer v2.15. See Sent-Email Detection section. |
 | **RECEIPT-PLACEHOLDER-TOKEN-1: Emitting unresolved `[Name]` placeholder tokens in outreach receipts/reports — the report looks like garbage even when the sent emails are clean (2026-08-07)** | **HARD.** NEVER put `[IBM]`/`[Caltech]`/`[Lihan]`-style tokens in a receipt. Resolve identities (arXiv author query, institutional page) before reporting; if unresolvable, report the address only. The user cannot distinguish "placeholder in report" from "placeholder in sent email" — a sloppy receipt reads as sloppy sends. Canonical case: this session — wire payloads were clean ("Dear Dr. Tavernelli/Heydeman/Lei"), receipt showed unresolved tokens. Owner: email-composer v2.14. Cross-ref: qnfo-core §0.0, PROFILE-README-FABRICATE-1. |
 | **CONNECTION-POINT-UNVERIFIED-1: Sending an outreach email whose personalization claim ("your 2018 work connecting tensor networks to p-adic fields...") was never verified against a live source (2026-08-07)** | **HARD.** Every connection-point claim MUST be verified pre-send: arXiv au: query + exact title match + (for institutions) address plausibility. Unverifiable -> [SKIPPED: no verified connection]. Canonical case: email 41's Heydeman 2018 p-adic/Bruhat-Tits claim could not be confirmed — 1/8 emails carried it. Owner: email-composer v2.14. Cross-ref: qnfo-core VERIFY-FACT-1. |
+| **EMAIL-SENDING-DOMAIN-10002: Onboarded Email Sending domain returns email.sending.error.internal_server (code 10002) on ALL addresses while sibling domains work (2026-08-10)** | **HARD.** An onboarded domain can fail platform-side with `email.sending.error.internal_server` on every address/recipient (verified via Worker binding, REST `POST /accounts/{acct}/email/sending/send`, AND wrangler CLI — three independent paths) while qwav.org/qwav.tech succeed. DNS (SPF/DKIM/MX/DMARC), onboarding (`wrangler email sending settings` = enabled), and the Worker binding are all intact; the CF status page shows "operational" (NOT per-zone authoritative). Fix: (1) reproduce across 2+ onboarded domains via REST to isolate domain vs account; (2) `wrangler email sending dns get <domain>`; (3) re-enable cycle (`wrangler email sending disable/enable`) — config confirmed unchanged in the canonical case; (4) file a CF ticket; (5) use Sender-Domain Fallback (qnfo.org → qwav.tech → qwav.org) meanwhile and flag in outreach-log.md. Canonical case: qnfo.org broken 2026-08-10; outreach sent from rowan.quni@qwav.tech. Owner: email-composer v2.15. Cross-ref: cloudflare-email-service, research v2.90. |
+| **SEARCH-Q-EMAIL-TOKEN-1: /emails/search?q=<full-email-with-@> returns count:0 for real records — the @ tokenizes away (2026-08-10)** | **HARD.** `GET /emails/search?q=tp53@rice.edu` → `{"count":0,"emails":[]}` while /emails/recent shows the record (id=61) — the query tokenizer drops @-containing full addresses. For dedup and lookups: use bare tokens (`q=rice`), subject keywords, or `/emails/recent?limit=N` + recipient filter. NEVER conclude "no prior contact" from a count:0 full-address search (would violate the no-repeat-contact mandate). Canonical case: 2026-08-10 dedup probe — count:0 for two sent outreach recipients. Owner: email-composer v2.15. |
+| **MESSAGE-ID-NE-DELIVERY-1: Worker /send returns its OWN uuid (crypto.randomUUID), NOT Cloudflare delivery state — 200 = accepted, not delivered (2026-08-10)** | **SOFT.** The qnfo-email Worker wraps `env.SEND_EMAIL.send()` and returns `message_id` = its own random UUID (source: `crypto.randomUUID()`), NOT Cloudflare's `delivered/permanent_bounces/queued` array. A 200 + message_id proves ACCEPTANCE only. Delivery monitoring (bounces, suppression, quota) requires the Email Sending REST API or deliverability.md endpoints (`/email/sending/limits`, `/email/sending/suppression`). Canonical case: 2026-08-10 — message_ids 3a0ec65a/391562a5 returned for the outreach batch; D1 status=sent confirms acceptance, not recipient delivery. Owner: email-composer v2.15. Cross-ref: cloudflare-email-service deliverability.md. |
 ## References
 
 
@@ -1411,10 +1447,10 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-**Worker source:** `C:\Users\LENOVO\.deepchat\workers\qnfo-email\qnfo-email.js` (v1.6)
+**Worker source (canonical, v1.8):** `QNFO/qwav-platform/qnfo-cloudflare-workers/qnfo-email/qnfo-email.js` (commits 6a58b37, 00ea399 — EMAIL-ROUTE-STRIP-1 fix + v1.8 `from` override). Local `C:\Users\LENOVO\.deepchat\workers\qnfo-email\` is EVICTED (WORKER-SOURCE-EVICTED-1).
 
 
-**Worker deploy:** `wrangler deploy` from `C:\Users\LENOVO\.deepchat\workers\qnfo-email\`
+**Worker deploy:** `wrangler deploy` from the qwav-platform repo directory above.
 
 
 
@@ -1438,5 +1474,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.14** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.15** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 

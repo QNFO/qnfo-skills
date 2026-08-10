@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.89
+version: 2.90
 
 
 
@@ -166,6 +166,11 @@ triggers:
 
 
 
+> **v2.90 UPDATE (2026-08-10, kaizen — CMD RED TEAM follow-up: briefing email sender override + Email Sending 10002):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive, session this — daily briefing run 2026-08-10 hit HTTP 500 on the archive email). Watchtower: N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **research-daily-brief.py --from sender override added** — the email_archive leg POSTs to the qnfo-email Worker /send with NO `from`, so the Worker defaults to `qnfo@qnfo.org`, which is BROKEN platform-side since 2026-08-08 (CF error 10002 email.sending.error.internal_server, see email-composer v2.15 EMAIL-SENDING-DOMAIN-10002). Every briefing email since then silently failed with HTTP 500 (this session's 08:00 UTC run included). Fix: `--from rowan.quni@qwav.tech` (verified working domain) or any ALLOWED_DOMAINS address; when qnfo.org recovers, drop the flag. Cross-ref: email-composer v2.15 (Sender-Domain Fallback, EMAIL-SENDING-DOMAIN-10002), kaizen v1.95.
+> Cross-reference: email-composer v2.15, kaizen v1.95, session this.
+
 > **v2.87 UPDATE (2026-08-06, kaizen — ZENODO-RECORDS-API-DROPS-METADATA-1 + P5.FRESH self-DOI ordering + INTERNAL-REF-1 extension):**
 > Red-team: direct parent-agent 5-adversary audit (session ktkjFggX5vMt1h4ogDIwh — SKILLS UPDATE
 > directive; qwave-qudit-advantage QNFO.UMP.005 red-team). HARD: 2. SOFT: 1. DESIGN: 0. Changes:
@@ -217,7 +222,7 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.89
+# RESEARCH — v2.90
 > **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -8943,7 +8948,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.89** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.90** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
