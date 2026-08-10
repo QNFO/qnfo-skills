@@ -222,7 +222,12 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.92
+# RESEARCH — v2.93
+> **v2.93 UPDATE (2026-08-10, kaizen — UIA cross-reference in Phase 4 Stage 3):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). UIA cross-ref added to
+> Phase 4 Stage 3 Red-Team Challenge — the 15-question UIA complements the 5-adversary review.
+> Cross-ref: UIA DOI 10.5281/zenodo.21878943, kaizen v2.01 §H.
+>
 > **v2.92 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: briefing send-guard cross-ref + history reconciliation):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session). Trigger: research was bumped 2.90->2.91 by concurrent session 05205f8 (AI-QUALITY-GATE-1, banner VERIFIED present) but .kaizen_history lacked the v2.91 entry, and the briefing archive send path had no TEST-SEND-EXTERNAL-1 cross-ref. HARD: 0. SOFT: 2. DESIGN: 0. Changes:
 > (1) [SOFT] **Briefing System section: TEST-SEND-EXTERNAL-1 cross-ref added (C2)** — the briefing archive email is a send path; test sends follow TEST-SEND-EXTERNAL-1 (user mailbox only, via email-composer scripts/email-send-guard.py).
@@ -4684,7 +4689,7 @@ Every P(E|H) > 0.80 must trace to an empirical calibration pillar (Empirical Bas
 
 
 
-3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist).
+3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist). **Complementary method:** the Universal Ignorance Audit (DOI 10.5281/zenodo.21878943, Quni-Gudzinas 2026) provides a 15-question deep-inquiry alternative that surfaces structural ignorance (scaffolds, map–territory errors, protected zones) complementary to adversarial correctness. See kaizen v2.01 §H.
 
 
 
@@ -8966,7 +8971,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.92** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.93** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

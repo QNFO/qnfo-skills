@@ -642,7 +642,7 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.23
+# QNFO Core — v1.24
 
 > **v1.23 UPDATE (2026-08-10, kaizen — skill_run-disable fallback + endpoint-scope verification; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -2241,6 +2241,11 @@ research (phases carry WBS codes in execute_plan), windows-command-patterns (exe
 
 ## §0.0 RESEARCH INTEGRITY MANDATE
 
+> **v1.24 UPDATE (2026-08-10, kaizen — Universal Ignorance Audit cross-reference):** Added UIA Question 5
+> (Falsifiability test) as a concrete instrument for the Falsifiability Requirement. Cross-ref:
+> UIA DOI 10.5281/zenodo.21878943, kaizen v2.01 §H.
+
+
 
 
 
@@ -2698,6 +2703,8 @@ must pass the gate before claiming cross-domain correspondences as evidence.
 
 
 research v2.73 (KIF-60, RETRODICTION-1/OVERFITTING-1/CHERRY-PICK-1/ABSORPTION-1),
+user 2026-08-04 methodological injunction (Obsidian note `_26216121020.md`).
+**Universal Ignorance Audit:** Question 5 (Falsifiability test: "What would a world look like in which this was false?") from the UIA (DOI 10.5281/zenodo.21878943, Quni-Gudzinas 2026) is a concrete instrument for applying the Falsifiability Requirement to any claim. See kaizen v2.01 §H (Universal Ignorance Audit).,
 
 
 
@@ -5770,7 +5777,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.23** (qnfo-core — AI-AUTHOR-CLASSIFY-1: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
+Current: **v1.24** (qnfo-core — UIA cross-reference + Q5 falsifiability instrument: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
 
 
 

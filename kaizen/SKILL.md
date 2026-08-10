@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 2.00
+version: 2.01
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -266,7 +266,30 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.00
+# KAIZEN — v2.01
+> **v2.01 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session).
+> Trigger: user directive to update skills with UIA (DOI 10.5281/zenodo.21878943). MEMORY-TO-SKILL-DRIFT
+> closed — UIA existed in durable memory (mem-t42Um_yqbfJL) since 2026-08-09 but never migrated to skill.
+> HARD: 2 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **Universal Ignorance Audit section (H) added to Mined Workflow Patterns** — the UIA
+>     is a fifteen-question, five-phase method for systematic inquiry into the structure of not-knowing.
+>     It is the NATURAL COMPLEMENT to kaizen's Phase 2 Red-Team Review: where the adversarial audit
+>     tests "is this skill correct?", the UIA tests "what is this skill structurally blind to?"
+>     Together they form a dual verification pipeline. Fifteen-question table with kaizen integration
+>     points per question. Kaizen-specific protocol: Q1-8 before Phase 2, Q9-15 before Phase 5,
+>     Q15 (recursive meta-question) seeds the next Watchtower session via durable memory.
+>     Canonical case: this session — UIA published 2026-08-10, integrated same-day.
+> (2) [HARD] **UIA-SKIP-1 anti-pattern added** — a kaizen cycle without a UIA pass audits
+>     correctness without auditing structural ignorance. Run Q1-8 before Phase 2, Q9-15 before Phase 5.
+> (3) [SOFT] **qnfo-core cross-ref added** — §0.0 Falsifiability Requirement now references UIA
+>     Question 5 (falsifiability test) as a concrete instrument. Cross-ref: UIA DOI 10.5281/zenodo.21878943.
+> (4) [SOFT] **research cross-ref added** — Phase 4 Stage 3 Red-Team Challenge now references UIA
+>     as a complementary deep-inquiry method. Cross-ref: UIA DOI 10.5281/zenodo.21878943.
+> (5) [DESIGN] **MEMORY-TO-SKILL-DRIFT closed** — UIA v2.0 memory migrated to kaizen SKILL.md.
+> Cross-reference: UIA DOI 10.5281/zenodo.21878943, qnfo-core v1.24, research v2.93,
+> mem-t42Um_yqbfJL (UIA v2.0), session this.
+>
 > **v2.00 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: PHANTOM-DEPLOY-VERSION mirror + MEMORY-TO-SKILL-DRIFT closure):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session).
 > Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 1 (kaizen-side: memory→skill drift).
@@ -9907,6 +9930,46 @@ replaces a sequential task list with a merge-driven execution plan.
 research KIF-29 (Cross-Domain Consilience Gate), CON.002 (Consilience
 Framework), SYNTHESIS-DILIGENCE-1 (kaizen v1.62).
 
+### H. Universal Ignorance Audit (UIA — QNFO-original, DOI 10.5281/zenodo.21878943; 2026-08-10)
+
+The **Universal Ignorance Audit** is a fifteen-question, five-phase method for systematically interrogating the structure of not-knowing in any domain. Published by the QNFO research program (Quni-Gudzinas 2026, DOI 10.5281/zenodo.21878943), the UIA treats ignorance as an active, structured state with architecture — hidden assumptions (scaffolds), representational confusions (map–territory errors), felt anomalies (wobbles), protected zones (taboo and identity-threatening questions), and productive capacities (actionable and relational ignorance).
+
+The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5-adversary framework). Where the kaizen audit tests "is this skill correct?", the UIA tests "what is this skill structurally blind to?" Together they form a dual verification pipeline: adversarial correctness + structural ignorance detection.
+
+**The Fifteen Questions (five phases):**
+
+| Phase | # | Question | Kaizen Integration |
+|:------|:--|:---------|:-------------------|
+| **1. Surface the Structure** | 1 | Scaffold detection: *What are the hidden assumptions holding this skill/pipeline up?* | Phase 0 pre-flight checks — identify load-bearing premises before auditing |
+| | 2 | Map–territory hygiene: *Where might the map (skill doc) be mistaken for the territory (actual execution)?* | Phase 1 explorer audit — catch representational drift |
+| | 3 | Wobble probe: *What is the tension, anomaly, or thing that does not fit?* | Watchtower INCIDENT-AXIS — wobbles become incidents if un-surfaced |
+| **2. Stress-Test the Frame** | 4 | Inversion: *What if the opposite assumption were true?* | Phase 2 red-team — the adversarial lens |
+| | 5 | Falsifiability: *What world would disprove this skill's claims?* | Phase 4 Verification Gate — every fix needs a disconfirmation condition |
+| | 6 | Invariant extraction: *What remains the same if the frame changes?* | Cross-skill dependency audit — what survives version drift |
+| **3. Multiply Perspectives** | 7 | Radical perspectival shift: *How would this look to a radically different observer?* | Phase 2 red-team novelty auditor |
+| | 8 | Externalized ignorance: *Who knows about this that I don't?* | Cross-skill integration gap audit |
+| **4. Uncover Hidden Forces** | 9 | Power analysis: *Who benefits from this skill's current framing?* | PROSE-GATE-ADVISORY-1 detection — who benefits when gates are prose-only |
+| | 10 | Protected ignorance: *What is the most dangerous question about this skill?* | SYNTHESIS-DILIGENCE-1 — the question that threatens the skill's identity |
+| | 11 | Somatic/tacit dimension: *What does this skill's uncertainty feel like in execution?* | EXEC-AUTOBG-DEATH-1 class — embodied knowledge of tool unreliability |
+| **5. Act** | 12 | Willful ignorance: *What do we already know but pretend not to?* | PHANTOM-DEPLOY-VERSION — the truth we already have but won't claim |
+| | 13 | Actionable ignorance: *What can we do with this uncertainty right now?* | Phase 5 closeout — deferred items become actionable in the next session |
+| | 14 | Relational ignorance: *What does the unknown want from this skill?* | Calibration Register — forward-looking fragility predictions |
+| | 15 | Recursive meta-question: *What question am I not asking?* | The Watchtower's MEMORY-DRIFT-AXIS — the question that generates the NEXT kaizen pass |
+
+**Kaizen-specific UIA Protocol (MANDATORY for every SKILLS UPDATE cycle):**
+
+1. **Before the red-team audit (Phase 2), run Questions 1-8** against the target skill. The UIA findings inform the 5-adversary review — a skill with surfaced scaffolds and wobbles makes the adversarial questions sharper.
+2. **Before closeout (Phase 5), run Questions 9-15** against the kaizen session itself. The UIA's action phase ensures closeout produces not just fixes but STRUCTURAL LEARNING.
+3. **The recursive meta-question (Q15) seeds the next Watchtower session.** The answer becomes a durable memory entry: "UIA-{skill}-{version}: the unasked question is X."
+
+**Anti-pattern: UIA-SKIP-1 — running a kaizen cycle without a UIA pass (2026-08-10).** A kaizen session that audits for correctness without auditing for structural ignorance produces verified fixes that may solve the wrong problem. The UIA catches what adversarial review assumes away — the scaffolds, map–territory errors, and protected ignorances that both the skill AND the auditor share. Cross-ref: SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1.
+
+**Administration protocol:** (1) State the skill/pipeline as the explicit target X. (2) Answer every question — skipping is forbidden, stretching is mandatory. (3) Write answers down — oral UIA loses the texture Q9-11 depend on. (4) Do not resolve during Phases 1-4 — premature resolution forecloses deeper unknowing. (5) Allow silence after Q14 — the relational question requires receptive attention. (6) Q15 seeds the next pass.
+
+**Meta-audit of the UIA itself (from the paper, §4):** The UIA has an analytic, individualistic, extractive slant. It underweights the receptive, surrendering, not-doing dimension of unknowing. It benefits the articulate, time-rich auditor and may silence those whose survival depends on certainty. These limitations are part of the method's specification — they bound its claims.
+
+**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question).
+
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
 
@@ -11920,6 +11983,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
 
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
+| **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21878943) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
 
 
 
@@ -13967,7 +14031,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v2.00** (kaizen — SKILLS UPDATE: PHANTOM-DEPLOY-VERSION mirror + MEMORY-TO-SKILL-DRIFT closure; 2026-08-10)
+Current: **v2.01** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
 
 
 
