@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.93
+version: 1.94
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -266,7 +266,27 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.93
+# KAIZEN — v1.94
+
+> **v1.94 UPDATE (2026-08-10, kaizen — Cloudflare cost incident closure: cloudflare v3.36 permanent fix + 6 anti-patterns):**
+> Red-team: direct parent-agent 5-adversary audit (session qxo_RCq4Y_tPZVkBQVmZb — CMD SKILLS UPDATE).
+> HARD: 3 (cloudflare-side). SOFT: 3. DESIGN: 2. Changes:
+> (1) [HARD] Incident: qnfo-paper-indexer v1 (deployed 2026-08-02 from temp dir, no git source, */30 cron,
+>     NO dedup) drove ~$5/day "Regular Twitch Neurons" (Workers AI Llama 3.3 70B; ~175k inference
+>     records/day since 2026-08-02). Fixed permanently: v1 DELETED; v2.0-dedup-aware reconstructed +
+>     deployed from QNFO/qnfo-workers (commit ae9d2d5) with sha256 content-hash dedup, X-Index-Token
+>     auth, NO cron. Verified: webhook call 2 -> skipped:true reason:unchanged; unauth -> 401; stream
+>     quiet (2 records/10min). Daily count 175,876 (08-09) -> 86,365 (08-10, morning firehose+residual).
+> (2) [HARD] 6 new cloudflare anti-patterns documented (owner: cloudflare v3.36): WORKER-THIN-CLIENT-1,
+>     CRON-AI-INDEXER-DEDUP-1, AI-ENDPOINT-AUTH-1, SCHEDULES-RAW-ARRAY-1, WAF-RATELIMIT-WORKERSDEV-1,
+>     WORKER-VERSIONS-NO-CODE-1. Mirrors for Watchtower.
+> (3) [SOFT] Auth token for all webhook callers (publication pipeline + scheduled task a0c65ac6):
+>     X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8.
+> (4) [SOFT] Git: QNFO/qnfo-workers created as canonical Workers source repo (worker commit ae9d2d5).
+> Cross-reference: cloudflare v3.36, QNFO/qnfo-workers, research v2.89 (VECTORIZE-WEBHOOK-VERIFY-1),
+> handoff #28392, wbs_state QNFO.CLOUDFLARE.USAGE P3/3, session qxo_RCq4Y_tPZVkBQVmZb.
+
+
 
 > **v1.93 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: ecosystem audit + Watchtower scan — all QNFO skills N-2 CLEAN):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive, this session).
@@ -13864,7 +13884,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.93** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v1.94** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
 
 
 

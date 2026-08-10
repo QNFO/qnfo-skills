@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.35
+version: 3.36
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -23,7 +23,37 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.35
+# CLOUDFLARE — v3.36
+
+> **v3.36 UPDATE (2026-08-10, kaizen — Workers cost incident closure: permanent fix + 6 new anti-patterns):**
+> Red-team: direct parent-agent 5-adversary audit (session qxo_RCq4Y_tPZVkBQVmZb — CMD RED TEAM +
+> CMD SKILLS UPDATE). HARD: 3 (incident-side). SOFT: 3. DESIGN: 2. Changes:
+> (1) [HARD] **WORKER-THIN-CLIENT-1** — qnfo-paper-indexer was deployed 2026-08-02 from a session temp
+>     dir, source NEVER committed to git; versions API is metadata-only (code unrecoverable, /content 405).
+>     Rule: any Worker deploy MUST be from a committed git repo (QNFO/qnfo-workers), pushed BEFORE deploy.
+> (2) [HARD] **CRON-AI-INDEXER-DEDUP-1** — the */30 cron re-embedded the corpus with no content-hash dedup
+>     (skipped:0), generating ~175k inference records/day -> ~$5/day "Regular Twitch Neurons" (Workers AI
+>     Llama 3.3 70B). Any cron/AI-indexer worker MUST carry a content-hash registry check (index_state
+>     table, sha256(body_md)); unchanged papers skip with reason:unchanged.
+> (3) [HARD] **AI-ENDPOINT-AUTH-1** — /webhook and /index were PUBLIC; any caller (orphaned agent session,
+>     bot) could trigger re-embedding and drain the free neuron allocation. All mutating AI endpoints MUST
+>     require X-Index-Token shared-secret header (401 otherwise). Token: chnx-idx-v1-k9m2n4p7r5t8.
+> (4) [SOFT] **SCHEDULES-RAW-ARRAY-1** — PUT /workers/scripts/{name}/schedules requires a RAW JSON ARRAY
+>     body (e.g., []) — wrapped {"crons":[]} returns 400 "Could not parse request body".
+> (5) [SOFT] **WAF-RATELIMIT-WORKERSDEV-1** — account-level http_ratelimit phase rejects ratelimit rules
+>     (kind root; "kind" field itself unknown on this API version) and workers.dev hostnames are NOT
+>     covered by zone-level rules. You CANNOT WAF-rate-limit workers.dev endpoints — use Worker-level auth.
+> (6) [SOFT] **WORKER-VERSIONS-NO-CODE-1** — GET /workers/scripts/{name}/versions/{id} returns metadata +
+>     bindings but NOT the script body; /content returns 405 for this auth scheme. Deployed code is
+>     unrecoverable without git — commit before deploy, always.
+> (7) [DESIGN] qnfo-paper-indexer v1 DELETED 2026-08-10; v2.0-dedup-aware reconstructed + deployed from
+>     QNFO/qnfo-workers (commit ae9d2d5): sha256 dedup, X-Index-Token auth, NO cron, on-demand only.
+>     Source also at .deepchat/handoff/qnfo-paper-indexer-v2-*. Auth token for callers (publication
+>     pipeline webhook, scheduled task): X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8.
+> Cross-reference: kaizen v1.94, QNFO/qnfo-workers, research v2.89 (VECTORIZE-WEBHOOK-VERIFY-1),
+> handoff #28392, session qxo_RCq4Y_tPZVkBQVmZb.
+
+
 
 > **v3.35 UPDATE (2026-08-05, kaizen — Email reclassification gap + qnfo-email v1.6 API docs):**
 > Red-team: direct parent-agent 5-adversary audit (session m_qnIa_aibac3IVnA51L1).
@@ -533,7 +563,7 @@ Verify materialization via `/health` — qnfo-qwav reports `ai: true` only after
 
 **Known live workers.dev URLs (verified 2026-08-02):**
 - `https://qnfo-paper-indexer.q08.workers.dev` — /health, /count, /index?offset=N,
-  /webhook?slug=XXX, /cron/debug (cron: every 30 min, 233 papers, 0 errors)
+  /webhook?slug=XXX, /cron/debug (auto-index cron REMOVED 2026-08-10 — cost incident ~$5/day "Regular Twitch Neurons"; on-demand /index + /webhook only; see handoff #28392, mem-ePaOd3YRXzmt)
 - `https://qnfo-qwav.q08.workers.dev` — /health (ai: true), /ask, /ai/ask, /ai/search
 
 ### R2 CLI Syntax (wrangler v4+)
@@ -975,7 +1005,7 @@ an audit-trail row is drift.)
 ### Workers
 Baseline: 9 (updated 2026-08-02 — live `workers_list` MCP returned 9 incl.
 `qnfo-paper-indexer`, created 2026-08-01; treat any future count ≠ 9 as drift).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; cron every 30 min + webhook for real-time; v1.0, 2026-08-01), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
+**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
 
 > **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** Before ANY Pages
 > deployment (q*.pages.dev / custom domains / GitHub Actions deploys), run
@@ -1358,7 +1388,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.35** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.36** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
