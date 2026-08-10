@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.02"
+version: "2.03"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,8 +265,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.02
-# KAIZEN — v2.02
+# KAIZEN — v2.03
+> **v2.03 UPDATE (2026-08-10, kaizen — aggregator truncation now 5/5 + Consolidated Closeout Verification mirror):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-15 (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc;
+> QNFO.RES.002/.003 closeout + red-team cycle). Watchtower: kaizen v2.02 N-2 CLEAN pre-edit; v2.03 CLEAN post-edit.
+> HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **SUBAGENT-AGGREGATOR-TRUNCATION-1 evidence escalated to 5/5** — this session dispatched FIVE
+>     parallel reviewer subagents (Accuracy/Completeness/Dependency/Novelty/Status); ALL reported `completed`
+>     status, yet the orchestrator aggregate returned ONLY planning preambles — zero findings surfaced from any.
+>     This is stronger than the prior 2/3 (v2.00) and 3/3 (v1.90) cases: the aggregator is now confirmed to drop
+>     subagent output even when every child finishes. Rule re-affirmed with stronger wording: the aggregator
+>     return is NEVER authoritative for audit findings; a direct parent-agent audit is the ONLY review that
+>     reliably completes. Fall back on the FIRST observation of preamble-only output, not the second.
+> (2) [DESIGN] **CONSOLIDATED-CLOSEOUT-VERIFICATION-1 mirror row added** (owner: research v2.95) — publication
+>     closeouts run ONE same-turn script re-proving DOI HEAD x4 + DataCite findable/subjects/rights + GitHub refs +
+>     D1 row + Zenodo files; any non-PASS blocks closeout (zero deferred). Canonical: QNFO.RES.002/.003.
+> Cross-reference: research v2.95, SUBAGENT-DEADLINE-1, Subagent Failure Handling (rule 4), QNFO.RES.002/.003,
+> session this.
+
+
 > **v2.02 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 mirror + research v2.94 correction cycle):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc;
 > QNFO.RES.002/.003 publication cycle triggered the finding). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit
@@ -12001,6 +12018,9 @@ Session Failure → Session Retrospective detects failure pattern
 
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
 | **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21878943) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
+| **NEWVERSION-DOI-RESERVATION-1: newversion drafts return `prereserve_doi: None` from GET /draft — PID reservation POST is the only path (2026-08-10)** | **HARD** (mirror; owner research v2.94). `POST /api/records/{id}/draft/pids/doi` (the draft's `links.reserve_doi`) → 201 with the reserved DOI. GET /draft returns `prereserve_doi: None` for newversion drafts (verified 2026-08-10, drafts 21878976/21878977). Also: in-place `.md` overwrite on a published record is impossible (415 bare URL / 403 bucket-locked on /content); P5.FRESH repair = newversion-only, uploaded .md carries its OWN DOI + status published. Canonical case: QNFO.RES.002/.003 — first newversion hit the None gap; PID-reservation fixed both; P5.FRESH yaml_ok=True. Cross-ref: research v2.94, ZENODO-BUCKET-LOCKED-1, P5.FRESH. |
+| **SUBAGENT-AGGREGATOR-TRUNCATION-1: all subagents 'completed' but aggregator returns only planning preambles — evidence 5/5 (2026-08-10)** | **HARD** (mirror; owner kaizen v2.03 Subagent Failure Handling). This session: 5 parallel reviewers all reported completed status; aggregate output = planning preambles only, zero findings. Prior evidence: 2/3 (v2.00), 3/3 (v1.90). The aggregator return is NEVER authoritative for audit findings. Direct parent-agent audit is the ONLY review that reliably completes; fall back on FIRST preamble-only observation. Canonical: QNFO.RES.002/.003 red-team (2026-08-10) — direct fallback returned 0 HARD/0 SOFT. |
+| **CONSOLIDATED-CLOSEOUT-VERIFICATION-1: closing a multi-layer publication without one same-turn re-proof script (2026-08-10)** | **HARD GATE** (mirror; owner research v2.95). After Zenodo+GitHub+D1+R2+KG closeout, run ONE script re-proving all layers same-turn (DOI HEAD x4 incl. v0.1 predecessors, DataCite findable/subjects/rights, GitHub ls-remote, D1 row, Zenodo files). Any non-PASS blocks closeout (zero deferred). Canonical: QNFO.RES.002/.003 (2026-08-10) — 5 layers, all PASS, 0 HARD/0 SOFT. Cross-ref: ZENODO-PHANTOM-DOI-1, P5.FRESH, Tool-Call Execution Mandate. |
 
 
 
@@ -14057,7 +14077,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.02** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
+Current: **v2.03** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
 
 
 
@@ -14213,7 +14233,6 @@ Current: **v2.02** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integrat
 
 
 - Do not guess script paths or change directories to locate skill files.
-
 
 
 

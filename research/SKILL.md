@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.94"
+version: "2.95"
 description: >
 
 
@@ -217,8 +217,22 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.94
-# RESEARCH — v2.94
+# RESEARCH — v2.95
+> **v2.95 UPDATE (2026-08-10, kaizen — Consolidated Publication Closeout Verification gate + UIA pass):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc,
+> QNFO.RES.002/.003 closeout cycle). Watchtower: research v2.94 N-2 CLEAN pre-edit; v2.95 N-2 CLEAN post-edit (raw anchors).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **Consolidated Publication Closeout Verification gate added (Phase 8 / Verification Gates)** —
+>     a single same-turn script that re-proves ALL distribution layers at once: doi.org HEAD x4 (new + v0.1 predecessors),
+>     DataCite state=findable + subjects + rightsList, GitHub `git ls-remote` branches+tags, D1 row re-query (doi/status/body_len),
+>     Zenodo record files (.pdf/.html/.md present). This closes the wobble where each layer was verified piecemeal and a
+>     phantom-claim could survive until the next gate. Canonical case: QNFO.RES.002/.003 final verification 2026-08-10 —
+>     one script re-proved all 5 layers, 0 HARD/0 SOFT, closing with zero deferred items. The gate is falsifiable: any
+>     non-resolving DOI or missing ref fails the closeout.
+> Cross-reference: kaizen v2.03 (mirror row), Tool-Call Execution Mandate, P5.FRESH, ZENODO-PHANTOM-DOI-1,
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+
+
 > **v2.94 UPDATE (2026-08-10, kaizen — NEWVERSION DOI RESERVATION PATH CORRECTED (prereserve_doi None) + P5.FRESH newversion-only):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc, QNFO.RES.002/.003 publication cycle).
 > Watchtower: research v2.93 N-2 CLEAN pre-edit; v2.94 N-2 CLEAN post-edit (raw-line anchors).
@@ -7644,6 +7658,15 @@ Cross-ref: Tool-Call Execution Mandate, ZENODO-PHANTOM-DOI-1.
 
 
 
+
+**CONSOLIDATED CLOSEOUT VERIFICATION (v2.95, DESIGN — same-turn re-proof):** after any multi-layer
+publication closeout (Zenodo + GitHub + D1 + R2 + KG), run ONE script that re-proves every layer
+in the same turn: (1) `HEAD https://doi.org/{new_doi}` and `{v0.1_doi}` -> 200 both (version chain);
+(2) DataCite `GET https://api.datacite.org/dois/{doi}` -> state=findable + subjects>=expected +
+rightsList has cc-by-nc-sa-4.0; (3) `git ls-remote` for branches + tags; (4) D1 SELECT row -> doi/status/body_len;
+(5) Zenodo record files -> .pdf/.html/.md all present. Any non-PASS blocks closeout (zero deferred).
+Canonical case: QNFO.RES.002/.003 (2026-08-10) — single script, 5 layers, all PASS.
+
 ## Verification Gates
 
 
@@ -7729,6 +7752,7 @@ Cross-ref: Tool-Call Execution Mandate, ZENODO-PHANTOM-DOI-1.
 
 
 | Core Distribution | All 4 layers verified | All pass |
+| **Consolidated Closeout Verification (v2.95)** | Same-turn re-proof of DOI HEAD x4 + DataCite findable/subjects/rights + GitHub refs + D1 row + Zenodo files | One script, all PASS |
 
 
 
@@ -8999,7 +9023,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.94** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.95** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
