@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.95"
+version: "2.96"
 description: >
 
 
@@ -217,7 +217,29 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.95
+# RESEARCH — v2.96
+
+# RESEARCH — v2.96
+> **v2.96 UPDATE (2026-08-10, kaizen — CMD SKILLS UPDATE: publication completeness gates — KG node + Vectorize index + PDF path option):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session Z-DBQiCgjlEszWQZzZthq;
+> trigger: ringbauer-qudit-due-diligence publication closeout red-team found HARD-1 KG-missing + HARD-2 Vectorize-missing,
+> plus PDF build bug where page.pdf() without path wrote no file). Watchtower: research v2.95 N-2 CLEAN pre-edit; v2.96 N-2 CLEAN post-edit (raw anchors).
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **Phase 6 KG Node Seeding (MANDATORY)** — every published paper must have a `paper:<slug>` KG node
+>     with >=1 BELONGS_TO edge (Edge Seeding Gate); verify query_graph/neighbors > 0 same-turn. Anti-pattern:
+>     PUBLICATION-KG-INDEX-GAP-1 (canonical: ringbauer-qudit-due-diligence — D1 row existed, KG node did not).
+> (2) [HARD] **Phase 6 Vectorize Indexing (MANDATORY)** — trigger qnfo-paper-indexer /index or /webhook with
+>     X-Index-Token after D1 insert; verify /webhook?slug= -> indexed:true, chunks>0 (VECTORIZE-WEBHOOK-VERIFY-1).
+>     Canonical: ringbauer-qudit-due-diligence HARD-2 — paper in D1 but not semantically searchable.
+> (3) [HARD] **PDF step 5 `path:` option required** (PDF-PATH-OPTION-1) — `page.pdf()` without `path` returns a
+>     Buffer and writes NO file while the pipeline reports success. Canonical: this session's first render.
+> (4) [SOFT] **Consolidated Closeout Verification extended 5→7 layers** — adds KG node + Vectorize index checks;
+>     this gate would have caught HARD-1/HARD-2 at closeout time.
+> (5) [SOFT] **R2-CDN-CACHE-1** — R2 object API GET may serve a CDN-cached stale object (CF-Cache-Status: HIT);
+>     canonical verify via rclone S3 check (0 differences), not API GET byte-compare.
+> Cross-reference: kaizen v2.04 (mirror rows), knowledge v2.10 (Edge Seeding Gate), cloudflare v3.36
+> (VECTORIZE-WEBHOOK-VERIFY-1, AI-ENDPOINT-AUTH-1), qnfo-core v1.23 (D1 fallback), ringbauer-qudit-due-diligence
+> (DOI 10.5281/zenodo.21879231), session Z-DBQiCgjlEszWQZzZthq.
 > **v2.95 UPDATE (2026-08-10, kaizen — Consolidated Publication Closeout Verification gate + UIA pass):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc,
 > QNFO.RES.002/.003 closeout cycle). Watchtower: research v2.94 N-2 CLEAN pre-edit; v2.95 N-2 CLEAN post-edit (raw anchors).
@@ -225,7 +247,7 @@ triggers:
 > (1) [DESIGN] **Consolidated Publication Closeout Verification gate added (Phase 8 / Verification Gates)** —
 >     a single same-turn script that re-proves ALL distribution layers at once: doi.org HEAD x4 (new + v0.1 predecessors),
 >     DataCite state=findable + subjects + rightsList, GitHub `git ls-remote` branches+tags, D1 row re-query (doi/status/body_len),
->     Zenodo record files (.pdf/.html/.md present). This closes the wobble where each layer was verified piecemeal and a
+>     Zenodo record files (.pdf/.html/.md present), KG node + Vectorize index (v2.96, PUBLICATION-KG-INDEX-GAP-1). This closes the wobble where each layer was verified piecemeal and a
 >     phantom-claim could survive until the next gate. Canonical case: QNFO.RES.002/.003 final verification 2026-08-10 —
 >     one script re-proved all 5 layers, 0 HARD/0 SOFT, closing with zero deferred items. The gate is falsifiable: any
 >     non-resolving DOI or missing ref fails the closeout.
@@ -5471,7 +5493,8 @@ No `--print-to-pdf`. No "primary tier." No fallback. One pipeline, every time.
 
 
 
-5. puppeteer-core CDP: `page.pdf({format:'A4', margin:{top:'2cm',bottom:'2cm',left:'2cm',right:'2cm'}, printBackground:true})`
+5. puppeteer-core CDP: `page.pdf({path: '<slug>.pdf', format:'A4', margin:{top:'2cm',bottom:'2cm',left:'2cm',right:'2cm'}, printBackground:true})`
+   **`path:` IS REQUIRED (PDF-PATH-OPTION-1, v2.96).** Without it, `page.pdf()` returns a Buffer and writes NO file — the pipeline reports success while the PDF is missing (canonical: ringbauer-qudit-due-diligence 2026-08-10).
 
 
 
@@ -6907,6 +6930,11 @@ Canonical: `cloudflare/scripts/d1-query.py`. CHECK-THEN-WRITE pattern (never com
 
 Upload `<slug>.md`, `<slug>.pdf` to `qnfo-releases/releases/<YYYY>/<MM>/<slug>/`.
 
+**Verification (R2-CDN-CACHE-1, v2.96):** the R2 object API GET path can serve a CDN-cached
+stale object (`CF-Cache-Status: HIT`) — a false md5 mismatch vs the fresh local file does NOT
+mean the upload failed. Canonical verification: `rclone check <localdir> releases:qnfo-releases/<prefix>`
+(S3 endpoint, bypasses the API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence
+2026-08-10 — API GET reported stale v1 PDF; rclone proved v4 objects correct.
 
 
 
@@ -6916,6 +6944,33 @@ Upload `<slug>.md`, `<slug>.pdf` to `qnfo-releases/releases/<YYYY>/<MM>/<slug>/`
 
 
 
+
+
+### KG Node Seeding (MANDATORY — PUBLICATION-KG-INDEX-GAP-1, v2.96)
+
+After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
+`paper:<slug>` with 4-D distribution properties + a `BELONGS_TO` edge to the
+owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
+entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
+`X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.23)
+when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
+→ neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
+invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
+HARD-1, 2026-08-10).
+
+### Vectorize Indexing (MANDATORY — PUBLICATION-KG-INDEX-GAP-1, v2.96)
+
+After the D1 insert, trigger the semantic indexer so the paper is discoverable
+via `search_papers`/`search_papers_enriched`. Call the qnfo-paper-indexer with
+the shared-secret header:
+`GET https://qnfo-paper-indexer.q08.workers.dev/index?slug=<slug>` (or `/webhook?slug=<slug>`)
+with `X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8`. **Verify** via
+`GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` →
+`{indexed:true, chunks:N, errors:0}` — the canonical single-paper index proof
+(VECTORIZE-WEBHOOK-VERIFY-1). A paper in D1 but not in Vectorize is not
+semantically discoverable (canonical: ringbauer-qudit-due-diligence HARD-2,
+2026-08-10).
 
 ### MCP-Driven Deployment Verification (HARD)
 
@@ -7664,8 +7719,12 @@ publication closeout (Zenodo + GitHub + D1 + R2 + KG), run ONE script that re-pr
 in the same turn: (1) `HEAD https://doi.org/{new_doi}` and `{v0.1_doi}` -> 200 both (version chain);
 (2) DataCite `GET https://api.datacite.org/dois/{doi}` -> state=findable + subjects>=expected +
 rightsList has cc-by-nc-sa-4.0; (3) `git ls-remote` for branches + tags; (4) D1 SELECT row -> doi/status/body_len;
-(5) Zenodo record files -> .pdf/.html/.md all present. Any non-PASS blocks closeout (zero deferred).
-Canonical case: QNFO.RES.002/.003 (2026-08-10) — single script, 5 layers, all PASS.
+(5) Zenodo record files -> .pdf/.html/.md all present; (6) KG node `paper:<slug>` present via
+query_graph/neighbors with >=1 BELONGS_TO edge (PUBLICATION-KG-INDEX-GAP-1); (7) Vectorize index
+proof via `GET qnfo-paper-indexer/webhook?slug=` -> indexed:true, chunks>0 (VECTORIZE-WEBHOOK-VERIFY-1).
+Any non-PASS blocks closeout (zero deferred). Canonical cases: QNFO.RES.002/.003 (2026-08-10, 5 layers
+all PASS) and ringbauer-qudit-due-diligence (2026-08-10 — this gate would have caught HARD-1 KG-missing
+and HARD-2 Vectorize-missing before closeout).
 
 ## Verification Gates
 
@@ -7752,7 +7811,7 @@ Canonical case: QNFO.RES.002/.003 (2026-08-10) — single script, 5 layers, all 
 
 
 | Core Distribution | All 4 layers verified | All pass |
-| **Consolidated Closeout Verification (v2.95)** | Same-turn re-proof of DOI HEAD x4 + DataCite findable/subjects/rights + GitHub refs + D1 row + Zenodo files | One script, all PASS |
+| **Consolidated Closeout Verification (v2.95→v2.96)** | Same-turn re-proof of DOI HEAD x4 + DataCite findable/subjects/rights + GitHub refs + D1 row + Zenodo files + **KG node (neighbors>0) + Vectorize (webhook indexed:true)** | One script, all PASS |
 
 
 
@@ -9023,7 +9082,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.95** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.96** (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

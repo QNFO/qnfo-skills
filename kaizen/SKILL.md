@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.03"
+version: "2.04"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,20 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.03
+# KAIZEN — v2.04
+
+> **v2.04 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: PUBLICATION-KG-INDEX-GAP-1 + PDF-PATH-OPTION-1 + R2-CDN-CACHE-1 mirrors; research v2.96):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session Z-DBQiCgjlEszWQZzZthq).
+> Trigger: ringbauer-qudit-due-diligence closeout red-team found HARD-1 (KG node missing) + HARD-2 (Vectorize index
+> missing) + PDF path bug + R2 CDN cache artifact. Watchtower: kaizen v2.03 N-2 CLEAN pre-edit; v2.04 N-2 CLEAN post-edit.
+> HARD: 0 (kaizen-side, 3 mirrors added). SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD-mirror] **PUBLICATION-KG-INDEX-GAP-1** — publication pipeline must seed KG node (>=1 BELONGS_TO) + trigger
+>     Vectorize index; verify query_graph/neighbors>0 and /webhook indexed:true same-turn (owner research v2.96).
+> (2) [HARD-mirror] **PDF-PATH-OPTION-1** — page.pdf() without `path` returns a Buffer, writes no file (owner research v2.96).
+> (3) [HARD-mirror] **R2-CDN-CACHE-1** — R2 API GET can serve stale cached object; verify via rclone S3 (owner research v2.96).
+> (4) [SOFT] **Calibration entry** added for PUBLICATION-KG-INDEX-GAP-1 (CHECK 2026-08-13).
+> Cross-reference: research v2.96, VECTORIZE-WEBHOOK-VERIFY-1, knowledge v2.10 (Edge Seeding Gate),
+> ringbauer-qudit-due-diligence (DOI 10.5281/zenodo.21879231), session Z-DBQiCgjlEszWQZzZthq.
 > **v2.03 UPDATE (2026-08-10, kaizen — aggregator truncation now 5/5 + Consolidated Closeout Verification mirror):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-15 (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc;
 > QNFO.RES.002/.003 closeout + red-team cycle). Watchtower: kaizen v2.02 N-2 CLEAN pre-edit; v2.03 CLEAN post-edit.
@@ -12017,6 +12030,10 @@ Session Failure → Session Retrospective detects failure pattern
 | **PROSE-GATE-ADVISORY-1: A HARD gate written only in prose — never scripted into the pipeline it guards (2026-08-06)** | **HARD GATE.** Any HARD anti-pattern that guards a build/release pipeline (publication, deployment, sync) MUST have a scripted, machine-enforced check referenced IN that pipeline. A prose rule is advisory and WILL be skipped under publication pressure. Canonical case: TITLE-DUPLICATION-1 (research v2.84) — three published ODR versions (v0.1-v0.3) shipped with the duplicated title until research v2.86 scripted `check-title-duplication.py` (build-time BLOCK, exit 1). Audit rule: for every HARD gate, ask "is there a script enforcing this?" If not, the gate is advisory — script it. Cross-ref: research v2.86, TITLE-DUPLICATION-1, N-2-SCAN-FALSE-POSITIVE-1. |
 
 | **SYNTHESIS-DILIGENCE-1: Forcing or ignoring connections in multi-note synthesis — cargo-cult synthesis or premature dismissal (2026-08-06)** | **HARD GATE.** Given a batch of input notes, work through ALL of them and find legitimate convergence — never force links without evidence (cargo-cult synthesis: "everything connects to everything," zero evidenced edges) and never dismiss notes as "unrelated" without the diligence pass (premature dismissal: misses real convergence). Canonical case: ODR 2026-08-06 — v0.1 forced photic sneeze ↔ BT-tree (no evidence); v0.3 found the real thesis (tensor networks = BT-tree computation) and moved unsupported links to Open Questions. Protocol: enumerate all inputs → extract each core claim → build evidence graph → keep only evidenced edges → explicitly classify non-converging inputs. Cross-ref: research KIF-29 (minimum-viable-finding), RETRODICTION-1, NOT-YET-EVIDENCE. |
+
+| **PUBLICATION-KG-INDEX-GAP-1: Publishing a paper to Zenodo/D1/papers.qnfo.org without a KG node or Vectorize index (2026-08-10)** | **HARD GATE** (mirror; owner research v2.96). A published paper with a D1 row but NO `paper:<slug>` KG node (>=1 BELONGS_TO edge) is invisible to KG-first due diligence; a paper not in Vectorize is not semantically discoverable. The publication pipeline MUST include: (1) KG node seeding via /sync or direct qnfo-graph D1 + verify query_graph/neighbors > 0 same-turn; (2) qnfo-paper-indexer trigger + verify /webhook?slug= -> indexed:true. Canonical case: ringbauer-qudit-due-diligence (10.5281/zenodo.21879231) — HARD-1 (KG missing) + HARD-2 (Vectorize missing) found at CMD RED TEAM closeout audit; both were invisible to the v2.95 consolidated closeout gate, now extended to 7 layers. Cross-ref: research v2.96 Phase 6, knowledge v2.10 Edge Seeding Gate, VECTORIZE-WEBHOOK-VERIFY-1. |
+| **PDF-PATH-OPTION-1: `page.pdf()` without the `path:` option returns a Buffer and writes NO file (2026-08-10)** | **HARD GATE** (mirror; owner research v2.96). In the puppeteer-core CDP pipeline, `page.pdf({format, margin, printBackground})` without `path` returns a Buffer — the pipeline reports success while the PDF file is never written. ALWAYS pass `path: '<slug>.pdf'`. Canonical case: ringbauer-qudit-due-diligence first render — node reported 'PDF written' but no file existed; verify_pdf.py FileNotFoundError caught it. Cross-ref: research v2.96 PDF Building step 5, CHROME-HEADLESS-1. |
+| **R2-CDN-CACHE-1: R2 object API GET serves a CDN-cached stale object — false md5 mismatch (2026-08-10)** | **HARD GATE** (mirror; owner research v2.96). The R2 object API GET path can return a stale cached object (`CF-Cache-Status: HIT`, old ETag) after an overwrite — a byte-compare against the fresh local file fails while the upload actually succeeded. Canonical verification: `rclone check <local> releases:qnfo-releases/<prefix>` (S3 endpoint, bypasses API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence — API GET reported stale v1 PDF (etag 150124da) while rclone proved v4 objects correct. Cross-ref: research v2.96 R2 Archive, cloudflare v3.14 (R2 object GET/HEAD caveats). |
 | **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21878943) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
 | **NEWVERSION-DOI-RESERVATION-1: newversion drafts return `prereserve_doi: None` from GET /draft — PID reservation POST is the only path (2026-08-10)** | **HARD** (mirror; owner research v2.94). `POST /api/records/{id}/draft/pids/doi` (the draft's `links.reserve_doi`) → 201 with the reserved DOI. GET /draft returns `prereserve_doi: None` for newversion drafts (verified 2026-08-10, drafts 21878976/21878977). Also: in-place `.md` overwrite on a published record is impossible (415 bare URL / 403 bucket-locked on /content); P5.FRESH repair = newversion-only, uploaded .md carries its OWN DOI + status published. Canonical case: QNFO.RES.002/.003 — first newversion hit the None gap; PID-reservation fixed both; P5.FRESH yaml_ok=True. Cross-ref: research v2.94, ZENODO-BUCKET-LOCKED-1, P5.FRESH. |
 | **SUBAGENT-AGGREGATOR-TRUNCATION-1: all subagents 'completed' but aggregator returns only planning preambles — evidence 5/5 (2026-08-10)** | **HARD** (mirror; owner kaizen v2.03 Subagent Failure Handling). This session: 5 parallel reviewers all reported completed status; aggregate output = planning preambles only, zero findings. Prior evidence: 2/3 (v2.00), 3/3 (v1.90). The aggregator return is NEVER authoritative for audit findings. Direct parent-agent audit is the ONLY review that reliably completes; fall back on FIRST preamble-only observation. Canonical: QNFO.RES.002/.003 red-team (2026-08-10) — direct fallback returned 0 HARD/0 SOFT. |
@@ -13898,6 +13915,13 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 ```
 
 
+
+[CHECK: 2026-08-13] PUBLICATION-KG-INDEX-GAP-1 will hold through +3 monitoring checkpoints: no
+published paper (Zenodo DOI issued) will lack a KG node (paper:<slug> with >=1 BELONGS_TO edge)
+or a Vectorize index proof (/webhook indexed:true). Risk of regression: [MODERATE] — the KG/Vectorize
+steps are now documented in research v2.96 Phase 6, but the consolidated closeout script that enforces
+them is the enforcement layer. Likelihood: [HIGH] — HARD-1/HARD-2 were found by red-team on the FIRST
+post-gate publication (ringbauer-qudit-due-diligence); the 7-layer closeout now blocks them.
 [CHECK: 2026-08-13] NEWVERSION-DOI-RESERVATION-1 will hold through +3 monitoring checkpoints: no future
 Zenodo newversion flow will attempt to read `prereserve_doi` from GET /draft (returns None); every
 newversion uses POST /api/records/{id}/draft/pids/doi to reserve its DOI, and every P5.FRESH repair is
@@ -14077,7 +14101,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.03** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
+Current: **v2.04** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
 
 
 
