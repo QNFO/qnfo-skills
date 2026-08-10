@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.90
+version: 2.91
 
 
 
@@ -222,7 +222,11 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.90
+# RESEARCH — v2.91
+> **v2.91 UPDATE (2026-08-10, kaizen — AI-QUALITY-GATE-1 added to publication pipeline):**
+> Red-team: direct parent-agent 5-adversary audit follow-up (session 0SnaUK-QccIJkohojGMQS — uncanny-valley research note + JPCUB verification). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **AI-QUALITY-GATE-1 added to Publication Language Gate (BLOCKING)** — the owner-level anti-pattern (qnfo-core v1.22) becomes a machine-enforced pipeline check per PROSE-GATE-ADVISORY-1. Before publication, AI-generated/AI-assisted papers MUST clear the forensic quality gate: (i) no elementary physics/energy-budget errors (canonical: Qudit Advantage §3.3 sets P_decode≈0 as a "conservative upper bound" — zero is a LOWER bound; VERIFIED via D1 body 2026-08-10), (ii) no synthetic/unresolvable citation anchors in the body (@C5_jpcub_p0-style prefixed keys — INTERNAL-REF-1-adjacent; readers read them as fake), (iii) no scaffold overload (meta-tag echo, rigid template boxes), (iv) no over-explaining textbook foundations while hand-waving the novel integration, (v) no self-referential metric claims without external validation. Cross-ref: qnfo-core v1.22, INTERNAL-REF-1, kaizen v1.63 (PROSE-GATE-ADVISORY-1).
+> Cross-reference: qnfo-core v1.22, kaizen v1.94, session 0SnaUK-QccIJkohojGMQS.
 > **v2.86 UPDATE (2026-08-06, kaizen — TITLE-DUPLICATION-1 SCRIPTED GATE: prose advisory became machine-enforced):**
 > Red-team: direct parent-agent 5-adversary audit (session bwt-Jv0EdLebno9QonKIa — ODR 2026-08-06
 > publication cycle). Trigger: user directive — "HOW MANY TIMES DO I HAVE TO TELL YOU TO FIX
@@ -5036,7 +5040,7 @@ status: "draft" | "published"
 
 
 
-Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, **internal references (repo paths, skill sections, internal program names, WBS codes like `QNFO.UMP.005`, quoted internal program names like "QEC Darwinism" — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
+Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, AI-quality-gate violations (elementary physics/energy-budget errors incl. P_decode direction slips, synthetic citation anchors, scaffold overload, hand-waved integration, self-referential metrics), **internal references (repo paths, skill sections, internal program names, WBS codes like `QNFO.UMP.005`, quoted internal program names like "QEC Darwinism" — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
 
 
 
@@ -7804,6 +7808,7 @@ Cross-ref: Tool-Call Execution Mandate, ZENODO-PHANTOM-DOI-1.
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` file naming for published papers (2026-08-05)** | **HARD GATE.** Published paper files MUST be named as the PROJECT SLUG: `<slug>.md`, `<slug>.pdf`, `<slug>.html` (e.g. `qec-darwinism-ultrametric.md`). Applies to repo files, Zenodo deposit filenames, and R2 keys. Canonical case: QNFO.UMP.004 v1.3 — files renamed `paper.*` → `qec-darwinism-ultrametric.*` (commit 24fc89f). |
 | **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` field — title renders TWICE on page 1 (2026-08-05)** | **HARD GATE.** Pandoc emits the YAML `title:` as `<h1 class="title">`; a body H1 with the same title duplicates it on page 1. When YAML frontmatter has `title:`, the paper body MUST NOT contain a top-level H1 with the same title. Verify: run `research/scripts/check-title-duplication.py <slug>.html` — PASS requires exactly ONE rendered `<h1 class="title">` and zero body `<h1>` (v2.86 scripted gate, build-time BLOCK on failure). Canonical case: QNFO.UMP.004 v1.2 — body H1 removed (commit f2912ab). |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (repo paths, skill sections, internal program names, conferences) (2026-08-05)** | **HARD GATE.** Published papers MUST NOT reference: repo paths (`QNFO/xxx`), skill sections (`QNFO Core §0.7`), internal program names as prose (`the Kepler Program`, `the Continuum Trilogy` as process refs), internal conference/workshop mentions, possessive internal refs (`QNFO's research program`). Convert to generic phrasing + numbered citations of PUBLISHED records only. Canonical case: QNFO.UMP.004 v1.2 — CWI section deleted, Kepler prose → "prior published work", refs 10-13 cited properly (commit f2912ab). |
+| **AI-QUALITY-GATE-1: Publishing AI-generated/AI-assisted papers without clearing the forensic quality gate (2026-08-10)** | **HARD GATE.** AI-generated/AI-assisted papers MUST pass the pre-publication quality gate: (i) no elementary physics/energy-budget errors (canonical: Qudit Advantage §3.3 P_decode≈0 labeled "conservative upper bound" — zero is a LOWER bound; VERIFIED via D1 body 2026-08-10), (ii) no synthetic/unresolvable citation anchors (@C5_jpcub_p0-style prefixed keys — INTERNAL-REF-1-adjacent), (iii) no scaffold overload (meta-tag echo, rigid template boxes), (iv) no over-explaining textbook foundations while hand-waving the novel integration, (v) no self-referential metric claims without external validation. The "AI-GENERATED" label cost is mitigated by quality, never by hiding (uncanny-valley literature: Luo 2019 moderation, Dietvorst 2014 asymmetry). Owner: qnfo-core v1.22. Cross-ref: INTERNAL-REF-1, PROSE-GATE-ADVISORY-1, kaizen v1.94. |
 
 
 
@@ -8948,7 +8953,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.90** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.91** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
