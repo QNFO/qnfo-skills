@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.18
+version: 3.19
 
 
 kif_tags: [KIF-32]
@@ -125,7 +125,24 @@ kif_tags: [KIF-32]
 
 
 
-# windows-command-patterns — v3.18
+# windows-command-patterns — v3.19
+
+> **v3.19 UPDATE (2026-08-10, kaizen — CURL-AUTH-QUOTE-1: exec-safe authenticated curl pattern; session bPhAUCI_FRVeZyA5Rxmsm):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session — every
+> quoted exec arg failed through cmd.exe/Node spawn). HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **CURL-AUTH-QUOTE-1 anti-pattern + S-1.0.10 section added** — through the exec tool, ALL quoted
+>     args are mangled: `-H "Authorization: Bearer %VAR%"` → header dropped (Cloudflare 1001 "Missing
+>     Authorization", GitHub 401); unquoted `-H Authorization:Bearer%VAR%` → 6111 "Invalid format" (no space
+>     after scheme). Canonical reliable form (verified live 2026-08-10): `--oauth2-bearer %VAR%` (curl builds
+>     `Authorization: Bearer <token>` with the required space; unquoted, no cmd mangling) + `-H Name:value`
+>     for headers whose value has NO space (`-H Content-Type:application/json`) + `--data-binary @file` for
+>     JSON bodies + `> out.txt` (cmd redirect, not `-o` which gets path-mangled). Applies to Cloudflare,
+>     GitHub, Zenodo, D1 REST.
+> (2) [SOFT] **`findstr`/`dir` with quoted args fail** — `findstr /n "# QNFO Core"` returned exit 1 (space in
+>     quoted pattern split by cmd). Use write→exec python for pattern search, or single-token patterns.
+> (3) [DESIGN] **S-1.0.10 section added** — full exec-safe HTTP recipe (auth + headers + body + redirect).
+> Cross-reference: CURL-AUTH-QUOTE-1, cloudflare v3.37 (D1-REST-PAYLOAD-1, TOKEN-VERIFY-SCOPE-1),
+> kaizen v1.96, qnfo-core v1.23, session bPhAUCI_FRVeZyA5Rxmsm.
 
 > **v3.18 UPDATE (2026-08-10, kaizen — exec space-path false negatives + cleanup-claim masking + pywin32 COM):**
 > Red-team: direct parent-agent 5-adversary audit (session FqszmI7iAvYDr6_X3C2qv — CMD SKILLS UPDATE).
@@ -1486,6 +1503,8 @@ For PATH persistence, use winreg instead of setx.
 
 
 
+| **CURL-AUTH-QUOTE-1: Quoted curl args mangled by exec — auth headers dropped (2026-08-10)** | `-H "Authorization: Bearer %VAR%"` → header lost (CF 1001, GH 401); `-H Authorization:Bearer%VAR%` → 6111 no-space. Use `--oauth2-bearer %VAR%` + `-H Name:value` (no spaces) + `--data-binary @file` + `> out.txt`. See §S-1.0.10. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (3 failed auth attempts → 1 working pattern). |
+
 ## S-1.0.9 WRITE-FILE-READ-BACK PATTERN — EXEC-AUTOBG-DEATH-1 WORKAROUND (v3.15, 2026-08-05)
 
 When `exec` on a short command auto-backgrounds and dies ("Session bg_XXX is not
@@ -1504,10 +1523,42 @@ The script MUST write the output to a file inside the write — never rely on
 stdout when exec sessions are dying. Cross-ref: kaizen v1.47 EXEC-AUTOBG-DEATH-1,
 PYTHON-BUFFERING-1.
 
+## S-1.0.10 EXEC-SAFE AUTHENTICATED CURL PATTERN (v3.19, 2026-08-10)
+
+Through the DeepChat exec tool (cmd.exe + Node spawn), ANY argument containing double quotes is mangled
+(opening quote stripped, closing quote glued to the last token). This breaks authenticated curl calls.
+
+**Canonical exec-safe forms (all unquoted):**
+
+```
+# AUTH — use --oauth2-bearer (curl builds 'Authorization: Bearer <token>' with the space)
+curl.exe -s --oauth2-bearer %CLOUDFLARE_API_TOKEN% https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database > out.json
+
+# HEADERS without spaces in the value — no quotes needed
+-H Content-Type:application/json
+
+# JSON BODY — write payload file first (write tool), then:
+--data-binary @C:\path\payload.json
+
+# OUTPUT — cmd redirect (never -o with an absolute path; it gets path-mangled)
+> C:\path\out.json
+
+# GitHub / Zenodo work identically
+curl.exe -s --oauth2-bearer %GITHUB_TOKEN% https://api.github.com/user > out.json
+```
+
+**Do NOT use:** `-H "Authorization: Bearer %VAR%"` (→ 1001 Missing Authorization / 401),
+`-H Authorization:Bearer%VAR%` (→ 6111 invalid format — no space), `-o C:\abs\path` (path-mangled ENOENT),
+quoted URLs with query strings (exit 3 URL malformed).
+
+Verified live 2026-08-10: Cloudflare account D1 list, GitHub /user, Zenodo deposit API, D1 REST read+write —
+all via the unquoted pattern above. Cross-ref: CURL-AUTH-QUOTE-1, cloudflare v3.37 D1-REST-PAYLOAD-1,
+S-1.0.4, S-1.0.7.
+
 ## Version
 
 
 
 
 
-Current: **v3.18** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.19** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)

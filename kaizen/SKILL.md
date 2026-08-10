@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.95
+version: 1.96
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -266,7 +266,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.95
+# KAIZEN — v1.96
+
+> **v1.96 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1 + CURL-AUTH-QUOTE-1 mirrors; session bPhAUCI_FRVeZyA5Rxmsm):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit; 4 edited post-edit (raw anchors). HARD: 0 (kaizen-side).
+> SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **3 new anti-pattern mirrors added** (owners: cloudflare v3.37 + windows-command-patterns v3.19):
+>     TOKEN-VERIFY-SCOPE-1 (user-level /user/tokens/verify 1000 != dead token for account-scoped tokens —
+>     verify at account scope), D1-REST-PAYLOAD-1 (d1-query.py via exec fails on spaced SQL; REST
+>     --data-binary @payload.json is the skill_run-disabled path), CURL-AUTH-QUOTE-1 (quoted -H auth headers
+>     mangled by exec; use --oauth2-bearer %VAR% unquoted).
+> (2) [DESIGN] **Session retrospective** — secrets rotation audit + red-team: the CF-token "INVALID" verdict
+>     was a TOKEN-VERIFY-SCOPE-1 false positive (endpoint scope mismatch); corrected before closeout via
+>     account-level verification. D1 closeout writes (handoffs #28402, wbs_state) executed via the
+>     D1-REST-PAYLOAD-1 path after skill_run disablement + exec quoting failures — the documented fallback
+>     worked end-to-end.
+> Cross-reference: cloudflare v3.37, windows-command-patterns v3.19, qnfo-core v1.23, session bPhAUCI_FRVeZyA5Rxmsm.
 
 > **v1.95 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: exec/cleanup/COM patterns from LoF26 session; calibration ref sync):**
 > Red-team: direct parent-agent 5-adversary audit (session FqszmI7iAvYDr6_X3C2qv — CMD SKILLS UPDATE).
@@ -13902,7 +13918,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.95** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v1.96** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
 
 
 
@@ -13914,6 +13930,10 @@ Current: **v1.95** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO ski
 
 
 
+
+| **TOKEN-VERIFY-SCOPE-1: Declaring a token INVALID from the wrong-scope verify endpoint (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.37). /user/tokens/verify returns 1000 for ACCOUNT-scoped tokens that are fully valid for account ops. Verify at account scope (GET /accounts/{id}/d1/database, wrangler whoami). Canonical case: session bPhAUCI_FRVeZyA5Rxmsm — CF token wrongly declared dead. |
+| **D1-REST-PAYLOAD-1: d1-query.py via exec fails on spaced SQL; no fallback documented (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.37). skill_run is the only d1-query.py path (exec quote-mangling breaks --sql "..."); when skill_run is disabled use D1 REST `--data-binary @payload.json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (6/6 exec d1-query failures; REST path succeeded for schema + handoff #28402 + wbs_state). |
+| **CURL-AUTH-QUOTE-1: Quoted curl -H auth headers mangled by exec (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.19). Use `--oauth2-bearer %VAR%` unquoted + `-H Name:value` (no spaces) + `--data-binary @file` + `> out.txt`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (3 failed auth attempts → 1 working). |
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 

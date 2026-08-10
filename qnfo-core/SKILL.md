@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.22
+version: 1.23
 
 
 
@@ -642,7 +642,23 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.22
+# QNFO Core — v1.23
+
+> **v1.23 UPDATE (2026-08-10, kaizen — skill_run-disable fallback + endpoint-scope verification; session bPhAUCI_FRVeZyA5Rxmsm):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **§0.6 skill_run-disable fallback added** — when the `skill_run` tool is disabled at the session
+>     level ("Tool is not available in the current session"), script execution falls back to the canonical
+>     windows-command-patterns S1.0 pattern: `write` a .py/.json payload to %TEMP%, then `exec python`/`curl` it.
+>     For D1: use the D1 REST API with `--data-binary @payload.json` (cloudflare v3.37 D1-REST-PAYLOAD-1);
+>     `d1-query.py` via exec FAILS for any spaced SQL. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm —
+>     skill_run disabled, D1 reads/writes completed via the REST payload path.
+> (2) [SOFT] **VERIFY-FACT-1 endpoint-scope extension** — verify existence/validity claims against the SAME
+>     endpoint scope the subject is used in: an account-scoped CF token must be verified via account-level
+>     endpoints (`GET /accounts/{id}/d1/database`, `wrangler whoami`), NOT the user-level
+>     `/user/tokens/verify` (returns 1000 for valid account-scoped tokens — a false "dead token" verdict).
+>     Cross-ref: cloudflare v3.37 TOKEN-VERIFY-SCOPE-1.
+> Cross-reference: cloudflare v3.37 (D1-REST-PAYLOAD-1, TOKEN-VERIFY-SCOPE-1), windows-command-patterns v3.19,
+> kaizen v1.96, session bPhAUCI_FRVeZyA5Rxmsm.
 > **v1.22 UPDATE (2026-08-10, kaizen — JPCUB claims VERIFIED with corrected attribution):**
 > Red-team: direct parent-agent 5-adversary audit follow-up — the note's action item (verify secondhand JPCUB claims) executed via D1 living-paper body_md (direct Cloudflare D1 HTTP API; get_paper_context tool returns empty but the data exists). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 0 (reclassification). Changes:
 > (1) [HARD] **AI-QUALITY-GATE-1 row updated: REPORTED-BUT-UNVERIFIED -> VERIFIED with corrected attribution.** Verified 2026-08-10 from D1 living-paper: (a) the P_decode≈0 "conservative upper bound" passage is in **Qudit Advantage §3.3** (10.5281/zenodo.21827737, slug qwave-qudit-advantage), NOT in JPCUB CL v2.0 (10.5281/zenodo.21821767) — both the 2026-08-09 forensic note AND this skill's v1.20/v1.21 banner misattributed it to CL v2.0; the zero-as-upper-bound logic error is REAL (zero is a lower bound); (b) the Landauer 300K-vs-10mK Planck-unit passage exists in Qudit Advantage §3.4 but is explicitly HEDGED in the paper ('this ratio does not directly translate to a JPCUB advantage') — the forensic 'conflation' characterization is OVERSTATED; (c) 'effectively free' decoder phrase PRESENT (§3.3); (d) JPCUB zero-external-citations self-disclosure PRESENT (§4.2); (e) @C5_jpcub_p0 anchor leak PRIMARY-VERIFIED. Classify: P_decode error VERIFIED (Qudit Advantage); Landauer conflation PARTIALLY-FALSE (paper hedges).
@@ -4711,6 +4727,16 @@ paper.md were both corrupted by PowerShell encoding failures. The complete
 
 
 
+### skill_run-disable fallback (v1.23, HARD — 2026-08-10)
+
+When `skill_run` is unavailable ("Tool is not available in the current session"):
+1. Scripts: `write` to %TEMP% → `exec python <file>` (windows-command-patterns S1.0) — never `python -c`.
+2. D1: use the D1 REST API (`POST /accounts/{id}/d1/database/{db}/query`) with `--data-binary @payload.json`
+   + `-H Content-Type:application/json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%` (cloudflare v3.37
+   D1-REST-PAYLOAD-1). `d1-query.py --sql "..."` via exec FAILS for any spaced SQL; `wrangler d1 execute
+   --file` hides row data (summary only).
+3. Verify reads/writes by re-querying (SCS-1). Canonical case: session bPhAUCI_FRVeZyA5Rxmsm.
+
 ## §0.7 OSTROWSKI DIMENSIONLESS MANDATE (HARD GATE — ALL PHYSICS FORMULAS)
 
 
@@ -5744,7 +5770,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.22** (qnfo-core — AI-AUTHOR-CLASSIFY-1: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
+Current: **v1.23** (qnfo-core — AI-AUTHOR-CLASSIFY-1: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
 
 
 

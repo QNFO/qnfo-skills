@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.36
+version: 3.37
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -23,7 +23,32 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.36
+# CLOUDFLARE — v3.37
+
+> **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
+> HARD: 2 (cloudflare-side). SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **TOKEN-VERIFY-SCOPE-1 anti-pattern added** — Cloudflare API tokens scoped to ACCOUNT-level
+>     resources are REJECTED by the user-level endpoint `GET /user/tokens/verify` (HTTP 1000 "Invalid API
+>     Token") and `GET /user/tokens` (9109 "Valid user-level authentication not found"), even when fully
+>     valid for account operations. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm — red-team declared
+>     CLOUDFLARE_API_TOKEN "INVALID" from /user/tokens/verify; account-level `GET /accounts/{id}/d1/database`
+>     returned success:true (7 D1 DBs) and `wrangler whoami` + remote D1 execute all worked. Fix: verify
+>     account-scoped tokens at ACCOUNT scope (`GET /accounts/{id}/d1/database`, `wrangler whoami`); reserve
+>     /user/tokens/verify for user-scoped tokens. A 1000 on /user/tokens/verify does NOT prove a token is dead.
+> (2) [HARD] **D1-REST-PAYLOAD-1 pattern + anti-pattern added** — when `skill_run` is DISABLED and the exec
+>     tool's cmd.exe quote-mangling breaks `d1-query.py --sql "..."` (argparse: "unrecognized arguments"), the
+>     canonical D1 access path is the REST API with a JSON payload file:
+>     `curl.exe -s -X POST --oauth2-bearer %CLOUDFLARE_API_TOKEN% -H Content-Type:application/json --data-binary @payload.json https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{db}/query > out.json`
+>     Payload shape: {"sql":"...","params":[...]} — supports SELECT, PRAGMA, INSERT, UPDATE (verified live:
+>     handoffs row 28402 + wbs_state upsert + read-back). Wrangler `d1 execute --remote --file` also works
+>     but HIDES row data (summary only) — use REST for readable results.
+> (3) [SOFT] **d1-query.py exec caveat documented** — `--sql "SELECT ..."` fails through the exec tool for ANY
+>     SQL containing a space (opening quote stripped, closing quote attached to last token). Use `skill_run`
+>     (preferred) or the D1-REST-PAYLOAD-1 path. Verified: 6/6 exec-based d1-query calls failed this session;
+>     identical calls via skill_run succeeded.
+> Cross-reference: TOKEN-VERIFY-SCOPE-1, D1-REST-PAYLOAD-1, windows-command-patterns v3.19 (CURL-AUTH-QUOTE-1),
+> kaizen v1.96, qnfo-core v1.23, session bPhAUCI_FRVeZyA5Rxmsm.
 
 > **v3.36 UPDATE (2026-08-10, kaizen — Workers cost incident closure: permanent fix + 6 new anti-patterns):**
 > Red-team: direct parent-agent 5-adversary audit (session qxo_RCq4Y_tPZVkBQVmZb — CMD RED TEAM +
@@ -1355,7 +1380,10 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 
 
 | **EMAIL-RECLASSIFY-ENDPOINT-1: qnfo-email Worker v1.6 has no classification mutation endpoint (2026-08-05)** | Classification (`"personal"`/`"general"`/`"spam"`) is set at ingestion only — there is no PATCH/PUT endpoint to reclassify an email after processing. `PATCH /emails/status {id, status}` changes status but NOT classification. Fix: add `PATCH /emails/classification {id, classification}` endpoint. Canonical case: manuscript solicitation (id 11) from dr.shrivishnu.msip@gmail.com was classified `"personal"` at ingestion and required manual status change to `"spam"` + filter creation. Cross-ref: qnfo-email Worker v1.6, EMAIL-FILTER-CREATE-1. |
-| **EMAIL-FILTER-CREATE-1: qnfo-email Worker POST /filters requires `field` + `pattern`, NOT `type` (2026-08-05)** | `POST /filters` body must include `{"field": "from", "pattern": "<sender>", "action": "spam"}`. Using `"type"` instead of `"field"` returns 400 `"field and pattern required"`. Verified: 5 existing filters (bounce/spam patterns) + filter id 6 created for dr.shrivishnu.msip@gmail.com. Cross-ref: qnfo-email Worker v1.6.## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
+| **EMAIL-FILTER-CREATE-1: qnfo-email Worker POST /filters requires `field` + `pattern`, NOT `type` (2026-08-05)** | `POST /filters` body must include `{"field": "from", "pattern": "<sender>", "action": "spam"}`. Using `"type"` instead of `"field"` returns 400 `"field and pattern required"`. Verified: 5 existing filters (bounce/spam patterns) + filter id 6 created for dr.shrivishnu.msip@gmail.com. Cross-ref: qnfo-email Worker v1.6.| **TOKEN-VERIFY-SCOPE-1: User-level /user/tokens/verify returns 1000 "Invalid API Token" for ACCOUNT-scoped tokens (2026-08-10)** | Account-scoped tokens are valid for account operations (D1/R2/Workers/DNS) but FAIL user-level endpoints: /user/tokens/verify → 1000, /user/tokens → 9109. Verify at ACCOUNT scope: `GET /accounts/{id}/d1/database` (success:true + DB list) or `wrangler whoami`. A 1000 from /user/tokens/verify is NOT evidence of a dead token. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm red-team false "INVALID token" verdict. Cross-ref: windows-command-patterns S-1.0.6 (verify against the SAME scope the token is used in). |
+| **D1-REST-PAYLOAD-1: Relying on d1-query.py via exec when skill_run is disabled (2026-08-10)** | `d1-query.py --sql "..."` fails through exec for ANY spaced SQL (quote-mangling: "unrecognized arguments"); `wrangler d1 execute --file` hides row data (summary only). Canonical path: D1 REST `POST /accounts/{id}/d1/database/{db}/query` with `--data-binary @payload.json` + `-H Content-Type:application/json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Payload {"sql":"...","params":[]}; write-verify by re-reading rows (SCS-1). Verified live 2026-08-10 (handoffs #28402, wbs_state upsert). Cross-ref: windows-command-patterns v3.19 CURL-AUTH-QUOTE-1, SCS-1. |
+
+## Vectorize Indexing Gotchas — personal-life layer (v3.32, 2026-08-04)
 
 Lessons from building the `personal-life` semantic index (d-drive bucket -> Workers AI bge -> Vectorize). Every one of these cost real debugging time; they are now anti-patterns.
 
@@ -1388,7 +1416,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.36** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.37** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
