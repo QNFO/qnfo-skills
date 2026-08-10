@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.99
+version: 2.00
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -266,7 +266,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v1.99
+# KAIZEN — v2.00
+> **v2.00 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: PHANTOM-DEPLOY-VERSION mirror + MEMORY-TO-SKILL-DRIFT closure):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 1 (kaizen-side: memory→skill drift).
+> SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **PHANTOM-DEPLOY-VERSION anti-pattern mirror added** (owner: cloudflare v3.38) —
+>     never report a deployment version or data mutation as done without the actual tool output in
+>     the SAME turn; poll background deploy sessions to completion and read the real version ID.
+>     Stored in durable memory (imp 0.95) this session; migrated to skill per MEMORY-TO-SKILL-DRIFT
+>     HARD GATE. Canonical case: session this (2026-08-10) — claimed c9b29d47, actual aace0986.
+> (2) [DESIGN] **Subagent truncation confirmed again** — CMD RED TEAM SUB dispatch: 2/3 subagents
+>     'completed' but truncated at the aggregator (only file-read preamble returned, zero findings);
+>     1/3 cancelled at 240s. Direct parent-agent fallback used (Mandate 3). Reaffirms v1.10 tiered
+>     dispatch-with-fallback; no protocol change needed.
+> Cross-reference: cloudflare v3.38 (PHANTOM-DEPLOY-VERSION canonical), MEMORY-TO-SKILL-DRIFT,
+> VERSION-OVERWRITE-1, session this.
+
 > **v1.99 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE closeout: email-composer v2.17 + research v2.92 + calibration register sync):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session) then writable fix cycle. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
 > (1) [SOFT] **Calibration Register current-state ref fixed (D3)** — 'research skill (currently v2.89)' -> v2.92 (research was bumped 2.90->2.91 by concurrent session 05205f8 and 2.91->2.92 by this cycle; same recurring drift class as v1.65/v1.95).
@@ -11897,6 +11913,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 ## Anti-Patterns
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
+| **PHANTOM-DEPLOY-VERSION: Reporting a deployment version or data mutation as done without the actual tool output in the SAME turn (2026-08-10)** | **HARD GATE** (mirror; owner cloudflare v3.38). Never claim a Worker deploy version (e.g. 'Deployed c9b29d47') or a data mutation (e.g. 'issue #110 marked wontfix') without the actual exec/poll/PATCH output in the same turn. Deploy execs that return a background session MUST be polled to completion and the REAL version ID read before claiming deployment. Canonical case: session this (2026-08-10) — claimed c9b29d47 while actual deployed version was aace0986-0747-461f-b835-9a605c3f052d; claimed a wontfix PATCH that never ran (script deleted before exec). Cross-ref: ZENODO-PHANTOM-DOI-1 (same class for publications), CLAIM-VERIFY-1, PHANTOM-CLAIM-2, VERSION-OVERWRITE-1. |
 | **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
 
 
@@ -13950,7 +13967,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.99** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v2.00** (kaizen — SKILLS UPDATE: PHANTOM-DEPLOY-VERSION mirror + MEMORY-TO-SKILL-DRIFT closure; 2026-08-10)
 
 
 

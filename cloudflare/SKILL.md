@@ -1050,7 +1050,7 @@ an audit-trail row is drift.)
 ### Workers
 Baseline: 12 (updated 2026-08-10 — live `workers_list` returned 12 incl.
 `qnfo-paper-indexer` (2026-08-01), `qnfo-email`, `qnfo-skill-sync` + `qnfo-agent-orchestrator` (2026-08-10); treat any future count ≠ 12 as drift).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v2.0.1 — REAL 8-tool MCP server: search_papers, search_papers_enriched, resolve_paper_id, search_memories, remember_fact, recall_facts, query_graph, get_paper_context; D1 LIVING_PAPER + GRAPH_DB + Vectorize PAPER_VZ + AI bindings; source QNFO/qnfo-workers; 2026-08-10), `qnfo-qwav`
+**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v2.0.1 — REAL 8-tool MCP server: search_papers, search_papers_enriched, resolve_paper_id, search_memories, remember_fact, recall_facts, query_graph, get_paper_context; D1 LIVING_PAPER + GRAPH_DB + Vectorize PAPER_VZ + AI bindings; source QNFO/qnfo-workers; 2026-08-10), `qnfo-qwav`, `qnfo-email` (routing/send API), `qnfo-skill-sync` (kaizen engine: chat-log ingest → D1 chat_logs; AI issue extraction → D1 agent_issues; kaizen report → GitHub + R2 snapshot; cron 0 3 * * *; X-Sync-Token auth), `qnfo-agent-orchestrator` (remote agent executor: DO-per-task agent loop, Workers AI function calling; tools search_papers/get_paper_context/query_graph; X-Sync-Token auth)
 
 > **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** Before ANY Pages
 > deployment (q*.pages.dev / custom domains / GitHub Actions deploys), run
@@ -1437,7 +1437,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.38** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.38** (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
