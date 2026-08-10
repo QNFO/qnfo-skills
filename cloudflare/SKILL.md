@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.37
+version: 3.38
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -9,6 +9,26 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v3.38 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: Worker fleet baseline 9→12 + 2 new Workers):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session;
+> Watchtower N-2 scan: 19/19 QNFO skills CLEAN pre-edit). HARD: 0 (skill-side). SOFT: 1. DESIGN: 1.
+> Changes:
+> (1) [SOFT] **Workers baseline corrected 9 → 12** — live fleet now 12: added `qnfo-email` (was
+>     counted separately), `qnfo-skill-sync` (always-on kaizen/sync engine: chat-log ingest → D1,
+>     AI issue extraction, kaizen report → GitHub QNFO/qnfo-skills kaizen-reports/, R2 SHA snapshot;
+>     cron 0 3 * * *; X-Sync-Token auth on all POST/PATCH), and `qnfo-agent-orchestrator` (remote
+>     agent execution: Durable Object per-task, Workers AI function calling, tools search_papers /
+>     get_paper_context / query_graph; X-Sync-Token auth). Resource baseline table row updated
+>     (Expected 12, Warning 13-14, Critical 15+).
+> (2) [SOFT] **PHANTOM-DEPLOY-VERSION anti-pattern added** — never report a Worker deployment
+>     version or data mutation as done without the actual tool output in the SAME turn; always poll
+>     background deploy sessions to completion and read the real version ID. Canonical case:
+>     session this (2026-08-10) — claimed c9b29d47 while actual deployed version was aace0986.
+> (3) [DESIGN] **.kaizen_history drift** — history log only reached v3.35 while fm/hdr/ft = 3.37;
+>     appended entries for v3.36 + v3.37 (concurrent-session bumps, content preserved in banners).
+> Cross-reference: kaizen v2.00 (PHANTOM-DEPLOY-VERSION mirror), qnfo-skill-sync + qnfo-agent-orchestrator
+> Workers (QNFO/qwav-platform/qnfo-cloudflare-workers/), session this.
+
 > **v3.28 UPDATE (2026-08-04, kaizen — SYNCPATH-1 unauthenticated /sync write path):**
 > Red-team: session dXXJ3TxRQ1VHzGdAyp-lo verified qnfo-gateway `handleSync` exposes POST /sync
 > with NO auth (HTTP 200, writes graph D1). HARD: 1. Changes: SYNCPATH-1 anti-pattern row added;
@@ -23,7 +43,7 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.37
+# CLOUDFLARE — v3.38
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -1028,9 +1048,9 @@ see `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md`. Any future count
 an audit-trail row is drift.)
 
 ### Workers
-Baseline: 9 (updated 2026-08-02 — live `workers_list` MCP returned 9 incl.
-`qnfo-paper-indexer`, created 2026-08-01; treat any future count ≠ 9 as drift).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v1.0.1 — debug endpoints removed), `qnfo-qwav`
+Baseline: 12 (updated 2026-08-10 — live `workers_list` returned 12 incl.
+`qnfo-paper-indexer` (2026-08-01), `qnfo-email`, `qnfo-skill-sync` + `qnfo-agent-orchestrator` (2026-08-10); treat any future count ≠ 12 as drift).
+**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-memory-mcp` (v2.0.1 — REAL 8-tool MCP server: search_papers, search_papers_enriched, resolve_paper_id, search_memories, remember_fact, recall_facts, query_graph, get_paper_context; D1 LIVING_PAPER + GRAPH_DB + Vectorize PAPER_VZ + AI bindings; source QNFO/qnfo-workers; 2026-08-10), `qnfo-qwav`
 
 > **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** Before ANY Pages
 > deployment (q*.pages.dev / custom domains / GitHub Actions deploys), run
@@ -1101,7 +1121,7 @@ For every custom domain that returns HTTP 301/302 to an unexpected destination o
 | Resource | Expected | Warning | Critical |
 |:---------|:--------|:--------|:---------|
 | D1 Databases | 6 | +/- 1 | +/- 2+ |
-| Workers | 9 | 10-11 | 12+ |
+| Workers | 12 | 13-14 | 15+ |
 | Pages Projects | 5 | 6-7 | 8+ |
 | Vectorize Indexes | 5 | +/- 1 | +/- 2+ |
 | R2 Buckets | 13 | +/- 1 | +/- 3+ |
@@ -1363,6 +1383,7 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **D1-BIND-1: D1 `.bind().first()` chain throws 1101 on Workers (2026-08-03)** | `prepare(...).bind(slug).first()` throws 1101 (JS exception) for ALL slugs while `.first()` without `.bind()` works on the same table. Confirmed on qnfo-paper-indexer: handleSingle with `.bind()` → 1101; handleBatch without `.bind()` → OK. Fix: use parameterized `?1` syntax instead of `.bind()`, OR update `compatibility_date` to latest, OR wrap in try/catch with `.all()` fallback. Suspected D1 client version mismatch with `.bind()`. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
 | **VECTORIZE-WEBHOOK-VERIFY-1: search_papers MCP "OK" treated as index verification (2026-08-04)** | Vectorize content indexed by qnfo-paper-indexer is invisible to search_papers MCP ("OK" = VECTORIZE-SILO-1/MCP-OFFLOAD-1). The canonical single-paper verification is `GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` → `{indexed:true, chunks:N, errors:0}`. Cross-ref: research v2.63. Case: IPR paper (QNFO.UMP.003) — webhook confirmed 26 chunks, 0 errors, body_len 41883 while search_papers returned "OK" only. |
 | **VECTORIZE-SILO-1: Vectorize content indexed by one Worker is invisible to MCP search tools (2026-08-03)** | Qnfo-paper-indexer upserts 646 chunks via PAPER_VZ binding (qwav-research-v2), but `search_papers`/`search_papers_enriched` MCP tools return `{}` (empty). Probable cause: embedding model mismatch between indexer and searcher Workers, or Vectorize binding name mismatch in MCP server config. Fix: verify same embedding model (`@cf/baai/bge-base-en-v1.5`) used for both indexing and querying; verify Vectorize binding name in the MCP server's wrangler config matches the index alias. Discovered in session bWLdtP54lAjqfblr2cUKH (2026-08-02). |
+| **MEMORY-MCP-STUB-1: QNFO MCP tools returning bare "OK" caused by a deployed STUB worker with zero bindings (2026-08-10)** | **ROOT CAUSE (confirmed):** the deployed qnfo-memory-mcp Worker (v1.2.0) was a placeholder — every tool handler literally returned `{content:[{type:"text",text:"OK"}]}` with ZERO Cloudflare bindings (no D1, no Vectorize, no AI). The MCP tools NEVER queried anything. Prior diagnoses (VECTORIZE-SILO-1, MCP-OFFLOAD-1, VECTORIZE-WEBHOOK-VERIFY-1) documented the "OK" symptom but not the cause. graph-api.q08.workers.dev / search-worker.q08.workers.dev 404 was a RED HERRING — those Workers never existed separately (consolidated into qnfo-gateway; zone routes confirm graph-api.qnfo.org -> qnfo-gateway). FIX: deployed real qnfo-memory-mcp v2.0.1 (8 functional handlers, LIVING_PAPER/GRAPH_DB/PAPER_VZ/AI bindings) from QNFO/qnfo-workers (commits 3137d68, d7fc4ad, 6faf94f); verified all 8 tools return real data. mcp-settings.json baseUrl was already correct — no config change needed; autoApprove expanded to 8 tools. **Lesson:** when MCP tools return bare "OK", fetch the deployed worker source via /content/v2 BEFORE blaming routes or silos. Cross-ref: VECTORIZE-SILO-1, MCP-OFFLOAD-1, qnfo-memory-mcp v2.0.1, session 07ze-JN-QPRVSiNqgXUZW. |
 | **Relying on durable memory for critical Cloudflare operational rules (2026-08-02)** | DeepChat memories are EPHEMERAL (may be purged). Critical rules (KIF-*, anti-patterns, endpoint maps, binding formats) MUST be embedded in this SKILL.md. Memory is for session outcomes, not operational authority. Migrate any rule found only in memory into this skill. |
 
 | **EMAILMSG-1: Using deprecated positional `new EmailMessage(from, to, ...)` constructor (2026-08-03)** | The modern Email Service `send()` API takes an object builder: `send({to, from, subject, text, html})`. The old positional constructor silently fails with `missing From: header` — no exception, just a 500 at send time. Diagnosed live on qnfo-email Worker (v1.4→v1.5). Cross-ref: cloudflare v3.23 Email section. |
@@ -1416,7 +1437,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.37** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.38** (cloudflare — EMAIL-RECLASSIFY-ENDPOINT-1 + EMAIL-FILTER-CREATE-1 + qnfo-email v1.6 API docs; 2026-08-05) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
