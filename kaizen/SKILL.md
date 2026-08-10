@@ -13877,6 +13877,15 @@ Likelihood: [HIGH] — operational proof this cycle (51/51 archived-spam, 10 fil
 mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 ```
 
+
+[CHECK: 2026-08-13] NEWVERSION-DOI-RESERVATION-1 will hold through +3 monitoring checkpoints: no future
+Zenodo newversion flow will attempt to read `prereserve_doi` from GET /draft (returns None); every
+newversion uses POST /api/records/{id}/draft/pids/doi to reserve its DOI, and every P5.FRESH repair is
+newversion-only (never in-place .md overwrite on a published record — 415/403). Risk of regression:
+[MODERATE] — the old GET /draft habit predates the correction; the research v2.94 rule + this mirror
+row are the enforcement. Likelihood: [HIGH] — verified live 2026-08-10 (drafts 21878976/21878977);
+two skills now carry the rule.
+
 ## Version
 
 
