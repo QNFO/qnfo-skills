@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.96
+version: 1.97
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -265,6 +265,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     ↔ kaizen v1.84 intact. No language consistency gaps found.
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
+
+# KAIZEN — v1.97
+> **v1.97 UPDATE (2026-08-10, kaizen — CMD RED TEAM 5-adversary audit FIX CYCLE: email-composer v2.15 + research v2.90 + mirror-row correction):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive — READ-ONLY audit delivered 10 findings H1-H10, then fix cycle applied; session this). Trigger: live evidence contradicted email-composer v2.14's OUTREACH-SENT-AS-ARCHIVED-1 premise. Watchtower: N-2 CLEAN pre-edit (19/19). HARD: 4 (email-composer-side). SOFT: 3. DESIGN: 2. Changes:
+> (1) [HARD] **OUTREACH-SENT-AS-ARCHIVED-1 premise CORRECTED (email-composer v2.15 + this mirror row)** — the v2.14 claim "Worker stores outbound sends with status='archived'; NO 'sent' status exists" was FACTUALLY FALSE. Live evidence 2026-08-10: Worker v1.8 source line 174 binds `status='sent'`; GET /emails/recent ids 59-62 all status=sent; /stats byStatus reports sent:1. The OPERATIONAL rule (classify by sender-domain) REMAINS canonical — defensive default — but the false premise is corrected in the Sent-Email Detection section, the anti-pattern row, and this mirror row.
+> (2) [HARD] **EMAIL-SENDING-DOMAIN-10002 anti-pattern added (email-composer v2.15)** — onboarded Email Sending domain can fail platform-side with `email.sending.error.internal_server` (code 10002) on ALL addresses while sibling domains work. Verified 2026-08-10 via three independent paths (Worker binding, REST `POST /accounts/{acct}/email/sending/send`, wrangler CLI): qnfo.org fails (all 4 addresses), qwav.org/qwav.tech succeed. **BIDIRECTIONAL scope (matrix-verified):** sends FROM qnfo.org AND sends TO @qnfo.org recipients both fail; DNS/onboarding/binding intact; CF status page "operational" is NOT per-zone authoritative. Fix: REST reproduction across 2+ domains, `wrangler email sending dns get`, re-enable cycle, CF ticket, Sender-Domain Fallback.
+> (3) [HARD] **Sender-Domain Fallback protocol (email-composer v2.15)** — qnfo.org → qwav.tech → qwav.org; flag every deviation in outreach-log.md (established as canonical git-tracked file, H10).
+> (4) [HARD] **research-daily-brief.py --from sender override (research v2.90)** — briefing email leg was silently failing (default sender qnfo@qnfo.org broken); live proof: briefing archived to working recipient with --from rowan.quni@qwav.tech (D1 id=67, status=sent).
+> (5) [SOFT] **SEARCH-Q-EMAIL-TOKEN-1** — /emails/search?q=<full-email-with-@> returns count:0 (@ tokenizes away); dedup must use /emails/recent + recipient filter (email-composer v2.15).
+> (6) [SOFT] **MESSAGE-ID-NE-DELIVERY-1** — Worker /send returns its OWN UUID (crypto.randomUUID); 200 = accepted, not delivered; delivery monitoring via REST /email/sending (email-composer v2.15).
+> (7) [SOFT] **/send `from` override + 11-domain ALLOWED_DOMAINS documented** (email-composer v2.15).
+> (8) [DESIGN] **Worker source canonical path corrected** — QNFO/qwav-platform/qnfo-cloudflare-workers/qnfo-email/ (v1.8, commits 6a58b37/00ea399), not evicted local path (email-composer v2.15).
+> (9) [DESIGN] **Mirror-row discipline confirmed** — kaizen mirror rows must be corrected in the SAME cycle as the owner-skill fix (this cycle: OUTREACH-SENT-AS-ARCHIVED-1 row).
+> Cross-reference: email-composer v2.15, research v2.90, qnfo-core v1.22 (VERIFY-FACT-1), cloudflare-email-service, session this.
+
 
 # KAIZEN — v1.96
 
@@ -13918,7 +13933,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.96** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v1.97** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
 
 
 
