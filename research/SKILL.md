@@ -10,12 +10,7 @@ name: research
 
 
 
-version: 2.92
-
-
-
-
-
+version: "2.94"
 description: >
 
 
@@ -222,7 +217,28 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.93
+# RESEARCH — v2.94
+# RESEARCH — v2.94
+> **v2.94 UPDATE (2026-08-10, kaizen — NEWVERSION DOI RESERVATION PATH CORRECTED (prereserve_doi None) + P5.FRESH newversion-only):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc, QNFO.RES.002/.003 publication cycle).
+> Watchtower: research v2.93 N-2 CLEAN pre-edit; v2.94 N-2 CLEAN post-edit (raw-line anchors).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **NEWVERSION SELF-DOI ORDERING RULE step (2) CORRECTED** — the documented `GET /api/records/{id}/draft`
+>     → `prereserve_doi` path returns **`prereserve_doi: None` for newversion drafts** (verified live 2026-08-10 on
+>     drafts 21878976/21878977). The ONLY working reservation path is **`POST /api/records/{id}/draft/pids/doi`**
+>     (the draft's `links.reserve_doi`) → 201 with the reserved DOI. A follow-the-doc agent would stall on step 2.
+>     Canonical case: QNFO.RES.002/.003 — first newversion run hit `prereserve_doi: None`; PID-reservation POST
+>     succeeded and both v0.2 records published with P5.FRESH yaml_ok=True.
+> (2) [HARD] **P5.FRESH instruction clarified (newversion-only)** — in-place `.md` overwrite on a published record's
+>     edit-draft is impossible: bare `PUT /draft/files/{fname}` → 415 (file-ENTRY endpoint, JSON expected); 
+>     `PUT /draft/files/{fname}/content` → 403 Bucket is locked (lock does not clear with wait). P5.FRESH repair
+>     ALWAYS uses newversion. ZENODO-BUCKET-LOCKED-1 extended with this evidence.
+> (3) [SOFT] **Self-DOI ordering also requires `status: "published"` in the uploaded .md** — the uploaded .md must
+>     carry BOTH its own reserved DOI AND status published (P5.FRESH checks both).
+> Cross-reference: kaizen v2.02 (mirror row), ZENODO-BUCKET-LOCKED-1, P5.FRESH, NEWVERSION SELF-DOI ORDERING RULE,
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+
+
 > **v2.93 UPDATE (2026-08-10, kaizen — UIA cross-reference in Phase 4 Stage 3):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). UIA cross-ref added to
 > Phase 4 Stage 3 Red-Team Challenge — the 15-question UIA complements the 5-adversary review.
@@ -4689,7 +4705,7 @@ Every P(E|H) > 0.80 must trace to an empirical calibration pillar (Empirical Bas
 
 
 
-3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist). **Complementary method:** the Universal Ignorance Audit (DOI 10.5281/zenodo.21878943, Quni-Gudzinas 2026) provides a 15-question deep-inquiry alternative that surfaces structural ignorance (scaffolds, map–territory errors, protected zones) complementary to adversarial correctness. See kaizen v2.01 §H.
+3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist). **Complementary method:** the Universal Ignorance Audit (DOI 10.5281/zenodo.21878943; case study: DOI 10.5281/zenodo.21878977) provides a 15-question deep-inquiry alternative that surfaces structural ignorance (scaffolds, map–territory errors, protected zones) complementary to adversarial correctness. See kaizen v2.01 §H.
 
 
 
@@ -6457,12 +6473,16 @@ After Zenodo publish, download the deposit's `.md` file and verify its YAML fron
 
 4. If verification fails: re-upload corrected `.md` + re-publish (or newversion)
 
-**NEWVERSION SELF-DOI ORDERING RULE (v2.87, HARD — R-A1 canonical case):** When a newversion is
-created to correct an embedded-YAML DOI, the uploaded `.md` MUST carry ITS OWN pre-reserved DOI —
-not the parent version's DOI. Procedure: (1) `POST /api/records/{id}/versions` → get new draft id;
-(2) fetch the draft's `prereserve_doi` (via `GET /api/records/{id}/draft` OR the deposit-API view);
-(3) UPDATE the LOCAL `.md` YAML `doi:` to that pre-reserved DOI **BEFORE uploading**; (4) upload
-`.md` + files; (5) publish; (6) verify the deposited `.md` YAML `doi:` == the PUBLISHED record DOI.
+**NEWVERSION SELF-DOI ORDERING RULE (v2.87, HARD — R-A1 canonical case; **v2.94 CORRECTED step 2**):**
+When a newversion is created to correct an embedded-YAML DOI, the uploaded `.md` MUST carry ITS OWN
+pre-reserved DOI — not the parent version's DOI. Procedure: (1) `POST /api/records/{id}/versions`
+→ get new draft id (201; `id` may be null — read `links.self`); (2) **RESERVE the DOI via
+`POST /api/records/{id}/draft/pids/doi` (the draft's `links.reserve_doi`)** → 201 with the reserved
+`doi` in the response — **`GET /api/records/{id}/draft` returns `prereserve_doi: None` for newversion
+drafts (verified live 2026-08-10, drafts 21878976/21878977) — the PID reservation POST is the ONLY
+working reservation path**; (3) UPDATE the LOCAL `.md` YAML `doi:` to that reserved DOI **AND set
+`status: "published"` BEFORE uploading**; (4) upload `.md` + files; (5) publish; (6) verify the
+deposited `.md` YAML `doi:` == the PUBLISHED record DOI AND `status: "published"` (P5.FRESH).
 FAILURE MODE: a script that uploads the local `.md` first and updates local YAML AFTER upload ships
 a deposited file whose `doi:` points at the parent version — P5.FRESH passes (doi != TBD) but the
 deposited file is stale by one version. Canonical case: qwave-qudit-advantage v0.2 (21827268)
@@ -8274,7 +8294,15 @@ Cross-ref: Tool-Call Execution Mandate, ZENODO-PHANTOM-DOI-1.
 
 
 
-| **ZENODO-BUCKET-LOCKED-1: DELETE file from draft → 403 "Bucket is locked" (2026-08-04)** | After `POST /api/records/{id}/draft`, deleting old files may return 403. Instead, upload new files with the SAME key to overwrite: `PUT /api/records/{id}/draft/files/{filename}` with `Content-Type: application/octet-stream`. If bucket remains locked, wait 30 seconds and retry. |
+| **ZENODO-BUCKET-LOCKED-1: DELETE file from draft → 403 "Bucket is locked" (2026-08-04)**
+
+**v2.94 EXTENSION (2026-08-10):** in-place FILE replacement on a PUBLISHED record's edit-draft is IMPOSSIBLE —
+`PUT /records/{id}/draft/files/{fname}` (bare file URL) → **415** "Invalid 'Content-Type' header. Expected one of:
+application/json" (that URL is the file-ENTRY metadata endpoint, not content); `PUT .../files/{fname}/content` →
+**403 "Bucket is locked for modifications"**. Even a 60s lock-wait does NOT clear it (verified live 2026-08-10 on
+records 21878943/21878945). P5.FRESH's "re-upload corrected .md + re-publish" instruction therefore ALWAYS
+means **newversion** (`POST /versions` → reserve DOI via `draft/pids/doi` → upload corrected .md with its OWN
+DOI + status published → publish). Never attempt in-place file overwrite on a published record for P5.FRESH. | After `POST /api/records/{id}/draft`, deleting old files may return 403. Instead, upload new files with the SAME key to overwrite: `PUT /api/records/{id}/draft/files/{filename}` with `Content-Type: application/octet-stream`. If bucket remains locked, wait 30 seconds and retry. |
 
 
 
@@ -8971,7 +8999,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.93** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.94** (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

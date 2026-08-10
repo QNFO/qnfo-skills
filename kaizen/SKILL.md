@@ -10,8 +10,7 @@ name: kaizen
 
 
 
-version: 2.01
-
+version: "2.02"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -266,7 +265,25 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.01
+# KAIZEN — v2.02
+# KAIZEN — v2.02
+> **v2.02 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 mirror + research v2.94 correction cycle):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc;
+> QNFO.RES.002/.003 publication cycle triggered the finding). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit
+> (kaizen footer flag FALSE POSITIVE per N-2-SCAN-FALSE-POSITIVE-1 — regex matched banner-quote `Current: **v1.48**`
+> at L1054; real footer at L14034 is v2.01). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **NEWVERSION-DOI-RESERVATION-1 mirror row added** (owner: research v2.94) — newversion drafts
+>     return `prereserve_doi: None` from GET /draft; the ONLY working DOI reservation path is
+>     `POST /api/records/{id}/draft/pids/doi` (links.reserve_doi) → 201 with the reserved DOI. Also: in-place
+>     `.md` overwrite on a published record is impossible (415 on bare file URL, 403 Bucket-locked on /content);
+>     P5.FRESH repair is newversion-only. Canonical case: QNFO.RES.002/.003 — first newversion run hit the None
+>     gap, PID-reservation POST fixed both, P5.FRESH yaml_ok=True verified.
+> (2) [AUDIT] **Watchtower v2.02 results** — research v2.94 (fm/hdr/ft), git-github v2.22, qnfo-core v1.24,
+>     windows-command-patterns v3.19 all N-2 CLEAN. qnfo-skills git clean (0 uncommitted).
+> Cross-reference: research v2.94 (NEWVERSION SELF-DOI ORDERING RULE correction), ZENODO-BUCKET-LOCKED-1,
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+
+
 > **v2.01 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session).
 > Trigger: user directive to update skills with UIA (DOI 10.5281/zenodo.21878943). MEMORY-TO-SKILL-DRIFT
@@ -9968,7 +9985,7 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 
 **Meta-audit of the UIA itself (from the paper, §4):** The UIA has an analytic, individualistic, extractive slant. It underweights the receptive, surrendering, not-doing dimension of unknowing. It benefits the articulate, time-rich auditor and may silence those whose survival depends on certainty. These limitations are part of the method's specification — they bound its claims.
 
-**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question).
+**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, synthesis paper DOI 10.5281/zenodo.21878977, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question).
 
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
@@ -14031,7 +14048,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v2.01** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
+Current: **v2.02** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
 
 
 
