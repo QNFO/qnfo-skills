@@ -10,6 +10,16 @@ allowedTools:
   - deepchat_settings_open
 ---
 
+# DeepChat Settings — v1.6
+> **v1.6 UPDATE (2026-08-10, kaizen — system prompt v2.9 sync + BLAME-EXTERNAL-1 live; CMD RED TEAM follow-up):**
+> Red-team: direct parent-agent 5-adversary audit (session JyHYI9Q9pS2zs7fL_mJbS). Finding: the v2.9 update had reached ONLY the canonical .md file — both runtime stores still held v2.8 (49,419 chars, no BLAME-EXTERNAL-1). The running system prompt was therefore still v2.8; the principle was inert. HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **System prompt v2.9 dual-written to runtime stores** — `app-settings.json` → `default_system_prompt` AND `agent.db` → `app_settings` → `systemPrompts` (backups: `.bak_20260810_174603`). All 3 stores now IDENTICAL: 50,518 chars, v2.9 header, BLAME-EXTERNAL-1 present. settingsWatcher picks up app-settings.json dynamically; agent.db loads at startup.
+> (2) [HARD] **Wrong-path misdiagnosis corrected** — earlier "agent.db locked by running app" was FALSE: the probe used `C:\Users\LENOVO\.deepchat\agent.db` (wrong path); the real path `%APPDATA%\DeepChat\app_db\agent.db` opens read-only AND writable with zero lock issues. Same fault class as BLAME-EXTERNAL-1 (blamed environment, fault was my own reference).
+> (3) [SOFT] **Reference updated** — "49,419 chars as of v2.8" -> v2.9 (50,518 chars, "Last updated 2026-08-10"). 9 CMD templates re-verified present in BOTH stores (content key in agent.db, template key in app-settings.json).
+> (4) [DESIGN] **Stale memory corrected** — the "system prompt must be applied manually via Settings UI" memory was WRONG (programmatic dual-write is the documented, executed path) and has been archived.
+> Cross-reference: kaizen v1.99, system-prompt-v2.7.md (content v2.9), BLAME-EXTERNAL-1, session this.
+
+
 # DeepChat Settings — v1.5
 
 > **v1.5 UPDATE (2026-08-07, kaizen — CMD template architecture + system prompt v2.8 sync):**
@@ -184,7 +194,7 @@ The system prompt is stored in TWO locations that MUST stay in sync:
 | Location | Key | Notes |
 |:---------|:----|:------|
 | `agent.db` → `app_settings` | `systemPrompts` | JSON array, `[{"id":"default","name":"DeepChat","content":"..."}]` |
-| `app-settings.json` | `default_system_prompt` | Raw string (49,419 chars as of v2.8) |
+| `app-settings.json` | `default_system_prompt` | Raw string (50,518 chars as of v2.9, BLAME-EXTERNAL-1 present) |
 
 To update the system prompt:
 1. Modify `app-settings.json` → `default_system_prompt` (settingsWatcher detects this)
@@ -284,4 +294,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.5** (deepchat-settings — CMD template architecture + system prompt v2.8 sync; 2026-08-07)
+Current: **v1.6** (deepchat-settings — system prompt v2.9 sync, all 3 stores identical; 2026-08-10)
