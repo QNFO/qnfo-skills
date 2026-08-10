@@ -1,3 +1,8 @@
+> **v2.16 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE: never send test/diagnostic emails to real external recipients):**
+> Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a SECOND contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **TEST-SEND-EXTERNAL-1 anti-pattern added** — test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox. Canonical case: 2026-08-10 MATRIX E. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only).
+> Cross-reference: kaizen v1.98 (mirror row), outreach-strategy.md §4, session this.
+
 > **v2.15 UPDATE (2026-08-10, kaizen — CMD RED TEAM 5-adversary audit: OUTREACH-SENT-AS-ARCHIVED-1 premise CORRECTED + EMAIL-SENDING-DOMAIN-10002 + SEARCH-Q-EMAIL-TOKEN-1 + MESSAGE-ID-NE-DELIVERY-1 + Sender-Domain Fallback):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive, this session — daily briefing + outreach execution 2026-08-10). Trigger: live evidence contradicted the v2.14 "no sent status" claim. Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 4. SOFT: 3. DESIGN: 2. Changes:
 > (1) [HARD] **OUTREACH-SENT-AS-ARCHIVED-1 premise CORRECTED** — the v2.14 claim "Worker stores outbound sends with status='archived'; NO 'sent' status exists" is FACTUALLY FALSE. Live evidence 2026-08-10: Worker v1.8 source line 174 binds `status='sent'`; GET /emails/recent shows ids 59-62 status=sent (incl. today's Patel/Emeriau outreach); /stats byStatus reports archived=55, sent=1, spam=3. The OPERATIONAL rule (classify by sender-domain, never status alone) REMAINS canonical — it is defensive against pre-v1.6 rows and mislabelled records — but the stated rationale is corrected in the Sent-Email Detection section + anti-pattern row.
@@ -267,7 +272,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.15
+version: 2.16
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -292,7 +297,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.15
+# Email Composer — v2.16
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1432,6 +1437,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **EMAIL-SENDING-DOMAIN-10002: Onboarded Email Sending domain returns email.sending.error.internal_server (code 10002) — BIDIRECTIONAL: sends FROM the domain AND sends TO recipients ON the domain both fail (2026-08-10)** | **HARD.** An onboarded domain can fail platform-side with `email.sending.error.internal_server` on every address/recipient (verified via Worker binding, REST `POST /accounts/{acct}/email/sending/send`, AND wrangler CLI) while sibling domains work. **Bidirectional scope (matrix-verified 2026-08-10):** qwav.tech→outlook/qwav.org/rice.edu all 200; qwav.tech→alerts@qnfo.org AND qnfo@qnfo.org→outlook BOTH 500 — i.e., qnfo.org fails as SENDER and as RECIPIENT. DNS (SPF/DKIM/MX/DMARC), onboarding (`wrangler email sending settings` = enabled), and the Worker binding are all intact; the CF status page shows "operational" (NOT per-zone authoritative). Fix: (1) reproduce across 2+ onboarded domains via REST to isolate domain vs account; (2) `wrangler email sending dns get <domain>`; (3) re-enable cycle — config confirmed unchanged in the canonical case; (4) file a CF ticket; (5) use Sender-Domain Fallback (qnfo.org → qwav.tech → qwav.org) AND a working recipient domain until resolved. Canonical case: qnfo.org broken 2026-08-10; outreach sent from rowan.quni@qwav.tech to external recipients; the daily-briefing archive to alerts@qnfo.org remains blocked (use a working recipient). Owner: email-composer v2.15. Cross-ref: cloudflare-email-service, research v2.90. |
 | **SEARCH-Q-EMAIL-TOKEN-1: /emails/search?q=<full-email-with-@> returns count:0 for real records — the @ tokenizes away (2026-08-10)** | **HARD.** `GET /emails/search?q=tp53@rice.edu` → `{"count":0,"emails":[]}` while /emails/recent shows the record (id=61) — the query tokenizer drops @-containing full addresses. For dedup and lookups: use bare tokens (`q=rice`), subject keywords, or `/emails/recent?limit=N` + recipient filter. NEVER conclude "no prior contact" from a count:0 full-address search (would violate the no-repeat-contact mandate). Canonical case: 2026-08-10 dedup probe — count:0 for two sent outreach recipients. Owner: email-composer v2.15. |
 | **MESSAGE-ID-NE-DELIVERY-1: Worker /send returns its OWN uuid (crypto.randomUUID), NOT Cloudflare delivery state — 200 = accepted, not delivered (2026-08-10)** | **SOFT.** The qnfo-email Worker wraps `env.SEND_EMAIL.send()` and returns `message_id` = its own random UUID (source: `crypto.randomUUID()`), NOT Cloudflare's `delivered/permanent_bounces/queued` array. A 200 + message_id proves ACCEPTANCE only. Delivery monitoring (bounces, suppression, quota) requires the Email Sending REST API or deliverability.md endpoints (`/email/sending/limits`, `/email/sending/suppression`). Canonical case: 2026-08-10 — message_ids 3a0ec65a/391562a5 returned for the outreach batch; D1 status=sent confirms acceptance, not recipient delivery. Owner: email-composer v2.15. Cross-ref: cloudflare-email-service deliverability.md. |
+| **TEST-SEND-EXTERNAL-1: Sending test/diagnostic emails to REAL external recipients — including already-contacted researchers (2026-08-10)** | **HARD GATE.** Test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox (rwnquni@outlook.com). Canonical case: 2026-08-10 — the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent "MATRIX E" to tp53@rice.edu (Tirthak Patel) at 11:54:48Z (D1 id=66), a second contact to a researcher who had already received genuine outreach that same day (id=61); the external control should have been rwnquni@outlook.com (already control A/D). Owner: email-composer v2.16. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only). |
 ## References
 
 
@@ -1474,5 +1480,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.15** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.16** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
