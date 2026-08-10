@@ -388,11 +388,11 @@ def email_archive(briefing_text, recipient, from_addr=''):
         print('  [email] No API key — skipping email archive', flush=True)
         return False
     try:
-        payload = _json.dumps({
+        payload = {
             'to': recipient,
             'subject': f'QNFO Research Briefing — {datetime.now(timezone.utc).strftime("%Y-%m-%d")}',
             'body': briefing_text,
-        })
+        }
         # Sender override: qnfo@qnfo.org default is BROKEN platform-side 2026-08-10
         # (EMAIL-SENDING-DOMAIN-10002, CF error 10002). --from rowan.quni@qwav.tech works.
         if from_addr:
@@ -422,7 +422,9 @@ def main():
     ap.add_argument('--days', type=int, default=1,
                     help='Days to scan (daily defaults to 1, weekly to 3)')
     ap.add_argument('--email', default='',
-                    help='Email address to archive the briefing to (e.g. alerts@qnfo.org)')
+                    help='Email address to archive the briefing to (e.g. alerts@qnfo.org). NOTE: qnfo.org '
+                         'recipients are BROKEN platform-side 2026-08-10 (EMAIL-SENDING-DOMAIN-10002) — '
+                         'use a working recipient domain until resolved)')
     ap.add_argument('--from', dest='from_addr', default='',
                     help='Sender override for the archive email (default: Worker default qnfo@qnfo.org '
                          '— BROKEN platform-side 2026-08-10; use rowan.quni@qwav.tech until fixed)')
