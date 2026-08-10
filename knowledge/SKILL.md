@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.8
+version: 2.9
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,28 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.9 UPDATE (2026-08-10, user directive — judicious labeling + monthly cadence):**
+> Red-team: 5-adversary audit of the PhilPapers monitor scheduled task (session _YeVIWmYVfkpQao_Ujkh0).
+> Changes:
+> (1) [HARD] **Judicious labeling policy (user directive 2026-08-10):** only papers that ARE
+>     philosophy papers may carry philosophy-class labels (philosophy of physics/mathematics/
+>     science/information, epistemology, metaphysics, ontology, structural realism, paradigm
+>     theory). The 2026-08-06 batch injected these into ~99% of the corpus (675/680) including
+>     license agreements, patent filings, physics-only and finance records — an over-tagging
+>     incident. **EXISTING RECORDS LEFT AS-IS per user directive — no retroactive edits.**
+>     `zenodo_philpapers_optimizer.py` now gates keyword injection behind
+>     `is_philosophy_core_record()`; `philpapers_monitor.py` v2 shares the PHIL_LABELS list.
+> (2) [HARD] **Scheduled task runs MONTHLY, not daily** (1st of month 06:00 UTC — scheduled
+>     task "PhilPapers Index Monitor (Monthly)", id 48240e95). The documented "daily cron
+>     ffc8f08f" NEVER existed in the scheduler (verified live 2026-08-10); daily polling is
+>     waste because the Zenodo→DataCite→CrossRef→PhilPapers crawl cycle is days-to-weeks.
+>     `philpapers_monitor.py` v2: ORCID-identifier query (fuzzy name queries return 0 hits),
+>     size≤25 pagination (unauthenticated API cap), coverage math ZeroDivision guard,
+>     total_checks increments on 403 cycles, domain-scoped coverage denominator.
+> (3) [SOFT] PhilPapers live index is Cloudflare-blocked (403 on every path as of 2026-08-10)
+>     — monitor falls back to search-engine cross-checks; K=0 new.
+> Cross-reference: kaizen v1.80, philpapers_monitor.py v2, zenodo_philpapers_optimizer.py v2.9.
+
 > **v2.8 UPDATE (2026-08-06, PhilPapers discoverability pipeline):**
 > Red-team: direct parent-agent audit of session 1tz85-vMiqh2TyFySznBA (IPR KG deployment).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -21,7 +43,7 @@ self_sufficient: true
 > Cross-reference: kaizen v1.20, research v2.65, qnfo-core N-2, KIF-23,
 > session 1tz85-vMiqh2TyFySznBA.
 
-# KNOWLEDGE — v2.8
+# KNOWLEDGE — v2.9
 > **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
 > HARD: 0. SOFT: 2. DESIGN: 1.
@@ -395,7 +417,7 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | Storing memory without category | Always categorize: user_preference/project_fact/task_outcome/heuristic/anti_pattern |
 | Ignoring search_memories for context | Semantic search finds decisions by meaning, not keywords |
 | **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
-| **PHILPAPERS-DISCOVERABILITY-GAP: Zenodo records without keywords AND abstract are invisible to PhilPapers crawlers (2026-08-06)** | **HARD GATE (v2.8):** PhilPapers discovers papers via Zenodo → DataCite → CrossRef → PhilPapers crawler pipeline. Trigger: abstract (≥200 chars with philosophy-domain terms) + keywords (include at least 3 of: "philosophy of physics", "epistemology", "metaphysics", "ontology", "philosophy of mathematics", "foundations of quantum mechanics", "consilience"). Confirmed: QUNTUF/QUNSAI (2 of ~293) indexed because both have KW+ABS; papers without both are invisible. Fix: `zenodo_philpapers_optimizer.py` batch-adds ORCID 0009-0002-4317-5604 + philosophy keywords + community. Direct path: PhilArchive upload → guaranteed indexing in days. Scripts (git-tracked at `qnfo-skills/knowledge/scripts/`): `zenodo_philpapers_optimizer.py`, `zenodo_fix4.py`, `philpapers_submit.py`, `philpapers_monitor.py`. Cross-ref: author ORCID 0009-0002-4317-5604, PhilPapers IDs QUNTUF/QUNSAI. |
+| **PHILPAPERS-DISCOVERABILITY-GAP: Zenodo records without keywords AND abstract are invisible to PhilPapers crawlers (2026-08-06)** | **HARD GATE (v2.9):** PhilPapers discovers papers via Zenodo → DataCite → CrossRef → PhilPapers crawler pipeline. Trigger: abstract (≥200 chars with philosophy-domain terms) + keywords. **JUDICIOUS LABELING (user directive 2026-08-10):** only papers that ARE philosophy papers may carry philosophy-class labels — non-philosophy QNFO records (physics, engineering, licensing, patents, finance) must NOT be tagged as philosophy. Existing records left AS-IS (over-tagging incident: 675/680 from the 2026-08-06 batch — no retroactive edits). Confirmed indexed: QUNTUF/QUNSAI (2 of ~293). Future optimizer runs gate injection behind `is_philosophy_core_record()`; monitor runs MONTHLY (not daily). Direct path: PhilArchive upload → guaranteed indexing in days. Scripts (git-tracked at `qnfo-skills/knowledge/scripts/`): `zenodo_philpapers_optimizer.py`, `zenodo_fix4.py`, `philpapers_submit.py`, `philpapers_monitor.py` (v2). Cross-ref: author ORCID 0009-0002-4317-5604, PhilPapers IDs QUNTUF/QUNSAI. |
 
 ---
 
@@ -445,7 +467,7 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 **Aggregator cascade:** ORCID → Google Scholar → Semantic Scholar → OSF Preprints → SSRN → PhilPapers. Each aggregator feeds downstream services.
 
-**Scheduled monitoring:** Run `philpapers_monitor.py` daily. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs Zenodo corpus.
+**Scheduled monitoring:** Run `philpapers_monitor.py` **monthly** (1st of month 06:00 UTC — scheduled task "PhilPapers Index Monitor (Monthly)"; the old "daily cron ffc8f08f" never existed). The crawl cycle is days-to-weeks, so daily polling is waste. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs the philosophy-eligible Zenodo subset (judicious-labeling denominator).
 
-Current: **v2.8** (PhilPapers Discoverability Pipeline — Zenodo→DataCite→CrossRef→PhilPapers indexing confirmed via QUNTUF/QUNSAI; 2026-08-06)
+Current: **v2.9** (PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; user directive 2026-08-10; QUNTUF/QUNSAI indexed, 2 of ~293)
 
