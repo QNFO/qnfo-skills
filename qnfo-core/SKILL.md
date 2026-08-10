@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.23
+version: 1.24
 
 
 
@@ -2704,7 +2704,7 @@ must pass the gate before claiming cross-domain correspondences as evidence.
 
 research v2.73 (KIF-60, RETRODICTION-1/OVERFITTING-1/CHERRY-PICK-1/ABSORPTION-1),
 user 2026-08-04 methodological injunction (Obsidian note `_26216121020.md`).
-**Universal Ignorance Audit:** Question 5 (Falsifiability test: "What would a world look like in which this was false?") from the UIA (DOI 10.5281/zenodo.21878943, Quni-Gudzinas 2026) is a concrete instrument for applying the Falsifiability Requirement to any claim. See kaizen v2.01 §H (Universal Ignorance Audit).,
+**Universal Ignorance Audit:** Question 5 (Falsifiability test: "What would a world look like in which this was false?") from the UIA (DOI 10.5281/zenodo.21878943; case study: DOI 10.5281/zenodo.21878977) is a concrete instrument for applying the Falsifiability Requirement to any claim. See kaizen v2.01 §H (Universal Ignorance Audit).,
 
 
 
@@ -5777,7 +5777,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.24** (qnfo-core — UIA cross-reference + Q5 falsifiability instrument: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
+Current: **v1.24** (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 
