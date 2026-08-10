@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: 1.98
+version: 1.99
 
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
@@ -265,6 +265,15 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     ↔ kaizen v1.84 intact. No language consistency gaps found.
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
+
+# KAIZEN — v1.99
+> **v1.99 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE closeout: email-composer v2.17 + research v2.92 + calibration register sync):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session) then writable fix cycle. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **Calibration Register current-state ref fixed (D3)** — 'research skill (currently v2.89)' -> v2.92 (research was bumped 2.90->2.91 by concurrent session 05205f8 and 2.91->2.92 by this cycle; same recurring drift class as v1.65/v1.95).
+> (2) [SOFT] **TEST-SEND-EXTERNAL-1 mirror row extended** — cross-ref to email-composer scripts/email-send-guard.py (scripted enforcement per PROSE-GATE-ADVISORY-1) + Repair-Send Protocol (v2.17).
+> (3) [DESIGN] **Monitoring checkpoint registered (C3)** — Patel (tp53@rice.edu) contact count must remain at exactly 2 (id=66 error + id=69 clarification); any 3rd is a TEST-SEND-EXTERNAL-1 / no-repeat-contact regression. Watchtower INCIDENT-AXIS trigger.
+> Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
+
 
 # KAIZEN — v1.98
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
@@ -12521,7 +12530,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **CMD-ECHO-SUCCESS-MASK-1: `2>nul & echo SUCCESS` fakes exit 0 (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.18). Deletion/cleanup claims must be verified with `dir` or `&&` chaining; a chained echo after `2>nul` is not evidence. Canonical case: 4 temp scripts falsely 'CLEANED' — H1 red-team catch. |
 | **WSH-OUTLOOK-COM-MEM-1: cscript fails on this host — pywin32 COM is the Outlook path (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.18). cscript/WSH dies with 'Not enough memory resources'; pywin32 win32com verified (7 Outlook appointments). |
 | **CUA-DRIVER-QUARANTINE-1: quarantined cua-driver blocks list_apps (2026-08-10)** | **SOFT** (mirror; owner windows-command-patterns v3.18). Fall back to COM/filesystem; user clicks Retry runtime to re-enable. |
-| **TEST-SEND-EXTERNAL-1: test/diagnostic emails sent to real external recipients (2026-08-10)** | **HARD GATE** (mirror; owner email-composer v2.16). Test sends ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal qnfo/qwav addresses; an external-recipient diagnostic control uses the user's own mailbox. NEVER to a real external address — even a "test"/"matrix" subject is still a contact and violates no-repeat-contact. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66; second contact to Patel). | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
+| **TEST-SEND-EXTERNAL-1: test/diagnostic emails sent to real external recipients (2026-08-10)** | **HARD GATE** (mirror; owner email-composer v2.16). Test sends ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal qnfo/qwav addresses; an external-recipient diagnostic control uses the user's own mailbox. NEVER to a real external address — even a "test"/"matrix" subject is still a contact and violates no-repeat-contact. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66; second contact to Patel). ENFORCED BY: email-composer/scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR: email-composer v2.17 Repair-Send Protocol. | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
 ## Cross-Skill Integration
 
 
@@ -12994,7 +13003,7 @@ dated, falsifiable claims about skill drift risk.
 
 
 
-- The research skill (currently v2.89) is actively evolving; the canonical
+- The research skill (currently v2.92) is actively evolving; the canonical
 
 
 
@@ -13941,7 +13950,7 @@ mandate stored (mem-YoM6-BSfCW_K) + documented in email-composer v2.7.
 
 
 
-Current: **v1.98** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
+Current: **v1.99** (kaizen — SKILLS UPDATE: ecosystem audit — 19/19 QNFO skills N-2 CLEAN; 2026-08-10)
 
 
 

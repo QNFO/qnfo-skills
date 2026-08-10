@@ -10,7 +10,7 @@ name: research
 
 
 
-version: 2.91
+version: 2.92
 
 
 
@@ -222,7 +222,13 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.91
+# RESEARCH — v2.92
+> **v2.92 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: briefing send-guard cross-ref + history reconciliation):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session). Trigger: research was bumped 2.90->2.91 by concurrent session 05205f8 (AI-QUALITY-GATE-1, banner VERIFIED present) but .kaizen_history lacked the v2.91 entry, and the briefing archive send path had no TEST-SEND-EXTERNAL-1 cross-ref. HARD: 0. SOFT: 2. DESIGN: 0. Changes:
+> (1) [SOFT] **Briefing System section: TEST-SEND-EXTERNAL-1 cross-ref added (C2)** — the briefing archive email is a send path; test sends follow TEST-SEND-EXTERNAL-1 (user mailbox only, via email-composer scripts/email-send-guard.py).
+> (2) [SOFT] **.kaizen_history reconciled** — v2.91 entry (retroactive, concurrent session) + v2.92 entry appended.
+> Cross-reference: email-composer v2.17 (TEST-SEND-EXTERNAL-1, email-send-guard.py), kaizen v1.99, session this.
+
 > **v2.91 UPDATE (2026-08-10, kaizen — AI-QUALITY-GATE-1 added to publication pipeline):**
 > Red-team: direct parent-agent 5-adversary audit follow-up (session 0SnaUK-QccIJkohojGMQS — uncanny-valley research note + JPCUB verification). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **AI-QUALITY-GATE-1 added to Publication Language Gate (BLOCKING)** — the owner-level anti-pattern (qnfo-core v1.22) becomes a machine-enforced pipeline check per PROSE-GATE-ADVISORY-1. Before publication, AI-generated/AI-assisted papers MUST clear the forensic quality gate: (i) no elementary physics/energy-budget errors (canonical: Qudit Advantage §3.3 sets P_decode≈0 as a "conservative upper bound" — zero is a LOWER bound; VERIFIED via D1 body 2026-08-10), (ii) no synthetic/unresolvable citation anchors in the body (@C5_jpcub_p0-style prefixed keys — INTERNAL-REF-1-adjacent; readers read them as fake), (iii) no scaffold overload (meta-tag echo, rigid template boxes), (iv) no over-explaining textbook foundations while hand-waving the novel integration, (v) no self-referential metric claims without external validation. Cross-ref: qnfo-core v1.22, INTERNAL-REF-1, kaizen v1.63 (PROSE-GATE-ADVISORY-1).
@@ -8620,6 +8626,13 @@ for social-media/manual-wading research discovery. Six cronjobs, zero user actio
 
 | Email Inbox Check | every 3h | qnfo.org mail summaries incl. archived briefings |
 
+**Send-path discipline (v2.92, CMD RED TEAM):** the briefing archive email (research-daily-brief.py
+email_archive) is a SEND path — test sends for it follow TEST-SEND-EXTERNAL-1 (email-composer v2.17):
+test emails go ONLY to the user's own mailbox or internal addresses, enforced by
+`email-composer/scripts/email-send-guard.py --mode test`. The archive recipient must be a WORKING
+domain (qnfo.org recipients were broken platform-side 2026-08-10 — EMAIL-SENDING-DOMAIN-10002);
+use `--from rowan.quni@qwav.tech` (or another ALLOWED_DOMAINS sender) until resolved.
+
 | Obsidian Intelligence Note (cfe37200) | Mon 10:00 UTC | Generates the periodic note into `D:\Obsidian\notes\v1\YYYY\MM\DD\_YYDDDDHHmmss.md` (PhD-filtered jobs + enriched conferences) |
 
 
@@ -8953,7 +8966,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.91** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.92** (research — TITLE-DUPLICATION-1 scripted gate: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

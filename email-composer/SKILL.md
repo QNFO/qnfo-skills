@@ -1,3 +1,11 @@
+> **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session). Trigger: the Patel incident (id=66 test email to a real recipient) revealed that TEST-SEND-EXTERNAL-1 (v2.16) was a PROSE-ONLY gate and there was no repair playbook. HARD: 2. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **Repair-Send Protocol section added (C1)** — codifies the incident-response playbook that was improvised on 2026-08-10: classify severity (wrong recipient / wrong content / redundant), clarify-vs-resend decision rule (if genuine content already delivered FIRST, send a short clarification threaded by subject — NEVER a full re-send), test-send to the USER's OWN mailbox first, verify in D1 (status=sent), log to outreach-log.md, and HARD-STOP further contact (no follow-up, no 4th email). The "threading-by-subject" repair pattern (N2) is codified here.
+> (2) [HARD] **Scripted send-guard (N1 / PROSE-GATE-ADVISORY-1 enforcement)** — TEST-SEND-EXTERNAL-1 is now machine-enforced by `scripts/email-send-guard.py`: any `--mode test` send whose recipient is NOT the user's own mailbox or an internal QNFO/QWAV domain exits 1 with the TEST-SEND-EXTERNAL-1 violation message. Prose gate → scripted gate.
+> (3) [SOFT] **TEST-SEND-EXTERNAL-1 row extended** — cross-ref to the scripted guard + Repair-Send Protocol added.
+> (4) [DESIGN] **Monitoring checkpoint registered (C3)** — Patel contact count (tp53@rice.edu) must remain at exactly 2 (id=66 error + id=69 clarification); any 3rd contact is a TEST-SEND-EXTERNAL-1 / no-repeat-contact regression.
+> Cross-reference: kaizen v1.99 (mirror + calibration fix), research v2.92 (briefing cross-ref), PROSE-GATE-ADVISORY-1, session this.
+
 > **v2.16 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE: never send test/diagnostic emails to real external recipients):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a SECOND contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 anti-pattern added** — test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox. Canonical case: 2026-08-10 MATRIX E. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only).
@@ -272,7 +280,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.16
+version: 2.17
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -297,7 +305,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.16
+# Email Composer — v2.17
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -689,6 +697,37 @@ When the canonical sending domain fails platform-side (10002 internal_server), f
 
 ### EMAIL-ADDRESS-PROLIFERATION-1 (HARD, 2026-08-06)
 Creating email routing rules / addresses beyond the canonical set without explicit user direction. Canonical case: 2026-08-06 — agent provisioned 5 literal rules × 11 domains (~55 addresses: qnfo@qwav.org, research@q-wave.tech, alerts@qnfo.uk, ...) when the user wanted 3-5 max. User directive cut it back: 8 domains reverted to catch-all drop (40 rules deleted), only the canonical set remains. Fix: before creating ANY routing rule, ask — "is this address in the canonical set, or explicitly requested?" If no, do not create it. Cross-ref: kaizen v1.81, N-2-SCAN-FALSE-POSITIVE-1 (verify before claim).
+
+## Repair-Send Protocol (v2.17, HARD — 2026-08-10)
+
+**Purpose:** the canonical response when an email was sent wrongly (wrong recipient, wrong content, or a test email that reached a real person). Codified from the Patel incident (2026-08-10): a diagnostic "matrix test" email (id=66) was sent to a real researcher who had already received genuine outreach (id=61); the repair was improvised. This protocol makes it deterministic.
+
+**Step 0 — Classify severity:**
+- **Wrong recipient** (test/error mail reached a real person) → proceed to Step 1.
+- **Wrong content** (real recipient, wrong/misleading body) → proceed to Step 1.
+- **Redundant** (same content sent twice) → NO new email. Stop. Log only.
+
+**Step 1 — Decision rule (clarify vs re-send):**
+- If the GENUINE content was already delivered FIRST (or separately): send a SHORT CLARIFICATION ONLY — never a full re-send. A third email repeating the pitch reads as pushy and uncoordinated.
+- If NO genuine content ever reached them: you may re-send the real content with an apology line.
+- **Thread by subject**: reuse the genuine email's exact subject (e.g., "Re: PaQit - ...") so the clarification lands adjacent to the real message in their inbox.
+
+**Step 2 — Contact-count gate (HARD):**
+- Count prior sends to this recipient in D1 (`/emails/recent` filtered by recipient).
+- If the recipient has ALREADY received genuine outreach, ANY further send (including a repair) requires **explicit user approval** (no-repeat-contact mandate). One repair max; **no follow-up, ever** (a 4th contact is a violation).
+
+**Step 3 — Test-send first (TEST-SEND-EXTERNAL-1):**
+- Test-send the exact payload to the USER's OWN mailbox (`rwnquni@outlook.com`) — via `scripts/email-send-guard.py --mode test` which enforces the allowlist. NEVER to the real recipient as a "test".
+
+**Step 4 — Send + verify + log:**
+- Send via the Worker /send (working sender domain per Sender-Domain Fallback).
+- Independently verify in D1: `status=sent` (Tool-Call Execution Mandate — API response is the first signal, D1 is the last).
+- Append the full incident → repair record to `references/outreach-log.md` (recipient, ids, user approval, anti-patterns referenced).
+- Commit + push outreach-log.md same session (SKILL-COMMIT-SAME-SESSION-1).
+
+**Canonical case:** 2026-08-10 — Patel test-email repair (id=68 own-mailbox test, id=69 clarification, user-approved contact #3, logged, committed ed080ba). HARD RULE: NO 4th contact to Patel ever.
+
+**Enforcement:** `scripts/email-send-guard.py --to <addr> --mode test` — exits 1 unless recipient is the user's own mailbox or an internal domain (TEST-SEND-EXTERNAL-1 scripted gate).
 
 ## Core Workflow
 
@@ -1437,7 +1476,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **EMAIL-SENDING-DOMAIN-10002: Onboarded Email Sending domain returns email.sending.error.internal_server (code 10002) — BIDIRECTIONAL: sends FROM the domain AND sends TO recipients ON the domain both fail (2026-08-10)** | **HARD.** An onboarded domain can fail platform-side with `email.sending.error.internal_server` on every address/recipient (verified via Worker binding, REST `POST /accounts/{acct}/email/sending/send`, AND wrangler CLI) while sibling domains work. **Bidirectional scope (matrix-verified 2026-08-10):** qwav.tech→outlook/qwav.org/rice.edu all 200; qwav.tech→alerts@qnfo.org AND qnfo@qnfo.org→outlook BOTH 500 — i.e., qnfo.org fails as SENDER and as RECIPIENT. DNS (SPF/DKIM/MX/DMARC), onboarding (`wrangler email sending settings` = enabled), and the Worker binding are all intact; the CF status page shows "operational" (NOT per-zone authoritative). Fix: (1) reproduce across 2+ onboarded domains via REST to isolate domain vs account; (2) `wrangler email sending dns get <domain>`; (3) re-enable cycle — config confirmed unchanged in the canonical case; (4) file a CF ticket; (5) use Sender-Domain Fallback (qnfo.org → qwav.tech → qwav.org) AND a working recipient domain until resolved. Canonical case: qnfo.org broken 2026-08-10; outreach sent from rowan.quni@qwav.tech to external recipients; the daily-briefing archive to alerts@qnfo.org remains blocked (use a working recipient). Owner: email-composer v2.15. Cross-ref: cloudflare-email-service, research v2.90. |
 | **SEARCH-Q-EMAIL-TOKEN-1: /emails/search?q=<full-email-with-@> returns count:0 for real records — the @ tokenizes away (2026-08-10)** | **HARD.** `GET /emails/search?q=tp53@rice.edu` → `{"count":0,"emails":[]}` while /emails/recent shows the record (id=61) — the query tokenizer drops @-containing full addresses. For dedup and lookups: use bare tokens (`q=rice`), subject keywords, or `/emails/recent?limit=N` + recipient filter. NEVER conclude "no prior contact" from a count:0 full-address search (would violate the no-repeat-contact mandate). Canonical case: 2026-08-10 dedup probe — count:0 for two sent outreach recipients. Owner: email-composer v2.15. |
 | **MESSAGE-ID-NE-DELIVERY-1: Worker /send returns its OWN uuid (crypto.randomUUID), NOT Cloudflare delivery state — 200 = accepted, not delivered (2026-08-10)** | **SOFT.** The qnfo-email Worker wraps `env.SEND_EMAIL.send()` and returns `message_id` = its own random UUID (source: `crypto.randomUUID()`), NOT Cloudflare's `delivered/permanent_bounces/queued` array. A 200 + message_id proves ACCEPTANCE only. Delivery monitoring (bounces, suppression, quota) requires the Email Sending REST API or deliverability.md endpoints (`/email/sending/limits`, `/email/sending/suppression`). Canonical case: 2026-08-10 — message_ids 3a0ec65a/391562a5 returned for the outreach batch; D1 status=sent confirms acceptance, not recipient delivery. Owner: email-composer v2.15. Cross-ref: cloudflare-email-service deliverability.md. |
-| **TEST-SEND-EXTERNAL-1: Sending test/diagnostic emails to REAL external recipients — including already-contacted researchers (2026-08-10)** | **HARD GATE.** Test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox (rwnquni@outlook.com). Canonical case: 2026-08-10 — the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent "MATRIX E" to tp53@rice.edu (Tirthak Patel) at 11:54:48Z (D1 id=66), a second contact to a researcher who had already received genuine outreach that same day (id=61); the external control should have been rwnquni@outlook.com (already control A/D). Owner: email-composer v2.16. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only). |
+| **TEST-SEND-EXTERNAL-1: Sending test/diagnostic emails to REAL external recipients — including already-contacted researchers (2026-08-10)** | **HARD GATE.** Test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox (rwnquni@outlook.com). Canonical case: 2026-08-10 — the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent "MATRIX E" to tp53@rice.edu (Tirthak Patel) at 11:54:48Z (D1 id=66), a second contact to a researcher who had already received genuine outreach that same day (id=61); the external control should have been rwnquni@outlook.com (already control A/D). Owner: email-composer v2.16. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only). ENFORCED BY: scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR PLAYBOOK: Repair-Send Protocol section (v2.17). |
 ## References
 
 
@@ -1480,5 +1519,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.16** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.17** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
 
