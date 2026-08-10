@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.18
+version: 1.19
 
 
 
@@ -642,8 +642,13 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.18
-
+# QNFO Core — v1.19
+> **v1.19 UPDATE (2026-08-10, kaizen — AI-AUTHOR-CLASSIFY-1: paper-authorship classification methodology):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM — 49-paper papers.qnfo.org AI-authorship classification). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 3. SOFT: 2. DESIGN: 2 (classification-level findings). Changes:
+> (1) [HARD] **AI-AUTHOR-CLASSIFY-1 anti-pattern added** — classifying QNFO paper authorship MUST use (a) full-body scan for the end-of-paper "Use of Artificial Intelligence" disclosure section (head-only scans miss it: canonical case produced 19/49 UNKNOWN while every full-body disclosure lived near references/ethics blocks), (b) DataCite API (`api.datacite.org/dois/{doi}`) for the authoritative creator string BEFORE HTML scraping (papers.qnfo.org author lines carry `\|` escapes and are sometimes missing entirely), (c) content-about-AI is NOT evidence of AI-generation (scanner-quoting class: N-2-SCAN-FALSE-POSITIVE-1, HARDCODED-AUDIT-1 — canonical case: consilience-framework mislabeled AI-GENERATED/META from TOC keywords alone), (d) explicit agent bylines ("Author: QNFO Research Agent", "LLM agent (DeepSeek V4)") ARE the strongest AI-generation evidence; human byline + explicit disclosure = AI-ASSISTED; no disclosure found in full body = report "no disclosure found", never "human-written".
+> (2) [SOFT] Classification bucket taxonomy: collapse ambiguous labels (LIKELY AI-ASSISTED, AI-GENERATED / META) or define them explicitly; `HUMAN / UNDECLARED` must read `HUMAN BYLINE / NO DISCLOSURE FOUND`.
+> (3) [DESIGN] DataCite + D1/Vectorize (`get_paper_context`, `search_papers_enriched`) are the canonical creator/disclosure sources for QNFO corpus audits; HTML crawl is fallback only.
+> Cross-reference: research v2.89 (ZENODO-PHANTOM-DOI-1 uses DataCite), kaizen v1.93 (N-2-SCAN-FALSE-POSITIVE-1, HARDCODED-AUDIT-1), session this (0SnaUK-QccIJkohojGMQS).
 
 
 
@@ -3661,6 +3666,7 @@ Before beginning work on a QNFO/QWAV deliverable:
 
 
 
+| **AI-AUTHOR-CLASSIFY-1: Classifying QNFO paper authorship from head-only scans or content keywords instead of full-body disclosure + DOI creator verification (2026-08-10)** | **HARD GATE.** When assessing whether a QNFO paper is human-written, AI-assisted, or AI-generated: (a) scan the FULL body for the "Use of Artificial Intelligence" disclosure section — it lives near the paper END (references/ethics block), so head-window scans miss it (canonical case: 49-paper papers.qnfo.org audit — 19 UNKNOWN from head[:800] scan; every full-body disclosure found in end-of-paper sections); (b) resolve the DOI via DataCite API (`api.datacite.org/dois/{doi}`) for the authoritative creator string before HTML scraping — site HTML may omit/format author lines inconsistently (`\|` escapes, missing byline); (c) content ABOUT AI ("This paper documents the Universal Consilience Prompt / Autonomous LLM Research Workflow") is NOT evidence the paper is AI-generated — the scanner-quoting class (N-2-SCAN-FALSE-POSITIVE-1, HARDCODED-AUDIT-1); (d) explicit agent bylines ("Author: QNFO Research Agent", "LLM agent (DeepSeek V4)") ARE the strongest AI-generation evidence; human byline + explicit disclosure = AI-ASSISTED; no disclosure found in full body = report "no disclosure found", never "human-written". Cross-ref: kaizen N-2-SCAN-FALSE-POSITIVE-1, research v2.89 ZENODO-PHANTOM-DOI-1 (DataCite), VERIFY-FACT-1. |
 | **VERIFY-FACT-1: Making factual existence claims ("X does not exist" / "X was released on Y") without live source verification (2026-08-05)** | **HARD GATE.** Every existence claim requires a same-turn tool call to a live source. Assumptions from training data are indistinguishable from fabrication when wrong. Canonical case: Heffner audit v1.0 claimed GPT-5 didn't exist; GPT-5 released Aug 7, 2025 (Wikipedia). Cross-ref: research v2.85, kaizen v1.59. |
 | **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` — title twice on page 1 (2026-08-05)** | **HARD.** No body H1 when YAML `title:` exists; exactly ONE title occurrence in rendered output. Cross-ref: research v2.84. |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, or possessive internal refs in published papers. Cite published records only. Cross-ref: research v2.84. |
@@ -5721,7 +5727,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.18** (qnfo-core — VERIFY-FACT-1: fact-check existence claims before publishing; 2026-08-05)
+Current: **v1.19** (qnfo-core — AI-AUTHOR-CLASSIFY-1: full-body AI-disclosure scan + DataCite creator verification; 2026-08-10)
 
 
 
