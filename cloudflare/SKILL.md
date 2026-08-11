@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.45
+version: 3.46
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -168,7 +168,19 @@ self_sufficient: true
 > Cross-reference: mcp-portals docs, qnfo-mcp-portal, CMD EXECUTE C5 (2026-08-11),
 > session QrOP_3xznyiEOIqdKFHWS.
 
-# CLOUDFLARE — v3.45
+> **v3.46 UPDATE (2026-08-11, kaizen — MCP portal token operational notes):**
+> Red-team: CMD SKILLS UPDATE cycle + portal implementation test (session QrOP_3xznyiEOIqdKFHWS).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **Portal OAuth token notes added** — verified live 2026-08-11: the mcp.q08.org
+>     portal token has a 900s (15 min) lifetime (shorter than hosted MCP-server tokens' 3600s);
+>     it is NOT covered by fleet-oauth-refresh.py; it auto-refreshes via the refresh_token grant
+>     against q08.cloudflareaccess.com/cdn-cgi/access/oauth/token (resource mcp.q08.org/mcp).
+>     mcp-remote handles refresh transparently; raw probes returning 401 "Session expired" must
+>     refresh before re-probing.
+> Cross-reference: v3.23 Token Refresh Protocol, fleet-oauth-refresh.py, mcp.q08.org portal,
+> session QrOP_3xznyiEOIqdKFHWS.
+
+# CLOUDFLARE — v3.46
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -511,6 +523,18 @@ ai-controls server ID, plus an Allow policy — otherwise the portal shows "No a
 available". Verified end-to-end: initialize 200, tools/list 200 (14 tools incl.
 portal_list_servers + namespaced upstream tools), cloudflare-blog_search_posts returned real
 results. DeepChat entry: `npx mcp-remote@latest https://mcp.q08.org/mcp` (clean OAuth form).
+
+**Portal OAuth token operational notes (2026-08-11, verified live):**
+- The portal access token has a **900s (15 min) lifetime** — shorter than the hosted MCP-server
+  tokens (3600s). It is **not** covered by `fleet-oauth-refresh.py` (that script's OAUTH_SERVERS
+  dict covers only the 15 hosted mcp.cloudflare.com servers). The portal token is auto-refreshed
+  by mcp-remote on demand via the `refresh_token` grant against
+  `https://q08.cloudflareaccess.com/cdn-cgi/access/oauth/token` (resource `https://mcp.q08.org/mcp`,
+  client_id from `~/.mcp-auth/mcp-remote-0.1.37/<md5(portal)>_client_info.json`). Verified: refresh
+  returns HTTP 200 with a rotated access+refresh pair; initialize then returns 200. If a raw probe
+  returns 401 "Session expired, please reauthenticate", run the refresh before re-probing.
+- DeepChat's mcp-remote entry handles this transparently (auto-refresh on connect); no manual
+  refresh needed for normal use.
 
 ### Cloudflare MCP Ecosystem Source Repositories (2026-08-11)
 
@@ -1899,7 +1923,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.45** (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.46** (cloudflare — MCP portal token operational notes; 2026-08-11) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
