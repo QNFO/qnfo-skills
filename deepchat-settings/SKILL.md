@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.9
+version: 1.10
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,23 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.9
+# DeepChat Settings — v1.10
+> **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
+> Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
+> the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
+> concurrently). HARD: 1 (mandate). Changes:
+> (1) [HARD] **Skills-Updates-Must-Include-Prompt-Stores protocol added** — every kaizen/skills-update cycle
+>     MUST/SHALL also update (a) the DeepChat system prompt in ALL THREE stores (`agent.db` → `app_settings`
+>     → `systemPrompts` content key, `app-settings.json` → `default_system_prompt`, canonical
+>     `system-prompt-v2.7.md` in BOTH .deepchat root and qnfo-skills git repo) and (b) the custom CMD prompt
+>     templates (`agent.db` customPrompts content key + `app-settings.json` customPrompts template key).
+>     System prompt bumped v3.0 → v3.1 (56,137 chars, "Last updated 2026-08-11"); CMD SKILLS UPDATE template
+>     now carries the mandate text (317 → 426 chars) in both stores.
+> (2) [SOFT] **Footer description normalized** — the v1.9 concurrent bump reused the v1.8 footer description
+>     ("stdio registration note + mcp-guard row"); footer now describes this v1.10 change.
+> Cross-reference: kaizen v2.17, system-prompt-v2.7.md (content v3.1), MCP-REGISTRATION-ONE-STORE-1,
+> session i3NHS7gJBTyozMCNeaZm-.
+
 > **v1.8 UPDATE (2026-08-11, kaizen — red-team fix cycle: stdio registration note + mcp-guard row; CMD EXECUTE):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — post-restart audit of
 > v1.7 + qwav-platform registration). HARD: 0. SOFT: 3. DESIGN: 2. This cycle applies the writable fixes:
@@ -415,4 +431,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.9** (deepchat-settings — red-team fix cycle: stdio registration note + mcp-guard row; 2026-08-11)
+Current: **v1.10** (deepchat-settings — USER MANDATE: skills updates also update system prompt + custom templates; 2026-08-11)
