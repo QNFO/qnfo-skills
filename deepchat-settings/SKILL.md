@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.6
+version: 1.7
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,24 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.6
+# DeepChat Settings — v1.7
+> **v1.7 UPDATE (2026-08-11, kaizen — MCP server registration mechanics documented; CMD SKILLS UPDATE):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — qwav-platform
+> MCP registration cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 0. SOFT: 2. DESIGN: 1.
+> (1) [SOFT] **MCP Server Registration section added** — dual-store pattern: `mcp-settings.json` → `mcpServers`
+>     (settingsWatcher live reload) + `agent.db` → `mcp_servers` (config_json with serverId/bindingHash;
+>     startup persistence) + `mcp_settings` (mcpEnabled/removedBuiltInServers) + `agent_mcp_selections`.
+>     bindingHash semantics: identical baseUrl → identical bindingHash → ALIAS entry (no new tool surface;
+>     tools keyed by name via input_enabledMcpTools). Backup-before-edit + rollback documented.
+> (2) [SOFT] **Anti-pattern rows added** — MCP-REGISTRATION-ONE-STORE-1 (single-store registration silently
+>     lost at restart or invisible to live reload; MUST dual-write) + MCPMARKET-CATALOG-NE-SERVER-1
+>     (marketplace catalog listing ≠ runnable MCP server; verify endpoint with MCP initialize POST —
+>     GET /mcp 404 is normal for streamable-HTTP — before registering).
+> (3) [DESIGN] **File Locations table completed** — added `mcp-settings.json` row (the map omitted the
+>     territory per UIA Q2).
+> Cross-reference: kaizen v2.10, MCP-REGISTRATION-ONE-STORE-1, MCPMARKET-CATALOG-NE-SERVER-1,
+> qwav-platform registration (session i3NHS7gJBTyozMCNeaZm-), session this.
+
 > **v1.6 UPDATE (2026-08-10, kaizen — system prompt v2.9 sync + BLAME-EXTERNAL-1 live; CMD RED TEAM follow-up):**
 > Red-team: direct parent-agent 5-adversary audit (session JyHYI9Q9pS2zs7fL_mJbS). Finding: the v2.9 update had reached ONLY the canonical .md file — both runtime stores still held v2.8 (49,419 chars, no BLAME-EXTERNAL-1). The running system prompt was therefore still v2.8; the principle was inert. HARD: 2. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **System prompt v2.9 dual-written to runtime stores** — `app-settings.json` → `default_system_prompt` AND `agent.db` → `app_settings` → `systemPrompts` (backups: `.bak_20260810_174603`). All 3 stores now IDENTICAL: 50,518 chars, v2.9 header, BLAME-EXTERNAL-1 present. settingsWatcher picks up app-settings.json dynamically; agent.db loads at startup.
@@ -107,6 +124,7 @@ the ~15 tool-call rediscovery this session burned (PROMPT-REDISCOVERY-1).
 |:-----|:-----|:-------|
 | **Agent database** | `%APPDATA%\DeepChat\app_db\agent.db` | SQLite3, `app_settings` table |
 | **App settings** | `%APPDATA%\DeepChat\app-settings.json` | JSON, top-level keys |
+| **MCP servers** | `%APPDATA%\DeepChat\mcp-settings.json` | JSON, `mcpServers` map |
 | **History DB** | `%APPDATA%\DeepChat\rtk\history.db` | SQLite3 (10824 commands) |
 | **Skills** | `%USERPROFILE%\.deepchat\skills\` | Markdown files (no .git) |
 | **Git-tracked skills** | `%USERPROFILE%\Documents\GitHub\qnfo-skills\` | Git repo (canonical) |
@@ -201,6 +219,45 @@ To update the system prompt:
 2. Modify `agent.db` → `app_settings` → `systemPrompts` (app reads this at startup)
 3. App restart may be required
 
+### MCP Server Registration (Programmatic — added 2026-08-11)
+
+MCP servers are stored in TWO locations that MUST be dual-written (canonical case:
+qwav-platform registration, session i3NHS7gJBTyozMCNeaZm- — ~15 tool calls were
+burned rediscovering this before it was documented):
+
+| Location | Key / Table | Role |
+|:---------|:------------|:-----|
+| `%APPDATA%\DeepChat\mcp-settings.json` | `mcpServers` (map keyed by server name) | Live MCP list; settingsWatcher watches this file |
+| `%APPDATA%\DeepChat\app_db\agent.db` | `mcp_servers` (name, config_json, sort_order, created_at, updated_at) | Startup persistence — survives restarts |
+| `agent.db` | `mcp_settings` (key/value_json) | `mcpEnabled`, `autoDetectNpmRegistry`, `removedBuiltInServers`, `npmRegistryCache` |
+| `agent.db` | `agent_mcp_selections` (agent_id, is_builtin, mcp_id, sort_order) | Per-agent server selection |
+
+**Entry shape (http type):** `type=http`, `baseUrl`, `enabled=true`, `command=""`,
+`args=[]`, `env={}`, `customHeaders={}`, `customNpmRegistry=""`. DB config_json adds
+`serverId` (uuid), `configGeneration`, `bindingHash`.
+
+**bindingHash semantics (CRITICAL):** the binding hash is derived from the connection
+parameters (baseUrl/command/type). Two entries with the SAME baseUrl get the SAME
+bindingHash — the second is an **ALIAS of the first binding**, not a new server. It
+adds naming fidelity but ZERO new tool surface: DeepChat keys tool enablement by
+NAME via `input_enabledMcpTools` in app-settings.json, so both names resolve to the
+same tools. Document aliases as aliases in the description.
+
+**Registration procedure:**
+1. BACKUP: copy `mcp-settings.json` → `mcp-settings.json.bak-YYYYMMDD-suffix`.
+2. `mcp-settings.json`: add the entry under `mcpServers` (settingsWatcher reloads live).
+3. `agent.db`: `INSERT INTO mcp_servers (name, config_json, sort_order, ...)` with
+   sort_order = `MAX(sort_order)+1` (verify no collision).
+4. VERIFY: re-read both stores + confirm the endpoint is live with an MCP
+   `initialize` POST (NOT a bare GET — GET /mcp → 404 is normal for streamable-HTTP).
+
+**Rollback:** remove the key from `mcpServers` + `DELETE FROM mcp_servers WHERE name='...'`.
+
+**Marketplace listings (mcpmarket.com etc.) are CATALOG CARDS — not servers.** They
+rarely contain an endpoint/install command; the linked repo may have NO MCP server
+component. Verify a real endpoint (MCP initialize POST; bare-Python UA may get CF
+403/1010 — use browser-grade headers) before registering. See MCPMARKET-CATALOG-NE-SERVER-1.
+
 ### TEMP-VOLATILITY (Critical Peril)
 
 **Windows `%TEMP%` is volatile across agent tool calls.** A file written by the
@@ -281,6 +338,8 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 | **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06)** | agent.db `customPrompts` entries: `{"name":..., "content":"..."}`. app-settings.json `customPrompts` entries: `{"name":..., "template":"..."}`. The prompt TEXT lives under DIFFERENT keys in the two stores. Always read `content` (agent.db) AND `template` (app-settings.json); both must be non-empty. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — a `content`-key read of app-settings.json falsely reported empty templates. |
 | **PROMPT-REDISCOVERY-1: Searching for prompt storage locations with 15+ tool calls when the answer is documented here (2026-08-05)** | Custom prompts live in `agent.db` → `app_settings` → `key='customPrompts'` (value_json JSON string). The system prompt is in `agent.db` → `key='systemPrompts'` AND `app-settings.json` → `default_system_prompt`. Read this skill first — do not grep JSON files or walk directory trees. |
 | **DB-SCHEMA-GUESS-1: Guessing database table names instead of querying sqlite_master (2026-08-05)** | Before querying any DeepChat database, run `SELECT name FROM sqlite_master WHERE type='table'` to discover the actual schema. The `app_settings` table uses key-value_json, not typed columns. The `history.db` uses `commands` and `parse_failures` tables, not `prompts`. |
+| **MCP-REGISTRATION-ONE-STORE-1: Registering an MCP server in only ONE of the two stores (2026-08-11)** | Dual-write BOTH: `mcp-settings.json` → `mcpServers` (settingsWatcher live reload) AND `agent.db` → `mcp_servers` (startup persistence). A one-store registration silently vanishes at restart (agent.db missed) or never appears in the live list (mcp-settings.json missed). Canonical case: qwav-platform registration 2026-08-11 — verified both stores needed (28-entry mcp-settings.json + 18-row mcp_servers). Cross-ref: MCP Server Registration section. |
+| **MCPMARKET-CATALOG-NE-SERVER-1: Treating an MCP marketplace listing (mcpmarket.com) as a runnable MCP server (2026-08-11)** | Marketplace listings are CATALOG CARDS: no endpoint, no install command, no tool list; the linked repo may contain NO MCP server component. Before registering in DeepChat, verify a REAL endpoint with an MCP `initialize` POST (bare GET /mcp → 404 is normal for streamable-HTTP; bare-Python UA may get CF 403/1010 — use browser-grade headers). Canonical case: qwav-platform — listing pointed at QNFO/qwav-platform repo (624 files, 0 with 'mcp' in name); the live endpoint was the pre-existing qnfo-memory-mcp worker. Cross-ref: MCP Server Registration section. |
 
 
 | **SKILL-FILE-NE-INSTALLED-1: Writing a SKILL.md file to the skills dir and assuming it is an installed skill (2026-08-05)** | File presence and valid frontmatter do NOT register a skill with the app loader. `skill_list` is the only truth. Canonical case: execution-mandate v2.6→v2.8 was written to disk and kaizened for 2 days while the app never loaded it — then kaizen v1.24 inferred "removed" and declared `[NOT-INSTALLED]` (SKILL-DEATH-FALSE-POSITIVE-1). When creating/updating a skill: verify via `skill_list` after writing, and if absent, run the app's install flow (not file writes). |
@@ -294,4 +353,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.6** (deepchat-settings — system prompt v2.9 sync, all 3 stores identical; 2026-08-10)
+Current: **v1.7** (deepchat-settings — MCP server registration mechanics + 2 anti-patterns; 2026-08-11)

@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.09"
+version: "2.10"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,22 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.09
+# KAIZEN — v2.10
+> **v2.10 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: deepchat-settings v1.7 — MCP registration mechanics + 2 anti-patterns):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS
+> UPDATE; qwav-platform MCP registration cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post.
+> HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **deepchat-settings v1.6→v1.7** — MCP Server Registration section (dual-store:
+>     mcp-settings.json mcpServers + agent.db mcp_servers/mcp_settings/agent_mcp_selections;
+>     bindingHash alias semantics; backup+rollback), File Locations table completed
+>     (mcp-settings.json row), anti-patterns MCP-REGISTRATION-ONE-STORE-1 + MCPMARKET-CATALOG-NE-SERVER-1.
+> (2) [DESIGN] **MCPMARKET-CATALOG-NE-SERVER-1 pattern** — marketplace listings are catalog cards; verify a
+>     real endpoint (MCP initialize POST) before registering in DeepChat; the listing itself never provides
+>     the endpoint. Canonical: qwav-platform listing → repo has no MCP component → live endpoint was the
+>     pre-existing qnfo-memory-mcp worker (verified live).
+> Cross-reference: deepchat-settings v1.7, MCP-REGISTRATION-ONE-STORE-1, MCPMARKET-CATALOG-NE-SERVER-1,
+> qnfo-memory-mcp (verified live), session i3NHS7gJBTyozMCNeaZm-.
+
 > **v2.09 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: cross-ref drift audit + 4 current-state fixes + UIA pass):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-15 (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
 > Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post. Cross-ref audit: 43 flags → 4 GENUINE current-state
@@ -6136,7 +6151,7 @@ is adversarial only toward new theories and deferential toward established ones 
 
 
 
-confirmation-biased (PRO-INCUMBENT-BIAS-1, research v2.73 / qnfo-core v1.14).
+confirmation-biased (PRO-INCUMBENT-BIAS-1, research v2.97 / qnfo-core v1.24).
 
 
 
@@ -14181,7 +14196,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.09** (kaizen — SKILLS UPDATE: cross-ref drift audit + 4 current-state fixes + UIA pass; 2026-08-11)
+Current: **v2.10** (kaizen — SKILLS UPDATE: deepchat-settings v1.7 MCP registration mechanics; 2026-08-11)
 
 
 
