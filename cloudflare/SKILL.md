@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.41
+version: 3.42
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -9,6 +9,30 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v3.42 UPDATE (2026-08-11, CMD IMPLEMENT — 5-repo Cloudflare fork family + RFC 0.2.0 discovery live):**
+> Red-team: direct parent-agent verification (this session — user directive: implement
+> cloudflare/skills, cloudflare/agent-skills-discovery-rfc, cloudflare/mcp,
+> cloudflare/playwright-mcp, cloudflare/workers-mcp). HARD: 0 (skill-side). SOFT: 1. DESIGN: 1.
+> Changes:
+> (1) [HARD-adjacent] **Fork family expanded 1 → 5 repos** — all official Cloudflare repos
+>     forked into QNFO org (cloudflare-skill-forks, agent-skills-discovery-rfc, mcp,
+>     playwright-mcp, workers-mcp), all cloned to C:\Users\LENOVO\Documents\GitHub, all with
+>     `upstream` remotes, ALL verified in sync with upstream 2026-08-11 (HEAD == origin/main
+>     == upstream/main for each). cloudflare-skill-forks fast-forwarded 30553f8→f96bff7
+>     (upstream #92: sandbox-sdk renamed → sandbox-stable + sandbox-next +
+>     sandbox-migrate-to-next).
+> (2) [SOFT] **Sandbox skill split hydrated** — live `sandbox-sdk` REMOVED (stale name,
+>     upstream renamed it), replaced byte-identical by `sandbox-stable`, `sandbox-next`,
+>     `sandbox-migrate-to-next` from the fork. 12 official skills now hydrated (13 minus the
+>     cloudflare collision). Official Skill Coverage Matrix updated 11 → 13 rows.
+> (3) [DESIGN] **RFC 0.2.0 Agent Skills Discovery IMPLEMENTED LIVE** — new Worker
+>     `qnfo-skills-discovery` (source QNFO/qnfo-workers `skills-discovery/`, commit e626f6d,
+>     deploy version 7c701b53) serves `/.well-known/agent-skills/index.json` + skill artifacts
+>     from the R2 qnfo-skills bucket. Verified: index 200, 16 skills, all artifact URLs 200,
+>     digests 16/16 match, 404 + HEAD + CORS correct. Bundled local generator
+>     `scripts/skills-index-generator.py` (--verify mode). See §Agent Skills Discovery Implementation.
+> Cross-reference: kaizen v2.10, QNFO/qnfo-workers commit e626f6d, session this.
+
 > **v3.41 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: agents-docs 18th server + coverage dedup):**
 > Red-team: direct parent-agent 5-adversary audit (session CljNkVCTz_AoMOG1FquOS — CMD SKILLS UPDATE;
 > cross-referenced docs servers-for-cloudflare page + cloudflare/mcp + cloudflare/playwright-mcp +
@@ -1553,7 +1577,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.41** (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.42** (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
@@ -1564,43 +1588,148 @@ from the official Cloudflare GitHub repo, available to load, and
 documented/referenced/linked in THIS custom skill — but they are NEVER backed up
 in the qnfo-skills repo.
 
-### The Fork (REAL — fork of official cloudflare/skills)
+### The Forks (REAL — forks of official Cloudflare repos)
 
-| Item | Value |
-|:-----|:------|
-| **Fork repo** | `https://github.com/QNFO/cloudflare-skill-forks` (public) |
-| **Upstream (official)** | `https://github.com/cloudflare/skills.git` — remote `upstream`, tracked |
-| **Local clone** | `C:\Users\LENOVO\Documents\GitHub\cloudflare-skill-forks` |
-| **Default branch** | `main` |
-| **Sync state (2026-08-05)** | fork HEAD == origin/main == upstream/main `30553f8` — in sync with official |
+**User directive (2026-08-05 + 2026-08-11):** Default Cloudflare skills and
+source repos MUST always be forked separately from the official Cloudflare
+GitHub org, available to load, and documented/referenced/linked in THIS custom
+skill — but they are NEVER backed up in the qnfo-skills repo.
+
+**Fork family (5 repos, all public in QNFO org, all with `upstream` remote):**
+
+| Repo | Official upstream | Local clone | Sync state (2026-08-11) |
+|:-----|:------------------|:------------|:------------------------|
+| `QNFO/cloudflare-skill-forks` | `cloudflare/skills` | `C:\Users\LENOVO\Documents\GitHub\cloudflare-skill-forks` | HEAD == origin/main == upstream/main `f96bff7` — in sync |
+| `QNFO/agent-skills-discovery-rfc` | `cloudflare/agent-skills-discovery-rfc` | `C:\Users\LENOVO\Documents\GitHub\agent-skills-discovery-rfc` | HEAD == origin/main == upstream/main `1bd1167` — in sync |
+| `QNFO/mcp` | `cloudflare/mcp` | `C:\Users\LENOVO\Documents\GitHub\mcp` | HEAD == origin/main == upstream/main `3be5560` — in sync |
+| `QNFO/playwright-mcp` | `cloudflare/playwright-mcp` | `C:\Users\LENOVO\Documents\GitHub\playwright-mcp` | HEAD == origin/main == upstream/main `ee81e27` — in sync |
+| `QNFO/workers-mcp` | `cloudflare/workers-mcp` | `C:\Users\LENOVO\Documents\GitHub\workers-mcp` | HEAD == origin/main == upstream/main `e22d7c4` — in sync |
+
+**What each fork is:**
+- **cloudflare-skill-forks** — the official Agent Skills collection (13 skills
+  under `skills/` as of upstream `f96bff7`). The single source for official
+  Cloudflare skills hydration.
+- **agent-skills-discovery-rfc** — the RFC 8615 `.well-known/agent-skills`
+  discovery mechanism spec (v0.2.0). Implemented live by the
+  `qnfo-skills-discovery` Worker (see §Agent Skills Discovery Implementation).
+- **mcp** — the token-efficient MCP server for the entire Cloudflare API
+  (2500 endpoints in 1k tokens, Code Mode). Source of the hosted
+  `mcp.cloudflare.com/mcp` server (row 1 of the MCP Coverage table).
+- **playwright-mcp** — Playwright MCP fork that works with Cloudflare Browser
+  Rendering. Relevant to `cloudflare-browser-mcp-server` row + `browser-mcp`
+  agent tools.
+- **workers-mcp** — SDK for exposing a Worker as a remote MCP server
+  ("talk to a Cloudflare Worker from Claude Desktop"). The pattern behind
+  `qnfo-memory-mcp` and any future Worker-hosted MCP servers.
 
 ### The Rules
 
 1. **Official Cloudflare skills live ONLY in the fork repo** — NEVER in qnfo-skills.
    The qnfo-skills repo contains ONLY this custom consolidated `cloudflare` skill.
 
-2. **Fork layout:** official skills are under `skills/<name>/SKILL.md` in the fork:
+2. **Fork layout (cloudflare-skill-forks):** official skills are under
+   `skills/<name>/SKILL.md` in the fork:
    agents-sdk, cloudflare-email-service, cloudflare-one, cloudflare-one-migrations,
-   durable-objects, sandbox-sdk, turnstile-spin, web-perf, workers-best-practices,
-   wrangler. (The official `skills/cloudflare/` entry is NOT installed — it would
-   collide with this custom skill.)
+   durable-objects, sandbox-stable, sandbox-next, sandbox-migrate-to-next,
+   turnstile-spin, web-perf, workers-best-practices, wrangler. (The official
+   `skills/cloudflare/` entry is NOT installed — it would collide with this
+   custom skill. Upstream renamed `sandbox-sdk` → `sandbox-stable` +
+   `sandbox-next` + `sandbox-migrate-to-next` in commit `f96bff7` (#92);
+   live `sandbox-sdk` was removed from the live dir 2026-08-11.)
 
-3. **Available to load:** the 10 official skills are hydrated into the DeepChat
-   live skills dir (C:\Users\LENOVO\.deepchat\skills) so they can be loaded —
-   but their canonical version home is the fork repo, version-tracked THERE.
+3. **Available to load:** the 12 official skills (13 minus the cloudflare
+   collision) are hydrated into the DeepChat live skills dir
+   (C:\Users\LENOVO\.deepchat\skills) so they can be loaded — but their
+   canonical version home is the fork repo, version-tracked THERE.
 
 4. **Modifications → PR back to Cloudflare.** Any modification made to a forked
    official skill in this ecosystem SHOULD be pushed as a PR to the official
    `cloudflare/skills` repo (via the `upstream` remote) for update consideration.
 
-5. **Keep the fork in sync with upstream:** after official Cloudflare updates,
-   `git -C <fork> fetch upstream && git merge upstream/main && git push origin main`.
+5. **Keep the forks in sync with upstream:** after official Cloudflare updates,
+   `git -C <fork> fetch upstream && git merge upstream/main && git push origin main`
+   per fork. Verified in sync for all 5 forks 2026-08-11.
 
 6. **Never customize/update platform-provided DeepChat skills** (companion
    directive): DeepChat platform default skills are expunged from all git repos.
 
-**Canonical case (2026-08-05):** fork created from official cloudflare/skills;
-10 official skills hydrated to runtime; custom skill v3.34 documents coverage.
+**Canonical case (2026-08-05 + 2026-08-11):** fork created from official
+cloudflare/skills; 10 official skills hydrated to runtime (v3.34). On
+2026-08-11 the fork family expanded to 5 repos (skills + discovery-rfc + mcp +
+playwright-mcp + workers-mcp), cloudflare-skill-forks fast-forwarded
+`30553f8`→`f96bff7`, sandbox-sdk renamed to sandbox-stable/next/migrate-to-next,
+12 official skills hydrated, and the RFC mechanism implemented live (see below).
+
+## Agent Skills Discovery Implementation (v3.42 — RFC 0.2.0, live 2026-08-11)
+
+> **Source:** `QNFO/agent-skills-discovery-rfc` (fork of
+> `cloudflare/agent-skills-discovery-rfc`, v0.2.0 spec).
+> **Spec:** RFC 8615 `.well-known` prefix + Agent Skills spec
+> (https://agentskills.io/specification).
+
+### What it is
+
+A standard mechanism for discovering Agent Skills: publishers expose
+`/.well-known/agent-skills/index.json` — a JSON index of skill entries
+(`{name, type, description, url, digest}`). Clients fetch the index, check the
+`$schema` URI, verify SHA-256 digests, and fetch artifacts only when needed
+(progressive disclosure: ~100 tokens per skill for name+description, full
+`SKILL.md` on activation, supporting files on demand).
+
+**Index schema (v0.2.0):**
+```json
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "cloudflare",
+      "type": "skill-md",
+      "description": "...",
+      "url": "/.well-known/agent-skills/cloudflare/SKILL.md",
+      "digest": "sha256:{64-hex}"
+    }
+  ]
+}
+```
+Skill names: 1-64 chars, lowercase alphanumeric + hyphens only, no leading/
+trailing/consecutive hyphens. Types: `skill-md` (single SKILL.md) or `archive`
+(tar.gz/zip with supporting files). HTTP: GET+HEAD, `application/json` for
+index, `text/markdown` for SKILL.md, 404 for missing, Cache-Control + CORS
+recommended. Clients MUST verify digests, MUST NOT execute `scripts/` by
+default, MUST gate script execution on user approval.
+
+### QNFO live implementation
+
+| Item | Value |
+|:-----|:------|
+| **Worker** | `qnfo-skills-discovery` (deployed 2026-08-11, version `7c701b53`) |
+| **Endpoint** | `https://qnfo-skills-discovery.q08.workers.dev/.well-known/agent-skills/index.json` |
+| **Data source** | R2 bucket `qnfo-skills` (SKILLS_BUCKET binding) — the canonical skills mirror maintained by `qnfo-skill-sync` |
+| **Source** | `QNFO/qnfo-workers` → `skills-discovery/worker.js` + `wrangler.toml` (commit `e626f6d`) |
+| **Index contents** | 16 skills (all custom qnfo-skills skills; official CF skills intentionally NOT included — they live only in the fork per §Cloudflare Fork Policy) |
+| **Verified (2026-08-11)** | index 200 + `$schema` correct; all 16 artifact URLs 200; digests 16/16 match served bytes; 404 for missing skill; HEAD 200; CORS `*` |
+
+**Local generator (offline / pre-deploy):**
+`scripts/skills-index-generator.py` (this skill) — scans any skills root,
+parses frontmatter, emits the RFC 0.2.0 index, `--verify` recomputes digests
+against source files. Canonical run:
+```bash
+python scripts/skills-index-generator.py --root C:\Users\LENOVO\.deepchat\skills \
+    --base-url https://qnfo.org --out index.json --verify
+```
+(43 skills indexed; `email-composer` skipped for missing frontmatter.)
+
+**Deploy/update flow (WORKER-THIN-CLIENT-1):**
+1. Edit `skills-discovery/` in `C:\Users\LENOVO\Documents\GitHub\qnfo-workers`
+2. `git add + commit` → `git push origin main` (BEFORE deploy)
+3. `cd skills-discovery && wrangler deploy`
+4. KIF-50: probe `/index.json` (200) + a `/SKILL.md` artifact (200) + digest re-check
+
+**Anti-pattern: SKILLS-DISCOVERY-PROPAGATION-1 (2026-08-11)** — immediately
+after `wrangler deploy`, the first probe may return HTTP 404 on
+`/.well-known/agent-skills/index.json` while the route settles (seconds).
+Retry after ~5s before diagnosing; a 404 on the fresh artifact route can also
+be stale propagation. Canonical case: first probe 404'd, re-probe 200.
 
 ## Agents SDK (Official Skill Integration — v3.30)
 
@@ -2074,9 +2203,10 @@ Be assertive (verify then state definitively), quantify impact (skip 0ms items),
 
 ---
 
-## Official Skill Coverage Matrix (v3.31)
+## Official Skill Coverage Matrix (v3.42)
 
-All 11 skills from `github.com/cloudflare/skills` are now integrated into this custom skill:
+All 13 skills from `github.com/cloudflare/skills` are now integrated into this custom skill
+(upstream `f96bff7`, 2026-08-11 — `sandbox-sdk` was split into 3 sandbox skills):
 
 | Official Skill | Status | Where |
 |:---------------|:-------|:------|
@@ -2086,7 +2216,9 @@ All 11 skills from `github.com/cloudflare/skills` are now integrated into this c
 | cloudflare-one | ✅ | §Cloudflare One (Zero Trust & SASE) |
 | cloudflare-one-migrations | ✅ | §Migrations (from Zscaler, VPN, etc.) |
 | agents-sdk | ✅ | §Agents SDK (v3.30) |
-| sandbox-sdk | ✅ | §Sandbox SDK (v3.30) |
+| sandbox-stable | ✅ | §Sandbox SDK (v3.30) — stable package |
+| sandbox-next | ✅ | Sandbox SDK @next (1.0 preview) — fork `skills/sandbox-next` |
+| sandbox-migrate-to-next | ✅ | Stable → @next migration guide — fork `skills/sandbox-migrate-to-next` |
 | durable-objects | ✅ | §Durable Objects (v3.31) |
 | workers-best-practices | ✅ | §Workers Best Practices (v3.31) |
 | web-perf | ✅ | §Web Performance Audit (v3.31) |
