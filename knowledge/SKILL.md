@@ -306,6 +306,12 @@ Every entity must have at least ONE `BELONGS_TO` edge to a domain or program con
 1. Query `/nodes?label=Concept` for available domains (level=1) and programs (level=2)
 2. Map entity to domain/program based on metadata (tags, domain field, name heuristics)
 3. Seed edges via Python script posting to graph-api sync endpoint
+   **SYNC CONTRACT (verified live 2026-08-11, session FMQelHEBu67pv0QrOWU6h):**
+   - `POST https://graph-api.qnfo.org/sync` with header `X-Sync-Token` (token at `C:\Users\LENOVO\tokens\qnfo-sync-token`)
+   - Body: `{"action":"bulk","edges":[{ "id": "<stable-edge-id>", "source_id": "<src>", "target_id": "<tgt>", "relationship_type": "<TYPE>" }]}` — `id`, `source_id`, `target_id`, `relationship_type` are ALL REQUIRED. Other key names (`type`, `relationship`, `source`/`target`, `from`/`to`, `rel`) return `Edge undefined: D1_TYPE_ERROR: Type 'undefined' not supported for value 'undefined'` (5 shapes tested and failed).
+   - Nodes: `{"action":"bulk","nodes":[{ "id": "<node-id>", "label": "<Label>", "name": "<Name>", "properties": { ... } }]}` — full-replace semantics for properties (verified: vault node note_count reconciled 5588→5616 same-turn).
+   - READ: `POST https://graph-api.qnfo.org/query` body `{"query": "<SQL>"}` — param MUST be `query` (NOT `sql`; `{"sql":...}` returns 400 "Missing query"). Response `{results: [...]}`.
+   - THROTTLE + RESUME (verified): endpoint throttles sustained bulk writes (~0.5-1 edge/sec); background exec sessions die ~15-20 min. Bulk seeding MUST be idempotent-resumable: query existing edges first (`SELECT target_id FROM edges WHERE source_id=? AND relationship_type=?`), seed only missing, log progress-to-file, run `python -u` unbuffered. Canonical: vault:obsidian-v1 → 5,616 CONTAINS edges seeded across 3 process lifetimes, `edgesInserted` counts only new rows.
 4. Verify: re-query `/neighbors/{entity}` -> neighbor count must be > 0
 
 ### Why This Matters
