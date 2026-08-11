@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.12"
+version: "2.13"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -18,6 +18,27 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 
 
 ---
+> **v2.13 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: cloudflare v3.41 agents-docs 18th server; reviewer-subagent DB-lock failure):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session CljNkVCTz_AoMOG1FquOS — CMD SKILLS UPDATE;
+> cloudflare v3.41 cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit (raw anchors). HARD: 1 (cloudflare-side).
+> SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD-mirror] **STALE-COUNT-1 recurrence on cloudflare frontmatter** — description said "17-MCP Coverage"
+>     after the fleet grew to 18 servers (Agents SDK Documentation server at agents.cloudflare.com/mcp).
+>     Same-class fix applied to cloudflare v3.41 frontmatter (17→18) + coverage table row 18 + health-check
+>     PUBLIC_SERVERS 2→3. Confirms STALE-COUNT-1 discipline: frontmatter description is the FIRST drift location.
+> (2) [SOFT-mirror] **VERSION-OVERWRITE-1 duplicate-section artifact** — concurrent session QrOP_3xznyiEOIqdKFHWS
+>     left a duplicated v3.40 banner + duplicated "MCP Ecosystem Source Repositories" section (both said 17).
+>     Deduped in cloudflare v3.41. Canonical fix: re-read current file before edit; merge past collisions.
+> (3) [SOFT] **SUBAGENT-AGGREGATOR-TRUNCATION-1 evidence +1 (DB-lock variant)** — this cycle's reviewer subagent
+>     failed with "Tape Finalization: database is locked" (child session errored during tape finalization, zero
+>     findings). Reaffirms direct parent-agent self-audit as the reliability backstop; subagent tape finalization
+>     collides with the running app's agent.db lock. Logged to durable memory (mem-fSyby7eFZD3l).
+> (4) [DESIGN] **watchtower-version-scan.py needs fm-quoted-version support** — kaizen frontmatter uses
+>     `version: "2.12"` (quoted); the scanner regex only matched unquoted, so fm showed None in scan output.
+>     Deferred: scanner enhancement (quoted-version tolerance) on next kaizen edit.
+> Cross-reference: cloudflare v3.41, STALE-COUNT-1, VERSION-OVERWRITE-1, SUBAGENT-AGGREGATOR-TRUNCATION-1,
+> session CljNkVCTz_AoMOG1FquOS.
+
 
 > **v1.46 UPDATE (2026-08-05, kaizen — red-team audit closeout: N-2-SCAN-FALSE-POSITIVE-1 + concurrent-bump merge):**
 
@@ -279,7 +300,13 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
 > Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.12
+# KAIZEN — v2.13
+> **v2.13 UPDATE (2026-08-11, kaizen — UIA self-audit repairs + MAP-TERRITORY GATE wiring):**
+> Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
+> Watchtower: kaizen v2.12 N-2 CLEAN pre-edit; v2.13 N-2 CLEAN post-edit (raw anchors). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **UIA self-audit repairs applied to §H** — the 2026-08-11 self-audit note (`_uia-self-audit-2026-08-11.md`) found the UIA itself mistakes its map for the territory (36 analyses, zero repairs). Four repairs added to the Kaizen-specific UIA Protocol: (a) terminal commitment after Q15 — the auditor MUST write ONE sentence beginning "I will now…"; if no commitment emerges the pass is INCOMPLETE; (b) repair-register integration — every UIA pass MUST produce >=1 row in UIA-REPAIR-REGISTER.md + a next-action date (UIA-REPAIR-GAP-1); (c) quarter-audit cap — one full pass per framework per quarter, repairs between passes; (d) map-is-a-map acknowledgment — the UIA is an instrument for preparing to encounter the unknown, not the encounter itself.
+> (2) [DESIGN] **MAP-TERRITORY GATE cross-ref** — research v2.98 `check-map-territory.py` is the scripted enforcement of the UIA Repair Pipeline STEP 4 (SCRIPTING MANDATE, PROSE-GATE-ADVISORY-1 closed): any `[TERRITORY` identity claim without a falsifiability condition blocks publication.
+> Cross-reference: research v2.98 (check-map-territory.py), UIA DOI 10.5281/zenodo.21878943, UIA Repair Pipeline + self-audit notes (2026-08-11), UIA-REPAIR-REGISTER.md, session rvnMtR544X387NEXCAPbB.
 > **v2.12 UPDATE (2026-08-11, kaizen — footer merge-artifact fix post red-team):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD RED TEAM READ-ONLY
 > post-restart audit). HARD: 0. SOFT: 3. DESIGN: 2. Changes:
@@ -10125,6 +10152,13 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 2. **Before closeout (Phase 5), run Questions 9-15** against the kaizen session itself. The UIA's action phase ensures closeout produces not just fixes but STRUCTURAL LEARNING.
 3. **The recursive meta-question (Q15) seeds the next Watchtower session.** The answer becomes a durable memory entry: "UIA-{skill}-{version}: the unasked question is X."
 
+**UIA self-audit repairs (2026-08-11, from `_uia-self-audit-2026-08-11.md`):** the UIA applied to itself finds the same wobble it detects everywhere — it mistakes its own map for the territory. Four repairs are MANDATORY additions to the protocol above:
+
+4. **TERMINAL COMMITMENT after Q15.** After answering Q15, the auditor MUST write ONE sentence beginning "I will now…" — a commitment to action. If no commitment emerges, the pass is INCOMPLETE (the UIA has no natural terminal condition; without this, audit becomes procrastination — canonical case: 36 UIA analyses on 2026-08-11 with zero repairs).
+5. **REPAIR-REGISTER INTEGRATION.** Every UIA pass MUST produce at least one row in `UIA-REPAIR-REGISTER.md` (ID, Framework, Question #, Finding, Severity, Fix class, Owner, Status) plus a next-action date — enforcement of UIA-REPAIR-GAP-1. Diagnosis without prescription is self-indulgence.
+6. **QUARTER-AUDIT CAP.** One full UIA pass per framework per quarter, with repairs between passes. 36 passes in one day is over-auditing — the instrument is for preparing to encounter the unknown, not for indefinitely deferring the encounter.
+7. **THE MAP IS A MAP.** Explicitly acknowledge that the UIA is an instrument for *preparing* to encounter the unknown, not the encounter itself. Running the audit is NOT equivalent to confronting the ignorance it maps — the structured map of not-knowing is itself a map–territory risk.
+
 **Anti-pattern: UIA-SKIP-1 — running a kaizen cycle without a UIA pass (2026-08-10).** A kaizen session that audits for correctness without auditing for structural ignorance produces verified fixes that may solve the wrong problem. The UIA catches what adversarial review assumes away — the scaffolds, map–territory errors, and protected ignorances that both the skill AND the auditor share. Cross-ref: SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1.
 
 **Administration protocol:** (1) State the skill/pipeline as the explicit target X. (2) Answer every question — skipping is forbidden, stretching is mandatory. (3) Write answers down — oral UIA loses the texture Q9-11 depend on. (4) Do not resolve during Phases 1-4 — premature resolution forecloses deeper unknowing. (5) Allow silence after Q14 — the relational question requires receptive attention. (6) Q15 seeds the next pass.
@@ -14217,7 +14251,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.12** (kaizen — footer merge-artifact fix post red-team; 2026-08-11)
+Current: **v2.13** (kaizen — cloudflare v3.41 agents-docs 18th server + UIA self-audit repairs + reviewer-DB-lock fallback; 2026-08-11)
 
 
 
