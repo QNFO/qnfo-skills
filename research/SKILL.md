@@ -218,8 +218,6 @@ triggers:
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
 # RESEARCH — v2.96
-
-# RESEARCH — v2.96
 > **v2.96 UPDATE (2026-08-10, kaizen — CMD SKILLS UPDATE: publication completeness gates — KG node + Vectorize index + PDF path option):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session Z-DBQiCgjlEszWQZzZthq;
 > trigger: ringbauer-qudit-due-diligence publication closeout red-team found HARD-1 KG-missing + HARD-2 Vectorize-missing,
@@ -240,6 +238,7 @@ triggers:
 > Cross-reference: kaizen v2.04 (mirror rows), knowledge v2.10 (Edge Seeding Gate), cloudflare v3.36
 > (VECTORIZE-WEBHOOK-VERIFY-1, AI-ENDPOINT-AUTH-1), qnfo-core v1.23 (D1 fallback), ringbauer-qudit-due-diligence
 > (DOI 10.5281/zenodo.21879231), session Z-DBQiCgjlEszWQZzZthq.
+
 > **v2.95 UPDATE (2026-08-10, kaizen — Consolidated Publication Closeout Verification gate + UIA pass):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc,
 > QNFO.RES.002/.003 closeout cycle). Watchtower: research v2.94 N-2 CLEAN pre-edit; v2.95 N-2 CLEAN post-edit (raw anchors).
@@ -6935,6 +6934,11 @@ stale object (`CF-Cache-Status: HIT`) — a false md5 mismatch vs the fresh loca
 mean the upload failed. Canonical verification: `rclone check <localdir> releases:qnfo-releases/<prefix>`
 (S3 endpoint, bypasses the API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence
 2026-08-10 — API GET reported stale v1 PDF; rclone proved v4 objects correct.
+**Verification (R2-CDN-CACHE-1, v2.96):** the R2 object API GET path can serve a CDN-cached
+stale object (`CF-Cache-Status: HIT`) — a false md5 mismatch vs the fresh local file does NOT
+mean the upload failed. Canonical verification: `rclone check <localdir> releases:qnfo-releases/<prefix>`
+(S3 endpoint, bypasses the API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence
+2026-08-10 — API GET reported stale v1 PDF; rclone proved v4 objects correct.
 
 
 
@@ -6972,6 +6976,31 @@ with `X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8`. **Verify** via
 semantically discoverable (canonical: ringbauer-qudit-due-diligence HARD-2,
 2026-08-10).
 
+### KG Node Seeding (MANDATORY — PUBLICATION-KG-INDEX-GAP-1, v2.96)
+
+After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
+`paper:<slug>` with 4-D distribution properties + a `BELONGS_TO` edge to the
+owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
+entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
+`X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.23)
+when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
+→ neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
+invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
+HARD-1, 2026-08-10).
+
+### Vectorize Indexing (MANDATORY — PUBLICATION-KG-INDEX-GAP-1, v2.96)
+
+After the D1 insert, trigger the semantic indexer so the paper is discoverable
+via `search_papers`/`search_papers_enriched`. Call the qnfo-paper-indexer with
+the shared-secret header:
+`GET https://qnfo-paper-indexer.q08.workers.dev/index?slug=<slug>` (or `/webhook?slug=<slug>`)
+with `X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8`. **Verify** via
+`GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` →
+`{indexed:true, chunks:N, errors:0}` — the canonical single-paper index proof
+(VECTORIZE-WEBHOOK-VERIFY-1). A paper in D1 but not in Vectorize is not
+semantically discoverable (canonical: ringbauer-qudit-due-diligence HARD-2,
+2026-08-10).
 ### MCP-Driven Deployment Verification (HARD)
 
 
