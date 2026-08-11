@@ -66,20 +66,58 @@ NEGATION = re.compile(r"\b(no|not|never|without|lacks?|absent|missing)\b", re.IG
 
 NEGATION_TAIL_TOKENS = 3
 
+# Clause-scoped denial: "no falsifiability condition that would break ..." — the
+# negation governs a condition noun phrase that itself carries the marker. A
+# marker is NEGATED when the negation token appears BEFORE a condition noun
+# within the same clause and the marker follows it (red-team HARD 2026-08-11:
+# "there is no falsifiability condition that would break this identity" must FAIL).
+CONDITION_NOUN = re.compile(
+    r"(falsifiability\s+condition|disconfirmation\s+condition|falsifiable\s+condition|"
+    r"condition\s+that\s+would)",
+    re.IGNORECASE,
+)
+CLAUSE_DENIAL_WINDOW = 80
+
+
+def is_clause_denied(text, marker_match):
+    """True when a negation governs a condition noun phrase before this marker.
+
+    Pattern: "[negation] ... [condition noun] ... [marker]" within one clause,
+    e.g. "there is NO falsifiability condition THAT WOULD BREAK this identity".
+    The marker is part of the negated noun phrase, so the sentence DENIES a
+    condition rather than asserting one (red-team HARD, 2026-08-11).
+    """
+    start = max(0, marker_match.start() - CLAUSE_DENIAL_WINDOW)
+    context = text[start:marker_match.start()]
+    neg = NEGATION.search(context)
+    if not neg:
+        return False
+    cond = CONDITION_NOUN.search(context)
+    if not cond:
+        return False
+    # The negation must precede the condition noun phrase.
+    return neg.start() < cond.start()
+
 
 def has_real_marker(text):
     """Return True if `text` contains at least one NON-NEGATED falsifiability marker.
 
-    Negation is scoped to the marker phrase: only the last NEGATION_TAIL_TOKENS
-    tokens immediately before the marker are checked. This prevents unrelated
-    negations in the same paragraph ("not proven, but would be broken if X")
-    from nullifying a valid condition (red-team S3, 2026-08-11).
+    Negation is scoped two ways (red-team S3 + HARD, 2026-08-11):
+    (a) direct attachment — the last NEGATION_TAIL_TOKENS tokens immediately
+        before the marker ("no falsifiability condition" is NOT a condition);
+    (b) clause-scoped denial — a negation governs a condition noun phrase that
+        carries the marker downstream ("no falsifiability condition that would
+        break this identity" is a denial, not a condition).
+    Unrelated negations in the same paragraph ("This claim is not proven, but
+    the identity would be broken if X") do NOT nullify a valid condition.
     """
     for m in FALSIFIABILITY_MARKERS.finditer(text):
         preceding = text[max(0, m.start() - 24):m.start()]
         tail = " ".join(preceding.split()[-NEGATION_TAIL_TOKENS:])
         if NEGATION.search(tail):
             continue  # negated marker — "no falsifiability condition" is NOT a condition
+        if is_clause_denied(text, m):
+            continue  # clause denial — "no ... condition that would break ..." is NOT a condition
         return True
     return False
 
