@@ -9,9 +9,9 @@ This is the proactive complement to fleet-oauth-refresh.py (which fixes, this on
 flags). Add to the kaizen Autonomous Watchtower's INCIDENT-AXIS scan.
 
 For each of the 17 Cloudflare MCP servers:
-  - OAuth servers (14): check token cache exists + age vs expires_in; if token
+  - OAuth servers (15): check token cache exists + age vs expires_in; if token
     exists, probe MCP initialize (expect HTTP 200). No token -> [NO-TOKEN] warning.
-  - Public servers (3): probe endpoint (expect HTTP 200).
+  - Public servers (2): probe endpoint (expect HTTP 200).
 
 Exit codes:
   0 = all live
@@ -44,10 +44,10 @@ OAUTH_SERVERS = {
     "cloudflare-casb-mcp-server": "https://casb.mcp.cloudflare.com/mcp",
     "cloudflare-autorag-mcp-server": "https://autorag.mcp.cloudflare.com/mcp",
     "dex-analysis":            "https://dex.mcp.cloudflare.com/mcp",
+    "cloudflare-radar":        "https://radar.mcp.cloudflare.com/mcp",
 }
 PUBLIC_SERVERS = {
     "cloudflare-docs":  "https://docs.mcp.cloudflare.com/mcp",
-    "cloudflare-radar": "https://radar.mcp.cloudflare.com/mcp",
     "cloudflare-blog":  "https://blog.mcp.cloudflare.com/mcp",
 }
 

@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.38
+version: 3.39
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -43,7 +43,34 @@ self_sufficient: true
 >     search_papers MCP "OK" is directional only (VECTORIZE-SILO-1). Cross-ref research v2.63.
 > Cross-reference: research v2.63, kaizen v1.20, session 1tz85-vMiqh2TyFySznBA.
 
-# CLOUDFLARE — v3.38
+> **v3.39 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: MCP Server Portals + cloudflare-radar OAuth correction):**
+> Red-team: direct parent-agent 5-adversary audit (session QrOP_3xznyiEOIqdKFHWS — CMD SKILLS UPDATE).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit (fm/hdr/ft raw anchors). Subagent review cancelled at
+> 240s deadline — direct parent fallback per Subagent Failure Handling rule 4 (SUBAGENT-AGGREGATOR-TRUNCATION-1).
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **cloudflare-radar MCP auth corrected None→OAuth** — live probe 2026-08-11:
+>     `radar.mcp.cloudflare.com/mcp` returns HTTP 401 `WWW-Authenticate: Bearer realm="OAuth"`,
+>     resource_metadata at `/well-known/oauth-protected-resource/mcp`. The MCP Coverage table marked
+>     radar `None` (public). The Zero Trust AI-controls MCP server entry created this session failed
+>     sync with `Authorization failed` (401 upstream) until reclassified auth_type=oauth. Canonical
+>     rule: a server whose upstream returns 401 with an OAuth WWW-Authenticate MUST be declared
+>     `auth_type: "oauth"`, not unauthenticated.
+> (2) [HARD] **fleet-mcp-health-check.py radar reclassified** — moved cloudflare-radar from
+>     PUBLIC_SERVERS (3→2: docs, blog) to OAUTH_SERVERS (14→15); docstring counts updated. Script
+>     verified compiles (py_compile OK), radar only in OAUTH dict. LANGUAGE-CONSISTENCY-1: same-class
+>     fix applied to every instance (skill table row + script + MCP Verification Gate prose).
+> (3) [SOFT] **MCP Verification Gate prose corrected** — "14 OAuth / 3 public" → "15 OAuth / 2 public
+>     (cloudflare-docs, cloudflare-blog)".
+> (4) [DESIGN] **MCP Server Portals section added** — Zero Trust AI controls MCP servers + portals API
+>     (`POST /accounts/{id}/access/ai-controls/mcp/servers|portals`), server/portal body schemas,
+>     tool-allowlist pattern (default_disabled+updated_tools), Managed OAuth on the mcp_portal Access
+>     app, and the CRITICAL gotcha verified 2026-08-11: API-created portals do NOT auto-provision DNS
+>     or the Access app (dashboard flow does); wrong CNAME origin → HTTP 522; service-token m2m pattern
+>     with `on_behalf: false`. Canonical case: this session's qnfo-mcp-portal on mcp.q08.org.
+> Cross-reference: kaizen v2.10 (concurrent deepchat-settings v1.7 MCP registration cycle), Zero Trust
+> AI controls docs, session QrOP_3xznyiEOIqdKFHWS.
+
+# CLOUDFLARE — v3.39
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -329,7 +356,7 @@ DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → host
 | 6 | `cloudflare-ai-gateway` | `ai-gateway.mcp.cloudflare.com/mcp` | OAuth | AI Gateway log search, prompt/response inspection |
 | 7 | `cloudflare-graphql` | `graphql.mcp.cloudflare.com/mcp` | OAuth | Cross-product GraphQL Analytics API |
 | 8 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
-| 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | None | Internet insights, BGP, traffic trends (autoApprove: all) |
+| 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | OAuth | Internet insights, BGP, traffic trends (autoApprove: all) |
 | 10 | `cloudflare-logpush` | `logs.mcp.cloudflare.com/mcp` | OAuth | Workers log export, logpush job management |
 | 11 | `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | OAuth | Headless browser automation, screenshots, PDF generation |
 | 12 | `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | OAuth | DNS query analytics, query volumes, top domain queries |
@@ -343,11 +370,31 @@ DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → host
 
 All 17 available Cloudflare MCP servers are now configured. No servers remain to add.
 
+### MCP Server Portals (Zero Trust AI controls — 2026-08-11)
+
+Cloudflare Access AI controls (Zero Trust > Access controls > AI controls) can **secure individual MCP servers** and **centralize them into an MCP server portal** on a single HTTP endpoint. Two distinct API surfaces:
+
+| Feature | API | Purpose |
+|:--------|:----|:--------|
+| **MCP servers** | `POST /accounts/{id}/access/ai-controls/mcp/servers` | Register an upstream MCP server for centralized management + Access policies |
+| **MCP portal** | `POST /accounts/{id}/access/ai-controls/mcp/portals` | Centralize servers on one hostname; portal exposes built-in tools `portal_list_servers`, `portal_toggle_servers`, `portal_toggle_single_server` |
+
+**Server body:** `{id, name, hostname (full URL incl. /mcp), auth_type: "unauthenticated"|"oauth"|"bearer", description, secure_web_gateway}`. Unauthenticated servers sync immediately (status `ready`, tools listed). **OAuth servers require an admin auth flow** (browser login) — they stay `waiting`/`error` until authenticated; a server whose upstream returns 401 (`WWW-Authenticate: Bearer realm="OAuth"`) MUST be declared `auth_type: "oauth"`, not `unauthenticated`.
+
+**Portal body:** `{id, hostname, name, code_mode: "off"|"opt_in"|"default_on"|"enforced", servers: [{server_id, default_disabled, on_behalf, updated_tools, updated_prompts}]}`. `default_disabled: true` + explicit `updated_tools` = tool allowlist pattern.
+
+**CRITICAL — API-created portals do NOT auto-provision DNS or the Access app.** The dashboard flow auto-creates both; the raw API creates ONLY the portal object. You must manually:
+1. **DNS record** for the portal hostname (e.g. `POST /zones/{zone}/dns_records` CNAME, `proxied: true`).
+2. **Access application** `POST /accounts/{id}/access/apps` with `type: "mcp_portal"`, `domain: <hostname>`, `oauth_configuration: {enabled: true, dynamic_client_registration: {enabled: true, allow_any_on_localhost: true, allow_any_on_loopback: true}}` (Managed OAuth — required for non-browser MCP clients; they get `401` + `WWW-Authenticate` pointing at OAuth discovery), plus a policy (e.g. `include: [{email: {email: "admin@example.com"}}]`).
+
+**Gotcha (verified 2026-08-11):** pointing the portal hostname CNAME at an arbitrary origin (e.g. a Pages project) yields **HTTP 522 origin connection error** — the portal gateway must own the hostname. For machine-to-machine access, create an **Access service token** + Service Auth policy on the portal app, then connect with `CF-Access-Client-Id` / `CF-Access-Client-Secret` headers (`mcp-remote ... --header CF-Access-Client-Id: ... --header CF-Access-Client-Secret: ...`). Per-server `on_behalf: false` is required for service-token sessions to reach that server.
+
+
 ### MCP Verification Gate
 
 **HEALTH CHECK SCRIPT:** `scripts/fleet-mcp-health-check.py` (this skill) probes ALL 17
-configured Cloudflare MCP servers — token-cache presence + MCP initialize probe for the 14
-OAuth servers, POST-initialize probe for the 3 public servers. Run it to detect
+configured Cloudflare MCP servers — token-cache presence + MCP initialize probe for the 15
+OAuth servers, POST-initialize probe for the 2 public servers (cloudflare-docs, cloudflare-blog). Run it to detect
 `invalid_token` / expired / missing-token fleet-wide BEFORE errors surface in the UI
 (2026-08-03 outage class). Integrated into the `kaizen-watchtower-daily` cronjob.
 Exit codes: 0 = all live, 1 = warnings (no-token/expired), 2 = failures.
@@ -1437,7 +1484,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.38** (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.39** (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
