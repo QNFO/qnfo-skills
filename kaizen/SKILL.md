@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.04"
+version: "2.05"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.04
+# KAIZEN — v2.05
+> **v2.05 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 correction + ZENODO-RECORDS-API-UPLOAD-CT-1 mirror):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP — QNFO.UMP.005
+> ERRATA cycle). HARD: 1 (kaizen-side correction). SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **NEWVERSION-DOI-RESERVATION-1 mirror CORRECTED** — the v2.02 claim "the ONLY working DOI reservation
+>     path is POST /api/records/{id}/draft/pids/doi" is FALSE. Verified 2026-08-10: `GET /api/deposit/depositions/{id}`
+>     returns `metadata.prereserve_doi.doi` for newversion drafts (read for 21880070 and 21880104). The deposit-API
+>     GET view is a WORKING prereserve-discovery path; POST pids/doi remains the alternative. Research v2.94 rule
+>     already names "the deposit-API view" — the kaizen mirror must match. Cross-ref: research v2.94.
+> (2) [SOFT] **ZENODO-RECORDS-API-UPLOAD-CT-1 mirror row added** (owner research v2.93) — records-API uploads need
+>     application/octet-stream for ALL files; type-specific MIME -> 415. Canonical: v0.7 two broken drafts before fix.
+> (3) [SOFT] **NODE-MJS-ESM-1 mirror row added** (owner windows-command-patterns v3.20) — Node require-based scripts
+>     must be `.cjs`, not `.mjs` (ESM scope failure on Windows absolute paths).
+> Cross-reference: research v2.93, windows-command-patterns v3.20, NEWVERSION-DOI-RESERVATION-1, session dlnKXUpIJK48EWgWj5SmP.
+
 
 > **v2.04 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: PUBLICATION-KG-INDEX-GAP-1 + PDF-PATH-OPTION-1 + R2-CDN-CACHE-1 mirrors; research v2.96):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session Z-DBQiCgjlEszWQZzZthq).
@@ -12035,7 +12049,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **PDF-PATH-OPTION-1: `page.pdf()` without the `path:` option returns a Buffer and writes NO file (2026-08-10)** | **HARD GATE** (mirror; owner research v2.96). In the puppeteer-core CDP pipeline, `page.pdf({format, margin, printBackground})` without `path` returns a Buffer — the pipeline reports success while the PDF file is never written. ALWAYS pass `path: '<slug>.pdf'`. Canonical case: ringbauer-qudit-due-diligence first render — node reported 'PDF written' but no file existed; verify_pdf.py FileNotFoundError caught it. Cross-ref: research v2.96 PDF Building step 5, CHROME-HEADLESS-1. |
 | **R2-CDN-CACHE-1: R2 object API GET serves a CDN-cached stale object — false md5 mismatch (2026-08-10)** | **HARD GATE** (mirror; owner research v2.96). The R2 object API GET path can return a stale cached object (`CF-Cache-Status: HIT`, old ETag) after an overwrite — a byte-compare against the fresh local file fails while the upload actually succeeded. Canonical verification: `rclone check <local> releases:qnfo-releases/<prefix>` (S3 endpoint, bypasses API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence — API GET reported stale v1 PDF (etag 150124da) while rclone proved v4 objects correct. Cross-ref: research v2.96 R2 Archive, cloudflare v3.14 (R2 object GET/HEAD caveats). |
 | **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21878943) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
-| **NEWVERSION-DOI-RESERVATION-1: newversion drafts return `prereserve_doi: None` from GET /draft — PID reservation POST is the only path (2026-08-10)** | **HARD** (mirror; owner research v2.94). `POST /api/records/{id}/draft/pids/doi` (the draft's `links.reserve_doi`) → 201 with the reserved DOI. GET /draft returns `prereserve_doi: None` for newversion drafts (verified 2026-08-10, drafts 21878976/21878977). Also: in-place `.md` overwrite on a published record is impossible (415 bare URL / 403 bucket-locked on /content); P5.FRESH repair = newversion-only, uploaded .md carries its OWN DOI + status published. Canonical case: QNFO.RES.002/.003 — first newversion hit the None gap; PID-reservation fixed both; P5.FRESH yaml_ok=True. Cross-ref: research v2.94, ZENODO-BUCKET-LOCKED-1, P5.FRESH. |
+| **NEWVERSION-DOI-RESERVATION-1: newversion drafts return `prereserve_doi: None` from GET /draft — PID reservation POST is the only path (2026-08-10)** | **HARD** (mirror; owner research v2.94). **`GET /api/deposit/depositions/{id}` → `metadata.prereserve_doi.doi` IS a working prereserve-discovery path** (verified 2026-08-10 for 21880070 and 21880104) — use it BEFORE the POST fallback. GET /draft returns `prereserve_doi: None`; POST /api/records/{id}/draft/pids/doi (links.reserve_doi) → 201 is the alternative. Also: in-place `.md` overwrite on a published record is impossible (415 bare URL / 403 bucket-locked on /content); P5.FRESH repair = newversion-only, uploaded .md carries its OWN DOI + status published. Canonical case: QNFO.RES.002/.003 — first newversion hit the None gap; PID-reservation fixed both; P5.FRESH yaml_ok=True. Cross-ref: research v2.94, ZENODO-BUCKET-LOCKED-1, P5.FRESH. |
 | **SUBAGENT-AGGREGATOR-TRUNCATION-1: all subagents 'completed' but aggregator returns only planning preambles — evidence 5/5 (2026-08-10)** | **HARD** (mirror; owner kaizen v2.03 Subagent Failure Handling). This session: 5 parallel reviewers all reported completed status; aggregate output = planning preambles only, zero findings. Prior evidence: 2/3 (v2.00), 3/3 (v1.90). The aggregator return is NEVER authoritative for audit findings. Direct parent-agent audit is the ONLY review that reliably completes; fall back on FIRST preamble-only observation. Canonical: QNFO.RES.002/.003 red-team (2026-08-10) — direct fallback returned 0 HARD/0 SOFT. |
 | **CONSOLIDATED-CLOSEOUT-VERIFICATION-1: closing a multi-layer publication without one same-turn re-proof script (2026-08-10)** | **HARD GATE** (mirror; owner research v2.95). After Zenodo+GitHub+D1+R2+KG closeout, run ONE script re-proving all layers same-turn (DOI HEAD x4 incl. v0.1 predecessors, DataCite findable/subjects/rights, GitHub ls-remote, D1 row, Zenodo files). Any non-PASS blocks closeout (zero deferred). Canonical: QNFO.RES.002/.003 (2026-08-10) — 5 layers, all PASS, 0 HARD/0 SOFT. Cross-ref: ZENODO-PHANTOM-DOI-1, P5.FRESH, Tool-Call Execution Mandate. |
 
@@ -14101,7 +14115,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.04** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
+Current: **v2.05** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
 
 
 

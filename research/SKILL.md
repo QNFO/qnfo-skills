@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.96"
+version: "2.97"
 description: >
 
 
@@ -217,7 +217,19 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.96
+# RESEARCH — v2.97
+> **v2.97 UPDATE (2026-08-10, kaizen — CDP render script .cjs + merge past concurrent v2.96):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP).
+> Concurrent-session merge: v2.96 (publication completeness gates) landed WHILE this audit ran — merged past
+> per VERSION-OVERWRITE-1. HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **CDP render script: use `.cjs` (CommonJS) not `.mjs`** — `render-pdf.mjs` with `require()` fails
+>     ("require is not defined in ES module scope"); ESM import of a Windows absolute path fails
+>     (ERR_UNSUPPORTED_ESM_URL_SCHEME). `render-pdf.cjs` with `require('C:/Users/LENOVO/node_modules/puppeteer-core')`
+>     + Edge msedge.exe works. Cross-ref: NODE-EVAL-CMD-1, NODE-MJS-ESM-1 (windows-command-patterns v3.20),
+>     references/cdp-pdf-pipeline.md. Canonical: qwave-qudit-advantage.pdf 590,959 B, 0 U+FFFD/FFFF.
+> Cross-reference: windows-command-patterns v3.20, kaizen v2.05, session dlnKXUpIJK48EWgWj5SmP.
+
+
 > **v2.96 UPDATE (2026-08-10, kaizen — CMD SKILLS UPDATE: publication completeness gates — KG node + Vectorize index + PDF path option):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session Z-DBQiCgjlEszWQZzZthq;
 > trigger: ringbauer-qudit-due-diligence publication closeout red-team found HARD-1 KG-missing + HARD-2 Vectorize-missing,
@@ -5493,6 +5505,7 @@ No `--print-to-pdf`. No "primary tier." No fallback. One pipeline, every time.
 
 
 5. puppeteer-core CDP: `page.pdf({path: '<slug>.pdf', format:'A4', margin:{top:'2cm',bottom:'2cm',left:'2cm',right:'2cm'}, printBackground:true})`
+   **Render script: use `.cjs` (CommonJS) with `require('C:/Users/LENOVO/node_modules/puppeteer-core')` — NOT `.mjs`** (v2.97: ESM require/import fails on Windows absolute paths; see NODE-MJS-ESM-1).
    **`path:` IS REQUIRED (PDF-PATH-OPTION-1, v2.96).** Without it, `page.pdf()` returns a Buffer and writes NO file — the pipeline reports success while the PDF is missing (canonical: ringbauer-qudit-due-diligence 2026-08-10).
 
 
@@ -6106,6 +6119,10 @@ H = {"Authorization": f"Bearer {token}",
 
 
 **PATH B — records API (InvenioRDM):**
+
+> **ZENODO-RECORDS-API-UPLOAD-CT-1 (v2.93, HARD):** use `Content-Type: application/octet-stream` for ALL file
+> types (md/html/pdf). Type-specific MIME (`text/html`, `application/pdf`) returns 415. Verified 2026-08-10
+> (v0.7: 21880070/21880081 broken by 415; uniform octet-stream -> 21880104 OK).
 
 
 
@@ -6934,6 +6951,7 @@ stale object (`CF-Cache-Status: HIT`) — a false md5 mismatch vs the fresh loca
 mean the upload failed. Canonical verification: `rclone check <localdir> releases:qnfo-releases/<prefix>`
 (S3 endpoint, bypasses the API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence
 2026-08-10 — API GET reported stale v1 PDF; rclone proved v4 objects correct.
+
 **Verification (R2-CDN-CACHE-1, v2.96):** the R2 object API GET path can serve a CDN-cached
 stale object (`CF-Cache-Status: HIT`) — a false md5 mismatch vs the fresh local file does NOT
 mean the upload failed. Canonical verification: `rclone check <localdir> releases:qnfo-releases/<prefix>`
@@ -7001,6 +7019,7 @@ with `X-Index-Token: chnx-idx-v1-k9m2n4p7r5t8`. **Verify** via
 (VECTORIZE-WEBHOOK-VERIFY-1). A paper in D1 but not in Vectorize is not
 semantically discoverable (canonical: ringbauer-qudit-due-diligence HARD-2,
 2026-08-10).
+
 ### MCP-Driven Deployment Verification (HARD)
 
 
@@ -9111,7 +9130,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.96** (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.97** (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

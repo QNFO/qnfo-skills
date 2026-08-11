@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.19
+version: 3.20
 
 
 kif_tags: [KIF-32]
@@ -125,7 +125,18 @@ kif_tags: [KIF-32]
 
 
 
-# windows-command-patterns — v3.19
+# windows-command-patterns — v3.20
+> **v3.20 UPDATE (2026-08-10, kaizen — NODE-MJS-ESM-1: Node require-based scripts must be `.cjs`):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP —
+> QNFO.UMP.005 v0.7 CDP PDF build). HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **NODE-MJS-ESM-1 anti-pattern added** — `render-pdf.mjs` with `require('C:/Users/LENOVO/node_modules/puppeteer-core')`
+>     fails: "require is not defined in ES module scope". ESM `import` of a Windows absolute path fails with
+>     ERR_UNSUPPORTED_ESM_URL_SCHEME (needs file:// URL). Fix: name Node scripts that use `require()` with the
+>     `.cjs` extension — CommonJS mode, require works, absolute paths fine. Canonical case: render-pdf.cjs (Edge +
+>     puppeteer-core) produced qwave-qudit-advantage.pdf 590,959 B, 0 U+FFFD/FFFF. Cross-ref: NODE-EVAL-CMD-1,
+>     research v2.93, kaizen v2.05, session dlnKXUpIJK48EWgWj5SmP.
+> Cross-reference: NODE-EVAL-CMD-1, research v2.93, kaizen v2.05.
+
 
 > **v3.19 UPDATE (2026-08-10, kaizen — CURL-AUTH-QUOTE-1: exec-safe authenticated curl pattern; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session — every
@@ -1561,4 +1572,4 @@ S-1.0.4, S-1.0.7.
 
 
 
-Current: **v3.19** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.20** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
