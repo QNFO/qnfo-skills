@@ -10,8 +10,13 @@ autonomous: true
 self_sufficient: true
 ---
 > **v3.45 UPDATE (2026-08-11, user directive — ALL official Cloudflare skills merged into this ONE skill):**
-> Red-team: direct parent-agent verification (this session — user directive: "UPDATE CLOUDFLARE SKILL
-> TO INCLUDE ALL OTHER CLOUDFLARE SKILLS"). Watchtower: 12 official CF skills N-2 CLEAN pre-edit.
+> Red-team: reviewer subagent audit (this session) found 3 HARD + 3 SOFT on the merge; ALL FIXED
+> before closeout (agents-sdk imports → `agents` package; garbled Pages baseline text; stale H1
+> v3.44; WORKER-CPU-LIMIT-1 dedupe; Fork Policy directive dedupe; Sandbox Code-Interpreter pointer).
+> Follow-up CMD RED TEAM (5-adversary, direct parent, read-only): 0 HARD / 1 SOFT / 2 DESIGN —
+> SOFT was THIS banner's stale red-team accounting; DESIGN = @callable() decorator form + matrix
+> phrasing. All three resolved in this same edit pass (S-1, D-1, D-2).
+> Watchtower: 12 official CF skills N-2 CLEAN pre-edit.
 > HARD: 0. SOFT: 0. DESIGN: 2. Changes:
 > (1) [DESIGN] **Complete content merge of all 12 official Cloudflare skills** — the consolidated
 >     skill now carries the FULL content of the standalone skills (not just summary pointers):
@@ -2149,7 +2154,7 @@ const agent = useAgent({
 | Route requests | `routeAgentRequest(req)` | URL-pattern-based request dispatch |
 | Store state | `this.setState({ key: val })` | Persisted to DO storage; triggers `onStateChange` |
 | Validate state | `validateStateChange(prev, next)` | Guard against invalid transitions |
-| Expose RPC | `@callable async myMethod(args)` | Callable from client/frontend |
+| Expose RPC | `@callable() async myMethod(args)` | Callable from client/frontend |
 | Multi-step tasks | `class MyWorkflow extends AgentWorkflow { ... }` | Survives DO eviction |
 | Chat agents | `class MyAgent extends AIChatAgent { ... }` | Streaming, tools, persistence |
 | WebSockets | `this.onWebSocketConnect(ws)` / `onMessage(ws, msg)` | Hibernation-supported |
@@ -2179,7 +2184,7 @@ export class MyAgent extends Agent<Env, State> {
     return { counter: 0, lastAction: '' };  // Initial state
   }
 
-  @callable async increment(n: number) {
+  @callable() async increment(n: number) {
     const curr = this.state.counter;
     await this.setState({ counter: curr + n, lastAction: `incremented by ${n}` });
     return this.state.counter;
@@ -3215,9 +3220,11 @@ Email/SMS/notification delivery (leave the existing submit handler alone); addin
 ## Official Skill Coverage Matrix (v3.45)
 
 All 13 skills from `github.com/cloudflare/skills` are integrated into this custom skill
-(upstream `f96bff7`, 2026-08-11 — `sandbox-sdk` split into 3 sandbox skills). As of v3.45,
-**the complete body of every official skill is merged inline** (not just summary pointers) —
-the consolidated skill is the single source of truth for agent execution:
+(upstream `f96bff7`, 2026-08-11 — `sandbox-sdk` split into 3 sandbox skills). "13" = the 12
+official skills (below) + this cloudflare skill itself, which is the 13th (the official
+`skills/cloudflare/` entry is NOT installed — it would collide; see §Cloudflare Fork Policy).
+As of v3.45, **the complete body of every official skill is merged inline** (not just summary
+pointers) — the consolidated skill is the single source of truth for agent execution:
 
 | Official Skill | Status | Where (merged full content) |
 |:---------------|:-------|:------|
