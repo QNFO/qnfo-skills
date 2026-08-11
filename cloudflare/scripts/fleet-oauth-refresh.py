@@ -3,7 +3,7 @@
 """
 fleet-oauth-refresh.py — Cloudflare MCP fleet-wide OAuth token refresh.
 
-Per cloudflare skill v3.23 §Token Refresh Protocol: every MCP server token cache
+Per cloudflare skill v3.41 §Token Refresh Protocol: every MCP server token cache
 includes a refresh_token (offline_access scope). The grant_type=refresh_token
 flow at each server's /token endpoint works server-side WITHOUT browser consent,
 so a single script can renew ALL cached tokens.
@@ -12,7 +12,7 @@ Usage:
     python fleet-oauth-refresh.py [--dry-run] [--verify]
 
 Behavior:
-  - For each of the 14 known Cloudflare OAuth MCP servers:
+  - For each of the 15 known Cloudflare OAuth MCP servers:
       - If <hash>_tokens.json exists  -> refresh via refresh_token grant (rotates access+refresh)
       - If <hash>_client_info.json missing or no token -> report "NEEDS FIRST-TIME AUTH"
   - Writes refreshed token back to the same cache file (atomic).
