@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.42
+version: 3.43
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -128,7 +128,7 @@ self_sufficient: true
 > Cross-reference: fleet-oauth-bootstrap.py, mcp-server-cloudflare, QNFO/cloudflare-skill-forks,
 > RADAR-MCP-OAUTH-1, session QrOP_3xznyiEOIqdKFHWS.
 
-# CLOUDFLARE — v3.41
+# CLOUDFLARE — v3.43
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -740,14 +740,19 @@ database_id = "70a58cb3-b2cd-498d-877f-ecca86859a22"
 binding = "PAPER_VZ"      # or QWAV_VZ for qnfo-qwav
 index_name = "qwav-research-v2"
 
-[[ai]]
-binding = "AI"            # ARRAY form [[ai]] — NOT [ai] single-table
+[ai]
+binding = "AI"            # SINGLE-TABLE form [ai] — CORRECTED 2026-08-11
 ```
 
-**AI binding format (v3.16):** use `[[ai]]` (array of tables). `[ai]` (single table)
-fails with `The field "ai" should be an object but got [{"binding":"AI"}]`.
-Verify materialization via `/health` — qnfo-qwav reports `ai: true` only after the
-`[[ai]]` deploy (previously `ai: false` → D1 LIKE fallback).
+**AI binding format (CORRECTED 2026-08-11, verified live on wrangler 4.118.0):**
+use `[ai]` (single table OBJECT). `[[ai]]` (array of tables) FAILS config validation with
+`The field "ai" should be an object but got [{"binding":"AI"}]` — the error message literally
+says the field must be an OBJECT, so the array form is wrong on wrangler >= 4.118.
+The pre-4.118 guidance (v3.16, 2026-08-02) was INVERTED. Canonical case: qnfo-ai v4.3.x
+(2026-08-11) — first deploy attempt with `[[ai]]` failed with this exact error; switching to
+`[ai]` deployed cleanly with `env.AI` materialized.
+Verify materialization via `/health` — qnfo-ai reports `ai: True` only after the
+`[ai]` deploy (previously `ai: false` → all tier-0 free models returned "All models failed.").
 
 **Known live workers.dev URLs (verified 2026-08-02):**
 - `https://qnfo-paper-indexer.q08.workers.dev` — /health, /count, /index?offset=N,
@@ -1209,7 +1214,7 @@ Baseline: 5 indexes (2026-07-25: added `qnfo-ai-log`, 768-dim cosine — qnfo-ai
 
 ### AI Gateway (consolidated 2026-07-25)
 Baseline: **1 gateway** — `default` (authenticated, collect_logs on, 10M log retention, unified billing FUNDED). `quni-io` and `0pus` deleted same date (0 logs each, verified live before deletion). Any second gateway appearing without an audit-trail row is drift.
-**Single point of entry for ALL AI:** `qnfo-ai` Worker v4.1 (`https://qnfo-ai.q08.workers.dev`) — auto-routing (5D), pinned models, ensembles, internal RAG (papers+memory Vectorize), query logging (D1 `qnfo-audit.ai_queries` + Vectorize `qnfo-ai-log`), `/v1/search`, `/v1/history`. Auth key at `%USERPROFILE%\.qnfo\router-auth-key` (rotated 2026-07-25).
+**Single point of entry for ALL AI:** `qnfo-ai` Worker v4.3.4 (`https://qnfo-ai.q08.workers.dev`) — auto-routing (5D), pinned models, ensembles (primary coder qwen2.5-coder-32b + validator llama-3.2-1b + reviewer qwen3-30b, all Workers AI free), internal RAG (papers+memory Vectorize), query logging (D1 `qnfo-audit.ai_queries` + Vectorize `qnfo-ai-log`), `/v1/search`, `/v1/history`. Auth key at `%USERPROFILE%\.qnfo\router-auth-key` (rotated 2026-07-25).
 **Tier-3 provider quirks (verified live 2026-07-25):** use the gateway COMPAT endpoint `gateway.ai.cloudflare.com/v1/{acct}/{gw}/compat/chat/completions` — the account-level `/ai/v1/chat/completions` endpoint returns HTTP 200 with an EMPTY anthropic message body (silent failure). anthropic claude-5 series rejects `temperature` (400 "deprecated"). openai gpt-5.x requires `max_completion_tokens`, rejects `max_tokens`.
 
 ### DNS Integrity Checks
@@ -1512,7 +1517,7 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **R2 object verification via HEAD (v3.14, 2026-08-01)** | The R2 object API does NOT support HEAD — it returns HTTP 405, which a verification script misread as "not found". Use GET and compare `Content-Length` (or MD5 of the body) against the local source. |
 | **Literal `%VAR%` in `.npmrc` / npm config values (v3.14, 2026-08-01)** | npm config files do NOT expand Windows `%VAR%` — the string is used LITERALLY, creating a stray `%USERPROFILE%` directory. Use absolute paths (`C:\Users\LENOVO\npm-global`) or `${VAR}` syntax in `.npmrc`. |
 | **KIF-61: Deploying a Worker without `workers_dev = true` and expecting HTTP/webhook access (2026-08-02)** | Cron-only or route-less Workers have NO public HTTP route — `.workers.dev` returns DNS NXDOMAIN (curl exit 1), misread as HTTP 1101 or a binding failure. Fix: `workers_dev = true` in wrangler.toml + `wrangler deploy`. Diagnose with `curl -s https://<worker>.q08.workers.dev/health` FIRST, then `wrangler deploy --dry-run` to read the live binding set. Root cause of the qnfo-paper-indexer webhook failure — the AI binding was present all along. |
-| **Using `[ai]` (single table) for Workers AI binding in wrangler.toml (2026-08-02)** | Fails config validation: `The field "ai" should be an object but got [{"binding":"AI"}]`. Use `[[ai]]` (array of tables). Verify materialization via the Worker's `/health` endpoint (`ai: true`). |
+| **Using `[[ai]]` (ARRAY of tables) for Workers AI binding in wrangler.toml — CORRECTED 2026-08-11 (was inverted)** | **WRONG on wrangler 4.118.0:** the `[[ai]]` array form FAILS config validation with `The field "ai" should be an object but got [{"binding":"AI"}]`. Use `[ai]` (single table OBJECT) — the error message literally says the field must be an OBJECT. The pre-4.118 guidance (v3.16, 2026-08-02) was inverted; verified live 2026-08-11: qnfo-ai v4.3.x `[[ai]]` deploy failed, `[ai]` deploy succeeded with `env.AI` materialized and tier-0 free models returning real content. Verify materialization via the Worker's `/health` endpoint (`ai: true`). |
 | **Concluding the token lacks Workers Scripts:Edit from a REST 9106 bindings error (2026-08-02)** | `GET /accounts/{id}/workers/scripts/{name}/bindings` returned 9106 while `wrangler deploy` with the same CLOUDFLARE_API_TOKEN succeeded. The bindings sub-endpoint has a different auth path. NEVER trust a single REST 9106 as proof of missing scope — test `wrangler deploy` directly before declaring a blocker. |
 | **Using `wrangler routes list` (removed in v4.118.0)** | Returns "Unknown arguments: routes, list". Route management in wrangler v4 is via wrangler.toml `workers_dev`/`routes` keys or the zone-level REST API. Use `wrangler pages project list` for Pages discovery (verified 2026-08-02: 5 projects — qwav, qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). |
 | **Misattributing a non-Cloudflare outage to Cloudflare (2026-08-02)** | ipatent.me: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app → 500 on Google Cloud Run. The CF layer is healthy; the 500 is the GCP backend. Always trace the full redirect chain (`curl -sI` + follow Location) before declaring "Cloudflare issue". |
@@ -1577,7 +1582,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.42** (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.43** (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
@@ -1846,7 +1851,7 @@ class ReportWorkflow extends AgentWorkflow {
 }
 ```
 
-> **QNFO NOTE:** Our `qnfo-ai` Worker v4.2.0 uses Workers AI directly. For stateful agent patterns (multi-turn memory, WebSocket hubs, approval workflows), prefer the Agents SDK over raw Workers AI + Durable Objects. The existing `qnfo-memory-mcp` Worker already uses DOs — a future `qnfo-agents` Worker could consolidate memory + chat + tools.
+> **QNFO NOTE:** Our `qnfo-ai` Worker v4.3.4 uses Workers AI directly (source committed to QNFO/qnfo-workers/qnfo-ai after WORKER-THIN-CLIENT-1 remediation; 7 commits a8fb276..888e64c; deployed 300aa8c8). For stateful agent patterns (multi-turn memory, WebSocket hubs, approval workflows), prefer the Agents SDK over raw Workers AI + Durable Objects. The existing `qnfo-memory-mcp` Worker already uses DOs — a future `qnfo-agents` Worker could consolidate memory + chat + tools.
 
 ---
 

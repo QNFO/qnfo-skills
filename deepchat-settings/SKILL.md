@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.8
+version: 1.9
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.8
+# DeepChat Settings — v1.9
 > **v1.8 UPDATE (2026-08-11, kaizen — red-team fix cycle: stdio registration note + mcp-guard row; CMD EXECUTE):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — post-restart audit of
 > v1.7 + qwav-platform registration). HARD: 0. SOFT: 3. DESIGN: 2. This cycle applies the writable fixes:
@@ -140,6 +140,7 @@ the ~15 tool-call rediscovery this session burned (PROMPT-REDISCOVERY-1).
 | **App settings** | `%APPDATA%\DeepChat\app-settings.json` | JSON, top-level keys |
 | **MCP servers** | `%APPDATA%\DeepChat\mcp-settings.json` | JSON, `mcpServers` map |
 | **MCP guard** | `%APPDATA%\DeepChat\mcp-guard.json` | JSON, file-hygiene/mojibake guard (not an MCP allowlist) |
+| **Provider registry** | `%APPDATA%\DeepChat\app_db\agent.db` → `providers`, `provider_models`, `model_status`, `model_configs` + `app-settings.json` → `preferredModel`/`defaultModel` | Custom provider config (api_key, base_url, enabled models, default model) — dual-write per §Provider Registration |
 | **History DB** | `%APPDATA%\DeepChat\rtk\history.db` | SQLite3 (10824 commands) |
 | **Skills** | `%USERPROFILE%\.deepchat\skills\` | Markdown files (no .git) |
 | **Git-tracked skills** | `%USERPROFILE%\Documents\GitHub\qnfo-skills\` | Git repo (canonical) |
@@ -279,6 +280,45 @@ rarely contain an endpoint/install command; the linked repo may have NO MCP serv
 component. Verify a real endpoint (MCP initialize POST; bare-Python UA may get CF
 403/1010 — use browser-grade headers) before registering. See MCPMARKET-CATALOG-NE-SERVER-1.
 
+### Provider Registration (Programmatic — added 2026-08-11)
+
+Custom providers (like the qnfo-ai "Cloudflare AI Router") are stored in agent.db tables
+AND mirrored in app-settings.json. This session (qnfo-ai ensemble setup) discovered the
+full schema — previously undocumented. THE KEY ROW MUST MATCH THE UPSTREAM SECRET:
+a stale `api_key` in `providers` silently 401s every chat request (PROVIDER-KEY-SYNC-1).
+
+**agent.db tables:**
+
+| Table | Key columns | Purpose |
+|:------|:------------|:--------|
+| `providers` | id, name, api_type, api_key, base_url, enabled, custom, sort_order, provider_json | The provider registry. `custom=1` = user-added. `provider_json.apiKey` MUST match `api_key` |
+| `provider_models` | provider_id, model_id, source, name, group_name, sort_order, model_json | Model catalog per provider (source=`provider` or `user`) |
+| `model_status` | status_key, provider_id, model_id, enabled, updated_at | Which models are ENABLED (the model picker gate) |
+| `model_configs` | cache_key, provider_id, model_id, source, config_json | Per-model user config (maxTokens, contextLength, temperature, apiEndpoint) |
+| `app_settings` | key=`preferredModel` / `defaultModel`, value_json | The active default model (dual-write with app-settings.json) |
+
+**provider_json shape (custom OpenAI-compatible):**
+`{"id":"<provider-id>","name":"...","apiType":"openai","apiKey":"<KEY>","baseUrl":"https://.../v1","enable":true,"custom":true}`
+
+**Registration procedure (programmatic, zero UI):**
+1. BACKUP both stores: copy `app-settings.json` and `agent.db`.
+2. INSERT into `providers` (id, name, api_type='openai', api_key, base_url, enabled=1, custom=1,
+   sort_order=MAX+1, provider_json) — or UPDATE existing row if the provider already exists.
+3. INSERT provider_models rows for each discoverable model (from GET {base}/models).
+4. INSERT model_status rows (enabled=1) for the models you want selectable.
+5. INSERT model_configs rows for user-tuned models.
+6. Set `preferredModel` + `defaultModel` in BOTH app-settings.json AND agent.db app_settings.
+7. VERIFY: re-read the provider row (api_key matches upstream), GET {base}/models returns
+   200, and a live chat completion with the stored key returns 200.
+8. NOTE: agent.db provider config is loaded at app STARTUP — a restart is needed for the
+   running instance to pick up key changes (app-settings.json modelConfig applies live).
+
+**Canonical case (2026-08-11):** Cloudflare AI Router provider (id `-_X6Z7YffrNPktrj3Vhjo`)
+was fully registered (16 models, enabled) but held the PRE-ROTATION api_key — the Worker's
+`ROUTER_AUTH_KEY` secret had been rotated, so every chat request returned 401. Fix: updated
+`providers.api_key` + `provider_json.apiKey` to the rotated key, cleaned stale key from
+agent_memory, set defaultModel to ensemble, verified 6/6 E2E.
+
 ### TEMP-VOLATILITY (Critical Peril)
 
 **Windows `%TEMP%` is volatile across agent tool calls.** A file written by the
@@ -360,6 +400,7 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 | **PROMPT-REDISCOVERY-1: Searching for prompt storage locations with 15+ tool calls when the answer is documented here (2026-08-05)** | Custom prompts live in `agent.db` → `app_settings` → `key='customPrompts'` (value_json JSON string). The system prompt is in `agent.db` → `key='systemPrompts'` AND `app-settings.json` → `default_system_prompt`. Read this skill first — do not grep JSON files or walk directory trees. |
 | **DB-SCHEMA-GUESS-1: Guessing database table names instead of querying sqlite_master (2026-08-05)** | Before querying any DeepChat database, run `SELECT name FROM sqlite_master WHERE type='table'` to discover the actual schema. The `app_settings` table uses key-value_json, not typed columns. The `history.db` uses `commands` and `parse_failures` tables, not `prompts`. |
 | **MCP-REGISTRATION-ONE-STORE-1: Registering an MCP server in only ONE of the two stores (2026-08-11)** | Dual-write BOTH: `mcp-settings.json` → `mcpServers` (settingsWatcher live reload) AND `agent.db` → `mcp_servers` (startup persistence). A one-store registration silently vanishes at restart (agent.db missed) or never appears in the live list (mcp-settings.json missed). Canonical case: qwav-platform registration 2026-08-11 — verified both stores needed (28-entry mcp-settings.json + 18-row mcp_servers). Cross-ref: MCP Server Registration section. |
+| **PROVIDER-KEY-SYNC-1: Provider api_key in agent.db goes stale when the upstream Worker secret is rotated (2026-08-11)** | **HARD.** After ANY rotation of a Worker secret that backs a custom provider (e.g. qnfo-ai `ROUTER_AUTH_KEY`), update `providers.api_key` + `provider_json.apiKey` in agent.db in the SAME session — otherwise every chat request 401s silently. Also clean the stale key from `agent_memory` (it leaks secrets in recall). Canonical case: 2026-08-11 Cloudflare AI Router — pre-rotation key `w18b7smc...` persisted in providers row after ROUTER_AUTH_KEY rotation; all requests 401'd until fixed; backups app-settings.json.bak-20260811_180232 / agent.db.bak-20260811_180232. Cross-ref: deepchat-settings §Provider Registration, kaizen mirror, TOKEN-VERIFY-SCOPE-1 (same class: scope mismatch on verify). |
 | **MCPMARKET-CATALOG-NE-SERVER-1: Treating an MCP marketplace listing (mcpmarket.com) as a runnable MCP server (2026-08-11)** | Marketplace listings are CATALOG CARDS: no endpoint, no install command, no tool list; the linked repo may contain NO MCP server component. Before registering in DeepChat, verify a REAL endpoint with an MCP `initialize` POST (bare GET /mcp → 404 is normal for streamable-HTTP; bare-Python UA may get CF 403/1010 — use browser-grade headers). Canonical case: qwav-platform — listing pointed at QNFO/qwav-platform repo (624 files, 0 with 'mcp' in name); the live endpoint was the pre-existing qnfo-memory-mcp worker. Cross-ref: MCP Server Registration section. |
 
 
@@ -374,4 +415,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.8** (deepchat-settings — red-team fix cycle: stdio registration note + mcp-guard row; 2026-08-11)
+Current: **v1.9** (deepchat-settings — red-team fix cycle: stdio registration note + mcp-guard row; 2026-08-11)

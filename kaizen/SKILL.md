@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.15"
+version: "2.17"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -300,7 +300,51 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
 > Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.15
+> **v2.16 UPDATE (2026-08-11, kaizen — CMD EXECUTE: red-team findings A3/D2/S2 fix cycle):**
+> Red-team: CMD RED TEAM 5-adversary audit (READ-ONLY, session QrOP_3xznyiEOIqdKFHWS) of the
+> CMD CLOSEOUT. HARD: 0. SOFT: 3. DESIGN: 1. VERSION-OVERWRITE-1 merge: v2.15 was claimed by a
+> concurrent session (9f25ab6 — phantom v2.13 re-execution) WHILE this audit ran — merged past to
+> v2.16. Changes:
+> (1) [DESIGN] **D1 Closeout Concurrency Semantics section added** — `wbs_state` is last-writer-wins
+>     keyed by `project_id`; concurrent sessions on the same project clobber each other (verified
+>     live 2026-08-11: QrOP_3xznyiEOIqdKFHWS 9/9 overwritten 20 min later by rvnMtR544X387NEXCAPbB).
+>     Rules: handoffs row = durable per-session record; wbs_state = latest-session-wins; use
+>     session-scoped project keys for concurrent closeouts; read-backs must note session_id.
+> (2) [SOFT] **Memory correction (A3)** — closeout memory mem-tR_D81aifSi5 said "pending verification"
+>     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
+> Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
+
+# KAIZEN — v2.17
+> **v2.17 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: AI-binding syntax correction + PROVIDER-KEY-SYNC-1 + providers-table docs; merged past concurrent v2.16):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session;
+> qnfo-ai ensemble deployment + DeepChat provider registration cycle). VERSION-OVERWRITE-1 merge:
+> concurrent session claimed v2.16 (D1 closeout concurrency cycle) WHILE this audit ran — merged
+> past the collision to v2.17; v2.16 banner + content preserved below. Watchtower: cloudflare
+> hdr=3.41/fm=3.42 DRIFT found pre-edit (concurrent residue; fixed to 3.43 triple). HARD: 2
+> (owner-skill side). SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **AI-BINDING-SYNTAX-1 mirror added (owner cloudflare v3.43)** — the v3.16 AI-binding
+>     guidance was INVERTED: it said `[[ai]]` (array) is correct and `[ai]` fails with `The field
+>     "ai" should be an object but got [{"binding":"AI"}]`. VERIFIED 2026-08-11 on wrangler
+>     4.118.0: `[[ai]]` FAILS with exactly that error (the message literally says the field must
+>     be an OBJECT); `[ai]` single-table OBJECT deploys cleanly. Canonical case: qnfo-ai v4.3.x —
+>     first deploy attempt with `[[ai]]` failed; `[ai]` deployed with env.AI materialized and
+>     tier-0 free models returned real content. Fixed in cloudflare v3.43 (section + wrangler.toml
+>     example + anti-pattern row).
+> (2) [HARD] **PROVIDER-KEY-SYNC-1 mirror added (owner deepchat-settings v1.9)** — custom provider
+>     `api_key` in agent.db `providers` goes stale when the upstream Worker secret is rotated;
+>     every chat request then 401s silently. Must update `providers.api_key` + `provider_json.apiKey`
+>     in the SAME session as the secret rotation. Canonical case: 2026-08-11 Cloudflare AI Router —
+>     pre-rotation key persisted in the providers row after ROUTER_AUTH_KEY rotation; all requests
+>     401'd until fixed; also cleaned stale key from agent_memory.
+> (3) [SOFT] **deepchat-settings v1.8→v1.9** — Provider Registration section added (providers/
+>     provider_models/model_status/model_configs tables + preferredModel/defaultModel dual-write +
+>     backup/verify procedure), File Locations table completed, PROVIDER-KEY-SYNC-1 anti-pattern.
+> (4) [DESIGN] **cloudflare v3.42→v3.43** — qnfo-ai current-state refs updated (v4.1/v4.2.0 → v4.3.4,
+>     ensemble with free models, source committed to QNFO/qnfo-workers after WORKER-THIN-CLIENT-1
+>     remediation).
+> Cross-reference: cloudflare v3.43, deepchat-settings v1.9, AI-BINDING-SYNTAX-1, PROVIDER-KEY-SYNC-1,
+> qnfo-ai v4.3.4, session this.
+
 > **v2.15 UPDATE (2026-08-11, kaizen — re-execution of the phantom v2.13 fix cycle; CMD EXECUTE after CMD RED TEAM):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD RED TEAM
 > READ-ONLY). HARD: 2 (process-side). This cycle CORRECTS the phantom v2.13 claim: the v2.12->v2.13 edits
@@ -7816,6 +7860,26 @@ item carries a documented blocker with an evidence trail and a follow-up trigger
 
 
 
+### D1 Closeout Concurrency Semantics (added 2026-08-11, red-team fix D2)
+
+The D1 closeout writes (`qnfo-audit.handoffs` insert + `wbs_state` upsert, proven pattern v1.83)
+have a **concurrency hazard**: `wbs_state` is keyed by `project_id` and is **last-writer-wins**.
+Two sessions closing the same project (e.g. both using `QNFO.KAIZEN`) will overwrite each other's
+row — the later upsert silently clobbers the earlier session's `current_phase`/`phase_data`/
+`session_id`. Verified live 2026-08-11: session QrOP_3xznyiEOIqdKFHWS upserted `QNFO.KAIZEN 9/9`
+(15:13:18Z), a concurrent session overwrote it with its own cycle 20 minutes later (15:33:56Z).
+
+Rules:
+1. **The durable per-session record is the `handoffs` row** (append-only, `id` PK) — never rely on
+   `wbs_state` for per-session history.
+2. `wbs_state` reflects the **latest session that closed the project** — document that semantics
+   when reading it; a "verified 9/9" claim from a read-back is only true until another session
+   closes the same project.
+3. When a project needs concurrent closeouts, **use a session-scoped project key** in
+   `wbs_state` (`QNFO.KAIZEN.<session-short>`) or accept latest-wins and rely on `handoffs` for
+   the authoritative trail.
+4. Read-back verification must note the `session_id` + `last_updated` of the row it verified.
+
 ### Phase 5 Step 0: Deferred-Items Closeout Gate (HARD GATE — MANDATORY)
 
 
@@ -12176,6 +12240,9 @@ Session Failure → Session Retrospective detects failure pattern
 
 ## Anti-Patterns
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
+| **AI-BINDING-SYNTAX-1: Using `[[ai]]` (array) for the Workers AI binding in wrangler.toml — the v3.16 guidance was INVERTED (2026-08-11)** | **HARD** (mirror; owner cloudflare v3.43). On wrangler 4.118.0 the `ai` field must be a SINGLE-TABLE OBJECT: `[ai]` with `binding = "AI"`. The `[[ai]]` array form FAILS config validation with `The field "ai" should be an object but got [{"binding":"AI"}]` — the error literally says the field must be an OBJECT. The pre-4.118 guidance (2026-08-02) claimed the reverse. Canonical case: qnfo-ai v4.3.x (2026-08-11) — `[[ai]]` deploy failed, `[ai]` deploy succeeded, env.AI materialized, tier-0 free models returned real content. Cross-ref: cloudflare v3.43, KIF-50 (binding loss class). |
+| **PROVIDER-KEY-SYNC-1: Custom provider api_key in agent.db goes stale when the upstream Worker secret rotates (2026-08-11)** | **HARD** (mirror; owner deepchat-settings v1.9). After ANY rotation of a Worker secret backing a custom provider (e.g. qnfo-ai `ROUTER_AUTH_KEY`), update `providers.api_key` + `provider_json.apiKey` in agent.db the SAME session + clean stale key from agent_memory; otherwise every chat request 401s silently. Canonical case: 2026-08-11 Cloudflare AI Router (id -_X6Z7YffrNPktrj3Vhjo) — pre-rotation key `w18b7smc...` persisted after ROUTER_AUTH_KEY rotation; fixed + verified 6/6 E2E; backups .bak-20260811_180232. Cross-ref: deepchat-settings §Provider Registration, TOKEN-VERIFY-SCOPE-1. |
+
 | **PHANTOM-DEPLOY-VERSION: Reporting a deployment version or data mutation as done without the actual tool output in the SAME turn (2026-08-10)** | **HARD GATE** (mirror; owner cloudflare v3.38). Never claim a Worker deploy version (e.g. 'Deployed c9b29d47') or a data mutation (e.g. 'issue #110 marked wontfix') without the actual exec/poll/PATCH output in the same turn. Deploy execs that return a background session MUST be polled to completion and the REAL version ID read before claiming deployment. Canonical case: session this (2026-08-10) — claimed c9b29d47 while actual deployed version was aace0986-0747-461f-b835-9a605c3f052d; claimed a wontfix PATCH that never ran (script deleted before exec). Cross-ref: ZENODO-PHANTOM-DOI-1 (same class for publications), CLAIM-VERIFY-1, PHANTOM-CLAIM-2, VERSION-OVERWRITE-1. |
 | **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
 
@@ -14270,7 +14337,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.15** (kaizen — re-execution of phantom v2.13 fixes: v2.07 dedupe + wording + ordering; 2026-08-11)
+Current: **v2.17** (kaizen — D1 closeout concurrency semantics + red-team fix cycle; 2026-08-11) (kaizen — re-execution of phantom v2.13 fixes: v2.07 dedupe + wording + ordering; 2026-08-11)
 
 
 
