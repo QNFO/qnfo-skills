@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.10"
+version: "2.11"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.10
+> **v2.11 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: calibration entries + concurrent-merge past v2.10):**
+> Red-team: direct parent-agent 5-adversary audit (session QrOP_3xznyiEOIqdKFHWS — CMD SKILLS UPDATE;
+> cloudflare v3.39 cycle). VERSION-OVERWRITE-1 merge: v2.10 was claimed by a concurrent session
+> (i3NHS7gJBTyozMCNeaZm-, deepchat-settings v1.7 MCP registration cycle) WHILE this audit ran — merged
+> past the collision to v2.11; v2.10 banner + L6154 cross-ref fix (research v2.97 / qnfo-core v1.24)
+> verified present. HARD: 0 (kaizen-side; 2 HARD in cloudflare v3.39). SOFT: 0. DESIGN: 2. Changes:
+> (1) [DESIGN] **Calibration entries added** — RADAR-MCP-OAUTH-1 (cloudflare-radar now OAuth; fleet
+>     health-check keeps radar in OAUTH_SERVERS, 15/2 counts; CHECK 2026-08-13) + MCP Server Portals
+>     section holds (API-created portals need manual DNS + mcp_portal Access app; 522 origin gotcha;
+>     CHECK 2026-08-13).
+> (2) [DESIGN] **Cross-ref fix preserved** — kaizen L6154 Adversarial-symmetry check now cites
+>     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
+> Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
+
+# KAIZEN — v2.11
 > **v2.10 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: deepchat-settings v1.7 — MCP registration mechanics + 2 anti-patterns):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS
 > UPDATE; qwav-platform MCP registration cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post.
@@ -14196,7 +14210,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.10** (kaizen — SKILLS UPDATE: deepchat-settings v1.7 MCP registration mechanics; 2026-08-11)
+Current: **v2.11** (kaizen — calibration entries + concurrent merge past v2.10; 2026-08-11) (kaizen — SKILLS UPDATE: deepchat-settings v1.7 MCP registration mechanics; 2026-08-11)
 
 
 
@@ -14355,3 +14369,19 @@ Current: **v2.10** (kaizen — SKILLS UPDATE: deepchat-settings v1.7 MCP registr
 
 
 
+
+
+[CHECK: 2026-08-13] RADAR-MCP-OAUTH-1 will hold through +3 monitoring checkpoints: no Zero Trust
+AI-controls MCP server entry or fleet health-check classification will declare cloudflare-radar
+auth_type=unauthenticated/public; auth_type=oauth is used and fleet-mcp-health-check.py keeps radar
+in OAUTH_SERVERS (15 oauth / 2 public). Risk of regression: [MODERATE] - the old skill table row
+(None) persisted for weeks before the 2026-08-11 live 401 probe corrected it; check the mcp.cloudflare.com
+docs for a future public radar endpoint. Likelihood: [HIGH] - cloudflare v3.39 + fleet script + this
+mirror all carry the rule.
+
+[CHECK: 2026-08-13] MCP Server Portals section (cloudflare v3.39) will hold: API-created portals are
+provisioned with DNS + mcp_portal Access app (Managed OAuth) + service-token m2m per the documented
+gotcha; no session will assume the portal API auto-provisions DNS/Access app (HTTP 522 otherwise).
+Risk of regression: [HIGH] - dashboard flow auto-provisions, tempting agents to skip manual steps;
+the 522 origin error is the silent failure. Likelihood: [HIGH] - canonical case qnfo-mcp-portal
+(mcp.q08.org) documented in cloudflare v3.39.
