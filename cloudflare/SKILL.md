@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (17-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.39
+version: 3.40
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -70,7 +70,35 @@ self_sufficient: true
 > Cross-reference: kaizen v2.10 (concurrent deepchat-settings v1.7 MCP registration cycle), Zero Trust
 > AI controls docs, session QrOP_3xznyiEOIqdKFHWS.
 
-# CLOUDFLARE — v3.39
+> **v3.40 UPDATE (2026-08-11, kaizen — FIX cloudflare-observability MCP + MCP ecosystem source repos):**
+> Red-team: direct parent-agent 5-adversary audit (session QrOP_3xznyiEOIqdKFHWS — FIX directive).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **MCP Ecosystem Source Repositories section added** — maps all 17 configured MCP
+>     servers to their canonical repos (mcp-server-cloudflare monorepo, cloudflare/mcp, workers-mcp,
+>     playwright-mcp, cloudflare/skills -> QNFO/cloudflare-skill-forks, agent-skills-discovery-rfc).
+> (2) [OBSERVATION] **OAuth bootstrap WITHOUT pre-authenticated dashboard session proven** — the
+>     authorize endpoint serves the consent page directly; Approve fires the loopback callback before
+>     the post-approval login redirect. Verified live 2026-08-11: cloudflare-observability token
+>     cached (scope workers_observability:read) + cloudflare-radar token cached (radar:read) — the
+>     fleet is now 17/17 HEALTHY (15 OAuth + 2 public, 0 warnings/failures, exit 0).
+> Cross-reference: fleet-oauth-bootstrap.py, mcp-server-cloudflare, QNFO/cloudflare-skill-forks,
+> RADAR-MCP-OAUTH-1, session QrOP_3xznyiEOIqdKFHWS.
+
+> **v3.40 UPDATE (2026-08-11, kaizen — FIX cloudflare-observability MCP + MCP ecosystem source repos):**
+> Red-team: direct parent-agent 5-adversary audit (session QrOP_3xznyiEOIqdKFHWS — FIX directive).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **MCP Ecosystem Source Repositories section added** — maps all 17 configured MCP
+>     servers to their canonical repos (mcp-server-cloudflare monorepo, cloudflare/mcp, workers-mcp,
+>     playwright-mcp, cloudflare/skills -> QNFO/cloudflare-skill-forks, agent-skills-discovery-rfc).
+> (2) [OBSERVATION] **OAuth bootstrap WITHOUT pre-authenticated dashboard session proven** — the
+>     authorize endpoint serves the consent page directly; Approve fires the loopback callback before
+>     the post-approval login redirect. Verified live 2026-08-11: cloudflare-observability token
+>     cached (scope workers_observability:read) + cloudflare-radar token cached (radar:read) — the
+>     fleet is now 17/17 HEALTHY (15 OAuth + 2 public, 0 warnings/failures, exit 0).
+> Cross-reference: fleet-oauth-bootstrap.py, mcp-server-cloudflare, QNFO/cloudflare-skill-forks,
+> RADAR-MCP-OAUTH-1, session QrOP_3xznyiEOIqdKFHWS.
+
+# CLOUDFLARE — v3.40
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -399,6 +427,60 @@ app destination type (WorkerDestination / via_mcp_server_portal) or a Cloudflare
 "provision portal" API/endpoint. EXTERNAL-BLOCK class (no-dashboard mandate KIF-60 prevents UI
 provisioning).
 
+
+### Cloudflare MCP Ecosystem Source Repositories (2026-08-11)
+
+The 17 configured Cloudflare MCP servers are hosted implementations from these canonical repos:
+
+| Repo | Stars | Role |
+|:-----|:-----:|:-----|
+| [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | 4059 | **Monorepo hosting ALL hosted MCP servers** (workers-observability 0.5.4 verified 2026-08-11 via initialize; cloudflare, bindings, builds, observability, ai-gateway, graphql, auditlogs, radar, logpush, casb, autorag, dex, containers, dns-analytics, browser) |
+| [cloudflare/mcp](https://github.com/cloudflare/mcp) | 723 | MCP server for the Cloudflare API (main `mcp.cloudflare.com/mcp` endpoint) |
+| [cloudflare/workers-mcp](https://github.com/cloudflare/workers-mcp) | 644 | Talk to a Cloudflare Worker from Claude Desktop — worker-side MCP client pattern |
+| [cloudflare/playwright-mcp](https://github.com/cloudflare/playwright-mcp) | 254 | Playwright MCP fork that works with Cloudflare Browser Rendering |
+| [cloudflare/skills](https://github.com/cloudflare/skills) | 2604 | Official agent skills — **forked to QNFO/cloudflare-skill-forks** (fork policy HARD; upstream wired, clean at f96bff7) |
+| [cloudflare/agent-skills-discovery-rfc](https://github.com/cloudflare/agent-skills-discovery-rfc) | 332 | RFC 8615 .well-known mechanism for discovering Agent Skills |
+
+**Implementation notes (2026-08-11):**
+- **OAuth bootstrap via consent page works WITHOUT a pre-authenticated dashboard session.** The
+  `fleet-oauth-bootstrap.py` listener + session-browser navigate to the authorize URL shows the
+  consent page directly; clicking Approve fires the loopback callback BEFORE the post-approval
+  login redirect — token cached successfully. Verified live for cloudflare-observability AND
+  cloudflare-radar (scope: user:read offline_access account:read workers:read
+  workers_observability:read / radar:read url_scanner:write).
+- **Fleet 17/17 HEALTHY** after both bootstraps (2026-08-11 08:03 UTC): 15 OAuth + 2 public, 0
+  warnings, 0 failures, exit 0.
+- The docs page
+  [servers-for-cloudflare](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/)
+  is the canonical hosted-server list; the mcp-server-cloudflare monorepo is the source of truth
+  for implementations.
+
+### Cloudflare MCP Ecosystem Source Repositories (2026-08-11)
+
+The 17 configured Cloudflare MCP servers are hosted implementations from these canonical repos:
+
+| Repo | Stars | Role |
+|:-----|:-----:|:-----|
+| [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | 4059 | **Monorepo hosting ALL hosted MCP servers** (workers-observability 0.5.4 verified 2026-08-11 via initialize; cloudflare, bindings, builds, observability, ai-gateway, graphql, auditlogs, radar, logpush, casb, autorag, dex, containers, dns-analytics, browser) |
+| [cloudflare/mcp](https://github.com/cloudflare/mcp) | 723 | MCP server for the Cloudflare API (main `mcp.cloudflare.com/mcp` endpoint) |
+| [cloudflare/workers-mcp](https://github.com/cloudflare/workers-mcp) | 644 | Talk to a Cloudflare Worker from Claude Desktop — worker-side MCP client pattern |
+| [cloudflare/playwright-mcp](https://github.com/cloudflare/playwright-mcp) | 254 | Playwright MCP fork that works with Cloudflare Browser Rendering |
+| [cloudflare/skills](https://github.com/cloudflare/skills) | 2604 | Official agent skills — **forked to QNFO/cloudflare-skill-forks** (fork policy HARD; upstream wired, clean at f96bff7) |
+| [cloudflare/agent-skills-discovery-rfc](https://github.com/cloudflare/agent-skills-discovery-rfc) | 332 | RFC 8615 .well-known mechanism for discovering Agent Skills |
+
+**Implementation notes (2026-08-11):**
+- **OAuth bootstrap via consent page works WITHOUT a pre-authenticated dashboard session.** The
+  `fleet-oauth-bootstrap.py` listener + session-browser navigate to the authorize URL shows the
+  consent page directly; clicking Approve fires the loopback callback BEFORE the post-approval
+  login redirect — token cached successfully. Verified live for cloudflare-observability AND
+  cloudflare-radar (scope: user:read offline_access account:read workers:read
+  workers_observability:read / radar:read url_scanner:write).
+- **Fleet 17/17 HEALTHY** after both bootstraps (2026-08-11 08:03 UTC): 15 OAuth + 2 public, 0
+  warnings, 0 failures, exit 0.
+- The docs page
+  [servers-for-cloudflare](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/)
+  is the canonical hosted-server list; the mcp-server-cloudflare monorepo is the source of truth
+  for implementations.
 
 ### MCP Verification Gate
 
@@ -1494,7 +1576,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.39** (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.40** (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
