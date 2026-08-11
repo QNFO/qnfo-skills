@@ -1,7 +1,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.43
+version: 3.44
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -128,7 +128,21 @@ self_sufficient: true
 > Cross-reference: fleet-oauth-bootstrap.py, mcp-server-cloudflare, QNFO/cloudflare-skill-forks,
 > RADAR-MCP-OAUTH-1, session QrOP_3xznyiEOIqdKFHWS.
 
-# CLOUDFLARE — v3.43
+> **v3.44 UPDATE (2026-08-11, kaizen — C5 RESOLVED: MCP portal gateway origin found + verified):**
+> Red-team: CMD EXECUTE C5 retry (session QrOP_3xznyiEOIqdKFHWS). VERSION-OVERWRITE-1 merge past
+> concurrent v3.43 (5-repo fork family + agents-docs). HARD: 0. SOFT: 0. DESIGN: 0.
+> The MCP Server Portals section's C5 OPEN note is REPLACED with RESOLVED documentation:
+> (1) **Gateway origin documented** — `gateway.agents.cloudflare.com` (Agents Gateway hostname).
+>     Docs API/Terraform sections: API-created portals need a proxied CNAME to that host or they
+>     return 522. Verified live on qnfo-mcp-portal (mcp.q08.org): CNAME + proxied -> POST /mcp
+>     401 OAuth challenge + RFC 8414 discovery 200 + DCR success + Access login page reachable.
+> (2) **Pitfalls documented** — flatten_cname:false on the gateway CNAME -> Error 1014
+>     (Cross-User Banned); via_mcp_server_portal destination REJECTED for mcp_portal apps (12130).
+> (3) Remaining human step: account-owner Access login (GitHub QAuth / email OTP) to mint token.
+> Cross-reference: mcp-portals docs, qnfo-mcp-portal, CMD EXECUTE C5 (2026-08-11),
+> session QrOP_3xznyiEOIqdKFHWS.
+
+# CLOUDFLARE — v3.44
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -448,15 +462,21 @@ Cloudflare Access AI controls (Zero Trust > Access controls > AI controls) can *
 
 **Gotcha (verified 2026-08-11):** pointing the portal hostname CNAME at an arbitrary origin (e.g. a Pages project) yields **HTTP 522 origin connection error** — the portal gateway must own the hostname. For machine-to-machine access, create an **Access service token** + Service Auth policy on the portal app, then connect with `CF-Access-Client-Id` / `CF-Access-Client-Secret` headers (`mcp-remote ... --header CF-Access-Client-Id: ... --header CF-Access-Client-Secret: ...`). Per-server `on_behalf: false` is required for service-token sessions to reach that server.
 
-**OPEN (2026-08-11, C5):** the correct gateway origin for an API-created portal hostname is
-UNDOCUMENTED. The dashboard flow auto-wires it (portal create -> DNS + mcp_portal Access app);
-the raw API does not, and no documented CNAME target exists (probed 2026-08-11: mcp-gateway.
-cloudflare.com, agw.cloudflareaccess.com, gateway.cloudflareaccess.com, mcp.cloudflareaccess.com
-all 404/NXDOMAIN). qnfo-mcp-portal (mcp.q08.org) remains HTTP 522 until the gateway hostname is
-identified or a provisioning endpoint is found. Retry trigger: investigate the portal Access
-app destination type (WorkerDestination / via_mcp_server_portal) or a Cloudflare
-"provision portal" API/endpoint. EXTERNAL-BLOCK class (no-dashboard mandate KIF-60 prevents UI
-provisioning).
+**RESOLVED (2026-08-11, C5):** the portal gateway origin IS documented —
+`gateway.agents.cloudflare.com` (the Agents Gateway hostname; the docs' API + Terraform sections
+state: *"After creating a portal via the API, you must create a proxied CNAME record that points
+your portal subdomain to `gateway.agents.cloudflare.com`. Without this record, the portal will
+return `522` errors."*). Verified live 2026-08-11 on qnfo-mcp-portal (mcp.q08.org): CNAME ->
+gateway.agents.cloudflare.com (proxied, default flatten_cname) replaced the wrong Pages-origin
+CNAME; `POST /mcp` now returns HTTP 401 `WWW-Authenticate: Bearer realm="OAuth"` (correct
+non-browser Managed OAuth challenge); `.well-known/oauth-protected-resource/mcp` + 
+`.well-known/oauth-authorization-server` return 200 (RFC 8414 discovery); Dynamic Client
+Registration succeeds; authorization reaches the Access login page for the portal app. Two
+pitfalls: (1) a proxied CNAME to gateway.agents.cloudflare.com with `flatten_cname: false`
+triggers Error 1014 (CNAME Cross-User Banned) — use default flatten (Terraform docs shape);
+(2) `via_mcp_server_portal` destinations are REJECTED for mcp_portal apps (12130) — the portal
+app keeps a `public` destination. The one remaining human step is the account-owner Access
+login (GitHub QAuth / email OTP) to mint the user's token.
 
 ### Cloudflare MCP Ecosystem Source Repositories (2026-08-11)
 
@@ -1582,7 +1602,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.43** (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.44** (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
