@@ -108,7 +108,7 @@ python search_obsidian.py  # write to %TEMP%, exec, read output
 read("D:\Obsidian\notes\v1\2026\08\06\_26218084027.md")
 ```
 
-This pattern is the canonical fallback per kaizen v1.60 (Obsidian D:-drive workflow). The HTTP endpoint is browser-only due to Cloudflare Bot Fight Mode.
+This pattern is the canonical fallback per kaizen v2.07 (Obsidian D:-drive workflow). The HTTP endpoint is browser-only due to Cloudflare Bot Fight Mode.
 ## DeepChat Integration Path (when user asks about personal content)
 
 ```
@@ -245,7 +245,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 
 | **CLOUDFLARE-WAF-1010-1: Cloudflare WAF (Bot Fight Mode / Browser Integrity Check) blocks non-browser HTTP clients from Workers endpoints (2026-08-06)** | The personal-life-search endpoint (personal-life-search.q08.workers.dev) returns Cloudflare error 1010 (browser_signature_banned) for all non-browser user agents (Python urllib, curl, requests). This makes the personal-knowledge skill's HTTP-based Obsidian access BROKEN for automated access. **Fix: use direct filesystem access** — `exec` with `cwd: D:\\Obsidian\\notes\\v1\\2026\\08` + `read` with absolute paths (canonical pattern per kaizen v1.60). The personal-life-search Worker has Bot Fight Mode enabled; the HTTP endpoint is only accessible from browser-origin requests. |
 ## Related
-- cloudflare v3.32 §Vectorize Indexing Gotchas (indexer anti-patterns)
+- cloudflare v3.38 §Vectorize Indexing Gotchas (indexer anti-patterns)
 - knowledge skill (QNFO memory/KG — different layer, never merged)
 - system v2.13 (skill-sync, desktop boundary)
 

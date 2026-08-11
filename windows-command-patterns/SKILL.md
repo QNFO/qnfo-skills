@@ -1563,7 +1563,7 @@ curl.exe -s --oauth2-bearer %GITHUB_TOKEN% https://api.github.com/user > out.jso
 quoted URLs with query strings (exit 3 URL malformed).
 
 Verified live 2026-08-10: Cloudflare account D1 list, GitHub /user, Zenodo deposit API, D1 REST read+write —
-all via the unquoted pattern above. Cross-ref: CURL-AUTH-QUOTE-1, cloudflare v3.37 D1-REST-PAYLOAD-1,
+all via the unquoted pattern above. Cross-ref: CURL-AUTH-QUOTE-1, cloudflare v3.38 D1-REST-PAYLOAD-1,
 S-1.0.4, S-1.0.7.
 
 ## Version

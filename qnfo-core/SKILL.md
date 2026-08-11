@@ -4739,7 +4739,7 @@ paper.md were both corrupted by PowerShell encoding failures. The complete
 When `skill_run` is unavailable ("Tool is not available in the current session"):
 1. Scripts: `write` to %TEMP% → `exec python <file>` (windows-command-patterns S1.0) — never `python -c`.
 2. D1: use the D1 REST API (`POST /accounts/{id}/d1/database/{db}/query`) with `--data-binary @payload.json`
-   + `-H Content-Type:application/json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%` (cloudflare v3.37
+   + `-H Content-Type:application/json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%` (cloudflare v3.38
    D1-REST-PAYLOAD-1). `d1-query.py --sql "..."` via exec FAILS for any spaced SQL; `wrangler d1 execute
    --file` hides row data (summary only).
 3. Verify reads/writes by re-querying (SCS-1). Canonical case: session bPhAUCI_FRVeZyA5Rxmsm.

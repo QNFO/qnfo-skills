@@ -6975,7 +6975,7 @@ After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
 owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
 entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
 `X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
-or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.23)
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.24)
 when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
 → neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
 invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
@@ -7001,7 +7001,7 @@ After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
 owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
 entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
 `X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
-or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.23)
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.24)
 when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
 → neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
 invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
@@ -7088,7 +7088,7 @@ channel for an independent researcher. Protocol (proven QNFO.UMP.005, 2026-08-06
    (Tool-Call Execution Mandate: the API response IS the proof).
 6. **Invite adversarial validation** in every letter; never imply validation you don't have.
 
-### PhilPapers Discoverability (v2.88, SOFT — cross-ref knowledge v2.8)
+### PhilPapers Discoverability (v2.88, SOFT — cross-ref knowledge v2.10)
 
 PhilPapers crawls Zenodo→DataCite→CrossRef and only indexes records with BOTH an abstract AND
 >=3 philosophy-domain keywords (`philosophy of physics`, `foundations of quantum mechanics`,

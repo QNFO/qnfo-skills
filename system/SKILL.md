@@ -755,7 +755,7 @@ in this skill's root directory. Recompile if lost:
 Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winreg REG_EXPAND_SZ.
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
-`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.17 §S-1.0.2.
+`EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.20 §S-1.0.2.
 Current: **2.13** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 

@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.07"
+version: "2.08"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,21 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.07
+# KAIZEN — v2.08
+> **v2.08 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN):**
+> Red-team: direct parent-agent 5-adversary audit (session jF6kLzOGvWJ-krex-neHF — CMD SKILLS UPDATE).
+> Watchtower scan: 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default INCOMPLETE (exempt).
+> Memory drift: 0 orphan anti-patterns requiring migration (RECALL-FACTS-GAP).
+> Notable since v2.07: cloudflare 3.35→3.38, qnfo-core 1.18→1.24, research 2.89→2.97, wcp 3.17→3.20,
+> deepchat-settings 1.5→1.6, email-composer 2.14→2.17, execution-mandate 2.8→2.9, knowledge 2.8→2.10 —
+> all bumped correctly by concurrent sessions (fm/hdr/ft synced).
+> HARD: 0. SOFT: 0. DESIGN: 0. Changes: None — ecosystem healthy.
+> (1) [AUDIT] **Watchtower v2.08 results** — 19/19 QNFO skills fm/hdr/ft consistent.
+> (2) [AUDIT] **Session retrospective** — CMD SKILLS UPDATE + prior CMD EXECUTE identity/WBS-6 work.
+>     Zero tool failures (all exec + skill_run calls completed successfully).
+>     CMD RED TEAM SUB earlier this session: 1 subagent cancelled (timeout), 2 truncated — 
+>     direct parent-agent fallback (SUBAGENT-AGGREGATOR-TRUNCATION-1 pattern continues).
+> Cross-reference: qnfo-core v1.24, research v2.97, cloudflare v3.38, session jF6kLzOGvWJ-krex-neHF.
 > **v2.07 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan):**
 > Red-team: direct parent-agent 5-adversary audit (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
 > Watchtower: 19/19 QNFO skills N-2 CLEAN post-fix (kaizen was DRIFT: ft=2.06 vs fm/hdr=2.05 — concurrent
@@ -12776,7 +12790,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| `execution-mandate` | [NOT-INSTALLED — removed] | This skill is NOT in the installed skill list; protocol text incorporated inline in §Subagent Failure Handling |
+| `execution-mandate` | Phase 0 (mandate autoload) | On-disk v2.9, actively kaizened — not currently in app skill_list loader (SKILL-DEATH-FALSE-POSITIVE-1: on-disk ≠ removed); protocol text incorporated inline in §Subagent Failure Handling |
 
 
 
@@ -14151,7 +14165,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.07** (kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan; 2026-08-11)
+Current: **v2.08** (kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN; 2026-08-11)
 
 
 
