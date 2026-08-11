@@ -17,8 +17,10 @@ description: DeepChat lifecycle hooks integration — Cloudflare infrastructure 
 > token (drift audit had been silently returning `warnings: ["Cloudflare API returned
 > HTTP 400"]` — the live comparison was broken; after rotation the audit surfaced
 > REAL drift: 26 stale portfolio workers + 13 missing live workers, verdict
-> DRIFT_DETECTED). Skill now git-tracked in qnfo-skills repo (origin + rwnq8) and
-> synced to R2 via skill-sync.
+> DRIFT_DETECTED). Skill now git-tracked in qnfo-skills repo (origin QNFO/qnfo-skills
+> + rwnq8 mirror, commit 8731684) — git is the canonical skill store; the
+> qnfo-skill-sync worker's daily kaizen cycle updates the R2 snapshot from the
+> GitHub HEAD.
 
 ## Hook Script
 
@@ -165,4 +167,5 @@ variables: `DEEPCHAT_HOOK_EVENT`, `DEEPCHAT_HOOK_TIME`, `DEEPCHAT_HOOK_IS_TEST`,
 - qnfo-audit infra: Workers (Lifecycle, Archive, Gateway), R2 `qnfo-audit`,
   D1 qnfo-audit, managed DNS — all tracked for configuration drift.
 - qnfo-skill-sync worker + `skill_pull.py`: skills git-tracked in qnfo-skills
-  repo (origin QNFO/qnfo-skills + rwnq8 mirror), synced to R2.
+  repo (origin QNFO/qnfo-skills + rwnq8 mirror) — canonical; R2 `qnfo-skills`
+  bucket stores sync snapshots updated by the worker's daily kaizen cycle.
