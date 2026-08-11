@@ -1,6 +1,6 @@
 ---
 name: deepchat-settings
-version: 1.7
+version: 1.8
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +10,21 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.7
+# DeepChat Settings — v1.8
+> **v1.8 UPDATE (2026-08-11, kaizen — red-team fix cycle: stdio registration note + mcp-guard row; CMD EXECUTE):**
+> Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — post-restart audit of
+> v1.7 + qwav-platform registration). HARD: 0. SOFT: 3. DESIGN: 2. This cycle applies the writable fixes:
+> (1) [SOFT] **stdio-type server note added** to MCP Server Registration — the v1.7 section documented
+>     HTTP-type (baseUrl) only; stdio servers (npx-based: LinkedIn, buffer, cloudflare, cua-driver) use
+>     `command`/`args` in mcp-settings.json and get serverId/bindingHash in agent.db at startup persistence.
+> (2) [DESIGN] **mcp-guard.json row added** to File Locations — config dir carries mcp-guard.json (a
+>     file-hygiene/mojibake guard: version/enabled/rules/known_mojibake_signatures/target_files), NOT an
+>     MCP allowlist; no registration entry needed. Row added to complete the map (UIA Q2 residual).
+> (3) [SOFT] v1.7 banner cross-ref "kaizen v2.10" is now stale (kaizen v2.11/v2.12 concurrent bumps) —
+>     banner-history text, EXEMPT per N-2-SCAN-FALSE-POSITIVE-1; left as written.
+> Cross-reference: kaizen v2.12, MCP-REGISTRATION-ONE-STORE-1, MCPMARKET-CATALOG-NE-SERVER-1,
+> session i3NHS7gJBTyozMCNeaZm-.
+
 > **v1.7 UPDATE (2026-08-11, kaizen — MCP server registration mechanics documented; CMD SKILLS UPDATE):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — qwav-platform
 > MCP registration cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit. HARD: 0. SOFT: 2. DESIGN: 1.
@@ -125,6 +139,7 @@ the ~15 tool-call rediscovery this session burned (PROMPT-REDISCOVERY-1).
 | **Agent database** | `%APPDATA%\DeepChat\app_db\agent.db` | SQLite3, `app_settings` table |
 | **App settings** | `%APPDATA%\DeepChat\app-settings.json` | JSON, top-level keys |
 | **MCP servers** | `%APPDATA%\DeepChat\mcp-settings.json` | JSON, `mcpServers` map |
+| **MCP guard** | `%APPDATA%\DeepChat\mcp-guard.json` | JSON, file-hygiene/mojibake guard (not an MCP allowlist) |
 | **History DB** | `%APPDATA%\DeepChat\rtk\history.db` | SQLite3 (10824 commands) |
 | **Skills** | `%USERPROFILE%\.deepchat\skills\` | Markdown files (no .git) |
 | **Git-tracked skills** | `%USERPROFILE%\Documents\GitHub\qnfo-skills\` | Git repo (canonical) |
@@ -235,6 +250,12 @@ burned rediscovering this before it was documented):
 **Entry shape (http type):** `type=http`, `baseUrl`, `enabled=true`, `command=""`,
 `args=[]`, `env={}`, `customHeaders={}`, `customNpmRegistry=""`. DB config_json adds
 `serverId` (uuid), `configGeneration`, `bindingHash`.
+**stdio-type servers (npx-based):** servers like LinkedIn, buffer, cloudflare, cua-driver use
+`command` + `args` instead of `baseUrl` (e.g. `command: "npx"`, `args: ["-y", "package@latest"]`).
+They are configured in `mcp-settings.json` `mcpServers`; agent.db `mcp_servers` stores their
+config_json (serverId/bindingHash) when the app binds them. Same discipline applies: backup the
+JSON, verify with a real handshake, roll back by removing from both stores.
+
 
 **bindingHash semantics (CRITICAL):** the binding hash is derived from the connection
 parameters (baseUrl/command/type). Two entries with the SAME baseUrl get the SAME
@@ -353,4 +374,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.7** (deepchat-settings — MCP server registration mechanics + 2 anti-patterns; 2026-08-11)
+Current: **v1.8** (deepchat-settings — red-team fix cycle: stdio registration note + mcp-guard row; 2026-08-11)

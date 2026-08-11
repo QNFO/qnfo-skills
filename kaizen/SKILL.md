@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.11"
+version: "2.12"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -279,7 +279,14 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
 > Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.11
+# KAIZEN — v2.12
+> **v2.12 UPDATE (2026-08-11, kaizen — footer merge-artifact fix post red-team):**
+> Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD RED TEAM READ-ONLY
+> post-restart audit). HARD: 0. SOFT: 3. DESIGN: 2. Changes:
+> (1) [DESIGN] **Footer merge artifact fixed** — the v2.11 concurrent merge (session QrOP_3xznyiEOIqdKFHWS)
+>     concatenated my v2.10 footer description onto the v2.11 footer line (VERSION-OVERWRITE-1 footer
+>     collision). Footer now reads a single v2.12 description; both v2.10/v2.11 banners preserved above.
+> Cross-reference: VERSION-OVERWRITE-1, deepchat-settings v1.8, session i3NHS7gJBTyozMCNeaZm-.
 > **v2.10 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: deepchat-settings v1.7 — MCP registration mechanics + 2 anti-patterns):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS
 > UPDATE; qwav-platform MCP registration cycle). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post.
@@ -14210,7 +14217,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.11** (kaizen — calibration entries + concurrent merge past v2.10; 2026-08-11) (kaizen — SKILLS UPDATE: deepchat-settings v1.7 MCP registration mechanics; 2026-08-11)
+Current: **v2.12** (kaizen — footer merge-artifact fix post red-team; 2026-08-11)
 
 
 
