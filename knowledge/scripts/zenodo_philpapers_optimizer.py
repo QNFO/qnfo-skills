@@ -21,7 +21,6 @@ USAGE:
 
 import json
 import os
-import re
 import sys
 import time
 import urllib.request
@@ -168,41 +167,9 @@ def audit_record(record):
     }
 
 
-def is_philosophy_core_record(record):
-    """v2.9 JUDICIOUS LABELING GATE (user directive 2026-08-10).
-
-    Only records that ARE philosophy papers may receive philosophy-class
-    labels. Non-philosophy QNFO records (physics, engineering, licensing,
-    patent filings, finance briefs) must NEVER be tagged as philosophy.
-    Title/DOI heuristics; QUNTUF/QUNSAI are the confirmed indexed cases.
-    """
-    meta = record.get("metadata", {})
-    title = meta.get("title", "")
-    if not title:
-        return False
-    return bool(re.search(
-        r"(philosoph|epistemolog|ontolog|consilien|metaphysic|epistemic|"
-        r"foundation of|principia ontologica|defining reality|killing the framework|"
-        r"displace the real numbers|macroscopic boundary|falsifiability protocol|"
-        r"conditional advantage|ultrametric foundation|scaffolds and invariants|"
-        r"pattern-based ontology|primordial mark|five pillars|one structure|"
-        r"cross-domain consilience|ultrametric sieve|adelic physics program)",
-        title, re.IGNORECASE))
-
-
 def generate_fixes(audit):
-    """Generate the metadata diff needed to fix a record.
-
-    v2.9 policy: philosophy-class keywords are ONLY injected when the record
-    is a philosophy paper (is_philosophy_core_record). For non-philosophy
-    records this function returns no keyword fixes — discoverability via
-    domain keywords is their path, not philosophy labels.
-    """
+    """Generate the metadata diff needed to fix a record."""
     fixes = {}
-
-    if not is_philosophy_core_record(audit["record"]):
-        # Domain gate: do NOT inject philosophy labels into non-philosophy records
-        return fixes
 
     if not audit["has_keywords"]:
         # Add philosophy keywords
