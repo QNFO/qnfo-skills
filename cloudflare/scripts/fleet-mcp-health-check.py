@@ -8,10 +8,10 @@ they surface as "Couldn't connect to cloudflare-observability" UI errors.
 This is the proactive complement to fleet-oauth-refresh.py (which fixes, this one
 flags). Add to the kaizen Autonomous Watchtower's INCIDENT-AXIS scan.
 
-For each of the 17 Cloudflare MCP servers:
+For each of the 18 Cloudflare MCP servers:
   - OAuth servers (15): check token cache exists + age vs expires_in; if token
     exists, probe MCP initialize (expect HTTP 200). No token -> [NO-TOKEN] warning.
-  - Public servers (2): probe endpoint (expect HTTP 200).
+  - Public servers (3): probe endpoint (expect HTTP 200).
 
 Exit codes:
   0 = all live
@@ -28,7 +28,7 @@ import urllib.error
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
 
-# All 17 configured Cloudflare MCP servers (cloudflare skill v3.39).
+# All 18 configured Cloudflare MCP servers (cloudflare skill v3.39 + agents-docs 2026-08-11).
 OAUTH_SERVERS = {
     "cloudflare":              "https://mcp.cloudflare.com/mcp",
     "cloudflare-bindings":     "https://bindings.mcp.cloudflare.com/mcp",
@@ -47,8 +47,9 @@ OAUTH_SERVERS = {
     "cloudflare-radar":        "https://radar.mcp.cloudflare.com/mcp",
 }
 PUBLIC_SERVERS = {
-    "cloudflare-docs":  "https://docs.mcp.cloudflare.com/mcp",
-    "cloudflare-blog":  "https://blog.mcp.cloudflare.com/mcp",
+    "cloudflare-docs":          "https://docs.mcp.cloudflare.com/mcp",
+    "cloudflare-blog":          "https://blog.mcp.cloudflare.com/mcp",
+    "cloudflare-agents-docs":   "https://agents.cloudflare.com/mcp",
 }
 
 

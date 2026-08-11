@@ -34,12 +34,13 @@ import urllib.parse
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
 
-# The 14 OAuth MCP servers (from cloudflare skill v3.21 §DeepChat MCP Server Coverage).
+# The 15 OAuth MCP servers (from cloudflare skill v3.39 §DeepChat MCP Server Coverage).
 OAUTH_SERVERS = {
     "cloudflare":              "https://mcp.cloudflare.com/mcp",
     "cloudflare-bindings":     "https://bindings.mcp.cloudflare.com/mcp",
     "cloudflare-builds":       "https://builds.mcp.cloudflare.com/mcp",
     "cloudflare-observability":"https://observability.mcp.cloudflare.com/mcp",
+    "cloudflare-radar":        "https://radar.mcp.cloudflare.com/mcp",
     "cloudflare-ai-gateway":   "https://ai-gateway.mcp.cloudflare.com/mcp",
     "cloudflare-graphql":      "https://graphql.mcp.cloudflare.com/mcp",
     "cloudflare-auditlogs":    "https://auditlogs.mcp.cloudflare.com/mcp",
