@@ -13332,6 +13332,21 @@ Likelihood: [MODERATE] — new autonomous infrastructure, needs burn-in.
 
 
 
+[CHECK: 2026-09-11] MAP-TERRITORY-1 will hold through +3 monitoring checkpoints: no [TERRITORY]
+identity claim in a QNFO paper draft will ship without a falsifiability condition — research v2.98
+check-map-territory.py is the scripted build-time BLOCK (PROSE-GATE-ADVISORY-1 closed for this gate).
+Risk of regression: [MODERATE] — prose discipline can erode; the scripted gate is the enforcement layer.
+Likelihood: [HIGH] — the UIA corpus canonical case (36 frameworks, one conflation) is documented in
+research v2.98 + qnfo-core v1.25 + this mirror row + UIA-REPAIR-REGISTER.md.
+
+[CHECK: 2026-11-11] UIA quarter-audit cap will hold: no framework receives more than one full UIA pass
+per quarter (2026-Q3), per the §H self-audit repairs (QUARTER-AUDIT CAP). Risk of regression: [MODERATE]
+— audit-as-procrastination is the exact failure the cap prevents. Likelihood: [HIGH] — the 2026-08-11
+corpus (36 passes/one day) is the canonical violation; the register + cap are the enforcement.
+
+[CHECK: 2026-09-11] All-36 map-territory label holds: no TERRITORY claim without falsifiability condition.
+Strength: [STRONG] | Status: [PENDING]
+
 [CHECK: 2026-09-15] Watchtower will have flagged at least one skill with
 
 
