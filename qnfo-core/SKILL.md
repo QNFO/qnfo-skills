@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.24
+version: 1.25
 
 
 
@@ -642,7 +642,13 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.24
+# QNFO Core — v1.25
+> **v1.25 UPDATE (2026-08-11, kaizen — MAP-TERRITORY-1 owner mirror row + research v2.98 cross-ref):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session rvnMtR544X387NEXCAPbB, UIA Repair Pipeline cycle).
+> Watchtower: qnfo-core v1.24 N-2 CLEAN pre-edit (raw anchors); v1.25 N-2 CLEAN post-edit. HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **MAP-TERRITORY-1 anti-pattern row added** — owner-level enforcement mirror of the research v2.98 MAP-TERRITORY GATE: any claim asserting a mathematical object IS the physical structure must carry `[MAP — model of X]` (analogy, no ontological claim) or `[TERRITORY — claimed identity]` (identity asserted, falsifiability condition REQUIRED per KIF-60 / §0.0). Scripted gate: `research/scripts/check-map-territory.py <slug>.md` (build-time BLOCK, exit 1). Canonical case: 2026-08-11 UIA corpus — 36 frameworks, one recurring map–territory conflation; UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01.
+> (2) [DESIGN] **Cross-ref updated** — research skill current state v2.98 (was v2.97 in §0.0 UIA cross-reference area); §0.0 Universal Ignorance Audit reference now points at the scripted gate.
+> Cross-reference: research v2.98 (check-map-territory.py, MAP-TERRITORY-1), UIA DOI 10.5281/zenodo.21878943, UIA-REPAIR-REGISTER.md, kaizen v2.14, session rvnMtR544X387NEXCAPbB.
 
 > **v1.23 UPDATE (2026-08-10, kaizen — skill_run-disable fallback + endpoint-scope verification; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -3711,6 +3717,7 @@ Before beginning work on a QNFO/QWAV deliverable:
 | **TITLE-DUPLICATION-1: Body `# <Title>` H1 alongside YAML `title:` — title twice on page 1 (2026-08-05)** | **HARD.** No body H1 when YAML `title:` exists; exactly ONE title occurrence in rendered output. Cross-ref: research v2.84. |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, or possessive internal refs in published papers. Cite published records only. Cross-ref: research v2.84. |
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf` file naming (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Cross-ref: research v2.84. |
+| **MAP-TERRITORY-1: Asserting a mathematical object IS the physical structure without an explicit map/territory label + falsifiability condition (2026-08-11)** | **HARD.** Any claim asserting a math object IS the physical structure must carry `[MAP — model of X]` (analogy, no ontological claim) or `[TERRITORY — claimed identity]` (identity asserted; falsifiability condition naming the observation that would break it REQUIRED — KIF-60 / §0.0). Scripted gate: `research/scripts/check-map-territory.py <slug>.md` (build-time BLOCK, exit 1; inline condition / same-paragraph condition / downgrade to MAP). Canonical case: 2026-08-11 UIA corpus — 36 frameworks, one recurring map–territory conflation under different names (UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01). Owner: research v2.98. Cross-ref: §0.0 Falsifiability Requirement, research v2.98, UIA DOI 10.5281/zenodo.21878943. |
 
 | **Producing ANY text containing mojibake / double-encoded characters** | **HARD GATE §0.2** — scan for CP1252 double-encoded hex patterns (0xE2 0x80 0x93/0x94/0x98/0x99/0x9C/0x9D/0xA2/0xA6, 0xE2 0x84 0xA2, 0xC3 0x8x) BEFORE commit/publish/insert. These are ALWAYS corruption signals. Run `scripts/scan-mojibake.py` as a mandatory pre-commit gate. Applies to ALL genres unconditionally. |
 
@@ -5777,7 +5784,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.24** (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.25** (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.98 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 

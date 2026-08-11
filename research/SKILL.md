@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.97"
+version: "2.98"
 description: >
 
 
@@ -217,7 +217,13 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.97
+# RESEARCH — v2.98
+> **v2.98 UPDATE (2026-08-11, kaizen — MAP-TERRITORY GATE SCRIPTED: check-map-territory.py + Publication Language Gate wiring):**
+> Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
+> Watchtower: research v2.97 N-2 CLEAN pre-edit; v2.98 N-2 CLEAN post-edit (raw anchors). HARD: 1 (research-side: gate was prose-only). SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **MAP-TERRITORY GATE scripted** — new `research/scripts/check-map-territory.py`: scans paper drafts for `[TERRITORY` labels (identity claims) without an accompanying falsifiability condition (KIF-60 / qnfo-core §0.0); `[MAP` labels are context-only (no condition). FAIL = exit 1 + FIX instruction (inline condition / same-paragraph condition / downgrade to MAP). Added to the Phase 5 Publication Language Gate scan list (build-time BLOCK). Canonical lesson: TITLE-DUPLICATION-1 shipped 3 published versions before scripting; map–territory conflation must not ship unlabelled again. Enforcement of the UIA Repair Pipeline Protocol v1.0 (2026-08-11) STEP 4 SCRIPTING MANDATE (PROSE-GATE-ADVISORY-1, kaizen v1.63).
+> (2) [DESIGN] **UIA-REPAIR-REGISTER.md created** (vault, 2026-08-11) — rows UIA-2026-08-11-01..06 incl. the all-36 REFRAME (P0) and the UIA self-audit (P0/IN-PROGRESS); calibration `[CHECK: 2026-09-11]` map-territory label holds.
+> Cross-reference: UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, UIA DOI 10.5281/zenodo.21878943, kaizen v1.63 (PROSE-GATE-ADVISORY-1), qnfo-core §0.0 (KIF-60), check-title-duplication.py (v2.86 pattern), session rvnMtR544X387NEXCAPbB.
 > **v2.97 UPDATE (2026-08-10, kaizen — CDP render script .cjs + merge past concurrent v2.96):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP).
 > Concurrent-session merge: v2.96 (publication completeness gates) landed WHILE this audit ran — merged past
@@ -5114,7 +5120,7 @@ status: "draft" | "published"
 
 
 
-Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, AI-quality-gate violations (elementary physics/energy-budget errors incl. P_decode direction slips, synthetic citation anchors, scaffold overload, hand-waved integration, self-referential metrics), **internal references (repo paths, skill sections, internal program names, WBS codes like `QNFO.UMP.005`, quoted internal program names like "QEC Darwinism" — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
+Scan for: internal language, credential leaks, bare Unicode math, AI-generated filler phrases, AI-quality-gate violations (elementary physics/energy-budget errors incl. P_decode direction slips, synthetic citation anchors, scaffold overload, hand-waved integration, self-referential metrics), **internal references (repo paths, skill sections, internal program names, WBS codes like `QNFO.UMP.005`, quoted internal program names like "QEC Darwinism" — INTERNAL-REF-1)**, **title duplication (exactly ONE rendered title — TITLE-DUPLICATION-1; scripted gate: `check-title-duplication.py <slug>.html`, build-time BLOCK)**, **file naming (`<slug>.md/.pdf/.html`, never `paper.*` — FILE-SLUG-1)**, **map–territory labels (any `[TERRITORY` identity claim requires a falsifiability condition — MAP-TERRITORY-1; scripted gate: `check-map-territory.py <slug>.md`, build-time BLOCK)**. Run `scan-mojibake.py` (qnfo-core §0.2). Run credential scan.
 
 
 
@@ -9131,7 +9137,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.97** (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.98** (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

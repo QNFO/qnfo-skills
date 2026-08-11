@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.13"
+version: "2.14"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -300,7 +300,14 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
 > Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.13
+# KAIZEN — v2.14
+> **v2.14 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: MAP-TERRITORY-1 mirror row + VERSION-OVERWRITE-1 merge past concurrent v2.13):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session rvnMtR544X387NEXCAPbB, UIA Repair Pipeline cycle).
+> Watchtower: 14 QNFO skills scanned; raw-anchor verification per N-2-SCAN-FALSE-POSITIVE-1 (scanner hdr=MISSING flags for qnfo-core/wcp/email-composer/qwav-demo-kit/deepchat-settings all regex FPs — lowercase headers; system/wcp use non-v-prefixed formats, exempt). kaizen fm/hdr/ft CLEAN pre-edit. HARD: 2 (kaizen-side: SKILL-COMMIT-SAME-SESSION-1 from prior session — research v2.98 + check-map-territory.py live-only; .kaizen_history gaps). SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **VERSION-OVERWRITE-1 collision resolved** — git kaizen carried TWO different v2.13 banners (our UIA cycle v2.13 + concurrent cloudflare v3.41 cycle v2.13). Merged past the collision per VERSION-OVERWRITE-1: kaizen now v2.14; both v2.13 banners preserved as history below.
+> (2) [SOFT] **MAP-TERRITORY-1 mirror row added** — cross-skill index mirror of research v2.98 `check-map-territory.py` gate: any `[TERRITORY` identity claim requires a falsifiability condition (KIF-60); `[MAP` labels context-only; build-time BLOCK on FAIL. Owner: research v2.98. Canonical: 2026-08-11 UIA corpus (36 frameworks, one conflation; UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01).
+> (3) [DESIGN] **Cross-ref current-state** — qnfo-core v1.25 (MAP-TERRITORY-1 owner row), research v2.98, UIA-REPAIR-REGISTER.md; §H UIA protocol now cross-references the scripted gate as STEP 4 enforcement.
+> Cross-reference: research v2.98 (check-map-territory.py), qnfo-core v1.25 (MAP-TERRITORY-1), UIA DOI 10.5281/zenodo.21878943, UIA-REPAIR-REGISTER.md, cloudflare v3.41 (concurrent v2.13 claimant), session rvnMtR544X387NEXCAPbB.
 > **v2.13 UPDATE (2026-08-11, kaizen — UIA self-audit repairs + MAP-TERRITORY GATE wiring):**
 > Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
 > Watchtower: kaizen v2.12 N-2 CLEAN pre-edit; v2.13 N-2 CLEAN post-edit (raw anchors). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
@@ -12203,6 +12210,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **TITLE-DUPLICATION-1: Published paper renders the title TWICE on page 1 (body H1 + YAML title) (2026-08-05)** | **HARD.** When YAML `title:` exists, the paper body MUST NOT contain a top-level H1 with the same title. Verify: exactly ONE title occurrence in rendered HTML/PDF. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (commit f2912ab). |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, possessive internal refs in published papers. Cite published records only. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (CWI section deleted). |
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` naming for published papers (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Applies to repo, Zenodo, R2. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.3 (commit 24fc89f). |
+| **MAP-TERRITORY-1: Asserting a mathematical object IS the physical structure without an explicit map/territory label + falsifiability condition (2026-08-11)** | **HARD GATE** (mirror; owner research v2.98). Any claim asserting a math object IS the physical structure must carry `[MAP — model of X]` (analogy, no ontological claim) or `[TERRITORY — claimed identity]` (identity asserted; falsifiability condition naming the observation that would break it REQUIRED — KIF-60). Scripted gate: `research/scripts/check-map-territory.py <slug>.md` (build-time BLOCK, exit 1; inline condition / same-paragraph condition / downgrade to MAP). Canonical case: 2026-08-11 UIA corpus — 36 frameworks, one recurring map–territory conflation (UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01); PROSE-GATE-ADVISORY-1 closed for this gate. Cross-ref: research v2.98, qnfo-core v1.25, UIA DOI 10.5281/zenodo.21878943. |
 
 
 | **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts from only ONE store or the wrong key (2026-08-06)** | **HARD GATE.** agent.db `app_settings.customPrompts` entries carry the prompt text under `content`; app-settings.json `customPrompts` entries carry it under `template`. Verifying prompt content with a single-key read produces a FALSE "empty prompt" flag — and acting on that flag (rewriting with empty content) would blank the templates. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — 7 tool calls + one false finding burned before the asymmetry was confirmed. Fix: when auditing/updating prompts, read BOTH stores and BOTH keys (`content` in agent.db, `template` in app-settings.json); confirm content length > 0 in each before declaring anything empty. Cross-ref: deepchat-settings v1.4, PROMPT-REDISCOVERY-1. |
@@ -14251,7 +14259,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.13** (kaizen — cloudflare v3.41 agents-docs 18th server + UIA self-audit repairs + reviewer-DB-lock fallback; 2026-08-11)
+Current: **v2.14** (kaizen — CMD SKILLS UPDATE: MAP-TERRITORY-1 mirror row + VERSION-OVERWRITE-1 merge past concurrent v2.13; 2026-08-11)
 
 
 
