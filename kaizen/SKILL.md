@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.05"
+version: "2.07"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,43 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.05
+# KAIZEN — v2.07
+> **v2.07 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan):**
+> Red-team: direct parent-agent 5-adversary audit (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN post-fix (kaizen was DRIFT: ft=2.06 vs fm/hdr=2.05 — concurrent
+> session bumped footer but left fm/hdr stale). Cross-ref audit: ~50 flags across 13 skills; ~15 genuine
+> current-state drifts identified, all banner-history EXEMPT per N-2-SCAN-FALSE-POSITIVE-1.
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **kaizen N-2 drift fixed** — fm 2.05→2.06, hdr 2.05→2.06 synced to match footer (v2.06).
+>     Concurrent session's calibration register ref sync (v2.92→v2.97, 2026-08-11) verified present.
+> (2) [SOFT] **Cross-ref ecosystem drift documented** — ~15 genuine current-state drifts across 13 QNFO
+>     skills (bloat-cleanup, deepchat-settings, email-composer, git-github, knowledge, personal-knowledge,
+>     qnfo-core, research, skill-creator, system, web-artifacts-builder, windows-command-patterns). All
+>     deferred for opportunistic fix per SKILL-CHURN-1 (content iteration ≠ churn).
+> (3) [SOFT] **Cross-Skill Integration table** — execution-mandate still listed as [NOT-INSTALLED]
+>     despite on-disk v2.9. Deferred: reconcile with skill_list.
+> (4) [DESIGN] **computer-use skill not in Cross-Skill Integration table** — available via CUA tools;
+>     should be added on next kaizen edit.
+> Cross-reference: N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, SKILL-CHURN-1,
+> session U0PSh1egq_JHTP8mB9JCn.
+> **v2.07 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan):**
+> Red-team: direct parent-agent 5-adversary audit (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN post-fix (kaizen was DRIFT: ft=2.06 vs fm/hdr=2.05 — concurrent
+> session bumped footer but left fm/hdr stale). Cross-ref audit: ~50 flags across 13 skills; ~15 genuine
+> current-state drifts identified, all banner-history EXEMPT per N-2-SCAN-FALSE-POSITIVE-1.
+> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [HARD] **kaizen N-2 drift fixed** — fm 2.05→2.06, hdr 2.05→2.06 synced to match footer (v2.06).
+>     Concurrent session's calibration register ref sync (v2.92→v2.97, 2026-08-11) verified present.
+> (2) [SOFT] **Cross-ref ecosystem drift documented** — ~15 genuine current-state drifts across 13 QNFO
+>     skills (bloat-cleanup, deepchat-settings, email-composer, git-github, knowledge, personal-knowledge,
+>     qnfo-core, research, skill-creator, system, web-artifacts-builder, windows-command-patterns). All
+>     deferred for opportunistic fix per SKILL-CHURN-1 (content iteration ≠ churn).
+> (3) [SOFT] **Cross-Skill Integration table** — execution-mandate still listed as [NOT-INSTALLED]
+>     despite on-disk v2.9. Deferred: reconcile with skill_list.
+> (4) [DESIGN] **computer-use skill not in Cross-Skill Integration table** — available via CUA tools;
+>     should be added on next kaizen edit.
+> Cross-reference: N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, SKILL-CHURN-1,
+> session U0PSh1egq_JHTP8mB9JCn.
 > **v2.05 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 correction + ZENODO-RECORDS-API-UPLOAD-CT-1 mirror):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP — QNFO.UMP.005
 > ERRATA cycle). HARD: 1 (kaizen-side correction). SOFT: 2. DESIGN: 0. Changes:
@@ -13152,7 +13188,7 @@ dated, falsifiable claims about skill drift risk.
 
 
 
-- The research skill (currently v2.92) is actively evolving; the canonical
+- The research skill (currently v2.97) is actively evolving; the canonical
 
 
 
@@ -14115,7 +14151,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.05** (kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern; 2026-08-10)
+Current: **v2.07** (kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan; 2026-08-11)
 
 
 
