@@ -47,7 +47,7 @@ self_sufficient: true
 > Red-team: direct parent-agent 5-adversary audit (session QrOP_3xznyiEOIqdKFHWS — CMD SKILLS UPDATE).
 > Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit (fm/hdr/ft raw anchors). Subagent review cancelled at
 > 240s deadline — direct parent fallback per Subagent Failure Handling rule 4 (SUBAGENT-AGGREGATOR-TRUNCATION-1).
-> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> HARD: 2. SOFT: 1. DESIGN: 1. Changes:
 > (1) [HARD] **cloudflare-radar MCP auth corrected None→OAuth** — live probe 2026-08-11:
 >     `radar.mcp.cloudflare.com/mcp` returns HTTP 401 `WWW-Authenticate: Bearer realm="OAuth"`,
 >     resource_metadata at `/well-known/oauth-protected-resource/mcp`. The MCP Coverage table marked
@@ -388,6 +388,16 @@ Cloudflare Access AI controls (Zero Trust > Access controls > AI controls) can *
 2. **Access application** `POST /accounts/{id}/access/apps` with `type: "mcp_portal"`, `domain: <hostname>`, `oauth_configuration: {enabled: true, dynamic_client_registration: {enabled: true, allow_any_on_localhost: true, allow_any_on_loopback: true}}` (Managed OAuth — required for non-browser MCP clients; they get `401` + `WWW-Authenticate` pointing at OAuth discovery), plus a policy (e.g. `include: [{email: {email: "admin@example.com"}}]`).
 
 **Gotcha (verified 2026-08-11):** pointing the portal hostname CNAME at an arbitrary origin (e.g. a Pages project) yields **HTTP 522 origin connection error** — the portal gateway must own the hostname. For machine-to-machine access, create an **Access service token** + Service Auth policy on the portal app, then connect with `CF-Access-Client-Id` / `CF-Access-Client-Secret` headers (`mcp-remote ... --header CF-Access-Client-Id: ... --header CF-Access-Client-Secret: ...`). Per-server `on_behalf: false` is required for service-token sessions to reach that server.
+
+**OPEN (2026-08-11, C5):** the correct gateway origin for an API-created portal hostname is
+UNDOCUMENTED. The dashboard flow auto-wires it (portal create -> DNS + mcp_portal Access app);
+the raw API does not, and no documented CNAME target exists (probed 2026-08-11: mcp-gateway.
+cloudflare.com, agw.cloudflareaccess.com, gateway.cloudflareaccess.com, mcp.cloudflareaccess.com
+all 404/NXDOMAIN). qnfo-mcp-portal (mcp.q08.org) remains HTTP 522 until the gateway hostname is
+identified or a provisioning endpoint is found. Retry trigger: investigate the portal Access
+app destination type (WorkerDestination / via_mcp_server_portal) or a Cloudflare
+"provision portal" API/endpoint. EXTERNAL-BLOCK class (no-dashboard mandate KIF-60 prevents UI
+provisioning).
 
 
 ### MCP Verification Gate
