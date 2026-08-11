@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.14"
+version: "2.15"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -300,7 +300,20 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     research v2.97 / qnfo-core v1.24 (was v2.73/v1.14, stale current-state pointer).
 > Cross-reference: cloudflare v3.39, RADAR-MCP-OAUTH-1, MCP Server Portals, session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.14
+# KAIZEN — v2.15
+> **v2.15 UPDATE (2026-08-11, kaizen — re-execution of the phantom v2.13 fix cycle; CMD EXECUTE after CMD RED TEAM):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD RED TEAM
+> READ-ONLY). HARD: 2 (process-side). This cycle CORRECTS the phantom v2.13 claim: the v2.12->v2.13 edits
+> were narrated as applied but the exec died (PARALLEL-WRITE-EXEC-RACE-1 / EXEC-AUTOBG-DEATH-1) and never
+> reached disk; the file moved to v2.14 via a concurrent session. Changes:
+> (1) [HARD] **Duplicate v2.07 banner removed** — the file still had two identical `v2.07 UPDATE` banners
+>     (concurrent-merge residue). Now exactly 1.
+> (2) [SOFT] **v2.12 wording corrected** — "banners preserved above" -> "preserved below/earlier".
+> (3) [SOFT] **Banner ordering restored** — v2.15 banner sits directly below the header, newest-first.
+> (4) [HARD] **Phantom memory corrected** — mem--Dl7vbx-7pxp archived (false task_outcome); this banner
+>     + corrected memory supersede it.
+> Cross-reference: VERSION-OVERWRITE-1, PARALLEL-WRITE-EXEC-RACE-1, ZENODO-PHANTOM-DOI-1 (claim-verify),
+> session i3NHS7gJBTyozMCNeaZm-.
 > **v2.14 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: MAP-TERRITORY-1 mirror row + VERSION-OVERWRITE-1 merge past concurrent v2.13):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session rvnMtR544X387NEXCAPbB, UIA Repair Pipeline cycle).
 > Watchtower: 14 QNFO skills scanned; raw-anchor verification per N-2-SCAN-FALSE-POSITIVE-1 (scanner hdr=MISSING flags for qnfo-core/wcp/email-composer/qwav-demo-kit/deepchat-settings all regex FPs — lowercase headers; system/wcp use non-v-prefixed formats, exempt). kaizen fm/hdr/ft CLEAN pre-edit. HARD: 2 (kaizen-side: SKILL-COMMIT-SAME-SESSION-1 from prior session — research v2.98 + check-map-territory.py live-only; .kaizen_history gaps). SOFT: 1. DESIGN: 1. Changes:
@@ -319,7 +332,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > post-restart audit). HARD: 0. SOFT: 3. DESIGN: 2. Changes:
 > (1) [DESIGN] **Footer merge artifact fixed** — the v2.11 concurrent merge (session QrOP_3xznyiEOIqdKFHWS)
 >     concatenated my v2.10 footer description onto the v2.11 footer line (VERSION-OVERWRITE-1 footer
->     collision). Footer now reads a single v2.12 description; both v2.10/v2.11 banners preserved above.
+>     collision). Footer now reads a single v2.12 description; both v2.10/v2.11 banners preserved below/earlier.
 > Cross-reference: VERSION-OVERWRITE-1, deepchat-settings v1.8, session i3NHS7gJBTyozMCNeaZm-.
 > **v2.10 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: deepchat-settings v1.7 — MCP registration mechanics + 2 anti-patterns):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS
@@ -384,24 +397,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     should be added on next kaizen edit.
 > Cross-reference: N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, SKILL-CHURN-1,
 > session U0PSh1egq_JHTP8mB9JCn.
-> **v2.07 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: red-team audit + N-2 drift fix + ecosystem cross-ref scan):**
-> Red-team: direct parent-agent 5-adversary audit (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
-> Watchtower: 19/19 QNFO skills N-2 CLEAN post-fix (kaizen was DRIFT: ft=2.06 vs fm/hdr=2.05 — concurrent
-> session bumped footer but left fm/hdr stale). Cross-ref audit: ~50 flags across 13 skills; ~15 genuine
-> current-state drifts identified, all banner-history EXEMPT per N-2-SCAN-FALSE-POSITIVE-1.
-> HARD: 0. SOFT: 2. DESIGN: 1. Changes:
-> (1) [HARD] **kaizen N-2 drift fixed** — fm 2.05→2.06, hdr 2.05→2.06 synced to match footer (v2.06).
->     Concurrent session's calibration register ref sync (v2.92→v2.97, 2026-08-11) verified present.
-> (2) [SOFT] **Cross-ref ecosystem drift documented** — ~15 genuine current-state drifts across 13 QNFO
->     skills (bloat-cleanup, deepchat-settings, email-composer, git-github, knowledge, personal-knowledge,
->     qnfo-core, research, skill-creator, system, web-artifacts-builder, windows-command-patterns). All
->     deferred for opportunistic fix per SKILL-CHURN-1 (content iteration ≠ churn).
-> (3) [SOFT] **Cross-Skill Integration table** — execution-mandate still listed as [NOT-INSTALLED]
->     despite on-disk v2.9. Deferred: reconcile with skill_list.
-> (4) [DESIGN] **computer-use skill not in Cross-Skill Integration table** — available via CUA tools;
->     should be added on next kaizen edit.
-> Cross-reference: N-2-FRONTMATTER-DRIFT-1, N-2-SCAN-FALSE-POSITIVE-1, SKILL-CHURN-1,
-> session U0PSh1egq_JHTP8mB9JCn.
+
 > **v2.05 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 correction + ZENODO-RECORDS-API-UPLOAD-CT-1 mirror):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP — QNFO.UMP.005
 > ERRATA cycle). HARD: 1 (kaizen-side correction). SOFT: 2. DESIGN: 0. Changes:
@@ -14274,7 +14270,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.14** (kaizen — CMD SKILLS UPDATE: MAP-TERRITORY-1 mirror row + VERSION-OVERWRITE-1 merge past concurrent v2.13; 2026-08-11)
+Current: **v2.15** (kaizen — re-execution of phantom v2.13 fixes: v2.07 dedupe + wording + ordering; 2026-08-11)
 
 
 
