@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.08"
+version: "2.09"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -265,7 +265,23 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: qnfo-core v1.17, research v2.88, N-2-FRONTMATTER-DRIFT-1,
 > RECALL-FACTS-GAP, session MerOabc5KO_W9Q8BP47ok.
 
-# KAIZEN — v2.08
+# KAIZEN — v2.09
+> **v2.09 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: cross-ref drift audit + 4 current-state fixes + UIA pass):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-15 (session U0PSh1egq_JHTP8mB9JCn — CMD SKILLS UPDATE).
+> Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post. Cross-ref audit: 43 flags → 4 GENUINE current-state
+> (kaizen v2.07→v2.08 churn from concurrent bump in knowledge/personal-knowledge/skill-creator; research
+> L7096 knowledge v2.8→v2.10 PHILPAPERS), 39 EXEMPT (provenance attributions, calibration-register entries,
+> 1 scanner false-positive: system v2.13 correct — audit version-map grabbed banner "v2.5").
+> HARD: 0. SOFT: 4 (fixed). DESIGN: 2. Changes:
+> (1) [SOFT] **4 current-state cross-ref fixes** — knowledge L225 kaizen v2.07→v2.08, personal-knowledge
+>     L111 kaizen v2.07→v2.08, skill-creator L264 kaizen v2.07→v2.08, research L7096 knowledge v2.8→v2.10.
+> (2) [DESIGN] **Kaizen-version churn finding** — kaizen bumped 2.05→2.06→2.07→2.08 within 24h (concurrent
+>     sessions); every bump orphans cross-refs pinning the old kaizen version. Mitigation: kaizen cross-refs
+>     should cite "kaizen vX (current)" only when the version adds meaning; plain "kaizen §H" for protocol refs.
+> (3) [DESIGN] **Scanner discipline re-confirmed** — the cross-ref audit flagged 43; raw-line classification
+>     reduced to 4. Confirms N-2-SCAN-FALSE-POSITIVE-1: scan output is a candidate list, raw anchors authoritative.
+> Cross-reference: N-2-SCAN-FALSE-POSITIVE-1, SKILL-DEATH-FALSE-POSITIVE-1 (system v2.13 false-positive),
+> session U0PSh1egq_JHTP8mB9JCn.
 > **v2.08 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN):**
 > Red-team: direct parent-agent 5-adversary audit (session jF6kLzOGvWJ-krex-neHF — CMD SKILLS UPDATE).
 > Watchtower scan: 19/19 QNFO skills N-2 CLEAN (fm/hdr/ft), 22/22 platform-default INCOMPLETE (exempt).
@@ -14165,7 +14181,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.08** (kaizen — SKILLS UPDATE: ecosystem audit — all QNFO skills N-2 CLEAN; 2026-08-11)
+Current: **v2.09** (kaizen — SKILLS UPDATE: cross-ref drift audit + 4 current-state fixes + UIA pass; 2026-08-11)
 
 
 

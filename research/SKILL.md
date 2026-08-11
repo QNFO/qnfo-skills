@@ -7093,7 +7093,7 @@ channel for an independent researcher. Protocol (proven QNFO.UMP.005, 2026-08-06
 PhilPapers crawls Zenodo→DataCite→CrossRef and only indexes records with BOTH an abstract AND
 >=3 philosophy-domain keywords (`philosophy of physics`, `foundations of quantum mechanics`,
 `consilience`, `philosophy of science`, `philosophy of mathematics`, etc. — full list in knowledge
-v2.8 PHILPAPERS-DISCOVERABILITY-GAP). For any paper with philosophy-of-physics framing: after
+v2.10 PHILPAPERS-DISCOVERABILITY-GAP). For any paper with philosophy-of-physics framing: after
 publish, add philosophy keywords via the deposit-API in-place metadata edit
 (ZENODO-RECORDS-API-DROPS-METADATA-1 compliant — deposit shape only), then verify DataCite
 `subjects` count. Canonical case: qwave-qudit-advantage v0.4 (21827737) — 15 keywords incl. 4

@@ -108,7 +108,7 @@ python search_obsidian.py  # write to %TEMP%, exec, read output
 read("D:\Obsidian\notes\v1\2026\08\06\_26218084027.md")
 ```
 
-This pattern is the canonical fallback per kaizen v2.07 (Obsidian D:-drive workflow). The HTTP endpoint is browser-only due to Cloudflare Bot Fight Mode.
+This pattern is the canonical fallback per kaizen v2.08 (Obsidian D:-drive workflow). The HTTP endpoint is browser-only due to Cloudflare Bot Fight Mode.
 ## DeepChat Integration Path (when user asks about personal content)
 
 ```
