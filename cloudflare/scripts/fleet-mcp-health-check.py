@@ -28,7 +28,7 @@ import urllib.error
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
 
-# All 18 configured Cloudflare MCP servers (cloudflare skill v3.39 + agents-docs 2026-08-11).
+# All 18 configured Cloudflare MCP servers (cloudflare skill v3.44).
 OAUTH_SERVERS = {
     "cloudflare":              "https://mcp.cloudflare.com/mcp",
     "cloudflare-bindings":     "https://bindings.mcp.cloudflare.com/mcp",
