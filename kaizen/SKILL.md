@@ -10,7 +10,7 @@ name: kaizen
 
 
 
-version: "2.17"
+version: "2.18"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -314,7 +314,13 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.17
+# KAIZEN — v2.18
+> **v2.18 UPDATE (2026-08-11, kaizen — CMD EXECUTE red-team fix cycle: stale current-state pointers + §H STEP 4 cross-ref):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB — session rvnMtR544X387NEXCAPbB; read-only audit of the CMD SKILLS UPDATE cycle, findings recovered via get_conversation_history — SUBAGENT-AGGREGATOR-TRUNCATION-1 evidence 9/x). HARD: 2 (kaizen-side: stale current-state pointers + unresolved §H banner claim). SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **Adversarial-symmetry owner pointer bumped** — `(PRO-INCUMBENT-BIAS-1, research v2.97 / qnfo-core v1.24)` -> `(research v2.99 / qnfo-core v1.26)`. This exact pointer was fixed in v2.11 (v2.73/v1.14 -> v2.97/v1.24) and drifted again — recurrence documented (VERSION-OVERWRITE-1 current-state discipline).
+> (2) [HARD] **§H STEP 4 cross-ref added** — the v2.14 banner claimed "§H UIA protocol now cross-references the scripted gate as STEP 4 enforcement" but the §H body lacked it (unresolved claim). Added `research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1)` to the §H cross-reference line, making the banner claim true.
+> (3) [SOFT] **Forecast current-state fixed** — "research skill (currently v2.97)" -> v2.99.
+> Cross-reference: research v2.99 (check-map-territory.py), qnfo-core v1.26 (MAP-TERRITORY-1), UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, session rvnMtR544X387NEXCAPbB.
 > **v2.17 UPDATE (2026-08-11, kaizen — SKILLS UPDATE: AI-binding syntax correction + PROVIDER-KEY-SYNC-1 + providers-table docs; merged past concurrent v2.16):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session;
 > qnfo-ai ensemble deployment + DeepChat provider registration cycle). VERSION-OVERWRITE-1 merge:
@@ -6246,7 +6252,7 @@ is adversarial only toward new theories and deferential toward established ones 
 
 
 
-confirmation-biased (PRO-INCUMBENT-BIAS-1, research v2.97 / qnfo-core v1.24).
+confirmation-biased (PRO-INCUMBENT-BIAS-1, research v2.99 / qnfo-core v1.26).
 
 
 
@@ -10232,7 +10238,7 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 
 **Meta-audit of the UIA itself (from the paper, §4):** The UIA has an analytic, individualistic, extractive slant. It underweights the receptive, surrendering, not-doing dimension of unknowing. It benefits the articulate, time-rich auditor and may silence those whose survival depends on certainty. These limitations are part of the method's specification — they bound its claims.
 
-**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, synthesis paper DOI 10.5281/zenodo.21878977, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question).
+**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, synthesis paper DOI 10.5281/zenodo.21878977, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question), research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1).
 
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
@@ -13359,7 +13365,7 @@ dated, falsifiable claims about skill drift risk.
 
 
 
-- The research skill (currently v2.97) is actively evolving; the canonical
+- The research skill (currently v2.99) is actively evolving; the canonical
 
 
 
@@ -14337,7 +14343,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.17** (kaizen — D1 closeout concurrency semantics + red-team fix cycle; 2026-08-11) (kaizen — re-execution of phantom v2.13 fixes: v2.07 dedupe + wording + ordering; 2026-08-11)
+Current: **v2.18** (kaizen — CMD EXECUTE red-team fix cycle: stale current-state pointers + §H STEP 4 cross-ref; 2026-08-11) (kaizen — D1 closeout concurrency semantics + red-team fix cycle; 2026-08-11) (kaizen — re-execution of phantom v2.13 fixes: v2.07 dedupe + wording + ordering; 2026-08-11)
 
 
 

@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.98"
+version: "2.99"
 description: >
 
 
@@ -217,13 +217,18 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.98
+# RESEARCH — v2.99
+> **v2.99 UPDATE (2026-08-11, kaizen — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB — session rvnMtR544X387NEXCAPbB). HARD: 2 (stale/orphaned current-state pointers). SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **KG Node Seeding pointer repointed (x2)** — `(per qnfo-core v1.24)` -> `(per knowledge v2.10 SYNC CONTRACT)`: qnfo-core v1.25+ contains zero `INSERT OR IGNORE`/`qnfo-graph` fallback content; the actual owner of the graph-sync contract is knowledge v2.10 (`graph-api.qnfo.org/sync`). Orphaned-owner pointer fixed.
+> (2) [DESIGN] **Banner cross-ref current-state cites added** — kaizen v2.18 (MAP-TERRITORY-1 mirror row) + qnfo-core v1.26 (MAP-TERRITORY-1 owner row) now cited in the v2.98 banner cross-ref line, matching sibling-banner convention.
+> Cross-reference: kaizen v2.18, qnfo-core v1.26, knowledge v2.10 (SYNC CONTRACT), UIA DOI 10.5281/zenodo.21878943, session rvnMtR544X387NEXCAPbB.
 > **v2.98 UPDATE (2026-08-11, kaizen — MAP-TERRITORY GATE SCRIPTED: check-map-territory.py + Publication Language Gate wiring):**
 > Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
 > Watchtower: research v2.97 N-2 CLEAN pre-edit; v2.98 N-2 CLEAN post-edit (raw anchors). HARD: 1 (research-side: gate was prose-only). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **MAP-TERRITORY GATE scripted** — new `research/scripts/check-map-territory.py`: scans paper drafts for `[TERRITORY` labels (identity claims) without an accompanying falsifiability condition (KIF-60 / qnfo-core §0.0); `[MAP` labels are context-only (no condition). FAIL = exit 1 + FIX instruction (inline condition / same-paragraph condition / downgrade to MAP). Added to the Phase 5 Publication Language Gate scan list (build-time BLOCK). Canonical lesson: TITLE-DUPLICATION-1 shipped 3 published versions before scripting; map–territory conflation must not ship unlabelled again. Enforcement of the UIA Repair Pipeline Protocol v1.0 (2026-08-11) STEP 4 SCRIPTING MANDATE (PROSE-GATE-ADVISORY-1, kaizen v1.63).
 > (2) [DESIGN] **UIA-REPAIR-REGISTER.md created** (vault, 2026-08-11) — rows UIA-2026-08-11-01..06 incl. the all-36 REFRAME (P0) and the UIA self-audit (P0/IN-PROGRESS); calibration `[CHECK: 2026-09-11]` map-territory label holds.
-> Cross-reference: UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, UIA DOI 10.5281/zenodo.21878943, kaizen v1.63 (PROSE-GATE-ADVISORY-1), qnfo-core §0.0 (KIF-60), check-title-duplication.py (v2.86 pattern), session rvnMtR544X387NEXCAPbB.
+> Cross-reference: UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, UIA DOI 10.5281/zenodo.21878943, kaizen v1.63 (PROSE-GATE-ADVISORY-1), qnfo-core §0.0 (KIF-60), check-title-duplication.py (v2.86 pattern), kaizen v2.18 (MAP-TERRITORY-1 mirror row), qnfo-core v1.26 (MAP-TERRITORY-1 owner row), session rvnMtR544X387NEXCAPbB.
 > **v2.97 UPDATE (2026-08-10, kaizen — CDP render script .cjs + merge past concurrent v2.96):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP).
 > Concurrent-session merge: v2.96 (publication completeness gates) landed WHILE this audit ran — merged past
@@ -6981,7 +6986,7 @@ After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
 owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
 entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
 `X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
-or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.24)
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per knowledge v2.10 SYNC CONTRACT)
 when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
 → neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
 invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
@@ -7007,7 +7012,7 @@ After the D1 insert, the paper MUST also have a Knowledge Graph node. Seed
 owning program/concept (knowledge skill Edge Seeding Gate — minimum 1 edge per
 entity). Canonical path: `POST https://graph-api.qnfo.org/sync` with
 `X-Sync-Token` (`{"action":"bulk","nodes":[{"id":"paper:<slug>",...}],"edges":[...]}`),
-or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per qnfo-core v1.24)
+or the direct `qnfo-graph` D1 `INSERT OR IGNORE` fallback (per knowledge v2.10 SYNC CONTRACT)
 when the sync token is unavailable. **Verify** via `query_graph('neighbors', {id: 'paper:<slug>'})`
 → neighbor count > 0 in the SAME turn. A paper with a D1 row but no KG node is
 invisible to KG-first due diligence (canonical: ringbauer-qudit-due-diligence
@@ -9137,7 +9142,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.98** (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.99** (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

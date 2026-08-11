@@ -12,7 +12,7 @@ name: qnfo-core
 
 
 
-version: 1.25
+version: "1.26"
 
 
 
@@ -642,7 +642,12 @@ description: Core QNFO agent identity with Research Integrity Mandate, Due Dilig
 
 
 
-# QNFO Core — v1.25
+# QNFO Core — v1.26
+> **v1.26 UPDATE (2026-08-11, kaizen — CMD EXECUTE red-team fix cycle: frontmatter quoting consistency):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB — session rvnMtR544X387NEXCAPbB). HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **Frontmatter version quoted** — `version: 1.25` -> `version: "1.26"` (unquoted YAML scalar parses as float; research/kaizen use quoted strings). Value unchanged; N-2 triples re-verified.
+> (2) [DESIGN] **Header naming note** — header `# QNFO Core — v1.26` (space) vs skill slug `qnfo-core`: scanner-keying risk documented per N-2-SCAN-FALSE-POSITIVE-1; version anchor correct.
+> Cross-reference: research v2.99 (MAP-TERRITORY-1), kaizen v2.18, UIA DOI 10.5281/zenodo.21878943, session rvnMtR544X387NEXCAPbB.
 > **v1.25 UPDATE (2026-08-11, kaizen — MAP-TERRITORY-1 owner mirror row + research v2.98 cross-ref):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session rvnMtR544X387NEXCAPbB, UIA Repair Pipeline cycle).
 > Watchtower: qnfo-core v1.24 N-2 CLEAN pre-edit (raw anchors); v1.25 N-2 CLEAN post-edit. HARD: 0. SOFT: 1. DESIGN: 0. Changes:
@@ -5784,7 +5789,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.25** (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.98 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.26** (qnfo-core — CMD EXECUTE red-team fix cycle: frontmatter quoting consistency; 2026-08-11) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 
