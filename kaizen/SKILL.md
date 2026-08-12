@@ -1,3 +1,19 @@
+> **v2.26 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: red-team skills audit cycle — N-2 header drift fixes + loader registration gap + prompt title parity):**
+> Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive). Watchtower scan:
+> 5 QNFO skills drifted/incomplete (kaizen hdr, deepchat-settings hdr, system hdr, windows-command-patterns hdr,
+> deepchat-hooks no version fields). Prompt stores: 4/4 byte-identical v3.4-content (sha16 9b4108b0468455a2) but
+> TITLE line stale at v3.3 -> bumped to v3.4 in all 4 stores. customPrompts: 9/9 identical both stores (verified
+> content-vs-template schema asymmetry per PROMPT-KEY-SCHEMA-ASYMMETRY-1). Loader registration gap: kaizen +
+> deepchat-settings + system + cloudflare + 6 more NOT in skill_list (frontmatter-not-at-byte-0) — documented for
+> app skill-management reconciliation, NOT a file rewrite. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 2. Changes:
+> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.26, deepchat-settings hdr v1.12 → v1.14,
+>     system hdr 2.13 → 2.14, windows-command-patterns hdr v3.20 → v3.21 (fm/ft already correct).
+> (2) [SOFT] **deepchat-hooks INCOMPLETE fixed** — added version frontmatter + versioned H1 + Current footer (v1.1).
+> (3) [DESIGN] **Loader registration gap documented** — 10 on-disk skills absent from skill_list; reconcile via app.
+> (4) [DESIGN] **System prompt title parity** — title v3.3 → v3.4 in all 4 stores (content already v3.4).
+> Cross-reference: deepchat-settings v1.14, system v2.14, windows-command-patterns v3.21, deepchat-hooks v1.1,
+> PROMPT-KEY-SCHEMA-ASYMMETRY-1, N-2-FRONTMATTER-DRIFT-1, SKILL-FILE-NE-INSTALLED-1, session this.
+
 > **v2.25 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1):**
 > Red-team: direct parent-agent 5-adversary audit (this session — skill-sync remediation + prompt-store parity
 > audit cycle). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
@@ -78,7 +94,7 @@ name: kaizen
 
 
 
-version: "2.25"
+version: "2.26"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -382,7 +398,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.23
+# KAIZEN — v2.26
 > **v2.20 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive with the
 > Skills-Updates-Must-Include-Prompt-Stores standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN
@@ -14446,7 +14462,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.25** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.26** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 

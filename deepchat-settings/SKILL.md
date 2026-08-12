@@ -68,7 +68,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.12
+# DeepChat Settings — v1.14
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped

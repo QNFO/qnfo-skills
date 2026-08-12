@@ -1,9 +1,10 @@
 ---
 name: deepchat-hooks
+version: 1.1
 description: DeepChat lifecycle hooks integration — Cloudflare infrastructure audit on session lifecycle events. Manages the cf_audit_hook.py script, the hooksNotifications config schema, and the qnfo-audit integration (qnfo-lifecycle worker endpoints + D1 audit_sessions). Load when the user asks about DeepChat Hooks, lifecycle events, SessionStart/SessionEnd commands, or the Cloudflare infra audit hook.
 ---
 
-# DeepChat Hooks — Cloudflare Infrastructure Audit
+# DeepChat Hooks — v1.1 — Cloudflare Infrastructure Audit
 
 > **v1.1 (2026-08-12):** Red-team fix cycle (CMD RED TEAM 5-adversary direct audit, session
 > UgsJmhHMt0OElfaPhKMSk). HARD-1 fixed: timeout budget brought under the app's 30s
@@ -169,3 +170,7 @@ variables: `DEEPCHAT_HOOK_EVENT`, `DEEPCHAT_HOOK_TIME`, `DEEPCHAT_HOOK_IS_TEST`,
 - qnfo-skill-sync worker + `skill_pull.py`: skills git-tracked in qnfo-skills
   repo (origin QNFO/qnfo-skills + rwnq8 mirror) — canonical; R2 `qnfo-skills`
   bucket stores sync snapshots updated by the worker's daily kaizen cycle.
+
+## Version
+
+Current: **v1.1** (deepchat-hooks — Cloudflare infra audit hook on SessionStart/SessionEnd; 2026-08-12)
