@@ -1,3 +1,21 @@
+> **v2.27 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident capture + cloudflare v3.50 + system-prompt v3.5 + template dual-write):**
+> Red-team: direct parent-agent audit of session rOT2C-ZiQbSVYpqghlLZ4 (daily-verify + R2 incident +
+> DESTROYED-vs-MISPLACED red-team + corrections). HARD: 2. SOFT: 0. DESIGN: 2. Changes:
+> (1) [HARD] **QUEUE-BODY-SHAPE-1 anti-pattern** (cloudflare v3.50): R2 event notification -> queue
+>     consumer with incompatible body-shape = full-bucket `undefined`-prefix corruption loop.
+>     Canonical: qnfo-lifecycle-queue (2026-06-21) -> 965 undefined keys; contained 2026-08-12
+>     (rules 9d7a3c07 + 139ab7ed deleted, queue deleted).
+> (2) [HARD] **AUDIT-COMPLETENESS-1 anti-pattern** (cloudflare v3.50): never declare R2 objects lost
+>     without sweeping ALL 13 buckets + reading qnfo-audit/architecture/R2-MULTI-BUCKET-
+>     ARCHITECTURE.md. 15 files falsely declared destroyed; 2 were live in qnfo-audit (canonical
+>     audit bucket). LOSS-REGISTER v2 corrected 2026-08-12.
+> (3) [DESIGN] **System prompt v3.4 -> v3.5** — Cloudflare mandate section extended with the two
+>     R2 audit mandates + multi-bucket architecture note; dual-written to 4 stores.
+> (4) [DESIGN] **CMD SKILLS UPDATE template updated** — R2/queue/audit skills changes MUST preserve
+>     QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 and dual-write the 4 prompt stores.
+> Cross-reference: cloudflare v3.50, system-prompt-v2.7.md v3.5, deepchat-settings, session
+> rOT2C-ZiQbSVYpqghlLZ4.
+
 > **v2.26 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: red-team skills audit cycle — N-2 header drift fixes + loader registration gap + prompt title parity):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive). Watchtower scan:
 > 5 QNFO skills drifted/incomplete (kaizen hdr, deepchat-settings hdr, system hdr, windows-command-patterns hdr,
@@ -6,7 +24,7 @@
 > content-vs-template schema asymmetry per PROMPT-KEY-SCHEMA-ASYMMETRY-1). Loader registration gap: kaizen +
 > deepchat-settings + system + cloudflare + 6 more NOT in skill_list (frontmatter-not-at-byte-0) — documented for
 > app skill-management reconciliation, NOT a file rewrite. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 2. Changes:
-> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.26, deepchat-settings hdr v1.12 → v1.14,
+> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.27, deepchat-settings hdr v1.12 → v1.14,
 >     system hdr 2.13 → 2.14, windows-command-patterns hdr v3.20 → v3.21 (fm/ft already correct).
 > (2) [SOFT] **deepchat-hooks INCOMPLETE fixed** — added version frontmatter + versioned H1 + Current footer (v1.1).
 > (3) [DESIGN] **Loader registration gap documented** — 10 on-disk skills absent from skill_list; reconcile via app.
@@ -94,7 +112,7 @@ name: kaizen
 
 
 
-version: "2.26"
+version: "2.27"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -615,7 +633,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > **v2.02 UPDATE (2026-08-10, kaizen — NEWVERSION-DOI-RESERVATION-1 mirror + research v2.94 correction cycle):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — session gZ5Qf_rxLX365TvNJDOkc;
 > QNFO.RES.002/.003 publication cycle triggered the finding). Watchtower: 19/19 QNFO skills N-2 CLEAN pre-edit
-> (kaizen footer flag FALSE POSITIVE per N-2-SCAN-FALSE-POSITIVE-1 — regex matched banner-quote `Current: **v1.48**`
+> (kaizen footer flag FALSE POSITIVE per N-2-SCAN-FALSE-POSITIVE-1 — regex matched banner-quote `Current: **v1.49**`
 > at L1054; real footer at L14034 is v2.01). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 0. Changes:
 > (1) [SOFT] **NEWVERSION-DOI-RESERVATION-1 mirror row added** (owner: research v2.94) — newversion drafts
 >     return `prereserve_doi: None` from GET /draft; the ONLY working DOI reservation path is
@@ -14462,7 +14480,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.26** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.27** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 

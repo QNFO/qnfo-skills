@@ -1,3 +1,24 @@
+> **v1.15 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.6 POST-PUBLICATION ADVERSARIAL ANALYSIS GATE + 4-store parity re-verified + CMD SKILLS UPDATE template drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM SUB on Zenodo 21878977/21878976
+> + CMD SKILLS UPDATE cycle). Prompt stores: PRE-EDIT parity check found agent.db systemPrompts STALE at v3.4
+> (58714) while app-settings + both .md files were v3.5 (59776) — drift introduced by the v3.5 cycle (only
+> md/app updated, agent.db missed). CMD SKILLS UPDATE template also diverged (db 994 vs app 1553 — app had
+> cloudflare v3.50 QUEUE-BODY-SHAPE-1/AUDIT-COMPLETENESS-1 mandate db lacked). HARD: 2 (both fixed). SOFT: 0.
+> Changes:
+> (1) [HARD] **System prompt v3.5 → v3.6** — new POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE,
+>     2026-08-12): every published research artifact MUST receive CMD RED TEAM SUB adversarial review after
+>     publication; READ-ONLY; HARD findings become next-cycle kaizen items. Dual-written to ALL 4 stores
+>     (agent.db systemPrompts / app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md /
+>     qnfo-skills repo copy) — sha16 8fc298179f8251b3, 61,157 chars, byte-identical (verified post-write).
+>     Backup: app-settings.json.bak_20260812_<stamp>.
+> (2) [HARD] **CMD SKILLS UPDATE template drift fixed** — agent.db content ← app-settings superset (1553 chars,
+>    cloudflare v3.50 mandates preserved). customPrompts now 9/9 byte-identical both stores (verified).
+> (3) [DESIGN] **4-store parity discipline** — every dual-write MUST verify ALL 4 stores byte-identical
+>    immediately after write (v3.5 cycle proved partial writes happen); CMD SKILLS UPDATE template carries
+>    this mandate.
+> Cross-reference: system-prompt-v2.7.md (content v3.6), kaizen v2.27, system v2.14, cloudflare v3.50,
+> PROMPT-STORE-4STORE-1, session this.
+
 > **v1.14 UPDATE (2026-08-12, kaizen — PROMPT-STORE-4STORE-1 parity fix + CMD DEPLOY cost-gate correction):**
 > Red-team: direct parent-agent 5-adversary parity audit (this session — CMD SKILLS UPDATE cycle; skill-sync
 > remediation + prompt-store audit). Prompt stores verified: agent.db systemPrompts / app-settings.json
@@ -58,7 +79,7 @@
 
 ---
 name: deepchat-settings
-version: 1.14
+version: 1.15
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -68,7 +89,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.14
+# DeepChat Settings — v1.15
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
@@ -489,4 +510,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.14** (deepchat-settings — PROMPT-STORE-4STORE-1 parity fix: repo copy synced to v3.4 + CMD DEPLOY $90/30d cost-gate correction; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.15** (deepchat-settings — PROMPT-STORE-4STORE-1 parity fix: repo copy synced to v3.4 + CMD DEPLOY $90/30d cost-gate correction; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
