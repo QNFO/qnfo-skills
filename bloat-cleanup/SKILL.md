@@ -730,4 +730,4 @@ subprocess.run(['cmd', '/c', 'sc.exe', 'failure', 'WSearch', 'reset=', '86400', 
 
 ## Version
 
-Current: **v3.4** (bloat-cleanup — CUA tools integration for GUI cleanup + stale cross-ref fix; 2026-08-06)
+Current: **v3.5** (bloat-cleanup — CMD SKILLS UPDATE: footer drift v3.4→v3.5 fixed (FRONTMATTER-HARD-1 follow-up); 2026-08-12) (bloat-cleanup — CUA tools integration for GUI cleanup + stale cross-ref fix; 2026-08-06)

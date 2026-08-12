@@ -92,7 +92,7 @@
 
 ---
 name: deepchat-settings
-version: 1.15
+version: 1.16
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -102,7 +102,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.15
+# DeepChat Settings — v1.16
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
