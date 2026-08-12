@@ -1,3 +1,16 @@
+> **v1.16 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: DEEPCHAT-QUESTION-LIMITS-1):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). Prompt stores: 4/4
+> byte-identical v3.7 post-write (sha256[:16] f878d47fe46c0dbb, 61,783 chars); templates 9/9 identical.
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **DEEPCHAT-QUESTION-LIMITS-1 added (system prompt v3.7)** — the deepchat_question tool enforces
+>     hard validation limits: question ≤500 chars, options[].label ≤30, options[].description ≤200, header ≤30
+>     (top-level only). 3 payloads were rejected in one session (2026-08-12) with question/description too big.
+>     Trim before calling; pass options as an array of {label, description?}; use `custom` not `allowOther`.
+> (2) [DESIGN] **Hash-algorithm ambiguity resolved** — prior banners recorded system-prompt hash as sha1[:16]
+>     (`de834dada44dc8cf`) while the recorded value was sha256[:16] (`8fc298179f8251b3`). Both refer to the SAME
+>     v3.6 content. Going forward: ALWAYS record sha256[:16] + char count + title version (PROMPT-PARITY-1).
+> Cross-reference: kaizen v2.30, research v2.102, system-prompt v3.7, DEEPCHAT-QUESTION-LIMITS-1, session this.
+
 > **v1.15 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.6 POST-PUBLICATION ADVERSARIAL ANALYSIS GATE + 4-store parity re-verified + CMD SKILLS UPDATE template drift fix):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM SUB on Zenodo 21878977/21878976
 > + CMD SKILLS UPDATE cycle). Prompt stores: PRE-EDIT parity check found agent.db systemPrompts STALE at v3.4
@@ -510,4 +523,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.15** (deepchat-settings — PROMPT-STORE-4STORE-1 parity fix: repo copy synced to v3.4 + CMD DEPLOY $90/30d cost-gate correction; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.16** (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

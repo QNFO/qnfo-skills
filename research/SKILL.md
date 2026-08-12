@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.101"
+version: "2.102"
 description: >
 
 
@@ -150,6 +150,33 @@ triggers:
 
 
 ---
+
+> **v2.102 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, BJ Klock provenance cycle).
+> HARD: 0 (research-side). SOFT: 3. DESIGN: 1. Changes:
+> (1) [SOFT] **Zenodo API WAF: urllib 403 even WITH Bearer token; browser-context fetch on zenodo.org origin works.**
+>     Python urllib (requests too) hits "unusual traffic from your network" 403 (nginx WAF bot-detection on the
+>     datacenter IP) REGARDLESS of token — the user's own 2026-08-05 A/B test proved minimal-UA requests trigger
+>     it. Canonical path for Zenodo API writes (newversion / PUT metadata / publish): browser-context fetch from
+>     a zenodo.org-origin page with `Authorization: Bearer <token>` + `User-Agent: Mozilla/5.0` — verified live
+>     2026-08-12: 6 records updated (newversion 201 → PUT 200 → publish 202) with zero 403s. Alternative:
+>     full Chrome UA + Accept-Language + Referer + Origin headers from Python (200/201, user's 08-05 test).
+>     Zenodo support's "upgrade your browser" guidance applies to the WEB UI (insecure-version DDoS mitigation),
+>     NOT to the REST API path.
+> (2) [SOFT] **Metadata-only amendment = newversion → PUT metadata.notes → publish.** To add a provenance note
+>     (or any metadata field) to a published record WITHOUT touching files: `POST /api/deposit/depositions/{id}/
+>     actions/newversion` (files carry over byte-identical) → `PUT /api/deposit/depositions/{draft_id}` with
+>     `{"metadata": {...existing..., "notes": "<text>"}}` → `POST .../actions/publish`. Verified live 2026-08-12:
+>     6 HRC records got a provenance note; file counts unchanged (5/2/0/0/0/2); concept DOIs resolve to the new
+>     noted versions; old versions untouched (history preserved). Zenodo does NOT allow editing a published
+>     record in place — new version is the only path.
+> (3) [SOFT] **archive.org CDX rate-limits Python (429); browser load_url to the CDX JSON works.** For Wayback
+>     capture-history audits use browser navigation (load_url on the CDX endpoint, parse innerText JSON) or
+>     throttle Python hard; wildcard CDX queries (`bjklock.com/*copied*`) time out — use exact-path queries.
+> (4) [DESIGN] **Klock incident cross-ref** — cranks with "sealed provenance" claims: Wayback audit (bjklock.com
+>     HRC page first archived 2025-03-18, "sealed" pages ALL postdate Rowan's Zenodo v1.0 2025-07-08, accusation
+>     page 0 captures) + Google Patents (zero patents) are the decisive counters; never engage the InMail.
+> Cross-reference: kaizen v2.30, deepchat-settings v1.16, system-prompt v3.7 (f878d47fe46c0dbb), session this.
 
 > **v2.101 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: N-2 header fix + DSI methodology cross-ref):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). Watchtower: research v2.100 hdr stale (v2.99) — FIXED. HARD: 0. SOFT: 1. DESIGN: 1. Changes:
@@ -9176,7 +9203,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.101** (research — CMD SKILLS UPDATE: records-API newversion version-inheritance + related_identifiers relation_type + DataCite-authoritative license verification; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.102** (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

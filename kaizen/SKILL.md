@@ -1,3 +1,31 @@
+> **v2.30 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: Zenodo WAF browser-context + DEEPCHAT-QUESTION-LIMITS-1 + 4-store v3.7 parity):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, BJ Klock provenance cycle).
+> Watchtower: 4-store prompt parity BROKEN? NO — verified byte-identical at v3.6 pre-edit (sha1[:16]
+> de834dada44dc8cf == sha256[:16] 8fc298179f8251b3 — SAME content, prior banners omitted the hash algorithm).
+> HARD: 1 (research banner landed inside frontmatter on first insert — FIXED by git-restore + surgical re-insert;
+> root cause: naive `find("---")` + global `\n\n\n\n→\n\n` whitespace collapse; NEVER collapse whitespace on
+> tracked skill files). SOFT: 3. DESIGN: 2. Changes:
+> (1) [SOFT] **System prompt v3.6 → v3.7** — DEEPCHAT-QUESTION-LIMITS-1 note added to Mandate 1 execution block:
+>     deepchat_question enforces question ≤500 / options[].label ≤30 / options[].description ≤200 / header ≤30
+>     (validated 2026-08-12: 3 rejected payloads in one session). Dual-written ALL 4 stores (agent.db
+>     systemPrompts / app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md / qnfo-skills
+>     repo copy) — sha256[:16] f878d47fe46c0dbb, 61,783 chars, byte-identical verified post-write.
+> (2) [SOFT] **research v2.101 → v2.102** — Zenodo API WAF pattern (urllib 403 even WITH token; browser-context
+>     fetch on zenodo.org origin + Bearer works — verified live 6 records 201/200/202); metadata-notes amendment
+>     pattern (newversion → PUT metadata.notes → publish, files untouched); archive.org CDX rate-limit note
+>     (Python 429, browser load_url works).
+> (3) [SOFT] **deepchat-settings v1.15 → v1.16** — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm ambiguity
+>     resolution (record sha256[:16] + char count + title version going forward).
+> (4) [HARD] **SKILL-FILE-WHITESPACE-COLLAPSE-1 added** — NEVER run global regex whitespace collapse
+>     (`\n\n\n\n → \n\n`) on tracked skill files; it destroys the banner-separation blank lines and creates
+>     massive diffs (9,184 → 5,869 lines). Insert banners via exact-anchor find (e.g. `> **v2.101 UPDATE`) and
+>     git-restore + re-insert when a first attempt lands in the wrong region.
+> (5) [DESIGN] **Hash-algorithm discipline** — prior banners recorded sha1[:16] while values were sha256[:16];
+>     both referred to the same content but were unverifiable. PROMPT-PARITY-1 now mandates sha256[:16] + len +
+>     title version in every banner.
+> Cross-reference: research v2.102, deepchat-settings v1.16, system-prompt-v2.7.md v3.7 (f878d47fe46c0dbb),
+> PROMPT-PARITY-1, SKILL-FILE-WHITESPACE-COLLAPSE-1, session this.
+
 > **v2.29 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: 4-store prompt parity repair + N-2 version-drift sweep + DSI methodology cross-ref):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, QNFO.UMP.008 publication cycle). Watchtower: 4-store prompt parity BROKEN (skills-copy stale at 8e912a21/62,828 B vs canonical v3.6 8fc298179f8251b3/61,830 B — FIXED by copy) + 3 skills with N-2 version drift (kaizen hdr v2.23/ft v1.49 vs fm v2.28; research hdr v2.99 vs v2.100; qnfo-core hdr v1.18 vs v1.26 — all fixed). HARD: 1 (prompt parity). SOFT: 4. DESIGN: 1. Changes:
 > (1) [HARD] **PROMPT-PARITY-1 added** — 4-store system-prompt parity (agent.db systemPrompts / app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md / qnfo-skills repo copy) can break independently; the skills-copy is the failure-prone store. Every skills-update cycle MUST sha256-check all 4 stores (canonical hash 8fc298179f8251b3, v3.6). Also verify customPrompts dual-write parity (agent.db `content` field vs app-settings `template` field — PROMPT-STORE-FIELD-ASYMMETRY-1).
@@ -757,7 +785,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.29
+# KAIZEN — v2.30
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
