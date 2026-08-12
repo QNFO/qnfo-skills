@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.102"
+version: "2.103"
 description: >
 
 
@@ -4824,7 +4824,7 @@ Every P(E|H) > 0.80 must trace to an empirical calibration pillar (Empirical Bas
 
 
 
-3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist). **Complementary method:** the Universal Ignorance Audit (DOI 10.5281/zenodo.21878943; case study: DOI 10.5281/zenodo.21878977) provides a 15-question deep-inquiry alternative that surfaces structural ignorance (scaffolds, map–territory errors, protected zones) complementary to adversarial correctness. See kaizen v2.01 §H.
+3. **Red-Team Challenge** — 5 adversary positions (Null-Hypothesis Defender, Methodology Skeptic, Better-Alternative Proposer, Scaling Pessimist, Resource Realist). **MANDATORY method (ZENODO-INQUIRY-1):** the Universal Ignorance Audit (DOI 10.5281/zenodo.21901984; synthesis: DOI 10.5281/zenodo.21901983) provides a 15-question deep-inquiry alternative that surfaces structural ignorance (scaffolds, map–territory errors, protected zones) complementary to adversarial correctness. See kaizen v2.01 §H.
 
 
 
@@ -9203,7 +9203,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.102** (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.103** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
