@@ -1,3 +1,22 @@
+> **v2.28 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: post-publication remediation learnings captured → research v2.100; prompt stores verified 4/4 byte-identical v3.6; git+R2 synced):**
+> Red-team: direct parent-agent 5-adversary audit of the CMD SKILLS UPDATE cycle following the Zenodo
+> v0.3 remediation (21878977/21878976 v0.3 = 10.5281/zenodo.21901983/21901984 + 2026c governance record
+> 10.5281/zenodo.21901930). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 0 (kaizen-side).
+> SOFT: 1 (research v2.99 lacked 2026-08-12 records-API learnings — FIXED → v2.100). DESIGN: 1 (records-API
+> newversion version-inheritance gap documented). Changes:
+> (1) [SOFT] **research v2.99 → v2.100** — new banner capturing 3 verified learnings from the v0.3
+>     remediation cycle: (a) records-API newversion does NOT inherit the `version` label (set explicitly);
+>     (b) records-API related_identifiers requires `relation_type` object shape or omission (deposit-API
+>     `relation` string → publish 400); (c) DataCite is the authoritative license/keywords verifier
+>     (GET-view `license: null` ≠ data loss — DataCite showed subjects=10/11 + rights=1 on both records).
+> (2) [DESIGN] **Prompt-store verification** — 4/4 stores byte-identical at v3.6 (sha16 8fc298179f8251b3),
+>     9/9 CMD templates identical; no content change warranted this cycle (learnings are research-skill
+>     domain; system prompt v3.6 POST-PUBLICATION ADVERSARIAL ANALYSIS GATE already current from v2.27).
+> (3) [SOFT] **Git + R2** — research v2.100 + kaizen v2.28 committed and pushed (origin + rwnq8);
+>     R2 synced via skill-sync.js (0 failures).
+> Cross-reference: research v2.100, deepchat-settings v1.15, system-prompt-v2.7.md (content v3.6),
+> PROMPT-STORE-4STORE-1, session this.
+
 > **v2.27 UPDATE (2026-08-12, kaizen — CMD RED TEAM SUB + CMD SKILLS UPDATE: post-publication adversarial audit gate on Zenodo 21878977/21878976; system prompt v3.6; 4-store parity re-verified; merged past concurrent v2.27):**
 > Red-team: 3 parallel reviewer subagents (Accuracy/Completeness/Dependency — all completed; Dependency
 > delayed ~7 min, fallback direct-audit was prepared but reviewer finished before use) on the two published
@@ -59,7 +78,7 @@
 > content-vs-template schema asymmetry per PROMPT-KEY-SCHEMA-ASYMMETRY-1). Loader registration gap: kaizen +
 > deepchat-settings + system + cloudflare + 6 more NOT in skill_list (frontmatter-not-at-byte-0) — documented for
 > app skill-management reconciliation, NOT a file rewrite. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 2. Changes:
-> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.27, deepchat-settings hdr v1.12 → v1.14,
+> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.28, deepchat-settings hdr v1.12 → v1.14,
 >     system hdr 2.13 → 2.14, windows-command-patterns hdr v3.20 → v3.21 (fm/ft already correct).
 > (2) [SOFT] **deepchat-hooks INCOMPLETE fixed** — added version frontmatter + versioned H1 + Current footer (v1.1).
 > (3) [DESIGN] **Loader registration gap documented** — 10 on-disk skills absent from skill_list; reconcile via app.
@@ -147,7 +166,7 @@ name: kaizen
 
 
 
-version: "2.27"
+version: "2.28"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -14515,7 +14534,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.27** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.28** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 

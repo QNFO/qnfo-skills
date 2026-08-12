@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.99"
+version: "2.100"
 description: >
 
 
@@ -160,6 +160,33 @@ triggers:
 
 
 
+
+> **v2.100 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: post-publication remediation learnings — records-API newversion version-inheritance + related_identifiers relation_type + DataCite-authoritative license verification):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB remediation cycle on Zenodo
+> 21878977/21878976 v0.3 + 2026c Corrections and Governance Record 10.5281/zenodo.21901930, session
+> z1a7zdl9MIPcta7TA-sOL). Watchtower: research v2.99 N-2 CLEAN pre-edit (raw anchors). HARD: 2 (missing
+> pipeline documentation). SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Records-API newversion does NOT inherit the parent's `version` label** — newversion drafts
+>     created via `POST /api/records/{id}/versions` publish with `metadata.version: None` unless set
+>     explicitly. Fix: set `metadata.version` in the records-API full-replacement metadata PUT before
+>     publish. Canonical: v0.3 records 21901983/21901984 showed version=None after first publish; fixed
+>     via records-API in-place metadata PUT (POST /draft → PUT metadata → publish 202, same DOI).
+> (2) [HARD] **Records-API `related_identifiers` requires `relation_type` (object shape)** — the
+>     deposit-API `relation` string shape → publish 400 "Missing data for required field: relation_type".
+>     For records-API newversions the version chain is automatic via /versions — OMIT related_identifiers
+>     entirely (simplest) or use the InvenioRDM object shape. Canonical: fix_version3.py publish 400
+>     (3 related_identifiers with `relation` string) → fix_version4.py omitted them → publish 202, DOI
+>     preserved (10.5281/zenodo.21901983 / 21901984).
+> (3) [SOFT] **DataCite is the authoritative license/keywords verifier for records-API publishes** — the
+>     Zenodo records GET-view may show `license: null, keywords: 0` after a records-API metadata PUT+
+>     publish even when the metadata WAS stored; check DataCite subjects/rightsList
+>     (api.datacite.org/dois/{doi}). In the 2026-08-12 v0.3 cycle DataCite showed subjects=10/11 +
+>     rights=1 (cc-by-nc-sa-4.0) on both records — proving the license+keywords ARE registered despite the
+>     GET-view null. Extends ZENODO-RECORDS-API-DROPS-METADATA-1 verification protocol (its canonical
+>     qwave-qudit-advantage v0.3 stored via deposit-API shape; this cycle proves the DataCite read-back is
+>     the authority regardless of which write API was used).
+> Cross-reference: ZENODO-RECORDS-API-DROPS-METADATA-1, NEWVERSION SELF-DOI ORDERING RULE, TWO-API METADATA
+> SHAPE DISTINCTION, kaizen v2.28, deepchat-settings v1.15, session this.
 
 > **v2.90 UPDATE (2026-08-10, kaizen — CMD RED TEAM follow-up: briefing email sender override + Email Sending 10002):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM directive, session this — daily briefing run 2026-08-10 hit HTTP 500 on the archive email). Watchtower: N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -9142,7 +9169,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.99** (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.100** (research — CMD SKILLS UPDATE: records-API newversion version-inheritance + related_identifiers relation_type + DataCite-authoritative license verification; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
