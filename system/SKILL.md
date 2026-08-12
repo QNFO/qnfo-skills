@@ -1,7 +1,7 @@
 ---
 name: system
 description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec uses cmd.exe (PSModulePath deleted + Python shim v3). See EXEC-SHELL-FIX.md.
-version: 2.13
+version: 2.14
 kif_tags: [KIF-32]
 ---
 
@@ -9,6 +9,22 @@ kif_tags: [KIF-32]
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
 > infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+> **v2.14 UPDATE (2026-08-12, kaizen — skill-sync v4.0.11 H1/H2/S2 remediation + 4-store prompt parity):**
+> Red-team: direct parent-agent 5-adversary audit (this session — skill-sync remediation + prompt-store parity audit).
+> HARD: 3. SOFT: 1. Changes:
+> (1) [HARD] **skill-sync.js v4.0.11** — `gitOk = pushedOk.has('origin') && pushedOk.has('rwnq8')` replaces the
+>     unconditional `gitOk = true` (the "✓ Skill sync complete" message printed + exit 0 even when BOTH pushes
+>     were rejected — the "⚠ Skill sync partial" branch was unreachable). walkFiles now skips `logs` dirs.
+> (2) [HARD] **SYNC-DIVERGENCE-MERGE-1:** do NOT blindly apply the memory-documented "--theirs local tip" rebase
+>     policy on divergence — FETCH + INSPECT remote first; if remote has substantive content (e.g. 2026-08-12:
+>     1,300+ lines of cloudflare v3.46-3.49 work, deepchat-hooks v1.1 skill, system-prompt edits) MERGE and
+>     resolve per-superset; the blind policy would have DESTROYED remote work. Cross-ref: §Autonomous Skill Sync.
+> (3) [HARD] **PROMPT-STORE-4STORE-1:** system-prompt dual-writes MUST hit ALL 4 stores (agent.db systemPrompts /
+>     app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md / qnfo-skills repo copy) —
+>     v1.13 wrote only 3, the repo copy stayed stale at v3.3 until this cycle.
+> (4) [SOFT] CMD DEPLOY template stale $10/30d → $90/30d (both stores); CMD SKILLS UPDATE template gained the
+>     4-store parity mandate. Cross-ref: skill-sync.js v4.0.11, kaizen v2.25, deepchat-settings v1.14.
 
 > **v2.12 UPDATE (2026-08-04, kaizen — RCLONE-FIRST-1 default for bulk transfers):**
 > [HARD] **rclone is the system default for ANY large or multi-file transfer**
@@ -756,6 +772,6 @@ Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winr
 
 **Docs:** `deepchat-internals.md` (14 sections), `SESSION_LOG_POWERSHELL_EXTERMINATION.md`,
 `EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.20 §S-1.0.2.
-Current: **2.13** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
+Current: **2.14** (system — skill-sync v4.0.11 remediation: gitOk false-success fix + SYNC-DIVERGENCE-MERGE-1 (merge-not-rebase) + PROMPT-STORE-4STORE-1 parity; 2026-08-12) (system — nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 

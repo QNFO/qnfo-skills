@@ -1,3 +1,17 @@
+> **v1.14 UPDATE (2026-08-12, kaizen — PROMPT-STORE-4STORE-1 parity fix + CMD DEPLOY cost-gate correction):**
+> Red-team: direct parent-agent 5-adversary parity audit (this session — CMD SKILLS UPDATE cycle; skill-sync
+> remediation + prompt-store audit). Prompt stores verified: agent.db systemPrompts / app-settings.json
+> default_system_prompt / .deepchat/system-prompt-v2.7.md all v3.4 byte-identical (sha16 9b4108b0468455a2).
+> HARD: 2. SOFT: 0. Changes:
+> (1) [HARD] **qnfo-skills repo copy of system-prompt-v2.7.md was STALE at v3.3** (v1.13 dual-wrote only 3 of 4
+>     stores; v1.12 had written all 4). Copied v3.4 over it — ALL 4 stores now byte-identical
+>     (PROMPT-STORE-4STORE-1, owner system v2.14). Backup: app-settings.json.bak_20260812_095846.
+> (2) [HARD] **CMD DEPLOY template stale cost value** — spend-limited $10/30d → $90/30d (cloudflare v3.49
+>     correction, rule 6f5c29f8 raised 2026-08-12) in BOTH stores (agent.db customPrompts content +
+>     app-settings.json customPrompts template).
+> (3) [SOFT] **CMD SKILLS UPDATE template** — 4-store parity verification mandate appended (both stores).
+> Cross-reference: system v2.14, kaizen v2.25, cloudflare v3.49, skill-sync.js v4.0.11, session this.
+
 > **v1.13 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.4 + cost-gate correction dual-write):**
 > Red-team: direct parent-agent 5-adversary audit (this session — user correction: "Twitch neuron usage is
 > $35-40, you're missing this"). Prompt stores verified byte-identical pre-edit (v3.3, sha16 d350bc849a9e4ca2).
@@ -44,7 +58,7 @@
 
 ---
 name: deepchat-settings
-version: 1.13
+version: 1.14
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -475,4 +489,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.13** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.14** (deepchat-settings — PROMPT-STORE-4STORE-1 parity fix: repo copy synced to v3.4 + CMD DEPLOY $90/30d cost-gate correction; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

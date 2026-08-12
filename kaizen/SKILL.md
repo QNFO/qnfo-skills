@@ -1,3 +1,14 @@
+> **v2.25 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1):**
+> Red-team: direct parent-agent 5-adversary audit (this session — skill-sync remediation + prompt-store parity
+> audit cycle). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **SYNC-DIVERGENCE-MERGE-1 mirrored** — do NOT blindly apply the "--theirs local tip" rebase policy on
+>     git divergence; fetch + inspect remote first; if remote has substantive content (1,300+ lines cloudflare
+>     v3.46-3.49, deepchat-hooks v1.1, system-prompt edits — 2026-08-12 case) MERGE and resolve per-superset.
+>     Owner: system v2.14 §Autonomous Skill Sync.
+> (2) [DESIGN] **kaizen SKILL.md bloat tracked** — 365KB (banner history); de-bloat candidate (like research
+>     v2.99 collapse) remains deferred; .kaizen_history is the canonical history store.
+> Cross-reference: system v2.14, deepchat-settings v1.14, skill-sync.js v4.0.11, cloudflare v3.49, session this.
+
 > **v2.24 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closure):**
 > Red-team: direct parent-agent 5-adversary audit (this session — user correction: "Twitch neuron usage is $35-40,
 > you're missing this"). Live GraphQL verified $40.28 incident (bge-base-en-v1.5 runaway); gateway spend limit
@@ -67,7 +78,7 @@ name: kaizen
 
 
 
-version: "2.24"
+version: "2.25"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -14435,7 +14446,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.24** (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.25** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 
