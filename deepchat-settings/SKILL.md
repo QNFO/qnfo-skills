@@ -1,3 +1,15 @@
+> **v1.12 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management prompt integration):**
+> Red-team: direct parent-agent 5-adversary audit (this session — user directive: all Cloudflare AI services
+> discoverable + cost-managed). Prompt stores verified byte-identical pre-edit (v3.2, sha16 cd420a28588a7f1f).
+> HARD: 0 (settings-side). SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **System prompt v3.2 → v3.3** — Cloudflare Leverage Mandate extended with the AI-Stack Cost Gate
+>     (all AI traffic through AI Gateway, spend limit $10/30d, free-tier-first model selection). Dual-written to
+>     all 4 stores (agent.db systemPrompts / app-settings.json default_system_prompt / system-prompt-v2.7.md in
+>     .deepchat root + qnfo-skills repo).
+> (2) [DESIGN] **CMD DEPLOY template updated** — appended AI-stack cost check (AI calls via AI Gateway,
+>     spend-limited). Both stores.
+> Cross-reference: cloudflare v3.48, kaizen v2.22, session this.
+
 > **v1.11 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.2 + CMD DEPLOY Cloudflare-leverage; Cloudflare Docs & Tools Leverage Mandate):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (this session — user directive "NOT
 > LEVERAGING CLOUDFLARE DOCUMENTATION AND TOOLS ENOUGH (MCP SERVERS AND SKILLS)"). Prompt stores
@@ -19,7 +31,7 @@
 
 ---
 name: deepchat-settings
-version: 1.11
+version: 1.12
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -29,7 +41,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.11
+# DeepChat Settings — v1.12
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
@@ -263,7 +275,7 @@ The system prompt is stored in TWO locations that MUST stay in sync:
 | Location | Key | Notes |
 |:---------|:----|:------|
 | `agent.db` → `app_settings` | `systemPrompts` | JSON array, `[{"id":"default","name":"DeepChat","content":"..."}]` |
-| `app-settings.json` | `default_system_prompt` | Raw string (v3.2 as of 2026-08-12, Cloudflare Docs & Tools Leverage Mandate present; 4 stores byte-identical) |
+| `app-settings.json` | `default_system_prompt` | Raw string (v3.3 as of 2026-08-12, Cloudflare Leverage Mandate + AI-Stack Cost Gate present; 4 stores byte-identical) |
 
 To update the system prompt:
 1. Modify `app-settings.json` → `default_system_prompt` (settingsWatcher detects this)
@@ -450,4 +462,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.11** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.2 + CMD DEPLOY Cloudflare-leverage; 2026-08-12)
+Current: **v1.12** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

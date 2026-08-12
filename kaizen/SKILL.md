@@ -1,3 +1,12 @@
+> **v2.22 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.48 AI-Stack Cost-Managed Leverage; AI-COST-GATE-1 mirror):**
+> Red-team: direct parent-agent 5-adversary audit (this session — user directive: all Cloudflare AI services
+> discoverable in skills/MCP + cost-managed). Docs MCP + live infra verified. HARD: 0 (kaizen-side). SOFT: 0.
+> DESIGN: 1. Changes:
+> (1) [SOFT] **AI-COST-GATE-1 mirror row added** (owner cloudflare v3.48) — every AI inference call must route
+>     through the AI Gateway; direct Workers-AI calls bypass the $10/30d spend limit.
+> (2) [SOFT] **Owner-pointer sync** — cloudflare v3.47 → v3.48 in active mirror rows + footer.
+> Cross-reference: cloudflare v3.48, deepchat-settings v1.12, system-prompt-v2.7.md (content v3.3), session this.
+
 > **v2.21 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.47 — Cloudflare Docs & Tools Leverage Mandate + fleet drift 12→15):**
 > Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (this session — user directive "NOT
 > LEVERAGING CLOUDFLARE DOCUMENTATION AND TOOLS ENOUGH (MCP SERVERS AND SKILLS)"). Watchtower:
@@ -28,7 +37,7 @@ name: kaizen
 
 
 
-version: "2.21"
+version: "2.22"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -332,7 +341,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.21
+# KAIZEN — v2.22
 > **v2.20 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive with the
 > Skills-Updates-Must-Include-Prompt-Stores standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN
@@ -14396,7 +14405,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.21** (kaizen — CMD SKILLS UPDATE: cloudflare v3.47 Cloudflare Docs & Tools Leverage Mandate + fleet drift 12→15; 2026-08-12)
+Current: **v2.22** (kaizen — CMD SKILLS UPDATE: cloudflare v3.48 AI-Stack Cost-Managed Leverage; AI-COST-GATE-1; 2026-08-12)
 
 
 
@@ -14413,6 +14422,7 @@ Current: **v2.21** (kaizen — CMD SKILLS UPDATE: cloudflare v3.47 Cloudflare Do
 | **D1-REST-PAYLOAD-1: d1-query.py via exec fails on spaced SQL; no fallback documented (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.47). skill_run is the only d1-query.py path (exec quote-mangling breaks --sql "..."); when skill_run is disabled use D1 REST `--data-binary @payload.json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (6/6 exec d1-query failures; REST path succeeded for schema + handoff #28402 + wbs_state). |
 | **CURL-AUTH-QUOTE-1: Quoted curl -H auth headers mangled by exec (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.20). Use `--oauth2-bearer %VAR%` unquoted + `-H Name:value` (no spaces) + `--data-binary @file` + `> out.txt`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (3 failed auth attempts → 1 working). |
 | **CLOUDFLARE-LEVERAGE-GAP-1: Doing Cloudflare work with raw CLI/REST/guessed knowledge while MCP servers + docs MCP are configured (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.47). User directive: utilize the FULL suite of Cloudflare resources (MCP servers AND skills) to maximize effective/efficient Cloudflare use. Before wrangler/REST/from-memory: ask "does a Cloudflare MCP server or the docs MCP cover this?" — search_cloudflare_documentation/search-agent-docs/workers_list/query_worker_observability FIRST. Canonical case: 2026-08-12 CMD SKILLS UPDATE — skill baseline (12) drifted from live workers_list (15) because the audit used MCP FIRST and caught it instantly. |
+| **CLOUDFLARE-AI-COST-GATE-1: Every AI inference call must route through the AI Gateway — direct Workers-AI calls bypass the spend limit (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.48). AI Gateway spend-limit rule 6f5c29f8 ($10/30d sliding) is the cost firewall; `env.AI.run()` without a gateway, or direct Workers AI REST, bypasses it. Route via `env.AI.run()` gateway methods, `/accounts/{id}/ai/v1/chat/completions`, or the compat endpoint. Canonical case: 2026-08-12 — default gateway hardened (rate 120/min, cache 300s, retry x3, spend limit ENABLED, auth true) after live probe showed it unhardened (rate null, cache 0, postpaid). |
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 
