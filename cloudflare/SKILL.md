@@ -1,3 +1,21 @@
+> **v3.49 UPDATE (2026-08-12, kaizen — CMD EXECUTE: red-team fix cycle — tier-0 gateway routing LIVE + AI Search deployed + User Insights/dynamic-route docs):**
+> Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM on v3.48). HARD-1/HARD-2 (tier-0
+> bypassed the gateway spend limit) RESOLVED by qnfo-ai v4.3.9: runWorkersAI + streaming now gateway-first via
+> GW_COMPAT (workers-ai/@cf/... + cf-aig-authorization), fallback to env.AI.run on failure — verified live
+> (tier-0 chat 200 through gateway). DESIGN-1 (AI Search not deployed) RESOLVED: qnfo-ai-search v1.0.1 live
+> (ai_search_namespaces binding, /health + /instances + /search + auth-gated /ingest; fire-and-forget upload).
+> SOFT: 3 fixed. DESIGN: 1 (deferred email/sub-agent wiring). Changes:
+> (1) [SOFT] **AI Gateway row caveat removed** — tier-0 now routes through the gateway (v4.3.9); AI-COST-GATE-1
+>     is enforced for the main path, not just a mandate. Fallback-to-direct remains for resilience (a dead
+>     gateway must not take down the router).
+> (2) [SOFT] **User Insights added** — AI spend anomaly tracking (GA 2026-08-05) named in the AI-stack section;
+>     monitor spend per model/provider/metadata in the Analytics dashboard.
+> (3) [SOFT] **Dynamic-route fallback example added** — spend-limit breach can route to a cheaper model instead
+>     of 429-block (docs: claude-opus-4.7 -> @cf/moonshotai/kimi-k2.6 pattern; QNFO: free tier-0 -> deepseek-v4-flash).
+> (4) [DESIGN] **Email/sub-agent agent wiring DEFERRED** — docs/agents email.md (sendEmail/onEmail/routeAgentEmail)
+>     + agent-tools.md (agentTool sub-agents) documented in §Agents; qnfo-agent-ws not yet wired (next cycle).
+> Cross-reference: kaizen v2.23, qnfo-ai v4.3.9, qnfo-ai-search v1.0.1, system-prompt-v2.7.md (content v3.3), session this.
+
 > **v3.48 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: Cloudflare AI Stack — Cost-Managed Leverage + full AI-service discoverability):**
 > Red-team: direct parent-agent 5-adversary audit + live infra (this session — user directive: "MAKE SURE ALL
 > CLOUDFLARE SERVICES, FEATURES, AND FUNCTIONALITY ARE DISCOVERABLE IN EXISTING SKILLS AND MCP PORTALS/SERVERS.
@@ -42,7 +60,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.48
+version: 3.49
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -221,7 +239,7 @@ self_sufficient: true
 > Cross-reference: v3.23 Token Refresh Protocol, fleet-oauth-refresh.py, mcp.q08.org portal,
 > session QrOP_3xznyiEOIqdKFHWS.
 
-# CLOUDFLARE — v3.48
+# CLOUDFLARE — v3.49
 
 > **v3.37 UPDATE (2026-08-10, kaizen — TOKEN-VERIFY-SCOPE-1 + D1-REST-PAYLOAD-1; session bPhAUCI_FRVeZyA5Rxmsm):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; secrets rotation audit session).
@@ -397,11 +415,11 @@ Docs MCP verified 2026-08-12. The AI Gateway is the single cost firewall for the
 |:--------|:-----------|:---------------------|
 | **AI (unified entrypoints)** | qnfo-ai v4.3.7 — `env.AI.run()` binding + `/ai/` REST | One binding for Workers AI + third-party; AI Gateway features auto-applied; use `@cf/` prefix for gateway routing; AI binding methods `gateway.patchLog()` / `gateway.getLog()` / `gateway.getUrl()` |
 | **Models** | qnfo-ai auto-route: tier-0 FREE models (llama-3.3-70b-instruct-fp8-fast, qwen2.5-coder-32b, llama-3.2-1b, qwen3-30b), deepseek-v4-flash fallback | Never pin paid-only frontier models (`@cf/moonshotai/kimi-k2.6`, `kimi-k2.7-code`, `@cf/zai-org/glm-5.2`) unless prepaid AI Gateway credits fund them (50 req/min via credits vs 20 standard); keep ensemble on free models |
-| **Workers AI** | 10,000 free Neurons/day on Paid plan | Monitor dash.cloudflare.com AI usage; if >10k/day needed, route via gateway + spend limits; embed with `@cf/baai/bge-base-en-v1.5` (768d) |
+| **Workers AI** | 10,000 free Neurons/day on Paid plan | **v4.3.9: tier-0 routed through the AI Gateway** (AI-COST-GATE-1 enforced) with `env.AI.run` fallback for resilience; monitor via User Insights (AI spend anomaly tracking, GA 2026-08-05) + dash.cloudflare.com AI usage; if >10k/day needed, spend-limit rule 6f5c29f8 ($10/30d) or dynamic-route fallback (e.g. free tier-0 -> deepseek-v4-flash); embed with `@cf/baai/bge-base-en-v1.5` (768d) |
 | **AI Gateway** | `default` gateway HARDENED 2026-08-12: rate 120/min fixed, cache 300s invalidate-on-update, retry x3 exponential, **spend limit $10/30d rule `6f5c29f8` ENABLED**, auth true, 10M logs | ALL AI traffic MUST route here (AI-COST-GATE-1). REST: `POST /accounts/{id}/ai/v1/chat/completions`; compat: `gateway.ai.cloudflare.com/v1/{acct}/default/compat/chat/completions`; manage via `PUT /accounts/{id}/ai-gateway/gateways/default` (HYPHEN `ai-gateway`, not underscore); spend limits = up to 20 rules/gateway, `limitType` enum `cost`, `window` numeric ms, block or dynamic-route fallback on 429 |
 | **MCP Portals** | mcp.q08.org Zero Trust portal (Managed OAuth, 900s token, service-token m2m) | Portal exposes hosted MCP servers (cloudflare, docs, ai-gateway, radar, …) under Access; `portal_list_servers` / `portal_toggle_servers` tools; token auto-refresh via refresh_token grant |
 | **Vectorize** | 5 indexes (qwav-research-v2, personal-life, …) | 50M queried + 10M stored dims/mo included on Paid; `.query()` with `returnValues ≤ 10`; metadata all strings; IDs ≤64B; bge-base-en-v1.5 768d |
-| **AI Search** | NOT yet deployed — **FREE during open beta** (2026-04-16: built-in storage + vector index + namespace binding) | Deploy an instance: `env.AI_SEARCH.get("instance")` → `items.uploadAndPoll()` → `instance.search()`; upload paper corpus → instant semantic Q&A without R2/D1 plumbing; Workers AI + AI Gateway billed separately (10k neurons/day budget) |
+| **AI Search** | **DEPLOYED v1.0.1** (`qnfo-ai-search` worker, 2026-08-12) — **FREE during open beta** (2026-04-16: built-in storage + vector index + namespace binding) | `env.AI_SEARCH.get("instance")` → `items.upload()` (fire-and-forget; `uploadAndPoll` times out on first ingest) → `instance.search()`; endpoints /health + /instances + /search (open) + /ingest (X-Sync-Token); auto-wired to AI Gateway (`ai_gateway_id: default`); Workers AI + AI Gateway billed separately (10k neurons/day budget) |
 | **Agents** | qnfo-agent-ws v1.2.0b (AIChatAgent + WebSocket + OpenAI surface; tools search_papers/get_paper_context/query_graph + cloudflare-api MCP; scheduleEvery 24h DailyQnfoReport + POST /v1/reports/run) | Run autonomous tasks ON CLOUDFLARE (scheduleEvery, AgentWorkflow durable steps, sendEmail/onEmail, agentTool sub-agents, callable RPC) instead of DeepChat cronjobs → zero DeepChat session cost; DO SQLite storage ≤5GB free on Paid; observability head_sampling_rate 1.0 (free until 2026-10-01) |
 
 **CLOUDFLARE-AI-COST-GATE-1 (HARD, 2026-08-12):** every AI inference call MUST go through the AI Gateway
@@ -2012,7 +2030,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.48** (cloudflare — Cloudflare AI Stack Cost-Managed Leverage + AI-COST-GATE-1 + all 8 AI services discoverable; 2026-08-12) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.49** (cloudflare — red-team fix cycle: tier-0 gateway routing LIVE (qnfo-ai v4.3.9) + AI Search deployed (qnfo-ai-search v1.0.1) + User Insights/dynamic-route docs; 2026-08-12) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
