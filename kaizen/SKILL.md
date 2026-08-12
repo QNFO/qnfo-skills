@@ -1,3 +1,12 @@
+> **v2.29 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: 4-store prompt parity repair + N-2 version-drift sweep + DSI methodology cross-ref):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, QNFO.UMP.008 publication cycle). Watchtower: 4-store prompt parity BROKEN (skills-copy stale at 8e912a21/62,828 B vs canonical v3.6 8fc298179f8251b3/61,830 B — FIXED by copy) + 3 skills with N-2 version drift (kaizen hdr v2.23/ft v1.49 vs fm v2.28; research hdr v2.99 vs v2.100; qnfo-core hdr v1.18 vs v1.26 — all fixed). HARD: 1 (prompt parity). SOFT: 4. DESIGN: 1. Changes:
+> (1) [HARD] **PROMPT-PARITY-1 added** — 4-store system-prompt parity (agent.db systemPrompts / app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md / qnfo-skills repo copy) can break independently; the skills-copy is the failure-prone store. Every skills-update cycle MUST sha256-check all 4 stores (canonical hash 8fc298179f8251b3, v3.6). Also verify customPrompts dual-write parity (agent.db `content` field vs app-settings `template` field — PROMPT-STORE-FIELD-ASYMMETRY-1).
+> (2) [SOFT] **PROMPT-STORE-FIELD-ASYMMETRY-1 added** — agent.db customPrompts stores `content`; app-settings stores `template`; audit tools reading only `template` from agent.db see false len=0.
+> (3) [SOFT] **SKILL-VERSION-DRIFT-1 added** — banner-only version bumps (without header+footer update) accumulate N-2 triple drift; update fm/hdr/ft in ONE atomic edit.
+> (4) [SOFT] **SUBAGENT-REVIEWER-SLOT-CONTENTION-1 added** — reviewer subagent slots frequently stay queued/running without completing; use bounded waits (45-60s) then direct parent-agent audit fallback; never block closeout on queued reviewers.
+> (5) [DESIGN] **DSI methodology cross-ref** — QNFO.UMP.008 (DOI 10.5281/zenodo.21902891): radix-agnostic detector (research/scripts/dsi-radix-detector.py) with integrity gates G1/G2/G3, G4 model-subtraction, max-statistic bootstrap p (Sidak double-counts — corrected), grid-uniformity guard (commit 969b982). Cross-ref: research v2.101.
+> Cross-reference: research v2.101, qnfo-core v1.27, system-prompt v3.6 (8fc298179f8251b3), QNFO.UMP.008 DOI 10.5281/zenodo.21902891, session this.
+
 > **v2.28 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: post-publication remediation learnings captured → research v2.100; prompt stores verified 4/4 byte-identical v3.6; git+R2 synced):**
 > Red-team: direct parent-agent 5-adversary audit of the CMD SKILLS UPDATE cycle following the Zenodo
 > v0.3 remediation (21878977/21878976 v0.3 = 10.5281/zenodo.21901983/21901984 + 2026c governance record
@@ -166,7 +175,7 @@ name: kaizen
 
 
 
-version: "2.28"
+version: "2.29"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -470,7 +479,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.26
+2.29v2.26
 > **v2.20 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive with the
 > Skills-Updates-Must-Include-Prompt-Stores standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN
@@ -748,7 +757,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v1.98
+# KAIZEN — v2.29
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -14534,7 +14543,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.28** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.29** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 

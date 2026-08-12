@@ -10,7 +10,7 @@ name: research
 
 
 
-version: "2.100"
+version: "2.101"
 description: >
 
 
@@ -151,6 +151,13 @@ triggers:
 
 ---
 
+> **v2.101 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: N-2 header fix + DSI methodology cross-ref):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). Watchtower: research v2.100 hdr stale (v2.99) — FIXED. HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **Header v2.99 → v2.101** (N-2 triple consistency).
+> (2) [DESIGN] **Radix-agnostic DSI methodology cross-ref** — the certified three-stage detector (`research/scripts/dsi-radix-detector.py`, commits a9db635→969b982) is the canonical radix-agnostic DSI discovery instrument: Stage 1 detrend + FFT/Lomb-Scargle (grid-uniformity guard auto-selects Lomb-Scargle on non-uniform grids — DESIGN-7), Stage 2 bounded sinusoid refinement (sigma_lambda), Stage 3 candidate-radix test; mandatory certification (max-statistic bootstrap p — ALREADY multiplicity-corrected, do NOT Sidak; DeltaBIC>10; integrity gates G1 resolvability omega>=2pi/u_span / G2 SNR>=1 / G3 sigma_lambda/lambda<10%); G4 model-subtraction mode for non-power-law spectra (scan log(y)-log(model) residuals). QNFO.UMP.008 null on Planck 2018 (DOI 10.5281/zenodo.21902891): no certified DSI at any resolvable radix incl. p-adic 2,3,5,7. Cross-ref: methodology note _26224105300.md.
+> Cross-reference: kaizen v2.29, QNFO.UMP.008 DOI 10.5281/zenodo.21902891, session this.
+
+
 
 
 
@@ -244,7 +251,7 @@ triggers:
 > Cross-reference: kaizen v1.79, knowledge v2.8 (PHILPAPERS-DISCOVERABILITY-GAP), ZENODO-RECORDS-
 > API-DROPS-METADATA-1, ZENODO-PHANTOM-DOI-1, mem-eoKxBfeViioJ, session ktkjFggX5vMt1h4ogDIwh.
 
-# RESEARCH — v2.99
+2.101v2.99
 > **v2.99 UPDATE (2026-08-11, kaizen — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB — session rvnMtR544X387NEXCAPbB). HARD: 2 (stale/orphaned current-state pointers). SOFT: 1. DESIGN: 1. Changes:
 > (1) [HARD] **KG Node Seeding pointer repointed (x2)** — `(per qnfo-core v1.24)` -> `(per knowledge v2.10 SYNC CONTRACT)`: qnfo-core v1.25+ contains zero `INSERT OR IGNORE`/`qnfo-graph` fallback content; the actual owner of the graph-sync contract is knowledge v2.10 (`graph-api.qnfo.org/sync`). Orphaned-owner pointer fixed.
@@ -9169,7 +9176,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.100** (research — CMD SKILLS UPDATE: records-API newversion version-inheritance + related_identifiers relation_type + DataCite-authoritative license verification; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.101** (research — CMD SKILLS UPDATE: records-API newversion version-inheritance + related_identifiers relation_type + DataCite-authoritative license verification; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
