@@ -1,3 +1,27 @@
+> **v2.33 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 repo-copy fix + 5-store v3.9 parity + cost-control/R2 verification):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this).
+> **PROMPT-PARITY-1 (HARD, FIXED):** qnfo-skills repo copy of `system-prompt-v2.7.md` was STALE
+> (v3.8, 65,039 B, sha e2d6f216c5119734 vs canonical v3.9 66,423 B e5902e47691612dd — the v1.13
+> missed-the-repo-copy failure mode) → **SYNCED to byte-identical v3.9**; all **5 stores** now
+> sha256[:16] e5902e47691612dd (agent.db systemPrompts / app-settings.json default_system_prompt /
+> .deepchat root / skills dir / qnfo-skills repo). VERIFIED same-turn: customPrompts **9/9 identical**
+> (agent.db == app-settings.json); CMD DEPLOY + CMD SKILLS UPDATE **cost gate = $90/30d** (no stale
+> $10); **cloudflare v3.50** Cost Control section complete (COST-AUDIT-MISS-AI-1 neuron audit via
+> aiInferenceAdaptiveGroups, <$100 target / $200 HARD CAP, $0.011/1k Neurons, 10k free/day);
+> **R2 anti-patterns preserved** (QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 + R2-MULTI-BUCKET-
+> ARCHITECTURE in system prompt v3.9 and cloudflare v3.50); system-prompt header==footer v3.9.
+> HARD: 1 (repo copy — FIXED). SOFT: 0. DESIGN: 0. Committed+ pushed to QNFO/qnfo-skills origin.
+
+> **v2.32 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.9 parity):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this).
+> ZENODO-INQUIRY-1: Universal Ignorance Audit (10.5281/zenodo.21901984) + epistemic pipeline lessons
+> (10.5281/zenodo.21901983) APPLIED TO ALL INQUIRY/RESEARCH; system prompt v3.8 → v3.9 (4 stores
+> byte-identical sha256 e5902e47691612dd, 65,719 chars); CMD SKILLS UPDATE template gained the
+> Zenodo mandate (both stores); research v2.102 → v2.103 (DOIs updated to v0.3 records);
+> cloudflare frontmatter 3.49 → 3.50; deepchat-settings frontmatter 1.15 → 1.16; kaizen
+> triple-drift fixed (frontmatter 2.29 / H1 v2.30 / footer v2.29 → v2.32). HARD: 0. SOFT: 0.
+> DESIGN: 0.
+
 > **v2.31 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: FRONTMATTER-HARD-1 + SERVICE-BINDING-1042-1 + 4-store v3.7 parity verify):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, Cloudflare-native program cycle).
 > Watchtower: bloat-cleanup duplicate `version:` keys (×3) = YAML parse defect → FIXED (v3.5);
@@ -251,7 +275,7 @@ name: kaizen
 
 
 
-version: "2.29"
+version: "2.32"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -833,7 +857,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.30
+# KAIZEN — v2.33
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -14619,7 +14643,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.29** (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.32** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.9 parity; 2026-08-12) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 
