@@ -1,6 +1,19 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.4
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.5
 
 ## CLOUDFLARE DOCUMENTATION & TOOLS LEVERAGE MANDATE (HARD GATE — 2026-08-12)
+
+**R2 AUDIT MANDATES (2026-08-12, cloudflare skill v3.50):**
+- **QUEUE-BODY-SHAPE-1** — an R2 bucket event notification wired to a queue consumer that reads
+  `{project, sourcePath, targetPath}` (fields absent in R2 event bodies) creates a full-bucket
+  corruption loop (`list({prefix: undefined})` → rewrite with `undefined` prefix + delete).
+  Queue producers for structured messages MUST be Worker producers; R2-event consumers MUST
+  parse `m.body.object.key`. Contained 2026-08-12 (rules + queue deleted).
+- **AUDIT-COMPLETENESS-1** — NEVER declare R2 objects "destroyed/unrecoverable" without sweeping
+  ALL 13 buckets and reading `qnfo-audit/architecture/R2-MULTI-BUCKET-ARCHITECTURE.md` first.
+  The `qnfo` bucket is DEPRECATED; `qnfo-audit` is the canonical audit-trails bucket. "Missing
+  from 3 buckets" is NOT "lost" — verify against the full fleet before any loss declaration.
+- **R2 Multi-Bucket Architecture** — 6-bucket fleet (releases/skills/audit/projects/backups/
+  assets) + deprecated `qnfo` archive. See the canonical doc for bucket roles.
 
 **Utilize the FULL suite of Cloudflare resources before any fallback.** The user mandate is explicit:
 "YOU ARE NOT LEVERAGING CLOUDFLARE DOCUMENTATION AND TOOLS ENOUGH (MCP SERVERS AND SKILLS)."

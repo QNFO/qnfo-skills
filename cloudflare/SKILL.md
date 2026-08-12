@@ -85,6 +85,25 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+
+# CLOUDFLARE — v3.50
+
+> **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident + AUDIT-COMPLETENESS-1 + QUEUE-BODY-SHAPE-1 + multi-bucket architecture):**
+> Red-team: direct parent-agent audit of the 2026-08-12 daily-verify/R2 incident session
+> (rOT2C-ZiQbSVYpqghlLZ4). HARD: 2. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **QUEUE-BODY-SHAPE-1 anti-pattern added** — R2 event notification -> queue consumer
+> body-shape mismatch caused a live full-bucket corruption loop (965 `undefined`-prefixed keys,
+> original root cause 2026-06-21 mis-wiring); contained by deleting the 2 event-notification rules
+> + the queue. See anti-patterns table.
+> (2) [HARD] **AUDIT-COMPLETENESS-1 anti-pattern added** — never declare R2 objects
+> "destroyed/unrecoverable" without sweeping ALL 13 buckets + reading the multi-bucket
+> architecture doc; "missing from 3 buckets" is NOT "lost". Canonical case: 15 files declared
+> destroyed; 2 were LIVE in `qnfo-audit` (their designated bucket).
+> (3) [DESIGN] **R2 Multi-Bucket Architecture reference added** — 6-bucket fleet canonical roles;
+> `qnfo` deprecated archive; canonical doc path.
+> Cross-reference: kaizen v2.24, deepchat-settings, session rOT2C-ZiQbSVYpqghlLZ4.
+
+
 > **v3.45 UPDATE (2026-08-11, user directive — ALL official Cloudflare skills merged into this ONE skill):**
 > Red-team: reviewer subagent audit (this session) found 3 HARD + 3 SOFT on the merge; ALL FIXED
 > before closeout (agents-sdk imports → `agents` package; garbled Pages baseline text; stale H1
@@ -1820,6 +1839,15 @@ Publication pipelines write D1 but KG seeding is session-dependent — drift acc
 ### R2 Path Hygiene
 **CRITICAL RULE:** Bucket name IS the namespace. NEVER prefix keys with `qnfo/` inside the `qnfo` bucket.
 
+> **R2 MULTI-BUCKET ARCHITECTURE (v1.0, 2026-07-15, ADR-013-REVISED) — READ BEFORE ANY R2 LOSS DECLARATION:**
+> The single `qnfo` bucket was replaced by a 6-bucket fleet: `qnfo-releases` (publications),
+> `qnfo-skills` (skills), `qnfo-audit` (AUDIT TRAILS — canonical home for audit/conversations/,
+> kaizen/), `qnfo-projects` (WBS), `qnfo-backups` (DR), `qnfo-assets` (static web). The `qnfo`
+> bucket is DEPRECATED read-only archive (cooldown to 2026-08-14, then deletable). Canonical doc:
+> `qnfo-audit/architecture/R2-MULTI-BUCKET-ARCHITECTURE.md`. AUDIT-COMPLETENESS-1 (see
+> anti-patterns): a file "missing" from the deprecated `qnfo` bucket may be LIVE in its
+> designated bucket — sweep ALL 13 buckets before declaring loss.
+
 ---
 
 ## Retrieval Sources (Prefer over pre-training — MCP-first)
@@ -2019,7 +2047,9 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **Using `wrangler routes list` (removed in v4.118.0)** | Returns "Unknown arguments: routes, list". Route management in wrangler v4 is via wrangler.toml `workers_dev`/`routes` keys or the zone-level REST API. Use `wrangler pages project list` for Pages discovery (verified 2026-08-02: 5 projects — qwav, qnfo-hub, ipatent-me, qnfo-publications, ask-qwav). |
 | **Misattributing a non-Cloudflare outage to Cloudflare (2026-08-02)** | ipatent.me: 301 (CF proxy OK) → ipatent-v4-0-1-183501038626.us-west1.run.app → 500 on Google Cloud Run. The CF layer is healthy; the 500 is the GCP backend. Always trace the full redirect chain (`curl -sI` + follow Location) before declaring "Cloudflare issue". |
 | **STALE-AUDIT-1: Auditing infra without checking `workers_list` modified_on timestamps (2026-08-02)** | Findings can be invalidated by remediation that landed minutes earlier. Case: v1 audit reported qnfo-qwav dead (ai:false) + webhook 1101, but both Workers were redeployed ~30 min prior (04:28/04:30Z, workers_dev=true). Red-team v2 re-verified: ai:true, vector search 0.75-0.90, webhook 200 for real slugs. **Fix: call `workers_list` and check modified_on BEFORE trusting any infra-state claim; treat findings older than the latest deployment as provisional.** Pairs with KIF-61 (1101 root cause = DNS NXDOMAIN route, not AI binding). |
+| **AUDIT-COMPLETENESS-1: Declaring R2 objects "destroyed/unrecoverable" without full-bucket enumeration (2026-08-12)** | NEVER declare an R2 object lost until ALL buckets have been searched — the 13-bucket fleet (qnfo, qnfo-*, releases, deepchat, git-repos, ipatent, etc.) means a file "missing" from one bucket may be LIVE in its architecture-designated bucket. Case: daily-verify declared 15 files "destroyed" after scanning only 3 buckets; a 5-adversary red-team found 2 of them live in `qnfo-audit` (the DESIGNATED audit-trails bucket per R2-MULTI-BUCKET-ARCHITECTURE.md — they were never lost). **Fix: (1) read `qnfo-audit/architecture/R2-MULTI-BUCKET-ARCHITECTURE.md` to know each bucket's canonical role BEFORE any loss declaration; (2) sweep ALL 13 buckets (rclone lsf --recursive --fast-list per bucket) for the filenames AND content needles; (3) only then classify as destroyed vs misplaced; (4) verify with per-file location audit + byte counts. "Unrecoverable" in a register is a verification claim, not an inference.** |
 
+| **QUEUE-BODY-SHAPE-1: Wiring an R2 bucket event notification to a queue consumer that reads a different message-body shape (2026-08-12)** | R2 event notification bodies are `{object:{key,...}, bucket:{...}}` — NOT `{project, sourcePath, targetPath}`. If a queue consumer reads fields that R2 events don't carry, they resolve to `undefined`: `list({prefix: undefined})` lists ALL objects, then `"undefined"+key.replace("undefined","")` rewrites every key with a literal `undefined` prefix, stamps `archived_at`, and deletes the original — a full-bucket corruption loop firing on EVERY matching PUT. Canonical incident: `qnfo-lifecycle-queue` (created 2026-06-21) had producer = R2 event notification on `qnfo` (rules `9d7a3c07` releases/*.md + `139ab7ed` discovery/*.json) and consumer = `qnfo-archive`, whose `queue()` handler read `m.body.project/sourcePath/targetPath` — the original source of 965 `undefined`-prefixed keys. Fix: (1) queue producers that need `{project, sourcePath, targetPath}` messages MUST be Worker producers (explicit `queue.send()` with that exact body), NOT R2 event notifications; (2) if R2 events are the producer, the consumer MUST parse `m.body.object.key`; (3) NEVER `list({prefix: undefined})` in a consumer — it is "all objects". Contained 2026-08-12: both rules deleted + queue deleted (remaining queues: []). |
 | **HARDCODED-HEALTH-1: Health endpoint hardcodes binding names (2026-08-02)** | `/health` MUST verify bindings at runtime with `!!env.BINDING_NAME` (e.g. `ai: !!env.AI`), NEVER echo the expected name as a string (`d1: "living-paper"`). Case: qnfo-qwav reported d1:"living-paper" while env.LIVING_PAPER was undefined → "Cannot read properties of undefined (reading 'prepare')" on /ask. Fix: `bindings: { d1: !!env.LIVING_PAPER ? "living-paper" : null, ai: !!env.AI, ai_search: !!env.QNFO_SEARCH }`. |
 | **CF-WAF-1: Python urllib blocked by Cloudflare WAF without browser UA (2026-08-02)** | ALWAYS pass `headers={'User-Agent':'Mozilla/5.0'}` when probing Worker endpoints from Python. Default urllib UA → HTTP 403. To read the real error body, catch `urllib.error.HTTPError` and `e.read().decode()` — surfaces 1101 text, "Cannot read properties...", etc. |
 | **MCP-OFFLOAD-1: Trusting MCP tool "OK" output for infra verification (2026-08-02)** | QNFO MCP tools (search_papers, query_graph, resolve_paper_id) often return "OK" with results offloaded to unreadable files. For INFRA state claims, verify with DIRECT probes (Python urllib + browser UA against the live Worker endpoint) — do not treat MCP "OK" as evidence of resource state. |
@@ -2079,7 +2109,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.49** (cloudflare — Cost-Control correction: spend limit $90/30d + COST-AUDIT-MISS-AI-1 neuron audit + gateway routing verified + rwnq8/personal-life source home; 2026-08-12) (cloudflare — red-team fix cycle: tier-0 gateway routing LIVE (qnfo-ai v4.3.9) + AI Search deployed (qnfo-ai-search v1.0.1) + User Insights/dynamic-route docs; 2026-08-12) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.50** (cloudflare — Cost-Control correction: spend limit $90/30d + COST-AUDIT-MISS-AI-1 neuron audit + gateway routing verified + rwnq8/personal-life source home; 2026-08-12) (cloudflare — red-team fix cycle: tier-0 gateway routing LIVE (qnfo-ai v4.3.9) + AI Search deployed (qnfo-ai-search v1.0.1) + User Insights/dynamic-route docs; 2026-08-12) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
 
 ---
 
