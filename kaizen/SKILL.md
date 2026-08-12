@@ -1,3 +1,51 @@
+> **v2.31 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: FRONTMATTER-HARD-1 + SERVICE-BINDING-1042-1 + 4-store v3.7 parity verify):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, Cloudflare-native program cycle).
+> Watchtower: bloat-cleanup duplicate `version:` keys (×3) = YAML parse defect → FIXED (v3.5);
+> cloudflare v3.50 + SERVICE-BINDING-1042-1 (Worker→workers.dev fetch = 1042; use service bindings) added.
+> Prompt stores verified **byte-identical v3.7** (sha256[:16] f878d47fe46c0dbb, 61,783 chars) across all three
+> system-prompt stores (agent.db systemPrompts / app-settings.json default_system_prompt / system-prompt-v2.7.md);
+> customPrompts 9/9 identical (agent.db customPrompts == app-settings.json customPrompts). HARD: 1. SOFT: 0. DESIGN: 1.
+> Changes:
+> (1) [HARD] **FRONTMATTER-HARD-1 (bloat-cleanup)** — duplicate version keys removed, header→v3.5 N-2 consistency.
+> (2) [DESIGN] **SERVICE-BINDING-1042-1 (cloudflare v3.50)** — cross-ref to qnfo-ops/qnfo-email-orchestrator pattern.
+> Cross-reference: bloat-cleanup v3.5, cloudflare v3.50, deepchat-settings v1.16, system-prompt-v2.7.md (content v3.7), session this.
+
+> **v2.31 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: FRONTMATTER-HARD-1 + SERVICE-BINDING-1042-1 + 4-store v3.7 parity verify):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, Cloudflare-native program cycle).
+> Watchtower: bloat-cleanup duplicate `version:` keys (×3) = YAML parse defect → FIXED (v3.5);
+> cloudflare v3.50 + SERVICE-BINDING-1042-1 (Worker→workers.dev fetch = 1042; use service bindings) added.
+> Prompt stores verified **byte-identical v3.7** (sha256[:16] f878d47fe46c0dbb, 61,783 chars) across all three
+> system-prompt stores (agent.db systemPrompts / app-settings.json default_system_prompt / system-prompt-v2.7.md);
+> customPrompts 9/9 identical (agent.db customPrompts == app-settings.json customPrompts). HARD: 1. SOFT: 0. DESIGN: 1.
+> Changes:
+> (1) [HARD] **FRONTMATTER-HARD-1 (bloat-cleanup)** — duplicate version keys removed, header→v3.5 N-2 consistency.
+> (2) [DESIGN] **SERVICE-BINDING-1042-1 (cloudflare v3.50)** — cross-ref to qnfo-ops/qnfo-email-orchestrator pattern.
+> Cross-reference: bloat-cleanup v3.5, cloudflare v3.50, deepchat-settings v1.16, system-prompt-v2.7.md (content v3.7), session this.
+
+> **v2.31 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system-prompt v3.8 PROVENANCE-ACCUSATION-1 + SKILL-REGISTRY-GAP-1 + footer-drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, BJ Klock provenance cycle 2).
+> Watchtower: 4-store prompt parity VERIFIED byte-identical at v3.7 (sha256[:16] f878d47fe46c0dbb, 61,783 chars) pre-edit;
+> customPrompts dual-write CLEAN (CMD SKILLS UPDATE template 1,553 chars identical both stores). HARD: 1 (footer drift —
+> header L0 said v3.7 while "## Version" footer said v3.4). SOFT: 1 (SKILL-REGISTRY-GAP-1). DESIGN: 1. Changes:
+> (1) [HARD] **System prompt v3.7 → v3.8** — footer-drift FIXED: header + "## Version" footer both now v3.8.
+>     PROVENANCE-ACCUSATION-1 gate added (name-overlap accusation protocol from the BJ Klock case: IGNORE — any reply
+>     validates the persecution narrative and becomes evidence in their archive; verify via archive.org CDX + Google
+>     Patents; strengthen YOUR record via Zenodo metadata.notes provenance amendment (newversion -> PUT metadata.notes ->
+>     publish, files untouched); one-paragraph rebuttal ONLY on escalation into your real audience; "all publicity is
+>     good publicity" is FALSE for pseudo-science adjacency). Dual-written ALL stores: canonical MD + qnfo-skills repo
+>     copy + both app-settings.json + agent.db systemPrompts[0] — sha256[:16] e8aba9530f1c277a, 63,345 chars,
+>     byte-identical verified post-write.
+> (2) [SOFT] **SKILL-REGISTRY-GAP-1 added** — kaizen / deepchat-settings / system / cloudflare / execution-mandate /
+>     email-composer / bloat-cleanup / qnfo-agent exist on disk (C:\Users\LENOVO\.deepchat\skills\<name>\SKILL.md)
+>     but are NOT in the 121-skill registry; skill_view("<name>") returns "Skill not found". Fix: read skill files
+>     directly via read tool (write-file-read-back pattern) when skill_view fails; registry subset is a platform
+>     behavior, not a disk problem.
+> (3) [DESIGN] **Footer-drift root cause** — version footers in skill files and system prompt drift independently of
+>     header banners; every CMD SKILLS UPDATE must verify header == footer AND all stores byte-identical (PROMPT-PARITY-1
+>     extension: check footer line, not just hash).
+> Cross-reference: research v2.102, deepchat-settings v1.16, system-prompt-v2.7.md v3.8 (e8aba9530f1c277a),
+> PROMPT-PARITY-1, SKILL-REGISTRY-GAP-1, session this.
+
 > **v2.30 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: Zenodo WAF browser-context + DEEPCHAT-QUESTION-LIMITS-1 + 4-store v3.7 parity):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this, BJ Klock provenance cycle).
 > Watchtower: 4-store prompt parity BROKEN? NO — verified byte-identical at v3.6 pre-edit (sha1[:16]

@@ -1,7 +1,7 @@
 ---
 name: bloat-cleanup
 description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
-version: 3.4
+version: 3.5
 triggers:
 - cleanup
 - bloatware
@@ -13,13 +13,19 @@ triggers:
 - disk cleanup
 - free RAM
 - optimize Windows
-version: 3.4
-
-version: 3.4
-
 ---
 
-# BLOAT CLEANUP — v3.4
+
+> **v3.5 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: FRONTMATTER-HARD-1 duplicate version keys):**
+> Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). HARD: 1. SOFT: 0. DESIGN: 0.
+> Changes:
+> (1) [HARD] **Duplicate `version:` YAML keys removed** — the frontmatter had `version: 3.4` three times
+>     (lines 3, 15, 17), a YAML parse-breaking defect that would fail any strict frontmatter parser.
+>     Kept the first occurrence, removed the two strays after the triggers list. Header bumped to v3.5
+>     for N-2 consistency (header/frontmatter/file-title triple).
+> Cross-reference: kaizen v2.31, system v2.14.
+
+# BLOAT CLEANUP — v3.5
 
 > **v3.4 UPDATE (2026-08-06, kaizen — CUA tools integration for GUI cleanup + stale cross-ref fix):**
 > Red-team: direct parent-agent 5-adversary audit (session QPBAVeVkU0Y5qkMNG6CC9 — CONTINUE

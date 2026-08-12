@@ -1,3 +1,20 @@
+> **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: SERVICE-BINDING-1042-1 — Worker→workers.dev fetch fails with error 1042):**
+> Red-team: direct parent-agent 5-adversary audit + live infra (session this — CMD CONTINUE Cloudflare-native program).
+> While building qnfo-ops (fleet aggregator), a Worker fetching another Worker's `*.workers.dev/health` URL
+> returned **HTTP 404 body "error code: 1042"** (worker-not-found-on-route) — while the SAME URL returned 200
+> from Python/external clients. Diagnosed via a `/diag` endpoint: `fetch("https://qnfo-lifecycle.q08.workers.dev/health")`
+> from inside a Worker → 1042; `fetch("https://example.com")` → 200. Root cause: a Worker must NOT hop over
+> the public `*.workers.dev` HTTP surface to reach a sibling Worker on the same account — that route is not
+> reliably resolvable from inside Workers. HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **SERVICE-BINDING-1042-1 anti-pattern added** — for Worker→Worker calls use **service bindings**
+>     (`[[services]] binding="X" service="<name>"` + `env.X.fetch("https://qnfo-ops.internal/health")` — the
+>     hostname is ignored, path/method route to the bound Worker). Service bindings are the Cloudflare-native
+>     RPC: no public route dependency, no API-key hop, works in production. qnfo-ops v0.4 (11/11 healthy, 657ms)
+>     and qnfo-email-orchestrator v0.2 both use this pattern successfully.
+> (2) [DESIGN] **Fleet-health aggregation pattern documented** — GET /status on a hub Worker with
+>     Promise.allSettled + per-probe 4s AbortController timeouts; a slow/failing member never hangs the hub.
+> Cross-reference: kaizen v2.31, qnfo-ops v0.4 (c1b693cc), qnfo-email-orchestrator v0.2 (e14cb112), session this.
+
 > **v3.49 UPDATE (2026-08-12, kaizen — CMD EXECUTE: red-team fix cycle — tier-0 gateway routing LIVE + AI Search deployed + User Insights/dynamic-route docs):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM on v3.48). HARD-1/HARD-2 (tier-0
 > bypassed the gateway spend limit) RESOLVED by qnfo-ai v4.3.9: runWorkersAI + streaming now gateway-first via
