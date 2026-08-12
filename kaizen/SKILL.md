@@ -1,3 +1,21 @@
+> **v2.21 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.47 — Cloudflare Docs & Tools Leverage Mandate + fleet drift 12→15):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (this session — user directive "NOT
+> LEVERAGING CLOUDFLARE DOCUMENTATION AND TOOLS ENOUGH (MCP SERVERS AND SKILLS)"). Watchtower:
+> live workers_list (15) vs cloudflare baseline (12) — HARD drift; prompt stores byte-identical
+> (v3.1, sha16 d9f6a397901beb8a). HARD: 0 (kaizen-side). SOFT: 3 (owner-pointer drift). DESIGN: 1.
+> Changes:
+> (1) [SOFT] **4 active mirror rows owner pointer cloudflare v3.46 → v3.47** — AI-BINDING-SYNTAX-1,
+>     PHANTOM-DEPLOY-VERSION, TOKEN-VERIFY-SCOPE-1, D1-REST-PAYLOAD-1 + 2 calibration entries
+>     (RADAR-MCP-OAUTH-1, MCP Server Portals) + footer description. Raw anchors verified.
+> (2) [SOFT] **New anti-pattern mirror added** — CLOUDFLARE-LEVERAGE-GAP-1 (owner cloudflare v3.47):
+>     doing Cloudflare work with raw CLI/REST/guessed knowledge while MCP + docs MCP are configured.
+> (3) [SOFT] **deepchat-settings v1.10 → v1.11 pointer** — system prompt now v3.2 (Cloudflare
+>     leverage mandate injected into all 4 prompt stores).
+> (4) [DESIGN] **Prompt-store verification evidence** — system prompt v3.2 (4 stores byte-identical,
+>     sha16 recorded in session tape) + CMD DEPLOY template updated to MCP/docs-first; mandate holds.
+> Cross-reference: cloudflare v3.47, deepchat-settings v1.11, system-prompt-v2.7.md (content v3.2),
+> N-2-SCAN-FALSE-POSITIVE-1, session this.
+
 ---
 
 
@@ -10,7 +28,7 @@ name: kaizen
 
 
 
-version: "2.20"
+version: "2.21"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -314,7 +332,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.20
+# KAIZEN — v2.21
 > **v2.20 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive with the
 > Skills-Updates-Must-Include-Prompt-Stores standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN
@@ -12281,10 +12299,10 @@ Session Failure → Session Retrospective detects failure pattern
 
 ## Anti-Patterns
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
-| **AI-BINDING-SYNTAX-1: Using `[[ai]]` (array) for the Workers AI binding in wrangler.toml — the v3.16 guidance was INVERTED (2026-08-11)** | **HARD** (mirror; owner cloudflare v3.46). On wrangler 4.118.0 the `ai` field must be a SINGLE-TABLE OBJECT: `[ai]` with `binding = "AI"`. The `[[ai]]` array form FAILS config validation with `The field "ai" should be an object but got [{"binding":"AI"}]` — the error literally says the field must be an OBJECT. The pre-4.118 guidance (2026-08-02) claimed the reverse. Canonical case: qnfo-ai v4.3.x (2026-08-11) — `[[ai]]` deploy failed, `[ai]` deploy succeeded, env.AI materialized, tier-0 free models returned real content. Cross-ref: cloudflare v3.43, KIF-50 (binding loss class). |
+| **AI-BINDING-SYNTAX-1: Using `[[ai]]` (array) for the Workers AI binding in wrangler.toml — the v3.16 guidance was INVERTED (2026-08-11)** | **HARD** (mirror; owner cloudflare v3.47). On wrangler 4.118.0 the `ai` field must be a SINGLE-TABLE OBJECT: `[ai]` with `binding = "AI"`. The `[[ai]]` array form FAILS config validation with `The field "ai" should be an object but got [{"binding":"AI"}]` — the error literally says the field must be an OBJECT. The pre-4.118 guidance (2026-08-02) claimed the reverse. Canonical case: qnfo-ai v4.3.x (2026-08-11) — `[[ai]]` deploy failed, `[ai]` deploy succeeded, env.AI materialized, tier-0 free models returned real content. Cross-ref: cloudflare v3.43, KIF-50 (binding loss class). |
 | **PROVIDER-KEY-SYNC-1: Custom provider api_key in agent.db goes stale when the upstream Worker secret rotates (2026-08-11)** | **HARD** (mirror; owner deepchat-settings v1.10). After ANY rotation of a Worker secret backing a custom provider (e.g. qnfo-ai `ROUTER_AUTH_KEY`), update `providers.api_key` + `provider_json.apiKey` in agent.db the SAME session + clean stale key from agent_memory; otherwise every chat request 401s silently. Canonical case: 2026-08-11 Cloudflare AI Router (id -_X6Z7YffrNPktrj3Vhjo) — pre-rotation key `w18b7smc...` persisted after ROUTER_AUTH_KEY rotation; fixed + verified 6/6 E2E; backups .bak-20260811_180232. Cross-ref: deepchat-settings §Provider Registration, TOKEN-VERIFY-SCOPE-1. |
 
-| **PHANTOM-DEPLOY-VERSION: Reporting a deployment version or data mutation as done without the actual tool output in the SAME turn (2026-08-10)** | **HARD GATE** (mirror; owner cloudflare v3.46). Never claim a Worker deploy version (e.g. 'Deployed c9b29d47') or a data mutation (e.g. 'issue #110 marked wontfix') without the actual exec/poll/PATCH output in the same turn. Deploy execs that return a background session MUST be polled to completion and the REAL version ID read before claiming deployment. Canonical case: session this (2026-08-10) — claimed c9b29d47 while actual deployed version was aace0986-0747-461f-b835-9a605c3f052d; claimed a wontfix PATCH that never ran (script deleted before exec). Cross-ref: ZENODO-PHANTOM-DOI-1 (same class for publications), CLAIM-VERIFY-1, PHANTOM-CLAIM-2, VERSION-OVERWRITE-1. |
+| **PHANTOM-DEPLOY-VERSION: Reporting a deployment version or data mutation as done without the actual tool output in the SAME turn (2026-08-10)** | **HARD GATE** (mirror; owner cloudflare v3.47). Never claim a Worker deploy version (e.g. 'Deployed c9b29d47') or a data mutation (e.g. 'issue #110 marked wontfix') without the actual exec/poll/PATCH output in the same turn. Deploy execs that return a background session MUST be polled to completion and the REAL version ID read before claiming deployment. Canonical case: session this (2026-08-10) — claimed c9b29d47 while actual deployed version was aace0986-0747-461f-b835-9a605c3f052d; claimed a wontfix PATCH that never ran (script deleted before exec). Cross-ref: ZENODO-PHANTOM-DOI-1 (same class for publications), CLAIM-VERIFY-1, PHANTOM-CLAIM-2, VERSION-OVERWRITE-1. |
 | **PARALLEL-WRITE-EXEC-RACE-1: `write` + `exec` on the same file in ONE parallel batch — exec fires before write completes (FileNotFoundError) (2026-08-06)** | **HARD GATE.** Never dispatch `write` and an `exec` that reads that file in the same parallel tool batch — the exec can fire before the write completes and fail with FileNotFoundError. Sequence: write in batch N, exec in batch N+1; NEVER batch write+verify. Canonical case: session nRNLsnj-ytLg_xHL768uG — 10+ exec failures, all write+exec races. Owner: windows-command-patterns v3.17 (SINGLE-BATCH-SEQUENTIAL-1). Cross-ref: PARALLEL-EXEC-RACE-1 (v1.52), FILE-WRITE-RACE-1 (v1.14). |
 
 
@@ -14378,7 +14396,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.20** (kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification; 2026-08-11)
+Current: **v2.21** (kaizen — CMD SKILLS UPDATE: cloudflare v3.47 Cloudflare Docs & Tools Leverage Mandate + fleet drift 12→15; 2026-08-12)
 
 
 
@@ -14391,9 +14409,10 @@ Current: **v2.20** (kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state
 
 
 
-| **TOKEN-VERIFY-SCOPE-1: Declaring a token INVALID from the wrong-scope verify endpoint (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.46). /user/tokens/verify returns 1000 for ACCOUNT-scoped tokens that are fully valid for account ops. Verify at account scope (GET /accounts/{id}/d1/database, wrangler whoami). Canonical case: session bPhAUCI_FRVeZyA5Rxmsm — CF token wrongly declared dead. |
-| **D1-REST-PAYLOAD-1: d1-query.py via exec fails on spaced SQL; no fallback documented (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.46). skill_run is the only d1-query.py path (exec quote-mangling breaks --sql "..."); when skill_run is disabled use D1 REST `--data-binary @payload.json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (6/6 exec d1-query failures; REST path succeeded for schema + handoff #28402 + wbs_state). |
+| **TOKEN-VERIFY-SCOPE-1: Declaring a token INVALID from the wrong-scope verify endpoint (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.47). /user/tokens/verify returns 1000 for ACCOUNT-scoped tokens that are fully valid for account ops. Verify at account scope (GET /accounts/{id}/d1/database, wrangler whoami). Canonical case: session bPhAUCI_FRVeZyA5Rxmsm — CF token wrongly declared dead. |
+| **D1-REST-PAYLOAD-1: d1-query.py via exec fails on spaced SQL; no fallback documented (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.47). skill_run is the only d1-query.py path (exec quote-mangling breaks --sql "..."); when skill_run is disabled use D1 REST `--data-binary @payload.json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (6/6 exec d1-query failures; REST path succeeded for schema + handoff #28402 + wbs_state). |
 | **CURL-AUTH-QUOTE-1: Quoted curl -H auth headers mangled by exec (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.20). Use `--oauth2-bearer %VAR%` unquoted + `-H Name:value` (no spaces) + `--data-binary @file` + `> out.txt`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (3 failed auth attempts → 1 working). |
+| **CLOUDFLARE-LEVERAGE-GAP-1: Doing Cloudflare work with raw CLI/REST/guessed knowledge while MCP servers + docs MCP are configured (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.47). User directive: utilize the FULL suite of Cloudflare resources (MCP servers AND skills) to maximize effective/efficient Cloudflare use. Before wrangler/REST/from-memory: ask "does a Cloudflare MCP server or the docs MCP cover this?" — search_cloudflare_documentation/search-agent-docs/workers_list/query_worker_observability FIRST. Canonical case: 2026-08-12 CMD SKILLS UPDATE — skill baseline (12) drifted from live workers_list (15) because the audit used MCP FIRST and caught it instantly. |
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 
@@ -14544,10 +14563,10 @@ AI-controls MCP server entry or fleet health-check classification will declare c
 auth_type=unauthenticated/public; auth_type=oauth is used and fleet-mcp-health-check.py keeps radar
 in OAUTH_SERVERS (15 oauth / 2 public). Risk of regression: [MODERATE] - the old skill table row
 (None) persisted for weeks before the 2026-08-11 live 401 probe corrected it; check the mcp.cloudflare.com
-docs for a future public radar endpoint. Likelihood: [HIGH] - cloudflare v3.46 + fleet script + this
+docs for a future public radar endpoint. Likelihood: [HIGH] - cloudflare v3.47 + fleet script + this
 mirror all carry the rule.
 
-[CHECK: 2026-08-13] MCP Server Portals section (cloudflare v3.46) will hold: API-created portals are
+[CHECK: 2026-08-13] MCP Server Portals section (cloudflare v3.47) will hold: API-created portals are
 provisioned with DNS + mcp_portal Access app (Managed OAuth) + service-token m2m per the documented
 gotcha; no session will assume the portal API auto-provisions DNS/Access app (HTTP 522 otherwise).
 Risk of regression: [HIGH] - dashboard flow auto-provisions, tempting agents to skip manual steps;

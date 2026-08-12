@@ -1,6 +1,25 @@
+> **v1.11 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.2 + CMD DEPLOY Cloudflare-leverage; Cloudflare Docs & Tools Leverage Mandate):**
+> Red-team: direct parent-agent 5-adversary audit + UIA Q1-8 (this session — user directive "NOT
+> LEVERAGING CLOUDFLARE DOCUMENTATION AND TOOLS ENOUGH (MCP SERVERS AND SKILLS)"). Prompt stores
+> verified byte-identical pre-edit (v3.1, sha16 d9f6a397901beb8a). HARD: 0 (settings-side). SOFT: 2.
+> DESIGN: 1. Changes:
+> (1) [SOFT] **System prompt v3.1 → v3.2 dual-written to ALL 4 stores** — agent.db systemPrompts,
+>     app-settings.json default_system_prompt, .deepchat/system-prompt-v2.7.md, qnfo-skills/
+>     system-prompt-v2.7.md — byte-identical after write (sha16 recorded in session tape). v3.2 adds
+>     the Cloudflare Docs & Tools Leverage Mandate (search_cloudflare_documentation / cloudflare-docs
+>     MCP / workers_list / query_worker_observability FIRST; wrangler/REST fallback only).
+> (2) [SOFT] **CMD DEPLOY template updated (both stores)** — wrangler-first → MCP/docs-first:
+>     "CMD DEPLOY: skill_view cloudflare -> CLOUDFLARE MCP+DOCS FIRST (search_cloudflare_documentation
+>     / workers_list / query_worker_observability) -> wrangler deploy -> verify ..." (200 → ~300 chars).
+> (3) [DESIGN] **Cloudflare Leverage Mandate referenced from the settings skill** — any prompt-template
+>     update that touches Cloudflare operations should carry the MCP/docs-first trigger per
+>     Skills-Updates-Must-Include-Prompt-Stores mandate. Cross-ref: cloudflare v3.47, kaizen v2.21.
+> Cross-reference: cloudflare v3.47, kaizen v2.21, system-prompt-v2.7.md (content v3.2),
+> CMD DEPLOY template, session this.
+
 ---
 name: deepchat-settings
-version: 1.10
+version: 1.11
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -10,7 +29,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.10
+# DeepChat Settings — v1.11
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
@@ -244,7 +263,7 @@ The system prompt is stored in TWO locations that MUST stay in sync:
 | Location | Key | Notes |
 |:---------|:----|:------|
 | `agent.db` → `app_settings` | `systemPrompts` | JSON array, `[{"id":"default","name":"DeepChat","content":"..."}]` |
-| `app-settings.json` | `default_system_prompt` | Raw string (50,518 chars as of v2.9, BLAME-EXTERNAL-1 present) |
+| `app-settings.json` | `default_system_prompt` | Raw string (v3.2 as of 2026-08-12, Cloudflare Docs & Tools Leverage Mandate present; 4 stores byte-identical) |
 
 To update the system prompt:
 1. Modify `app-settings.json` → `default_system_prompt` (settingsWatcher detects this)
@@ -431,4 +450,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.10** (deepchat-settings — USER MANDATE: skills updates also update system prompt + custom templates; 2026-08-11)
+Current: **v1.11** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.2 + CMD DEPLOY Cloudflare-leverage; 2026-08-12)
