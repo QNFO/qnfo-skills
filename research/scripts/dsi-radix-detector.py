@@ -241,6 +241,94 @@ def scan_dsi(u, y, window=801, n_boot=300, multi=False, verbose=True):
     return result
 
 
+def scan_residuals(u, resid, n_boot=300, multi=False, verbose=True):
+    """G4 protocol: scan ALREADY-DETRENDED residuals (e.g. log(y)-log(model)).
+
+    Residuals are mean-zero by construction, so the moving-average detrend is
+    BYPASSED (re-applying it on short series is broken). Operates directly on
+    the residual array: FFT peak -> bounded sinusoid -> bootstrap null on the
+    residuals (valid because residuals are noise if the model is a good fit)
+    -> integrity gates.
+
+    Verified 2026-08-12: LCDM-residual Planck TT scan (binned, 83 pts).
+    """
+    du = u[1] - u[0]
+    logy = np.asarray(resid, float)          # residuals ARE the log-domain series
+    # Stage 1: FFT peak directly (no detrend)
+    omega0, spec, freq = fft_peak(logy, du)
+    lam0 = lambda_from_omega(omega0)
+    # Stage 2: bounded sinusoid on residuals
+    popt, pcov = refine_omega(u, logy, omega0)
+    omega_ref = popt[1]
+    lam_ref = lambda_from_omega(omega_ref)
+    sig_om = float(np.sqrt(pcov[1, 1]))
+    sig_lam = sigma_lambda(omega_ref, sig_om, lam_ref)
+    # Certification: bootstrap null on the residuals (max-statistic p)
+    def peak_stat(rr):
+        s = np.abs(rfft(rr)) ** 2
+        return float(np.max(s[1:]))
+    obs = peak_stat(logy)
+    nulls = np.empty(n_boot)
+    for b in range(n_boot):
+        rng = np.random.default_rng(9000 + b)
+        nulls[b] = peak_stat(logy[rng.permutation(len(logy))])
+    p_boot = (1 + np.sum(nulls >= obs)) / (1 + n_boot)
+    # LR test vs pure constant (residual mean): model0 = 0, model1 = C cos
+    n = len(u)
+    rss0 = np.sum(logy ** 2)
+    X1 = np.vstack([np.cos(omega_ref * u + popt[2])]).T
+    coef1 = np.linalg.lstsq(X1, logy, rcond=None)[0]
+    rss1 = np.sum((logy - X1 @ coef1) ** 2)
+    k0, k1 = 1, 3  # 0-mean vs C,omega,phi
+    bic0 = n * np.log(rss0 / n) + k0 * np.log(n)
+    bic1 = n * np.log(rss1 / n) + k1 * np.log(n)
+    dbic = bic0 - bic1
+    F = ((rss0 - rss1) / 2) / (rss1 / (n - k1))
+    p_F = 1.0 - stats.f.cdf(F, 2, n - k1)
+    # Integrity gates
+    u_span = u[-1] - u[0]
+    omega_min = 2.0 * np.pi / u_span
+    amp = abs(popt[0])
+    rms = float(np.sqrt(np.mean(logy ** 2))) if np.isfinite(logy).all() else 0.0
+    snr = (amp / rms) if rms > 0 else 0.0
+    g1 = omega_ref >= omega_min
+    g2 = snr >= 1.0
+    g3 = (sig_lam / lam_ref) < 0.10
+    gates_pass = int(g1) + int(g2) + int(g3)
+    f_min, f_max = freq[1], freq[-1]
+    n_eff = int(np.floor((f_max - f_min) * (u[-1] - u[0]))) + 1
+    result = {
+        "mode": "residuals",
+        "omega_fft": float(omega0), "lambda_fft": float(lam0),
+        "omega_refined": float(omega_ref), "lambda_refined": float(lam_ref),
+        "sigma_lambda": float(sig_lam),
+        "delta_bic": float(dbic), "F": float(F), "p_F": float(p_F),
+        "bootstrap_peak": float(obs),
+        "bootstrap_null_mean": float(nulls.mean()),
+        "bootstrap_null_std": float(nulls.std()),
+        "bootstrap_p": float(p_boot),
+        "n_eff": n_eff,
+        "integrity_gates": {
+            "G1_resolvable_omega_min": float(omega_min),
+            "G2_SNR": float(snr),
+            "G3_sigma_lambda_frac": float(sig_lam / lam_ref),
+            "gates_passed": gates_pass,
+        },
+        "detected": bool(p_boot < 0.05 and dbic > 10 and p_F < 0.05 and gates_pass == 3),
+    }
+    if verbose:
+        print(f"[residuals] Stage 1 FFT peak: omega={omega0:.4f} lambda={lam0:.4f}")
+        print(f"[residuals] Stage 2 refine:   omega={omega_ref:.4f} lambda={lam_ref:.4f} "
+              f"sigma_lambda={sig_lam:.4f} ({sig_lam/lam_ref:.1%})")
+        print(f"[residuals] LR: DeltaBIC={dbic:.1f} p_F={p_F:.2e}")
+        print(f"[residuals] bootstrap null: obs={obs:.1f} null={nulls.mean():.1f}+-{nulls.std():.1f} "
+              f"p={p_boot:.4f} (max-statistic, multiplicity-corrected)")
+        print(f"[residuals] gates: G1 omega>={omega_min:.3f} {g1} | G2 SNR={snr:.2f} {g2} | "
+              f"G3 siglamfrac={sig_lam/lam_ref:.1%} {g3} -> {gates_pass}/3")
+        print(f"[residuals] DETECTED: {result['detected']}")
+    return result
+
+
 # ---------------------------------------------------------------------------
 # Self-test + CLI
 # ---------------------------------------------------------------------------
@@ -265,17 +353,43 @@ def main():
     ap.add_argument("--window", type=int, default=801)
     ap.add_argument("--boot", type=int, default=300)
     ap.add_argument("--multi", action="store_true", help="multi-radix rescan")
+    ap.add_argument("--model", help="CSV column name for theory model (default: none) —\n                                  G4 protocol: subtract physical model first, scan residuals")
+    ap.add_argument("--model-csv", help="path to separate CSV with scale,model columns")
     ap.add_argument("--self-test", action="store_true", help="run synthetic verification")
     args = ap.parse_args()
 
     if args.data:
-        u, y = np.loadtxt(args.data, delimiter=",", unpack=True)
-        u = np.asarray(u, float)
-        y = np.asarray(y, float)
+        import numpy as np
+        data = np.loadtxt(args.data, delimiter=",", unpack=True)
+        u = np.asarray(data[0], float)
+        y = np.asarray(data[1], float)
         if u[0] <= 0:
             print("FATAL: scale column must be > 0 (log-space requires positive x)", file=sys.stderr)
             sys.exit(1)
         u = np.log(u)  # interpret input as raw scale x -> u = ln(x)
+
+        # G4 protocol: model subtraction FIRST, then scan residuals directly
+        model_used = False
+        if args.model is not None and args.model:
+            if len(data) >= 3:
+                model = np.asarray(data[2], float)
+            elif args.model_csv:
+                md = np.loadtxt(args.model_csv, delimiter=",", unpack=True)
+                model = np.asarray(md[1], float)
+            else:
+                raise SystemExit("FATAL: --model given but no 3rd column and no --model-csv")
+            if np.any(model <= 0):
+                raise SystemExit("FATAL: model values must be > 0 (log-space)")
+            if len(model) != len(y):
+                raise SystemExit("FATAL: model length != data length")
+            resid = np.log(y) - np.log(model)   # log-residuals vs physical model
+            model_used = True
+            print(f"[G4] model-subtracted log-residuals: {len(resid)} points")
+            res = scan_residuals(u, resid, args.boot, multi=args.multi)
+            res["model_subtracted"] = True
+            print(json.dumps(res, indent=2))
+            sys.exit(0 if res["detected"] else 0)
+
         res = scan_dsi(u, y, args.window, args.boot, multi=args.multi)
         print(json.dumps(res, indent=2))
         sys.exit(0 if res["detected"] else 0)  # exit 0 both ways; check 'detected' field
