@@ -74,6 +74,25 @@ def lomb_scargle(t, yv, freqs):
 
 
 # ---------------------------------------------------------------------------
+# Grid uniformity guard (red-team DESIGN-7, 2026-08-12)
+# ---------------------------------------------------------------------------
+
+def _check_uniform_grid(x, tol=1e-3):
+    """Return (is_uniform, mean_spacing). A grid is uniform if all spacings
+    are within `tol` relative of the mean. The CMB ell-grid (u = ln ell) is
+    NOT uniform — the FFT would mis-scale on it; Lomb-Scargle is required.
+    """
+    if len(x) < 3:
+        return True, 1.0
+    dx = np.diff(x)
+    mean_dx = np.mean(dx)
+    if mean_dx <= 0:
+        return False, mean_dx
+    rel = np.max(np.abs(dx - mean_dx) / mean_dx)
+    return rel < tol, mean_dx
+
+
+# ---------------------------------------------------------------------------
 # Stage 2: bounded sinusoid refinement + sigma_lambda
 # ---------------------------------------------------------------------------
 
@@ -155,7 +174,22 @@ def scan_dsi(u, y, window=801, n_boot=300, multi=False, verbose=True):
     resid, trend = detrend_log(logy, window)
     du = u[1] - u[0]
 
-    omega0, spec, freq = fft_peak(resid, du)
+    # Red-team DESIGN-7: FFT assumes uniform u-spacing. On non-uniform grids
+    # (e.g. u = ln(ell) for the Planck ell-grid) the raw-frame FFT mis-scales
+    # the frequency axis. Detect and fall back to Lomb-Scargle, which handles
+    # arbitrary spacing natively.
+    is_uniform, _ = _check_uniform_grid(u)
+    if is_uniform:
+        omega0, spec, freq = fft_peak(resid, du)
+    else:
+        if verbose:
+            print(f"[uniformity] non-uniform grid detected — using Lomb-Scargle")
+        freqs = np.linspace(1.0 / (u[-1] - u[0]), 1.0 / (2 * du), 4000)
+        ls = lomb_scargle(u, resid, freqs)
+        idx0 = int(np.argmax(ls))
+        omega0 = 2.0 * np.pi * freqs[idx0]
+        spec = ls
+        freq = freqs
     lam0 = lambda_from_omega(omega0)
 
     popt, pcov = refine_omega(u, resid, omega0)
