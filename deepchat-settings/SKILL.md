@@ -1,3 +1,16 @@
+> **v1.13 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.4 + cost-gate correction dual-write):**
+> Red-team: direct parent-agent 5-adversary audit (this session — user correction: "Twitch neuron usage is
+> $35-40, you're missing this"). Prompt stores verified byte-identical pre-edit (v3.3, sha16 d350bc849a9e4ca2).
+> HARD: 1 (stale $10/30d in v3.3 cost gate). SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **System prompt v3.3 → v3.4** — cost gate corrected: spend limit $90/30d (rule 6f5c29f8, was $10),
+>     COST-AUDIT-MISS-AI-1 mandatory neuron check (aiInferenceAdaptiveGroups, runaway >100k neurons/day),
+>     budget policy <$100 target / $200 HARD CAP, weekly audit cronjob ref. Dual-written to all 3 stores
+>     (agent.db systemPrompts / app-settings.json default_system_prompt / system-prompt-v2.7.md) — sha16
+>     9b4108b0468455a2, 58,714 bytes, byte-identical. Backup: app-settings.json.bak_20260812_082432.
+> (2) [SOFT] **CMD SKILLS UPDATE template updated (both stores)** — 426 → 683 chars: cost-control mandate
+>     appended (cloudflare v3.49 Cost Control section, $90/30d, COST-AUDIT-MISS-AI-1, dual-write). Parity MATCH.
+> Cross-reference: cloudflare v3.49, kaizen v2.24, system-prompt-v2.7.md (content v3.4), session this.
+
 > **v1.12 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management prompt integration):**
 > Red-team: direct parent-agent 5-adversary audit (this session — user directive: all Cloudflare AI services
 > discoverable + cost-managed). Prompt stores verified byte-identical pre-edit (v3.2, sha16 cd420a28588a7f1f).
@@ -31,7 +44,7 @@
 
 ---
 name: deepchat-settings
-version: 1.12
+version: 1.13
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -462,4 +475,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.12** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.13** (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

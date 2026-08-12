@@ -1,3 +1,21 @@
+> **v2.24 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closure):**
+> Red-team: direct parent-agent 5-adversary audit (this session — user correction: "Twitch neuron usage is $35-40,
+> you're missing this"). Live GraphQL verified $40.28 incident (bge-base-en-v1.5 runaway); gateway spend limit
+> $10 → $90/30d; neuron audit protocol established. HARD: 2 (mirror stale $10/30d; COST-AUDIT-MISS-AI-1 absent).
+> SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **CLOUDFLARE-AI-COST-GATE-1 mirror corrected** — $10/30d → $90/30d (rule 6f5c29f8, raised 2026-08-12);
+>     owner pointer cloudflare v3.48 → v3.49; bypass-proven note added (direct env.AI.run() calls never fired the limit).
+> (2) [HARD] **COST-AUDIT-MISS-AI-1 mirror row added** (owner cloudflare v3.49) — EVERY cost audit MUST query
+>     aiInferenceAdaptiveGroups (neurons); runaway signature >100k neurons/day; $0.011/1k, 10k free/day.
+> (3) [SOFT] **Pending findings closed** — memory mem-edJjNEsA6jLG flagged "CMD #15 incorrect kaizen phase count +
+>     CMD #16 non-existent skill references + Prompt Review Protocol missing CMD slash command system" from an
+>     incomplete prior session. VERIFIED 2026-08-12: Prompt Review Protocol present WITH slash-command system
+>     ("slash command" anchor found); CMD #15/#16 were pre-v2.17 protocol findings, now superseded by the current
+>     CMD SKILLS UPDATE protocol + N-2-SCAN-FALSE-POSITIVE-1 discipline — closed as resolved.
+> (4) [DESIGN] **kaizen SKILL.md bloat flagged** — 363KB (banner history); de-bloat candidate (like research
+>     v2.99 collapse) — deferred; .kaizen_history is the canonical history store.
+> Cross-reference: cloudflare v3.49, deepchat-settings v1.13, system-prompt-v2.7.md (content v3.4), session this.
+
 > **v2.23 UPDATE (2026-08-12, kaizen — CMD EXECUTE: red-team fix cycle closeout — HARD-1/HARD-2 RESOLVED, AI Search deployed):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM on v2.22/cloudflare v3.48).
 > HARD-1/HARD-2 RESOLVED in owner skill: qnfo-ai v4.3.9 routes tier-0 through AI Gateway (AI-COST-GATE-1 enforced);
@@ -49,7 +67,7 @@ name: kaizen
 
 
 
-version: "2.23"
+version: "2.24"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -14417,7 +14435,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.23** (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.24** (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 
@@ -14434,7 +14452,8 @@ Current: **v2.23** (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2
 | **D1-REST-PAYLOAD-1: d1-query.py via exec fails on spaced SQL; no fallback documented (2026-08-10)** | **HARD** (mirror; owner cloudflare v3.47). skill_run is the only d1-query.py path (exec quote-mangling breaks --sql "..."); when skill_run is disabled use D1 REST `--data-binary @payload.json` + `--oauth2-bearer %CLOUDFLARE_API_TOKEN%`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (6/6 exec d1-query failures; REST path succeeded for schema + handoff #28402 + wbs_state). |
 | **CURL-AUTH-QUOTE-1: Quoted curl -H auth headers mangled by exec (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.20). Use `--oauth2-bearer %VAR%` unquoted + `-H Name:value` (no spaces) + `--data-binary @file` + `> out.txt`. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm (3 failed auth attempts → 1 working). |
 | **CLOUDFLARE-LEVERAGE-GAP-1: Doing Cloudflare work with raw CLI/REST/guessed knowledge while MCP servers + docs MCP are configured (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.47). User directive: utilize the FULL suite of Cloudflare resources (MCP servers AND skills) to maximize effective/efficient Cloudflare use. Before wrangler/REST/from-memory: ask "does a Cloudflare MCP server or the docs MCP cover this?" — search_cloudflare_documentation/search-agent-docs/workers_list/query_worker_observability FIRST. Canonical case: 2026-08-12 CMD SKILLS UPDATE — skill baseline (12) drifted from live workers_list (15) because the audit used MCP FIRST and caught it instantly. |
-| **CLOUDFLARE-AI-COST-GATE-1: Every AI inference call must route through the AI Gateway — direct Workers-AI calls bypass the spend limit (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.48). AI Gateway spend-limit rule 6f5c29f8 ($10/30d sliding) is the cost firewall; `env.AI.run()` without a gateway, or direct Workers AI REST, bypasses it. Route via `env.AI.run()` gateway methods, `/accounts/{id}/ai/v1/chat/completions`, or the compat endpoint. Canonical case: 2026-08-12 — default gateway hardened (rate 120/min, cache 300s, retry x3, spend limit ENABLED, auth true) after live probe showed it unhardened (rate null, cache 0, postpaid). |
+| **CLOUDFLARE-AI-COST-GATE-1: Every AI inference call must route through the AI Gateway — direct Workers-AI calls bypass the spend limit (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.49). AI Gateway spend-limit rule 6f5c29f8 (**$90/30d sliding**, RAISED from $10 on 2026-08-12 — the $10 limit NEVER fired during the $40 runaway because direct env.AI.run() calls bypassed it) is the cost firewall; `env.AI.run()` without a gateway, or direct Workers AI REST, bypasses it. Route via `env.AI.run()` gateway methods, `/accounts/{id}/ai/v1/chat/completions`, or the compat endpoint. Canonical case: 2026-08-12 — default gateway hardened (rate 120/min, cache 300s, retry x3, spend limit ENABLED, auth true) + qnfo-paper-indexer v2.1 + personal-life v2.5/v1.1 all gateway-routed so the limit binds. |
+| **COST-AUDIT-MISS-AI-1: A Cloudflare cost audit that skips Workers AI neuron spend MISSES the dominant cost line (2026-08-12)** | **HARD** (mirror; owner cloudflare v3.49). First audit reported "~$5-7/mo" while the real bill was $40.28 (user caught it). EVERY cost audit MUST query GraphQL `aiInferenceAdaptiveGroups` (dimensions { date modelId }, sum { totalNeurons }); runaway signature >100k neurons/day (~$1.1/day) = ORANGE, >3M neurons/month (~$33) = RED. Pricing $0.011/1k Neurons, 10k free/day. Canonical case: session 2026-08-12 — 99.7% of the $40 was one embedding model (@cf/baai/bge-base-en-v1.5, 1.32M calls) from the qnfo-paper-indexer v1 cron runaway. |
 
 | **CONCURRENT-KAIZEN-1: Two kaizen sessions on the same skill file collide; writes interleave unpredictably (2026-08-04)** | A scheduled background pipeline (Watchtower, backfill, cronjob) can modify a SKILL.md while the current session's kaizen is also editing it. Symptom: version string changed to unexpected content between writes, banner text replaced with unrelated content. Fix: (A) all kaizen edits to a skill file MUST be done in a SINGLE atomic Python script (read→modify→write, no tool-call interleaving); (B) immediately after write, re-read the file to verify your content landed; (C) if content was overwritten, the file was concurrently modified — re-read the current state and re-apply edits against it. Canonical case: session ktmz7cqk — research v2.73 version string overwritten between apply_kaizen.py write and verify_final.py read. |
 

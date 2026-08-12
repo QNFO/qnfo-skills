@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.20
+version: 3.21
 
 
 kif_tags: [KIF-32]
@@ -15,6 +15,19 @@ kif_tags: [KIF-32]
 
 ---
 
+
+> **v3.21 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: exec wrapper quoting + inline-python findings):**
+> Red-team: direct parent-agent audit (this session — Cloudflare cost-control cycle; 40+ exec calls exercised
+> the wrapper; write-file-read-back used throughout). HARD: 0. SOFT: 2. DESIGN: 1. Changes:
+> (1) [SOFT] **EXEC-ARG-QUOTE-1 added** — the exec wrapper mangles quoted args after the first token in chained
+>     commands: `git -C "path"` (invalid arg), `findstr /c:"pattern with space"` (Cannot open), `dir /b "path"`
+>     (silently empty). Fix: UNQUOTED paths where possible (no spaces), single commands instead of `&`-chains
+>     with quoted args, and the write-file-read-back pattern for anything complex.
+> (2) [SOFT] **INLINE-PYTHON-C-1 added** — inline `python -c "long one-liner"` fails through exec (exit 255,
+>     output lost). Fix: write a .py to %TEMP%, `exec python file.py`, `read` the output (§S-1.0.9 pattern).
+> (3) [DESIGN] EXEC-AUTOBG-DEATH-1 remains the umbrella rule; this cycle adds the two most common triggers
+>     observed (quoted args + inline -c) as named anti-patterns.
+> Cross-reference: kaizen v2.24, EXEC-AUTOBG-DEATH-1, CURL-AUTH-QUOTE-1, session this.
 
 > **v3.8 UPDATE (2026-08-04, kaizen — Red-team skills audit closeout):**
 
@@ -1572,4 +1585,4 @@ S-1.0.4, S-1.0.7.
 
 
 
-Current: **v3.20** (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.21** (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
