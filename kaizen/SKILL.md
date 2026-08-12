@@ -1,3 +1,15 @@
+> **v2.23 UPDATE (2026-08-12, kaizen — CMD EXECUTE: red-team fix cycle closeout — HARD-1/HARD-2 RESOLVED, AI Search deployed):**
+> Red-team: direct parent-agent 5-adversary audit (this session — CMD RED TEAM on v2.22/cloudflare v3.48).
+> HARD-1/HARD-2 RESOLVED in owner skill: qnfo-ai v4.3.9 routes tier-0 through AI Gateway (AI-COST-GATE-1 enforced);
+> DESIGN-1 RESOLVED: qnfo-ai-search v1.0.1 deployed (free AI Search beta). HARD: 0 (kaizen-side). SOFT: 2.
+> DESIGN: 1. Changes:
+> (1) [SOFT] **AI-COST-GATE-1 mirror updated** — tier-0 now gateway-routed (v4.3.9); mirror reflects enforced
+>     state with `env.AI.run` fallback documented.
+> (2) [SOFT] **Owner pointers synced** — cloudflare v3.48 → v3.49.
+> (3) [DESIGN] **Email/sub-agent agent wiring deferred** — documented in cloudflare v3.49 §Agents; qnfo-agent-ws
+>     email/agentTool wiring queued for next cycle (out of scope for this fix cycle).
+> Cross-reference: cloudflare v3.49, qnfo-ai v4.3.9, qnfo-ai-search v1.0.1, session this.
+
 > **v2.22 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: cloudflare v3.48 AI-Stack Cost-Managed Leverage; AI-COST-GATE-1 mirror):**
 > Red-team: direct parent-agent 5-adversary audit (this session — user directive: all Cloudflare AI services
 > discoverable in skills/MCP + cost-managed). Docs MCP + live infra verified. HARD: 0 (kaizen-side). SOFT: 0.
@@ -37,7 +49,7 @@ name: kaizen
 
 
 
-version: "2.22"
+version: "2.23"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -341,7 +353,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 >     while the D1 writes were verified same-turn; corrected via follow-up task_outcome memory.
 > Cross-reference: v1.83 (D1 closeout pattern), CMD RED TEAM (2026-08-11), session QrOP_3xznyiEOIqdKFHWS.
 
-# KAIZEN — v2.22
+# KAIZEN — v2.23
 > **v2.20 UPDATE (2026-08-11, kaizen — CMD SKILLS UPDATE: cloudflare v3.46 current-state pointer sync + prompt-store verification):**
 > Red-team: direct parent-agent 5-adversary audit (this session — CMD SKILLS UPDATE directive with the
 > Skills-Updates-Must-Include-Prompt-Stores standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN
@@ -14405,7 +14417,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.22** (kaizen — CMD SKILLS UPDATE: cloudflare v3.48 AI-Stack Cost-Managed Leverage; AI-COST-GATE-1; 2026-08-12)
+Current: **v2.23** (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
 
 
 

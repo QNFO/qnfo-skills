@@ -1,11 +1,27 @@
 ---
 name: personal-knowledge
 description: Query the PERSONAL semantic layer (personal-life Vectorize/D1/Workers) from DeepChat. Use when the user asks about their own files, documents, life admin, Obsidian vault, personal archives, or anything NOT QNFO/QWAV research. Bridges personal-search endpoint + durable memories + conversation history + Obsidian vault. STRICTLY personal domain — never mixes with qnfo-* (user mandate 2026-08-04).
-version: 1.4
+version: 1.5
 kif_tags: [PERSONAL]
 ---
 
-# PERSONAL KNOWLEDGE — v1.4 (2026-08-06)
+# PERSONAL KNOWLEDGE — v1.5 (2026-08-12)
+
+> **v1.5 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: personal-layer cost hardening + source home):**
+> Red-team: direct parent-agent 5-adversary audit (this session — Cloudflare cost-control cycle; user
+> approved "same hardening" for the personal layer). HARD: 3 (missing rwnq8/personal-life source home;
+> missing v2.5-auth/v1.1-gateway versions; missing gateway-routing/spend-limit refs). SOFT: 1 (WAF-1010
+> nuance). DESIGN: 0. Changes:
+> (1) [HARD] **Source home documented** — personal workers' canonical git = **rwnq8/personal-life**
+>     (private, personal account per mandate 2026-08-04); commits be6b021 + 5276cd7 (indexer/ + search/).
+> (2) [HARD] **Versions + auth + routing** — personal-life-indexer **v2.5-index-auth** (00753a12; /index
+>     requires X-Index-Token plx-idx-v1-k7n9q2t5m3p8; 401 otherwise), personal-life-search **v1.1-gateway-routed**
+>     (24528dcb); ALL env.AI.run calls route through AI Gateway default → $90/30d spend limit binds.
+> (3) [HARD] **Cost hardening** — gateway spend limit $90/30d (rule 6f5c29f8) covers the personal layer;
+>     budget policy <$100 target / $200 HARD CAP (user 2026-08-12); COST-AUDIT-MISS-AI-1 neuron check.
+> (4) [SOFT] **CLOUDFLARE-WAF-1010-1 refined** — verified 2026-08-12: /health + /search return HTTP 200 to a
+>     Mozilla/5.0 UA (not 1010); other paths/UA fingerprints may still 1010 — direct-filesystem fallback stays canonical.
+> Cross-reference: cloudflare v3.49, kaizen v2.24, deepchat-settings v1.13, session this.
 
 > **PURPOSE:** The user uses DeepChat as the single interface for ALL information
 > needs. This skill is the integration path for their PERSONAL files — everything
@@ -83,9 +99,25 @@ personal-life-search Worker:  GET /search?q=<query>&topK=N
 DeepChat UI (the user's interface)
 ```
 
+## Personal Workers Source & Cost Hardening (v1.5 — 2026-08-12)
+
+**Source home:** `rwnq8/personal-life` (private repo, personal account — NEVER QNFO org per mandate
+2026-08-04). Layout: `indexer/` (personal-life-indexer) + `search/` (personal-life-search), each with
+wrangler.toml. WORKER-THIN-CLIENT-1: commit + push BEFORE wrangler deploy.
+
+| Worker | Version (deploy) | Auth | AI routing |
+|:-------|:-----------------|:-----|:-----------|
+| personal-life-indexer | v2.5-index-auth (00753a12) | `/index` requires `X-Index-Token` (or Bearer) = `plx-idx-v1-k7n9q2t5m3p8` (env.INDEX_TOKEN) — 401 otherwise; `/health` + `/files` public | env.AI.run → gateway `default` (spend limit binds) |
+| personal-life-search | v1.1-gateway-routed (24528dcb) | public read-only | env.AI.run → gateway `default` |
+
+**Cost hardening (2026-08-12):** every AI call routes through AI Gateway `default` so the **$90/30d sliding
+spend limit** (rule 6f5c29f8) binds — closes the last gap after the 08-02→08-10 bge-base-en-v1.5 runaway
+(~$40, qnfo-paper-indexer v1). Budget policy: total < $100/mo TARGET, $200 HARD CAP. The 08-12 session's
+`/search?q=test` produced the FIRST bge-base-en-v1.5 entry ever in the gateway logs — proof the routing works.
+
 ## Query Endpoints
 
-> **CLOUDFLARE-WAF-1010 (v1.4):** The personal-life-search Worker has Cloudflare Bot Fight Mode enabled. Non-browser HTTP clients (Python urllib, curl, requests) receive error 1010 (browser_signature_banned). The HTTP endpoints below are browser-only. For automated access, use direct filesystem access: `exec` with `cwd: D:\Obsidian\notes\v1` + `read` with absolute file paths.
+> **CLOUDFLARE-WAF-1010 (v1.5, refined 2026-08-12):** personal-life-search has Cloudflare Bot Fight Mode enabled — non-browser clients CAN receive error 1010 (browser_signature_banned). Verified 2026-08-12: `/health` and `/search` returned HTTP 200 to a Mozilla/5.0 UA (probe succeeded), so endpoint probing works with a browser-like UA, but other paths/fingerprints may still 1010. For automated access the canonical path remains direct filesystem: `exec` with `cwd: D:\Obsidian\notes\v1` + `read` with absolute file paths.
 
 | Endpoint | Method | Purpose |
 |:---------|:-------|:--------|
@@ -243,7 +275,8 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 | **GITHUB-CDN-PROPAGATION-1 (cross-ref, REVISED 2026-08-05):** profile README does NOT auto-appear for CLI/API-created profile repos | **THE REAL FIX is the "Share to Profile" button** on the repo page (github.com/{username}/{username} -> "Share to Profile"). The repo page renders the README but the PROFILE page stays empty until this button is clicked — it is NOT a 5-30min CDN wait. Verified 2026-08-05: rwnq8/rwnq8 rendered on repo page for 40+ min with zero profile-page markdown; clicking "Share to Profile" made it appear on github.com/rwnq8 IMMEDIATELY (server-side rendered, confirmed via curl). Repos created via `gh repo create` need this manual promotion; the editor banner ("is a special repository") confirms recognition but does NOT promote it. |
 | **PROFILE-README-FABRICATE-1 (cross-ref):** badge/tool claims without resume attestation | HARD GATE. Grep the actual resume/portfolio for every tool badge before adding it. |
 
-| **CLOUDFLARE-WAF-1010-1: Cloudflare WAF (Bot Fight Mode / Browser Integrity Check) blocks non-browser HTTP clients from Workers endpoints (2026-08-06)** | The personal-life-search endpoint (personal-life-search.q08.workers.dev) returns Cloudflare error 1010 (browser_signature_banned) for all non-browser user agents (Python urllib, curl, requests). This makes the personal-knowledge skill's HTTP-based Obsidian access BROKEN for automated access. **Fix: use direct filesystem access** — `exec` with `cwd: D:\\Obsidian\\notes\\v1\\2026\\08` + `read` with absolute paths (canonical pattern per kaizen v1.60). The personal-life-search Worker has Bot Fight Mode enabled; the HTTP endpoint is only accessible from browser-origin requests. |
+| **CLOUDFLARE-WAF-1010-1: Cloudflare WAF (Bot Fight Mode / Browser Integrity Check) blocks non-browser HTTP clients from Workers endpoints (2026-08-06)** | The personal-life-search endpoint (personal-life-search.q08.workers.dev) returns Cloudflare error 1010 (browser_signature_banned) for all non-browser user agents (Python urllib, curl, requests). This makes the personal-knowledge skill's HTTP-based Obsidian access BROKEN for automated access. **Fix: use direct filesystem access** — `exec` with `cwd: D:\\Obsidian\\notes\\v1\\2026\\08` + `read` with absolute paths (canonical pattern per kaizen v1.60). The personal-life-search Worker has Bot Fight Mode enabled; the HTTP endpoint is only accessible from browser-origin requests. (REFINED 2026-08-12: /health + /search returned 200 to a Mozilla/5.0 UA — browser-like UA probes work; direct filesystem remains canonical.) |
+| **PERSONAL-INDEX-AUTH-1 (2026-08-12):** triggering personal-life-indexer `/index` without auth | `/index` returns 401 without `X-Index-Token` (or Bearer) = `plx-idx-v1-k7n9q2t5m3p8` (env.INDEX_TOKEN, wrangler.toml [vars]). Registry dedup + the $90/30d gateway spend limit bound worst-case burn. `/health` + `/files` stay public read-only. |
 ## Related
 - cloudflare v3.38 §Vectorize Indexing Gotchas (indexer anti-patterns)
 - knowledge skill (QNFO memory/KG — different layer, never merged)
@@ -251,4 +284,4 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 
 ## Version
 
-Current: **v1.4** (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)
+Current: **v1.5** (personal-knowledge — personal workers source home rwnq8/personal-life + cost hardening: gateway routing, $90/30d spend limit, X-Index-Token auth; 2026-08-12) (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)

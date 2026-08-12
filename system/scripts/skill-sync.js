@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 /**
- * skill-sync.js v4.0.10 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
+ * skill-sync.js v4.0.11 — Sync all local skills (SKILL.md + scripts/* + templates/* + references/*) to GitHub + R2
  *
  * Usage: node skill-sync.js [skills-root-dir] [--targets=a,b,c] [--force] [--no-verify] [--skip-git]
  *
+ * v4.0.11 (2026-08-12, kaizen — HARD fix from red-team audit): gitOk was set true
+ *   UNCONDITIONALLY after the push loop, so the "✓ Skill sync complete — GitHub
+ *   (origin + rwnq8) + R2 in sync" message printed (and exit 0) even when BOTH pushes
+ *   were rejected — the "⚠ Skill sync partial" branch was unreachable. Now gitOk
+ *   requires both remotes to have pushed/up-to-date. Also: walkFiles now skips
+ *   `logs` directories (matches skill-level .gitignore `logs/`; runtime audit logs
+ *   are not skill content and were drifting into R2 while git filtered them).
  * v4.0.10 (2026-08-07, kaizen — fix push-message check: git push writes to stderr, not stdout)
  * v4.0.9 (2026-08-07, kaizen — git add -u for tracked deletions; honest push messaging)
  * v4.0.8 (2026-08-07, kaizen — truthful completion message; gitOk flag)
@@ -96,6 +103,7 @@ function walkFiles(dir, base) {
     if (entry.name.startsWith('.')) continue;                 // hidden (incl. .kaizen_history)
     if (/\.bak(?:-\d{8})?$/i.test(entry.name)) continue;       // backup files (v4)
     if (entry.name === '__pycache__') continue;               // py build cache
+    if (entry.isDirectory() && entry.name === 'logs') continue; // runtime logs (v4.0.11, matches skill .gitignore `logs/`)
     if (entry.isFile() && entry.name.endsWith('.pyc')) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out = out.concat(walkFiles(full, base));
@@ -250,14 +258,16 @@ async function pool(items, worker, concurrency) {
         execSync('git commit -m "ACTION:SYNC FILES: skills/* RATIONALE: automated skill-sync.js v4 run -- propagate local SKILL.md/script edits to git history"', { cwd: skillsRoot, stdio: 'pipe' });
         console.log('✓ Git commit created');
       } catch (e) { console.log('○ No changes to commit'); }
+      const pushedOk = new Set();
       for (const remote of ['origin', 'rwnq8']) {
         try {
           const out = execSync(`git push ${remote} master 2>&1`, { cwd: skillsRoot, stdio: 'pipe' }).toString();
           if (/Everything up.to.date/i.test(out)) console.log(`○ ${remote} already up-to-date`);
           else console.log(`✓ Pushed to ${remote}`);
+          pushedOk.add(remote);
         } catch (e) { console.log(`✗ Failed to push to ${remote}: ${e.message.split('\n')[0]}`); }
       }
-      gitOk = true;
+      gitOk = pushedOk.has('origin') && pushedOk.has('rwnq8');
     } catch (e) { console.log('✗ Git error:', e.message.split('\n')[0]); }
     } // close inner if (!skipGit) after pre-flight
   }
