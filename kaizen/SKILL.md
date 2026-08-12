@@ -1,3 +1,38 @@
+> **v2.27 UPDATE (2026-08-12, kaizen — CMD RED TEAM SUB + CMD SKILLS UPDATE: post-publication adversarial audit gate on Zenodo 21878977/21878976; system prompt v3.6; 4-store parity re-verified; merged past concurrent v2.27):**
+> Red-team: 3 parallel reviewer subagents (Accuracy/Completeness/Dependency — all completed; Dependency
+> delayed ~7 min, fallback direct-audit was prepared but reviewer finished before use) on the two published
+> Zenodo preprints (10.5281/zenodo.21878977 Paper A "Knowing What We Do Not Know...", 10.5281/zenodo.21878976
+> Paper B "The Universal Ignorance Audit...", both v0.2 2026-08-10). Aggregate: 13 HARD / 16 SOFT / 9 DESIGN.
+> HARD highlights (all READ-ONLY verified): (1) Paper A 2026c "Corrections and Governance Record" — NO DOI,
+> record does not exist (author enumeration of 687 records + 7 variant queries → 0); (2) Paper A 2026b title
+> mismatch — cited "Qudit Advantage and the JPCUB Standard..." vs actual record 21827737 "The Qudit Advantage:
+> System-Level Joules-per-Solution Comparison..." (v0.4, 2026-08-06); (3) Kreps et al. 2020 JEPS 7(2):90-102
+> → Crossref 9(1):104-117; (4) Whitcomb et al. 2015 PPR 91(1):95-120 → Crossref 94(3):509-539; (5) forensic
+> analyses not deposited (data availability = private notes); (6) fabrication rebuttal unverifiable (org never
+> named); (7) ERRATA.md referenced by record 21827737 description but absent from files. VERIFIED CLEAN: all 7
+> DOIs resolve; 15 questions/5 phases correct; dates/versions consistent; §3.1-3.3 factual claims match the
+> analyzed paper's deposited text verbatim (P_decode≈0, Landauer 300K/10mK ratio 3e4, [PHILOSOPHY]x3,
+> [speculative]x7, @C5_jpcub_p0, empty References section). PROMPT STORES: pre-edit parity check found
+> agent.db systemPrompts STALE at v3.4 (58714) while other 3 stores were v3.5 (59776) — drift introduced by
+> the v3.5 cycle (only md/app updated, agent.db missed). CMD SKILLS UPDATE template also diverged (db 994 vs
+> app 1553 — app had cloudflare v3.50 QUEUE-BODY-SHAPE-1/AUDIT-COMPLETENESS-1 mandate db lacked). HARD: 0
+> (kaizen-side). SOFT: 2 (store drift, template drift — both FIXED). DESIGN: 1 (v3.5 cycle missed agent.db;
+> 4-store verify is now MANDATORY in the CMD SKILLS UPDATE template). Changes:
+> (1) [SOFT] **System prompt v3.5 → v3.6** — new POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE,
+>     2026-08-12): every published research artifact MUST receive CMD RED TEAM SUB adversarial review after
+>     publication; READ-ONLY; HARD findings become next-cycle kaizen items. Dual-written to ALL 4 stores
+>     (agent.db systemPrompts / app-settings.json default_system_prompt / .deepchat/system-prompt-v2.7.md /
+>     qnfo-skills repo copy) — sha16 8fc298179f8251b3, 61,157 chars, byte-identical (verified post-write).
+>     Backup: app-settings.json.bak_20260812_<stamp>.
+> (2) [SOFT] **CMD SKILLS UPDATE template drift fixed** — agent.db content ← app-settings superset (1553
+>    chars, cloudflare v3.50 mandates QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1). customPrompts now 9/9
+>    byte-identical both stores (verified).
+> (3) [DESIGN] **4-store parity discipline** — every dual-write MUST verify all 4 stores byte-identical
+>    immediately after write (v3.5 cycle proved partial writes happen); CMD SKILLS UPDATE template carries
+>    this mandate.
+> Cross-reference: system-prompt-v2.7.md (content v3.6), deepchat-settings v1.15, system v2.14,
+> cloudflare v3.50, PROMPT-STORE-4STORE-1, CMD RED TEAM SUB, session this.
+
 > **v2.27 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident capture + cloudflare v3.50 + system-prompt v3.5 + template dual-write):**
 > Red-team: direct parent-agent audit of session rOT2C-ZiQbSVYpqghlLZ4 (daily-verify + R2 incident +
 > DESTROYED-vs-MISPLACED red-team + corrections). HARD: 2. SOFT: 0. DESIGN: 2. Changes:
