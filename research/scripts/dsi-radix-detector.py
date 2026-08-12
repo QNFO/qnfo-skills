@@ -167,6 +167,24 @@ def scan_dsi(u, y, window=801, n_boot=300, multi=False, verbose=True):
     dbic, F, p_F = likelihood_ratio(u, logy, omega_ref, popt[2])
     obs_peak, nulls, p_boot = bootstrap_null(u, logy, n_boot)
 
+    # Integrity gates for REAL-DATA application (verified 2026-08-12 on Planck TT):
+    # G1 Resolvability: need >=1 full log-periodic cycle in the probed u-span.
+    #    omega_ref below 2*pi/u_span is a trend artifact, not an oscillation.
+    # G2 Amplitude: residual sinusoid must exceed residual noise (SNR >= 1).
+    # G3 Radix precision: sigma_lambda/lambda < 10% (else the radix is unconstrained).
+    # G4 Null-model validity (caller's responsibility): for non-power-law data
+    #    (e.g. CMB acoustic peaks) the shuffle-null destroys real non-DSI
+    #    structure and inflates p -- subtract the physical model FIRST.
+    u_span = u[-1] - u[0]
+    omega_min = 2.0 * np.pi / u_span
+    amp = abs(popt[0])
+    rms = float(np.sqrt(np.mean(resid ** 2))) if np.isfinite(resid).all() else 0.0
+    snr = (amp / rms) if rms > 0 else 0.0
+    g1 = omega_ref >= omega_min
+    g2 = snr >= 1.0
+    g3 = (sig_lam / lam_ref) < 0.10
+    gates_pass = int(g1) + int(g2) + int(g3)
+
     # Multiplicity — IMPORTANT: the bootstrap p is a MAX-STATISTIC p (observed max
     # peak vs distribution of shuffled max peaks), so it is ALREADY multiplicity-
     # corrected over all frequency bins. Sidak over N_eff applies only to a nominal
@@ -188,7 +206,14 @@ def scan_dsi(u, y, window=801, n_boot=300, multi=False, verbose=True):
         "bootstrap_p": float(p_boot),
         "n_eff": n_eff,
         "p_global_sidak_nominal_1e4": float(p_global_sidak_nominal),  # illustrative, NOT for bootstrap p
-        "detected": bool(p_boot < 0.05 and dbic > 10 and p_F < 0.05),
+        "integrity_gates": {
+            "G1_resolvable_omega_min": float(omega_min),
+            "G2_SNR": float(snr),
+            "G3_sigma_lambda_frac": float(sig_lam / lam_ref),
+            "gates_passed": gates_pass,
+        },
+        # Detection requires the bootstrap certification AND all 3 integrity gates.
+        "detected": bool(p_boot < 0.05 and dbic > 10 and p_F < 0.05 and gates_pass == 3),
         "window": window,
     }
 
