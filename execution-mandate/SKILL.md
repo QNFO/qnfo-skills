@@ -317,7 +317,7 @@ Tasks that span multiple sessions:
    → "Trivial" (exempt) = single read-only queries, factual lookups, tool status checks.
 
 2. REVIEWER DISPATCH:
-   → subagent_orchestrator(operation="run", mode="parallel", tasks=[{
+   → deepchat_subagents(operation="run", mode="parallel", tasks=[{
        slotId: "reviewer",
        title: "Red-team audit of <task>",
        prompt: "Audit the following completed work for correctness, completeness,
@@ -795,7 +795,7 @@ MANDATE 2 (Planned items):
 
 MANDATE 3 (Subagent red-team):
   WRONG: "This was a simple change — no need for review."
-  RIGHT: subagent_orchestrator(slotId="reviewer", ...) → wait → fall back if truncated.
+  RIGHT: deepchat_subagents(slotId="reviewer", ...) → wait → fall back if truncated.
 
 MANDATE 4 (Skill enforcement):
   WRONG: "I know how to do this — no need to load the skill."

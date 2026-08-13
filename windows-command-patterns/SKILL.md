@@ -7,7 +7,7 @@ name: windows-command-patterns
 description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
 
 
-version: 3.21
+version: 3.22
 
 
 kif_tags: [KIF-32]
@@ -15,6 +15,21 @@ kif_tags: [KIF-32]
 
 ---
 
+
+> **v3.22 UPDATE (2026-08-13, kaizen — CMD RED TEAM: && chains are SAFE — empirical correction):**
+> Red-team: direct parent-agent audit (this session — recurring-issue remediation).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **AND-CHAIN-CORRECTION-1: `&&`/`||`/`()` chains WORK natively through the
+>     exec tool.** Live test 2026-08-13: `echo FIRST_OK && echo SECOND_OK && (echo PAREN_OK)`
+>     returned all three tokens, exit 0. The recurring "avoid && chains" belief was a
+>     CONFLATION: what actually mangles is DOUBLE-QUOTED ARGUMENTS (`echo "X"` → literal
+>     `\"X\"`), not the chain separators. DO NOT avoid `&&`; it is safe and canonical.
+>     Keep avoiding: quoted args, inline `python -c`, `git commit -m` with spaces/special
+>     chars (use `-F`), findstr multi-word patterns.
+> (2) [DESIGN] S0.0 rule 3 amended below — direct `&&` chaining is allowed; `cmd /c "..."`
+>     wrapping is only needed when the chain ITSELF contains inner quotes.
+> Cross-reference: memory mem-iJP0jmqcqR_e archived 2026-08-13 (was false),
+> mem-_c2Tl94IWmiI (verified), system-prompt v3.16, session this.
 
 > **v3.21 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: exec wrapper quoting + inline-python findings):**
 > Red-team: direct parent-agent audit (this session — Cloudflare cost-control cycle; 40+ exec calls exercised
@@ -933,7 +948,7 @@ The cumulative damage caused by PowerShell exceeds every other tooling failure c
 2. **Does the command string contain `python -c`?** → **ABORT.** Write `_*.py` file, `exec python _*.py`.
 
 
-3. **Does the command use `&&`, `||`, or `&` as separators?** → Use `cmd /c "cmd1 && cmd2"` for chaining.
+3. **Does the command use `&&`, `||`, or `&` as separators?** → SAFE: direct `&&` chaining works natively (AND-CHAIN-CORRECTION-1). Only wrap in `cmd /c "cmd1 && cmd2"` when the chain itself contains inner double quotes.
 
 
 4. **Does it contain nested double quotes?** → **ABORT.** Write to file instead.
@@ -1585,7 +1600,7 @@ S-1.0.4, S-1.0.7.
 
 
 
-Current: **v3.21** (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.22** (windows-command-patterns — AND-CHAIN-CORRECTION-1: && chains safe, quotes break; 2026-08-13) (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
 
 ## EXEC-SHELL-QUOTE-1 - Exec-Shell Quoting & Phantom-Error Gate (2026-08-13)
 

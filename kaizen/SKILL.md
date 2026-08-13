@@ -1,3 +1,26 @@
+> **v2.40 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 line-ending normalization + CMD-template drift fix):**
+> Red-team: direct parent-agent audit (this session — TVup6pTPxp9jFQiLVgq2m; skills audit + prompt parity).
+> HARD: 2. SOFT: 1. DESIGN: 1.
+> (1) [HARD] **PROMPT-PARITY-1 raw-sha break (line-ending variant):** canonical-md + .deepchat/skills
+>     copy were CRLF (74,551 B) vs repo-copy + app-settings + agent-db LF (73,428 B) — content textually
+>     IDENTICAL (0 diff chars) but raw sha256 differed (4a619794 vs eff4d7ab). .gitattributes enforces
+>     'system-prompt-v2.7.md text eol=lf'. FIXED: dual-write normalized ALL stores to LF byte-identical
+>     (sha16 eff4d7abefef7d19, 73,428 B, v3.16 header==footer) across: .deepchat/system-prompt-v2.7.md,
+>     .deepchat/skills/system-prompt-v2.7.md, agent.db app_settings.systemPrompts, AppData Roaming
+>     app-settings.json default_system_prompt, .deepchat/app-settings.json default_system_prompt.
+> (2) [HARD] **CMD-template drift (agent.db customPrompts stale vs JSON):** 3/9 templates differed —
+>     RED TEAM SUB DB 235 B (operation=run) vs JSON 222 B (spawn, parallel); SKILLS UPDATE DB 3,049 B
+>     (missing v3.11-v3.15 mandates) vs JSON 4,673 B; PUBLISH DB 885 B vs JSON 616 B (source-completeness).
+>     FIXED: agent.db customPrompts synced to JSON (authoritative), now 9/9 byte-identical.
+> (3) [SOFT] **MODEL-KEY-FILE-DRIFT-1 recurrence:** AppData app-settings.json preferredModel had drifted
+>     to deepseek-v4-pro; .deepchat variant defaultModel=None. FIXED: both stores now
+>     defaultModel=preferredModel=deepseek/deepseek-v4-flash (DEEPCHAT-DEFAULT-MODEL-1).
+> (4) [DESIGN] v2.40 history entry + commit of the pending v3.16 cycle (6 files incl. system-prompt
+>     repo copy, windows-command-patterns v3.22 AND-CHAIN-CORRECTION-1, kaizen history v2.33/v2.34).
+> Verified: 15/15 mandate markers present in canonical; subagent_orchestrator fully renamed to
+> deepchat_subagents (SUBAGENT-ORCHESTRATOR-RENAME-1); 9/9 CMD templates dual-store MATCH.
+> Cross-ref: system-prompt v3.16, windows-command-patterns v3.22, deepchat-settings v1.16, session this.
+
 > **v2.39 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: repo-copy phantom-claim + model-key drift):**
 > Red-team: direct parent-agent audit (this session — LoF26-adjacent; skills audit + prompt parity).
 > HARD: 1. SOFT: 1. DESIGN: 0.
@@ -6665,7 +6688,7 @@ When the kaizen skill is kaizening itself (self-kaizen), the agent MUST:
 
 
 
-1. **Read the skill independently** — do not rely solely on subagent outputs; subagent_orchestrator truncation can lose audit findings. The parent agent must also read the full SKILL.md directly.
+1. **Read the skill independently** — do not rely solely on subagent outputs; deepchat_subagents truncation can lose audit findings. The parent agent must also read the full SKILL.md directly.
 
 
 
@@ -6851,7 +6874,7 @@ dispatch subagents, expect truncation, always have a parent-agent fallback.
 
 
 
-When subagent_orchestrator outputs are truncated, the parent agent MUST:
+When deepchat_subagents outputs are truncated, the parent agent MUST:
 
 
 
@@ -7505,7 +7528,7 @@ assigned one adversarial perspective:
 
 
 
-subagent_orchestrator(operation="run", mode="parallel", tasks=[
+deepchat_subagents(operation="run", mode="parallel", tasks=[
 
 
 
@@ -11151,7 +11174,7 @@ and durable sandboxes. Its AGENTS.md coding standards are gold:
 
 
 
-| 2 | **Sub-Agents** | User explicitly (`@agent`) | Manual deep analysis, separate context, full tools, expert depth | subagent_orchestrator (explorer/reviewer/implementer) |
+| 2 | **Sub-Agents** | User explicitly (`@agent`) | Manual deep analysis, separate context, full tools, expert depth | deepchat_subagents (explorer/reviewer/implementer) |
 
 
 
@@ -12872,7 +12895,7 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 
-| **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `subagent_orchestrator(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
+| **RCS-2: Treating tool dispatch confirmation ("Subagent run started: queued") as completion** | After `deepchat_subagents(operation: "run")`, explicitly call `info` to `wait` to `log` in sequence. If `wait` times out, call `info` for final status, read `log` for completed tasks, report which completed vs. cancelled. |
 
 
 
