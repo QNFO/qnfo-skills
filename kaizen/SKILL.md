@@ -14878,3 +14878,13 @@ the 522 origin error is the silent failure. Likelihood: [HIGH] - canonical case 
 ## CMD SKILLS UPDATE cycle log (2026-08-13, v3.11)
 Red-team skills audit: cloudflare v3.50 (cost gate $90/30d, COST-AUDIT-MISS-AI-1, aiInferenceAdaptiveGroups, <$100/$200 budget) PASS; research v2.104 (ZENODO v0.3 records 21901984/21901983 canonical, superseded 21878943/21878977 only in historical contexts) PASS; kaizen v2.34 (PROMPT-PARITY-1, 9/9, dual-write, header==footer) PASS. HARD: 0. SOFT: 0. DESIGN: 0.
 Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = per-session orchestration_policy explicit|proactive; proactive = auto-execute; PR #2082 merged 2026-08-04), DEEPCHAT-SEARCH-DEFAULT-1 (no global web-search default in v1.1.0; per-session in-memory globe toggle), DEEPSEEK-PARAM-DEFAULTS-1 (temp/topP ignored in thinking mode; effort default high; v4-flash 0.7/0.9, v4-pro 0.4/0.9, chat 0.7/0.9, reasoner 0.6/0.9), DEEPCHAT-DEFAULT-MODEL-1 (app_settings defaultModel/preferredModel MUST be deepseek/deepseek-v4-flash). 5 stores byte-identical sha256 7bc53ed99f26e827 (agent.db systemPrompts, app-settings.json default_system_prompt, .deepchat md, skills md, qnfo-skills repo). header==footer==3.11. 9/9 CMD templates identical; CMD SKILLS UPDATE template gained the v3.11 mandate line. Backups: app-settings.json.bak-v3.11-20260813_101953, agent.db.bak-v3.11-20260813_101953.
+
+## Cycle Record 2026-08-13 - CMD SKILLS UPDATE (v3.15)
+
+- Red-team skills audit: FOUND 3-way PROMPT-PARITY-1 failures (qnfo-skills repo copy stale v3.13,
+  app_db agent.db systemPrompts stale v3.13, CMD PUBLISH template drift app-settings vs agent.db).
+- Built v3.15: EXEC-SHELL-QUOTE-1 gate added; Last updated 2026-08-13; all v3.11-v3.14 mandates preserved.
+- Dual-wrote 4 stores (app-settings.json / .deepchat/system-prompt-v2.7.md / qnfo-skills repo copy /
+  app_db agent.db) - sha256 4ce146c6cc4f7940, header==footer v3.15. 9/9 CMD templates synced across
+  both stores (CMD CLOSEOUT gained D1-access note; CMD SKILLS UPDATE gained 5-store verification note).
+- Skills updated: windows-command-patterns (EXEC-SHELL-QUOTE-1), wrangler (D1 quick-reference).

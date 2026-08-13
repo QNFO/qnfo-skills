@@ -920,3 +920,17 @@ wrangler docs configuration
 7. **Test locally first**: `wrangler dev` with local bindings before deploying.
 8. **Use `--dry-run` before major deploys**: Validate changes without deployment.
 9. **Never embed secrets in commands**: Use interactive prompts (`wrangler secret put`), file-based input (`wrangler secret bulk`), or secure CI environment variables. Never echo, log, or pass secret values as CLI arguments.
+
+## D1 Access Quick-Reference (2026-08-13)
+
+- qnfo-audit D1: id 35e2e573-92f3-46ac-83c6-22f6429fc5e5 (account quniverse edb167b78c9fb901ea5bca3ce58ccc4b);
+  tables include handoffs, wbs_state, ai_queries (79 tables).
+- living-paper D1: id 70a58cb3-b2cd-498d-877f-ecca86859a22. qnfo-graph D1: a1954b92-d681-4d02-b1f6-f9a2eb4c265d.
+- wrangler is installed GLOBAL: C:\Users\LENOVO\npm-global\wrangler (v4.118+); auth via CLOUDFLARE_API_TOKEN.
+- INLINE --command QUOTING BREAKS on parentheses in this shell ("Unknown argument: table_info(handoffs)") -
+  always use --file <path.sql> OR the D1 REST API via Python urllib POST:
+  POST https://api.cloudflare.com/client/v4/accounts/<ACCT>/d1/database/<DB_ID>/query
+  headers: Authorization: Bearer %CLOUDFLARE_API_TOKEN%, Content-Type: application/json
+  body file: {"sql": "..."}  (multiple ; separated statements allowed)
+- DeepChat's real agent.db = C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db (2.3 GB;
+  app_settings key/value_json schema; .deepchat\agent.db is a stale 0-byte file).

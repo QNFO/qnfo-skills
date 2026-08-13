@@ -1586,3 +1586,14 @@ S-1.0.4, S-1.0.7.
 
 
 Current: **v3.21** (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+
+## EXEC-SHELL-QUOTE-1 - Exec-Shell Quoting & Phantom-Error Gate (2026-08-13)
+
+Observed on this host (cmd.exe via shim). See also the system prompt's EXEC SHELL FIX section.
+
+1. QUOTED ABSOLUTE PATHS GET WORKSPACE-PREFIXED: python "C:\path\s.py" becomes <workspace>"C:\path\s.py"
+   and fails. Fix: cd /d <dir> && python script.py (unquoted), or write the script with the write tool.
+2. INLINE python -c ONE-LINERS BREAK ("os was unexpected at this time"). Fix: write-then-exec script pattern.
+3. findstr MULTI-WORD QUOTED PATTERNS SPLIT ("FINDSTR: Cannot open Data"). Fix: single unquoted token, or grep in Python.
+4. PHANTOM "Session ... is not running" ERRORS while the command ACTUALLY ran. Check process list/log before retrying or re-running destructive commands.
+5. QUOTED URLS get workspace-prefixed (curl exit 6). Fix: unquoted URLs, or Python urllib with a JSON body file.
