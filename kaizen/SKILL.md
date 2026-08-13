@@ -1,3 +1,23 @@
+> **v2.37 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: clean audit + 5-store clarification):**
+> Red-team: direct parent-agent 5-adversary audit (this session). HARD: 0. SOFT: 0. DESIGN: 1.
+> Audit result: ALL GREEN — no skill changes warranted this cycle (no version-inflation bumps).
+> (1) 3 agent-prompt stores byte-identical sha16 9ae093cba5682386 (v3.13, header==footer):
+>     .deepchat/system-prompt-v2.7.md == .deepchat/skills/system-prompt-v2.7.md ==
+>     Roaming\DeepChat\app-settings.json default_system_prompt.
+> (2) All 15 mandate items verified present: cost $90/30d, COST-AUDIT-MISS-AI-1,
+>     QUEUE-BODY-SHAPE-1, AUDIT-COMPLETENESS-1, PROVENANCE-ACCUSATION-1,
+>     SKILL-REGISTRY-GAP-1, ZENODO UIA/IAPS (21901984/21901983), PROMPT-PARITY-1,
+>     DEEPCHAT-ORCHESTRATION-1, DEEPCHAT-SEARCH-DEFAULT-1, DEEPSEEK-PARAM-DEFAULTS-1,
+>     DEEPCHAT-DEFAULT-MODEL-1, PUBLICATION SOURCE COMPLETENESS, GitHub Available-in.
+> (3) 9/9 CMD templates verified (Publish-has-GitHub, Deploy-has-$90, Skills-update-has-parity).
+> (4) [DESIGN] 5-store clarification: Roaming\DeepChat\system_prompts.json holds the app's
+>     UI-DEFAULT prompt (4,731 chars) by design — a different store type, NOT a second copy of
+>     the agent system prompt; do NOT force it to byte-parity with the agent prompt. The 3
+>     agent-prompt stores above ARE the parity set. agent.db (.deepchat) is an empty legacy
+>     file; the live app DB is DIPS (locked by the running app; app-settings.json is
+>     authoritative).
+> Cross-ref: research v2.106, system-prompt v3.13, session this.
+
 > **v2.36 UPDATE (2026-08-13, kaizen — GITHUB EXTERNAL-RESOURCES LINKAGE mirror):**
 > Red-team: direct parent-agent 5-adversary audit. HARD: 0. SOFT: 1. DESIGN: 0.
 > (1) [SOFT] **PUBLICATION-SOURCE-COMPLETENESS-1 mirror extended** (owner research v2.106):
@@ -301,7 +321,7 @@ name: kaizen
 
 
 
-version: "2.36"
+version: "2.37"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -883,7 +903,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.36
+# KAIZEN — v2.37
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -14669,7 +14689,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.36** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
+Current: **v2.37** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
 
 
 
