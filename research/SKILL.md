@@ -1,3 +1,16 @@
+> **v2.106 UPDATE (2026-08-13, kaizen — GITHUB EXTERNAL-RESOURCES LINKAGE):**
+> Red-team: direct parent-agent 5-adversary audit (user mandate: ALL Zenodo records must show
+> GitHub provenance as 'External resources / Available in <repo> / Release: <branch>').
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **PUBLICATION-SOURCE-COMPLETENESS-1 extended** — the GitHub provenance
+>     `related_identifiers` entry MUST use: `scheme: "url"`, `relation_type: {"id": "issupplementto"}`,
+>     `identifier: https://github.com/QNFO/<repo>/tree/<branch>`. This exact shape is what makes
+>     Zenodo render the "External resources / Available in <repo> / Release: <branch>" block on the
+>     record page (verified live 2026-08-13 on idempotent-core 21916939 + void-is-not-false 21916970).
+>     The bare-repo URL (`https://github.com/QNFO/<repo>`) is NOT sufficient — the `/tree/<branch>`
+>     path is what yields the Release label.
+> Cross-reference: kaizen v2.36, system-prompt v3.13, session this.
+
 > **v2.105 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: PUBLICATION-SOURCE-COMPLETENESS-1):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB on Zenodo 21915967/21916107).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -29,7 +42,7 @@ name: research
 
 
 
-version: "2.105"
+version: "2.106"
 description: >
 
 
@@ -9222,7 +9235,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.105** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.106** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
