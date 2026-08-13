@@ -1,4 +1,4 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.13
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.14
 
 
 ## POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE, 2026-08-12)
@@ -1080,10 +1080,11 @@ DON'T LEAVE ANY FILES OUT!" (PUBLICATION-SOURCE-COMPLETENESS-1; owner research v
 
 
  GitHub provenance: `related_identifiers` with `scheme: url`, `relation_type: {id: issupplementto}`, `identifier: https://github.com/QNFO/<repo>/tree/<branch>` makes Zenodo render "External resources / Available in <repo> / Release: <branch>" — use the branch URL, not the bare repo URL.
+ Zenodo metadata PUT is FULL REPLACEMENT: any one-field edit MUST preserve related_identifiers + license + creators + resource_type + keywords (PARTIAL-PUT-CLEARS-FIELDS-1).
 
 ## Version
 
-Current: **v3.13** (DEEPCHAT-ORCHESTRATION-1 subagent-approval gate + DEEPCHAT-SEARCH-DEFAULT-1 + DEEPSEEK-PARAM-DEFAULTS-1 + DEEPCHAT-DEFAULT-MODEL-1 added; PROMPT-PARITY-1 4-store byte-identical + SKILL-REGISTRY-GAP-1 + ZENODO-INQUIRY-1 + cloudflare cost gate $90/30d + R2 anti-patterns preserved; 2026-08-13)
+Current: **v3.14** (DEEPCHAT-ORCHESTRATION-1 subagent-approval gate + DEEPCHAT-SEARCH-DEFAULT-1 + DEEPSEEK-PARAM-DEFAULTS-1 + DEEPCHAT-DEFAULT-MODEL-1 added; PROMPT-PARITY-1 4-store byte-identical + SKILL-REGISTRY-GAP-1 + ZENODO-INQUIRY-1 + cloudflare cost gate $90/30d + R2 anti-patterns preserved; 2026-08-13)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 
