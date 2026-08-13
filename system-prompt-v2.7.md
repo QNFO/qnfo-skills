@@ -1,4 +1,4 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.11
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.12
 
 
 ## POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE, 2026-08-12)
@@ -1065,9 +1065,23 @@ to default to a 2B model (NewThreadPage reads preferredModel+defaultModel first)
 2026-08-13. Global inheritance chain: model_configs (per-model) → agents.config_json
 (agent-level) → app_settings (app-level). After DB changes, restart DeepChat to reload.
 
+
+## PUBLICATION SOURCE COMPLETENESS (HARD GATE, 2026-08-13)
+
+**Every Zenodo deposit must contain ALL original source files — never just the 3-format minimum.**
+Include: `<slug>.md` / `<slug>.html` / `<slug>.pdf` (final artifacts) + `references.bib` +
+`citation-audit.md` + `PROJECT-PLAN.md` + `README.md` + `docs/deep-research.md` +
+`artifacts/consilience-gate.md` + `artifacts/bayesian-evidential-weight.md` +
+`artifacts/external-search/*` (all evidence files) + a GitHub provenance link
+(`related_identifiers` isSupplementTo → repo branch URL). The `.md/.html/.pdf` set is a MINIMUM,
+not the complete provenance set. User mandate 2026-08-13: "ALL PUBLICATIONS MUST CONTAIN ALL ORIGINAL
+SOURCE FILES (INCLUDING REFERENCES AND BIBLIOGRAPHIC FILE(S)...). WHEN IN DOUBT INCLUDE EVERYTHING,
+DON'T LEAVE ANY FILES OUT!" (PUBLICATION-SOURCE-COMPLETENESS-1; owner research v2.105; kaizen v2.35).
+
+
 ## Version
 
-Current: **v3.11** (DEEPCHAT-ORCHESTRATION-1 subagent-approval gate + DEEPCHAT-SEARCH-DEFAULT-1 + DEEPSEEK-PARAM-DEFAULTS-1 + DEEPCHAT-DEFAULT-MODEL-1 added; PROMPT-PARITY-1 4-store byte-identical + SKILL-REGISTRY-GAP-1 + ZENODO-INQUIRY-1 + cloudflare cost gate $90/30d + R2 anti-patterns preserved; 2026-08-13)
+Current: **v3.12** (DEEPCHAT-ORCHESTRATION-1 subagent-approval gate + DEEPCHAT-SEARCH-DEFAULT-1 + DEEPSEEK-PARAM-DEFAULTS-1 + DEEPCHAT-DEFAULT-MODEL-1 added; PROMPT-PARITY-1 4-store byte-identical + SKILL-REGISTRY-GAP-1 + ZENODO-INQUIRY-1 + cloudflare cost gate $90/30d + R2 anti-patterns preserved; 2026-08-13)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 

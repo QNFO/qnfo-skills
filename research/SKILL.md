@@ -1,3 +1,17 @@
+> **v2.105 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: PUBLICATION-SOURCE-COMPLETENESS-1):**
+> Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB on Zenodo 21915967/21916107).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **PUBLICATION-SOURCE-COMPLETENESS-1 anti-pattern added** — Zenodo deposits MUST contain
+>     ALL original source files: <slug>.md/.html/.pdf (final artifacts) + references.bib +
+>     citation-audit.md + PROJECT-PLAN.md + README.md + docs/deep-research.md + artifacts/consilience-gate.md
+>     + artifacts/bayesian-evidential-weight.md + artifacts/external-search/* (all evidence) AND a GitHub
+>     provenance link (related_identifiers isSupplementTo -> repo branch URL). The 3-file set is a MINIMUM,
+>     not the complete set. User mandate 2026-08-13: "ALL PUBLICATIONS MUST CONTAIN ALL ORIGINAL SOURCE
+>     FILES... WHEN IN DOUBT INCLUDE EVERYTHING, DON'T LEAVE ANY FILES OUT." Canonical case: the two
+>     Laws-of-Form spinoff deposits (21915967 idempotent-core, 21916107 void-is-not-false) shipped 3 files
+>     only; remediated via newversion with the full provenance set + GitHub link.
+> Cross-reference: kaizen v2.35, system-prompt v3.12, session this.
+
 > **v2.104 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
 > Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
 > Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS); 5 refs updated.
@@ -15,7 +29,7 @@ name: research
 
 
 
-version: "2.103"
+version: "2.105"
 description: >
 
 
@@ -9208,7 +9222,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.104** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.105** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 

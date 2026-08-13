@@ -1,3 +1,14 @@
+> **v2.35 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: N-2 triple-drift fix + publication-source-completeness mirror):**
+> Red-team: direct parent-agent 5-adversary audit (this session). HARD: 1. SOFT: 0. DESIGN: 1.
+> (1) [HARD] kaizen N-2 triple drift fixed: frontmatter 2.32 / header 2.34 -> ALL v2.35.
+> (2) [DESIGN] PUBLICATION-SOURCE-COMPLETENESS-1 mirrored (owner research v2.105): every Zenodo
+>     deposit must contain ALL original source files (references.bib, citation-audit.md,
+>     PROJECT-PLAN.md, README.md, docs/, artifacts/ gates, external-search evidence) + GitHub
+>     provenance link (related_identifiers isSupplementTo). The 3-file .md/.html/.pdf set is a
+>     MINIMUM, not the complete provenance set (user mandate 2026-08-13: "when in doubt include
+>     everything, don't leave any files out").
+> Cross-ref: research v2.105, system-prompt v3.12, CMD PUBLISH template, session this.
+
 > **v2.34 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep + footer-drift fix):**
 > Red-team: direct parent-agent 5-adversary audit (this session). HARD: 2. SOFT: 0. DESIGN: 0.
 > (1) [HARD] Superseded DOIs -> v0.3 records: 21878943 -> 21901984 (UIA) and 21878977 -> 21901983 (IAPS epistemic lessons); 14 refs updated.
@@ -194,7 +205,7 @@
 > content-vs-template schema asymmetry per PROMPT-KEY-SCHEMA-ASYMMETRY-1). Loader registration gap: kaizen +
 > deepchat-settings + system + cloudflare + 6 more NOT in skill_list (frontmatter-not-at-byte-0) — documented for
 > app skill-management reconciliation, NOT a file rewrite. HARD: 0 (kaizen-side). SOFT: 2. DESIGN: 2. Changes:
-> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.23` → v2.28, deepchat-settings hdr v1.12 → v1.14,
+> (1) [SOFT] **N-2 header drift fixed** — kaizen hdr `# KAIZEN — v2.35` → v2.28, deepchat-settings hdr v1.12 → v1.14,
 >     system hdr 2.13 → 2.14, windows-command-patterns hdr v3.20 → v3.21 (fm/ft already correct).
 > (2) [SOFT] **deepchat-hooks INCOMPLETE fixed** — added version frontmatter + versioned H1 + Current footer (v1.1).
 > (3) [DESIGN] **Loader registration gap documented** — 10 on-disk skills absent from skill_list; reconcile via app.
@@ -282,7 +293,7 @@ name: kaizen
 
 
 
-version: "2.32"
+version: "2.35"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -864,7 +875,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.34
+# KAIZEN — v2.35
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -14650,7 +14661,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.34** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
+Current: **v2.35** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
 
 
 
