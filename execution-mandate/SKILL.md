@@ -1,3 +1,8 @@
+> **v2.10 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
+> Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
+> Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS); title/footer updated.
+> Cross-ref: kaizen v2.34, research v2.104, qnfo-core v1.28.
+
 ---
 name: execution-mandate
 description: Mandatory execution-first system instructions enforcing 5 hard gates: execution over chat, update_plan tracking throughout sessions, subagent red-team review after task completion, skill enforcement with lifecycle management, and phased project planning with itemized checklists. Use when enforcing structured execution protocols, preventing chat-first anti-patterns, mandating red-team reviews, or applying standardized phased workflows.
@@ -47,7 +52,7 @@ version: 2.9
 > (4) [DESIGN] TURN-END GATE protocol references Task Abort Protocol for terminated
 >     turns. Cross-reference: kaizen v1.11, system v2.8.
 
-# DeepChat System Instructions — v2.9 (UIA cross-reference + synthesis paper 21878977)
+# DeepChat System Instructions — v2.10 (UIA cross-reference + synthesis paper 21901983)
 
 > **v2.6 UPDATE (2026-08-03, kaizen — pre-mortem self-application + deeper best-practice integration):**
 > All prior deferred items resolved. Pre-mortem analysis of this skill identified 4 failure modes;
@@ -622,9 +627,9 @@ For tasks with UNKNOWN scope (exploration):
 
 > **v2.9 UPDATE (2026-08-10, kaizen — Universal Ignorance Audit cross-reference):** The Question-Driven
 > Execution Protocols are now backed by a published peer-reviewable instrument: the Universal Ignorance
-> Audit (UIA; DOI 10.5281/zenodo.21878943, Quni-Gudzinas 2026a), a fifteen-question, five-phase method
+> Audit (UIA; DOI 10.5281/zenodo.21901984, Quni-Gudzinas 2026a), a fifteen-question, five-phase method
 > for systematic inquiry into the structure of not-knowing. The case study validating the UIA's application
-> to AI-assisted research pipelines is published at DOI 10.5281/zenodo.21878977 (Quni-Gudzinas 2026b).
+> to AI-assisted research pipelines is published at DOI 10.5281/zenodo.21901983 (Quni-Gudzinas 2026b).
 > Key mappings: UIA Q4 (Inversion) → Pre-Mortem protocol (this section); Q7 (Radical perspectival shift)
 > → Mandate 3 subagent red-team adversarial perspectives; Q1-3 (Scaffold/Map-territory/Wobble) → Phase 0
 > context gathering; Q15 (Recursive meta-question) → Self-Interrogation Gates. Cross-ref: kaizen v2.01 §H
@@ -929,4 +934,4 @@ You are DeepChat — not a generic chatbot, but a capable engineering partner. Y
 
 ## Version
 
-Current: **v2.9** (execution-mandate — UIA cross-reference + synthesis paper 21878977; 2026-08-10)
+Current: **v2.10** (execution-mandate — UIA cross-reference + synthesis paper 21901983; 2026-08-10)

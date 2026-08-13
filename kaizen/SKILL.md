@@ -1,3 +1,10 @@
+> **v2.34 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep + footer-drift fix):**
+> Red-team: direct parent-agent 5-adversary audit (this session). HARD: 2. SOFT: 0. DESIGN: 0.
+> (1) [HARD] Superseded DOIs -> v0.3 records: 21878943 -> 21901984 (UIA) and 21878977 -> 21901983 (IAPS epistemic lessons); 14 refs updated.
+>     Bare-ID mapping/history notes (L111 '21878977 v0.3 = 21901983', historical banners, draft IDs) preserved.
+> (2) [HARD] PROMPT-PARITY-1 footer drift fixed: header v2.33 / footer v2.32 -> both v2.34.
+> Cross-ref: research v2.104, qnfo-core v1.28, execution-mandate v2.10, skill-creator.
+
 > **v2.33 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 repo-copy fix + 5-store v3.9 parity + cost-control/R2 verification):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this).
 > **PROMPT-PARITY-1 (HARD, FIXED):** qnfo-skills repo copy of `system-prompt-v2.7.md` was STALE
@@ -129,7 +136,7 @@
 > **v2.27 UPDATE (2026-08-12, kaizen — CMD RED TEAM SUB + CMD SKILLS UPDATE: post-publication adversarial audit gate on Zenodo 21878977/21878976; system prompt v3.6; 4-store parity re-verified; merged past concurrent v2.27):**
 > Red-team: 3 parallel reviewer subagents (Accuracy/Completeness/Dependency — all completed; Dependency
 > delayed ~7 min, fallback direct-audit was prepared but reviewer finished before use) on the two published
-> Zenodo preprints (10.5281/zenodo.21878977 Paper A "Knowing What We Do Not Know...", 10.5281/zenodo.21878976
+> Zenodo preprints (10.5281/zenodo.21901983 Paper A "Knowing What We Do Not Know...", 10.5281/zenodo.21878976
 > Paper B "The Universal Ignorance Audit...", both v0.2 2026-08-10). Aggregate: 13 HARD / 16 SOFT / 9 DESIGN.
 > HARD highlights (all READ-ONLY verified): (1) Paper A 2026c "Corrections and Governance Record" — NO DOI,
 > record does not exist (author enumeration of 687 records + 7 variant queries → 0); (2) Paper A 2026b title
@@ -670,13 +677,13 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (1) [HARD] **VERSION-OVERWRITE-1 collision resolved** — git kaizen carried TWO different v2.13 banners (our UIA cycle v2.13 + concurrent cloudflare v3.41 cycle v2.13). Merged past the collision per VERSION-OVERWRITE-1: kaizen now v2.14; both v2.13 banners preserved as history below.
 > (2) [SOFT] **MAP-TERRITORY-1 mirror row added** — cross-skill index mirror of research v2.98 `check-map-territory.py` gate: any `[TERRITORY` identity claim requires a falsifiability condition (KIF-60); `[MAP` labels context-only; build-time BLOCK on FAIL. Owner: research v2.98. Canonical: 2026-08-11 UIA corpus (36 frameworks, one conflation; UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01).
 > (3) [DESIGN] **Cross-ref current-state** — qnfo-core v1.25 (MAP-TERRITORY-1 owner row), research v2.98, UIA-REPAIR-REGISTER.md; §H UIA protocol now cross-references the scripted gate as STEP 4 enforcement.
-> Cross-reference: research v2.98 (check-map-territory.py), qnfo-core v1.25 (MAP-TERRITORY-1), UIA DOI 10.5281/zenodo.21878943, UIA-REPAIR-REGISTER.md, cloudflare v3.41 (concurrent v2.13 claimant), session rvnMtR544X387NEXCAPbB.
+> Cross-reference: research v2.98 (check-map-territory.py), qnfo-core v1.25 (MAP-TERRITORY-1), UIA DOI 10.5281/zenodo.21901984, UIA-REPAIR-REGISTER.md, cloudflare v3.41 (concurrent v2.13 claimant), session rvnMtR544X387NEXCAPbB.
 > **v2.13 UPDATE (2026-08-11, kaizen — UIA self-audit repairs + MAP-TERRITORY GATE wiring):**
 > Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
 > Watchtower: kaizen v2.12 N-2 CLEAN pre-edit; v2.13 N-2 CLEAN post-edit (raw anchors). HARD: 0 (kaizen-side). SOFT: 1. DESIGN: 1. Changes:
 > (1) [SOFT] **UIA self-audit repairs applied to §H** — the 2026-08-11 self-audit note (`_uia-self-audit-2026-08-11.md`) found the UIA itself mistakes its map for the territory (36 analyses, zero repairs). Four repairs added to the Kaizen-specific UIA Protocol: (a) terminal commitment after Q15 — the auditor MUST write ONE sentence beginning "I will now…"; if no commitment emerges the pass is INCOMPLETE; (b) repair-register integration — every UIA pass MUST produce >=1 row in UIA-REPAIR-REGISTER.md + a next-action date (UIA-REPAIR-GAP-1); (c) quarter-audit cap — one full pass per framework per quarter, repairs between passes; (d) map-is-a-map acknowledgment — the UIA is an instrument for preparing to encounter the unknown, not the encounter itself.
 > (2) [DESIGN] **MAP-TERRITORY GATE cross-ref** — research v2.98 `check-map-territory.py` is the scripted enforcement of the UIA Repair Pipeline STEP 4 (SCRIPTING MANDATE, PROSE-GATE-ADVISORY-1 closed): any `[TERRITORY` identity claim without a falsifiability condition blocks publication.
-> Cross-reference: research v2.98 (check-map-territory.py), UIA DOI 10.5281/zenodo.21878943, UIA Repair Pipeline + self-audit notes (2026-08-11), UIA-REPAIR-REGISTER.md, session rvnMtR544X387NEXCAPbB.
+> Cross-reference: research v2.98 (check-map-territory.py), UIA DOI 10.5281/zenodo.21901984, UIA Repair Pipeline + self-audit notes (2026-08-11), UIA-REPAIR-REGISTER.md, session rvnMtR544X387NEXCAPbB.
 > **v2.12 UPDATE (2026-08-11, kaizen — footer merge-artifact fix post red-team):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD RED TEAM READ-ONLY
 > post-restart audit). HARD: 0. SOFT: 3. DESIGN: 2. Changes:
@@ -807,12 +814,12 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (2) [AUDIT] **Watchtower v2.02 results** — research v2.94 (fm/hdr/ft), git-github v2.22, qnfo-core v1.24,
 >     windows-command-patterns v3.19 all N-2 CLEAN. qnfo-skills git clean (0 uncommitted).
 > Cross-reference: research v2.94 (NEWVERSION SELF-DOI ORDERING RULE correction), ZENODO-BUCKET-LOCKED-1,
-> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21901983), session this.
 
 
 > **v2.01 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: Universal Ignorance Audit integration + UIA-SKIP-1 anti-pattern):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE directive — this session).
-> Trigger: user directive to update skills with UIA (DOI 10.5281/zenodo.21878943). MEMORY-TO-SKILL-DRIFT
+> Trigger: user directive to update skills with UIA (DOI 10.5281/zenodo.21901984). MEMORY-TO-SKILL-DRIFT
 > closed — UIA existed in durable memory (mem-t42Um_yqbfJL) since 2026-08-09 but never migrated to skill.
 > HARD: 2 (kaizen-side). SOFT: 2. DESIGN: 1. Changes:
 > (1) [HARD] **Universal Ignorance Audit section (H) added to Mined Workflow Patterns** — the UIA
@@ -826,11 +833,11 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > (2) [HARD] **UIA-SKIP-1 anti-pattern added** — a kaizen cycle without a UIA pass audits
 >     correctness without auditing structural ignorance. Run Q1-8 before Phase 2, Q9-15 before Phase 5.
 > (3) [SOFT] **qnfo-core cross-ref added** — §0.0 Falsifiability Requirement now references UIA
->     Question 5 (falsifiability test) as a concrete instrument. Cross-ref: UIA DOI 10.5281/zenodo.21878943.
+>     Question 5 (falsifiability test) as a concrete instrument. Cross-ref: UIA DOI 10.5281/zenodo.21901984.
 > (4) [SOFT] **research cross-ref added** — Phase 4 Stage 3 Red-Team Challenge now references UIA
->     as a complementary deep-inquiry method. Cross-ref: UIA DOI 10.5281/zenodo.21878943.
+>     as a complementary deep-inquiry method. Cross-ref: UIA DOI 10.5281/zenodo.21901984.
 > (5) [DESIGN] **MEMORY-TO-SKILL-DRIFT closed** — UIA v2.0 memory migrated to kaizen SKILL.md.
-> Cross-reference: UIA DOI 10.5281/zenodo.21878943, qnfo-core v1.24, research v2.93,
+> Cross-reference: UIA DOI 10.5281/zenodo.21901984, qnfo-core v1.24, research v2.93,
 > mem-t42Um_yqbfJL (UIA v2.0), session this.
 >
 > **v2.00 UPDATE (2026-08-10, kaizen — SKILLS UPDATE: PHANTOM-DEPLOY-VERSION mirror + MEMORY-TO-SKILL-DRIFT closure):**
@@ -857,7 +864,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.33
+# KAIZEN — v2.34
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -10493,9 +10500,9 @@ replaces a sequential task list with a merge-driven execution plan.
 research KIF-29 (Cross-Domain Consilience Gate), CON.002 (Consilience
 Framework), SYNTHESIS-DILIGENCE-1 (kaizen v1.62).
 
-### H. Universal Ignorance Audit (UIA — QNFO-original, DOI 10.5281/zenodo.21878943; 2026-08-10)
+### H. Universal Ignorance Audit (UIA — QNFO-original, DOI 10.5281/zenodo.21901984; 2026-08-10)
 
-The **Universal Ignorance Audit** is a fifteen-question, five-phase method for systematically interrogating the structure of not-knowing in any domain. Published by the QNFO research program (Quni-Gudzinas 2026, DOI 10.5281/zenodo.21878943), the UIA treats ignorance as an active, structured state with architecture — hidden assumptions (scaffolds), representational confusions (map–territory errors), felt anomalies (wobbles), protected zones (taboo and identity-threatening questions), and productive capacities (actionable and relational ignorance).
+The **Universal Ignorance Audit** is a fifteen-question, five-phase method for systematically interrogating the structure of not-knowing in any domain. Published by the QNFO research program (Quni-Gudzinas 2026, DOI 10.5281/zenodo.21901984), the UIA treats ignorance as an active, structured state with architecture — hidden assumptions (scaffolds), representational confusions (map–territory errors), felt anomalies (wobbles), protected zones (taboo and identity-threatening questions), and productive capacities (actionable and relational ignorance).
 
 The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5-adversary framework). Where the kaizen audit tests "is this skill correct?", the UIA tests "what is this skill structurally blind to?" Together they form a dual verification pipeline: adversarial correctness + structural ignorance detection.
 
@@ -10538,7 +10545,7 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 
 **Meta-audit of the UIA itself (from the paper, §4):** The UIA has an analytic, individualistic, extractive slant. It underweights the receptive, surrendering, not-doing dimension of unknowing. It benefits the articulate, time-rich auditor and may silence those whose survival depends on certainty. These limitations are part of the method's specification — they bound its claims.
 
-**Cross-reference:** UIA DOI 10.5281/zenodo.21878943, synthesis paper DOI 10.5281/zenodo.21878977, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question), research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1).
+**Cross-reference:** UIA DOI 10.5281/zenodo.21901984, synthesis paper DOI 10.5281/zenodo.21901983, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question), research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1).
 
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
@@ -12560,7 +12567,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **PUBLICATION-KG-INDEX-GAP-1: Publishing a paper to Zenodo/D1/papers.qnfo.org without a KG node or Vectorize index (2026-08-10)** | **HARD GATE** (mirror; owner research v2.99). A published paper with a D1 row but NO `paper:<slug>` KG node (>=1 BELONGS_TO edge) is invisible to KG-first due diligence; a paper not in Vectorize is not semantically discoverable. The publication pipeline MUST include: (1) KG node seeding via /sync or direct qnfo-graph D1 + verify query_graph/neighbors > 0 same-turn; (2) qnfo-paper-indexer trigger + verify /webhook?slug= -> indexed:true. Canonical case: ringbauer-qudit-due-diligence (10.5281/zenodo.21879231) — HARD-1 (KG missing) + HARD-2 (Vectorize missing) found at CMD RED TEAM closeout audit; both were invisible to the v2.95 consolidated closeout gate, now extended to 7 layers. Cross-ref: research v2.96 Phase 6, knowledge v2.10 Edge Seeding Gate, VECTORIZE-WEBHOOK-VERIFY-1. |
 | **PDF-PATH-OPTION-1: `page.pdf()` without the `path:` option returns a Buffer and writes NO file (2026-08-10)** | **HARD GATE** (mirror; owner research v2.99). In the puppeteer-core CDP pipeline, `page.pdf({format, margin, printBackground})` without `path` returns a Buffer — the pipeline reports success while the PDF file is never written. ALWAYS pass `path: '<slug>.pdf'`. Canonical case: ringbauer-qudit-due-diligence first render — node reported 'PDF written' but no file existed; verify_pdf.py FileNotFoundError caught it. Cross-ref: research v2.96 PDF Building step 5, CHROME-HEADLESS-1. |
 | **R2-CDN-CACHE-1: R2 object API GET serves a CDN-cached stale object — false md5 mismatch (2026-08-10)** | **HARD GATE** (mirror; owner research v2.99). The R2 object API GET path can return a stale cached object (`CF-Cache-Status: HIT`, old ETag) after an overwrite — a byte-compare against the fresh local file fails while the upload actually succeeded. Canonical verification: `rclone check <local> releases:qnfo-releases/<prefix>` (S3 endpoint, bypasses API CDN) -> 0 differences. Canonical case: ringbauer-qudit-due-diligence — API GET reported stale v1 PDF (etag 150124da) while rclone proved v4 objects correct. Cross-ref: research v2.96 R2 Archive, cloudflare v3.14 (R2 object GET/HEAD caveats). |
-| **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21878943) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
+| **UIA-SKIP-1: Running a kaizen cycle without a Universal Ignorance Audit pass — auditing for correctness without auditing for structural ignorance (2026-08-10)** | **HARD GATE.** Kaizen Phase 2 red-team review audits "is this skill correct?" The UIA audits "what is this skill structurally blind to?" A kaizen session that skips the UIA produces verified fixes for the KNOWN problems while missing scaffolds, map–territory errors, and protected ignorances. Run UIA Questions 1-8 before Phase 2, Questions 9-15 before Phase 5. Canonical case: this session — UIA was published (DOI 10.5281/zenodo.21901984) and integrated into kaizen v2.01. Cross-ref: H. Universal Ignorance Audit, SYNTHESIS-DILIGENCE-1, PROSE-GATE-ADVISORY-1. |
 | **NEWVERSION-DOI-RESERVATION-1: newversion drafts return `prereserve_doi: None` from GET /draft — PID reservation POST is the only path (2026-08-10)** | **HARD** (mirror; owner research v2.99). **`GET /api/deposit/depositions/{id}` → `metadata.prereserve_doi.doi` IS a working prereserve-discovery path** (verified 2026-08-10 for 21880070 and 21880104) — use it BEFORE the POST fallback. GET /draft returns `prereserve_doi: None`; POST /api/records/{id}/draft/pids/doi (links.reserve_doi) → 201 is the alternative. Also: in-place `.md` overwrite on a published record is impossible (415 bare URL / 403 bucket-locked on /content); P5.FRESH repair = newversion-only, uploaded .md carries its OWN DOI + status published. Canonical case: QNFO.RES.002/.003 — first newversion hit the None gap; PID-reservation fixed both; P5.FRESH yaml_ok=True. Cross-ref: research v2.94, ZENODO-BUCKET-LOCKED-1, P5.FRESH. |
 | **SUBAGENT-AGGREGATOR-TRUNCATION-1: all subagents 'completed' but aggregator returns only planning preambles — evidence 6/6 (2026-08-11)** | **HARD** (mirror; owner kaizen v2.03 Subagent Failure Handling). Evidence escalated 5/5 → **6/6** (2026-08-11, session FMQelHEBu67pv0QrOWU6h). The aggregator return is NEVER authoritative for audit findings. **RECOVERY WORKAROUND (verified 2026-08-11): `get_conversation_history({conversationId: "<childSessionId>"})` recovers the FULL subagent findings** the orchestrator aggregate truncates — the child session's transcript contains the complete audit (this recovered the HARD-1 count correction that would otherwise have been lost). Procedure: (1) dispatch subagent; (2) if aggregate shows only preamble → note childSessionId from the run status; (3) call `get_conversation_history` on that child session id; (4) parse the full findings from the transcript; (5) only then fall back to direct parent-agent audit if the child session itself truncated. Direct parent-agent audit remains the reliability backstop. Canonical: QNFO.RES.002/.003 red-team (2026-08-10) + YES-TO-ALL bundle red-team (2026-08-11) — the latter recovered HARD-1 via get_conversation_history. |
 | **CONSOLIDATED-CLOSEOUT-VERIFICATION-1: closing a multi-layer publication without one same-turn re-proof script (2026-08-10)** | **HARD GATE** (mirror; owner research v2.99). After Zenodo+GitHub+D1+R2+KG closeout, run ONE script re-proving all layers same-turn (DOI HEAD x4 incl. v0.1 predecessors, DataCite findable/subjects/rights, GitHub ls-remote, D1 row, Zenodo files). Any non-PASS blocks closeout (zero deferred). Canonical: QNFO.RES.002/.003 (2026-08-10) — 5 layers, all PASS, 0 HARD/0 SOFT. Cross-ref: ZENODO-PHANTOM-DOI-1, P5.FRESH, Tool-Call Execution Mandate. |
@@ -12579,7 +12586,7 @@ Session Failure → Session Retrospective detects failure pattern
 | **TITLE-DUPLICATION-1: Published paper renders the title TWICE on page 1 (body H1 + YAML title) (2026-08-05)** | **HARD.** When YAML `title:` exists, the paper body MUST NOT contain a top-level H1 with the same title. Verify: exactly ONE title occurrence in rendered HTML/PDF. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (commit f2912ab). |
 | **INTERNAL-REF-1: Published papers referencing internal QNFO processes (2026-08-05)** | **HARD.** No repo paths, skill sections, internal program names as prose, internal conferences, possessive internal refs in published papers. Cite published records only. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.2 (CWI section deleted). |
 | **FILE-SLUG-1: Generic `paper.md`/`paper.pdf`/`paper.html` naming for published papers (2026-08-05)** | **HARD.** All published files named as project slug: `<slug>.md/.pdf/.html`. Applies to repo, Zenodo, R2. Owner: research v2.84. Canonical case: QNFO.UMP.004 v1.3 (commit 24fc89f). |
-| **MAP-TERRITORY-1: Asserting a mathematical object IS the physical structure without an explicit map/territory label + falsifiability condition (2026-08-11)** | **HARD GATE** (mirror; owner research v2.99). Any claim asserting a math object IS the physical structure must carry `[MAP — model of X]` (analogy, no ontological claim) or `[TERRITORY — claimed identity]` (identity asserted; falsifiability condition naming the observation that would break it REQUIRED — KIF-60). Scripted gate: `research/scripts/check-map-territory.py <slug>.md` (build-time BLOCK, exit 1; inline condition / same-paragraph condition / downgrade to MAP). Canonical case: 2026-08-11 UIA corpus — 36 frameworks, one recurring map–territory conflation (UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01); PROSE-GATE-ADVISORY-1 closed for this gate. Cross-ref: research v2.98, qnfo-core v1.25, UIA DOI 10.5281/zenodo.21878943. |
+| **MAP-TERRITORY-1: Asserting a mathematical object IS the physical structure without an explicit map/territory label + falsifiability condition (2026-08-11)** | **HARD GATE** (mirror; owner research v2.99). Any claim asserting a math object IS the physical structure must carry `[MAP — model of X]` (analogy, no ontological claim) or `[TERRITORY — claimed identity]` (identity asserted; falsifiability condition naming the observation that would break it REQUIRED — KIF-60). Scripted gate: `research/scripts/check-map-territory.py <slug>.md` (build-time BLOCK, exit 1; inline condition / same-paragraph condition / downgrade to MAP). Canonical case: 2026-08-11 UIA corpus — 36 frameworks, one recurring map–territory conflation (UIA-REPAIR-REGISTER.md row UIA-2026-08-11-01); PROSE-GATE-ADVISORY-1 closed for this gate. Cross-ref: research v2.98, qnfo-core v1.25, UIA DOI 10.5281/zenodo.21901984. |
 
 
 | **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts from only ONE store or the wrong key (2026-08-06)** | **HARD GATE.** agent.db `app_settings.customPrompts` entries carry the prompt text under `content`; app-settings.json `customPrompts` entries carry it under `template`. Verifying prompt content with a single-key read produces a FALSE "empty prompt" flag — and acting on that flag (rewriting with empty content) would blank the templates. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — 7 tool calls + one false finding burned before the asymmetry was confirmed. Fix: when auditing/updating prompts, read BOTH stores and BOTH keys (`content` in agent.db, `template` in app-settings.json); confirm content length > 0 in each before declaring anything empty. Cross-ref: deepchat-settings v1.4, PROMPT-REDISCOVERY-1. |
@@ -14643,7 +14650,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.32** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.9 parity; 2026-08-12) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-12) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-12) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-12)
+Current: **v2.34** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
 
 
 
@@ -14821,3 +14828,7 @@ gotcha; no session will assume the portal API auto-provisions DNS/Access app (HT
 Risk of regression: [HIGH] - dashboard flow auto-provisions, tempting agents to skip manual steps;
 the 522 origin error is the silent failure. Likelihood: [HIGH] - canonical case qnfo-mcp-portal
 (mcp.q08.org) documented in cloudflare v3.46.
+
+## CMD SKILLS UPDATE cycle log (2026-08-13, v3.11)
+Red-team skills audit: cloudflare v3.50 (cost gate $90/30d, COST-AUDIT-MISS-AI-1, aiInferenceAdaptiveGroups, <$100/$200 budget) PASS; research v2.104 (ZENODO v0.3 records 21901984/21901983 canonical, superseded 21878943/21878977 only in historical contexts) PASS; kaizen v2.34 (PROMPT-PARITY-1, 9/9, dual-write, header==footer) PASS. HARD: 0. SOFT: 0. DESIGN: 0.
+Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = per-session orchestration_policy explicit|proactive; proactive = auto-execute; PR #2082 merged 2026-08-04), DEEPCHAT-SEARCH-DEFAULT-1 (no global web-search default in v1.1.0; per-session in-memory globe toggle), DEEPSEEK-PARAM-DEFAULTS-1 (temp/topP ignored in thinking mode; effort default high; v4-flash 0.7/0.9, v4-pro 0.4/0.9, chat 0.7/0.9, reasoner 0.6/0.9), DEEPCHAT-DEFAULT-MODEL-1 (app_settings defaultModel/preferredModel MUST be deepseek/deepseek-v4-flash). 5 stores byte-identical sha256 7bc53ed99f26e827 (agent.db systemPrompts, app-settings.json default_system_prompt, .deepchat md, skills md, qnfo-skills repo). header==footer==3.11. 9/9 CMD templates identical; CMD SKILLS UPDATE template gained the v3.11 mandate line. Backups: app-settings.json.bak-v3.11-20260813_101953, agent.db.bak-v3.11-20260813_101953.

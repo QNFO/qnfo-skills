@@ -1,3 +1,8 @@
+> **UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
+> Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
+> Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS).
+> Cross-ref: kaizen v2.34, research v2.104.
+
 ---
 name: skill-creator
 description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
@@ -261,7 +266,7 @@ Skip this step only if the skill being developed already exists, and iteration o
 
 When creating a new skill from scratch, always run the `init_skill.py` script. The script conveniently generates a new template skill directory that
 
-**Universal Ignorance Audit (UIA) for new skills:** After creating the skill scaffold, run a Universal Ignorance Audit pass on the draft SKILL.md — Questions 1-8 (Surface the Structure through Multiply Perspectives) before finalizing the skill content, and Questions 9-15 (Uncover Hidden Forces through Act) before deployment. The UIA surfaces scaffolds, map–territory errors, wobbles, and protected ignorances that an adversarial red-team review alone may miss. See kaizen v2.08 §H (Universal Ignorance Audit) for the complete 15-question instrument and protocol. DOI 10.5281/zenodo.21878943 (methodology), DOI 10.5281/zenodo.21878977 (case study). automatically includes everything a skill requires, making the skill creation process much more efficient and reliable.
+**Universal Ignorance Audit (UIA) for new skills:** After creating the skill scaffold, run a Universal Ignorance Audit pass on the draft SKILL.md — Questions 1-8 (Surface the Structure through Multiply Perspectives) before finalizing the skill content, and Questions 9-15 (Uncover Hidden Forces through Act) before deployment. The UIA surfaces scaffolds, map–territory errors, wobbles, and protected ignorances that an adversarial red-team review alone may miss. See kaizen v2.08 §H (Universal Ignorance Audit) for the complete 15-question instrument and protocol. DOI 10.5281/zenodo.21901984 (methodology), DOI 10.5281/zenodo.21901983 (case study). automatically includes everything a skill requires, making the skill creation process much more efficient and reliable.
 
 Usage:
 

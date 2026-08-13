@@ -1,3 +1,8 @@
+> **v2.104 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
+> Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
+> Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS); 5 refs updated.
+> Cross-ref: kaizen v2.34, qnfo-core v1.28, execution-mandate v2.10.
+
 ---
 
 
@@ -283,13 +288,13 @@ triggers:
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM SUB — session rvnMtR544X387NEXCAPbB). HARD: 2 (stale/orphaned current-state pointers). SOFT: 1. DESIGN: 1. Changes:
 > (1) [HARD] **KG Node Seeding pointer repointed (x2)** — `(per qnfo-core v1.24)` -> `(per knowledge v2.10 SYNC CONTRACT)`: qnfo-core v1.25+ contains zero `INSERT OR IGNORE`/`qnfo-graph` fallback content; the actual owner of the graph-sync contract is knowledge v2.10 (`graph-api.qnfo.org/sync`). Orphaned-owner pointer fixed.
 > (2) [DESIGN] **Banner cross-ref current-state cites added** — kaizen v2.18 (MAP-TERRITORY-1 mirror row) + qnfo-core v1.26 (MAP-TERRITORY-1 owner row) now cited in the v2.98 banner cross-ref line, matching sibling-banner convention.
-> Cross-reference: kaizen v2.18, qnfo-core v1.26, knowledge v2.10 (SYNC CONTRACT), UIA DOI 10.5281/zenodo.21878943, session rvnMtR544X387NEXCAPbB.
+> Cross-reference: kaizen v2.18, qnfo-core v1.26, knowledge v2.10 (SYNC CONTRACT), UIA DOI 10.5281/zenodo.21901984, session rvnMtR544X387NEXCAPbB.
 > **v2.98 UPDATE (2026-08-11, kaizen — MAP-TERRITORY GATE SCRIPTED: check-map-territory.py + Publication Language Gate wiring):**
 > Red-team: direct parent-agent 5-adversary audit (UIA Repair Pipeline execution — session rvnMtR544X387NEXCAPbB).
 > Watchtower: research v2.97 N-2 CLEAN pre-edit; v2.98 N-2 CLEAN post-edit (raw anchors). HARD: 1 (research-side: gate was prose-only). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **MAP-TERRITORY GATE scripted** — new `research/scripts/check-map-territory.py`: scans paper drafts for `[TERRITORY` labels (identity claims) without an accompanying falsifiability condition (KIF-60 / qnfo-core §0.0); `[MAP` labels are context-only (no condition). FAIL = exit 1 + FIX instruction (inline condition / same-paragraph condition / downgrade to MAP). Added to the Phase 5 Publication Language Gate scan list (build-time BLOCK). Canonical lesson: TITLE-DUPLICATION-1 shipped 3 published versions before scripting; map–territory conflation must not ship unlabelled again. Enforcement of the UIA Repair Pipeline Protocol v1.0 (2026-08-11) STEP 4 SCRIPTING MANDATE (PROSE-GATE-ADVISORY-1, kaizen v1.63).
 > (2) [DESIGN] **UIA-REPAIR-REGISTER.md created** (vault, 2026-08-11) — rows UIA-2026-08-11-01..06 incl. the all-36 REFRAME (P0) and the UIA self-audit (P0/IN-PROGRESS); calibration `[CHECK: 2026-09-11]` map-territory label holds.
-> Cross-reference: UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, UIA DOI 10.5281/zenodo.21878943, kaizen v1.63 (PROSE-GATE-ADVISORY-1), qnfo-core §0.0 (KIF-60), check-title-duplication.py (v2.86 pattern), kaizen v2.18 (MAP-TERRITORY-1 mirror row), qnfo-core v1.26 (MAP-TERRITORY-1 owner row), session rvnMtR544X387NEXCAPbB.
+> Cross-reference: UIA Repair Pipeline note `_uia-repair-pipeline-2026-08-11.md`, UIA DOI 10.5281/zenodo.21901984, kaizen v1.63 (PROSE-GATE-ADVISORY-1), qnfo-core §0.0 (KIF-60), check-title-duplication.py (v2.86 pattern), kaizen v2.18 (MAP-TERRITORY-1 mirror row), qnfo-core v1.26 (MAP-TERRITORY-1 owner row), session rvnMtR544X387NEXCAPbB.
 > **v2.97 UPDATE (2026-08-10, kaizen — CDP render script .cjs + merge past concurrent v2.96):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP).
 > Concurrent-session merge: v2.96 (publication completeness gates) landed WHILE this audit ran — merged past
@@ -335,7 +340,7 @@ triggers:
 >     one script re-proved all 5 layers, 0 HARD/0 SOFT, closing with zero deferred items. The gate is falsifiable: any
 >     non-resolving DOI or missing ref fails the closeout.
 > Cross-reference: kaizen v2.03 (mirror row), Tool-Call Execution Mandate, P5.FRESH, ZENODO-PHANTOM-DOI-1,
-> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21901983), session this.
 
 
 > **v2.94 UPDATE (2026-08-10, kaizen — NEWVERSION DOI RESERVATION PATH CORRECTED (prereserve_doi None) + P5.FRESH newversion-only):**
@@ -355,13 +360,13 @@ triggers:
 > (3) [SOFT] **Self-DOI ordering also requires `status: "published"` in the uploaded .md** — the uploaded .md must
 >     carry BOTH its own reserved DOI AND status published (P5.FRESH checks both).
 > Cross-reference: kaizen v2.02 (mirror row), ZENODO-BUCKET-LOCKED-1, P5.FRESH, NEWVERSION SELF-DOI ORDERING RULE,
-> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21878977), session this.
+> QNFO.RES.002 (10.5281/zenodo.21878976) + QNFO.RES.003 (10.5281/zenodo.21901983), session this.
 
 
 > **v2.93 UPDATE (2026-08-10, kaizen — UIA cross-reference in Phase 4 Stage 3):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE). UIA cross-ref added to
 > Phase 4 Stage 3 Red-Team Challenge — the 15-question UIA complements the 5-adversary review.
-> Cross-ref: UIA DOI 10.5281/zenodo.21878943, kaizen v2.01 §H.
+> Cross-ref: UIA DOI 10.5281/zenodo.21901984, kaizen v2.01 §H.
 >
 > **v2.92 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: briefing send-guard cross-ref + history reconciliation):**
 > Red-team: direct parent-agent 5-adversary audit (CMD RED TEAM, READ-ONLY — this session). Trigger: research was bumped 2.90->2.91 by concurrent session 05205f8 (AI-QUALITY-GATE-1, banner VERIFIED present) but .kaizen_history lacked the v2.91 entry, and the briefing archive send path had no TEST-SEND-EXTERNAL-1 cross-ref. HARD: 0. SOFT: 2. DESIGN: 0. Changes:
@@ -9203,7 +9208,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.103** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.104** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
 
 
 
