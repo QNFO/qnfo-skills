@@ -1,3 +1,27 @@
+> **v2.39 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: repo-copy phantom-claim + model-key drift):**
+> Red-team: direct parent-agent audit (this session — LoF26-adjacent; skills audit + prompt parity).
+> HARD: 1. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **REPO-COPY-PHANTOM-1 — system-prompt repo copy drifted while footer claimed parity:**
+>     v3.15 footer said "5-store repair (repo copy + app_db agent.db brought to parity)" but
+>     skills/system-prompt-v2.7.md (qnfo-skills repo clone at .deepchat/skills) was still v3.14
+>     (sha ee98424d vs canonical 4ce146c6; 1,495 chars behind). Every CMD SKILLS UPDATE must
+>     verify the repo copy explicitly (git status + sha), never trust the footer claim.
+>     Fixed: repo copy synced byte-identical (sha 4ce146c6cc4f7940), committed f937f02.
+> (2) [SOFT] **MODEL-KEY-FILE-DRIFT-1 — app-settings.json model keys drifted from DB:**
+>     DB app_settings.defaultModel/preferredModel = deepseek/deepseek-v4-flash (correct,
+>     DEEPCHAT-DEFAULT-MODEL-1) but app-settings.json file had workers-ai gemma-2b-it-lora
+>     + deepseek-v4-pro. Fixed: file now deepseek/deepseek-v4-flash, backup taken, JSON valid,
+>     default_system_prompt sha unchanged (4ce146c6). DB app_settings is authoritative
+>     (deepchat-settings v1.16).
+> Verified this cycle: 9/9 CMD templates identical (DB customPrompts == app-settings.json
+> customPrompts, all 9 shas match), header==footer v3.15, cloudflare v3.50 + cost gates
+> ($90/30d, COST-AUDIT-MISS-AI-1, QUEUE-BODY-SHAPE-1, AUDIT-COMPLETENESS-1) present,
+> ZENODO v0.3 DOIs (21901984/21901983) present. Store set: agent.db app_settings.systemPrompts
+> == app-settings.json default_system_prompt == .deepchat/system-prompt-v2.7.md ==
+> skills/system-prompt-v2.7.md == v3.15 sha 4ce146c6cc4f7940. (system_prompts.json is the
+> UI-default store by design — NOT parity member, per v2.37.)
+> Cross-ref: deepchat-settings v1.16, system-prompt v3.15, session this.
+
 > **v2.38 UPDATE (2026-08-13, kaizen — PARTIAL-PUT-CLEARS-FIELDS-1 mirror):**
 > Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **PARTIAL-PUT-CLEARS-FIELDS-1 mirror** (owner research v2.107): Zenodo metadata PUT
