@@ -1,3 +1,31 @@
+> **v2.110 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: VECTORIZE-403-MISDIAGNOSIS + WBS-COLLISION-2 + REDTEAM-QUEUE-STALL-1):**
+> Red-team: direct parent-agent audit (session FJ4ZYy6OEfAnpu8mq30OZ; QNFO.RES.007 5-adversary audit + outreach cycle).
+> HARD: 3. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **VECTORIZE-403-MISDIAGNOSIS anti-pattern added** — qnfo-paper-indexer 403/error-1010 was MISDIAGNOSED as
+>     "token rotated" (memory + logs) when the root cause was the MISSING browser User-Agent: default Python urllib
+>     UA triggers Cloudflare Browser Integrity Check (BIC, error 1010) on every path of the worker regardless of token
+>     validity. Token `chnx-idx-v1-k9m2n4p7r5t8` was valid throughout. Verified live 2026-08-14: with
+>     `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ...` the same endpoint returns
+>     `200 {"success":true,"indexed":false,"skipped":true,"reason":"unchanged"}`. ALL qnfo-paper-indexer calls (and any
+>     Cloudflare-worker HTTP call from Python) MUST send a browser-like User-Agent. 403 from this worker is a UA
+>     problem, NOT a token problem — test the UA hypothesis BEFORE diagnosing token rotation (BLAME-EXTERNAL-1
+>     discipline). Canonical case: QNFO.RES.007 2026-08-14 closeout (Vectorize 21 chunks, 0 errors, verified with UA).
+> (2) [HARD] **WBS-COLLISION-2 anti-pattern added** — two concurrent sessions resolving "next available WBS code"
+>     against D1 program_registry can select the SAME code; the later session's INSERT/UPDATE silently overwrites the
+>     first project's row (metadata for a different thesis). Canonical case: QNFO.RES.007 vs formal-self-reference-limits
+>     2026-08-14 — canonical row (invariant-structural-value) restored; late claim renumbered to RES.008 (per
+>     RES.004/005 precedent: first claim keeps the code). WBS resolution MUST be atomic: check-then-insert in ONE
+>     transaction or with a UNIQUE constraint / registry lock; when resuming a session after a gap, re-verify the D1
+>     row identity (name + slug), not just wbs_code, BEFORE any write.
+> (3) [HARD] **REDTEAM-QUEUE-STALL-1 anti-pattern added** — reviewer subagents dispatched via deepchat_subagents
+>     frequently remain QUEUED >150s (no turn started) in this environment (documented 2026-08-10, 2026-08-13,
+>     2026-08-14). A queued subagent is NOT a review. Mandatory fallback: after ~75s without a started turn, execute
+>     the direct parent-agent audit (Mandate 3 §Reviewer Failure Fallback) and log the stall. NOTE: a reviewer CAN
+>     eventually complete and return REAL findings (RES.007 2026-08-14: FAIL with 3 HARD — duplicate Joyal-Street work
+>     with synthetic DOI `doi={joyalstreet1986}`, audit accounting double-count, BP-10 unverifiable "51/51") — always
+>     poll/inspect the delegation before finalizing closeout, and treat late-arriving findings as remediation items.
+> Cross-reference: kaizen v2.45, email-composer v2.19 (send UA gotchas), session FJ4ZYy6OEfAnpu8mq30OZ.
+
 > **v2.109 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: NEWVERSION-FRONTMATTER-CARRYOVER-1 + DOI-WAF-403 audit helper):**
 > Red-team: direct parent-agent skills audit (session DRUiOGPDwdzH2BayFiv9x; RES.007 publish-then-audit cycle).
 > HARD: 1. SOFT: 1. DESIGN: 0.
@@ -8394,13 +8422,16 @@ and HARD-2 Vectorize-missing before closeout).
 
 
 
-| **VECTORIZE-WEBHOOK-VERIFY-1: search_papers "OK" treated as Vectorize index proof (2026-08-04)** | MCP search_papers returns "OK"/empty for newly indexed papers (VECTORIZE-SILO-1). The AUTHORITATIVE single-paper index check is `GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` — response `{indexed:true, chunks:N, errors:0}` is direct proof the paper is in Vectorize. Use the webhook for "is this paper indexed?" claims; search_papers is directional only. Case: IPR paper (QNFO.UMP.003) — search_papers returned "OK" while webhook confirmed 26 chunks, 0 errors, body_len 41883. Cross-ref: cloudflare v3.33 VECTORIZE-WEBHOOK-VERIFY-1. |
+| **VECTORIZE-WEBHOOK-VERIFY-1: search_papers "OK" treated as Vectorize index proof (2026-08-04)** | MCP search_papers returns "OK"/empty for newly indexed papers (VECTORIZE-SILO-1). The AUTHORITATIVE single-paper index check is `GET https://qnfo-paper-indexer.q08.workers.dev/webhook?slug=<slug>` — response `{indexed:true, chunks:N, errors:0}` is direct proof the paper is in Vectorize. Use the webhook for "is this paper indexed?" claims; search_papers is directional only.
+| **REDTEAM-QUEUE-STALL-1: reviewer subagent stays QUEUED >150s (no turn started) and closeout proceeds without review (2026-08-10/13/14)** | A queued subagent is NOT a review. After ~75s without a started turn, execute the direct parent-agent audit (Mandate 3 §Reviewer Failure Fallback) and log the stall. A reviewer CAN still complete late with REAL findings (RES.007 2026-08-14: FAIL — duplicate Joyal-Street work with synthetic DOI, audit double-count, BP-10 "51/51") — inspect the delegation before final closeout; late findings become remediation items. | Case: IPR paper (QNFO.UMP.003) — search_papers returned "OK" while webhook confirmed 26 chunks, 0 errors, body_len 41883. Cross-ref: cloudflare v3.33 VECTORIZE-WEBHOOK-VERIFY-1. **User-Agent requirement (2026-08-14, VECTORIZE-403-MISDIAGNOSIS):** ALL calls to this worker MUST send a browser-like `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ...` header. Default Python urllib UA triggers Cloudflare BIC (error 1010) -> HTTP 403 on every path regardless of token. A 403 from qnfo-paper-indexer is a UA problem, NOT a token problem (BLAME-EXTERNAL-1). |
 
 
 
 
 
-| **WBS-STD-2: Cross-reference claims WBS usage that does not exist (2026-08-04)** | A skill's cross-ref "research (phases carry WBS codes in execute_plan)" was FALSE — research had plain Phase steps. Cross-refs to a standard must be verified against the target skill's actual content (read the file) before being written; phantom compliance claims are the same class as phantom validation claims. Fix: verify target content before writing the cross-ref; kaizen Watchtower should audit WBS cross-refs. |
+| **WBS-STD-2: Cross-reference claims WBS usage that does not exist (2026-08-04)** |
+| **WBS-COLLISION-2: concurrent sessions resolve the same next-WBS-code and the later write overwrites the first project's D1 row (2026-08-14)** | Two sessions computed "next available RES code = 007" simultaneously; the later session's UPDATE replaced the canonical row (invariant-structural-value) with metadata for a different thesis (formal-self-reference-limits). Resolution per RES.004/005 precedent: first claim keeps the code, late claim renumbered (RES.008). WBS resolution MUST be atomic (check-then-insert in ONE transaction / UNIQUE constraint / registry lock); on session resume re-verify D1 row identity (name+slug), not just wbs_code, before ANY write. Canonical: QNFO.RES.007 2026-08-14. |
+ A skill's cross-ref "research (phases carry WBS codes in execute_plan)" was FALSE — research had plain Phase steps. Cross-refs to a standard must be verified against the target skill's actual content (read the file) before being written; phantom compliance claims are the same class as phantom validation claims. Fix: verify target content before writing the cross-ref; kaizen Watchtower should audit WBS cross-refs. |
 
 
 

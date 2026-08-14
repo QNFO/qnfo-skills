@@ -1,6 +1,26 @@
 > **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
 # email-composer
 
+> **v2.19 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: SEND-403-BIC-UA-1 + SEND-KEY-BINDINGS-1 + /send verification):**
+> Red-team: direct parent-agent audit (session FJ4ZYy6OEfAnpu8mq30OZ; RES.007 P7 OUTREACH execution).
+> HARD: 2. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **SEND-403-BIC-UA-1 anti-pattern added** — `/send` (and `/health`) returning HTTP 403 with Cloudflare
+>     error 1010 from Python means the caller omitted a browser-like User-Agent: default urllib UA triggers
+>     Cloudflare Browser Integrity Check. Same class as VECTORIZE-403-MISDIAGNOSIS (research v2.110). Fix: always
+>     send `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0
+>     Safari/537.36` on qnfo-email calls. Canonical: RES.007 outreach 2026-08-14 — first /send attempt 403 (no UA),
+>     retry with UA -> 200.
+> (2) [HARD] **SEND-KEY-BINDINGS-1 anti-pattern added** — the qnfo-email API key MUST be read in FULL from the worker
+>     `/bindings` endpoint (`GET /accounts/{acct}/workers/scripts/qnfo-email/bindings` -> `API_KEY.text`); the
+>     `/settings` endpoint returns the same text but truncating prints to 30 chars (common debug habit) produces a
+>     PARTIAL key -> HTTP 401 unauthorized. The full key ends with `-zJ09X7EePDto`. Auth accepts
+>     `Authorization: Bearer <key>` OR `x-api-key: <key>` (worker L67-70). Canonical: RES.007 2026-08-14 — 401 until
+>     full key used; both header forms then verified on /health.
+> (3) [SOFT] **/send response semantics documented in-practice** — 200 + `message_id` = ACCEPTED by the worker
+>     (crypto.randomUUID), NOT delivery proof (MESSAGE-ID-NE-DELIVERY-1). Verify via `GET /emails/recent` ->
+>     status=sent + outreach-log.md entry with message_id (Tool-Call Execution Mandate).
+> Cross-reference: research v2.110 (VECTORIZE-403-MISDIAGNOSIS), kaizen v2.45, session FJ4ZYy6OEfAnpu8mq30OZ.
+
 > **v2.18 UPDATE (2026-08-14, red-team remediation — DETECTION-ONLY MANDATE documented + Patel C3 monitor corrected + tracking-gap ledger):**
 > Red-team: 3 parallel reviewer audit (2026-08-14 email check) — 0 HARD behavioral violations, 1 scoped HARD record-keeping finding, 5 SOFT doc/tracking gaps. Changes:
 > (1) [HARD] **CURRENT STATE: DETECTION-ONLY since 2026-08-13** — user mandate supersedes the v2.12/v2.13 autonomous-sending history (banners preserved as history): NEVER send outreach emails autonomously, ever; no send action without explicit user approval in an email-composer session. Frontmatter `autonomous` set to `false`. Cronjob 3851f539 verified detection-only (renamed 2026-08-13, description + taskPrompt both detection-only).
