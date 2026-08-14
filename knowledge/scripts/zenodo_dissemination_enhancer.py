@@ -26,7 +26,7 @@ USAGE:
   python zenodo_dissemination_enhancer.py --record 21208346 \
       --alternate-json alternates.json --apply
 
-subject JSON shape:  [{"term": "Ultrametric analysis", "identifier": "http://eurovoc.europa.eu/...", "scheme": "EuroSciVoc"}]
+subject JSON shape:  [{"term": "Ultrametric analysis", "identifier": "http://publications.europa.eu/resource/authority/euroscivoc/...", "scheme": "EuroSciVoc"}]
 alternate JSON shape: [{"identifier": "https://archive.softwareheritage.org/...", "scheme": "swh"}]
 
 Requires: Zenodo token at C:\\Users\\LENOVO\\tokens\\zenodo (for --apply only;

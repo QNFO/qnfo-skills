@@ -5,8 +5,9 @@ zenodo_dissemination_health.py — Zenodo Dissemination Playbook levers D4-D5
 
 Implements:
   D4: Semantic Scholar gap monitoring — probes S2 for QNFO DOIs and reports
-      INDEXED vs MISSING (playbook finding: 5/5 sampled QNFO records were 404,
-      i.e., Semantic Scholar does NOT index the QNFO corpus today).
+      INDEXED vs MISSING (playbook finding 2026-08-14: 5/5 sampled QNFO records
+      were 404; upgraded to ENGINE-WIDE — S2 returns 404 for the whole
+      10.5281/zenodo.* prefix, incl. highly-cited pycm/coverage.py).
   D5: OpenCitations COCI citation watch — weekly poll of citing-DOI counts
       (playbook baseline 2026-08-14: QUNTUF = 0 citations) + doi.org
       citation_title/citation_abstract meta-tag verification (post-publish

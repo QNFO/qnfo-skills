@@ -20,7 +20,7 @@ self_sufficient: true
 >     D3 3+ communities, D4 Semantic Scholar gap monitoring, D5 OpenCitations COCI
 >     + doi.org meta verification, D6 bucket machine-readable files, D7 fediverse
 >     broadcast. Live-verified 2026-08-14: OpenAIRE indexes QNFO (QUNTUF+UCS both
->     total=1); Semantic Scholar does NOT index 5/5 sampled QNFO records (404);
+>     total=1); Semantic Scholar does NOT index zenodo.org DOIs AT ALL (engine-wide — even highly-cited pycm/coverage.py return 404; S2-ZENODO-GAP-1 upgraded 2026-08-14 from corpus-specific to prefix-wide);
 >     QUNTUF subjects are plain arXiv strings WITHOUT scheme/URI; alternate_identifiers
 >     EMPTY; 1 community only; COCI baseline 0.
 > (2) [HARD] **New scripts (git-tracked qnfo-skills/knowledge/scripts/)** —
@@ -468,7 +468,7 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 **Source:** AI Mode export `_26226160010.md` (5 concatenated sessions) distilled into
 `D:\Obsidian\notes\v1\2026\08\14\Zenodo-dissemination-playbook-2026-08-14.md`.
 **Live-verified 2026-08-14:** OpenAIRE indexes QNFO (QUNTUF + Ultrametric Code Spaces,
-total=1 each); Semantic Scholar does NOT index 5/5 sampled QNFO DOIs (S2-ZENODO-GAP-1);
+total=1 each); Semantic Scholar does NOT index 10.5281/zenodo.* DOIs AT ALL — engine-wide (probe 2026-08-14: pycm 10.5281/zenodo.1218230 + coverage.py also 404; S2-ZENODO-GAP-1 upgraded from corpus-specific to prefix-wide);
 CORE API probe 429 (unverified); BASE not probed.
 
 ### Levers and tooling (all scripts git-tracked `qnfo-skills/knowledge/scripts/`)
@@ -478,7 +478,7 @@ CORE API probe 429 (unverified); BASE not probed.
 | **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record |
 | **D2** | `alternate_identifiers` (SWH etc.) | `zenodo_dissemination_enhancer.py --alternate-json <map> --record <id> [--apply]` | Scripted; apply per-record |
 | **D3** | 3+ communities per record | `zenodo_dissemination_enhancer.py --community <slug> ...` (existence-verified) | Scripted; NOT grant-linked (self-funded) |
-| **D4** | Semantic Scholar gap monitoring | `zenodo_dissemination_health.py --doi <doi>` (reports INDEXED/MISSING) | Scripted; baseline = 5/5 MISSING |
+| **D4** | Semantic Scholar gap monitoring | `zenodo_dissemination_health.py --doi <doi>` (reports INDEXED/MISSING) | Scripted; baseline = MISSING (engine-wide, 10.5281 prefix) |
 | **D5** | OpenCitations COCI + doi.org meta verification | `zenodo_dissemination_health.py` (exit 1 = NEW citations; state file `zenodo_dissemination_state.json`) | Scripted; baseline 0 citations |
 | **D6** | Bucket machine-readable files (datacite.json / README.md / metadata.jsonld) | `zenodo_bucket_assets.py --record <id> [--upload]` | Scripted; generate-only default |
 | **D7** | Fediverse broadcast on publish (<280-char impact copy) | `zenodo_broadcast.py` in **social-media-management** skill (compose-only default; `--post` explicit) | Scripted; plumbing exists (52 BS / 7 MA) |
