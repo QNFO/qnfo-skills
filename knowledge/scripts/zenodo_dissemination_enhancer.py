@@ -172,8 +172,10 @@ def main():
     new_md.update(changes)
     api_put(f"/api/records/{rec_id}/draft", {"metadata": new_md})
     print(f"Applied metadata changes to draft of record {rec_id}.")
-    print("NOTE: run POST /api/records/{id}/actions/publish to publish the draft "
-          "(or the UI) — publishing creates a new version with a new DOI.")
+    print("NOTE: publish via POST /api/records/{id}/draft/actions/publish (new RDM; "
+      "the plain /actions/publish route does NOT exist — verified 2026-08-14) "
+      "or legacy POST /api/deposit/depositions/{id}/actions/publish — publishing "
+      "creates a new version with a new DOI.")
     print("VERIFY: fetch https://zenodo.org/api/records/{id} and check the fields.")
 
 
