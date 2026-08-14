@@ -78,7 +78,22 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
 
-# SOCIAL MEDIA MANAGEMENT — v1.6.0
+# SOCIAL MEDIA MANAGEMENT — v1.7.0
+> **v1.7.0 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D7 broadcast):**
+> Red-team: direct parent-agent audit (session waFvkOWgtaYZqNMLWOqdW continuation; reviewer stalled -> fallback).
+> HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
+> Changes:
+> (1) [HARD] **`zenodo_broadcast.py` added to scripts/** — Zenodo Dissemination
+>     Playbook lever D7: composes <280-char "impact copy" (contribution -> DOI ->
+>     3 hashtags, no exclamation points) and dispatches to Mastodon + Bluesky ONLY
+>     with an explicit `--post` flag. Compose-only default (TEST-SEND-EXTERNAL-1
+>     compliance). Enforces BSKY-300-GRAPHEME-1 (290-char cap). Credential discovery
+>     per TOKEN-DISCOVERY-1 (env -> keys.json -> ~/.mastodon_creds.json).
+> (2) [SOFT] **D7 workflow documented** — after a Zenodo record goes live:
+>     `python scripts\zenodo_broadcast.py --doi <doi> --title "<title>"` (compose),
+>     then `--post` when confirmed live. Cross-links knowledge skill v2.11 playbook.
+> Cross-reference: knowledge v2.11 (Zenodo Dissemination Playbook D1-D7),
+> playbook note 2026-08-14, BSKY-300-GRAPHEME-1, TEST-SEND-EXTERNAL-1.
 > **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
 > HARD: 1. SOFT: 0. DESIGN: 1. Changes:
@@ -369,6 +384,55 @@ accounts. Load these in the Bluesky app to bulk-follow entire communities:
 
 ---
 
+### `bluesky_post.py` — AT Protocol Posting Client
+
+Zero-dependency posting client with credential auto-discovery (env → keys.json →
+.env → .bsky_credentials) and threaded posting. Canonical thread:
+`references/bluesky-thread.txt` (5 posts, published live 2026-08-05).
+
+| Command | Description |
+|:--------|:------------|
+| (see script docstring) | Post text / threads; enforces the 300-grapheme limit |
+
+### `zenodo_broadcast.py` — Zenodo Publish Broadcast (Playbook D7, 2026-08-14)
+
+Composes <280-char "impact copy" for a published Zenodo record and (only with an
+explicit `--post` flag) dispatches to Mastodon + Bluesky:
+
+```cmd
+:: Compose only (default — no network writes)
+python scripts\zenodo_broadcast.py --doi 10.5281/zenodo.21208346 --title "The Ultrametric Foundation: A Unified Thesis on Number, Time, Knowledge, and Computation"
+
+:: Post to QNFO's OWN handles after the record is confirmed live
+python scripts\zenodo_broadcast.py --doi 10.5281/zenodo.21208346 --title "..." --post
+```
+
+Rules enforced by the script (from the Zenodo Dissemination Playbook §5):
+- Lead with the primary contribution; end with `https://doi.org/<doi>`.
+- Exactly three hashtags; NO exclamation points / marketing jargon.
+- Mastodon ≤280 chars; Bluesky ≤290 (BSKY-300-GRAPHEME-1 hard limit).
+- Compose-only default = TEST-SEND-EXTERNAL-1 compliance (never test-post to
+  external accounts; only QNFO-owned handles).
+
+---
+
+## Zenodo Publish Broadcast Workflow (D7, 2026-08-14)
+
+Wire-in after any Zenodo record goes live (see knowledge skill v2.11 playbook D1-D7):
+
+1. **Verify the record is live** — `zenodo_dissemination_health.py --doi <doi>`
+   (knowledge skill) or a manual `https://doi.org/<doi>` check (citation_title meta present).
+2. **Compose** — `python scripts\zenodo_broadcast.py --doi <doi> --title "<title>"`.
+3. **Approve + post** — re-run with `--post` (QNFO-owned handles only; check the
+   composed copy for length/hashtags first).
+4. **Track** — thread posts must include replyTo root/parent refs
+   (BSKY-300-GRAPHEME-1 case); keep broadcast ≤290 graphemes.
+
+Cross-reference: knowledge skill v2.11 (Zenodo Dissemination Playbook),
+playbook note `D:\Obsidian\notes\v1\2026\08\14\Zenodo-dissemination-playbook-2026-08-14.md`.
+
+---
+
 ## Integration with DeepChat
 
 ### Ad-hoc Follow from a Conversation
@@ -466,10 +530,18 @@ social-media-management/
 ├── SKILL.md                            ← This file
 ├── scripts/
 │   ├── bluesky_follow.py               ← Bluesky AT Protocol follow management
+│   ├── bluesky_post.py                 ← Bluesky AT Protocol posting client
+│   ├── discover_accounts.py            ← Taxonomy-driven account discovery
+│   ├── linkedin-apply-profile.py       ← LinkedIn profile editing (CDP)
 │   ├── mastodon_follow.py              ← Mastodon REST API follow management
-│   └── social_follow.py                ← Unified CLI (all platforms)
+│   ├── social_follow.py                ← Unified CLI (all platforms)
+│   ├── verify_bsky_handles.py          ← Unauthenticated handle verification
+│   └── zenodo_broadcast.py             ← Zenodo publish broadcast (D7, 2026-08-14)
 └── references/
-    └── qnfo_accounts.json              ← Curated QNFO account registry
+    ├── qnfo_accounts.json              ← Curated QNFO account registry
+    ├── qnfo_taxonomy.md                ← QNFO keyword taxonomy
+    ├── bluesky-thread.txt              ← Canonical Bluesky thread
+    └── jpcub-thread.txt                ← JPCUB Bluesky thread
 ```
 
 ---
@@ -479,7 +551,8 @@ social-media-management/
 | Date       | Version | Changes |
 |:-----------|:--------|:--------|
 | 2026-08-05 | v1.0.0  | Initial skill: Bluesky + Mastodon scripts, QNFO registry, unified CLI |
+| 2026-08-14 | v1.7.0  | Zenodo broadcast (D7) — compose+post script, publish workflow |
 
 ## Version
 
-Current: **v1.6.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, linkedin-mcp DELETED, Buffer MCP posting, QNFO account registry; 2026-08-05)
+Current: **v1.7.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP posting, QNFO account registry; 2026-08-14)

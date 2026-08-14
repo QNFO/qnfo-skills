@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.10
+version: 2.11
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,27 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.11 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D1-D7 implemented):**
+> Red-team: subagent reviewer stalled -> direct parent-agent adversarial audit (session waFvkOWgtaYZqNMLWOqdW continuation).
+> HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
+> Changes:
+> (1) [HARD] **Zenodo Dissemination Playbook section added** — implements playbook
+>     D1-D7 (from AI Mode export `_26226160010.md`, playbook note
+>     `D:\Obsidian\notes\v1\2026\08\14\Zenodo-dissemination-playbook-2026-08-14.md`):
+>     D1 EuroSciVoc scheme/identifier subjects, D2 alternate_identifiers,
+>     D3 3+ communities, D4 Semantic Scholar gap monitoring, D5 OpenCitations COCI
+>     + doi.org meta verification, D6 bucket machine-readable files, D7 fediverse
+>     broadcast. Live-verified 2026-08-14: OpenAIRE indexes QNFO (QUNTUF+UCS both
+>     total=1); Semantic Scholar does NOT index 5/5 sampled QNFO records (404);
+>     QUNTUF subjects are plain arXiv strings WITHOUT scheme/URI; alternate_identifiers
+>     EMPTY; 1 community only; COCI baseline 0.
+> (2) [HARD] **New scripts (git-tracked qnfo-skills/knowledge/scripts/)** —
+>     `zenodo_dissemination_enhancer.py` (D1-D3, dry-run default), 
+>     `zenodo_dissemination_health.py` (D4-D5, cron-ready JSON, exit codes),
+>     `zenodo_bucket_assets.py` (D6, generate-only default). D7 script lives in
+>     social-media-management skill (`zenodo_broadcast.py`, compose-only default).
+> (3) [DESIGN] **execute_plan literal example added** — `[QNFO.OUTREACH.2026-08-14-CONTINUE.P7]`.
+> Cross-reference: playbook note 2026-08-14, social-media-management v1.7.0, kaizen v1.9x.
 > **v2.10 UPDATE (2026-08-10, kaizen — PAPER-CONTEXT-TOOL-EMPTY-1: direct D1 query is the canonical paper-body path):**
 > Red-team: direct parent-agent 5-adversary audit follow-up (session 0SnaUK-QccIJkohojGMQS). Watchtower: 20/20 QNFO skills N-2 CLEAN pre-edit. HARD: 1. SOFT: 0. DESIGN: 1. Changes:
 > (1) [HARD] **PAPER-CONTEXT-TOOL-EMPTY-1 anti-pattern added** — `get_paper_context` and `search_papers_enriched` return EMPTY in this environment (verified repeatedly 2026-08-10) even when the paper body exists in D1 living-paper. An empty tool result does NOT mean the paper is missing (VECTORIZE-SILO-1 class). Canonical case: JPCUB verification — all get_paper_context probes returned empty; the same bodies were retrieved by direct Cloudflare D1 HTTP API query (papers table, body_md column). Working path: token `C:\Users\LENOVO\tokens\cloudflare`; POST https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{db}/query with acct=edb167b78c9fb901ea5bca3ce58ccc4b, db=70a58cb3-b2cd-498d-877f-ecca86859a22 (living-paper), SQL `SELECT slug, doi, body_md FROM papers WHERE lower(doi) LIKE ?`.
@@ -435,6 +456,44 @@ through `qnfo-ai` Worker v4.1 → AI Gateway. Use `cloudflare-ai-gateway` MCP se
 | **PAPER-CONTEXT-TOOL-EMPTY-1: Treating an empty get_paper_context / search_papers_enriched result as 'paper not in D1' (2026-08-10)** | **HARD GATE (v2.10):** these tools return EMPTY in this environment even when the paper body exists (VECTORIZE-SILO-1 class; canonical case: JPCUB verification 2026-08-10). An empty result is a TOOL gap, not a DATA gap. Fallback: direct Cloudflare D1 HTTP API query against living-paper DB 70a58cb3-b2cd-498d-877f-ecca86859a22 (papers table, body_md) using token C:\Users\LENOVO\tokens\cloudflare. Verify presence with SELECT slug,doi,body_md before concluding missing. Cross-ref: VECTORIZE-SILO-1, kaizen v1.94. |
 | **ZENODO-KG-OWNERSHIP-1: Writing zenodo_doi to KG/D1 without verifying DOI ownership (2026-08-04)** | **HARD GATE (v2.3):** zenodo_doi/zenodo_url may only be written for DOIs verified QNFO-owned against the live API (creator search + person-name variant). `doi LIKE '%zenodo%'` matches external citations and placeholders. Case: blanket backfill created 1,245+ fake links (session dXXJ3TxRQ1VHzGdAyp-lo). Run `research/scripts/zenodo-ownership-check.py` after any backfill. Cross-ref: research v2.54 P5.OWNERSHIP. |
 | **PHILPAPERS-DISCOVERABILITY-GAP: Zenodo records without keywords AND abstract are invisible to PhilPapers crawlers (2026-08-06)** | **HARD GATE (v2.9):** PhilPapers discovers papers via Zenodo → DataCite → CrossRef → PhilPapers crawler pipeline. Trigger: abstract (≥200 chars with philosophy-domain terms) + keywords. **JUDICIOUS LABELING (user directive 2026-08-10):** only papers that ARE philosophy papers may carry philosophy-class labels — non-philosophy QNFO records (physics, engineering, licensing, patents, finance) must NOT be tagged as philosophy. Existing records left AS-IS (over-tagging incident: 675/680 from the 2026-08-06 batch — no retroactive edits). Confirmed indexed: QUNTUF/QUNSAI (2 of ~293). Future optimizer runs gate injection behind `is_philosophy_core_record()`; monitor runs MONTHLY (not daily). Direct path: PhilArchive upload → guaranteed indexing in days. Scripts (git-tracked at `qnfo-skills/knowledge/scripts/`): `zenodo_philpapers_optimizer.py`, `zenodo_fix4.py`, `philpapers_submit.py`, `philpapers_monitor.py` (v2). Cross-ref: author ORCID 0009-0002-4317-5604, PhilPapers IDs QUNTUF/QUNSAI. |
+| **S2-ZENODO-GAP-1: Assuming Semantic Scholar ingests QNFO Zenodo records (2026-08-14)** | **HARD GATE (v2.11):** live probe of 5/5 flagship QNFO DOIs (21208346, 21255344, 21824396, 21827737, 21547793) returned 404 — Semantic Scholar does NOT index the QNFO corpus today, despite the generic claim in `_26226160010.md` session 1. OpenAIRE EXPLORE is the confirmed active indexer (total=1 for QUNTUF + Ultrametric Code Spaces). Do not claim S2 coverage in outreach or metrics; monitor via `zenodo_dissemination_health.py` (D4) and treat S2 absence as a discovery gap to close via metadata levers (D1 subjects scheme/URI, D2 alternate_identifiers, D6 bucket schema files). |
+| **SUBJECT-SCHEME-GAP-1: Subjects as plain arXiv strings without scheme/identifier (2026-08-14)** | **HARD GATE (v2.11):** QUNTUF subjects are `{"term": "Physics - High Energy Physics - Phenomenology (hep-ph)"}` with NO `scheme`/`identifier` — aggregators parse Term IDs/URIs, not bare strings (playbook §2). Do not claim "vocabulary-optimized" metadata for records lacking `scheme`/`identifier` on subjects. Enrichment path: `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> --apply` (D1). Never fabricate URIs — pass real EuroSciVoc term identifiers only. |
+| **ALTERNATE-IDENTIFIER-GAP-1: Empty alternate_identifiers (2026-08-14)** | **HARD GATE (v2.11):** `alternate_identifiers` is EMPTY on QUNTUF — duplicate-merge levers (SWH etc.) are unapplied (playbook §4, D2). Path: `zenodo_dissemination_enhancer.py --alternate-json <map> --record <id> --apply`. |
+| **COMMUNITY-COUNT-GAP-1: Single community per record (2026-08-14)** | **HARD GATE (v2.11):** QUNTUF carries only `qnfo`; playbook recommends 3+ high-traffic communities per record (D3). Membership is via deposit-metadata `communities` field. Only add EXISTING communities (verify via `/api/communities/{slug}`; the enhancer skips non-existent slugs). NOTE: `ecfunded`/grant-linked communities apply to EU-funded records — QNFO is self-funded, so grant-linked slugs are NOT applicable; do not fabricate grant linkage. |
+
+---
+
+## Zenodo Dissemination Playbook (v2.11, 2026-08-14) — D1-D7 IMPLEMENTED
+
+**Source:** AI Mode export `_26226160010.md` (5 concatenated sessions) distilled into
+`D:\Obsidian\notes\v1\2026\08\14\Zenodo-dissemination-playbook-2026-08-14.md`.
+**Live-verified 2026-08-14:** OpenAIRE indexes QNFO (QUNTUF + Ultrametric Code Spaces,
+total=1 each); Semantic Scholar does NOT index 5/5 sampled QNFO DOIs (S2-ZENODO-GAP-1);
+CORE API probe 429 (unverified); BASE not probed.
+
+### Levers and tooling (all scripts git-tracked `qnfo-skills/knowledge/scripts/`)
+
+| Lever | What | Script / path | Status |
+|:------|:-----|:--------------|:-------|
+| **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record |
+| **D2** | `alternate_identifiers` (SWH etc.) | `zenodo_dissemination_enhancer.py --alternate-json <map> --record <id> [--apply]` | Scripted; apply per-record |
+| **D3** | 3+ communities per record | `zenodo_dissemination_enhancer.py --community <slug> ...` (existence-verified) | Scripted; NOT grant-linked (self-funded) |
+| **D4** | Semantic Scholar gap monitoring | `zenodo_dissemination_health.py --doi <doi>` (reports INDEXED/MISSING) | Scripted; baseline = 5/5 MISSING |
+| **D5** | OpenCitations COCI + doi.org meta verification | `zenodo_dissemination_health.py` (exit 1 = NEW citations; state file `zenodo_dissemination_state.json`) | Scripted; baseline 0 citations |
+| **D6** | Bucket machine-readable files (datacite.json / README.md / metadata.jsonld) | `zenodo_bucket_assets.py --record <id> [--upload]` | Scripted; generate-only default |
+| **D7** | Fediverse broadcast on publish (<280-char impact copy) | `zenodo_broadcast.py` in **social-media-management** skill (compose-only default; `--post` explicit) | Scripted; plumbing exists (52 BS / 7 MA) |
+
+### Enhance flow (per record)
+1. `python scripts\zenodo_dissemination_health.py --doi 10.5281/zenodo.XXXXXXX` — baseline S2/COCI/meta.
+2. `python scripts\zenodo_dissemination_enhancer.py --record XXXXX --subjects-json subjects.json` — DRY-RUN first; `--apply` writes a draft; publish the draft for a new version.
+3. `python scripts\zenodo_bucket_assets.py --record XXXXX` — generate D6 files; `--upload` streams to the draft bucket.
+4. Broadcast: `python <social skill>\scripts\zenodo_broadcast.py --doi ... --title "..."` then `--post` when the record is live.
+
+### Guardrails (playbook §7, unchanged hard gates)
+- **ZENODO-KG-OWNERSHIP-1** — no DOI writes without live ownership verification.
+- **No fabricated URIs** — EuroSciVoc identifiers must be real (the note's `http://europa.eu` example is a generic domain, NOT a term URI).
+- **Judicious labeling** stays; grant-linked communities N/A (self-funded).
+- **TEST-SEND-EXTERNAL-1 / BSKY-300-GRAPHEME-1** apply to D7 broadcasts.
 
 ---
 
@@ -486,5 +545,5 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 **Scheduled monitoring:** Run `philpapers_monitor.py` **monthly** (1st of month 06:00 UTC — scheduled task "PhilPapers Index Monitor (Monthly)"; the old "daily cron ffc8f08f" never existed). The crawl cycle is days-to-weeks, so daily polling is waste. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs the philosophy-eligible Zenodo subset (judicious-labeling denominator).
 
-Current: **v2.10** (PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; user directive 2026-08-10; QUNTUF/QUNSAI indexed, 2 of ~293)
+Current: **v2.11** (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
 
