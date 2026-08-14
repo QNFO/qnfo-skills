@@ -1,6 +1,14 @@
 > **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
 # email-composer
 
+> **v2.18 UPDATE (2026-08-14, red-team remediation — DETECTION-ONLY MANDATE documented + Patel C3 monitor corrected + tracking-gap ledger):**
+> Red-team: 3 parallel reviewer audit (2026-08-14 email check) — 0 HARD behavioral violations, 1 scoped HARD record-keeping finding, 5 SOFT doc/tracking gaps. Changes:
+> (1) [HARD] **CURRENT STATE: DETECTION-ONLY since 2026-08-13** — user mandate supersedes the v2.12/v2.13 autonomous-sending history (banners preserved as history): NEVER send outreach emails autonomously, ever; no send action without explicit user approval in an email-composer session. Frontmatter `autonomous` set to `false`. Cronjob 3851f539 verified detection-only (renamed 2026-08-13, description + taskPrompt both detection-only).
+> (2) [HARD] **Patel C3 monitor CORRECTED** — the v2.17 banner's "must remain at exactly 2 (id=66 + id=69)" omitted id=61; the TRUE lifetime contact count is THREE (id=61 genuine + id=66 error + id=69 repair). Any further contact = 4th contact = HARD violation (no-repeat-contact mandate). The v2.17 text stands as history; this line is the operational correction.
+> (3) [SOFT] **Tracking-gap ledger** — see outreach-log.md 2026-08-14 RED-TEAM REMEDIATION: unlogged test-to-OWN-mailbox rows 74/114/132 (all rwnquni@outlook.com, TEST-SEND-EXTERNAL-1 compliant), D1 ids 107-110 deleted (404, no API record), complete follow-up eligibility dates per batch (08-06 → 08-20; 08-10 Emeriau/Bruhat-Tits → 08-24; 08-12 CMB/standards/singles → 08-26; 08-14 Marcolli → 08-28 pending user disposition).
+> (4) [SOFT] **Count claims must match verified state** — EV record "19/19 fields" corrected to 18/19 (required phone blocked). Same class as RECEIPT-PLACEHOLDER-TOKEN-1: report what is verifiable.
+> Cross-reference: outreach-log.md (2026-08-14 entries), user mandate 2026-08-13, system prompt (email + outreach monitoring agent), session this.
+
 > **v2.17 UPDATE (2026-08-10, kaizen — ROUTING-DROP-BREAKS-SENDING-1 ROOT CAUSE + EMAIL-SUBJECT-SPAM-TOKENS-1 + DELIVERABILITY-POSTURE):**
 > Red-team: deep-dive RCA of the 10002 incident (user directive — "external errors are uncommon; the error is entirely your fault"). Trigger: 2026-08-08 closeout proved the 10002 root cause was the agent's own routing DROP rules, not a Cloudflare platform issue. HARD: 2. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **EMAIL-SENDING-DOMAIN-10002 root cause CORRECTED** — the v2.15 row blamed "platform-side" and recommended "file CF ticket" + Sender-Domain Fallback. The TRUE root cause (proven 2026-08-08 closeout): a prior hygiene session added 4 routing-level DROP rules on the qnfo.org zone (spam blocks: glintopenaccess.org, paperworkspot@gmail.com, dr.shrivishnu.msip@gmail.com, lena.mories@glintopenaccess.org). Routing DROP rules on a zone with Email Sending enabled SILENTLY KILL the ENTIRE outbound pipeline — every send from ANY qnfo.org address returns 10002 internal_server. Differential proof: 10/11 sending domains returned HTTP 200; only qnfo.org — the ONLY zone with DROP rules — failed. Deleting the 4 DROP rules restored sending immediately (verified REST 200 + D1 rows 75-77 status=sent). NEVER file a CF ticket for 10002 before checking the zone's routing rules; NEVER use routing DROP rules for spam on a zone with Email Sending — use Worker filters (POST /email/filters).
@@ -288,7 +296,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.17
+version: 2.18
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -301,7 +309,7 @@ priority: 2
 platform: cloudflare
 
 
-autonomous: true
+autonomous: false
 
 
 self_sufficient: true
@@ -313,7 +321,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.17
+# Email Composer — v2.18
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1527,5 +1535,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.17** (email-composer — WORKER-SOURCE-EVICTED-1 + CF API key fallback; 2026-08-05)
+Current: **v2.18** (email-composer — DETECTION-ONLY since 2026-08-13; red-team remediation 2026-08-14)
 

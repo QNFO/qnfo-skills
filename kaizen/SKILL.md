@@ -1,3 +1,32 @@
+> **v2.44 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.20 — EMAIL-OUTREACH-DETECTION-ONLY-1 + RECEIPT-COUNT-ACCURACY-1 + 5-store parity):**
+> Red-team: direct parent-agent skills audit (session this — email/outreach monitoring agent: 2026-08-14
+> email-check + EV application + red-team remediation cycle). Watchtower: email-composer v2.18 N-2 CLEAN.
+> HARD: 2. SOFT: 2. DESIGN: 0.
+> (1) [HARD] **System prompt v3.19 -> v3.20** — EMAIL-OUTREACH-DETECTION-ONLY-1 HARD GATE section added
+>     (2026-08-13 mandate: NEVER send outreach emails autonomously; cronjob 3851f539 detection-only;
+>     follow-up rules 14–21d once-only, never twice, never a 4th contact; per-recipient LIFETIME contact
+>     counts — Patel = 3 [ids 61+66+69]; redundant duplicate sends -> log-only per Repair-Send Protocol)
+>     + RECEIPT-COUNT-ACCURACY-1 (count claims must match verified state; EV record corrected 19/19 →
+>     18/19) + skills-parity row. Dual-written to ALL 5 stores — sha256 6c27969f02a2210e, 79,927 B,
+>     header==footer v3.20 (PROMPT-PARITY-1): A .deepchat/system-prompt-v2.7.md / B qnfo-skills repo
+>     copy (pushed 66d363b..76d00bc) + local checkout / C .deepchat/app-settings.json / D Roaming
+>     DeepChat app-settings.json / E agent.db systemPrompts.
+> (2) [HARD] **email-composer v2.17 -> v2.18** — detection-only mandate documented (frontmatter
+>     `autonomous: false`), Patel C3 monitor corrected to 3 lifetime contacts, tracking-gap ledger
+>     (test-to-own rows 74/114/132, D1 ids 107-110 deletion gap, complete follow-up eligibility dates),
+>     count-claims accuracy note. 3-reviewer red-team: 0 HARD behavioral violations; 1 scoped HARD
+>     (Mosca id=71 "Re:" first-contact flag — user word required); 5 SOFT gaps remediated in
+>     outreach-log.md (RED-TEAM REMEDIATION entry).
+> (3) [SOFT] **TEMPLATE-STORES-1 verified clean** — 9/9 CMD templates content-identical across
+>     agent.db customPrompts (DICT) + app-settings.json customPrompts (LIST {name,template,parameters:[]});
+>     shape difference is known/expected (v2.42).
+> (4) [SOFT] **Mandate markers re-verified, no change needed** — cloudflare v3.50 (Cost Control $90/30d,
+>     COST-AUDIT-MISS-AI-1, aiInferenceAdaptiveGroups, QUEUE-BODY-SHAPE-1, AUDIT-COMPLETENESS-1);
+>     research v2.109 (ZENODO-INQUIRY-1: 21901984/21901983 live, superseded 21878943/21878977
+>     history-only); DEEPCHAT-DEFAULT-MODEL-1 (deepseek/deepseek-v4-flash in both JSON stores).
+> Cross-reference: system-prompt v3.20, email-composer v2.18, cloudflare v3.50, research v2.109,
+> deepchat-settings, session this.
+
 > **v2.43 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.19 + NEWVERSION-FRONTMATTER-CARRYOVER-1 + 5-store parity repair):**
 > Red-team: direct parent-agent skills audit (session DRUiOGPDwdzH2BayFiv9x; RES.007 publish-then-audit
 > cycle closeout). Watchtower: kaizen v2.42 N-2 CLEAN pre-edit.
