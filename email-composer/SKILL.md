@@ -19,7 +19,7 @@
 > (3) [SOFT] **/send response semantics documented in-practice** — 200 + `message_id` = ACCEPTED by the worker
 >     (crypto.randomUUID), NOT delivery proof (MESSAGE-ID-NE-DELIVERY-1). Verify via `GET /emails/recent` ->
 >     status=sent + outreach-log.md entry with message_id (Tool-Call Execution Mandate).
-> Cross-reference: research v2.110 (VECTORIZE-403-MISDIAGNOSIS), kaizen v2.45, session FJ4ZYy6OEfAnpu8mq30OZ.
+> Cross-reference: research v2.110 (VECTORIZE-403-MISDIAGNOSIS), kaizen v2.44, session FJ4ZYy6OEfAnpu8mq30OZ.
 
 > **v2.18 UPDATE (2026-08-14, red-team remediation — DETECTION-ONLY MANDATE documented + Patel C3 monitor corrected + tracking-gap ledger):**
 > Red-team: 3 parallel reviewer audit (2026-08-14 email check) — 0 HARD behavioral violations, 1 scoped HARD record-keeping finding, 5 SOFT doc/tracking gaps. Changes:

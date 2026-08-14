@@ -24,7 +24,7 @@
 >     eventually complete and return REAL findings (RES.007 2026-08-14: FAIL with 3 HARD — duplicate Joyal-Street work
 >     with synthetic DOI `doi={joyalstreet1986}`, audit accounting double-count, BP-10 unverifiable "51/51") — always
 >     poll/inspect the delegation before finalizing closeout, and treat late-arriving findings as remediation items.
-> Cross-reference: kaizen v2.45, email-composer v2.19 (send UA gotchas), session FJ4ZYy6OEfAnpu8mq30OZ.
+> Cross-reference: kaizen v2.44, email-composer v2.19 (send UA gotchas), session FJ4ZYy6OEfAnpu8mq30OZ.
 
 > **v2.109 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: NEWVERSION-FRONTMATTER-CARRYOVER-1 + DOI-WAF-403 audit helper):**
 > Red-team: direct parent-agent skills audit (session DRUiOGPDwdzH2BayFiv9x; RES.007 publish-then-audit cycle).
