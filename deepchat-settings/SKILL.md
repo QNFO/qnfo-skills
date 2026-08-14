@@ -9,7 +9,7 @@
 >     preferredModel to the session's active model (observed deepseek-v4-pro drift twice: 2026-08-13
 >     and 2026-08-14). Every CMD SKILLS UPDATE cycle must re-verify BOTH JSON model keys and re-fix
 >     drift; the canonical value remains deepseek-v4-flash.
-> Cross-reference: kaizen v2.41, system-prompt v3.17, session this.
+> Cross-reference: kaizen v2.41, research v2.108, system-prompt v3.17, session this.
 
 
 > **v1.16 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: DEEPCHAT-QUESTION-LIMITS-1):**
