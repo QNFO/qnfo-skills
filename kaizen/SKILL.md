@@ -1,3 +1,53 @@
+> **v2.43 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.19 + NEWVERSION-FRONTMATTER-CARRYOVER-1 + 5-store parity repair):**
+> Red-team: direct parent-agent skills audit (session DRUiOGPDwdzH2BayFiv9x; RES.007 publish-then-audit
+> cycle closeout). Watchtower: kaizen v2.42 N-2 CLEAN pre-edit.
+> HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **PROMPT-PARITY-1 break found + repaired** — v3.18 cycle claimed "dual-written to ALL 5
+>     stores (sha c4d69c4d)" but only 3/5 were actually written: store B (.deepchat/skills/system-prompt-
+>     v2.7.md repo copy) and store D (Roaming app-settings.json) were STALE at v3.17 (b92a9afc, 74,214 B,
+>     1,550 B behind) — REPO-COPY-PHANTOM-1 recurrence (kaizen v2.39). REPAIRED: system prompt v3.19
+>     dual-written to ALL 5 stores byte-identical (sha256 41685c99fb56767a, 77,953 B, LF,
+>     header==footer v3.19). LESSON: the footer/version claim is NOT verification — every cycle must
+>     sha-compare all 5 stores (A canon / B repo copy / C .deepchat app-settings / D Roaming app-settings
+>     / E agent.db systemPrompts), not trust the banner.
+> (2) [HARD] **System prompt v3.18 -> v3.19** — NEWVERSION-FRONTMATTER-CARRYOVER-1 HARD GATE section
+>     added (newversion drafts carry parent files byte-identical; frontmatter doi MUST be patched to the
+>     newversion's own reserved DOI before upload; verify deposited sha + doi.org + DataCite after
+>     publish; anti-anti-pattern: never call a reserved DOI phantom without checking records API state
+>     or concept is_last). Canonical case: RES.007 v0.2 21929590 shipped stale v0.1 DOI 21929479.
+> (3) [HARD] **research skill v2.108 -> v2.109** — NEWVERSION-FRONTMATTER-CARRYOVER-1 anti-pattern +
+>     DOI-WAF-403 audit-helper note + UTF-8 byte-vs-char counting trap DESIGN note (203,919 -> 207,723 B).
+> (4) [SOFT] **TEMPLATE-STORES-1 confirmed clean** — 9/9 CMD templates allmatch across agent.db
+>     customPrompts + both app-settings.json (DB=.dc=Roaming for all 9: CLOSEOUT/CONTINUE/DEPLOY/EXECUTE/
+>     PUBLISH/RED TEAM/RED TEAM SUB/RESEARCH/SKILLS UPDATE).
+> (5) [DESIGN] Cloudflare Cost Control section verified present (v3.49+): spend limit $90/30d (8 hits),
+>     COST-AUDIT-MISS-AI-1 (4), aiInferenceAdaptiveGroups (2), QUEUE-BODY-SHAPE-1 (3), AUDIT-COMPLETENESS-1
+>     (4), 100k neurons (2). No change needed.
+> Cross-reference: research v2.109, system-prompt v3.19, deepchat-settings v1.17, REPO-COPY-PHANTOM-1,
+> session this.
+
+> **v2.42 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.18 + EXECUTION SERIALIZATION & TOOL-QUIRK GATES):**
+> Red-team: direct parent-agent skills audit (session A6PK-OKIDCgheNLkbt2Rq; live template probes stale = startup cache artifact).
+> HARD: 2. SOFT: 3. DESIGN: 0.
+> (1) [HARD] **System prompt v3.17 -> v3.18** — EXECUTION SERIALIZATION & TOOL-QUIRK GATES section:
+>     PARALLEL-WRITE-EXEC-RACE-1 (same-target file ops serialized: clone->edit->read-back->commit->
+>     push->ls-remote->cleanup, one step per batch; demonstrated twice 2026-08-14: cleanup raced
+>     commit+push, "fatal: could not read log file", lost edits) + EXEC-AUTOBG-READBACK-1 (exec
+>     auto-backgrounds with "Session is not running"; redirect output to file and read it back).
+>     Dual-written to ALL 5 stores — sha256 c4d69c4d, 75,764 chars, LF, header==footer v3.18.
+>     Line-ending regression caught in-cycle (CRLF->LF, binary-verified; v2.40 lesson reapplied).
+> (2) [HARD] **CustomPrompt live-probe staleness classified** — on-disk stores (app-settings.json
+>     customPrompts LIST {name,template,parameters} x9 + agent.db customPrompts DICT x9) confirmed
+>     FIXED (deepchat_subagents, PUBLICATION-SOURCE-COMPLETENESS-1); live fill_prompt_template shows
+>     stale startup-cached content -> TEMPLATE-STORES-1: verify via on-disk stores, not live probes.
+> (3) [SOFT] REVIEWER-BOUNDED-WAIT-1 (bounded waits then direct audit fallback; CMD RED TEAM SUB
+>     reviewers truncated/stalled 2026-08-14).
+> (4) [SOFT] CROSS-STORE-PUBLISH-SYNC-1 (publish cycles re-point ALL stores incl. file headers;
+>     registry header DOI staleness H-1 resolved same day).
+> (5) [SOFT] AND-CHAIN-CORRECTION-1 absent from v3.17 rewrite — superseded by v3.18 gates.
+> Cross-reference: research v2.108, kaizen v2.41, system-prompt v3.18, session A6PK-OKIDCgheNLkbt2Rq.
+
+
 > **v2.41 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DUE-DILIGENCE-DEPTH-1 + system prompt v3.17):**
 > Red-team: direct parent-agent skills audit + 5-store parity verification (session this).
 > HARD: 2. SOFT: 2. DESIGN: 0.
@@ -395,7 +445,7 @@ name: kaizen
 
 
 
-version: "2.41"
+version: "2.43"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

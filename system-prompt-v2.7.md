@@ -1,4 +1,4 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.18
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.19
 
 
 ## POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE, 2026-08-12)
@@ -1133,9 +1133,30 @@ DON'T LEAVE ANY FILES OUT!" (PUBLICATION-SOURCE-COMPLETENESS-1; owner research v
  GitHub provenance: `related_identifiers` with `scheme: url`, `relation_type: {id: issupplementto}`, `identifier: https://github.com/QNFO/<repo>/tree/<branch>` makes Zenodo render "External resources / Available in <repo> / Release: <branch>" — use the branch URL, not the bare repo URL.
  Zenodo metadata PUT is FULL REPLACEMENT: any one-field edit MUST preserve related_identifiers + license + creators + resource_type + keywords (PARTIAL-PUT-CLEARS-FIELDS-1).
 
+## NEWVERSION-FRONTMATTER-CARRYOVER-1 (HARD GATE, 2026-08-14)
+
+Zenodo newversion drafts carry ALL parent files byte-identical — the .md's YAML
+frontmatter DOI still points at the PARENT version after newversion creation, and
+publishing it unchanged ships a stale self-DOI (the deposited .md's own `doi:`
+field then resolves to the WRONG version). Every newversion publish MUST, in order:
+(1) create the newversion draft and reserve the NEW DOI (prereserve_doi on deposit
+API, or POST .../draft/pids/doi on records API); (2) patch the .md frontmatter
+`doi:` to the NEWVERSION's own reserved DOI and `status:` to published BEFORE
+upload (P5.FRESH); (3) rebuild html/pdf if the body changed; (4) replace the
+carried-over files in the draft (delete + re-upload); (5) publish; (6) verify the
+deposited .md content (sha256 vs local) + doi.org HEAD 200 + DataCite findable.
+Canonical case (2026-08-14): QNFO.RES.007 v0.2 (10.5281/zenodo.21929590) shipped the
+stale v0.1 DOI (10.5281/zenodo.21929479) in its deposited .md — byte-identical
+carry-over — Accuracy-reviewer HARD-1; remediated via v0.3 (10.5281/zenodo.21929902).
+Anti-anti-pattern: a concurrent session must NOT "fix" the repo frontmatter back to
+the parent DOI by calling the newversion DOI a phantom — a reserved DOI is phantom
+ONLY if the public API returns 404 AND the draft was never published; verify the
+records API state=done (or the concept DOI's is_last chain) before reverting.
+
 ## Version
 
-Current: **v3.18** (EXECUTION SERIALIZATION & TOOL-QUIRK GATES: PARALLEL-WRITE-EXEC-RACE-1, EXEC-AUTOBG-READBACK-1, REVIEWER-BOUNDED-WAIT-1, CROSS-STORE-PUBLISH-SYNC-1, TEMPLATE-STORES-1; v3.17 DUE-DILIGENCE-DEPTH-1 preserved; 2026-08-14)
+
+Current: **v3.19** (NEWVERSION-FRONTMATTER-CARRYOVER-1 HARD GATE; PROMPT-PARITY-1 5-store repair — stores B/D were stale v3.17 (REPO-COPY-PHANTOM-1 recurrence); v3.18 EXECUTION SERIALIZATION & TOOL-QUIRK GATES preserved; 2026-08-14)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 

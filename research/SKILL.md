@@ -1,3 +1,28 @@
+> **v2.109 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: NEWVERSION-FRONTMATTER-CARRYOVER-1 + DOI-WAF-403 audit helper):**
+> Red-team: direct parent-agent skills audit (session DRUiOGPDwdzH2BayFiv9x; RES.007 publish-then-audit cycle).
+> HARD: 1. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **NEWVERSION-FRONTMATTER-CARRYOVER-1 anti-pattern added** — Zenodo newversion drafts carry ALL
+>     parent files byte-identical; the .md YAML frontmatter `doi:` still points at the PARENT version.
+>     Publishing a newversion without patching the frontmatter to the NEWVERSION's own reserved DOI ships a
+>     stale self-DOI. MANDATORY newversion order: (1) create draft + reserve new DOI; (2) patch .md
+>     frontmatter doi + status BEFORE upload (P5.FRESH); (3) rebuild html/pdf if body changed; (4) replace
+>     carried-over files in draft (delete + re-upload); (5) publish; (6) verify deposited .md sha256 vs local
+>     + doi.org HEAD 200 + DataCite findable. Canonical case: QNFO.RES.007 v0.2 (10.5281/zenodo.21929590)
+>     shipped stale v0.1 DOI (10.5281/zenodo.21929479) in its deposited .md — Accuracy-reviewer HARD-1;
+>     remediated via v0.3 (10.5281/zenodo.21929902). Anti-anti-pattern: never call a newversion's reserved
+>     DOI "phantom" merely because the parent is newer — verify records API state=done or the concept
+>     is_last chain before reverting frontmatter (a concurrent session reverted to the parent DOI in error).
+> (2) [SOFT] **DOI-WAF-403 audit-helper note** — doi.org HEAD returns 403 on some publisher DOIs
+>     (OUP/OBO/MDPI/CNTP/APS) under audit User-Agent; 403 != dead DOI. Audit helpers MUST auto-fallback to
+>     Crossref API (api.crossref.org/works/{doi}) for authoritative year/author/title before flagging a DOI
+>     as unresolvable (same family as ZENODO-BOT-403-1). Verified live 2026-08-14 (5 DOIs: all 403-on-HEAD,
+>     all Crossref-confirmed).
+> (3) [DESIGN] UTF-8 byte-vs-char counting trap — paper .md "size discrepancy" audits must compare
+>     normalized content (CRLF->LF) or decode-aware lengths; a byte-count difference of ~18-28B on a
+>     ~14.5KB file is often UTF-8 multi-byte chars (π, θ, ℤ), not content drift (RES.007 closure cycle).
+> Cross-reference: kaizen v2.43, system-prompt v3.19 (NEWVERSION-FRONTMATTER-CARRYOVER-1 HARD GATE),
+> ZENODO-PHANTOM-DOI-1, P5.FRESH, R2-CDN-CACHE-1, session this.
+
 > **v2.108 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DUE-DILIGENCE-DEPTH-1):**
 > Red-team: direct parent-agent skills audit + 5-store prompt parity verification (session this).
 > HARD: 2. SOFT: 1. DESIGN: 0. Changes:
@@ -73,7 +98,7 @@ name: research
 
 
 
-version: "2.108"
+version: "2.109"
 description: >
 
 
@@ -6060,6 +6085,23 @@ AD-HOC-ZENODO-METADATA-1, ZENODO-UPLOAD-MULTIPART-1.
 
 
 
+
+**NEWVERSION-FRONTMATTER-CARRYOVER-1 (v2.109, HARD):** newversion drafts carry ALL parent
+files byte-identical — the .md YAML `doi:` still points at the parent version. MANDATORY newversion
+order: (1) create draft + reserve new DOI (deposit: prereserve_doi; records: POST .../draft/pids/doi);
+(2) patch .md frontmatter `doi:` to the NEWVERSION's own reserved DOI + `status: published` BEFORE
+upload (P5.FRESH); (3) rebuild html/pdf if body changed; (4) replace carried-over files (delete +
+re-upload via deposit /files or records /draft/files overwrite); (5) publish; (6) verify deposited
+.md sha256 vs local + doi.org HEAD 200 + DataCite findable. Canonical case: RES.007 v0.2
+(10.5281/zenodo.21929590) shipped stale v0.1 DOI (21929479) in deposited .md (byte-identical carry-
+over) — Accuracy-reviewer HARD-1, remediated v0.3 (10.5281/zenodo.21929902). Anti-anti-pattern: do
+NOT call a reserved newversion DOI "phantom" just because the parent resolves — check records API
+state=done or concept is_last; a concurrent session reverted to the parent DOI in error (2026-08-14).
+
+**DOI-WAF-403 (v2.109, SOFT — audit helpers):** doi.org HEAD 403 on publisher DOIs
+(OUP/OBO/MDPI/CNTP/APS) is a WAF bot-block, NOT a dead DOI. Audit/dependency-check scripts MUST
+auto-fallback to `api.crossref.org/works/{doi}` (authoritative year/author/title) before reporting
+an unresolvable DOI. Same family as ZENODO-BOT-403-1 (full browser UA or Crossref fallback).
 
 **REQUIRED METADATA FIELDS (InvenioRDM):**
 
