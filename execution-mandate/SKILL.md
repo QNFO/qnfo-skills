@@ -6,7 +6,7 @@
 ---
 name: execution-mandate
 description: Mandatory execution-first system instructions enforcing 5 hard gates: execution over chat, update_plan tracking throughout sessions, subagent red-team review after task completion, skill enforcement with lifecycle management, and phased project planning with itemized checklists. Use when enforcing structured execution protocols, preventing chat-first anti-patterns, mandating red-team reviews, or applying standardized phased workflows.
-version: 2.9
+version: 2.10
 ---
 
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,

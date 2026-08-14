@@ -1,3 +1,25 @@
+> **v2.46 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: mirror rows added — WBS-COLLISION-2, REDTEAM-QUEUE-STALL-1, VECTORIZE-403-MISDIAGNOSIS + frontmatter repair):**
+> Red-team: direct parent-agent skills audit (session this). HARD: 3. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **frontmatter v2.43 -> v2.46** — content banners already at v2.45 (5-store parity
+>     repair cycle); frontmatter had drifted two versions behind.
+> (2) [HARD] **WBS-COLLISION-2 mirror row added** — two concurrent sessions resolving "next
+>     available WBS code" against D1 program_registry can select the SAME code; later INSERT/
+>     UPDATE silently overwrites the first project's row. Canonical: QNFO.RES.007 vs
+>     formal-self-reference-limits 2026-08-14 — canonical row (invariant-structural-value)
+>     restored; late claim renumbered to RES.008. Fix: check-then-insert in ONE transaction or
+>     UNIQUE constraint / registry lock; re-verify D1 row identity (name + slug) before writes.
+> (3) [HARD] **REDTEAM-QUEUE-STALL-1 mirror row added** — reviewer subagents frequently remain
+>     QUEUED >150s (no turn started); a queued subagent is NOT a review. After ~75s without a
+>     started turn: direct parent-agent audit fallback; poll/inspect the delegation before
+>     finalizing closeout; late-arriving findings are remediation items (RES.007 2026-08-14:
+>     late reviewer returned 3 HARD — synthetic DOI doi={joyalstreet1986}, audit double-count,
+>     BP-10 unverifiable).
+> (4) [HARD] **VECTORIZE-403-MISDIAGNOSIS mirror row added** — qnfo-paper-indexer 403/1010 =
+>     missing browser User-Agent (BIC), NOT token rotation; all Python->Worker HTTP calls MUST
+>     send a browser-like UA (canonical: QNFO.RES.007 2026-08-14).
+> Cross-reference: research v2.111, cloudflare v3.51, system-prompt v3.21, session this.
+
+
 > **v2.45 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: 5-store parity repair — agent.db E-store staleness + MODEL-KEY-FILE-DRIFT-1 recurrence):**
 > Red-team: direct parent-agent skills audit (session this). Watchtower: email-composer v2.18 N-2 CLEAN.
 > HARD: 3. SOFT: 1. DESIGN: 0.
@@ -498,7 +520,7 @@ name: kaizen
 
 
 
-version: "2.43"
+version: "2.46"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

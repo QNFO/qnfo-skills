@@ -1,3 +1,15 @@
+> **v3.51 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: VECTORIZE-403-MISDIAGNOSIS propagated from research v2.110):**
+> Red-team: direct parent-agent skills audit (session this). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **VECTORIZE-403-MISDIAGNOSIS anti-pattern added** — qnfo-paper-indexer (and ALL
+>     Cloudflare-worker HTTP calls from Python) 403/error-1010 = MISSING browser User-Agent:
+>     default Python urllib UA triggers Cloudflare Browser Integrity Check (BIC, error 1010)
+>     regardless of token validity. Fix: `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+>     AppleWebKit/537.36 ...` on every call; test the UA hypothesis BEFORE diagnosing token
+>     rotation (BLAME-EXTERNAL-1). Canonical: QNFO.RES.007 2026-08-14 closeout (21 chunks
+>     verified with UA). Token chnx-idx-v1-k9m2n4p7r5t8 was valid throughout.
+> Cross-reference: research v2.111, kaizen v2.46, system-prompt v3.21, session this.
+
+
 > **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: SERVICE-BINDING-1042-1 — Worker→workers.dev fetch fails with error 1042):**
 > Red-team: direct parent-agent 5-adversary audit + live infra (session this — CMD CONTINUE Cloudflare-native program).
 > While building qnfo-ops (fleet aggregator), a Worker fetching another Worker's `*.workers.dev/health` URL
@@ -94,7 +106,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.50
+version: 3.51
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1

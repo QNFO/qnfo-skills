@@ -1,3 +1,11 @@
+> **v2.111 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: N-2 frontmatter repair — content was already v2.110):**
+> Red-team: direct parent-agent skills audit (session this). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **frontmatter v2.109 -> v2.110** — content banners already at v2.110 (VECTORIZE-403-
+>     MISDIAGNOSIS + WBS-COLLISION-2 + REDTEAM-QUEUE-STALL-1 from the prior cycle); frontmatter
+>     had drifted one version behind. No content change; parity with system-prompt v3.21 verified.
+> Cross-reference: kaizen v2.46, cloudflare v3.51, system-prompt v3.21, session this.
+
+
 > **v2.110 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: VECTORIZE-403-MISDIAGNOSIS + WBS-COLLISION-2 + REDTEAM-QUEUE-STALL-1):**
 > Red-team: direct parent-agent audit (session FJ4ZYy6OEfAnpu8mq30OZ; QNFO.RES.007 5-adversary audit + outreach cycle).
 > HARD: 3. SOFT: 0. DESIGN: 0.
@@ -126,7 +134,7 @@ name: research
 
 
 
-version: "2.109"
+version: "2.111"
 description: >
 
 
