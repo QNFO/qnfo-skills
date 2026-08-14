@@ -1,0 +1,21 @@
+{
+  "_comment": "QNFO EuroSciVoc term mapping for Zenodo subjects enrichment (playbook D1). Canonical URI format: http://data.europa.eu/8mn/euroscivoc#<uuid>. Only LIVE-VERIFIED URIs are listed (HTTP 200 via EU Vocabularies SPARQL, 2026-08-14). UNRESOLVED terms (physics, computer science, epistemology, information science, quantum physics, statistics, logic) timed out against the flaky EU SPARQL endpoint on 2026-08-14 — resolve via http://publications.europa.eu/webapi/rdf/sparql (SELECT ?c WHERE { ?c skos:prefLabel ?l . FILTER(LCASE(STR(?l)) = \"<term>\") } LIMIT 5) during a stable window BEFORE any --apply. NEVER fabricate a term URI.",
+  "verified": {
+    "philosophy": "http://data.europa.eu/8mn/euroscivoc#20e77e46-571d-42a4-b3f1-8eb284bc4034",
+    "mathematics": "http://data.europa.eu/8mn/euroscivoc#5ac3ab8e-7d50-4091-94e2-0eec71c915db"
+  },
+  "unresolved_2026_08_14": [
+    "physics",
+    "computer science",
+    "epistemology",
+    "information science",
+    "quantum physics",
+    "statistics",
+    "logic"
+  ],
+  "resolution_notes": {
+    "endpoint": "http://publications.europa.eu/webapi/rdf/sparql (GET with URL-encoded query; POST hangs)",
+    "scheme_uri": "http://publications.europa.eu/resource/authority/euroscivoc (HTTP 200 verified 2026-08-14)",
+    "zenodo_vocab_api": "https://zenodo.org/api/vocabularies/subjects returns 0 EuroSciVoc hits (2026-08-14) — NOT a usable source"
+  }
+}

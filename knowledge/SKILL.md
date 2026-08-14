@@ -475,7 +475,7 @@ CORE API probe 429 (unverified); BASE not probed.
 
 | Lever | What | Script / path | Status |
 |:------|:-----|:--------------|:-------|
-| **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record |
+| **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record. Verified term map: `scripts/euroscivoc_qnfo_terms.json` (philosophy + mathematics live-verified 2026-08-14; physics/CS/epistemology UNRESOLVED — EU SPARQL flaky; NEVER fabricate URIs) |
 | **D2** | `alternate_identifiers` (SWH etc.) | `zenodo_dissemination_enhancer.py --alternate-json <map> --record <id> [--apply]` | Scripted; apply per-record |
 | **D3** | 3+ communities per record | `zenodo_dissemination_enhancer.py --community <slug> ...` (existence-verified) | Scripted; NOT grant-linked (self-funded) |
 | **D4** | Semantic Scholar gap monitoring | `zenodo_dissemination_health.py --doi <doi>` (reports INDEXED/MISSING) | Scripted; baseline = MISSING (engine-wide, 10.5281 prefix) |
