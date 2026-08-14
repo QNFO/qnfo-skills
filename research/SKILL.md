@@ -1,3 +1,19 @@
+> **v2.108 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DUE-DILIGENCE-DEPTH-1):**
+> Red-team: direct parent-agent skills audit + 5-store prompt parity verification (session this).
+> HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DUE-DILIGENCE-DEPTH-1 added** — Phase 1(a) upgraded to full-corpus due diligence
+>     (user mandate 2026-08-14: ~1,000-record QNFO corpus, growing rapidly, diverse domains/methods/
+>     results; ALL records valuable): query_graph(stats) FIRST, >=3 distinct query formulations per
+>     topic, search_papers limit 10 -> 20, cross-system ID validation via resolve_paper_id per hit,
+>     >=2 adjacent WBS domains, external independent verification (arXiv/OpenAlex/Crossref/
+>     archive.org CDX/Google Patents), evidence-discipline for every count/DOI.
+> (2) [HARD] **Superseded DOI sweep re-verified** — 21878943 (x2) / 21878977 (x4) remain ONLY in
+>     historical banners/case-history (v2.104 sweep complete); all live references point to v0.3
+>     21901984 (x8) / 21901983 (x7).
+> (3) [SOFT] **Frontmatter version 2.107 -> 2.108.**
+> Cross-reference: system-prompt v3.17, kaizen v2.41, deepchat-settings v1.17, session this.
+
+
 > **v2.107 UPDATE (2026-08-13, kaizen — PARTIAL-PUT-CLEARS-FIELDS-1):**
 > Red-team: direct parent-agent audit (CMD RED TEAM SUB — GitHub related_identifiers regression).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -57,7 +73,7 @@ name: research
 
 
 
-version: "2.107"
+version: "2.108"
 description: >
 
 
@@ -2872,13 +2888,19 @@ Phase Closeout Protocol: commit → credential-scan → tag → push → verify 
 
 
 
-- `search_papers({query: "<topic>", limit: 10})` via Vectorize
+- `search_papers({query: "<topic>", limit: 20})` via Vectorize — FULL-CORPUS SWEEP: >=3 distinct query formulations per topic (semantic drift) + qnfo-memory-mcp search_papers + search_papers_enriched + recall_facts + search_memories + KG neighbor walks
+
+- CROSS-SYSTEM ID VALIDATION: for each hit, `resolve_paper_id` (slug -> Vectorize ID -> KG ID -> DOI); flag inconsistencies EARLY — a mismatch is a data-quality finding, not a footnote
+
+- TAXONOMY BREADTH: >=2 adjacent WBS domains; surface records that CONTRADICT or COMPLICATE the hypothesis, not only those that support it
 
 
 
 
 
-- Report: "QNFO Cross-Reference: Found N related papers"
+- Report: "QNFO Cross-Reference: Found N related papers across M domains (corpus size K)"
+
+**DUE-DILIGENCE-DEPTH-1 (HARD GATE, 2026-08-14):** The QNFO corpus is ~1,000 records and growing rapidly — diverse domains, methods, and results; every record a potential contributor to the body of knowledge. Due diligence MUST be corpus-scale, not top-k convenience (user mandate 2026-08-14): (1) query_graph stats FIRST; (2) >=3 query formulations per topic, search_papers limit >=20; (3) resolve_paper_id per hit — cross-system ID validation, a mismatch is a data-quality finding, not a footnote; (4) >=2 adjacent WBS domains; (5) external independent verification (arXiv/OpenAlex/Crossref/archive.org CDX/Google Patents) — never accept a claim on the citing record’s word alone; (6) save every query/API response to artifacts/external-search/ — a count without its evidence file does not exist.
 
 
 

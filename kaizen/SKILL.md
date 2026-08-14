@@ -1,3 +1,23 @@
+> **v2.41 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DUE-DILIGENCE-DEPTH-1 + system prompt v3.17):**
+> Red-team: direct parent-agent skills audit + 5-store parity verification (session this).
+> HARD: 2. SOFT: 2. DESIGN: 0.
+> (1) [HARD] **System prompt v3.16 -> v3.17** — DUE-DILIGENCE-DEPTH-1 HARD GATE added (full-corpus
+>     due diligence: ~1,000-record corpus, query_graph stats first, >=3 query formulations, limit>=20,
+>     cross-system ID validation, >=2 adjacent WBS domains, external independent verification,
+>     evidence discipline). Dual-written to ALL 5 stores (canonical md / repo copy / agent.db
+>     systemPrompts / .deepchat app-settings.json / Roaming app-settings.json) — sha16
+>     b92a9afcafd5f6f1, 74,214 chars, LF, header==footer v3.17 (PROMPT-PARITY-1).
+> (2) [HARD] **CMD templates updated + dual-written** — CMD RESEARCH (DUE-DILIGENCE-DEPTH-1 mandate)
+>     + CMD SKILLS UPDATE (v3.17 preservation mandate appended); DB dict + both JSON lists carry
+>     identical template text; `parameters` normalized to [] across all 9 entries.
+> (3) [SOFT] **MODEL-KEY-FILE-DRIFT recurrence** — Roaming preferredModel had re-drifted to
+>     deepseek-v4-pro (runtime rewrite of the active model); re-fixed both JSON files to
+>     deepseek-v4-flash (DEEPCHAT-DEFAULT-MODEL-1). Recurring — verify every cycle.
+> (4) [SOFT] **Superseded DOIs verified historical-only** — research skill's 21878943/21878977
+>     occurrences are banner/case-history only; live refs all v0.3 (ZENODO-INQUIRY-1).
+> Cross-reference: research v2.108, deepchat-settings v1.17, system-prompt v3.17, session this.
+
+
 > **v2.40 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 line-ending normalization + CMD-template drift fix):**
 > Red-team: direct parent-agent audit (this session — TVup6pTPxp9jFQiLVgq2m; skills audit + prompt parity).
 > HARD: 2. SOFT: 1. DESIGN: 1.
@@ -375,7 +395,7 @@ name: kaizen
 
 
 
-version: "2.38"
+version: "2.41"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

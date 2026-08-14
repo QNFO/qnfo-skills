@@ -1,3 +1,17 @@
+> **v1.17 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DEEPCHAT-DEFAULT-MODEL-1 documentation):**
+> Red-team: direct parent-agent skills audit + store-map verification (session this).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DEEPCHAT-DEFAULT-MODEL-1 documented** — app_settings.defaultModel + preferredModel
+>     MUST be deepseek/deepseek-v4-flash in BOTH app-settings.json files: .deepchat mirror AND
+>     AppData\Roaming\DeepChat (the runtime-active store). agent.db app_settings has NO model keys
+>     (only systemPrompts + customPrompts). Canonical fix: write both JSON files.
+> (2) [SOFT] **MODEL-KEY-FILE-DRIFT recurrence documented** — the RUNNING app rewrites the Roaming
+>     preferredModel to the session's active model (observed deepseek-v4-pro drift twice: 2026-08-13
+>     and 2026-08-14). Every CMD SKILLS UPDATE cycle must re-verify BOTH JSON model keys and re-fix
+>     drift; the canonical value remains deepseek-v4-flash.
+> Cross-reference: kaizen v2.41, system-prompt v3.17, session this.
+
+
 > **v1.16 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: DEEPCHAT-QUESTION-LIMITS-1):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). Prompt stores: 4/4
 > byte-identical v3.7 post-write (sha256[:16] f878d47fe46c0dbb, 61,783 chars); templates 9/9 identical.
@@ -92,7 +106,7 @@
 
 ---
 name: deepchat-settings
-version: 1.16
+version: 1.17
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
