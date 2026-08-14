@@ -1,0 +1,12 @@
+[
+  {
+    "term": "philosophy",
+    "identifier": "http://data.europa.eu/8mn/euroscivoc#20e77e46-571d-42a4-b3f1-8eb284bc4034",
+    "scheme": "EuroSciVoc"
+  },
+  {
+    "term": "mathematics",
+    "identifier": "http://data.europa.eu/8mn/euroscivoc#5ac3ab8e-7d50-4091-94e2-0eec71c915db",
+    "scheme": "EuroSciVoc"
+  }
+]

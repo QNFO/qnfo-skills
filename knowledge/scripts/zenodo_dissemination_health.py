@@ -15,7 +15,8 @@ Implements:
 
 DESIGNED FOR CRON: --json emits a single-line JSON report; exit 0 = healthy
 (no NEW citations, DOI meta OK), exit 1 = new citations found (triggers
-follow-up), exit 2 = verification failure (broken URL/meta missing).
+follow-up), exit 2 = verification failure (broken URL/meta missing),
+exit 3 = both (bitmask; new citations are NEVER masked by a meta failure).
 
 State: keeps last-seen citation counts at
 C:\\Users\\LENOVO\\.deepchat\\skills\\knowledge\\scripts\\zenodo_dissemination_state.json
@@ -126,9 +127,9 @@ def main():
         state[doi] = {"coci_last": coci, "s2": s2, "checked": time.strftime("%Y-%m-%dT%H:%M:%SZ")}
         if new:
             report["new_citations"].append({"doi": doi, "count": coci, "previous": prev})
-            exit_code = 1
+            exit_code |= 1
         if not meta_ok:
-            exit_code = 2
+            exit_code |= 2
 
         entry = {"doi": doi, "coci_citations": coci, "s2": s2,
                  "doi_meta": meta_msg, "new_citation": new}

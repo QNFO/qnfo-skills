@@ -475,7 +475,7 @@ CORE API probe 429 (unverified); BASE not probed.
 
 | Lever | What | Script / path | Status |
 |:------|:-----|:--------------|:-------|
-| **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record. Verified term map: `scripts/euroscivoc_qnfo_terms.json` (philosophy + mathematics live-verified 2026-08-14; physics/CS/epistemology UNRESOLVED — EU SPARQL flaky; NEVER fabricate URIs) |
+| **D1** | EuroSciVoc `scheme`/`identifier` on subjects | `zenodo_dissemination_enhancer.py --subjects-json <map> --record <id> [--apply]` | Scripted; apply per-record. Verified term map: `scripts/euroscivoc_qnfo_terms.json` (dict; source of truth) + `scripts/euroscivoc_subjects_array.json` (JSON ARRAY — the format `--subjects-json` requires; derived from the mapping's verified block; philosophy + mathematics live-verified 2026-08-14; physics/CS/epistemology UNRESOLVED — EU SPARQL flaky; NEVER fabricate URIs) |
 | **D2** | `alternate_identifiers` (SWH etc.) | `zenodo_dissemination_enhancer.py --alternate-json <map> --record <id> [--apply]` | Scripted; apply per-record |
 | **D3** | 3+ communities per record | `zenodo_dissemination_enhancer.py --community <slug> ...` (existence-verified) | Scripted; NOT grant-linked (self-funded) |
 | **D4** | Semantic Scholar gap monitoring | `zenodo_dissemination_health.py --doi <doi>` (reports INDEXED/MISSING) | Scripted; baseline = MISSING (engine-wide, 10.5281 prefix) |
@@ -490,6 +490,8 @@ CORE API probe 429 (unverified); BASE not probed.
 4. Broadcast: `python <social skill>\scripts\zenodo_broadcast.py --doi ... --title "..."` then `--post` when the record is live.
 
 ### Guardrails (playbook §7, unchanged hard gates)
+- **Anti-spam guardrails** — no keyword-stuffed descriptions (full sentences, keyword density <3%); BASE/CORE silently block AI-style stuffing.
+- **Abstracts never fabricated** — real-source backfill only; the corpus optimizer's `is_philosophy_core_record()` gate stays.
 - **ZENODO-KG-OWNERSHIP-1** — no DOI writes without live ownership verification.
 - **No fabricated URIs** — EuroSciVoc identifiers must be real (the note's `http://europa.eu` example is a generic domain, NOT a term URI).
 - **Judicious labeling** stays; grant-linked communities N/A (self-funded).

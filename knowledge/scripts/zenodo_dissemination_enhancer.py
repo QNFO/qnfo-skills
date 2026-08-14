@@ -60,6 +60,17 @@ def api_put(path, payload):
         return json.loads(r.read().decode("utf-8"))
 
 
+def api_post(path):
+    """Authenticated POST (create draft on a published record)."""
+    with open(TOKEN_PATH, "r", encoding="utf-8") as f:
+        tok = f.read().strip()
+    req = urllib.request.Request(BASE + path, data=b"{}", method="POST",
+                                 headers={**UA, "Content-Type": "application/json",
+                                          "Authorization": f"Bearer {tok}"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
 def load_json_flag(fname, flag):
     if not fname:
         return []
@@ -163,19 +174,23 @@ def main():
         print("DRY-RUN: proposed changes above. Re-run with --apply to write.")
         return
 
-    # Edit the record (draft edit endpoint), then re-publish not required
-    # for metadata-only edits on published records? Zenodo v2: metadata edits
-    # on published records go through /api/records/{id}/draft + publish.
+    # Edit the record: a draft must be CREATED (POST) for published records —
+    # GET /api/records/{id}/draft 404s when no draft exists (verified live 2026-08-14).
     rec_id = rec.get("id")
-    draft = api_get(f"/api/records/{rec_id}/draft")
+    try:
+        draft = api_get(f"/api/records/{rec_id}/draft")
+    except urllib.error.HTTPError as e:
+        if e.code != 404:
+            sys.exit(f"ERROR: could not fetch draft: {e}")
+        print(f"  No draft exists — creating new-version draft (POST /api/records/{rec_id}/draft)")
+        draft = api_post(f"/api/records/{rec_id}/draft")
     new_md = draft.get("metadata", {})
     new_md.update(changes)
     api_put(f"/api/records/{rec_id}/draft", {"metadata": new_md})
     print(f"Applied metadata changes to draft of record {rec_id}.")
-    print("NOTE: publish via POST /api/records/{id}/draft/actions/publish (new RDM; "
-      "the plain /actions/publish route does NOT exist — verified 2026-08-14) "
-      "or legacy POST /api/deposit/depositions/{id}/actions/publish — publishing "
-      "creates a new version with a new DOI.")
+    print("NOTE: publish the draft via POST /api/records/{id}/draft/actions/publish "
+          "(new RDM; the plain /actions/publish route does NOT exist — verified "
+          "2026-08-14), or the UI — publishing creates a new version with a new DOI.")
     print("VERIFY: fetch https://zenodo.org/api/records/{id} and check the fields.")
 
 
