@@ -1,3 +1,27 @@
+> **v2.45 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: 5-store parity repair — agent.db E-store staleness + MODEL-KEY-FILE-DRIFT-1 recurrence):**
+> Red-team: direct parent-agent skills audit (session this). Watchtower: email-composer v2.18 N-2 CLEAN.
+> HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **PROMPT-PARITY-1 break repaired** — E (agent.db app_settings.systemPrompts) was STALE at
+>     v3.16 (sha16 eff4d7abefef7d19, 72,692 chars) while A/B/C/D were all v3.20 (sha16 6c27969f02a2210e,
+>     79,927 B); the v2.44 banner claimed 5-store parity but E had since drifted. REPAIRED: E
+>     systemPrompts[0].content = v3.20 — content unchanged, so NO system-prompt version bump
+>     (repair-only sync). VERIFIED post-write: E sha16 6c27969f02a2210e, 79,151 chars.
+>     SHAPE NOTE: E systemPrompts is now a LIST [{name:'DeepChat', id:'default', description, content,
+>     parameters}] — parity scripts MUST read [0].content (v2.42 documented DICT shape; drifted since).
+> (2) [HARD] **E customPrompts 2/9 stale — synced** — CMD RESEARCH (476 vs 835 chars) and CMD SKILLS
+>     UPDATE (4,673 vs 5,373) were behind D's authoritative templates; synced, verified 9/9 sha-match
+>     E↔D↔C. E customPrompts shape {name,description,content,parameters,id} — template text lives in
+>     'content', NOT 'template' (wrong-key audit trap; prior script read empty).
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence repaired** — D (Roaming app-settings.json) preferredModel
+>     had re-drifted to deepseek-v4-pro (live app writes the session model on save); reset to
+>     deepseek/deepseek-v4-flash per DEEPCHAT-DEFAULT-MODEL-1. C and E were already flash. Drift source
+>     is the running app — RE-CHECK EVERY CYCLE (third recurrence class).
+> (4) [SOFT] **Mandate markers re-verified, no change needed** — cloudflare v3.50 ($90 x8, COST-AUDIT-MISS-AI-1 x4,
+>     QUEUE-BODY-SHAPE-1 x3, AUDIT-COMPLETENESS-1 x4, aiInferenceAdaptiveGroups x2, R2-MULTI-BUCKET-ARCHITECTURE x3);
+>     research v2.109 (21901984/21901983 live; superseded 21878943/21878977 history-only CONFIRMED);
+>     canonical v3.20 26/26 mandate markers; 0 subagent_orchestrator regressions across all audited skills.
+> Cross-reference: system-prompt v3.20 (unchanged), cloudflare v3.50, research v2.109, deepchat-settings, session this.
+
 > **v2.44 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.20 — EMAIL-OUTREACH-DETECTION-ONLY-1 + RECEIPT-COUNT-ACCURACY-1 + 5-store parity):**
 > Red-team: direct parent-agent skills audit (session this — email/outreach monitoring agent: 2026-08-14
 > email-check + EV application + red-team remediation cycle). Watchtower: email-composer v2.18 N-2 CLEAN.
