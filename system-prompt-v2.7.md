@@ -1,4 +1,28 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.20
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.21
+
+> **v3.21 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: red-team skills audit + N-2 drift repairs + VECTORIZE-403 propagation):**
+> Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle).
+> HARD: 3. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **N-2 frontmatter drift repaired** — research `version: 2.109` (content v2.110),
+>     kaizen `version: 2.43` (content v2.45), execution-mandate `version: 2.9` (content v2.10)
+>     — all frontmatter versions bumped to match their latest banners.
+> (2) [HARD] **VECTORIZE-403-MISDIAGNOSIS propagated to cloudflare v3.51** — qnfo-paper-indexer
+>     403/error-1010 = MISSING browser User-Agent (Cloudflare BIC), NOT token rotation; research
+>     v2.110 had the row, cloudflare v3.50 lacked it. ALL Python->Worker HTTP calls MUST send a
+>     browser-like UA. Token chnx-idx-v1-k9m2n4p7r5t8 valid throughout (canonical case:
+>     QNFO.RES.007 2026-08-14 closeout, 21 chunks verified with UA).
+> (3) [HARD] **kaizen mirror rows added (v2.46)** — WBS-COLLISION-2 (atomic WBS resolution; check-
+>     then-insert in ONE transaction or UNIQUE constraint; canonical: RES.007 collision 2026-08-14,
+>     late claim renumbered to RES.008), REDTEAM-QUEUE-STALL-1 (queued subagent >75s != review;
+>     direct parent-agent audit fallback), VECTORIZE-403-MISDIAGNOSIS — mirroring research v2.110.
+> (4) [SOFT] **PROMPT-PARITY-1 re-verified** — 4/4 system-prompt stores byte-identical
+>     (sha 6c27969f... at v3.20 pre-write; post-write verified below) + 9/9 CMD templates identical
+>     in app-settings + agent.db. E-store shape note: agent.db systemPrompts is a raw content
+>     string in this build (kaizen v2.45 documented a LIST shape [{name,id,content,...}] — parity
+>     scripts must handle the raw-string form; parity held for the raw string).
+> Cross-reference: kaizen v2.46, research v2.111, cloudflare v3.51, execution-mandate v2.10,
+> CMD SKILLS UPDATE template (v3.21 mandate line), session this.
+
 
 
 ## EMAIL & OUTREACH DETECTION-ONLY MANDATE + SKILLS-PARITY ROW (HARD GATE — 2026-08-14)
@@ -1182,7 +1206,7 @@ records API state=done (or the concept DOI's is_last chain) before reverting.
 ## Version
 
 
-Current: **v3.20** (EMAIL-OUTREACH-DETECTION-ONLY-1 + RECEIPT-COUNT-ACCURACY-1 + skills-parity row 2026-08-14; v3.19 NEWVERSION-FRONTMATTER-CARRYOVER-1 + PROMPT-PARITY-1 5-store repair preserved; 2026-08-14)
+Current: **v3.21** (EMAIL-OUTREACH-DETECTION-ONLY-1 + RECEIPT-COUNT-ACCURACY-1 + skills-parity row 2026-08-14; v3.19 NEWVERSION-FRONTMATTER-CARRYOVER-1 + PROMPT-PARITY-1 5-store repair preserved; 2026-08-14)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 
