@@ -1,4 +1,25 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.25
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.26
+
+> **v3.26 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 + 5-store parity repair D/E + kaizen/deepchat-settings drift sweep):**
+> Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
+> HARD: 4. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **DEEPCHAT-MEMORY-EMBEDDING-1 added (HARD GATE section)** — DeepSeek has NO embedding models
+>     (verified 2026-08-15: only deepseek-v4-flash/pro, both chat, no /embeddings endpoint; DeepChat provider
+>     adapter throws NoSuchModelError for embeddingModel). DeepChat v1.1.0 local memory lives in
+>     AppData\Roaming\DeepChat\app_db\agent.db (3.67 GB, 75 tables) — NOT the legacy .deepchat/agent.db
+>     (200 KB). Per-agent memory config in agents.config_json: memoryEnabled, memoryEmbedding, memoryExtractionModel,
+>     memoryRetrieval, memoryInjectionTokenBudget, personaEvolutionEnabled. memoryEmbedding was null -> all 16,770
+>     rows fts_only; enabled via Cloudflare Workers AI bge-base-en-v1.5 (768-dim) through AI Gateway provider
+>     -_X6Z7YffrNPktrj3Vhjo. Model ID MUST be exactly workers-ai/@cf/baai/bge-base-en-v1.5 (bare @cf/... = Invalid
+>     provider; workers-ai/bge-... alias = No such model). Embedding endpoint REQUIRES browser-like UA (BIC 1010
+>     blocks Python-urllib) — VECTORIZE-403-MISDIAGNOSIS class. Pipeline auto-activates without restart
+>     (MEMORY_MAINTENANCE_TRIGGER_CONFIG_KEYS fires; verified 2,250 memories embedded 'ready', 13,830 pending).
+> (2) [HARD] **PROMPT-PARITY-1 break repaired** — concurrent v3.25 GIT-BASH-SHELL-1 cycle wrote A/B/C only;
+>     D (Roaming app-settings.json) + E (agent.db systemPrompts) STALE at v3.24 (d74bb0b3ddfed88c). REPAIRED:
+>     v3.26 dual-written ALL 5 stores byte-identical.
+> (3) [HARD] **kaizen frontmatter drift repaired** — frontmatter version 2.46 -> v2.50 (content banners at v2.49).
+> (4) [HARD] **deepchat-settings footer drift repaired** — footer title v1.16 vs frontmatter 1.17 -> both v1.18.
+> Cross-reference: kaizen v2.50, deepchat-settings v1.18, cloudflare v3.51, windows-command-patterns v3.23, session this.
 
 > **v3.25 UPDATE (2026-08-15, kaizen — GIT-BASH-SHELL-1: agent command shell switched from cmd.exe to Git Bash):**
 > Red-team: direct parent-agent audit (session this — permanent fix for quoted-path/backslash mangling).
@@ -1311,10 +1332,36 @@ the parent DOI by calling the newversion DOI a phantom — a reserved DOI is pha
 ONLY if the public API returns 404 AND the draft was never published; verify the
 records API state=done (or the concept DOI's is_last chain) before reverting.
 
+## DEEPCHAT MEMORY & EMBEDDING CONFIG (HARD GATE — 2026-08-15)
+
+**DEEPCHAT-MEMORY-EMBEDDING-1 (HARD):** DeepSeek does NOT support embeddings — only deepseek-v4-flash and
+deepseek-v4-pro, both chat models; no /embeddings endpoint (verified 2026-08-15); DeepChat's DeepSeek provider
+adapter throws NoSuchModelError({modelType:"embeddingModel"}).
+1. DeepChat v1.1.0 memory canonical store = AppData\Roaming\DeepChat\app_db\agent.db (3.67 GB, 75 tables).
+   The legacy .deepchat/agent.db (200 KB) holds only app_settings — NOT memory.
+2. Per-agent memory config lives in agents.config_json (agent 'deepchat'): memoryEnabled (true),
+   memoryEmbedding (was null = FTS-only recall), memoryExtractionModel (deepseek-v4-flash),
+   memoryRetrieval {topK:6, rrfK:60, similarityThreshold:0.2}, memoryInjectionTokenBudget, personaEvolutionEnabled.
+3. Cost-optimized embedding = Cloudflare Workers AI bge-base-en-v1.5 (768-dim) via AI Gateway provider
+   -_X6Z7YffrNPktrj3Vhjo (apiType openai-completions, baseUrl .../default/compat). memoryEmbedding format =
+   {"providerId":"-_X6Z7YffrNPktrj3Vhjo","modelId":"workers-ai/@cf/baai/bge-base-en-v1.5"} (confirmed from app
+   source: resolveMemoryEmbedding expects {providerId, modelId}).
+4. MODEL-ID TRAP: only workers-ai/@cf/baai/bge-base-en-v1.5 works. Bare @cf/baai/bge-base-en-v1.5 = HTTP 400
+   "Invalid provider"; alias workers-ai/bge-base-en-v1.5 = HTTP 400 "No such model". Verify with a live
+   /embeddings call (browser UA) before configuring.
+5. Embedding endpoint REQUIRES a browser-like User-Agent — Cloudflare BIC returns error-1010 for Python-urllib
+   (VECTORIZE-403-MISDIAGNOSIS class); send Mozilla/5.0 ... Chrome/... headers.
+6. Setting memoryEmbedding auto-activates the pipeline WITHOUT restart (MEMORY_MAINTENANCE_TRIGGER_CONFIG_KEYS
+   includes memoryEmbedding; agent_memory_dirty backlog drains; embedding_state fts_only -> pending -> ready;
+   verified 2026-08-15: 2,250 ready / 13,830 pending after enablement).
+7. Cost: Workers AI embeddings are the cheapest option (free-tier neurons daily; ~$0.011/1k beyond; bounded by
+   the $90/30d AI Gateway spend limit rule 6f5c29f8). Do NOT use OpenAI/Cohere/Gemini embeddings — bge-base
+   matches the QNFO Vectorize family. Backlog drain is one-time; new memories embed incrementally.
+
 ## Version
 
 
-Current: **v3.25** (GIT-BASH-SHELL-1: agent shell switched to Git Bash; EXEC SHELL + EXEC-SHELL-QUOTE-1 rewritten for POSIX/MSYS; PROMPT-PARITY-1 5-store byte-identical incl. E-store repair; 2026-08-15)
+Current: **v3.26** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

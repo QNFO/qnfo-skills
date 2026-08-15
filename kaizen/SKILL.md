@@ -1,3 +1,26 @@
+> **v2.51 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 mirror + 5-store parity repair + kaizen frontmatter drift):**
+> Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
+> HARD: 3. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **DEEPCHAT-MEMORY-EMBEDDING-1 mirror row** — DeepSeek has NO embedding models (verified 2026-08-15:
+>     only deepseek-v4-flash/pro, both chat; no /embeddings endpoint; DeepChat adapter throws NoSuchModelError).
+>     DeepChat v1.1.0 memory canonical store = AppData\Roaming\DeepChat\app_db\agent.db (3.67 GB) NOT the
+>     legacy 200 KB .deepchat/agent.db. Per-agent memory config in agents.config_json (memoryEnabled /
+>     memoryEmbedding / memoryExtractionModel / memoryRetrieval / memoryInjectionTokenBudget /
+>     personaEvolutionEnabled). Cost-optimized embedding = Cloudflare Workers AI bge-base-en-v1.5 (768-dim) via
+>     AI Gateway provider -_X6Z7YffrNPktrj3Vhjo; model ID MUST be exactly workers-ai/@cf/baai/bge-base-en-v1.5
+>     (bare @cf/... = Invalid provider; workers-ai/bge-... alias = No such model); embedding endpoint REQUIRES
+>     browser-like UA (BIC 1010 = VECTORIZE-403-MISDIAGNOSIS class). Pipeline auto-activates without restart
+>     (MEMORY_MAINTENANCE_TRIGGER_CONFIG_KEYS; verified 2,250 ready / 13,830 pending). See system-prompt v3.26.
+> (2) [HARD] **PROMPT-PARITY-1 5-store repair** — concurrent v3.25 GIT-BASH-SHELL-1 cycle wrote A/B/C only;
+>     D/E stale at v3.24 (d74bb0b3ddfed88c). Repaired: v3.26 dual-written ALL 5 stores byte-identical
+>     (sha16 2b2acf8e584c2234, 96,162 chars, header==footer v3.26).
+> (3) [HARD] **kaizen frontmatter drift repaired** — frontmatter version 2.46 -> v2.51 (top banner was v2.50
+>     from concurrent GIT-BASH-SHELL-1 cycle; frontmatter had lagged 3-4 versions; N-2-SCAN discipline:
+>     re-read file before edit, merge past collisions).
+> Cross-reference: system-prompt v3.26, deepchat-settings v1.18, research v2.112, cloudflare v3.51,
+> session this.
+
+
 > **v2.50 UPDATE (2026-08-15, kaizen — GIT-BASH-SHELL-1: agent command shell switched from cmd.exe to Git Bash):**
 > Red-team: direct parent-agent audit + live verification (session this — permanent fix for quote mangling).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -575,7 +598,7 @@ name: kaizen
 
 
 
-version: "2.46"
+version: "2.51"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

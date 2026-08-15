@@ -1,3 +1,19 @@
+> **v1.18 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation):**
+> Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
+> HARD: 2. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Memory system documentation added** — DeepChat v1.1.0 memory canonical store is
+>     AppData\Roaming\DeepChat\app_db\agent.db (3.67 GB, 75 tables) — the legacy .deepchat/agent.db
+>     (200 KB) holds only app_settings (NOT memory). Per-agent memory config lives in agents.config_json
+>     (agent 'deepchat'): memoryEnabled (default false), memoryEmbedding (null = FTS-only recall),
+>     memoryExtractionModel, memoryRetrieval {topK,rrfK,similarityThreshold,weights}, memoryInjectionTokenBudget,
+>     personaEvolutionEnabled. Enabling vector recall: memoryEmbedding = {"providerId": "-_X6Z7YffrNPktrj3Vhjo",
+>     "modelId": "workers-ai/@cf/baai/bge-base-en-v1.5"} (Cloudflare Workers AI bge-base-en-v1.5, 768-dim, via
+>     AI Gateway). DeepSeek has NO embedding models (DEEPCHAT-MEMORY-EMBEDDING-1).
+> (2) [HARD] **Footer drift repaired** — footer title said v1.16 while frontmatter was 1.17; both now v1.18
+>     (N-1 drift class). Frontmatter version 1.17 -> 1.18.
+> Cross-reference: kaizen v2.51, system-prompt v3.26, research v2.112, session this.
+
+
 > **v1.17 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: DEEPCHAT-DEFAULT-MODEL-1 documentation):**
 > Red-team: direct parent-agent skills audit + store-map verification (session this).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -106,7 +122,7 @@
 
 ---
 name: deepchat-settings
-version: 1.17
+version: 1.18
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -116,7 +132,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.16
+# DeepChat Settings — v1.18
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
