@@ -98,7 +98,7 @@ self_sufficient: true
 > Cross-reference: kaizen v1.20, research v2.65, qnfo-core N-2, KIF-23,
 > session 1tz85-vMiqh2TyFySznBA.
 
-# KNOWLEDGE — v2.10
+# KNOWLEDGE — v2.13
 (70a58cb3-b2cd-498d-877f-ecca86859a22), session 0SnaUK-QccIJkohojGMQS.
 > **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
@@ -577,5 +577,5 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 **Scheduled monitoring:** Run `philpapers_monitor.py` **monthly** (1st of month 06:00 UTC — scheduled task "PhilPapers Index Monitor (Monthly)"; the old "daily cron ffc8f08f" never existed). The crawl cycle is days-to-weeks, so daily polling is waste. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs the philosophy-eligible Zenodo subset (judicious-labeling denominator).
 
-Current: **v2.11** (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
+Current: **v2.13** (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
 
