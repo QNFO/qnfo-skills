@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bluesky posting — AT Protocol minimal client, zero dependencies.
+r"""Bluesky posting — AT Protocol minimal client, zero dependencies.
 
 CREDENTIAL DISCOVERY (auto, never prompts):
 1. Environment variables: BSKY_HANDLE, BSKY_APP_PASS
