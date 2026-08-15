@@ -1,3 +1,14 @@
+> **v2.49 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: GIT-OWNERSHIP-1 + S2-ZENODO-GAP-1 marker + N-2 drift sweep):**
+> Red-team: direct parent-agent skills audit (session this — post-restart cycle).
+> HARD: 3. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **GIT-OWNERSHIP-1 mirror row** — never commit another session's uncommitted
+>     working-tree files; attribute dirt via `git status --porcelain`; selective `git add` +
+>     `git pull --rebase --autostash` (canonical: RT3 2026-08-15, 7 concurrent files not committed).
+> (2) [HARD] **N-2 drift sweep** — kaizen H1 v2.38->v2.49 + footer v2.38->v2.49; research footer
+>     v2.107->v2.112; cloudflare H1 v3.50->v3.51 + footer v3.50->v3.51 (banners already ahead).
+> (3) [HARD] **S2-ZENODO-GAP-1 marker name** propagated to system prompt (v3.22 described it in prose).
+> Cross-reference: system-prompt v3.24, knowledge v2.13, research v2.112, cloudflare v3.51, session this.
+
 > **v2.48 UPDATE (2026-08-14, kaizen — QNFO.RES.009 spin-statistics-distinction full lifecycle record):**
 > Red-team: direct parent-agent audit (session PzctHHW4qJopkaNoCTABv).
 > HARD: 1. SOFT: 2. DESIGN: 0. Changes:
@@ -1130,7 +1141,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.38
+# KAIZEN — v2.49
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -14916,7 +14927,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.38** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
+Current: **v2.49** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
 
 
 
