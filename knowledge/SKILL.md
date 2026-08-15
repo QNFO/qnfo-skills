@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.12
+version: 2.13
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,13 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.13 UPDATE (2026-08-14, kaizen — D1 write discipline: INSERT OR IGNORE NOT NULL swallowing + SQLITE_TOOBIG):**
+> Red-team: direct parent-agent audit (session PzctHHW4qJopkaNoCTABv — QNFO.RES.009 D1 living-paper insert).
+> HARD: 2. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **INSERT OR IGNORE silently swallows NOT NULL violations** — `INSERT OR IGNORE INTO papers ...` returned success with changes:0 and no row when a NOT NULL column (papers.authors) was omitted; surfaced only via a plain INSERT. Discipline: use plain INSERT to surface constraint errors; reserve OR IGNORE for deliberate idempotent upserts.
+> (2) [HARD] **SQLITE_TOOBIG at ~2.3 MB values** — D1 rejects single values above ~1 MB (SQLITE_TOOBIG). Store pre-inline HTML (~25 KB) in papers.body_html, not the MathJax-inlined HTML (~2.3 MB). Canonical: QNFO.RES.009 body_html = 25,713 B.
+> Cross-reference: research v2.112, system-prompt v3.23, session PzctHHW4qJopkaNoCTABv.
+
 > **v2.12 UPDATE (2026-08-14, kaizen — Zenodo Deposit Integrity Gates: R2-MIRROR-AFTER-PUBLISH-1 + WRONG-BUCKET-SELECTION-1 + ZENODO-PLACEHOLDER-DOI-1 + ZENODO-CONCEPT-DOI-CITE-1):**
 > Red-team: direct parent-agent skills audit (session this — Tyranny essay publish→audit→R2-mirror cycle).
 > HARD: 4. SOFT: 0. DESIGN: 0. Changes (mirror of system-prompt v3.23 + kaizen v2.47):

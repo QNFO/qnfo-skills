@@ -1,3 +1,12 @@
+> **v2.112 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: Zenodo newversion file-delete + D1 write discipline + S2 gap + email async-verification):**
+> Red-team: direct parent-agent skills audit (session PzctHHW4qJopkaNoCTABv — QNFO.RES.009 publish→audit→remediate→outreach cycle).
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-DEPOSIT-DELETE-500-1 added** — on a Zenodo NEWVERSION draft, `DELETE /api/deposit/depositions/{id}/files/{FILENAME}` returns HTTP 500 (server error) while `DELETE {file.links.self}` (per-file UUID URL) returns 204; bucket-level PUT returns 404. Replacement workaround: GET /files → DELETE each target's links.self → re-POST multipart. Canonical: QNFO.RES.009 v1.1 newversion (draft 21939493) — references.bib/.md/.html/.pdf/citation-audit.md replaced this way.
+> (2) [HARD] **D1 write discipline** — `INSERT OR IGNORE` silently swallows NOT NULL violations (canonical: papers.authors); use plain INSERT to surface constraint errors. D1 rejects single values above ~1 MB (SQLITE_TOOBIG) — store pre-inline HTML (~25 KB) not MathJax-inlined (~2.3 MB) in body_html.
+> (3) [SOFT] **Semantic Scholar systematic 404** — S2 does not index the QNFO Zenodo record set at all (3/3 DOIs 404 on 2026-08-14 incl. flagship QUNTUF 10.5281/zenodo.21208346, which IS OpenAIRE-indexed); not ingestion lag; no automatic path; document, do not retry.
+> (4) [SOFT] **Email Sending REST async shape** — 200/success/message_id may return EMPTY delivered/queued arrays; verify actual delivery via the recipient mailbox (marker-prefixed test subjects land in Junk per EMAIL-SUBJECT-SPAM-TOKENS-1) before real outreach.
+> Cross-reference: knowledge v2.13, kaizen v2.48, system-prompt v3.23, session PzctHHW4qJopkaNoCTABv.
+
 > **v2.111 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: N-2 frontmatter repair — content was already v2.110):**
 > Red-team: direct parent-agent skills audit (session this). HARD: 1. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **frontmatter v2.109 -> v2.110** — content banners already at v2.110 (VECTORIZE-403-
@@ -134,7 +143,7 @@ name: research
 
 
 
-version: "2.111"
+version: "2.112"
 description: >
 
 

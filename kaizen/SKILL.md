@@ -1,3 +1,11 @@
+> **v2.48 UPDATE (2026-08-14, kaizen — QNFO.RES.009 spin-statistics-distinction full lifecycle record):**
+> Red-team: direct parent-agent audit (session PzctHHW4qJopkaNoCTABv).
+> HARD: 1. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-DEPOSIT-DELETE-500-1** — newversion-draft file replacement requires DELETE by links.self (UUID), NOT by filename (500); see research v2.112.
+> (2) [SOFT] **D1 write discipline** (INSERT OR IGNORE NOT NULL swallowing + SQLITE_TOOBIG); see knowledge v2.13.
+> (3) [SOFT] **Outreach send-guard proven** — test→confirm-delivery→real-send cycle withheld the real send across 2 cycles until mailbox delivery (Junk) was confirmed; publish-then-audit loop remediated the references.bib HARD finding via v1.1.
+> Cross-reference: research v2.112, knowledge v2.13, system-prompt v3.22 (preserved in v3.23), session PzctHHW4qJopkaNoCTABv.
+
 > **v2.47 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.23 + 5-store parity repair + Zenodo Deposit Integrity Gates):**
 > Red-team: direct parent-agent skills audit (session this — Tyranny essay publish→audit→R2-mirror cycle).
 > HARD: 3. SOFT: 0. DESIGN: 0. Changes:
