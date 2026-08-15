@@ -131,3 +131,49 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Dedup check (no-repeat-contact mandate):** de Ronde has ZERO prior contacts in this log and D1. First contact.
 
 **Follow-up eligibility:** earliest 2026-08-14T07:48Z → first follow-up eligible **2026-08-24** (10d), one max, pending response.
+
+
+---
+
+## 2026-08-15 — Proactive outreach (user mandate 2026-08-15: proactive + dedup + master list; REVERSES v2.18 detection-only)
+
+**User mandate (2026-08-15):** "BE MORE PROACTIVE REACHING OUT TO RESEARCHERS... initiate contact with high-value, highly relevant researchers (only 1 email per researcher/name/email, never contact the same email twice unless replying). Keep a master list for coordination across all scheduled tasks/LLM processes. Only surface actionable followup requiring user decision. Good vibes only." This REVERSES the v2.18 detection-only mandate (2026-08-13). Frontmatter `autonomous` set back to `true`.
+
+**Papers + contacts (3 sent, all NEW, emails VERIFIED from arXiv source tarballs):**
+
+| # | Recipient | Email source | Their paper (arXiv) | Connection point | Message ID | D1 id | Status |
+|---|-----------|--------------|---------------------|------------------|------------|-------|--------|
+| 1 | Enrico Santamato (INFN Naples) | VERIFIED from arXiv source 2511.13360 (`enrico.santamato@na.infn.it` in 2025_-_Spin_statistics.tex) | The Intrinsic Angular-Momentum of Particles and the spin-statistics connection (2511.13360) | Spin-statistics from intrinsic angular momentum vs the Boson/Fermion structural-invariant reading | 2f6cbceb-e8fa-4291-a9d5-e4be5706c0da | 154 | sent |
+| 2 | Mahdi Naser-Moghadasi (brightmind-ai) | VERIFIED from arXiv source 2605.17831 (`mahdi@brightmind-ai.com`) | Agentic Cost-Aware Query Planning with Knowledge Distillation (2605.17831) | Cost-aware agentic planning = the same quantity JPCUB joules-per-solution formalizes | b3237b72-e23e-4422-8db8-42792d15ce27 | 155 | sent |
+| 3 | Aske Plaat (Leiden) | VERIFIED from arXiv source 2503.23037 (`aske.plaat@gmail.com` in agenticllm4.tex) | Agentic Large Language Models, a survey (2503.23037) | Agentic-LLM taxonomy + joules-per-solution efficiency axis | 21386c58-5567-4637-976a-d3bd450e576e | 156 | sent |
+
+**Paper 1 target:** *The Boson/Fermion Distinction: Spin-Statistics as Structural Invariant* — DOI 10.5281/zenodo.21944401 (2026-08-15).
+**Paper 2 targets:** *Joules-per-Solution for Stochastic and Agentic Inference: Benchmarking Frontier and Agentic LLMs Against the Human Brain* — DOI 10.5281/zenodo.21944533 (2026-08-15).
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=153 → rwnquni@outlook.com (own mailbox), message_id a8954ee1-a9d8-4b67-9b03-85e35317f737, status=sent.
+
+**Verified but NOT contacted (single-contact-per-group, outreach-strategy §1):**
+- Francesco De Martini (francesco.demartini2@gmail.com, co-author of 2511.13360 with Santamato).
+- Faezeh Ghederi (faezeh.ghederi@mavs.uta.edu, co-author of 2605.17831 with Naser-Moghadasi).
+
+**CONNECTION-POINT-UNVERIFIED-1 (no email in source tarball, deferred):**
+- Inference-Time Agentic Decision Rules Beat Longer Evolving Search (2607.27564) — source had NO emails.
+- Agentic Reasoning for LLMs (2601.12538, 30-author survey) — no author emails in source.
+
+**Dedup check (no-repeat-contact mandate):** all 3 verified against D1 master list (32 external recipients, ids 1-152). Zero prior contact. First contact each.
+
+**Follow-up eligibility:** Santamato / Naser-Moghadasi / Plaat → first eligible **2026-08-29** (14d), one max each, pending response.
+
+
+---
+
+## 2026-08-15 — Delivery-monitoring note (SOFT-1 / MESSAGE-ID-NE-DELIVERY-1 remediation)
+
+- 200 + message_id = ACCEPTED by the worker (crypto.randomUUID), NOT delivery proof (MESSAGE-ID-NE-DELIVERY-1).
+- D1 `status=sent` remains the canonical send verification (Tool-Call Execution Mandate).
+- Read-only Cloudflare Email Sending REST checks run 2026-08-15:
+  - limits: {"quota": {"value": 1000, "unit": "day"}, "usage": {"sent": 5, "over_quota": false, "resets_at": "2026-08-15T21:03:46Z"}}
+  - suppression list: 0 suppressed (empty = healthy); items: []
+- Per-message delivery events are not queryable via CF REST without a delivery webhook. SOP: run the deliverability
+  checks (cloudflare-email-service references/deliverability.md) weekly as part of Daily/Weekly ops, and re-verify
+  engagement for Santamato / Naser-Moghadasi / Plaat at the 2026-08-29 follow-up window.

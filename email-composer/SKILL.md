@@ -1,6 +1,30 @@
 > **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
 # email-composer
 
+> **v2.20 UPDATE (2026-08-15, kaizen — PROACTIVE OUTREACH REINSTATED + red-team remediation of the 2026-08-15 round):**
+> Red-team: 4-parallel-reviewer audit (Accuracy / Completeness / Dependency / Compliance) + direct parent-agent
+> fallback of the 2026-08-15 proactive outreach round (3 sends: Santamato / Naser-Moghadasi / Plaat).
+> VERDICT: 0 HARD, 4 SOFT, 7+ PASS — all 4 SOFT remediated in this cycle.
+> (1) [HARD] **User mandate 2026-08-15 REVERSES the v2.18 detection-only mandate**: "MAKE SURE YOU INITIATE CONTACT
+>     WITH HIGH-VALUE, HIGHLY RELEVANT RESEARCHERS... ONLY 1 EMAIL PER RESEARCHER/NAME/EMAIL... KEEP A MASTER
+>     LIST... GOOD VIBES ONLY!" Frontmatter `autonomous` set back to `true`. The v2.18 "CURRENT STATE:
+>     DETECTION-ONLY" banner is SUPERSEDED (annotated inline below).
+> (2) [SOFT] **SOFT-1 MESSAGE-ID-NE-DELIVERY-1 remediated**: 200+message_id = ACCEPTED (not delivery); D1
+>     status=sent = canonical verification; read-only CF Email Sending REST checks 2026-08-15 (limits 5/1000 sent,
+>     suppression list empty); delivery-monitoring SOP note added to outreach-log.md; weekly deliverability check
+>     per cloudflare-email-service deliverability.md.
+> (3) [SOFT] **SOFT-2 banner drift fixed**: version bumped 2.18 -> 2.20; this banner documents the reversal.
+> (4) [SOFT] **SOFT-3 recipient attribution resolved**: D1 DOES store recipient attribution — /emails/body?id= and
+>     the raw D1 table expose the `recipient` column for ids 153-156 (verified 2026-08-15). `to:null` in
+>     /emails/recent is a list-projection quirk only; canonical attribution = D1 `recipient` column (echo file
+>     qnfo-send-results.json remains a secondary trail).
+> (5) [SOFT] **SOFT-4 master-list artifact removed**: `attacker-probe@example.invalid` (D1 security-probe row,
+>     never an outreach recipient) excluded from dedup master list + contact-ledger.md; count corrected 35 -> 34
+>     (31 prior + 3 new); probe-handling convention documented in contact-ledger.md.
+> Cross-reference: outreach-log.md 2026-08-15 (batch + delivery note), contact-ledger.md, user mandate 2026-08-15,
+> red-team audit this session, qnfo-email Worker v1.8.
+
+
 > **v2.19 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: SEND-403-BIC-UA-1 + SEND-KEY-BINDINGS-1 + /send verification):**
 > Red-team: direct parent-agent audit (session FJ4ZYy6OEfAnpu8mq30OZ; RES.007 P7 OUTREACH execution).
 > HARD: 2. SOFT: 1. DESIGN: 0.
@@ -23,7 +47,7 @@
 
 > **v2.18 UPDATE (2026-08-14, red-team remediation — DETECTION-ONLY MANDATE documented + Patel C3 monitor corrected + tracking-gap ledger):**
 > Red-team: 3 parallel reviewer audit (2026-08-14 email check) — 0 HARD behavioral violations, 1 scoped HARD record-keeping finding, 5 SOFT doc/tracking gaps. Changes:
-> (1) [HARD] **CURRENT STATE: DETECTION-ONLY since 2026-08-13** — user mandate supersedes the v2.12/v2.13 autonomous-sending history (banners preserved as history): NEVER send outreach emails autonomously, ever; no send action without explicit user approval in an email-composer session. Frontmatter `autonomous` set to `false`. Cronjob 3851f539 verified detection-only (renamed 2026-08-13, description + taskPrompt both detection-only).
+> (1) [HARD] **CURRENT STATE: DETECTION-ONLY since 2026-08-13 — ⚠️ SUPERSEDED 2026-08-15 by user mandate (see v2.20 banner): proactive autonomous outreach reinstated; frontmatter `autonomous: true`** — user mandate supersedes the v2.12/v2.13 autonomous-sending history (banners preserved as history): NEVER send outreach emails autonomously, ever; no send action without explicit user approval in an email-composer session. Frontmatter `autonomous` set to `false`. Cronjob 3851f539 verified detection-only (renamed 2026-08-13, description + taskPrompt both detection-only).
 > (2) [HARD] **Patel C3 monitor CORRECTED** — the v2.17 banner's "must remain at exactly 2 (id=66 + id=69)" omitted id=61; the TRUE lifetime contact count is THREE (id=61 genuine + id=66 error + id=69 repair). Any further contact = 4th contact = HARD violation (no-repeat-contact mandate). The v2.17 text stands as history; this line is the operational correction.
 > (3) [SOFT] **Tracking-gap ledger** — see outreach-log.md 2026-08-14 RED-TEAM REMEDIATION: unlogged test-to-OWN-mailbox rows 74/114/132 (all rwnquni@outlook.com, TEST-SEND-EXTERNAL-1 compliant), D1 ids 107-110 deleted (404, no API record), complete follow-up eligibility dates per batch (08-06 → 08-20; 08-10 Emeriau/Bruhat-Tits → 08-24; 08-12 CMB/standards/singles → 08-26; 08-14 Marcolli → 08-28 pending user disposition).
 > (4) [SOFT] **Count claims must match verified state** — EV record "19/19 fields" corrected to 18/19 (required phone blocked). Same class as RECEIPT-PLACEHOLDER-TOKEN-1: report what is verifiable.
@@ -316,7 +340,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
 
 
-version: 2.18
+version: 2.20
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -329,7 +353,7 @@ priority: 2
 platform: cloudflare
 
 
-autonomous: false
+autonomous: true
 
 
 self_sufficient: true
@@ -341,7 +365,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.18
+# Email Composer — v2.20
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
