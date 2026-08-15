@@ -1,7 +1,7 @@
 ---
 name: system
 description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec shell is Git Bash (POSIX) as of 2026-08-15 (GIT-BASH-SHELL-1); cmd.exe/shim history retained as safety-net + revert reference. See EXEC-SHELL-FIX.md + windows-command-patterns v3.23.
-version: 2.14
+version: 2.15
 kif_tags: [KIF-32]
 ---
 
@@ -9,6 +9,15 @@ kif_tags: [KIF-32]
 > run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
 > STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
 > infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+
+> **v2.15 UPDATE (2026-08-15, kaizen — GIT-BASH-SHELL-1: EXEC SHELL MANDATE switched from cmd.exe to Git Bash):**
+> Red-team: direct parent-agent audit (session this — Git Bash shell switch retool).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **EXEC SHELL MANDATE rewritten for Git Bash (POSIX)** — description + mandate
+>     section + verification updated; cmd.exe/shim chain retained as LEGACY safety-net reference
+>     (the powershell.exe shim still serves electron-builder/hooks spawns — never delete).
+>     See windows-command-patterns v3.23 + system prompt v3.25 EXEC SHELL section.
+> Cross-reference: windows-command-patterns v3.23, system-prompt v3.25, kaizen v2.50, session this.
 
 > **v2.14 UPDATE (2026-08-12, kaizen — skill-sync v4.0.11 H1/H2/S2 remediation + 4-store prompt parity):**
 > Red-team: direct parent-agent 5-adversary audit (this session — skill-sync remediation + prompt-store parity audit).
@@ -730,7 +739,7 @@ survives the kill, and defaults to a 20s delay so the current turn completes.
 Do NOT force-kill DeepChat from within an agent turn — always use the helper.
 
 
-## EXEC SHELL MANDATE — GIT BASH (POSIX) as of v3.23 (2026-08-15); cmd.exe history below
+## EXEC SHELL MANDATE — GIT BASH (POSIX) as of 2026-08-15; cmd.exe history below
 
 > **UPDATE 2026-08-15 (GIT-BASH-SHELL-1):** the `exec` tool NOW runs Git Bash — DeepChat
 > setting `agentCommandShell.preference = "git-bash"` (Roaming app-settings.json) resolves

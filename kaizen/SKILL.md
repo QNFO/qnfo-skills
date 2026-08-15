@@ -1,3 +1,19 @@
+> **v2.50 UPDATE (2026-08-15, kaizen — GIT-BASH-SHELL-1: agent command shell switched from cmd.exe to Git Bash):**
+> Red-team: direct parent-agent audit + live verification (session this — permanent fix for quote mangling).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **GIT-BASH-SHELL-1 mirror row** — `agentCommandShell.preference = "git-bash"`
+>     (Roaming app-settings.json, machine-local key) makes exec spawn `bash -c <cmd>` (dialect
+>     posix, pathStyle msys) via `C:\Program Files\Git\bin\bash.exe`. Root cause of the old
+>     quoted-path/backslash mangling: backgroundExecSessionManager.ts spawned cmd.exe WITHOUT
+>     windowsVerbatimArguments:true, so Node escaped double-quotes as backslash-quote which
+>     cmd.exe choked on; bash handles backslash-escaped quotes natively.
+>     Retooled: windows-command-patterns v3.23, system v2.15, email-composer, git-github
+>     (GIT-COMMIT-M-QUOTE-1 RESOLVED — `git commit -m` with spaces works again), personal-knowledge,
+>     research, qwav-demo-kit, qnfo-core; system prompt v3.25 (5-store byte-identical parity,
+>     E-store agent.db repair); powershell.exe shim retained as safety net (never delete).
+>     Verified live: exec runs x86_64-pc-msys Git Bash; committed cab4645 (+ this cycle).
+> Cross-reference: system-prompt v3.25, windows-command-patterns v3.23, system v2.15, session this.
+
 > **v2.49 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: GIT-OWNERSHIP-1 + S2-ZENODO-GAP-1 marker + N-2 drift sweep):**
 > Red-team: direct parent-agent skills audit (session this — post-restart cycle).
 > HARD: 3. SOFT: 0. DESIGN: 0. Changes:
