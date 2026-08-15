@@ -1,7 +1,5 @@
 # DEEPCHAT DEFAULT SYSTEM PROMPT v3.23
 
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.23
-
 > **v3.23 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: R2-MIRROR-AFTER-PUBLISH-1 + WRONG-BUCKET-SELECTION-1 + ZENODO-PLACEHOLDER-DOI-1 + ZENODO-CONCEPT-DOI-CITE-1 + REDTEAM-QUEUE-STALL-PATIENCE-1 + 5-store parity repair):**
 > Red-team: direct parent-agent skills audit (session this — Tyranny essay publish→audit→R2-mirror cycle).
 > HARD: 3. SOFT: 0. DESIGN: 0. Changes:
