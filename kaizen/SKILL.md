@@ -1,3 +1,23 @@
+> **v2.47 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: system prompt v3.23 + 5-store parity repair + Zenodo Deposit Integrity Gates):**
+> Red-team: direct parent-agent skills audit (session this — Tyranny essay publish→audit→R2-mirror cycle).
+> HARD: 3. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **PROMPT-PARITY-1 break repaired** — v3.22 cycle wrote A/B/D but MISSED C
+>     (.deepchat/app-settings.json) + E (agent.db), both stale at v3.21 (d04eccd59a7afdc8,
+>     81,129 B vs v3.22 b051c707c39dce29, 83,036 B) — REPO-COPY-PHANTOM-1 class recurrence
+>     (phantom 5-store parity claims). REPAIRED: v3.23 dual-written to ALL 5 stores
+>     byte-identical sha16 951ead19b547cff2 (87,588 B, header==footer v3.23); 9/9 CMD
+>     templates identical (CMD SKILLS UPDATE 7,810 B with v3.22+v3.23 mandates).
+> (2) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence** — D (Roaming app-settings.json) preferredModel
+>     re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (v3.17 mandate: both JSON model
+>     keys flash; third recurrence class — RE-CHECK EVERY CYCLE; drift source = running app
+>     write-on-save).
+> (3) [HARD] **System prompt v3.22 -> v3.23** — five new HARD gates (live in body):
+>     R2-MIRROR-AFTER-PUBLISH-1, WRONG-BUCKET-SELECTION-1, ZENODO-PLACEHOLDER-DOI-1,
+>     ZENODO-CONCEPT-DOI-CITE-1, REDTEAM-QUEUE-STALL-PATIENCE-1 (pass-2 reviewers may stall
+>     ~8 min then resume — wait ~15 min before direct-audit fallback; canonical: Tyranny
+>     pass-2 Accuracy/Completeness both delivered after ~15 min).
+> Cross-reference: system-prompt v3.23, knowledge v2.12, cloudflare v3.51, session this.
+
 > **v2.46 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: mirror rows added — WBS-COLLISION-2, REDTEAM-QUEUE-STALL-1, VECTORIZE-403-MISDIAGNOSIS + frontmatter repair):**
 > Red-team: direct parent-agent skills audit (session this). HARD: 3. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **frontmatter v2.43 -> v2.46** — content banners already at v2.45 (5-store parity

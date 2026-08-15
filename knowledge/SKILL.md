@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.11
+version: 2.12
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,29 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.12 UPDATE (2026-08-14, kaizen — Zenodo Deposit Integrity Gates: R2-MIRROR-AFTER-PUBLISH-1 + WRONG-BUCKET-SELECTION-1 + ZENODO-PLACEHOLDER-DOI-1 + ZENODO-CONCEPT-DOI-CITE-1):**
+> Red-team: direct parent-agent skills audit (session this — Tyranny essay publish→audit→R2-mirror cycle).
+> HARD: 4. SOFT: 0. DESIGN: 0. Changes (mirror of system-prompt v3.23 + kaizen v2.47):
+> (1) [HARD] **R2-MIRROR-AFTER-PUBLISH-1** — every Zenodo publication MUST be mirrored to the
+>     canonical R2 papers bucket `qnfo-releases` at `YYYY/MM/<slug>/` (main file + README.md +
+>     all source files) same-cycle, AND the KG Paper node updated to
+>     `distribution_status: distributed` + `r2_path` + `r2_readme` (graph-api /sync upsert).
+>     Zenodo-only leaves status at `published`; a missing R2 mirror is a HARD finding
+>     (canonical: Tyranny-of-the-±1 2026-08-14 Completeness pass-2 HARD-1). Mirror BEFORE
+>     closeout; verify via bucket listing (GET /accounts/{acct}/r2/buckets/{bucket}/objects?prefix=...).
+> (2) [HARD] **WRONG-BUCKET-SELECTION-1** — canonical papers bucket = `qnfo-releases`
+>     (companion projects at `2026/08/<slug>/`), NOT the bare `releases` bucket. Verify the
+>     target bucket against a sibling object BEFORE any write (canonical: Tyranny mirrored to
+>     `releases` 2026-08-14 — script bug, BLAME-EXTERNAL-1; deleted + re-mirrored).
+> (3) [HARD] **ZENODO-PLACEHOLDER-DOI-1** — legacy deposit API `prereserved_doi` may return None;
+>     NEVER rely on it. The placeholder-DOI trick MUST verify the UPLOADED FILE (fetch back from
+>     bucket; assert no `<RESERVED>` string) BEFORE publish. Published placeholder = immutable;
+>     remediate via new version (concept DOI resolves to latest; placeholder version remains).
+> (4) [HARD] **ZENODO-CONCEPT-DOI-CITE-1** — versioned records' How-to-Cite MUST use the CONCEPT
+>     DOI (fetch record → `conceptrecid`; canonical: 10.5281/zenodo.21939595), NOT the v1 record
+>     DOI. v1-DOI cite pins readers to the oldest (possibly placeholder-bearing) version.
+> Cross-reference: system-prompt v3.23, kaizen v2.47, cloudflare v3.51, session this.
+
 > **v2.11 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D1-D7 implemented):**
 > Red-team: subagent reviewer stalled -> direct parent-agent adversarial audit (session waFvkOWgtaYZqNMLWOqdW continuation).
 > HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
