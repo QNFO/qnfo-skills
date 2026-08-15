@@ -6,6 +6,17 @@
 
 ---
 
+
+> **UPDATE 2026-08-15 - Git Bash is now the PRIMARY agent command shell.**
+> The cmd.exe/shim chain documented below is now a SAFETY NET (for non-agent
+> PowerShell spawns: electron-builder, hooks, shell-bootstrap env capture) and a
+> revert reference. The agent command shell switched to Git Bash:
+> `agentCommandShell.preference = "git-bash"` in Roaming app-settings.json -> exec spawns
+> `bash -c <cmd>` (dialect posix, pathStyle msys). This eliminates the quoted-path/backslash
+> mangling at the root (bash understands backslash-escaped quotes; cmd.exe does not).
+> See `windows-command-patterns` v3.23. The shim at
+> C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe MUST REMAIN deployed as
+> the safety net - do NOT delete it. Revert: set preference back to "auto".
 ## THE PROBLEM (Why exec broke)
 
 DeepChat's `exec` tool chooses its shell in `shellEnvHelper.ts`:

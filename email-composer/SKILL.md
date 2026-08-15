@@ -558,10 +558,10 @@ OOO, ID=42 — alternate contact Patricia Moser quantumoptics-blatt@uibk.ac.at).
 
 
 
-> **CMD.EXE NOTE (v2.3):** All curl examples below use bash `$KEY` syntax.
+> **SHELL NOTE (v3.23, 2026-08-15):** All curl examples below use bash `$KEY` syntax — the exec tool now runs Git Bash (POSIX), so `$KEY` expansion works natively (GIT-BASH-SHELL-1). Legacy v2.3 cmd.exe note obsolete.
 
 
-> The exec tool runs `cmd.exe`, which does NOT expand `$KEY`. On Windows use:
+> (Legacy cmd.exe-era guidance, kept for portability — Git Bash expands `$KEY` natively since 2026-08-15.) On any shell use:
 
 
 > - Either `set KEY=<API_KEY>` then `%KEY%` in commands (cmd.exe variable syntax), OR

@@ -1,6 +1,6 @@
 ---
 name: system
-description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec uses cmd.exe (PSModulePath deleted + Python shim v3). See EXEC-SHELL-FIX.md.
+description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec shell is Git Bash (POSIX) as of 2026-08-15 (GIT-BASH-SHELL-1); cmd.exe/shim history retained as safety-net + revert reference. See EXEC-SHELL-FIX.md + windows-command-patterns v3.23.
 version: 2.14
 kif_tags: [KIF-32]
 ---
@@ -730,9 +730,18 @@ survives the kill, and defaults to a 20s delay so the current turn completes.
 Do NOT force-kill DeepChat from within an agent turn — always use the helper.
 
 
-## EXEC SHELL MANDATE — CMD.EXE ONLY (v2.9, 2026-08-03)
+## EXEC SHELL MANDATE — GIT BASH (POSIX) as of v3.23 (2026-08-15); cmd.exe history below
 
-**The DeepChat `exec` tool uses `cmd.exe`. It does NOT use PowerShell.**
+> **UPDATE 2026-08-15 (GIT-BASH-SHELL-1):** the `exec` tool NOW runs Git Bash — DeepChat
+> setting `agentCommandShell.preference = "git-bash"` (Roaming app-settings.json) resolves
+> to `C:\Program Files\Git\bin\bash.exe` (bash -c; dialect posix; pathStyle msys).
+> The cmd.exe/shim chain documented below is LEGACY: kept as the safety-net reference
+> (the powershell.exe shim still serves electron-builder/hooks spawns — never delete it)
+> and as revert documentation. Quoted-path mangling root cause was backgroundExecSessionManager.ts
+> spawning cmd.exe without windowsVerbatimArguments:true; bash handles quotes natively.
+> See windows-command-patterns v3.23 and system prompt v3.25 EXEC SHELL section.
+
+**The DeepChat `exec` tool uses Git Bash (POSIX). It does NOT use PowerShell or cmd.exe (as of 2026-08-15).**
 
 ### Root Cause (Source-Level Fix)
 
@@ -762,9 +771,9 @@ winreg PATH fix — NEVER setx, verification, troubleshooting) at `EXEC-SHELL-FI
 in this skill's root directory. Recompile if lost:
 `pyinstaller --onefile --name powershell _ps_shim.py` (source in EXEC-SHELL-FIX.md).
 
-**Verification (session start):**
-1. `git --version` → shows `git version 2.49.0` (NOT empty exit-0 — empty means shim v2 bug)
-2. `echo test` → prints `test`
+> **Verification (session start):**
+1. `git --version` → shows `git version 2.49.0.windows.1`
+2. `bash --version` → shows x86_64-pc-msys (NOT alpine — alpine = WSL bash, wrong shell)
 3. `npm --version` → works directly (no .ps1 wrapper blocking)
 
 **CRITICAL:** If commands return exit 0 with NO output, the shim is v2 (eats commands).

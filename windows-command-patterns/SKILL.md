@@ -4,10 +4,10 @@
 name: windows-command-patterns
 
 
-description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec tool uses cmd.exe.
+description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec shell is Git Bash (POSIX) as of v3.23; cmd.exe patterns retained as legacy/revert reference.
 
 
-version: 3.22
+version: 3.23
 
 
 kif_tags: [KIF-32]
@@ -16,6 +16,24 @@ kif_tags: [KIF-32]
 ---
 
 
+
+> **v3.23 UPDATE (2026-08-15, kaizen - GIT-BASH SHELL SWITCH):**
+> Red-team: direct parent-agent audit (this session - permanent fix for quote mangling).
+> HARD: 0. SOFT: 0. DESIGN: 1. Changes:
+> (1) [DESIGN] **GIT-BASH-SHELL-1: agent command shell switched from cmd.exe to Git Bash.**
+>     Root cause of the old quoted-path/backslash mangling: backgroundExecSessionManager.ts
+>     spawns cmd.exe WITHOUT windowsVerbatimArguments:true, so Node escapes double-quotes
+>     as backslash-quote, which cmd.exe chokes on. Setting agentCommandShell.preference="git-bash"
+>     (Roaming app-settings.json) makes exec spawn `bash -c <cmd>` (dialect posix, pathStyle msys);
+>     bash understands backslash-escaped quotes natively so the mangling is eliminated.
+>     Takes effect after restart. Revert: set preference back to "auto".
+> (2) [DESIGN] Git Bash guidance: POSIX syntax (ls/cp/rm/grep/cd/2>/dev/null/;), NOT cmd.exe
+>     (dir/copy/del/findstr/cd /d/2>nul/&). MSYS auto-converts POSIX-style paths (/c/...);
+>     use Windows-native paths (C:\...) with the read/write/edit/glob/grep FILE TOOLS, and
+>     /c/... or forward-slash paths in shell commands. Python-first protocol UNCHANGED
+>     (python is on PATH under Git Bash; write->exec->delete still canonical).
+> Cross-reference: system EXEC-SHELL-FIX.md (shim now safety-net only), memory
+> mem-M2WtunaKLRFU, session this.
 > **v3.22 UPDATE (2026-08-13, kaizen — CMD RED TEAM: && chains are SAFE — empirical correction):**
 > Red-team: direct parent-agent audit (this session — recurring-issue remediation).
 > HARD: 0. SOFT: 1. DESIGN: 1. Changes:
@@ -1600,7 +1618,7 @@ S-1.0.4, S-1.0.7.
 
 
 
-Current: **v3.22** (windows-command-patterns — AND-CHAIN-CORRECTION-1: && chains safe, quotes break; 2026-08-13) (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
+Current: **v3.23** (windows-command-patterns — GIT-BASH-SHELL-1: agent shell switched to Git Bash; POSIX syntax, MSYS paths; 2026-08-15) (windows-command-patterns — AND-CHAIN-CORRECTION-1: && chains safe, quotes break; 2026-08-13) (windows-command-patterns — exec wrapper quoting EXEC-ARG-QUOTE-1 + inline-python INLINE-PYTHON-C-1; write-file-read-back canonical; 2026-08-12) (windows-command-patterns — CUA tools integration: Computer Use as GUI automation path; GUI automation row in Operation table; 2026-08-06)
 
 ## EXEC-SHELL-QUOTE-1 - Exec-Shell Quoting & Phantom-Error Gate (2026-08-13)
 

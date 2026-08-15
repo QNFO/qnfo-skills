@@ -4358,7 +4358,7 @@ There is no "last resort." There is no ".ps1 file only." PowerShell does not exi
 
 
 
-   → exec cmd /c "<command>" → DONE
+   → exec bash -c "<command>" → DONE   (Git Bash as of 2026-08-15, GIT-BASH-SHELL-1)
 
 
 
@@ -4736,7 +4736,7 @@ paper.md were both corrupted by PowerShell encoding failures. The complete
 
 
 
-3. cmd? → cmd /c
+3. shell command? → exec directly (Git Bash, POSIX as of 2026-08-15, GIT-BASH-SHELL-1)
 
 
 

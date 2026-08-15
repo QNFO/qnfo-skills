@@ -131,7 +131,7 @@ When the HTTP search endpoint is blocked by Cloudflare WAF (error 1010), use dir
 
 ```bash
 # List files in Obsidian vault
-exec("dir /b /s D:\Obsidian\notes\v1\2026\08\*.md 2>nul", cwd="D:\Obsidian\notes\v1\2026\08")
+exec("find /d/Obsidian/notes/v1/2026/08 -maxdepth 1 -name '*.md'")   # Git Bash/MSYS syntax (2026-08-15); keep Windows-native paths for file tools
 
 # Search vault with Python
 python search_obsidian.py  # write to %TEMP%, exec, read output

@@ -241,10 +241,10 @@ git add <files>
 
 # 4. Commit with conventional format
 git commit -F C:\Users\LENOVO\AppData\Local\Temp\commit-msg.txt
-#   ^ cmd.exe CANNOT pass quotes/em-dashes/spaces through git commit -m via the exec
-#   tool (GIT-COMMIT-M-QUOTE-1, windows-command-patterns v3.12). ALWAYS write the
-#   message to a file with the write tool, then commit with -F. Never use -m for
-#   anything beyond a single word.
+#   ^ GIT-COMMIT-M-QUOTE-1 RESOLVED under Git Bash (2026-08-15, windows-command-patterns
+#   v3.23): `git commit -m "multi word message"` now works natively (bash passes quotes
+#   correctly). The -F write-file pattern remains canonical for long/complex messages
+#   (em-dashes, multiline, signed-off-by), but -m with spaces/special chars is safe again.
 
 # 5. Verify commit
 git log -1 --oneline
@@ -412,7 +412,7 @@ git clone <url> %TEMP%\<project>
 
 # Step 3: Commit (MANDATORY SAME TURN — never defer)
 git add <files> ; git commit -F C:\Users\LENOVO\AppData\Local\Temp\commit-msg.txt
-#   (GIT-COMMIT-M-QUOTE-1: never git commit -m with special chars on cmd.exe)
+#   (GIT-COMMIT-M-QUOTE-1 RESOLVED under Git Bash 2026-08-15; -F still canonical for long messages)
 
 # Step 4: Push (MANDATORY SAME TURN — never defer)
 git push origin <branch>

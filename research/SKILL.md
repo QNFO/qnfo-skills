@@ -8671,6 +8671,8 @@ DOI + status published → publish). Never attempt in-place file overwrite on a 
 
 
 
+> **UPDATE 2026-08-15 (GIT-BASH-SHELL-1):** the rows below are legacy cmd.exe-era anti-patterns. The exec tool now runs Git Bash (POSIX) — `node -e`, `python -c`, and quoted args generally work again. The write-file→run→read pattern remains canonical for anything non-trivial. See windows-command-patterns v3.23.
+>
 | **NODE-EVAL-CMD-1: node -e fails with "Unterminated string constant" in cmd.exe (2026-08-04)** | `node -e` in Windows cmd.exe cannot handle multi-line code or code with quotes. Always write Node scripts to `.mjs` files and run `node <file>`. Same rule as windows-command-patterns S0.0 for Python `-c`. |
 
 
