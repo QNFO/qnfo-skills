@@ -7996,7 +7996,12 @@ curator-gated — ZENODO-COMMUNITY-INCLUSION-REQUEST-1):**
   to community members" (ZENODO-COMMUNITY-SUBMIT-MEMBERSHIP-1): join first via
   POST /api/communities/{slug}/members.
 - `research/scripts/figshare-submit.py` — `submit` (create draft → upload file → publish → verify
-  read-back), `create` / `upload` / `publish` / `verify` modes. One-time Figshare personal token.
+  read-back), `create` / `upload` / `publish` / `verify` modes. **LIVE-VERIFIED 2026-08-16** on the
+  flagship QUNTUF thesis (DOI 10.6084/m9.figshare.33264561.v1, CC BY 4.0, 4 categories): license must
+  be an INTEGER Figshare ID (CC BY-NC-SA NOT offered — use `--license 1` = CC BY 4.0), `defined_type`
+  default `thesis`, CHUNKED upload (`GET upload_url → parts → PUT {url}/{partNo}` → complete=202 →
+  poll computed_md5), and `--categories` (selectable leaf IDs only) is required before publish.
+  One-time Figshare personal token (env or keys.json `figshare_token`).
 
 **Recommended protocol after every Phase 5 publish:** (1) Zenodo primary + own communities
 (QNFO/QWAV/Ultrametric — still the highest-value asset); (2) `zenodo-communities.py submit
