@@ -22,9 +22,13 @@ since 2024. The headline facts:
    existing `osf-profile-update.py` leg) is unaffected; OSF-as-preprint-server is off the
    table for AI-assisted QNFO papers.
 
-2. **Zenodo topic communities are bimodal.** Some are large and open (auto-include);
-   many are empty/slug-squatted. The two must be separated by record count (the discover
-   script does this). Verified open communities ranked by record count:
+2. **Zenodo topic communities are bimodal.** Some are large and open for inclusion
+   REQUESTS; many are empty/slug-squatted. The two must be separated by record count (the
+   discover script does this). **VERIFIED LIVE 2026-08-16 (ZENODO-COMMUNITY-INCLUSION-REQUEST-1):
+   `review_policy=closed` does NOT auto-include for third-party submitters** — submitting via
+   `POST /api/records/{id}/communities` creates a community-inclusion REQUEST (status=submitted)
+   that awaits each community's curators; only the user's OWN communities auto-accept (owner).
+   Verified open communities ranked by record count:
 
    | records | review | slug | title |
    |--:|--:|---|---|
@@ -40,16 +44,19 @@ since 2024. The headline facts:
    | 13 | open | `atitphysics` | Advanced Topics in Theoretical Physics |
 
    ★ = topically direct match to QNFO (symplectic geometry, Berry curvature, quantum
-   foundations — the UMP/RES/INM core). `review=closed` means **auto-included on request**
-   (no curator approval); `review=open` means a curator must approve (mild gate).
+   foundations — the UMP/RES/INM core). `review=closed`/`review=open` only describe member
+   submission flows; third-party inclusion is ALWAYS a curator-gated REQUEST
+   (ZENODO-COMMUNITY-INCLUSION-REQUEST-1).
 
    By contrast, the user's **own** communities dominate their niche: QNFO = **878 records**,
    QWAV = **93**, Ultrametric Physics = **78**.
 
 **Conclusion:** a real dissemination add-on exists, but it is narrower than hoped:
 (a) keep Zenodo as the primary record + grow/SEO the user's OWN communities (still the
-highest-value asset), (b) submit published records to the ~3 genuinely open + auto-include
-communities (esp. `fbt-framework`, `advancedtheoreticalphysicsandmathematics`), (c) add
+highest-value asset), (b) submit published records to the ~3 genuinely open communities
+(esp. `fbt-framework`, `advancedtheoreticalphysicsandmathematics`) — acceptance is
+curator-gated, so treat submission as an inclusion REQUEST to be tracked via `report` mode,
+(c) add
 Figshare + Internet Archive as secondary legs, and (d) treat the *indexing layer*
 (Zenodo → DataCite → OpenAlex / OpenAIRE / BASE / CORE / Google Scholar) as the real
 "wider dissemination" — discoverability comes from indexing, not from more preprint servers.
@@ -62,7 +69,7 @@ Figshare + Internet Archive as secondary legs, and (d) treat the *indexing layer
 |---|---|---|---|---|---|---|
 | **Zenodo** (primary) | ✓ | ✓ deposit+records | ✓ | ✓* (see §4) | ✓ | **PRIMARY** |
 | **Own communities** (QNFO 878 / QWAV 93 / Ultra 78) | ✓ | ✓ | ✓ | ✓ | ✓ | **HIGHEST VALUE** |
-| **Open Zenodo topic communities** (fbt-framework etc.) | ✓ | ✓ | ~ (review=closed → none) | ✓ | ✓ | **ADD-ON** (auto-include) |
+| **Open Zenodo topic communities** (fbt-framework etc.) | ✓ | ✓ | ~ (curator-gated inclusion REQUEST) | ✓ | ✓ | **ADD-ON** (REQUEST, track via report) |
 | **Internet Archive** | ✓ | ✓ S3-like | ✓ | ✓ | ✓ | mirror (already: `internet-archive-submit.js`) |
 | **Figshare** | ✓ tier (20 GB priv + public) | ✓ v2 (verified live) | ✓ (no peer review) | ✓* (no explicit ban found; light moderation) | ✓ | **SECONDARY** (data/articles) |
 | **viXra** | ✓ | ✗ (web form) | ✓ | ✓ | ✓ | **REPUTATION RISK** (46,008 e-prints; hosts fringe) |
@@ -106,10 +113,15 @@ which is exactly what QNFO discloses — qualifies. Consequences:
 
 - **ZENODO-COMMUNITY-EMPTY-1** — never submit into a Zenodo community without first checking
   its record count (`q=communities:<slug>`); many open topic communities are 0-4 records or
-  slug-squatted. Filter by record count; prefer `review=closed` (auto-include) over
-  `review=open` (curation gate).
+  slug-squatted. Filter by record count; prefer large open communities.
+- **ZENODO-COMMUNITY-INCLUSION-REQUEST-1** (VERIFIED LIVE 2026-08-16) — `review_policy=closed`
+  does NOT auto-include third-party submissions. `POST /api/records/{id}/communities` creates
+  a community-inclusion REQUEST (status=submitted) awaiting curators; only own communities
+  auto-accept (owner). The memberships list shows only accepted; track pending via
+  `GET /api/requests?q=topic.record:<id>` (report mode does this). Do NOT claim "included"
+  for a submitted record — report "REQUEST submitted".
 - **ZENODO-COMMUNITY-BIMODAL-1** — the community landscape is bimodal (a few large open
-  auto-include communities + many empty ones); a single keyword search read without a
+  communities worth requesting + many empty ones); a single keyword search read without a
   record-count filter gives a misleading "mostly empty" picture.
 - **OSF-PREPRINTS-AI-BAN-1** — OSF Preprints bans LLM/AI-generated content and suspended
   new submissions Aug 2025; do not route AI-assisted papers there (OSF *profile* is fine).
@@ -127,10 +139,12 @@ which is exactly what QNFO discloses — qualifies. Consequences:
 ## 6. Recommended add-on protocol (implemented in `zenodo-communities.py`)
 
 1. **Discover** open communities (`record_submission_policy=open`) matching QNFO domains,
-   filter by record count, rank; prefer `review=closed` (auto-include).
+   filter by record count, rank; prefer large open communities.
 2. **Submit** a *published* record to eligible open communities via
    `POST /api/records/{id}/communities` with `{"communities":[{"id": slug}]}`.
-3. **Report** current memberships (`GET /api/records/{id}/communities`) for verification.
+3. **Report** accepted memberships + pending inclusion requests (`GET /api/records/{id}/communities`
+   + `GET /api/requests?q=topic.record:<id>`) for verification — a submitted record shows
+   "REQUEST submitted", never "included", until a curator accepts (ZENODO-COMMUNITY-INCLUSION-REQUEST-1).
 4. **Secondary legs** (existing/planned): Figshare cross-post (API v2, one-time PAT),
    Internet Archive mirror (already automated), index-layer verification (DataCite/OpenAlex/
    OpenAIRE — already automatic via Zenodo).

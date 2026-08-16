@@ -40,8 +40,13 @@ SAFETY GATES (HARD):
       Never to "closed"/restricted communities (403 + possible account flag).
     - Only submits records that are already PUBLISHED (state=done via records API).
     - Skips empty/squatted communities by default (min-record filter).
-    - review_policy handling: "closed" -> auto-included on request; "open"/"members"
-      -> request is queued for curator review (reported, not claimed as included).
+    - review_policy handling (VERIFIED LIVE 2026-08-16): "closed" does NOT mean
+      auto-included for third-party submitters (ZENODO-COMMUNITY-INCLUSION-REQUEST-1).
+      POST /records/{id}/communities
+      creates a community-inclusion REQUEST (status=submitted) that awaits the
+      community's curators; only the user's OWN communities auto-accept (owner).
+      "open"/"members" -> queued for curator review. Report via /api/requests
+      (status=submitted), not the memberships list (which only shows accepted).
 """
 
 import argparse
@@ -215,7 +220,7 @@ def do_submit(doi, community_slug, all_open, min_records, token):
     record_id, status = resolve_record(doi)
     if not record_id:
         sys.exit(f"ERROR: could not resolve record for DOI {doi}")
-    if status != "done":
+    if status not in ("done", "published"):
         sys.exit(f"ERROR: record {record_id} status={status} — submit only PUBLISHED records.")
 
     targets = []
@@ -250,18 +255,39 @@ def do_report(doi, token):
     if not record_id:
         sys.exit(f"ERROR: could not resolve record for DOI {doi}")
     print(f"Record: https://zenodo.org/records/{record_id}  (status={status})")
+
+    # 1) Active memberships (accepted communities only)
     body, err = record_communities(record_id, token)
     if err is not None:
         print(f"  (read communities: {err})")
-        return
-    memberships = body.get("hits", body) if isinstance(body, dict) else body
-    items = memberships.get("hits", []) if isinstance(memberships, dict) else memberships
-    if isinstance(items, list) and items:
-        for m in items:
-            if isinstance(m, dict):
-                print(f"  - {m.get('slug', m.get('id'))}  {m.get('title', '')[:50]}")
     else:
-        print("  (no community memberships returned)")
+        memberships = body.get("hits", body) if isinstance(body, dict) else body
+        items = memberships.get("hits", []) if isinstance(memberships, dict) else memberships
+        if isinstance(items, list) and items:
+            for m in items:
+                if isinstance(m, dict):
+                    print(f"  MEMBER: {m.get('slug', m.get('id'))}  {m.get('title', '')[:50]}")
+        else:
+            print("  MEMBER: (none)")
+
+    # 2) Pending community-inclusion requests for this record (VERIFIED LIVE 2026-08-16:
+    #    third-party submissions create status=submitted requests awaiting curators).
+    try:
+        q = urllib.parse.quote(f"topic.record:{record_id}")
+        st, rbody = request(f"{API_BASE}/requests?q={q}&size=50", token=token)
+        if st == 200:
+            rh = rbody.get("hits", {}).get("hits", []) if isinstance(rbody, dict) else []
+            pending = [r for r in rh if isinstance(r, dict) and r.get("type") == "community-inclusion"]
+            if pending:
+                for r in pending:
+                    recv = (r.get("receiver") or {}).get("community", "")[:14]
+                    print(f"  REQUEST: {r.get('status')}  receiver={recv}  created={(r.get('created') or '')[:19]}")
+            else:
+                print("  REQUEST: (none pending)")
+        else:
+            print(f"  REQUEST: (read failed HTTP {st})")
+    except Exception as e:
+        print(f"  REQUEST: (read failed {e})")
 
 
 def main():
