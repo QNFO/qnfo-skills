@@ -1,4 +1,63 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.26
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.28
+
+> **v3.28 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: BRIEFING-DENSITY-1 (no empty daily-briefing notes) + N-2/parity re-verify):**
+> Red-team: direct parent-agent skills audit (session this — cycle 2 after v3.27; 6-store parity re-verified at v3.27
+> baseline sha c925a98866b8b69a before this bump).
+> HARD: 1. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **BRIEFING-DENSITY-1** — user mandate 2026-08-15: "only show highly relevant research, i don't want
+>     clutter... would rather not have to look at an empty daily briefing note at all... better things to do than
+>     administrivia." Daily briefing behavior: (a) show ONLY highly relevant research — precision over recall, no
+>     clutter, no skimmable filler; (b) if the run reports 0 unique papers matched, DO NOT create or write an empty
+>     Obsidian daily-briefing note (skip the write-to-obsidian.py pipe; the email archive to alerts@qnfo.org still
+>     runs); (c) research-daily-brief.py itself does NOT write Obsidian notes — the wrapper step (cronjob
+>     fdf1403c / manual run) skips the write when 0 papers; cronjob taskPrompt updated; research skill v2.113
+>     documents the guard.
+> (2) [SOFT] **N-2 re-verify (cycle 2)** — research 2.112, kaizen 2.52, cloudflare 3.51, execution-mandate 2.10,
+>     system 2.15, deepchat-settings 1.18, windows-command-patterns 3.23 all OK; email-composer frontmatter 2.20 ==
+>     newest post-H1 banner 2.20 (the file's pre-H1 v2.17 legacy banner is a structural quirk, not drift);
+>     cloudflare-email-service has no version field (pre-existing, noted only).
+> (3) [DESIGN] **6-store parity verified at v3.27 baseline** (sha c925a98866b8b69a) and re-verified after this
+>     v3.28 dual-write; 9/9 CMD templates in all 4 prompt stores; DEEPCHAT-DEFAULT-MODEL-1 (deepseek-v4-flash) both
+>     JSON model keys.
+> Cross-reference: research skill v2.113, cronjob fdf1403c, kaizen v2.53, cloudflare v3.51, session this.
+
+
+
+> **v3.27 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: EMAIL-COMPOSER-PROACTIVE-1 + REDTEAM-SUBAGENT-GATE-STALL-1 + D1-RECIPIENT-ATTRIBUTION-1 + MASTER-LIST-PROBE-1 + WBS-OUTREACH-GAP-1):**
+> Red-team: direct parent-agent skills audit (session this — proactive outreach round + 4-parallel-reviewer red-team + remediation cycle).
+> HARD: 2. SOFT: 4. DESIGN: 0. Changes:
+> (1) [HARD] **EMAIL-COMPOSER-PROACTIVE-1** — user mandate 2026-08-15 REVERSES the 08-13 detection-only mandate:
+>     proactive autonomous outreach reinstated (email-composer v2.20, frontmatter autonomous:true, cronjob 3851f539
+>     reconciled detection-only -> proactive). Rules: ONE email per researcher/name/email; NEVER re-contact the same
+>     email unless replying; check the master list (email-composer references/contact-ledger.md + D1 emails table)
+>     BEFORE any send; verify recipient emails from the arXiv SOURCE tarball (CONNECTION-POINT-UNVERIFIED-1);
+>     test-send to user's own mailbox first (TEST-SEND-EXTERNAL-1); single contact per research group; daily cap 3-5;
+>     log every send to outreach-log.md with message_id + D1 verification. Red-team of the first proactive round
+>     (2026-08-15, 3 sends): 0 HARD / 4 SOFT, all remediated same day (SKILL.md v2.20 banner, master list rebuilt
+>     35->34 excluding probe artifact, CF deliverability checks + delivery-monitoring SOP, D1 attribution confirmed).
+> (2) [HARD] **REDTEAM-SUBAGENT-GATE-STALL-1** — subagent children STALL when they call write-classified tools
+>     (update_plan, exec): a reviewed_contract approval never resolves in this environment, freezing the child
+>     mid-turn (observed 2026-08-15 across 4 parallel red-team reviewers). Red-team subagents MUST use ONLY
+>     read-classified tools (read, process log, read_result) and report findings in their final answer; prefer
+>     direct parent-agent audit with same-turn evidence for exec-dependent verification. Extends
+>     REDTEAM-QUEUE-STALL-PATIENCE-1: wait ~5 min max before direct-audit fallback.
+> (3) [SOFT] **D1-RECIPIENT-ATTRIBUTION-1** — /emails/recent projects `to:null` for recent rows (list-projection
+>     quirk, verified 2026-08-15): canonical recipient attribution = /emails/body?id= (recipient column) or direct
+>     D1 query on qnfo-audit.emails; keep qnfo-send-results.json echo as secondary trail.
+> (4) [SOFT] **MASTER-LIST-PROBE-1** — exclude *.invalid / *.example probe artifacts (attacker-probe@example.invalid,
+>     a D1 security-probe row, never an outreach recipient) from dedup master list; contact-ledger.md (34 entries,
+>     31 prior + 3 new) is the coordination snapshot; D1 emails table remains authoritative.
+> (5) [SOFT] **WBS-OUTREACH-GAP-1** — WBS taxonomy (QNFO/wbs-6-synthesis docs/WBS.TAXONOMY.md, ADR-2026-007) has NO
+>     outreach/communications program (SR/ADL/PBO/QD/UF/CON/CMP/JPC/ODR/CGS only); ad-hoc EML workstream code used
+>     2026-08-15; consider registering an outreach/comms program if WBS-coded outreach plans recur.
+> (6) [SOFT] **PROMPT-PARITY store map (v3.26)**: canonical 5 stores = A system-prompt-v2.7.md, B skills repo copy,
+>     C .deepchat/app-settings.json, D Roaming app-settings.json, E Roaming app_db/agent.db systemPrompts (NOT the
+>     legacy .deepchat/agent.db 200 KB — superseded). This cycle dual-writes A-F (legacy agent.db also refreshed to
+>     prevent stale-read confusion) byte-identical.
+> Cross-reference: email-composer v2.20, kaizen v2.52, cloudflare v3.51, windows-command-patterns v3.23,
+> deepchat-settings v1.18, session this.
+
+
 
 > **v3.26 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 + 5-store parity repair D/E + kaizen/deepchat-settings drift sweep):**
 > Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
@@ -1361,7 +1420,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.26** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
+Current: **v3.28** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
