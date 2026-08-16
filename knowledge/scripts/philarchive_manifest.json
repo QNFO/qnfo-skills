@@ -1,0 +1,92 @@
+{
+  "submitter": {
+    "name": "Rowan Brad Quni-Gudzinas",
+    "orcid": "0009-0002-4317-5604",
+    "email": "rowan@qnfo.org"
+  },
+  "papers": [
+    {
+      "title": "The Purpose Principle: Grounding Research in Reality, Utility, and Premise-Depth",
+      "authors": [
+        {
+          "name": "Rowan Brad Quni-Gudzinas",
+          "orcid": "0009-0002-4317-5604"
+        }
+      ],
+      "abstract": "A research program's claim to advancement should be evaluated by a grounding criterion: (G1) a live, non-vacuous path from its questions to real-world utility, traceable and asserted in falsifiable form; (G2) a declared premise chain (which claims are derived vs. unanalyzable primitives or named imported inputs); (G3) no legitimacy derived solely from discipline, abstraction level, or knowledge silo. Exploratory research remains valuable iff it maintains an open grounding path. Falsification conditions F1-F3 are named, including a self-siloing meta-test. The criterion is as deep as its three premises (L0-L2) - this paper proves no theorem; it proposes a usable, falsifiable test for what deserves to be advanced.",
+      "doi": "10.5281/zenodo.21964565",
+      "year": "2026",
+      "keywords": [
+        "philosophy of science",
+        "epistemology",
+        "research methodology",
+        "falsifiability",
+        "research evaluation",
+        "grounding",
+        "premise-depth",
+        "knowledge silos"
+      ],
+      "categories": [
+        "Philosophy of Science",
+        "Epistemology"
+      ],
+      "type": "preprint",
+      "license": "QNFO-ULA"
+    },
+    {
+      "title": "The Ultrametric Foundation: A Unified Thesis on Number, Time, Knowledge, and Computation",
+      "authors": [
+        {
+          "name": "Rowan Brad Quni-Gudzinas",
+          "orcid": "0009-0002-4317-5604"
+        }
+      ],
+      "abstract": "Positional notation is inherently an ultrametric tree of nested cycles. The Archimedean line is a derived abstraction. Recovering the native ultrametric resolves cascading errors across number, time, knowledge, and computation.",
+      "doi": "10.5281/zenodo.21208346",
+      "year": "2026",
+      "keywords": [
+        "ultrametric",
+        "p-adic",
+        "positional notation",
+        "epistemology",
+        "cyclic time",
+        "Zitterbewegung",
+        "quantum computing",
+        "Laws of Form"
+      ],
+      "categories": [
+        "Philosophy of Physical Science"
+      ],
+      "type": "preprint",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "title": "Scaffolds and Invariants: An Epistemic Hygiene Audit of pi, Number Bases, and Geometric Centers",
+      "authors": [
+        {
+          "name": "Rowan Brad Quni-Gudzinas",
+          "orcid": "0009-0002-4317-5604"
+        }
+      ],
+      "abstract": "This paper applies epistemic hygiene -- the systematic separation of human-imposed conventions (scaffolds) from relational structures that persist across representations (invariants) -- to the foundations of mathematics. Through five critical experiments, we demonstrate that pi-the-constant is an invariant forced by the complex exponential period, while its association with planar circles, decimal digits, and Pi Day are pure scaffolds.",
+      "doi": "10.5281/zenodo.21255344",
+      "year": "2026",
+      "keywords": [
+        "epistemic hygiene",
+        "scaffold",
+        "invariant",
+        "pi",
+        "number bases",
+        "positional notation",
+        "spherical geometry",
+        "philosophy of mathematics",
+        "center-free geometry"
+      ],
+      "categories": [
+        "Philosophy of Mathematics"
+      ],
+      "type": "preprint",
+      "license": "CC-BY-4.0"
+    }
+  ]
+}
