@@ -204,3 +204,26 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Dedup check (no-repeat-contact mandate):** all 4 verified against contact-ledger.md (34 entries) + D1 master list (ids 1-166). Zero prior contact. First contact each.
 
 **Follow-up eligibility:** Kauffman / Thamm / Yu-An Chen / Kejun Liu → first eligible **2026-08-30** (14d), one max each, pending response.
+
+
+---
+
+## 2026-08-16 — QPL 2026 registration logistics (NOT research outreach; conference-logistics contact)
+
+**Context:** User found QPL 2026 registration CLOSED on aanmelder.nl ("Registration has been closed by the organizers", no waitlist/subscribe). Conference starts 2026-08-17 08:45 (UvA Roeterseiland campus, Nieuwe Achtergracht 168-184).
+
+**Contact:** Kevin Koenrades (UvA events coordinator, QPL 2026 Organising Committee) — email **VERIFIED from live UvA profile page** (uva.nl/en/profile/k/o/k.koenrades/, `K.Koenrades@uva.nl`). NOT a research contact — excluded from research contact ledger; classified as conference-logistics.
+
+| # | Recipient | Email source | Subject | Message ID | D1 id | Status |
+|---|-----------|--------------|---------|------------|-------|--------|
+| 1 | Kevin Koenrades (UvA) | VERIFIED from UvA profile page | QPL 2026 - registration closed, inquiry about late/on-site attendance options | d2203614-f172-48a7-8e01-3e99ebd3374f | 174 | sent |
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=173 → rwnquni@outlook.com (own mailbox), message_id f5e2ecae-c7bf-48b5-bfa5-3bed2cd1ecd1, status=sent. Send-guard scripted gate passed (exit 0).
+
+**Ask:** (1) on-site/late registration possible? (2) waitlist? (3) day-attendance arrangement? Full late rate EUR 360 offered. User is Amsterdam-based (zero travel).
+
+**Send verification (Tool-Call Execution Mandate):** ids 173+174 confirmed status=sent via GET /emails/recent.
+
+**Follow-up eligibility:** if no reply within 3 days → one follow-up 2026-08-19 (conference days 2-3), then archive (no-repeat-contact discipline). On-site registration desk opens Mon 08:45-09:30 — user can also try walk-up.
+
+**Alternative channels verified (unused):** Stephanie Mak (s.n.mak@uva.nl, UvA events coordinator — second coordinator, NOT contacted to avoid double-contact of the same organising group); PC chair John van de Wetering (j.m.m.vandewetering@uva.nl — deliberately NOT used: high-value ZX research target, one-email rule preserved).
