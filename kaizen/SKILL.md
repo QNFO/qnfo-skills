@@ -1,3 +1,23 @@
+> **v2.57 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: email-body proactive reconciliation + email-composer stale-restore clobber + footer fix; absorbs concurrent v2.56 NO-JOURNALS-1):**
+> Red-team: direct parent-agent audit (session KrfyAByt9iDC-YAS8H5dM — verification of concurrent v3.29/v3.30 cycles + remediation).
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **EMAIL-BODY-DETECTION-ONLY-STALE-1** — system-prompt body section (2026-08-14) still mandated
+>     DETECTION-ONLY outreach while the v3.27 banner had REVERSED it to proactive; contradiction survived
+>     v3.27→v3.30. Section rewritten to the proactive regime; detection-only retained as superseded history.
+>     Mirrors system-prompt v3.31.
+> (2) [HARD] **EMAIL-COMPOSER-REVERT-1** — email-composer/SKILL.md working-tree silently reverted to v2.18
+>     (autonomous:false) + contact-ledger.md deleted after HEAD 76a04f0 (v2.20, autonomous:true); file mtime
+>     07:10:05 (timestamp-preserving copy) = stale-restore clobber signature; no banner documented a revert.
+>     Restored HEAD v2.20. Root-cause candidate: backup/skill-sync restore with 07:10-era stale source.
+> (3) [SOFT] **FOOTER-PARENTHETICAL-DRIFT-1** — system-prompt footer parenthetical was stale since v3.26
+>     (described DEEPCHAT-MEMORY-EMBEDDING-1 through v3.30); now describes the current cycle.
+> (4) [SOFT] **CMD-SKILLS-UPDATE-TEMPLATE-GAP-1** — v3.29/v3.30 cycles never appended a mandate line to CMD
+>     SKILLS UPDATE; v3.31 line appended. Also completed B (repo copy) + C (app-settings) — stale at v3.28
+>     with C's 3 stale templates, left by BOTH the v3.29 and v3.30 dual-writes. NOTE: research/SKILL.md
+>     working tree carries a second v2.115 banner (NO-JOURNALS correction) vs committed 915cd65 (dissemination
+>     add-on) — the NO-JOURNALS correction should be versioned v2.116 when committed (observed, not modified).
+> Cross-reference: EMAIL-COMPOSER-PROACTIVE-1, SO-WHAT-GATE-1, NO-JOURNALS-1, system-prompt v3.31, email-composer v2.20.
+
 > **v2.56 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: NO-JOURNALS-1 mirror row):**
 > Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **NO-JOURNALS-1** — CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to traditional academic
@@ -665,7 +685,7 @@ name: kaizen
 
 
 
-version: "2.53"
+version: 2.57
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
