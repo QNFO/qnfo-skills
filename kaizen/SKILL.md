@@ -1,3 +1,16 @@
+> **v2.56 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: NO-JOURNALS-1 mirror row):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **NO-JOURNALS-1** — CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to traditional academic
+>     journals, ever; do NOT suggest/prepare journal submissions (cover letters, shortlists) unless explicitly prompted.
+>     Autonomous submission ONLY to fully-autonomous/100%-no-manual-intervention outlets (rules out paid + proprietary/
+>     esoteric systems). Canonical venue = Zenodo ONLY. Mirrors system-prompt v3.30 + research v2.115. ROOT-CAUSE: the
+>     research skill Phase 7 "Journal Submission (HARD)" gate was DEFECTIVE — a skill mandate that contradicted the user's
+>     standing preference produced violating artifacts (cover-letter.md + journal-submission-strategy.md, retracted a1a7d09).
+>     LESSON: a skill's "HARD" gate is only as valid as its premise — before a skill directs an agent to take an EXTERNAL
+>     action (submission, outreach, payment), the skill must carry the user's actual venue policy or it will manufacture
+>     violations. Audit skills for external-action gates that lack the user's categorical preferences.
+> Cross-reference: NO-JOURNALS-1, system-prompt v3.30, research v2.115, mem-_1gt5bzs_EY9.
+
 > **v2.55 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT/premise-depth gate + MODEL-KEY-FILE-DRIFT-1 #7):**
 > Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 2. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **SO-WHAT-GATE-1** — user editorial mandate (2026-08-16): every research artifact + publication (incl. social posts)

@@ -1,4 +1,18 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.29
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.30
+> **v3.30 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: NO-JOURNALS-1 — categorical no-traditional-journals directive):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **NO-JOURNALS-1** — CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to traditional academic
+>     journals — EVER. Do NOT suggest or prepare journal submissions (no cover letters, no journal shortlists) unless
+>     explicitly prompted by the user. Autonomous submission is permitted ONLY to outlets that are fully autonomous and
+>     100% complete with ZERO manual user intervention — which rules out paid submissions and practically all traditional/
+>     proprietary/esoteric submission systems. Canonical publication venue = Zenodo ONLY. ROOT CAUSE of the prior violation:
+>     the research skill's Phase 7 "Journal Submission (v2.88, HARD)" gate was DEFECTIVE (contradicted the user's standing
+>     preference) — corrected to "Publication Venue" (NO-JOURNALS-1) in research v2.115, with the journal shortlist + cover-letter
+>     protocol REMOVED. Prior-session violating artifacts (cover-letter.md, journal-submission-strategy.md) were retracted
+>     (commit a1a7d09) and replaced with autonomous-dissemination-strategy.md (Zenodo canonical; no further submission actions).
+> Cross-reference: NO-JOURNALS-1, SO-WHAT-GATE-1, PROMPT-PARITY-1, research v2.115, user_preference mem-_1gt5bzs_EY9.
+
+
 > **v3.29 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT / premise-depth editorial gate):**
 > Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s, RES.011 closeout + user editorial directive).
 > HARD: 2. SOFT: 0. DESIGN: 0.
@@ -1439,7 +1453,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.29** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
+Current: **v3.30** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
