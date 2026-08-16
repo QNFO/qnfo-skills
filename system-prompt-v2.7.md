@@ -1,4 +1,12 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.32
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.33
+
+> **v3.33 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: GTD weekly-review delta-anchor + GTD fleet state + MODEL-KEY-FILE-DRIFT-1 #9):**
+> Red-team: direct parent-agent red-team skills audit (session 6427jDZRyelzVeXaHMTty — GTD weekly-review expansion + reviewer HARD-1 delta-anchor finding; kaizen v2.59 mirrors).
+> HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DELTA-ANCHOR-1** — any DELTA sweep MUST pin its anchor: derive the boundary from the existing artifact's OWN header timestamp (`> YYYY-MM-DD HH:MM`); fallback = file mtime MINUS 30 min (correction margin) only when no header exists; CATCH-ALL — any window item NOT already cited/listed in the existing artifact is IN SCOPE (when in doubt, include; a delta drop is a silent loss, a surplus fold is one line). Canonical: GTD Friday task 382376cd HARD-1 fix 2026-08-16 — an unpinned `-newermt` mtime anchor (11:48) would have DROPPED the DECISION-READY QPL attendance-plan note (11:21) days before QPL 2026 (Aug 17–21).
+> (2) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #9** — Roaming app-settings.json `preferredModel` re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash per DEEPCHAT-DEFAULT-MODEL-1 (both JSON model keys flash).
+> (3) [SOFT] **GTD WEEKLY-REVIEW FLEET STATE** — the SINGLE weekly-review scheduled task = "QNFO Weekly Review (GTD, Friday — merged triage)" id 382376cd (Fri 15:00 UTC, cron `0 15 * * 5`), GTD-expanded 2026-08-16 (STEP 1 delta rule with DELTA-ANCHOR-1; note sections NEXT-7-DAYS / WAITING-FOR / UIA-REGISTER-DUE / SOMEDAY-MAYBE; portfolio triage 4a0–4e full-corpus). NEVER create a new weekly-review task; the Obsidian GTD LLM process consumes the machine-readable '## Portfolio Triage' section.
+> Cross-reference: kaizen v2.59, research v2.115, cloudflare v3.51, execution-mandate v2.10, session this.
 
 > **v3.32 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: dissemination add-on live-verified + Figshare API facts + N-2/model-key repairs):**
 > Red-team: direct parent-agent audit (session tGKyVRwKJGbLDdKZtEKpa — dissemination add-on live tests on
@@ -385,6 +393,14 @@ corpus-scale, not top-k convenience (user mandate 2026-08-14):
    dirt is present; (b) use `git pull --rebase --autostash` to preserve foreign uncommitted work
    across a rebase; (c) commit ONLY your own changed files; (d) re-verify `git status
    --porcelain` clean + HEAD==origin/master after push.
+
+## GTD WEEKLY REVIEW & DELTA-ANCHOR GATE (HARD GATE — 2026-08-16)
+
+1. **DELTA-ANCHOR-1 (HARD):** any DELTA sweep — the Friday weekly-review STEP 1 delta rule, incremental briefings, or any "what changed since the last review" audit — MUST pin its anchor and never drop window items:
+   (a) ANCHOR RULE: derive the boundary from the existing artifact's OWN header timestamp (the `> YYYY-MM-DD HH:MM` line); use file mtime MINUS 30 min (correction margin) only when no header timestamp exists (red-team corrections shift mtime — an unpinned mtime anchor silently drops the most time-critical notes);
+   (b) CATCH-ALL: any window item NOT already cited/listed in the existing artifact is IN SCOPE — when in doubt, include (a delta drop is a silent loss; a surplus fold is one line);
+   (c) canonical case (2026-08-16): GTD Friday task 382376cd HARD-1 — an unpinned `-newermt` anchor at file mtime 11:48 would have dropped the DECISION-READY QPL attendance-plan note (11:21) days before QPL 2026 (Aug 17–21).
+2. **GTD WEEKLY-REVIEW FLEET STATE (SOFT):** the SINGLE weekly-review scheduled task = "QNFO Weekly Review (GTD, Friday — merged triage)" id 382376cd (Fri 15:00 UTC, cron `0 15 * * 5`), GTD-expanded 2026-08-16 with the delta rule + sections NEXT-7-DAYS, WAITING-FOR, UIA-REGISTER-DUE, SOMEDAY/MAYBE + portfolio triage 4a0–4e (full-corpus enumeration gate). NEVER create a new weekly-review task (user directive 2026-08-16: no chat-thread clutter; all weekly-review content fires in the single Friday task). The Obsidian GTD LLM process handles note-level GTD; the review publishes decisions in a machine-readable '## Portfolio Triage — YYYY-MM-DD' section for it — do not duplicate its work.
 
 ## R2 MIRROR & ZENODO DEPOSIT INTEGRITY GATES (HARD GATE — 2026-08-14)
 
@@ -1526,7 +1542,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.32** (ZENODO-COMMUNITY-INCLUSION-REQUEST-1 + ZENODO-RECORDS-STATUS-PUBLISHED-1 + FIGSHARE-LICENSE-INT-1 + FIGSHARE-DEFINED-TYPE-1 + FIGSHARE-CHUNKED-UPLOAD-1 + FIGSHARE-CATEGORIES-PUBLISH-1 + FIGSHARE-PUBLIC-DELETE-1 + N-2 frontmatter repair + MODEL-KEY-FILE-DRIFT-1 #6; 6-store parity byte-identical; 2026-08-16)
+Current: **v3.33** (DELTA-ANCHOR-1 + GTD WEEKLY-REVIEW FLEET STATE + MODEL-KEY-FILE-DRIFT-1 #9; N-2 re-verify kaizen 2.59/research 2.115/cloudflare 3.51/execution-mandate 2.10; 5-store parity byte-identical; 2026-08-16)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
