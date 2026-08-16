@@ -1,3 +1,12 @@
+> **v2.59 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: DELTA-ANCHOR-1 + GTD weekly-review fleet state + MODEL-KEY-FILE-DRIFT-1 #9 + kaizen footer-drift repair; mirrors system-prompt v3.33):**
+> Red-team: direct parent-agent red-team skills audit (session 6427jDZRyelzVeXaHMTty — GTD weekly-review expansion + reviewer HARD-1 delta-anchor finding).
+> HARD: 3. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DELTA-ANCHOR-1** — any DELTA sweep MUST pin its anchor (existing artifact's OWN header timestamp `> YYYY-MM-DD HH:MM`; fallback = file mtime − 30 min; CATCH-ALL: any window item not already listed in the existing artifact is IN SCOPE — when in doubt, include). Canonical: GTD Friday task 382376cd HARD-1 2026-08-16 — an unpinned `-newermt` mtime anchor would have dropped the DECISION-READY QPL note (11:21) before QPL 2026 (Aug 17–21). Mirror of system-prompt v3.33.
+> (2) [HARD] **KAizen footer drift repaired** — Version-section footer said `Current: **v2.49**` while banner/frontmatter were v2.58 (FOOTER-PARENTHETICAL-DRIFT-1 class); footer now v2.59.
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #9** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys flash).
+> (4) [SOFT] **GTD WEEKLY-REVIEW FLEET STATE** — the SINGLE weekly-review scheduled task = "QNFO Weekly Review (GTD, Friday — merged triage)" id 382376cd (Fri 15:00 UTC, cron `0 15 * * 5`), GTD-expanded (STEP 1 delta rule, sections NEXT-7-DAYS/WAITING-FOR/UIA-REGISTER-DUE/SOMEDAY-MAYBE, portfolio triage 4a0–4e); NEVER create new weekly-review tasks.
+> Cross-reference: system-prompt v3.33, research v2.115, cloudflare v3.51, execution-mandate v2.10, session 6427jDZRyelzVeXaHMTty.
+
 > **v2.58 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: dissemination add-on live-verified + Figshare API facts + N-2/model-key repairs; mirrors system-prompt v3.32):**
 > Red-team: direct parent-agent audit (session tGKyVRwKJGbLDdKZtEKpa — dissemination add-on live tests on QUNTUF 10.5281/zenodo.21208346).
 > HARD: 8. SOFT: 0. DESIGN: 0. Changes:
@@ -708,7 +717,7 @@ name: kaizen
 
 
 
-version: 2.58
+version: 2.59
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -15083,7 +15092,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.49** (kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 + version-drift sweep + 4-store v3.10 parity; 2026-08-13) (kaizen — CMD SKILLS UPDATE: skill-sync v4.0.11 remediation + SYNC-DIVERGENCE-MERGE-1 + PROMPT-STORE-4STORE-1; 2026-08-13) (kaizen — CMD SKILLS UPDATE: cloudflare v3.49 cost-control correction + COST-AUDIT-MISS-AI-1 mirror + pending CMD #15/#16 closed; 2026-08-13) (kaizen — CMD EXECUTE: red-team fix cycle — HARD-1/HARD-2 RESOLVED (qnfo-ai v4.3.9 tier-0 gateway) + AI Search deployed; 2026-08-13)
+Current: **v2.59** (kaizen — DELTA-ANCHOR-1 + GTD fleet state + MODEL-KEY-FILE-DRIFT-1 #9 + footer-drift repair; mirrors system-prompt v3.33; 2026-08-16)
 
 
 
