@@ -7344,8 +7344,12 @@ traditional/proprietary/esoteric submission systems. **Canonical publication ven
    QST) is RETRACTED — these are traditional journals and are categorically forbidden.
 3. **NO cover letter.** Cover letters are a journal-specific artifact and are forbidden (a cover-letter.md
    draft was produced and retracted 2026-08-16, commit a1a7d09).
-4. **Autonomous outlets only:** no additional fully-autonomous, free, no-manual-intervention outlet is
-   currently available beyond the Zenodo dissemination stack. Do NOT invent submission paths.
+4. **Autonomous outlets only (journal-style systems):** no journal-style submission system is
+   currently available that is fully-autonomous, free, and zero-manual-intervention — do NOT invent
+   journal submission paths. This does NOT restrict the verified autonomous dissemination stack
+   (see "Open Outlets & Community Dissemination" below: open Zenodo communities with
+   record_submission_policy=open + review_policy=closed auto-include, Figshare API v2, Internet
+   Archive — all free, API-driven, no endorsement, no manual intervention).
 
 ### Targeted Outreach (v2.88, SOFT — independent-researcher legitimacy)
 
