@@ -42,8 +42,8 @@ SAFETY GATES (HARD):
     - No live submission without FIGSHARE_TOKEN (exit with clear message).
     - Default is PUBLIC publish (that is the dissemination point); --no-publish
       keeps a private draft for review.
-    - License default cc-by-nc-sa (matches QNFO Zenodo corpus norm); override
-      with --license if a record uses a different license.
+    - License default 1 = CC BY 4.0 (Figshare v2 offers only 7 license IDs; CC BY-NC-SA
+      is NOT available — closest compatible public license). Accepts integer ID or known name.
     - Every publish is followed by verify (read-back) before reporting success.
 """
 
@@ -56,6 +56,31 @@ import urllib.error
 import urllib.request
 
 API_BASE = "https://api.figshare.com/v2"
+
+# Figshare v2 license IDs (verified live 2026-08-16 via GET /v2/licenses):
+# 1=CC BY 4.0, 2=CC0, 3=MIT, 4=GPL, 5=GPL 2.0+, 6=GPL 3.0+, 7=Apache 2.0.
+# NOTE: CC BY-NC-SA is NOT offered by Figshare v2 (QNFO Zenodo norm cc-by-nc-sa-4.0
+# cannot be mirrored here; CC BY 4.0 is the closest compatible public license).
+LICENSES = {
+    "1": 1, "cc-by": 1, "cc-by-4.0": 1,
+    "2": 2, "cc0": 2,
+    "3": 3, "mit": 3,
+    "4": 4, "gpl": 4,
+    "5": 5, "gpl-2.0": 5, "gpl-2.0+": 5,
+    "6": 6, "gpl-3.0": 6, "gpl-3.0+": 6,
+    "7": 7, "apache-2.0": 7,
+}
+
+
+def coerce_license(raw):
+    """Accept integer ID or known name; error with the available list otherwise."""
+    key = str(raw).strip().lower()
+    if key in LICENSES:
+        return LICENSES[key]
+    sys.exit(f"ERROR: unknown license '{raw}'. Figshare v2 offers: "
+             "1=CC BY 4.0, 2=CC0, 3=MIT, 4=GPL, 5=GPL 2.0+, 6=GPL 3.0+, 7=Apache 2.0. "
+             "(CC BY-NC-SA is not available on Figshare v2.)")
+
 
 BROWSER_HEADERS = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -120,16 +145,19 @@ def file_meta(path):
     return os.path.basename(path), size, md5.hexdigest()
 
 
-def create_article(token, title, description, keywords, license_id, defined_type):
-    """POST /account/articles -> draft article. Returns article id."""
+def create_article(token, title, description, keywords, license_id, defined_type, categories=""):
+    """POST /account/articles -> draft article. Returns article id.
+    Categories (comma-separated Figshare category IDs) are required before publish."""
     data = {
         "title": title,
         "description": description,
-        "license": license_id,
+        "license": coerce_license(license_id),
         "defined_type": defined_type,
     }
     if keywords:
         data["tags"] = [k.strip() for k in keywords.split(",") if k.strip()]
+    if categories:
+        data["categories"] = [int(c.strip()) for c in categories.split(",") if c.strip()]
     st, body = request(f"{API_BASE}/account/articles", token=token, method="POST", data=data)
     if st != 201:
         sys.exit(f"ERROR: create article failed HTTP {st}: {json.dumps(body, ensure_ascii=False)[:300]}")
@@ -143,7 +171,9 @@ def create_article(token, title, description, keywords, license_id, defined_type
 
 
 def upload_file(token, article_id, path):
-    """Attach one file to an article: initiate -> S3 PUT -> complete."""
+    """Attach one file to an article — Figshare v2 CHUNKED upload (VERIFIED LIVE 2026-08-16):
+    initiate -> GET file resource (upload_url) -> GET upload_url (parts) ->
+    PUT each part to {upload_url}/{partNo} -> complete (202 async) -> poll computed_md5."""
     name, size, md5 = file_meta(path)
     st, body = request(
         f"{API_BASE}/account/articles/{article_id}/files",
@@ -153,48 +183,66 @@ def upload_file(token, article_id, path):
     if st != 201:
         sys.exit(f"ERROR: file init failed HTTP {st}: {json.dumps(body, ensure_ascii=False)[:300]}")
     if isinstance(body, dict) and body.get("location"):
-        # body.location points to /account/articles/{id}/files/{file_id}
         loc = body["location"]
         if not loc.startswith("http"):
             loc = f"{API_BASE}{loc}"
-        st2, fbody = request(loc, token=token)
-        if st2 != 200:
-            sys.exit(f"ERROR: file resource read failed HTTP {st2}")
-        upload_url = (fbody or {}).get("upload_url") or (fbody or {}).get("uploadUrl")
-        if not upload_url:
-            sys.exit(f"ERROR: no upload_url in {json.dumps(fbody, ensure_ascii=False)[:300]}")
-        file_id = None
-        loc_tail = loc.rsplit("/", 1)[-1]
-        if loc_tail.isdigit():
-            file_id = loc_tail
-        if not file_id:
-            sys.exit(f"ERROR: could not parse file_id from {loc}")
     else:
         sys.exit(f"ERROR: unexpected file init response: {json.dumps(body, ensure_ascii=False)[:300]}")
 
-    # S3 presigned PUT
+    st2, fbody = request(loc, token=token)
+    if st2 != 200:
+        sys.exit(f"ERROR: file resource read failed HTTP {st2}")
+    upload_url = (fbody or {}).get("upload_url") or (fbody or {}).get("uploadUrl")
+    file_id = loc.rsplit("/", 1)[-1]
+    if not upload_url or not file_id or not file_id.isdigit():
+        sys.exit(f"ERROR: bad file resource: {json.dumps(fbody, ensure_ascii=False)[:300]}")
+
+    # Chunked upload: GET {upload_url} -> parts[{partNo,startOffset,endOffset}]
+    st3, pbody = request(upload_url)
+    if st3 != 200:
+        sys.exit(f"ERROR: parts read failed HTTP {st3}: {json.dumps(pbody, ensure_ascii=False)[:200]}")
+    parts = (pbody or {}).get("parts") or []
+    if not parts:
+        sys.exit(f"ERROR: no parts in upload_url response: {json.dumps(pbody, ensure_ascii=False)[:300]}")
     with open(path, "rb") as fh:
         raw = fh.read()
-    st3, _ = request(upload_url, method="PUT", raw_body=raw, content_type="application/octet-stream")
-    if st3 not in (200, 201, 204):
-        sys.exit(f"ERROR: S3 upload failed HTTP {st3}")
+    for part in parts:
+        pno = part.get("partNo")
+        start = int(part.get("startOffset", 0))
+        end = int(part.get("endOffset", -1))
+        chunk = raw[start:end + 1]
+        stp, _ = request(f"{upload_url}/{pno}", method="PUT", raw_body=chunk,
+                         content_type="application/octet-stream")
+        if stp not in (200, 201, 204):
+            sys.exit(f"ERROR: part {pno} upload failed HTTP {stp}")
 
-    # Complete upload
+    # Complete (202 = accepted for async processing)
     st4, cbody = request(
         f"{API_BASE}/account/articles/{article_id}/files/{file_id}",
         token=token, method="POST",
         data={"status": "completed"},
     )
-    if st4 not in (200, 201, 204):
+    if st4 not in (200, 201, 202, 204):
         sys.exit(f"ERROR: complete upload failed HTTP {st4}: {json.dumps(cbody, ensure_ascii=False)[:300]}")
-    print(f"File attached: {name} ({size} bytes, md5 {md5})")
+
+    # Poll until computed_md5 == supplied md5 (processing is async)
+    import time as _time
+    for _ in range(10):
+        _time.sleep(3)
+        _, fv = request(f"{API_BASE}/account/articles/{article_id}/files/{file_id}", token=token)
+        if isinstance(fv, dict) and fv.get("computed_md5") == md5:
+            break
+    print(f"File attached: {name} ({size} bytes, md5 {md5}, {len(parts)} part(s) chunked)")
     return file_id
 
 
 def publish(token, article_id):
     st, body = request(f"{API_BASE}/account/articles/{article_id}/publish", token=token, method="POST", data={})
     if st not in (200, 201, 202, 204):
-        sys.exit(f"ERROR: publish failed HTTP {st}: {json.dumps(body, ensure_ascii=False)[:300]}")
+        msg = json.dumps(body, ensure_ascii=False)[:300]
+        if "categories" in msg.lower():
+            sys.exit(f"ERROR: publish failed HTTP {st}: {msg}. Hint: set --categories on create/submit (selectable Figshare category IDs; e.g. --categories 30229,29785,29827,30022). Publish requires at least one category.")
+        sys.exit(f"ERROR: publish failed HTTP {st}: {msg}")
     print(f"Publish request accepted for article {article_id} (HTTP {st})")
 
 
@@ -218,10 +266,16 @@ def main():
     ap.add_argument("--title", help="article title")
     ap.add_argument("--description", help="article description")
     ap.add_argument("--keywords", default="", help="comma-separated keywords")
-    ap.add_argument("--license", default="cc-by-nc-sa", help="Figshare license id (default cc-by-nc-sa)")
-    ap.add_argument("--defined-type", default="paper",
-                    choices=["paper", "preprint", "dataset", "poster", "presentation",
-                             "figure", "media", "fileset"])
+    ap.add_argument("--license", default="1", help="Figshare license ID integer (default 1 = CC BY 4.0; see LICENSES)")
+    ap.add_argument("--defined-type", default="thesis",
+                    choices=["figure", "media", "dataset", "poster", "journal contribution",
+                             "presentation", "thesis", "software", "online resource",
+                             "preprint", "book", "conference contribution"])
+    ap.add_argument("--categories", default="",
+                    help="comma-separated Figshare category IDs (REQUIRED before publish; "
+                         "selectable leaves only, e.g. 30229=Foundations of QM, 29785=Algebraic "
+                         "structures in math phys, 29827=Algebra & number theory, 30022=Philosophy "
+                         "of science)")
     ap.add_argument("--article", help="article id for upload/publish/verify")
     ap.add_argument("--no-publish", action="store_true", help="leave as private draft")
     args = ap.parse_args()
@@ -233,7 +287,7 @@ def main():
     if args.mode == "create":
         if not args.title or not args.description:
             sys.exit("ERROR: --title and --description required for create")
-        create_article(token, args.title, args.description, args.keywords, args.license, args.defined_type)
+        create_article(token, args.title, args.description, args.keywords, args.license, args.defined_type, args.categories)
     elif args.mode == "upload":
         if not args.article or not args.file:
             sys.exit("ERROR: --article and --file required for upload")
@@ -249,7 +303,7 @@ def main():
     elif args.mode == "submit":
         if not args.file or not args.title or not args.description:
             sys.exit("ERROR: --file, --title, --description required for submit")
-        aid = create_article(token, args.title, args.description, args.keywords, args.license, args.defined_type)
+        aid = create_article(token, args.title, args.description, args.keywords, args.license, args.defined_type, args.categories)
         upload_file(token, aid, args.file)
         if not args.no_publish:
             publish(token, aid)
