@@ -13,9 +13,11 @@ WHY THIS EXISTS (verified 2026-08-16, see research/references/dissemination-outl
       template, and no explicit AI-text ban found in Figshare's published policies.
 
 CREDENTIALS:
-    FIGSHARE_TOKEN from the environment ONLY (same discipline as ZENODO_TOKEN —
-    never hardcode, never retype a truncated token). One-time setup: log in to
-    figshare.com -> Settings -> Applications -> Personal Token, then export.
+    FIGSHARE_TOKEN is read from the environment OR from the canonical key store
+    C:/Users/LENOVO/keys.json (key "figshare_token" — same store as zenodo_token /
+    buffer_token / cloudflare_api_token). One-time setup: log in to figshare.com ->
+    Settings -> Applications -> Personal Token, then store it in keys.json (or export
+    FIGSHARE_TOKEN). Never hardcode, never retype a truncated token.
 
 USAGE:
     python figshare-submit.py submit --file <path> --title "<T>" --description "<D>"
@@ -65,10 +67,17 @@ BROWSER_HEADERS = {
 def get_token() -> str:
     token = os.environ.get("FIGSHARE_TOKEN")
     if not token:
+        # Fallback: canonical key store (same convention as buffer-post.py / keys.json).
+        try:
+            with open(r"C:\Users\LENOVO\keys.json", encoding="utf-8") as _f:
+                token = json.load(_f).get("figshare_token")
+        except Exception:
+            token = None
+    if not token:
         sys.exit(
-            "ERROR: FIGSHARE_TOKEN not set in environment. One-time setup: "
-            "figshare.com -> Settings -> Applications -> Personal Token, then "
-            "export FIGSHARE_TOKEN. Never hardcode it."
+            "ERROR: FIGSHARE_TOKEN not found (env or C:\\Users\\LENOVO\\keys.json). One-time "
+            "setup: figshare.com -> Settings -> Applications -> Personal Token, then store it "
+            "as figshare_token in keys.json (or export FIGSHARE_TOKEN). Never hardcode it."
         )
     return token
 
