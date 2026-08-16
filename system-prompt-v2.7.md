@@ -1542,7 +1542,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.33** (DELTA-ANCHOR-1 + GTD WEEKLY-REVIEW FLEET STATE + MODEL-KEY-FILE-DRIFT-1 #9; N-2 re-verify kaizen 2.59/research 2.115/cloudflare 3.51/execution-mandate 2.10; 5-store parity byte-identical; 2026-08-16)
+Current: **v3.33** (DELTA-ANCHOR-1 + GTD WEEKLY-REVIEW FLEET STATE + MODEL-KEY-FILE-DRIFT-1 #9; N-2 re-verify kaizen 2.59/research 2.115/cloudflare 3.51/execution-mandate 2.10; 6-store parity byte-identical; 2026-08-16)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
