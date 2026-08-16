@@ -1,3 +1,28 @@
+> **v2.115 UPDATE (2026-08-16, kaizen — CMD CONTINUE correction: NO traditional journal submissions):**
+> Red-team: direct parent-agent (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **NO-JOURNALS-1 (Publication Venue)** — CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to
+>     traditional academic journals, ever. Do NOT suggest/prepare journal submissions (cover letters, shortlists) unless
+>     explicitly prompted. Autonomous submission ONLY to outlets that are fully autonomous + 100% complete with zero manual
+>     intervention (rules out paid + proprietary/esoteric systems). Canonical venue = Zenodo ONLY. Phase 7's "Journal Submission
+>     (HARD)" gate was DEFECTIVE (contradicted the user's standing preference; caused a cover-letter + shortlist to be drafted
+>     this session, retracted in commit a1a7d09). Corrected: Phase 7 now = "Publication Venue"; journal shortlist + cover-letter
+>     protocol REMOVED; replaced with autonomous-only guidance.
+> Cross-reference: NO-JOURNALS-1, system-prompt v3.29, user_preference mem-_1gt5bzs_EY9, commit a1a7d09.
+
+> **v2.115 UPDATE (2026-08-16, user-requested research — dissemination outlets add-on):**
+> User mandate: research Zenodo communities + other open-science outlets for QNFO publication
+> with NO content regulation (no formatting template, no AI-text ban), NO gatekeeping/endorsement
+> (no arXiv), NO cost, fully DeepChat-executable. HARD: 1 (findings baked into Phase 7).
+> (1) [HARD] **DISSEMINATION-OUTLETS-1** — Phase 7 new subsection "Open Outlets & Community
+>     Dissemination": verified landscape (OSF Preprints DISQUALIFIED — bans LLM/AI text + suspended
+>     submissions Aug 2025; Zenodo communities BIMODAL — few large open auto-include communities
+>     vs. many 0-4-record slug-squatted ones; Figshare = secondary leg; viXra = reputation risk),
+>     target community shortlist (advancedtheoreticalphysicsandmathematics 1004 rec,
+>     fbt-framework 366 rec ★ direct UMP/RES match, tp-a-m-c 745 rec — all review=closed
+>     auto-include), scripts `research/scripts/zenodo-communities.py` + `figshare-submit.py`,
+>     evidence report `research/references/dissemination-outlets-2026-08-16.md`.
+> Cross-reference: kaizen v2.53, system-prompt v3.24, session tGKyVRwKJGbLDdKZtEKpa.
+
 > **v2.114 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT/premise-depth publication gate):**
 > Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **SO-WHAT-GATE-1 (Publication)** — every paper abstract and every social post MUST carry: (a) an explicit
@@ -7303,23 +7328,24 @@ Cross-MCP chain: cloudflare-builds → cloudflare-observability → cloudflare-b
 
 ## Phase 7: Dissemination
 
-### Journal Submission (v2.88, HARD — the peer-review leg)
+### Publication Venue (v2.115, CORRECTED — Zenodo canonical, NO traditional journals)
 
-**arXiv is NOT a guaranteed publication leg.** The author may lack arXiv endorsement (standing
-preference: papers target journals directly — durable memory `mem-eoKxBfeViioJ`). Phase 7 MUST
-therefore include direct journal submission as the peer-review path:
+**CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to traditional academic journals — ever.**
+Do NOT suggest or prepare journal submissions (no cover letters, no journal shortlists) unless explicitly
+prompted by the user. Autonomous submission is permitted ONLY to outlets that are fully autonomous and
+100% complete with ZERO manual user intervention — which rules out paid submissions and practically all
+traditional/proprietary/esoteric submission systems. **Canonical publication venue: Zenodo ONLY.**
 
-1. **Preprint discoverability without arXiv:** Zenodo → DataCite → OpenAlex auto-indexing (author
+1. **Preprint discoverability (autonomous stack):** Zenodo → DataCite → OpenAlex auto-indexing (author
    profile exists) + Google Scholar/Semantic Scholar DOI pickup + PhilPapers (keywords below) +
-   papers.qnfo.org. An arXiv listing is NOT required for scholarly-index presence.
-2. **Journal shortlist** (independent-researcher friendly): Frontiers in Physics (Quantum Computing
-   section — ★★★★★: same venue as the cited qudit reviews), EPJ Quantum Technology (★★★),
-   Quantum (diamond OA, ★★★★), QST (IOP), AVS Quantum Science, Entropy. Full strategy:
-   `artifacts/journal-submission-strategy.md` pattern (created QNFO.UMP.005, d72415f).
-3. **Cover letter protocol:** lead with the paper's pre-registered falsification/disconfirmation
-   condition — it is the strongest peer-review asset; state independence + ORCID; explicitly
-   invite adversarial validation; keep `[speculative]` labels (they signal calibration).
-4. **Post-acceptance:** newversion with `related_identifiers: isPublishedIn` (journal DOI).
+   papers.qnfo.org. An arXiv listing is NOT required for scholarly-index presence (arXiv is out of scope —
+   endorsement is a manual step).
+2. **NO journal shortlist.** The prior shortlist (Frontiers in Physics, Quantum, EPJ QTech, Entropy, AVS QS,
+   QST) is RETRACTED — these are traditional journals and are categorically forbidden.
+3. **NO cover letter.** Cover letters are a journal-specific artifact and are forbidden (a cover-letter.md
+   draft was produced and retracted 2026-08-16, commit a1a7d09).
+4. **Autonomous outlets only:** no additional fully-autonomous, free, no-manual-intervention outlet is
+   currently available beyond the Zenodo dissemination stack. Do NOT invent submission paths.
 
 ### Targeted Outreach (v2.88, SOFT — independent-researcher legitimacy)
 
@@ -7913,6 +7939,55 @@ Cloudflare R2 (durable store) + locally-computed CIDv1 + Cloudflare DNS DNSLink.
 
 
 
+
+### Open Outlets & Community Dissemination (v2.115, DISSEMINATION-OUTLETS-1 — 2026-08-16)
+
+User mandate: disseminate QNFO research MORE widely through channels that (1) impose NO content
+regulation — no formatting template and NO ban on AI-generated text, (2) have NO gatekeeping or
+endorsement (explicitly NOT arXiv), (3) are free, and (4) are fully DeepChat-executable (no manual
+intervention). Verified landscape + evidence: `research/references/dissemination-outlets-2026-08-16.md`.
+
+**Verified reality (live API + policy probes, 2026-08-16):**
+- **OSF Preprints — DISQUALIFIED (OSF-PREPRINTS-AI-BAN-1):** moderation policy states content
+  "completely or mostly generated by LLM/AI tools is not appropriate for OSF Preprints"; COS
+  suspended new OSF Preprints submissions Aug 2025. OSF-as-profile (`osf-profile-update.py`) is fine.
+- **Zenodo communities — BIMODAL (ZENODO-COMMUNITY-BIMODAL-1):** a few LARGE open communities with
+  `record_submission_policy=open` + `review_policy=closed` (auto-include on request) are worth
+  joining; MANY are 0-4 records / slug-squatted (ZENODO-COMMUNITY-EMPTY-1: always check record
+  count before submitting — `GET /api/records?q=communities:<slug>`).
+- **Zenodo AI policy nuance (ZENODO-AI-POLICY-NUANCE-1):** Zenodo bans only AI-generated content
+  WITHOUT a verifiable basis in human-conducted research. Human-directed AI-assisted QNFO records
+  qualify — keep the AI-assistance disclosure explicit (already corpus norm).
+- **Figshare — SECONDARY leg:** free tier (20 GB private + unlimited public), API v2 verified live,
+  no endorsement/peer review, light moderation, no explicit AI-text ban. Positioned for
+  data/articles, not preprint-community discovery.
+- **viXra — reputation risk:** true no-gatekeeping archive (46,008 e-prints) but hosts fringe
+  content; using it risks brand association with pseudoscience. Only with explicit user approval.
+
+**Target community shortlist (verified open, review=closed = auto-include):**
+
+| records | slug | note |
+|--:|---|---|
+| 1004 | `advancedtheoreticalphysicsandmathematics` | Univ. Athens org — broad theoretical physics + math |
+| 745 | `tp-a-m-c` | Theoretical/Applied/Mathematical/Computational — "all theories welcome" |
+| 366 | `fbt-framework` | **Geometric Foundations of Quantum Theory and Gravity** — direct UMP/RES match (symplectic geometry, Berry curvature) |
+| 113 | `ml4q` | Matter and Light for Quantum Computing (project-scoped, German ExC) |
+
+**Scripts (fully automated, ZENODO_TOKEN / FIGSHARE_TOKEN from env only):**
+- `research/scripts/zenodo-communities.py` — `discover` (rank open communities by record count),
+  `submit --doi <DOI> --all-open|--community <slug>` (POST /api/records/{id}/communities),
+  `report --doi <DOI>` (verify memberships). Only submits PUBLISHED records to
+  `record_submission_policy=open` communities. On "only allowed to community members"
+  (ZENODO-COMMUNITY-SUBMIT-MEMBERSHIP-1): join first via POST /api/communities/{slug}/members.
+- `research/scripts/figshare-submit.py` — `submit` (create draft → upload file → publish → verify
+  read-back), `create` / `upload` / `publish` / `verify` modes. One-time Figshare personal token.
+
+**Recommended protocol after every Phase 5 publish:** (1) Zenodo primary + own communities
+(QNFO/QWAV/Ultrametric — still the highest-value asset); (2) `zenodo-communities.py submit
+--doi <DOI> --all-open --min-records 5` (auto-include targets above); (3) optional Figshare
+cross-post for data-heavy artifacts; (4) rely on the indexing layer (Zenodo → DataCite →
+OpenAlex/OpenAIRE/BASE/CORE/Google Scholar) for real discoverability — more preprint servers are
+NOT the bottleneck.
 
 ## Phase 8: Core Distribution Stack (MANDATORY)
 
