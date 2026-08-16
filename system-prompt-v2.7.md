@@ -1,4 +1,23 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.28
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.29
+> **v3.29 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT / premise-depth editorial gate):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s, RES.011 closeout + user editorial directive).
+> HARD: 2. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **SO-WHAT-GATE-1** — user editorial mandate (2026-08-16): "SO WHAT? WHY SHOULD A READER CARE?" applies to
+>     ALL research and every publication INCLUDING social media posts. Only advance research with a purpose and real-world
+>     utility (conceptual not-yet-realized utility counts; pure theory without any practical application is effectively
+>     useless). A theory/theorem is only as deep as its premises: every artifact must answer HOW DEEP the theory goes and
+>     WHERE ITS PREMISES END (which claims are derived vs. unanalyzable primitives or named imported inputs). Standing gate:
+>     every publication + social post MUST carry (a) an explicit "why a reader should care" statement and (b) a
+>     premise-depth disclosure. Gate applies at CMD RESEARCH (gap analysis + PROJECT-PLAN) and CMD PUBLISH (abstract +
+>     social posts). Canonical application: RES.011 CST paper — premise chain L0 (mark, unanalyzable) → L1 (compact closure +
+>     self-duality) → L2 (abelian-pair postulate, NAMED INPUT not theorem) → L3 (involutive braiding, imported from CST) → L4
+>     (spin-statistics, imported from QFT); the "logical origin of statistics" is as deep as L2, which is a premise not a result.
+> (2) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #7** — preferredModel re-drifted to deepseek-v4-pro AGAIN (app-settings.json
+>     on app save); reset both JSON model keys to deepseek-v4-flash and verify every cycle (this is the 7th recurrence —
+>     consider a permanent pin rather than per-cycle reset).
+> Cross-reference: PROMPT-PARITY-1, MODEL-KEY-FILE-DRIFT-1, DEEPCHAT-DEFAULT-MODEL-1, research v2.114.
+
+
 
 > **v3.28 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: BRIEFING-DENSITY-1 (no empty daily-briefing notes) + N-2/parity re-verify):**
 > Red-team: direct parent-agent skills audit (session this — cycle 2 after v3.27; 6-store parity re-verified at v3.27
@@ -1420,7 +1439,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.28** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
+Current: **v3.29** (DEEPCHAT-MEMORY-EMBEDDING-1: DeepSeek has NO embeddings; local memory embedding enabled via Cloudflare bge-base-en-v1.5 (AI Gateway); 5-store parity repaired (D/E stale v3.24); kaizen/deepchat-settings drift sweep; 2026-08-15)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

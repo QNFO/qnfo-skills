@@ -1,3 +1,26 @@
+> **v2.114 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT/premise-depth publication gate):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **SO-WHAT-GATE-1 (Publication)** — every paper abstract and every social post MUST carry: (a) an explicit
+>     "why a reader should care" statement, and (b) a premise-depth disclosure (which claims are derived vs. unanalyzable
+>     primitives or named imported inputs; how deep the theory goes and where its premises END). Added to the Pre-Publication
+>     Requirements alongside PANDOC-SAFE and BP-1/BP-2. Gap analysis (Phase 1) must state the premise-chain depth so novelty
+>     claims are bounded by the depth of their assumptions (canonical: RES.011 — the abelian-pair postulate is a NAMED INPUT,
+>     so "statistics from logic" is as deep as that premise, nothing more). Mirror of system-prompt v3.29 SO-WHAT-GATE-1.
+> Cross-reference: SO-WHAT-GATE-1, system-prompt v3.29, kaizen v2.55.
+
+> **v2.113 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: BRIEFING-DENSITY-1 (no empty daily-briefing notes) + system-prompt v3.28):**
+> Red-team: direct parent-agent skills audit (session this — cycle 2; user mandate: only highly relevant research,
+> no empty briefing notes, no administrivia).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **BRIEFING-DENSITY-1** — daily briefing (research-daily-brief.py + wrapper) MUST show ONLY highly
+>     relevant research (precision over recall, no clutter); if the run reports 0 unique papers matched, DO NOT
+>     create/write an empty Obsidian daily-briefing note (skip the write-to-obsidian.py pipe; the email archive to
+>     alerts@qnfo.org still runs). research-daily-brief.py itself does NOT write Obsidian notes — the guard lives
+>     in the wrapper step (cronjob fdf1403c taskPrompt updated; manual runs: skip write-to-obsidian when
+>     "Total: 0 unique papers").
+> Cross-reference: system-prompt v3.28, kaizen v2.53, cronjob fdf1403c, session this.
+
+
 > **v2.112 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: Zenodo newversion file-delete + D1 write discipline + S2 gap + email async-verification):**
 > Red-team: direct parent-agent skills audit (session PzctHHW4qJopkaNoCTABv — QNFO.RES.009 publish→audit→remediate→outreach cycle).
 > HARD: 2. SOFT: 2. DESIGN: 0. Changes:
@@ -143,7 +166,7 @@ name: research
 
 
 
-version: "2.112"
+version: "2.113"
 description: >
 
 

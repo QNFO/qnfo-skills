@@ -1,3 +1,16 @@
+> **v2.55 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: SO-WHAT/premise-depth gate + MODEL-KEY-FILE-DRIFT-1 #7):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s). HARD: 2. SOFT: 0. DESIGN: 0.
+> (1) [HARD] **SO-WHAT-GATE-1** — user editorial mandate (2026-08-16): every research artifact + publication (incl. social posts)
+>     MUST carry "why a reader should care" + premise-depth disclosure (derived vs. unanalyzable primitives/named imported inputs;
+>     how deep the theory goes, where premises end). Pure theory without any practical application (even conceptual) = useless.
+>     Mirrors system-prompt v3.29 SO-WHAT-GATE-1 + research v2.114. Canonical depth-map example: RES.011 CST premise chain
+>     L0 mark (unanalyzable) -> L1 compact closure -> L2 abelian-pair postulate (NAMED INPUT not theorem) -> L3 involutive
+>     braiding (imported) -> L4 spin-statistics (imported from QFT).
+> (2) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #7** — preferredModel re-drifted to deepseek-v4-pro again on app save; reset
+>     both JSON model keys to deepseek-v4-flash. This is the 7th recurrence — RECOMMEND a permanent pin (app-side) rather than
+>     per-cycle reset; document the pin mechanism in deepchat-settings next cycle.
+> Cross-reference: SO-WHAT-GATE-1, PROMPT-PARITY-1, MODEL-KEY-FILE-DRIFT-1, system-prompt v3.29, research v2.114.
+
 > **v2.54 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 repo-store drift + roaming-DB schema + template drift):**
 > Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s, RES.011 closeout cycle). HARD: 3. SOFT: 1. DESIGN: 0.
 > (1) [HARD] **PROMPT-PARITY-REPO-STORE-1** — the qnfo-skills repo copy of `system-prompt-v2.7.md` was ~14 KB STALE (v3.26, 96,162 B vs canonical v3.28 101,648 B, sha 77eb7b6a) — the exact v1.13-missed-store class. Every CMD SKILLS UPDATE MUST hash the repo copy against canonical_md and `git pull --rebase` + push before declaring parity. Concurrent-session pushes of older versions cause rebase conflicts: resolve toward the version matching ALL 4 live runtime stores (roaming agent.db = authoritative live store per DEEPCHAT-MEMORY-EMBEDDING-1).
