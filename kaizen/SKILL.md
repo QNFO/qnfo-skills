@@ -1,3 +1,26 @@
+> **v2.58 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: dissemination add-on live-verified + Figshare API facts + N-2/model-key repairs; mirrors system-prompt v3.32):**
+> Red-team: direct parent-agent audit (session tGKyVRwKJGbLDdKZtEKpa — dissemination add-on live tests on QUNTUF 10.5281/zenodo.21208346).
+> HARD: 8. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-COMMUNITY-INCLUSION-REQUEST-1** — Zenodo `review_policy=closed` does NOT auto-include third-party
+>     submissions; `POST /api/records/{id}/communities` creates a community-inclusion REQUEST (status=submitted) awaiting
+>     curators; only OWN communities auto-accept; track via `GET /api/requests?q=topic.record:<id>`; NEVER claim "included"
+>     for a submitted record (canonical: QUNTUF 21208346, 3 REQUESTs verified live).
+> (2) [HARD] **ZENODO-RECORDS-STATUS-PUBLISHED-1** — records API returns `status=published` (InvenioRDM), NOT deposit-API
+>     `state=done`; gates must accept BOTH (canonical: zenodo-communities.py submit gate bug 2026-08-16).
+> (3) [HARD] **FIGSHARE-LICENSE-INT-1** — Figshare v2 `license` must be an INTEGER ID (only 7 offered; CC BY-NC-SA NOT
+>     available — use 1=CC BY 4.0); `coerce_license()` in figshare-submit.py.
+> (4) [HARD] **FIGSHARE-DEFINED-TYPE-1** — `defined_type='paper'` INVALID on Figshare v2 (422); valid list incl. thesis/
+>     preprint/journal contribution; default 'thesis'.
+> (5) [HARD] **FIGSHARE-CHUNKED-UPLOAD-1** — Figshare v2 upload is CHUNKED (initiate → GET upload_url → parts[] →
+>     PUT {url}/{partNo} per byte range → complete=202 → poll computed_md5); bare PUT to upload_url = 404.
+> (6) [HARD] **FIGSHARE-CATEGORIES-PUBLISH-1** — publish requires ≥1 category; hierarchical with is_selectable leaves only
+>     (parent → 400); pass leaf IDs via --categories.
+> (7) [HARD] **FIGSHARE-PUBLIC-DELETE-1** — Figshare 400 "Cannot delete a public article"; public articles PERMANENT via
+>     API; live-test with --no-publish first (canonical: duplicate 33264552 remains public).
+> (8) [HARD] **N-2 frontmatter drift repaired** — research/SKILL.md frontmatter 2.113→2.115; **MODEL-KEY-FILE-DRIFT-1 #6**
+>     — Roaming app-settings.json preferredModel re-drifted to v4-pro, reset to flash.
+> Cross-reference: system-prompt v3.32, research v2.115, cloudflare v3.51, session tGKyVRwKJGbLDdKZtEKpa.
+
 > **v2.57 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: email-body proactive reconciliation + email-composer stale-restore clobber + footer fix; absorbs concurrent v2.56 NO-JOURNALS-1):**
 > Red-team: direct parent-agent audit (session KrfyAByt9iDC-YAS8H5dM — verification of concurrent v3.29/v3.30 cycles + remediation).
 > HARD: 2. SOFT: 2. DESIGN: 0. Changes:
@@ -685,7 +708,7 @@ name: kaizen
 
 
 
-version: 2.57
+version: 2.58
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -12955,6 +12978,13 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 ## Anti-Patterns
+| **ZENODO-COMMUNITY-INCLUSION-REQUEST-1: Zenodo `review_policy=closed` = auto-include (2026-08-16)** | **HARD** (mirror; owner research v2.115). Live-verified FALSE for third-party submitters: `POST /api/records/{id}/communities` creates a community-inclusion REQUEST (status=submitted) awaiting curators; only OWN communities auto-accept (owner). Track pending via `GET /api/requests?q=topic.record:<id>`; NEVER report "included" — report "REQUEST submitted". Canonical: QUNTUF 21208346 → fbt-framework/advancedtheoreticalphysicsandmathematics/tp-a-m-c. |
+| **ZENODO-RECORDS-STATUS-PUBLISHED-1: records API status = 'done' (2026-08-16)** | **HARD** (mirror; owner research v2.115). The InvenioRDM records API returns `status=published`, NOT the deposit-API `state=done`; a gate checking `status != "done"` rejects EVERY published record. Accept `("done", "published")`. Canonical: zenodo-communities.py submit gate blocked flagship until fixed. |
+| **FIGSHARE-LICENSE-INT-1: Figshare v2 license = string (2026-08-16)** | **HARD** (mirror; owner research v2.115). Figshare v2 requires `license` as an INTEGER ID; only 7 offered (1=CC BY 4.0 … 7=Apache 2.0); **CC BY-NC-SA NOT available** — use 1=CC BY 4.0. Canonical: QUNTUF cross-post. |
+| **FIGSHARE-DEFINED-TYPE-1: Figshare defined_type='paper' valid (2026-08-16)** | **HARD** (mirror; owner research v2.115). `paper` is NOT in Figshare v2 defined_type (422); valid: figure/media/dataset/poster/"journal contribution"/presentation/thesis/software/"online resource"/preprint/book/"conference contribution". Default 'thesis'. |
+| **FIGSHARE-CHUNKED-UPLOAD-1: Figshare upload = single PUT (2026-08-16)** | **HARD** (mirror; owner research v2.115). Figshare v2 file upload is CHUNKED: initiate → GET file resource (upload_url) → GET upload_url → parts[] → PUT {upload_url}/{partNo} per byte range → complete (202 async) → poll computed_md5. Bare PUT to upload_url = 404 "Cannot PUT". |
+| **FIGSHARE-CATEGORIES-PUBLISH-1: publish needs no categories (2026-08-16)** | **HARD** (mirror; owner research v2.115). Figshare publish REQUIRES ≥1 category; categories are hierarchical with `is_selectable` leaves only (parent → 400 "Not allowed to set category"). Pass leaf IDs via --categories (e.g. 30229/29785/29827/30022). |
+| **FIGSHARE-PUBLIC-DELETE-1: public Figshare articles deletable (2026-08-16)** | **HARD** (mirror; owner research v2.115). Figshare returns 400 "Cannot delete a public article" — public articles are PERMANENT via API. Live-test with --no-publish; a public duplicate cannot be removed (canonical: 33264552 remains beside 33264561). |
 **NOTE:** This is a cross-skill index. Canonical definitions live in the owning skill's anti-pattern table. Entries here are mirrors for Watchtower scanning — the owning skill is authoritative. Current owning skills: research (Zenodo/PDF/citations/Bayesian gates), windows-command-patterns (exec quoting/admin elevation), git-github (commit/CI patterns), cloudflare (D1/backfill), bloat-cleanup (system/cleanup).
 | **AI-BINDING-SYNTAX-1: Using `[[ai]]` (array) for the Workers AI binding in wrangler.toml — the v3.16 guidance was INVERTED (2026-08-11)** | **HARD** (mirror; owner cloudflare v3.47). On wrangler 4.118.0 the `ai` field must be a SINGLE-TABLE OBJECT: `[ai]` with `binding = "AI"`. The `[[ai]]` array form FAILS config validation with `The field "ai" should be an object but got [{"binding":"AI"}]` — the error literally says the field must be an OBJECT. The pre-4.118 guidance (2026-08-02) claimed the reverse. Canonical case: qnfo-ai v4.3.x (2026-08-11) — `[[ai]]` deploy failed, `[ai]` deploy succeeded, env.AI materialized, tier-0 free models returned real content. Cross-ref: cloudflare v3.43, KIF-50 (binding loss class). |
 | **PROVIDER-KEY-SYNC-1: Custom provider api_key in agent.db goes stale when the upstream Worker secret rotates (2026-08-11)** | **HARD** (mirror; owner deepchat-settings v1.10). After ANY rotation of a Worker secret backing a custom provider (e.g. qnfo-ai `ROUTER_AUTH_KEY`), update `providers.api_key` + `provider_json.apiKey` in agent.db the SAME session + clean stale key from agent_memory; otherwise every chat request 401s silently. Canonical case: 2026-08-11 Cloudflare AI Router (id -_X6Z7YffrNPktrj3Vhjo) — pre-rotation key `w18b7smc...` persisted after ROUTER_AUTH_KEY rotation; fixed + verified 6/6 E2E; backups .bak-20260811_180232. Cross-ref: deepchat-settings §Provider Registration, TOKEN-VERIFY-SCOPE-1. |

@@ -1,4 +1,44 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.31
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.32
+
+> **v3.32 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: dissemination add-on live-verified + Figshare API facts + N-2/model-key repairs):**
+> Red-team: direct parent-agent audit (session tGKyVRwKJGbLDdKZtEKpa — dissemination add-on live tests on
+> QUNTUF 10.5281/zenodo.21208346; kaizen v2.58 mirrors).
+> HARD: 8. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **ZENODO-COMMUNITY-INCLUSION-REQUEST-1** — Zenodo `review_policy=closed` does NOT auto-include
+>     third-party submissions. `POST /api/records/{id}/communities` creates a community-inclusion REQUEST
+>     (status=submitted) that awaits each community's curators; only the user's OWN communities auto-accept
+>     (owner). The memberships list (`GET /records/{id}/communities`) shows only accepted communities; track
+>     pending via `GET /api/requests?q=topic.record:<id>`. NEVER claim "included" for a submitted record —
+>     report "REQUEST submitted" (canonical: QUNTUF 21208346 → fbt-framework/advancedtheoreticalphysicsandmathematics/
+>     tp-a-m-c, 3 REQUESTs verified live; `zenodo-communities.py report` surfaces REQUEST lines).
+> (2) [HARD] **ZENODO-RECORDS-STATUS-PUBLISHED-1** — the records API (InvenioRDM) returns `status=published`,
+>     NOT the deposit-API `state=done`. Any status gate must accept BOTH (`("done", "published")`); a gate
+>     checking `status != "done"` blocks EVERY published record (canonical: zenodo-communities.py submit gate
+>     rejected the flagship until fixed 2026-08-16).
+> (3) [HARD] **FIGSHARE-LICENSE-INT-1** — Figshare API v2 requires `license` as an INTEGER ID, not a string.
+>     Only 7 license IDs are offered (1=CC BY 4.0, 2=CC0, 3=MIT, 4=GPL, 5=GPL 2.0+, 6=GPL 3.0+, 7=Apache 2.0);
+>     **CC BY-NC-SA is NOT available on Figshare v2** — use 1=CC BY 4.0 (closest compatible public license).
+>     `coerce_license()` in figshare-submit.py maps names→IDs.
+> (4) [HARD] **FIGSHARE-DEFINED-TYPE-1** — Figshare v2 `defined_type='paper'` is INVALID (422). Valid options:
+>     figure, media, dataset, poster, "journal contribution", presentation, thesis, software, "online resource",
+>     preprint, book, "conference contribution". Default 'thesis' for QNFO cross-posts.
+> (5) [HARD] **FIGSHARE-CHUNKED-UPLOAD-1** — Figshare v2 file upload is CHUNKED, not a single PUT: initiate
+>     (POST /account/articles/{id}/files) → GET file resource (upload_url) → GET upload_url → parts[] →
+>     PUT {upload_url}/{partNo} with each part's byte range → complete (POST files/{fid} {"status":"completed"},
+>     returns 202 async) → poll computed_md5 == supplied_md5. A bare PUT to upload_url returns 404 "Cannot PUT".
+> (6) [HARD] **FIGSHARE-CATEGORIES-PUBLISH-1** — publish requires at least one category; categories are
+>     hierarchical with `is_selectable` on leaves only (parent categories → 400 "Not allowed to set category");
+>     pass leaf IDs via `--categories` (e.g. 30229=Foundations of QM, 29785=Algebraic structures in math phys,
+>     29827=Algebra & number theory, 30022=Philosophy of science). Selectable leaves verified via
+>     GET /categories?page_size=1000 (is_selectable:true).
+> (7) [HARD] **FIGSHARE-PUBLIC-DELETE-1** — Figshare returns 400 "Cannot delete a public article": public
+>     articles are PERMANENT via API. Live-test with `--no-publish` first; a public duplicate cannot be removed
+>     (canonical: QUNTUF cross-post test duplicate 33264552 remains public beside canonical 33264561).
+> (8) [HARD] **N-2 frontmatter drift repaired** — research/SKILL.md frontmatter `2.113` → `2.115` (matched the
+>     v2.115 banner; kaizen cycle N-2 rule).
+> (9) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #6** — Roaming app-settings.json `preferredModel` re-drifted
+>     to deepseek-v4-pro; reset to deepseek-v4-flash per DEEPCHAT-DEFAULT-MODEL-1 (both JSON model keys flash).
+> Cross-reference: kaizen v2.58, research v2.115, cloudflare v3.51, session tGKyVRwKJGbLDdKZtEKpa.
 
 > **v3.31 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: email-body proactive reconciliation + email-composer stale-restore clobber + footer fix; absorbs concurrent v3.30 NO-JOURNALS-1):**
 > Red-team: direct parent-agent audit (session KrfyAByt9iDC-YAS8H5dM — verification + remediation of concurrent v3.29/v3.30 cycles).
@@ -1486,7 +1526,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.31** (SO-WHAT-GATE-1 + NO-JOURNALS-1 + EMAIL-BODY-DETECTION-ONLY-STALE-1 + EMAIL-COMPOSER-REVERT-1 + FOOTER-PARENTHETICAL-DRIFT-1; 6-store parity byte-identical; 2026-08-16)
+Current: **v3.32** (ZENODO-COMMUNITY-INCLUSION-REQUEST-1 + ZENODO-RECORDS-STATUS-PUBLISHED-1 + FIGSHARE-LICENSE-INT-1 + FIGSHARE-DEFINED-TYPE-1 + FIGSHARE-CHUNKED-UPLOAD-1 + FIGSHARE-CATEGORIES-PUBLISH-1 + FIGSHARE-PUBLIC-DELETE-1 + N-2 frontmatter repair + MODEL-KEY-FILE-DRIFT-1 #6; 6-store parity byte-identical; 2026-08-16)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
