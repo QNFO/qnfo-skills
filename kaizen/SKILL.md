@@ -1,3 +1,44 @@
+> **v2.54 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 repo-store drift + roaming-DB schema + template drift):**
+> Red-team: direct parent-agent audit (session QVfcGcaza2VKvkXttwx3s, RES.011 closeout cycle). HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **PROMPT-PARITY-REPO-STORE-1** — the qnfo-skills repo copy of `system-prompt-v2.7.md` was ~14 KB STALE (v3.26, 96,162 B vs canonical v3.28 101,648 B, sha 77eb7b6a) — the exact v1.13-missed-store class. Every CMD SKILLS UPDATE MUST hash the repo copy against canonical_md and `git pull --rebase` + push before declaring parity. Concurrent-session pushes of older versions cause rebase conflicts: resolve toward the version matching ALL 4 live runtime stores (roaming agent.db = authoritative live store per DEEPCHAT-MEMORY-EMBEDDING-1).
+> (2) [HARD] **ROAMING-DB-APP-SETTINGS-SCHEMA-1** — `AppData\Roaming\DeepChat\app_db\agent.db` `app_settings` table uses `value_json` (NOT `value`) and stores `systemPrompts` as a JSON LIST `[{"id":"default","name":"DeepChat","content":"..."}]` (106,079 B wrapper / 101,648 B content) and `customPrompts` as a list of `{name,parameters,content}` — parity audits MUST parse this shape; legacy `.deepchat/agent.db` uses `value` + raw string / dict-of-name->content. An audit that reads the wrong column/key reports false MISSING (probe value_json, extract [0]["content"]).
+> (3) [HARD] **CMD-TEMPLATE-STORE-DRIFT-1** — legacy agent.db `customPrompts["CMD SKILLS UPDATE"]` was stale (5,897 B vs 9,524 B canonical in app-settings.json `template` key). Templates live under DIFFERENT keys per store: app-settings.json list items use `template`, legacy DB dict uses name->content. 9/9 template parity must be re-verified EVERY cycle (8/9 can pass while 1 drifts).
+> (4) [SOFT] **KAIZEN-PHANTOM-CLAIM-1 (self-incident)** — this cycle's FIRST audit pass marked steps completed while the exec sessions never ran (output files ENOENT). Every kaizen step requires same-turn file read-back evidence; a completion claim without an existing output file is a phantom claim and MUST be corrected by resetting the plan and re-executing.
+> (5) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #6** — `preferredModel` re-drifted to `deepseek-v4-pro` in Roaming app-settings.json; reset both JSON model keys to `deepseek-v4-flash` and verify every cycle.
+> Cross-reference: PROMPT-PARITY-1, DEEPCHAT-MEMORY-EMBEDDING-1, MODEL-KEY-FILE-DRIFT-1, v1.13 missing-store incident, system-prompt v3.28.
+
+> **v2.53 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: BRIEFING-DENSITY-1 (no empty daily-briefing notes) + system-prompt v3.28 + research v2.113):**
+> Red-team: direct parent-agent skills audit (session this — cycle 2; user mandate: only highly relevant research,
+> no empty briefing notes, no administrivia).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **BRIEFING-DENSITY-1 mirror row (owner: system-prompt v3.28)** — daily briefing shows ONLY highly
+>     relevant research (precision over recall); if 0 unique papers matched, DO NOT write an empty Obsidian
+>     daily-briefing note (skip write-to-obsidian pipe; email archive still runs). Wrapper-level guard: cronjob
+>     fdf1403c + manual runs skip the note when total==0. research-daily-brief.py itself never wrote notes.
+> Cross-reference: system-prompt v3.28, research v2.113, cronjob fdf1403c, session this.
+
+
+> **v2.52 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: EMAIL-COMPOSER-PROACTIVE-1 + REDTEAM-SUBAGENT-GATE-STALL-1 + system-prompt v3.27):**
+> Red-team: direct parent-agent skills audit (session this — proactive outreach round, 4-parallel-reviewer red-team, remediation, skills cycle).
+> HARD: 2. SOFT: 4. DESIGN: 0. Changes:
+> (1) [HARD] **EMAIL-COMPOSER-PROACTIVE-1 mirror row (owner: email-composer v2.20)** — user mandate 2026-08-15
+>     reinstates proactive autonomous outreach (reverses 08-13 detection-only): frontmatter autonomous:true,
+>     cronjob 3851f539 reconciled, master list contact-ledger.md (34 entries, probe artifacts excluded),
+>     1 email per researcher/email, good-vibes-only reply filtering. Red-team of first proactive round: 0 HARD / 4 SOFT, remediated.
+> (2) [HARD] **REDTEAM-SUBAGENT-GATE-STALL-1 mirror row (owner: system-prompt v3.27)** — subagent children STALL on
+>     write-classified tool calls (update_plan, exec) because a reviewed_contract approval never resolves in this
+>     environment (observed 2026-08-15 across 4 parallel reviewers). Red-team subagents MUST use read-classified
+>     tools only + direct parent-agent audit fallback (~5 min wait max). Extends REDTEAM-QUEUE-STALL-PATIENCE-1.
+> (3) [SOFT] **D1-RECIPIENT-ATTRIBUTION-1** — /emails/recent projects to:null (projection quirk); canonical
+>     attribution = /emails/body?id= recipient column or direct D1 query (qnfo-audit.emails).
+> (4) [SOFT] **MASTER-LIST-PROBE-1** — *.invalid/*.example probe artifacts excluded from dedup master list.
+> (5) [SOFT] **WBS-OUTREACH-GAP-1** — WBS taxonomy has no outreach/comms program; ad-hoc EML code used; consider registering.
+> (6) [SOFT] **PROMPT-PARITY-1** — v3.27 dual-written to 6 stores byte-identical (A-F incl. legacy agent.db refresh);
+>     canonical 5 = A/B/C/D/E (legacy .deepchat/agent.db superseded but refreshed to avoid stale-read).
+> Cross-reference: email-composer v2.20, system-prompt v3.27, cloudflare v3.51, deepchat-settings v1.18,
+> windows-command-patterns v3.23, session this.
+
+
 > **v2.51 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 mirror + 5-store parity repair + kaizen frontmatter drift):**
 > Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
 > HARD: 3. SOFT: 0. DESIGN: 0. Changes:
@@ -598,7 +639,7 @@ name: kaizen
 
 
 
-version: "2.51"
+version: "2.53"
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
