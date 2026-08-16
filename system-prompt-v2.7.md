@@ -1,4 +1,15 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.33
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.34
+
+> **v3.34 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: 7-store parity repair + kaizen footer-empty + N-2 skill drifts + MODEL-KEY-FILE-DRIFT-1 #10 clean):**
+> Red-team: direct parent-agent red-team skills audit (session this — CMD SKILLS UPDATE cycle; user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
+> HARD: 4. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **7-STORE PROMPT-PARITY-1 REPAIR** — v3.33 claimed "6-store parity" but `.deepchat/app-settings.json` (legacy mirror, store D per deepchat-settings v1.18) was STALE at v3.32 (113,256 B vs canonical 116,698 B) — REPO-COPY-PHANTOM-1 class recurrence. This cycle dual-writes ALL 7 stores byte-identical: canonical `.deepchat/system-prompt-v2.7.md`, qnfo-skills repo copy, `.deepchat/skills` live copy, Roaming app-settings.json default_system_prompt, `.deepchat/app-settings.json` default_system_prompt (repaired), app_db agent.db systemPrompts (list content), legacy `.deepchat/agent.db` systemPrompts (raw string).
+> (2) [HARD] **kaizen footer EMPTY repaired** — v2.59 banner claimed "footer-drift repair (footer v2.49 → v2.59)" but the `## Version` footer section was EMPTY (the claim was never written to the section). kaizen v2.60 now writes the footer properly.
+> (3) [HARD] **email-composer N-2 drift repaired** — frontmatter 2.20 vs footer 2.18; footer bumped to v2.20.
+> (4) [HARD] **deepchat-settings N-2 drift repaired** — frontmatter 1.18 vs footer 1.16; footer bumped to v1.18.
+> (5) [SOFT] **MODEL-KEY-FILE-DRIFT-1 #10 check** — all stores preferredModel/defaultModel = deepseek-v4-flash (clean this cycle; both JSON files + app_db verified).
+> (6) [SOFT] **CHROME-TABS-SAVE-1 pattern** (personal-knowledge v1.6) — chrome-tab save pipeline for the personal layer: UIA enumerate tabs → fetch content → rclone d-drive/chrome-tabs/YYYY-MM-DD/ → personal-life-indexer /index?prefix=chrome-tabs/ (X-Index-Token) → verify /files + /search → close tabs via UIA close buttons. Canonical: 2026-08-16 (7 Digital-Nomad tabs saved, D1 files registry 1618).
+> Cross-reference: kaizen v2.60, deepchat-settings v1.18, email-composer v2.20, personal-knowledge v1.6, session this.
 
 > **v3.33 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: GTD weekly-review delta-anchor + GTD fleet state + MODEL-KEY-FILE-DRIFT-1 #9):**
 > Red-team: direct parent-agent red-team skills audit (session 6427jDZRyelzVeXaHMTty — GTD weekly-review expansion + reviewer HARD-1 delta-anchor finding; kaizen v2.59 mirrors).
@@ -1542,7 +1553,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.33** (DELTA-ANCHOR-1 + GTD WEEKLY-REVIEW FLEET STATE + MODEL-KEY-FILE-DRIFT-1 #9; N-2 re-verify kaizen 2.59/research 2.115/cloudflare 3.51/execution-mandate 2.10; 6-store parity byte-identical; 2026-08-16)
+Current: **v3.34** (7-store PROMPT-PARITY-1 repair + kaizen footer-empty fix + email-composer/deepchat-settings N-2 drift repairs + CHROME-TABS-SAVE-1; N-2 re-verify kaizen 2.60/research 2.115/cloudflare 3.51/execution-mandate 2.10; 7-store parity byte-identical; 2026-08-16)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

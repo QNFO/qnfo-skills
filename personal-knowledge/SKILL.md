@@ -1,7 +1,20 @@
+> **v1.6 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: CHROME-TABS-SAVE-1 pipeline + 7-store parity note; mirrors system-prompt v3.34):**
+> Red-team: direct parent-agent red-team skills audit (session this — user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **CHROME-TABS-SAVE-1 section added** — canonical pipeline for saving open Chrome tabs into the
+>     personal layer: UIA tab enumeration (uiautomation pkg; chrome window may be minimized; exclude the
+>     DeepChat window which is also Chrome_WidgetWin_1) -> per-tab URL read (omnibox after Select; duplicate
+>     URLs are separate tabs) -> fetch page content (browser-like UA, HTML->text) -> write md files with
+>     frontmatter (title/url/tab_label/saved_at/source/tab_group) -> rclone to d-drive/chrome-tabs/YYYY-MM-DD/
+>     -> personal-life-indexer /index?prefix=chrome-tabs/ (X-Index-Token) -> verify /files + /search ->
+>     close tabs via UIA close-button Invoke (last-tab close exits Chrome entirely). Canonical: 2026-08-16
+>     (7 Digital-Nomad tabs, 7 md ~72 KB, indexer 7/7, D1 files registry 1618, Chrome 0 procs after close).
+> Cross-reference: system-prompt v3.34, kaizen v2.60, session this.
+
 ---
 name: personal-knowledge
 description: Query the PERSONAL semantic layer (personal-life Vectorize/D1/Workers) from DeepChat. Use when the user asks about their own files, documents, life admin, Obsidian vault, personal archives, or anything NOT QNFO/QWAV research. Bridges personal-search endpoint + durable memories + conversation history + Obsidian vault. STRICTLY personal domain — never mixes with qnfo-* (user mandate 2026-08-04).
-version: 1.5
+version: 1.6
 kif_tags: [PERSONAL]
 ---
 
@@ -114,6 +127,45 @@ wrangler.toml. WORKER-THIN-CLIENT-1: commit + push BEFORE wrangler deploy.
 spend limit** (rule 6f5c29f8) binds — closes the last gap after the 08-02→08-10 bge-base-en-v1.5 runaway
 (~$40, qnfo-paper-indexer v1). Budget policy: total < $100/mo TARGET, $200 HARD CAP. The 08-12 session's
 `/search?q=test` produced the FIRST bge-base-en-v1.5 entry ever in the gateway logs — proof the routing works.
+
+
+
+## Saving Open Chrome Tabs (CHROME-TABS-SAVE-1 — 2026-08-16)
+
+When the user asks to save open Chrome tabs into the personal layer ("save all open tabs", "digital nomad
+reference"), execute this canonical pipeline (verified 2026-08-16, 7 Digital-Nomad tabs):
+
+1. **Enumerate tabs (UIA, not CDP):** Chrome is usually NOT launched with --remote-debugging-port, so CDP
+   `/json` is unavailable. Use `pip install uiautomation` + walk the Chrome window's TabItemControls.
+   The Chrome window may be MINIMIZED (BoundingRectangle 0x0) but UIA still enumerates. EXCLUDE the
+   DeepChat window — it is also class `Chrome_WidgetWin_1` (filter `'DeepChat' not in w.Name`).
+   Chrome's live Sessions files (Tabs_*/Session_*) are LOCKED while Chrome runs — do NOT rely on older
+   snapshots (they include already-closed tabs from earlier sessions).
+2. **Per-tab URL:** activate each tab (SelectionItemPattern.Select), wait ~0.8 s, read the omnibox
+   (`ClassName == 'OmniboxViewViews'`, GetValuePattern().Value). Duplicate URLs in separate tabs are
+   expected — save each, mark `-dup` in the slug/tab_label.
+3. **Fetch content:** Python urllib with a browser-like UA (Mozilla/5.0 ... Chrome/151.0.0.0). HTMLParser
+   text extraction (skip script/style/nav/footer/header; block-tag newlines). Retry transient DNS errors
+   (getaddrinfo failed) 2-3x with 3 s sleep. Google Search result pages return ~98 chars (JS-rendered) —
+   preserve the query URL + list the answer tabs as context.
+4. **Write md files:** per tab `<NN>-<slug>.md` with YAML frontmatter: title, url, tab_label, saved_at
+   (ISO-8601 UTC), source: chrome-tab-<group>, tab_group. Body = `# <title>` + `Source: <url>` + text.
+5. **Upload:** `rclone copy <tempdir> primary-r2:d-drive/chrome-tabs/YYYY-MM-DD/` then `rclone lsl` verify.
+6. **Index:** `GET https://personal-life-indexer.q08.workers.dev/index?prefix=chrome-tabs/YYYY-MM-DD/`
+   with `X-Index-Token: plx-idx-v1-k7n9q2t5m3p8` (browser-like UA). Expect `{"scanned":N,"indexed":N,"errors":0}`.
+7. **Verify:** `/files?prefix=chrome-tabs/...` (D1 registry rows) + `/search?q=<topic>` on
+   personal-life-search (Vectorize hits; response uses `files[].path` — NOT `results`/`hits` keys).
+8. **Close tabs:** re-walk TabItemControls, find each tab's child ButtonControl named 'Close tab',
+   `GetInvokePattern().Invoke()` (sleep ~0.6 s between). Closing the LAST tab exits Chrome entirely
+   (verify `tasklist /FI "IMAGENAME eq chrome.exe"` -> 0 processes).
+
+Anti-patterns:
+- **CHROME-TABS-STALE-SNSS-1:** don't use old Tabs_* session snapshots for the current tab list (live
+  files are Chrome-locked; old snapshots include tabs already closed).
+- **CHROME-WINDOW-MINIMIZED-1:** a minimized (0x0 rect) Chrome window is still fully UIA-addressable —
+  do not force-restore it.
+- **CHROME-TABS-DUP-1:** duplicate URL tabs are real tabs — save both (slug `-dup`) so the reference set
+  mirrors what was open.
 
 ## Query Endpoints
 
@@ -284,4 +336,4 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 
 ## Version
 
-Current: **v1.5** (personal-knowledge — personal workers source home rwnq8/personal-life + cost hardening: gateway routing, $90/30d spend limit, X-Index-Token auth; 2026-08-12) (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)
+Current: **v1.6** (personal-knowledge — CHROME-TABS-SAVE-1 pipeline + 7-store parity note; 2026-08-16) (personal-knowledge — (personal-knowledge — personal workers source home rwnq8/personal-life + cost hardening: gateway routing, $90/30d spend limit, X-Index-Token auth; 2026-08-12) (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)

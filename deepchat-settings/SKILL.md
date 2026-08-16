@@ -553,4 +553,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.16** (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.18** (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

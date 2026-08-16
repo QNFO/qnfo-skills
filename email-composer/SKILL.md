@@ -1579,5 +1579,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.18** (email-composer — DETECTION-ONLY since 2026-08-13; red-team remediation 2026-08-14)
+Current: **v2.20** (email-composer — PROACTIVE OUTREACH REINSTATED (EMAIL-COMPOSER-PROACTIVE-1, v3.27 reversal of the 08-13 detection-only mandate); red-team remediation 2026-08-15; N-2 footer repair 2026-08-16)
 
