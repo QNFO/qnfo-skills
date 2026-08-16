@@ -1,7 +1,7 @@
 # QNFO Outreach Master Contact Ledger
 
 Canonical dedup list for ALL scheduled tasks / LLM processes. Check BEFORE any send.
-Last updated: 2026-08-15 (SOFT-4 remediation: probe artifacts excluded)
+Last updated: 2026-08-16 (daily briefing outreach batch)
 
 | Email | Name | First contact | Source / paper | Note |
 |---|---|---|---|---|
@@ -23,8 +23,10 @@ Last updated: 2026-08-15 (SOFT-4 remediation: probe artifacts excluded)
 | kais@purdue.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | kelvin.onggadinata@ntu.edu.sg | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | kerjean@lipn.fr | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
+| kjliu@suda.edu.cn | Kejun Liu | 2026-08-16 | 2607.11867 paraparticles Hardy-space | NEW 2026-08-16 |
 | klaus.lange@hpe.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | kohteckseng@ntu.edu.sg | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
+| loukau@gmail.com | Louis H. Kauffman | 2026-08-16 | 2605.29246 Q-Calculus LoF | NEW 2026-08-16 |
 | lyhung@fudan.edu.cn | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | lzihan9175@gmail.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | mahdi@brightmind-ai.com | Mahdi Naser-Moghadasi | 2026-08-15 | 2605.17831 cost-aware agentic | NEW 2026-08-15 |
@@ -38,7 +40,9 @@ Last updated: 2026-08-15 (SOFT-4 remediation: probe artifacts excluded)
 | okunishi@phys.sc.niigata-u.ac.jp | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | pe.emeriau@quandela.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | stephenebert@physics.ucla.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
+| thamm@itp.uni-leipzig.de | Matthias Thamm | 2026-08-16 | 2606.24831 anyon exchange phase | NEW 2026-08-16 |
 | tp53@rice.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
+| yuanchen@pku.edu.cn | Yu-An Chen | 2026-08-16 | 2607.02280 Bockstein braiding | NEW 2026-08-16 |
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 34 entries = 31 prior + 3 new. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 38 entries = 34 prior + 4 new (2026-08-16 batch). Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.

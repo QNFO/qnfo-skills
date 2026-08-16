@@ -177,3 +177,30 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 - Per-message delivery events are not queryable via CF REST without a delivery webhook. SOP: run the deliverability
   checks (cloudflare-email-service references/deliverability.md) weekly as part of Daily/Weekly ops, and re-verify
   engagement for Santamato / Naser-Moghadasi / Plaat at the 2026-08-29 follow-up window.
+
+
+---
+
+## 2026-08-16 — Proactive outreach (daily briefing session; user mandate 2026-08-15 stands)
+
+**Paper 1 target:** *The Exchange Phase as a Logical Scalar: R = e^(2 pi i s) from the Re-Entrant Calculus* — DOI **10.5281/zenodo.21963930** (v1.1, 2026-08-16).
+**Paper 2 target:** *The Boson/Fermion Distinction: Spin-Statistics as Structural Invariant* — DOI **10.5281/zenodo.21962904** (v1.5, 2026-08-16).
+
+| # | Recipient | Email source | Their paper (arXiv) | Connection point | Message ID | D1 id | Status |
+|---|-----------|--------------|---------------------|------------------|------------|-------|--------|
+| 1 | Louis H. Kauffman (UIC) | VERIFIED from arXiv source tarball 2605.29246 (`loukau@gmail.com` in ws-rv9x6.tex) | The Q-Calculus: A Quaternion-Based Laws of Form System (2605.29246) | Q-Calculus LoF extension ↔ Exchange-Phase paper's re-entrant-mark derivation; Kauffman's mark-to-fermion-algebra (1301.6214) cited as closest prior art | c83eba9b-9e94-4fb1-a414-c1fb06eaafe1 | 168 | sent |
+| 2 | Matthias Thamm (Leipzig) | VERIFIED from arXiv source tarball 2606.24831 (`thamm@itp.uni-leipzig.de` in main.tex) | Anyon Exchange Phase from Antidot Interferometry (2606.24831) | Bare anyon exchange-phase extraction ↔ R = e^(2 pi i s) as structural invariant | 61e35236-0da1-44d8-8439-d576e7cefacb | 169 | sent |
+| 3 | Yu-An Chen (Peking U) | VERIFIED from arXiv source tarball 2607.02280 (`yuanchen@pku.edu.cn`, contact author in main.tex) | Bockstein braiding statistics (2607.02280) | Universal statistical-process invariants ↔ exchange-phase/topological-spin invariant | 19d12f3f-8ef2-481b-a8cb-8acc95d901e6 | 170 | sent |
+| 4 | Kejun Liu (Soochow U) | VERIFIED from arXiv source tarball 2607.11867 (`kjliu@suda.edu.cn` in main.tex) | Paraparticles intrinsically exhibit Hardy-space breakdown (2607.11867) | Non-unitary exchange statistics testability ↔ boson/fermion dichotomy as derived shadow | 9380d117-d38f-44e7-848d-fe3573264835 | 171 | sent |
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=167 → rwnquni@outlook.com (own mailbox), message_id a382aa10-7494-40f9-8a27-3b5aaac7073b, 2026-08-16T08:09:19Z, status=sent. Send-guard scripted gate passed (exit 0).
+
+**Verified but NOT contacted (single-contact-per-group, outreach-strategy §1):** Arthur M. Collings (otter@mac.com, co-author of 2605.29246 with Kauffman); Felix Puster / Bernd Rosenow (Leipzig co-authors of 2606.24831); Po-Shen Hsin (co-author of 2607.02280).
+
+**CONNECTION-POINT-UNVERIFIED-1 (no email in source tarball, deferred):** Zhiyuan Wang / Kaden Hazzard (2607.26351 R-parastatistics — no emails in tarball, excluded).
+
+**Send verification (Tool-Call Execution Mandate):** all 5 rows confirmed in D1 via GET /emails/recent: ids 167-171 status=sent. Canonical sent-classification rule satisfied (sender rowan.quni@qnfo.org + external recipient).
+
+**Dedup check (no-repeat-contact mandate):** all 4 verified against contact-ledger.md (34 entries) + D1 master list (ids 1-166). Zero prior contact. First contact each.
+
+**Follow-up eligibility:** Kauffman / Thamm / Yu-An Chen / Kejun Liu → first eligible **2026-08-30** (14d), one max each, pending response.
