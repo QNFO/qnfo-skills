@@ -35,7 +35,7 @@
 > Red-team: direct parent-agent red-team skills audit (session 6427jDZRyelzVeXaHMTty — GTD weekly-review expansion + reviewer HARD-1 delta-anchor finding).
 > HARD: 3. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **DELTA-ANCHOR-1** — any DELTA sweep MUST pin its anchor (existing artifact's OWN header timestamp `> YYYY-MM-DD HH:MM`; fallback = file mtime − 30 min; CATCH-ALL: any window item not already listed in the existing artifact is IN SCOPE — when in doubt, include). Canonical: GTD Friday task 382376cd HARD-1 2026-08-16 — an unpinned `-newermt` mtime anchor would have dropped the DECISION-READY QPL note (11:21) before QPL 2026 (Aug 17–21). Mirror of system-prompt v3.33.
-> (2) [HARD] **KAizen footer drift repaired** — Version-section footer said `Current: **v2.49**` while banner/frontmatter were v2.58 (FOOTER-PARENTHETICAL-DRIFT-1 class); footer now v2.59.
+> (2) [HARD] **KAizen footer drift repaired** — Version-section footer said `Current: **v2.63** (CMD SKILLS UPDATE 2026-08-17: PROMPT-PARITY-1 v3.37 repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 pattern; mirrors system-prompt v3.38)` while banner/frontmatter were v2.58 (FOOTER-PARENTHETICAL-DRIFT-1 class); footer now v2.59.
 > (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #9** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys flash).
 > (4) [SOFT] **GTD WEEKLY-REVIEW FLEET STATE** — the SINGLE weekly-review scheduled task = "QNFO Weekly Review (GTD, Friday — merged triage)" id 382376cd (Fri 15:00 UTC, cron `0 15 * * 5`), GTD-expanded (STEP 1 delta rule, sections NEXT-7-DAYS/WAITING-FOR/UIA-REGISTER-DUE/SOMEDAY-MAYBE, portfolio triage 4a0–4e); NEVER create new weekly-review tasks.
 > Cross-reference: system-prompt v3.33, research v2.115, cloudflare v3.51, execution-mandate v2.10, session 6427jDZRyelzVeXaHMTty.
@@ -739,6 +739,16 @@
 > N-2-SCAN-FALSE-POSITIVE-1, session this.
 
 ---
+> **v2.63 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors system-prompt v3.38):**
+> Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; v3.37 cycle stopped mid-write).
+> HARD: 3. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **PROMPT-PARITY-1 v3.37 partial-write repaired** — v3.37 cycle left footer v3.36 + store B stale (v3.36 content); v3.38 dual-wrote ALL stores byte-identical, header==footer==v3.38 (REPO-COPY-PHANTOM-1 class recurrence; canonical: v3.37 2026-08-17 partial write, backup .bak-consolidate2-20260817-143732).
+> (2) [HARD] **kaizen footer N-2 drift repaired** — footer stuck at v2.49 through v2.50–v2.62 (13 versions); repaired to v2.63 == frontmatter == banner.
+> (3) [HARD] **R2-OBJECTS-LISTING-SHAPE-1** — CF R2 objects list API `result` is a PLAIN LIST (not {objects:[]}); pagination via result_info.cursor (20/page); list prefix RAW (encoded slashes → HTTP 400); PUT key MUST be percent-encoded (quote(key, safe='')). Canonical: RES.006 mirror verify 2026-08-17 (2 misparses → 0 vs 53 objects).
+> (4) [SOFT] **CROSS-STORE-PUBLISH-SYNC-1 execution order** — R2 mirror → D1 papers (doi/zenodo_doi/r2_key/body_md frontmatter) → paper_ids upsert → KG json_set (paper distributed + project P8) → Vectorize /index?slug= + webhook verify → residual-DOI sweep. Canonical: RES.006 21929626→21979060 2026-08-17.
+> (5) [SOFT] **NEWVERSION-FRONTMATTER-CARRYOVER-1 extended to D1 body_md** — body_md keeps the parent self-DOI after re-publish; corpus re-point MUST replace body_md frontmatter + re-index (canonical: RES.006 21979060).
+> Cross-reference: system-prompt v3.38, cloudflare v3.53, knowledge v2.14, session this.
+
 
 
 
@@ -750,7 +760,7 @@ name: kaizen
 
 
 
-version: 2.62
+version: 2.63
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

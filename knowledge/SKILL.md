@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.13
+version: 2.14
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,13 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+> **v2.14 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LISTING-SHAPE-1; mirrors system-prompt v3.38):**
+> Red-team: direct parent-agent skills audit (session this — RES.006 corpus re-point 21929626→21979060).
+> HARD: 2. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **CROSS-STORE-PUBLISH-SYNC-1 execution pattern added** — re-point order for a Zenodo newversion: (a) R2 mirror to qnfo-releases (ALL deposit files, CF API PUT, verify paginated listing); (b) D1 living-paper papers row: doi + zenodo_doi + r2_key + body_md frontmatter replace (body_md keeps the OLD self-DOI — replace via SQL replace(body_md, 'doi: "10.5281/zenodo.OLD"', 'doi: "10.5281/zenodo.NEW"')); (c) paper_ids upsert (slug, vectorize_id paper:<slug>:0, kg_id paper:<slug>, doi, r2_path, zenodo_url); (d) KG qnfo-graph: paper node json_set (doi, zenodo_url, distribution_status=distributed, r2_path, r2_readme, date, note) + project node json_set (phase=P8, status=published, doi, current_version); (e) Vectorize re-index via qnfo-paper-indexer /index?slug= (browser UA + X-Index-Token chnx-idx-v1-k9m2n4p7r5t8) + webhook verify (indexed:true chunks>0); (f) residual-DOI sweep (papers, paper_ids, body_md corpus-wide, KG nodes, KG edges, citations). Canonical: RES.006 21929626→21979060 2026-08-17 (all verified live).
+> (2) [HARD] **R2-OBJECTS-LISTING-SHAPE-1 cross-ref** — R2 list API result is a plain LIST; paginate via result_info.cursor; list prefix RAW, PUT key percent-encoded (canonical: RES.006 mirror verify).
+> Cross-reference: system-prompt v3.38, kaizen v2.63, cloudflare v3.53, R2-MIRROR-AFTER-PUBLISH-1, session this.
+
 > **v2.13 UPDATE (2026-08-14, kaizen — D1 write discipline: INSERT OR IGNORE NOT NULL swallowing + SQLITE_TOOBIG):**
 > Red-team: direct parent-agent audit (session PzctHHW4qJopkaNoCTABv — QNFO.RES.009 D1 living-paper insert).
 > HARD: 2. SOFT: 0. DESIGN: 0. Changes:
@@ -577,8 +584,8 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 **Scheduled monitoring:** Run `philpapers_monitor.py` **monthly** (1st of month 06:00 UTC — scheduled task "PhilPapers Index Monitor (Monthly)"; the old "daily cron ffc8f08f" never existed). The crawl cycle is days-to-weeks, so daily polling is waste. Checks PhilPapers for new QUN-prefixed records, compares against known indexed set, estimates coverage vs the philosophy-eligible Zenodo subset (judicious-labeling denominator).
 
-Current: **v2.13** (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
+Current: **v2.14** (CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LISTING-SHAPE-1; 2026-08-17) (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
 
 ## Version
 
-Current: **v2.13** (knowledge — N-2 footer alignment; 2026-08-17)
+Current: **v2.14** (CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LISTING-SHAPE-1; 2026-08-17) (knowledge — N-2 footer alignment; 2026-08-17)
