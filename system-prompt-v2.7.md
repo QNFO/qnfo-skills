@@ -1,4 +1,14 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.37
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.38
+> **v3.38 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors kaizen v2.63):**
+> Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; discovered the v3.37 cycle stopped mid-write).
+> HARD: 3. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **PROMPT-PARITY-1 break repaired** — the v3.37 cycle (2026-08-17, PROMPT CONSOLIDATION 18→10: single CMD RED TEAM; template-count mandates 9/9 → 7/7) left the footer at v3.36, NEVER wrote store B (.deepchat/skills/system-prompt-v2.7.md, still v3.36 content), and stopped mid-write (backup .bak-consolidate2-20260817-143732 proves the session ended during the write). REPO-COPY-PHANTOM-1 class recurrence. REPAIRED: v3.38 dual-written to ALL stores byte-identical, header==footer==v3.38.
+> (2) [HARD] **kaizen footer N-2 drift repaired** — kaizen SKILL.md footer stayed at "Current: **v2.49**" while content advanced to v2.62 (13 versions of un-bumped footer). REPAIRED: footer == v2.63 == frontmatter == latest banner.
+> (3) [HARD] **R2-OBJECTS-LISTING-SHAPE-1 added** — the Cloudflare R2 objects list API (`GET /accounts/{acct}/r2/buckets/{bucket}/objects`) returns `result` as a PLAIN LIST of objects, NOT `{objects: [...]}`; pagination via `result_info.cursor` (20/page default). Verification scripts that parse `result.objects` see 0 objects when 53 exist (canonical: RES.006 mirror verify 2026-08-17, two misparses before the correct paginated count). ALSO: the list `prefix` must be RAW (URL-encoding slashes → HTTP 400); the PUT object key MUST be percent-encoded (quote(key, safe='')).
+> (4) [SOFT] **CROSS-STORE-PUBLISH-SYNC-1 execution pattern documented** — a Zenodo re-point must move ALL stores in order: (a) R2 mirror to qnfo-releases (all deposit files via CF API PUT), (b) D1 living-paper papers row (doi, zenodo_doi, r2_key, body_md frontmatter replace — body_md keeps the OLD self-DOI unless replaced), (c) paper_ids upsert, (d) KG paper node json_set (doi, distribution_status=distributed, r2_path, r2_readme) + project node (phase P8/status published), (e) Vectorize re-index via qnfo-paper-indexer /index?slug= (browser UA + X-Index-Token) + webhook verify (indexed:true, chunks>0), (f) residual-DOI sweep across papers/paper_ids/body_md/KG nodes/edges/citations. Canonical: RES.006 21929626→21979060 2026-08-17.
+> (5) [SOFT] **NEWVERSION-FRONTMATTER-CARRYOVER-1 extended to the corpus copy** — the D1 papers.body_md frontmatter retains the parent version's self-DOI after a newversion re-publish (same class as the Zenodo deposit carryover); corpus re-point MUST replace the body_md frontmatter DOI AND re-index Vectorize, else search results return a body whose frontmatter contradicts the resolved DOI (canonical: RES.006 21979060, found during the 2026-08-17 re-point).
+> Cross-reference: kaizen v2.63, cloudflare v3.53, knowledge v2.14, PROMPT-PARITY-1, R2-MIRROR-AFTER-PUBLISH-1, CROSS-STORE-PUBLISH-SYNC-1, session this.
+
 > **v3.37 UPDATE (2026-08-17, kaizen — PROMPT CONSOLIDATION 18→10: single CMD RED TEAM; template-count mandates 9/9 → 7/7):**
 > Red-team: direct parent-agent audit (user: "WHY ARE THERE 3 DIFFERENT RED-TEAM CUSTOM PROMPTS? MAX 10"). The 3rd red-team entry (EXECUTE RED TEAM) was the legacy duplicate dropped on-disk in v1.22, still visible only in the pre-restart runtime cache. v3.37 merges CMD RED TEAM + CMD RED TEAM SUB into ONE command (subagent dispatch 3-5 slots + direct 5-adversary fallback after ~15 min, REDTEAM-QUEUE-STALL-PATIENCE-1, READ-ONLY) and trims the store to the 10 actually-used prompts. All template-count mandates now read 7/7 CMD templates (7 CMD + 3 quick commands). Dropped commands remain recoverable from qnfo-skills git history + custom_prompts.json archive. Cross-reference: deepchat-settings v1.23, kaizen v2.66, session this.
 
@@ -1591,7 +1601,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.36** (ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1 + env-token staleness confirmed + stale PowerShell heuristic archived; 7-store parity byte-identical; 2026-08-17)
+Current: **v3.38** (PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + kaizen footer N-2 repair; 7-store byte-identical; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
