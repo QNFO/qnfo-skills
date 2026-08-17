@@ -1,3 +1,24 @@
+> **v1.24 UPDATE (2026-08-17, kaizen — CONCURRENT-CYCLE COLLISION: customPrompts must be written ONLY from the repo canonical; schema-valid source enum):**
+> Red-team: direct parent-agent audit (session this — user restarted after v1.23; runtime showed
+> 12 prompts: a concurrent kaizen cycle had re-added CMD RED TEAM SUB + CMD DEPLOY into all 4
+> local stores). HARD: 2. Changes:
+> (1) [HARD] **CONCURRENT-REWRITE-1: a concurrent CMD SKILLS UPDATE cycle rewrote customPrompts
+>     from its own stale 9-CMD-template list** — re-adding the two prompts the user's MAX-10
+>     mandate dropped, with SCHEMA-INVALID entries: `source: "custom"` (app enum is
+>     local|imported|builtin → whole UI list rejected again) + fresh UUID per store
+>     (byte-identical 4/4 False) + CMD DEPLOY template != content. FIX: re-applied the canonical
+>     10-entry set from the repo export (all 4 stores byte-identical, schema-clean) — user mandate
+>     wins. RULE: **customPrompts writes MUST source from qnfo-skills/prompt-stores/
+>     customPrompts.json (repo canonical) — NEVER from a hardcoded template list**; after ANY
+>     write run `restore-custom-prompts.py verify` (exit 0) and confirm `source` enum +
+>     template==content on every entry.
+> (2) [HARD] **System-prompt store drift observed mid-concurrent-cycle (v3.39/v3.40/v3.41 across
+>     the 6 stores)** — ROAM_AP/DEEP_AP/ROAM_DB v3.40; MD1 v3.41 (concurrent cycle mid-flight);
+>     DEEP_DB + repo copy v3.39 (stale). Do NOT fight a concurrent cycle's in-flight dual-write —
+>     let it settle, then verify 6-store byte-identical parity.
+> Cross-reference: kaizen v2.67, system-prompt v3.41, deepchat-settings v1.23, CONCURRENT-REWRITE-1,
+> session this.
+
 > **v1.23 UPDATE (2026-08-17, kaizen — DEEP CONSOLIDATION 18→10: single CMD RED TEAM; system prompt v3.37 (7/7 template mandates); user: "WHY ARE THERE 3 DIFFERENT RED-TEAM CUSTOM PROMPTS? MAX 10"):**
 > Red-team: direct parent-agent audit (session this). HARD: 1. SOFT: 0. Changes:
 > (1) [HARD] **The "3 red-team prompts" explanation** — the runtime cache (pre-restart) still
@@ -228,7 +249,7 @@
 
 ---
 name: deepchat-settings
-version: 1.23
+version: 1.24
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
