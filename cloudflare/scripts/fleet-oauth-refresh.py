@@ -12,7 +12,7 @@ Usage:
     python fleet-oauth-refresh.py [--dry-run] [--verify]
 
 Behavior:
-  - For each of the 15 known Cloudflare OAuth MCP servers:
+  - For each of the 6 registered Cloudflare OAuth MCP servers:
       - If <hash>_tokens.json exists  -> refresh via refresh_token grant (rotates access+refresh)
       - If <hash>_client_info.json missing or no token -> report "NEEDS FIRST-TIME AUTH"
   - Writes refreshed token back to the same cache file (atomic).

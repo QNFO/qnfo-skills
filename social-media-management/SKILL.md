@@ -555,4 +555,4 @@ social-media-management/
 
 ## Version
 
-Current: **v1.7.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn/Buffer, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP posting, QNFO account registry; 2026-08-14)
+Current: **v1.7.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP REMOVED 2026-08-17, QNFO account registry; 2026-08-14)

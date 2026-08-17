@@ -46,7 +46,9 @@ Session: PI64gnaq9r_E5tiK2Dx_y. Mirrors: system-prompt v3.40→v3.41, cloudflare
    byte-identical LF, verified by RAW-BYTE sha256 c46bd2963315775c. Rule: prompt-store writes
    MUST use binary writes (or newline='\n'); parity checks MUST compare raw bytes.
 
-## Servers removed (18) — user mandate (unneeded OR cannot stay connected)
+## Servers removed (19 total) — user mandate (unneeded OR cannot stay connected)
+
+(18 in the grouped list below + qnfo-browser-run in the 404 bullet; red-team Accuracy review counted 19)
 
 - No OAuth token: cloudflare-observability, cloudflare-radar
 - Not needed for QNFO/Cloudflare: cloudflare-logpush, cloudflare-browser-mcp-server,

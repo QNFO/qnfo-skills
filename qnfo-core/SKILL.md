@@ -1736,7 +1736,7 @@ per the 2026-08-04 ecosystem nomenclature audit. `--` (double hyphen) and
 
 
 
-system, knowledge, linkedin-mcp, qnfo-core own header) must normalize on their
+system, knowledge, qnfo-core own header) must normalize on their
 
 
 

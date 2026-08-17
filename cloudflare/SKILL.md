@@ -130,7 +130,7 @@
 
 ---
 name: cloudflare
-description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
+description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (9-MCP Coverage — fleet trimmed 2026-08-17) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
 version: 3.55
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
@@ -507,7 +507,7 @@ Docs MCP verified 2026-08-12. The AI Gateway is the single cost firewall for the
 | **Models** | qnfo-ai auto-route: tier-0 FREE models (llama-3.3-70b-instruct-fp8-fast, qwen2.5-coder-32b, llama-3.2-1b, qwen3-30b), deepseek-v4-flash fallback | Never pin paid-only frontier models (`@cf/moonshotai/kimi-k2.6`, `kimi-k2.7-code`, `@cf/zai-org/glm-5.2`) unless prepaid AI Gateway credits fund them (50 req/min via credits vs 20 standard); keep ensemble on free models |
 | **Workers AI** | 10,000 free Neurons/day on Paid plan | **v4.3.9: tier-0 routed through the AI Gateway** (AI-COST-GATE-1 enforced) with `env.AI.run` fallback for resilience; monitor via User Insights (AI spend anomaly tracking, GA 2026-08-05) + dash.cloudflare.com AI usage; if >10k/day needed, spend-limit rule 6f5c29f8 ($10/30d) or dynamic-route fallback (e.g. free tier-0 -> deepseek-v4-flash); embed with `@cf/baai/bge-base-en-v1.5` (768d) |
 | **AI Gateway** | `default` gateway HARDENED 2026-08-12: rate 120/min fixed, cache 300s invalidate-on-update, retry x3 exponential, **spend limit $90/30d rule `6f5c29f8` ENABLED**, auth true, 10M logs | ALL AI traffic MUST route here (AI-COST-GATE-1). REST: `POST /accounts/{id}/ai/v1/chat/completions`; compat: `gateway.ai.cloudflare.com/v1/{acct}/default/compat/chat/completions`; manage via `PUT /accounts/{id}/ai-gateway/gateways/default` (HYPHEN `ai-gateway`, not underscore); spend limits = up to 20 rules/gateway, `limitType` enum `cost`, `window` numeric ms, block or dynamic-route fallback on 429 |
-| **MCP Portals** | mcp.q08.org Zero Trust portal (Managed OAuth, 900s token, service-token m2m) | Portal exposes hosted MCP servers (cloudflare, docs, ai-gateway, radar, …) under Access; `portal_list_servers` / `portal_toggle_servers` tools; token auto-refresh via refresh_token grant |
+| **MCP Portals** | mcp.q08.org Zero Trust portal (Managed OAuth, 900s token, service-token m2m) — portal REMOVED from DeepChat 2026-08-17 (direct endpoints registered; feature docs only) | Portal exposes hosted MCP servers (cloudflare, docs, ai-gateway, radar, …) under Access; `portal_list_servers` / `portal_toggle_servers` tools; token auto-refresh via refresh_token grant |
 | **Vectorize** | 5 indexes (qwav-research-v2, personal-life, …) | 50M queried + 10M stored dims/mo included on Paid; `.query()` with `returnValues ≤ 10`; metadata all strings; IDs ≤64B; bge-base-en-v1.5 768d |
 | **AI Search** | **DEPLOYED v1.0.1** (`qnfo-ai-search` worker, 2026-08-12) — **FREE during open beta** (2026-04-16: built-in storage + vector index + namespace binding) | `env.AI_SEARCH.get("instance")` → `items.upload()` (fire-and-forget; `uploadAndPoll` times out on first ingest) → `instance.search()`; endpoints /health + /instances + /search (open) + /ingest (X-Sync-Token); auto-wired to AI Gateway (`ai_gateway_id: default`); Workers AI + AI Gateway billed separately (10k neurons/day budget) |
 | **Agents** | qnfo-agent-ws v1.2.0b (AIChatAgent + WebSocket + OpenAI surface; tools search_papers/get_paper_context/query_graph + cloudflare-api MCP; scheduleEvery 24h DailyQnfoReport + POST /v1/reports/run) | Run autonomous tasks ON CLOUDFLARE (scheduleEvery, AgentWorkflow durable steps, sendEmail/onEmail, agentTool sub-agents, callable RPC) instead of DeepChat cronjobs → zero DeepChat session cost; DO SQLite storage ≤5GB free on Paid; observability head_sampling_rate 1.0 (free until 2026-10-01) |
@@ -753,7 +753,7 @@ results. DeepChat entry (REMOVED 2026-08-17 — portal unneeded; direct endpoint
 **Portal OAuth token operational notes (2026-08-11, verified live):**
 - The portal access token has a **900s (15 min) lifetime** — shorter than the hosted MCP-server
   tokens (3600s). It is **not** covered by `fleet-oauth-refresh.py` (that script's OAUTH_SERVERS
-  dict covers only the 15 hosted mcp.cloudflare.com servers). The portal token is auto-refreshed
+  dict covers only the 6 registered OAuth mcp.cloudflare.com servers). The portal token is auto-refreshed
   by mcp-remote on demand via the `refresh_token` grant against
   `https://q08.cloudflareaccess.com/cdn-cgi/access/oauth/token` (resource `https://mcp.q08.org/mcp`,
   client_id from `~/.mcp-auth/mcp-remote-0.1.37/<md5(portal)>_client_info.json`). Verified: refresh
@@ -764,7 +764,7 @@ results. DeepChat entry (REMOVED 2026-08-17 — portal unneeded; direct endpoint
 
 ### Cloudflare MCP Ecosystem Source Repositories (2026-08-11)
 
-The 18 configured Cloudflare MCP servers are hosted implementations from these canonical repos:
+The 9 registered Cloudflare MCP servers are hosted implementations from these canonical repos:
 
 | Repo | Stars | Role |
 |:-----|:-----:|:-----|
@@ -791,8 +791,8 @@ The 18 configured Cloudflare MCP servers are hosted implementations from these c
 
 ### MCP Verification Gate
 
-**HEALTH CHECK SCRIPT:** `scripts/fleet-mcp-health-check.py` (this skill) probes ALL 18
-configured Cloudflare MCP servers — token-cache presence + MCP initialize probe for the 15
+**HEALTH CHECK SCRIPT:** `scripts/fleet-mcp-health-check.py` (this skill) probes ALL 9
+registered Cloudflare MCP servers — token-cache presence + MCP initialize probe for the 6
 OAuth servers, POST-initialize probe for the 3 public servers (cloudflare-docs, cloudflare-blog,
 cloudflare-agents-docs). Run it to detect
 `invalid_token` / expired / missing-token fleet-wide BEFORE errors surface in the UI
@@ -825,7 +825,7 @@ can't complete, STOP and report the blocker.
 1. **Recover OAuth state** from the mcp-remote cache (`~/.mcp-auth/mcp-remote-<ver>/`):
    - `<hash>_client_info.json` → `client_id`, `redirect_uris[0]` (e.g. `http://localhost:22875/oauth/callback`)
    - `<hash>_code_verifier.txt` → PKCE verifier
-   - `<hash>` = MD5 of the MCP server URL (e.g. `https://observability.mcp.cloudflare.com/mcp`)
+   - `<hash>` = MD5 of the MCP server URL (e.g. `https://mcp.cloudflare.com/mcp`)
 2. **Fetch discovery doc** (RFC 8414): `GET https://<server>/.well-known/oauth-authorization-server`
    → `token_endpoint`, `authorization_endpoint`. Cloudflare's observability server:
    `https://observability.mcp.cloudflare.com/token`.
@@ -872,7 +872,7 @@ subsequent token refreshes can be automated WITHOUT browser consent using the `r
 import urllib.request, json, os, hashlib
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
-SERVER_URL = "https://observability.mcp.cloudflare.com/mcp"
+SERVER_URL = "https://mcp.cloudflare.com/mcp"
 HASH = hashlib.md5(SERVER_URL.encode()).hexdigest()
 
 # Read existing token cache
@@ -2077,7 +2077,7 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include the high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, `cloudflare-blog`, `cloudflare-agents-docs`. See §DeepChat MCP Server Coverage (v3.45 — 9/9 registered). |
 | Trusting that an MCP server is reachable without a live HTTP probe | Verify with `curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp` — 401 = live (auth required), 404/530 = not deployed. Never claim an MCP server "is working" from config validation alone. |
 | Using raw `npx wrangler` or REST API when an MCP server exists for that operation (KIF-49) | Consult §MCP-Driven Operations decision matrix FIRST. `cloudflare-graphql` (workersInvocationsAdaptiveGroups) replaces `curl /health`. `cloudflare-builds` replaces `npx wrangler deployments list`. `cloudflare-auditlogs` replaces manual audit log REST queries. CLI/REST are FALLBACKS, not defaults. |
-| Claiming "deployed" or "healthy" from a single MCP server response alone (MCP Anti-Phantom Gate) | Cross-reference any operational claim against at least TWO independent MCP servers (e.g., observability + builds + auditlogs = verified). Single-MCP feed is directional, not confirmed. |
+| Claiming "deployed" or "healthy" from a single MCP server response alone (MCP Anti-Phantom Gate) | Cross-reference any operational claim against at least TWO independent MCP servers (e.g., graphql + builds + auditlogs = verified). Single-MCP feed is directional, not confirmed. |
 | Skipping structured metrics during infrastructure audits in favor of REST/curl health checks | `cloudflare-observability` MCP REMOVED 2026-08-17 (no OAuth token — cannot stay connected). Use `cloudflare-graphql` workersInvocationsAdaptiveGroups for structured metrics (error rates, p50/p99 latency, invocation counts), REST Workers logs API as fallback. |
 | Running DNS zone audits without query-volume data | `dns-analytics` MCP REMOVED 2026-08-17. Use GraphQL zone analytics (httpRequests1dGroups by zone) or Cloudflare API zone analytics to detect dead zones (perfect records, zero traffic). |
 | Deploying Workers/Pages without checking `cloudflare-builds` for build confirmation | `cloudflare-builds` MCP is the canonical deploy-history source. Wrangler's `deploy` exit code confirms the REQUEST was accepted, not that the build pipeline succeeded and the artifact is serving. |
@@ -2119,7 +2119,7 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | **WRANGLER-PATH-REGRESSION-1: Wrangler PATH fix from prior session silently reverts (2026-08-04)** | The permanent wrangler PATH fix (npm config set prefix + setx Path) applied 2026-08-01 was reverted by 2026-08-04 — `wrangler --version` returns "not recognized". The npm global prefix at `C:\Users\LENOVO\npm-global` may have been cleared or overwritten. Fix: re-apply the permanent fix from the Wrangler Environment Setup section AND add a verification step to `availability-audit.js` or `url-health-check.js` that checks `wrangler --version` as a pre-flight gate. |
 | **GATEWAY-PROD-STALE-1: `qnfo-gateway-production` created 2026-07-31, never deployed with HTTP routes (2026-08-04)** | The staging/production variant Worker was created 2026-07-31 and returns 404 on /health. Likely a test Worker that was never deployed with `workers_dev = true` (KIF-61) or never had HTTP route handlers. If unused, delete to prevent drift from the 9-Worker baseline. Flagged in 2026-08-04 infrastructure audit — `workers_list` shows 10 Workers (baseline 9), but "+qnfo-email" is legitimate growth while "+qnfo-gateway-production" is unexplained drift. |
 | **SYNCPATH-1: Unauthenticated POST /sync writes to the KG (2026-08-04)** | qnfo-gateway `handleSync` accepts POST /sync at graph-api.qnfo.org and qnfo.org with NO auth — verified live: HTTP 200, `{action:bulk, nodes[], edges[]}` inserts into graph D1. Anyone can create/modify KG nodes+edges. Fix: require a shared-secret header (X-Sync-Token) on /sync before writes; keep read endpoints open. Also note: this endpoint is the executable path for deferred KG-seed tasks (write path exists — awaits node/edge spec). Canonical case: session dXXJ3TxRQ1VHzGdAyp-lo. |
-| **WORKER-CPU-LIMIT-1: Ignoring Free plan CPU budget when designing Workers (2026-08-04)** | `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request. Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan OR paginate D1 queries + stream large payloads via `ReadableStream` + move CPU-heavy work to Queue consumers. Diagnose via `cloudflare-observability` MCP watching for `CPU time exceeded` in invocation logs. See §Workers Execution Limits. |
+| **WORKER-CPU-LIMIT-1: Ignoring Free plan CPU budget when designing Workers (2026-08-04)** | `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request. Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan OR paginate D1 queries + stream large payloads via `ReadableStream` + move CPU-heavy work to Queue consumers. Diagnose via cloudflare-graphql (workersInvocationsAdaptiveGroups) / REST logs API watching for `CPU time exceeded` in invocation logs. See §Workers Execution Limits. |
 
 | **EMAIL-RECLASSIFY-ENDPOINT-1: qnfo-email Worker v1.6 has no classification mutation endpoint (2026-08-05)** | Classification (`"personal"`/`"general"`/`"spam"`) is set at ingestion only — there is no PATCH/PUT endpoint to reclassify an email after processing. `PATCH /emails/status {id, status}` changes status but NOT classification. Fix: add `PATCH /emails/classification {id, classification}` endpoint. Canonical case: manuscript solicitation (id 11) from dr.shrivishnu.msip@gmail.com was classified `"personal"` at ingestion and required manual status change to `"spam"` + filter creation. Cross-ref: qnfo-email Worker v1.6, EMAIL-FILTER-CREATE-1. |
 | **EMAIL-FILTER-CREATE-1: qnfo-email Worker POST /filters requires `field` + `pattern`, NOT `type` (2026-08-05)** | `POST /filters` body must include `{"field": "from", "pattern": "<sender>", "action": "spam"}`. Using `"type"` instead of `"field"` returns 400 `"field and pattern required"`. Verified: 5 existing filters (bounce/spam patterns) + filter id 6 created for dr.shrivishnu.msip@gmail.com. Cross-ref: qnfo-email Worker v1.6.| **TOKEN-VERIFY-SCOPE-1: User-level /user/tokens/verify returns 1000 "Invalid API Token" for ACCOUNT-scoped tokens (2026-08-10)** | Account-scoped tokens are valid for account operations (D1/R2/Workers/DNS) but FAIL user-level endpoints: /user/tokens/verify → 1000, /user/tokens → 9109. Verify at ACCOUNT scope: `GET /accounts/{id}/d1/database` (success:true + DB list) or `wrangler whoami`. A 1000 from /user/tokens/verify is NOT evidence of a dead token. Canonical case: session bPhAUCI_FRVeZyA5Rxmsm red-team false "INVALID token" verdict. Cross-ref: windows-command-patterns S-1.0.6 (verify against the SAME scope the token is used in). |
@@ -3260,7 +3260,7 @@ This distinction is critical for Workers on the **Free plan**: a Worker with thr
 
 ### Anti-Pattern: WORKER-CPU-LIMIT-1 — Ignoring Free plan CPU budget when designing Workers
 
-**Full definition, canonical case, and fix options are in the Anti-Patterns table above (row `WORKER-CPU-LIMIT-1`).** Summary: `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request; Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan, paginate D1 queries, stream large payloads, move heavy work to Queue consumers. Diagnose via `cloudflare-observability` MCP watching for `CPU time exceeded`.
+**Full definition, canonical case, and fix options are in the Anti-Patterns table above (row `WORKER-CPU-LIMIT-1`).** Summary: `CPU time exceeded` on Workers that ran fine in `wrangler dev` (local dev bypasses the Free plan limit!). Free plan: 10 ms CPU per request; Paid plan: up to 5 min (default 30 s). CPU time ≠ wall-clock — I/O waits don't count. Fix: upgrade to Paid plan, paginate D1 queries, stream large payloads, move heavy work to Queue consumers. Diagnose via cloudflare-graphql (workersInvocationsAdaptiveGroups) / REST logs API watching for `CPU time exceeded`.
 
 > **QNFO STATUS:** All QNFO Workers run on a Paid plan (`quniverse` account, `edb167b78c9fb901ea5bca3ce58ccc4b`). The Free plan limits are documented here for Worker design awareness and for any Workers deployed to other accounts.
 
