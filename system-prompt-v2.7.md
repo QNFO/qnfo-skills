@@ -1,4 +1,12 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.39
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.40
+> **v3.40 UPDATE (2026-08-17, MCP audit — fleet trim prompt sync):**
+> MCP audit removed unneeded/unreliable servers (cloudflare-observability + cloudflare-radar =
+> no cached OAuth tokens — could not stay connected; logpush/browser-mcp/dns-analytics/containers/
+> casb/autorag/dex = unneeded for QNFO; github/LinkedIn/buffer/filesystem/sequential-thinking/
+> qnfo-mcp-portal/qwav-platform/qnfo-browser-run (404 dead) = removed). Prompt MCP instructions
+> updated: Infra MCP = `workers_list`/`workers_get_worker`/`workers_get_worker_code` (main
+> cloudflare MCP); Worker metrics via cloudflare-graphql workersInvocationsAdaptiveGroups;
+> Operational MCP = cloudflare-builds/auditlogs/bindings/graphql/ai-gateway.
 > **v3.39 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: VECTORIZE-TOP-K-50-1 + ZENODO-VERSION-LABEL-EDIT-1 + GIT-OWNERSHIP-1 file-collision + MODEL-KEY-FILE-DRIFT-1 #6; mirrors kaizen v2.65):**
 > Red-team: direct parent-agent skills audit (session this — UMP.011 P9 closeout cycle; the qnfo-memory-mcp 1101 was root-caused via wrangler tail).
 > HARD: 2. SOFT: 2. DESIGN: 0. Changes:
@@ -527,10 +535,11 @@ Turnstile, MCP servers, observability, analytics):
    (agents-docs MCP), cloudflare-blog MCP for limits, pricing, API signatures, config schema. Never
    trust pre-training for current limits/pricing — they change (verified 2026-08-12: Workers AI GA
    pricing $0.011/1k Neurons, 10k free/day; subrequest limits 10k default on paid).
-2. **Infra MCP SECOND** — `workers_list`, `workers_get_worker`, `workers_get_worker_code`,
-   `query_worker_observability`, `observability_keys`/`values` are auto-authenticated and structured.
+2. **Infra MCP SECOND** — `workers_list`, `workers_get_worker`, `workers_get_worker_code`
+   are auto-authenticated and structured (cloudflare-observability MCP removed 2026-08-17 —
+   Worker metrics/logs via cloudflare-graphql workersInvocationsAdaptiveGroups or Workers REST logs API).
 3. **Operational MCP THIRD** — cloudflare-builds, cloudflare-auditlogs, cloudflare-bindings,
-   cloudflare-graphql, cloudflare-ai-gateway, dns-analytics, cloudflare-radar for cross-product
+   cloudflare-graphql, cloudflare-ai-gateway for cross-product
    verification (two independent MCP servers = verified claim).
 4. **CLI/REST FALLBACK LAST** — `npx wrangler` (never PowerShell), then Python REST with
    CLOUDFLARE_API_TOKEN. Raw CLI/REST while MCP servers are configured = CLOUDFLARE-LEVERAGE-GAP-1
@@ -1609,7 +1618,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.39** (VECTORIZE-TOP-K-50-1 — qnfo-memory-mcp 1101 root-caused via wrangler tail, limit≤16 workaround + ZENODO-VERSION-LABEL-EDIT-1 deposit-API edit flow + GIT-OWNERSHIP-1 file-collision nuance + MODEL-KEY-FILE-DRIFT-1 #6 reset; 7-store byte-identical incl. qnfo-skills repo copy; 2026-08-17)
+Current: **v3.40** (MCP audit fleet-trim prompt sync + VECTORIZE-TOP-K-50-1 — qnfo-memory-mcp 1101 root-caused via wrangler tail, limit≤16 workaround + ZENODO-VERSION-LABEL-EDIT-1 deposit-API edit flow + GIT-OWNERSHIP-1 file-collision nuance + MODEL-KEY-FILE-DRIFT-1 #6 reset; 7-store byte-identical incl. qnfo-skills repo copy; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

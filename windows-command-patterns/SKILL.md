@@ -1391,7 +1391,7 @@ escalating to infrastructure theories. Failure to do so is a HARD kaizen finding
 | Git operations | `subprocess.run(['git','-C',path,...])` |
 
 
-| Cloudflare API | Python + `urllib.request` + `json.dumps` — BUT first prefer Cloudflare MCP agent tools by name: `workers_list`, `workers_get_worker`, `query_worker_observability`, `search_cloudflare_documentation`. Load the `cloudflare` skill for the full decision ladder (MCP tools → `npx wrangler` → REST; NEVER PowerShell — KIF-59). D1 queries: prefer `cloudflare/scripts/d1-query.py` (auto-discovery, KIF-36) over raw REST; verify writes by re-reading the row (SCS-1). |
+| Cloudflare API | Python + `urllib.request` + `json.dumps` — BUT first prefer Cloudflare MCP agent tools by name: `workers_list`, `workers_get_worker`, `search_cloudflare_documentation`. Load the `cloudflare` skill for the full decision ladder (MCP tools → `npx wrangler` → REST; NEVER PowerShell — KIF-59). D1 queries: prefer `cloudflare/scripts/d1-query.py` (auto-discovery, KIF-36) over raw REST; verify writes by re-reading the row (SCS-1). |
 
 
 | PDF building | Python → `subprocess.run(['pandoc',...])` |

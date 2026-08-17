@@ -1,3 +1,10 @@
+> **v2.116 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: VECTORIZE-TOP-K-50-1 + ZENODO-VERSION-LABEL-EDIT-1; mirrors system-prompt v3.39 + kaizen v2.65):**
+> Red-team: direct parent-agent skills audit (session this — UMP.011 P9 closeout cycle; the qnfo-memory-mcp 1101 was root-caused via wrangler tail).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DUE-DILIGENCE-DEPTH-1 execution note — semantic-channel workaround** — qnfo-memory-mcp search_papers throws Error 1101 for limit >= 17 due to the worker's topK = 3 x limit rerank buffer exceeding Vectorize's 50-cap with returnValues=true (VECTOR_QUERY_ERROR 40025 — see VECTORIZE-TOP-K-50-1 in kaizen v2.65 / cloudflare v3.54). When the Phase 1 semantic sweep hits 1101 at limit>=20: retry at limit<=16 (verified reliable) and note the cap in the evidence file; do NOT label the channel "outage" — it is a query-size bug. Full 4-topic x 3-formulation sweep at limit=16 is valid corpus-scale coverage (canonical: UMP.011 P9 2026-08-17, 12/12 formulations succeeded).
+> (2) [SOFT] **ZENODO-VERSION-LABEL-EDIT-1 cross-ref** — deposit-API-created records: version label via POST /actions/edit -> PUT full metadata -> POST /actions/publish (records-API /draft 404s for these records); see kaizen v2.65.
+> Cross-reference: system-prompt v3.39, kaizen v2.65, cloudflare v3.54, session this.
+
 > **v2.115 UPDATE (2026-08-16, kaizen — CMD CONTINUE correction: NO traditional journal submissions):**
 > Red-team: direct parent-agent (session QVfcGcaza2VKvkXttwx3s). HARD: 1. SOFT: 0. DESIGN: 0.
 > (1) [HARD] **NO-JOURNALS-1 (Publication Venue)** — CATEGORICAL USER DIRECTIVE (2026-08-16): the user NEVER submits to
@@ -193,7 +200,7 @@ name: research
 
 
 
-version: 2.115
+version: 2.116
 description: >
 
 
@@ -7304,7 +7311,7 @@ semantically discoverable (canonical: ringbauer-qudit-due-diligence HARD-2,
 
 
 
-Cross-MCP chain: cloudflare-builds → cloudflare-observability → cloudflare-bindings → cloudflare-auditlogs. All must pass before declaring deployment complete.
+Cross-MCP chain: cloudflare-builds → cloudflare-graphql (invocation analytics) → cloudflare-bindings → cloudflare-auditlogs. All must pass before declaring deployment complete. (cloudflare-observability MCP removed 2026-08-17.)
 
 
 
@@ -9484,7 +9491,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.115** (research — ZENODO-INQUIRY-1: UIA 10.5281/zenodo.21901984 + IAPS 10.5281/zenodo.21901983 applied to ALL inquiry/research; 2026-08-12) (research — CMD SKILLS UPDATE: Zenodo API WAF browser-context pattern + metadata-notes amendment; 2026-08-12) (research — CMD EXECUTE red-team fix cycle: KG-seeding pointer repoint + banner cross-ref current-state; 2026-08-11) (research — MAP-TERRITORY GATE scripted: check-map-territory.py + Publication Language Gate wiring; 2026-08-11) (research — publication completeness gates: KG node + Vectorize index + PDF path option; 2026-08-10) (research — UIA cross-reference in Phase 4 Stage 3 Red-Team Challenge: check-title-duplication.py in PDF pipeline; ODR v0.4 canonical fix; 2026-08-06) (research — Existential-claim verification gate (KIF-62 / VERIFY-DONT-ASSUME-1) in Phase 5; 2026-08-05) (research — Briefing System: obsidian-intelligence-note.py + write-to-obsidian.py v2 (--slug, descriptive _<slug>-YYYY-MM-DD.md filenames), cronjob cfe37200, job curation mandate; 2026-08-05)
+Current: **v2.116** (VECTORIZE-TOP-K-50-1 semantic-sweep workaround limit<=16 + ZENODO-VERSION-LABEL-EDIT-1; 2026-08-17)
 
 
 

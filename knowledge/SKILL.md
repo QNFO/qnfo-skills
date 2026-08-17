@@ -445,7 +445,7 @@ When discovering "what exists," query in this order:
 | **1. KG (canonical topology)** | graph-api Worker (`query_graph`) | `/stats`, `/nodes`, `/neighbors`, `/impact` | What exists AND how things connect |
 | **2. D1 (structured records)** | `cloudflare/scripts/d1-query.py` | `portfolio-state`, `living-paper`, `qnfo-audit` | Row-level structured data |
 | **3. Vectorize (semantic search)** | `search_memories`, `search_papers` | 768-dim cosine similarity | Meaning-based search across memories + papers |
-| **4. MCP: AutoRAG (automated RAG)** | `cloudflare-autorag-mcp-server` | Workers AI + Vectorize pipeline | Full RAG pipeline — indexing, embedding, retrieval (PREFERRED over manual Vectorize) |
+| **4. MCP: AutoRAG (automated RAG)** | REMOVED 2026-08-17 (server unregistered — not needed; qnfo-memory-mcp covers QNFO search) | Manual Vectorize insert + Workers AI query | Manual pipeline is canonical |
 | **5. MCP: AI Gateway (query logging)** | `cloudflare-ai-gateway` | Gateway log search, prompt inspection | Trace AI queries, debug prompt/response patterns |
 | **6. R2 (file artifacts)** | wrangler R2 object get/list | `qnfo/` bucket | Canonical file storage (last resort for discovery) |
 | **7. Local filesystem** | `glob`, `grep`, `os.listdir` | CWD | Ephemeral cache -- verify against R2 before trusting |
@@ -455,18 +455,17 @@ When discovering "what exists," query in this order:
 
 **Keyword Taxonomy (v1.0, 2026-08-05):** When discovering GitHub repos aligned with QNFO programs, consult `QNFO/qnfo-research:docs/QNFO-KEYWORD-TAXONOMY.md` (canonical doc, committed to git) or `memory_recall({query: "QNFO keyword taxonomy {program}"})` (per-program durable memories). The taxonomy maps each WBS program (UMP/SLB/INM/CFE/RES/PLT/DEM) to GitHub-searchable keywords organized by tier (core, geometry, algebra, etc.). It also covers cross-cutting themes: Agentic AI, 4-D Distribution Protocol, and Measurement Stratigraphy.
 
-### AutoRAG Integration (v2.2)
+### AutoRAG Integration (v2.2) — AutoRAG MCP REMOVED 2026-08-17
 
-When building or updating RAG pipelines for knowledge retrieval, prefer
-`cloudflare-autorag-mcp-server` over manual Vectorize insert + Workers AI query patterns.
-AutoRAG automates:
-- Document ingestion and chunking
+`cloudflare-autorag-mcp-server` was removed in the MCP audit 2026-08-17 (unneeded for QNFO;
+qnfo-memory-mcp + research skills cover QNFO search). Use the manual pipeline:
+- Document ingestion and chunking (research skill build-paper.py)
 - Embedding generation via Workers AI
-- Vectorize index population
-- Query-time retrieval with reranking
+- Vectorize index population (qnfo-paper-indexer)
+- Query-time retrieval via qnfo-memory-mcp (`search_memories`, `search_papers`)
 
-Manual Vectorize operations (`search_memories`, `search_papers`, `remember_fact`) remain
-available as fallbacks when AutoRAG is unreachable or for single-document operations.
+Manual Vectorize operations (`search_memories`, `search_papers`, `remember_fact`) are now
+the canonical path.
 
 ### AI Gateway Logging (v2.2)
 

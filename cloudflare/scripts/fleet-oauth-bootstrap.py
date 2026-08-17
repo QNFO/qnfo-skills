@@ -36,23 +36,16 @@ import base64
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
 
-# All 15 OAuth Cloudflare MCP servers (cloudflare skill v3.41).
+# The 6 OAuth Cloudflare MCP servers registered in DeepChat (2026-08-17 fleet trim:
+# observability + radar removed - no cached tokens; logpush/browser/dns-analytics/
+# containers/casb/autorag/dex removed - not needed for QNFO operations).
 OAUTH_SERVERS = {
     "cloudflare":              "https://mcp.cloudflare.com/mcp",
     "cloudflare-bindings":     "https://bindings.mcp.cloudflare.com/mcp",
     "cloudflare-builds":       "https://builds.mcp.cloudflare.com/mcp",
-    "cloudflare-observability":"https://observability.mcp.cloudflare.com/mcp",
-    "cloudflare-radar":        "https://radar.mcp.cloudflare.com/mcp",
     "cloudflare-ai-gateway":   "https://ai-gateway.mcp.cloudflare.com/mcp",
     "cloudflare-graphql":      "https://graphql.mcp.cloudflare.com/mcp",
     "cloudflare-auditlogs":    "https://auditlogs.mcp.cloudflare.com/mcp",
-    "cloudflare-logpush":      "https://logs.mcp.cloudflare.com/mcp",
-    "cloudflare-browser-mcp-server": "https://browser.mcp.cloudflare.com/mcp",
-    "dns-analytics":           "https://dns-analytics.mcp.cloudflare.com/mcp",
-    "containers-mcp":          "https://containers.mcp.cloudflare.com/mcp",
-    "cloudflare-casb-mcp-server": "https://casb.mcp.cloudflare.com/mcp",
-    "cloudflare-autorag-mcp-server": "https://autorag.mcp.cloudflare.com/mcp",
-    "dex-analysis":            "https://dex.mcp.cloudflare.com/mcp",
 }
 
 

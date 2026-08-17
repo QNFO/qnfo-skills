@@ -8,8 +8,8 @@ they surface as "Couldn't connect to cloudflare-observability" UI errors.
 This is the proactive complement to fleet-oauth-refresh.py (which fixes, this one
 flags). Add to the kaizen Autonomous Watchtower's INCIDENT-AXIS scan.
 
-For each of the 18 Cloudflare MCP servers:
-  - OAuth servers (15): check token cache exists + age vs expires_in; if token
+For each of the 9 Cloudflare MCP servers registered in DeepChat (2026-08-17 fleet trim):
+  - OAuth servers (6): check token cache exists + age vs expires_in; if token
     exists, probe MCP initialize (expect HTTP 200). No token -> [NO-TOKEN] warning.
   - Public servers (3): probe endpoint (expect HTTP 200).
 
@@ -28,23 +28,16 @@ import urllib.error
 
 CACHE_DIR = os.path.expandvars(r"%USERPROFILE%\.mcp-auth\mcp-remote-0.1.37")
 
-# All 18 configured Cloudflare MCP servers (cloudflare skill v3.44).
+# All 6 Cloudflare OAuth MCP servers registered in DeepChat (2026-08-17 fleet trim:
+# observability + radar removed - no cached tokens; logpush/browser/dns-analytics/
+# containers/casb/autorag/dex removed - not needed for QNFO operations).
 OAUTH_SERVERS = {
     "cloudflare":              "https://mcp.cloudflare.com/mcp",
     "cloudflare-bindings":     "https://bindings.mcp.cloudflare.com/mcp",
     "cloudflare-builds":       "https://builds.mcp.cloudflare.com/mcp",
-    "cloudflare-observability":"https://observability.mcp.cloudflare.com/mcp",
     "cloudflare-ai-gateway":   "https://ai-gateway.mcp.cloudflare.com/mcp",
     "cloudflare-graphql":      "https://graphql.mcp.cloudflare.com/mcp",
     "cloudflare-auditlogs":    "https://auditlogs.mcp.cloudflare.com/mcp",
-    "cloudflare-logpush":      "https://logs.mcp.cloudflare.com/mcp",
-    "cloudflare-browser-mcp-server": "https://browser.mcp.cloudflare.com/mcp",
-    "dns-analytics":           "https://dns-analytics.mcp.cloudflare.com/mcp",
-    "containers-mcp":          "https://containers.mcp.cloudflare.com/mcp",
-    "cloudflare-casb-mcp-server": "https://casb.mcp.cloudflare.com/mcp",
-    "cloudflare-autorag-mcp-server": "https://autorag.mcp.cloudflare.com/mcp",
-    "dex-analysis":            "https://dex.mcp.cloudflare.com/mcp",
-    "cloudflare-radar":        "https://radar.mcp.cloudflare.com/mcp",
 }
 PUBLIC_SERVERS = {
     "cloudflare-docs":          "https://docs.mcp.cloudflare.com/mcp",

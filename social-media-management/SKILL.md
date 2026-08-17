@@ -119,7 +119,7 @@ LinkedIn browser-automation path (linkedin-mcp DELETED 2026-08-05).
 | Mastodon  | ✅ YES      | OAuth 2.0 (REST)            | `mastodon_follow.py`  | Instance limit  |
 | X/Twitter | ❌ NO       | OAuth 1.0a/2.0 (removed)    | Manual only           | N/A             |
 | LinkedIn  | ❌ NO API   | Browser automation (autocomplete selectors) | Manual via browser | N/A — profile edit unbounded |
-| Buffer    | ✅ YES (MCP) | Remote MCP w/ Bearer token (mcp.buffer.com) | `mcp-remote` (Buffer MCP) | Cross-platform scheduler |
+| Buffer    | ❌ NO (MCP removed 2026-08-17) | Buffer web UI / REST API | — | Cross-platform scheduler |
 
 > **X/Twitter note:** The Follows and List Follows endpoints were removed from
 > Basic and Pro tiers in August 2023. Only Enterprise tier ($42K+/year) retains
@@ -303,16 +303,15 @@ hammer retries. Retrying the same broken approach risks account lockout.**
 ---
 ---
 
-## Buffer — Cross-Platform Posting (MCP FUNCTIONAL)
+## Buffer — Cross-Platform Posting (MCP REMOVED 2026-08-17)
 
-Buffer MCP is **enabled and functional**: `mcp-settings.json` → `buffer` server →
-`npx mcp-remote https://mcp.buffer.com/mcp --header Bearer <token>`. This is the
-cross-platform scheduler for Bluesky / X / LinkedIn / Mastodon posts.
+Buffer MCP was **removed** in the MCP audit 2026-08-17 (unneeded for QNFO/Cloudflare;
+plaintext Bearer token removed from `mcp-settings.json`). Buffer scheduling now uses the
+Buffer web UI or REST API directly.
 
 - **Channels:** publish the same QNFO content to all connected profiles from one queue
-- **Workflow:** draft in markdown → post via Buffer MCP → verify in Buffer dashboard
-- **Auth:** the Bearer token lives in `mcp-settings.json` `buffer` server config —
-  never hardcode it in scripts (TOKEN-DISCOVERY-1 order: tokens dir → env → memory → user)
+- **Workflow:** draft in markdown → post via Buffer web/API → verify in Buffer dashboard
+- **Auth:** Buffer token no longer stored in `mcp-settings.json` (TOKEN-DISCOVERY-1 order: tokens dir → env → memory → user)
 - **Integration:** pairs with `email-composer` for announcement sequences and with
   the registry for account targeting
 

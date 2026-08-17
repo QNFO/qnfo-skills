@@ -216,10 +216,10 @@
 >     app-settings.json default_system_prompt, .deepchat/system-prompt-v2.7.md, qnfo-skills/
 >     system-prompt-v2.7.md — byte-identical after write (sha16 recorded in session tape). v3.2 adds
 >     the Cloudflare Docs & Tools Leverage Mandate (search_cloudflare_documentation / cloudflare-docs
->     MCP / workers_list / query_worker_observability FIRST; wrangler/REST fallback only).
+>     MCP / workers_list / workers_get_worker FIRST; wrangler/REST fallback only).
 > (2) [SOFT] **CMD DEPLOY template updated (both stores)** — wrangler-first → MCP/docs-first:
 >     "CMD DEPLOY: skill_view cloudflare -> CLOUDFLARE MCP+DOCS FIRST (search_cloudflare_documentation
->     / workers_list / query_worker_observability) -> wrangler deploy -> verify ..." (200 → ~300 chars).
+>     / workers_list / workers_get_worker) -> wrangler deploy -> verify ..." (200 → ~300 chars).
 > (3) [DESIGN] **Cloudflare Leverage Mandate referenced from the settings skill** — any prompt-template
 >     update that touches Cloudflare operations should carry the MCP/docs-first trigger per
 >     Skills-Updates-Must-Include-Prompt-Stores mandate. Cross-ref: cloudflare v3.47, kaizen v2.21.

@@ -25,7 +25,7 @@ self_sufficient: true
 > **v2.2 UPDATE (2026-07-29, Cloudflare MCP deploy kaizen):**
 > Added MCP-driven deployment verification to the Deploy & Verify and Testing
 > Checklist sections. After every MCP server deploy, the verification chain now
-> requires `cloudflare-builds` (build confirmation), `cloudflare-observability`
+> requires `cloudflare-builds` (build confirmation), `cloudflare-graphql` (invocation analytics)
 > (invocation health), `cloudflare-bindings` (binding integrity), and
 > `cloudflare-auditlogs` (deploy trail). See `cloudflare` skill v3.9
 > §MCP-Driven Operations for the full decision matrix.
@@ -704,14 +704,14 @@ the deploy successful. The `curl /health` check above is a sanity test, not veri
 
 ```
 1. cloudflare-builds      → confirm deploy succeeded, capture build ID + timestamp
-2. cloudflare-observability → confirm Worker is receiving healthy invocations (≥1, 0 errors)
+2. cloudflare-graphql → confirm Worker is receiving healthy invocations (≥1, 0 errors)
 3. cloudflare-bindings    → verify wrangler.jsonc bindings match actual runtime bindings
 4. cloudflare-auditlogs   → confirm deploy action appears in account audit trail
 ```
 
 **Gate criteria:**
 - `cloudflare-builds` returns successful build ≤ 5 min old
-- `cloudflare-observability` shows invocations since build timestamp with 0 errors
+- `cloudflare-graphql` analytics show invocations since build timestamp with 0 errors
 - `cloudflare-bindings` reports zero missing/extra bindings
 - `cloudflare-auditlogs` contains the deploy action
 
@@ -742,7 +742,7 @@ See `cloudflare` skill v3.9 §MCP-Driven Operations for the canonical decision m
 - [ ] Rate limiting works (if applicable)
 - [ ] Cold start time < 500ms
 - [ ] **MCP verification (v2.2):** Deploy confirmed via `cloudflare-builds`
-- [ ] **MCP verification (v2.2):** Worker healthy via `cloudflare-observability`
+- [ ] **MCP verification (v2.2):** Worker healthy via `cloudflare-graphql` analytics
 - [ ] **MCP verification (v2.2):** Bindings match wrangler.jsonc via `cloudflare-bindings`
 - [ ] **MCP verification (v2.2):** Deploy recorded in `cloudflare-auditlogs`
 

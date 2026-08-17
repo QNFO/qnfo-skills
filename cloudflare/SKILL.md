@@ -1,3 +1,15 @@
+> **v3.55 UPDATE (2026-08-17, kaizen — CMD CONTINUE iteration: OAuth invalid_grant = session-dead confirmation; mirrors system-prompt v3.40):**
+> Red-team: direct parent-agent iteration (session this — worker-fix owner-block probe exhausted the wrangler OAuth path).
+> HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **ACCESS-TOKEN-EXPIRY-CONFLATION-1 extension — invalid_grant semantics** — when the OAuth refresh grant returns 400 `invalid_grant` AND expiration_time is in the past: the OAuth session is DEAD (revoked/expired) — do NOT keep retrying, do NOT mislabel as scope or config-path issues. XDG-aligned wrangler whoami "not authenticated" is then the CORRECT outcome (WRANGLER-CONFIG-PATH-1 applies only when the config is NOT FOUND). Canonical: wrangler default.toml (expiration 2026-05-28T20:51:34Z) → refresh tested 2026-08-17 → invalid_grant; qnfo-memory-mcp worker repair owner-blocked (3 API tokens 405 + OAuth dead — see VECTORIZE-TOP-K-50-1).
+> Cross-reference: system-prompt v3.40, kaizen v2.66, ACCESS-TOKEN-EXPIRY-CONFLATION-1, WRANGLER-CONFIG-PATH-1, VECTORIZE-TOP-K-50-1, session this.
+
+> **v3.54 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: VECTORIZE-TOP-K-50-1; mirrors system-prompt v3.39):**
+> Red-team: direct parent-agent skills audit (session this — UMP.011 P9 closeout cycle; the qnfo-memory-mcp 1101 was root-caused via wrangler tail).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **VECTORIZE-TOP-K-50-1 added** — Cloudflare Vectorize query API: with `returnValues=true` or `returnMetadata=all`, max topK is **50** (VECTOR_QUERY_ERROR 40025); topK up to 100 requires `returnValues=false` + `returnMetadata=indexed`. A Worker whose search tool passes topK = 3 x requested limit (rerank buffer) + returnValues=true throws unhandled VECTOR_QUERY_ERROR -> HTTP 1101 for requested limits >= 17 (50/3 = 16.67). DIAGNOSIS: `wrangler tail <worker> --format json` captures the exception stack (tool_search_papers worker.js:54 -> callTool -> fetch). FIX: clamp topK <= 50 or set returnValues=false. NEVER label "Worker outage" without tail evidence. Canonical: qnfo-memory-mcp 2026-08-17 — misdiagnosed 4x as "intermittent outage" (limit>=20 sweep calls), root-caused via tail; workaround limit<=16. Worker content download requires Workers Scripts Edit scope (405 Method not allowed otherwise).
+> Cross-reference: system-prompt v3.39, kaizen v2.65, research v2.116, VECTORIZE-403-MISDIAGNOSIS (same worker, UA-class), session this.
+
 > **v3.53 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: R2-OBJECTS-LISTING-SHAPE-1; mirrors system-prompt v3.38):**
 > Red-team: direct parent-agent skills audit (session this — RES.006 R2 mirror verification).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -119,7 +131,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (18-MCP Coverage) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.53
+version: 3.54
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -456,7 +468,7 @@ Use this decision ladder for EVERY Cloudflare operation:
 
 | Priority | Tool | When |
 |:---------|:-----|:-----|
-| **1st** | Cloudflare MCP tools (`workers_list`, `workers_get_worker`, `query_worker_observability`, `search_cloudflare_documentation`, etc.) | ALWAYS — these are auto-authenticated, structured, and cannot corrupt data |
+| **1st** | Cloudflare MCP tools (`workers_list`, `workers_get_worker`, `workers_get_worker_code`, `search_cloudflare_documentation`, etc.) | ALWAYS — these are auto-authenticated, structured, and cannot corrupt data |
 | **1.5** | **`rclone` for ALL R2 bulk transfers** (sync/copy/move/check/mount) — NOT wrangler | Any multi-file or large R2 transfer (archives, buckets, migrations, mirrors). rclone = S3-native, multipart, parallel, resumable, **server-side copy**. Canonical binary `C:\rclone\rclone.exe`; remotes in `%APPDATA%\rclone\rclone.conf` (`primary-r2`, `releases`, `archive`). Verified 2026-08-04: 54k-file archive sync + bucket-to-bucket server-side copy. See §R2 Transfer Protocol. |
 | **2nd** | `npx wrangler <cmd>` (via `exec`, NOT via PowerShell) | When MCP tools don't cover the specific operation |
 | **3rd** | Cloudflare REST API (Python `urllib.request` with `CLOUDFLARE_API_TOKEN` env var) | For D1 queries / R2 listings when wrangler hangs |
@@ -472,8 +484,8 @@ Use this decision ladder for EVERY Cloudflare operation:
 | Step | Tool(s) | Why |
 |:-----|:--------|:----|
 | 1. Docs/limits FIRST | `search_cloudflare_documentation` (cloudflare-docs MCP) · `search-agent-docs` (agents-docs MCP) · cloudflare-blog MCP | Limits/pricing/API signatures change; never trust pre-training. Verified live 2026-08-12: Workers AI GA pricing, subrequest limits, model Paid-plan requirements. |
-| 2. Infra state via MCP | `workers_list` · `workers_get_worker` · `workers_get_worker_code` · `query_worker_observability` · `observability_keys/values` | Auto-authenticated, structured, cannot corrupt data. |
-| 3. Build/deploy/audit MCP | cloudflare-builds · cloudflare-auditlogs · cloudflare-bindings · cloudflare-graphql · cloudflare-ai-gateway · dns-analytics · cloudflare-radar | Cross-product verification chains per §MCP-Driven Operations. |
+| 2. Infra state via MCP | `workers_list` · `workers_get_worker` · `workers_get_worker_code` | Auto-authenticated, structured, cannot corrupt data. |
+| 3. Build/deploy/audit MCP | cloudflare-builds · cloudflare-auditlogs · cloudflare-bindings · cloudflare-graphql · cloudflare-ai-gateway | Cross-product verification chains per §MCP-Driven Operations. |
 | 4. CLI fallback | `npx wrangler` (via exec, never PowerShell) | Only when MCP tools don't cover the operation. |
 | 5. REST fallback | Python urllib + CLOUDFLARE_API_TOKEN | Only when MCP+wrangler unavailable. |
 
@@ -661,11 +673,11 @@ CLAIMS per `qnfo-core` §9.11 Rule 14 — BLOCKED.
 
 ---
 
-## DeepChat MCP Server Coverage (v3.8 — 18 of 18 available)
+## DeepChat MCP Server Coverage (v3.45 — 9 of 9 registered; 2026-08-17 fleet trim)
 
 DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → hosted Streamable HTTP). All servers expose `/mcp` and `/sse` (compatibility alias) through MCP SDK v2 factories. OAuth triggers automatically on first use.
 
-### Configured (18/18 — 100% coverage)
+### Configured (9/9 — 2026-08-17 fleet trim)
 
 | # | MCP Server ID | Endpoint | Auth | Purpose |
 |:--|:--------------|:---------|:----:|:--------|
@@ -673,26 +685,27 @@ DeepChat connects to Cloudflare MCP servers via `npx mcp-remote` (stdio → host
 | 2 | `cloudflare-docs` | `docs.mcp.cloudflare.com/mcp` | None | Documentation search (autoApprove: all) |
 | 3 | `cloudflare-bindings` | `bindings.mcp.cloudflare.com/mcp` | OAuth | Workers bindings, wrangler.toml configs |
 | 4 | `cloudflare-builds` | `builds.mcp.cloudflare.com/mcp` | OAuth | Pages + Workers CI/CD, build logs |
-| 5 | `cloudflare-observability` | `observability.mcp.cloudflare.com/mcp` | OAuth | Workers logs, metrics, invocation tracing |
-| 6 | `cloudflare-ai-gateway` | `ai-gateway.mcp.cloudflare.com/mcp` | OAuth | AI Gateway log search, prompt/response inspection |
-| 7 | `cloudflare-graphql` | `graphql.mcp.cloudflare.com/mcp` | OAuth | Cross-product GraphQL Analytics API |
-| 8 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
-| 9 | `cloudflare-radar` | `radar.mcp.cloudflare.com/mcp` | OAuth | Internet insights, BGP, traffic trends (autoApprove: all) |
-| 10 | `cloudflare-logpush` | `logs.mcp.cloudflare.com/mcp` | OAuth | Workers log export, logpush job management |
-| 11 | `cloudflare-browser-mcp-server` | `browser.mcp.cloudflare.com/mcp` | OAuth | Headless browser automation, screenshots, PDF generation |
-| 12 | `dns-analytics` | `dns-analytics.mcp.cloudflare.com/mcp` | OAuth | DNS query analytics, query volumes, top domain queries |
-| 13 | `containers-mcp` | `containers.mcp.cloudflare.com/mcp` | OAuth | Deploy & manage Docker containers on Cloudflare edge |
-| 14 | `cloudflare-casb-mcp-server` | `casb.mcp.cloudflare.com/mcp` | OAuth | CASB — Cloud Access Security Broker, SaaS security audits |
-| 15 | `cloudflare-autorag-mcp-server` | `autorag.mcp.cloudflare.com/mcp` | OAuth | AutoRAG — Automated RAG with Workers AI + Vectorize |
-| 16 | `cloudflare-blog` | `blog.mcp.cloudflare.com/mcp` | None | Search blog.cloudflare.com posts (public, no auth) |
-| 17 | `dex-analysis` | `dex.mcp.cloudflare.com/mcp` | OAuth | Digital Experience monitoring, network performance analysis |
-| 18 | `cloudflare-agents-docs` | `agents.cloudflare.com/mcp` | None | Agents SDK Documentation search — `search-agent-docs` tool (public, no auth, autoApprove: all) |
+| 5 | `cloudflare-ai-gateway` | `ai-gateway.mcp.cloudflare.com/mcp` | OAuth | AI Gateway log search, prompt/response inspection |
+| 6 | `cloudflare-graphql` | `graphql.mcp.cloudflare.com/mcp` | OAuth | Cross-product GraphQL Analytics API |
+| 7 | `cloudflare-auditlogs` | `auditlogs.mcp.cloudflare.com/mcp` | OAuth | Account audit trail, compliance reports |
+| 8 | `cloudflare-blog` | `blog.mcp.cloudflare.com/mcp` | None | Search blog.cloudflare.com posts (public, no auth) |
+| 9 | `cloudflare-agents-docs` | `agents.cloudflare.com/mcp` | None | Agents SDK Documentation search — `search-agent-docs` tool (public, no auth, autoApprove: all) |
 
-### Coverage Complete — 18/18 (100%)
+### Coverage — 9/9 registered (2026-08-17 fleet trim)
 
-All 18 available Cloudflare MCP servers are now configured. No servers remain to add.
-(2026-08-11: row 18 added from the docs servers-for-cloudflare page — Agents SDK Documentation server at
-`agents.cloudflare.com/mcp`, serverInfo `agents-mcp` v0.0.1, verified live via MCP initialize + tools/list.)
+Fleet trimmed from 18 to 9 (MCP audit 2026-08-17, user mandate: remove servers that are unneeded or
+cannot stay connected):
+- `cloudflare-observability` + `cloudflare-radar` REMOVED — no cached OAuth tokens (require one-time
+  interactive browser OAuth; enabled-but-not-running state persisted since 2026-08-08).
+- `cloudflare-logpush`, `cloudflare-browser-mcp-server`, `dns-analytics`, `containers-mcp`,
+  `cloudflare-casb-mcp-server`, `cloudflare-autorag-mcp-server`, `dex-analysis` REMOVED — not needed
+  for QNFO operations.
+- Non-Cloudflare removals: `qnfo-browser-run` (endpoint 404 — worker not deployed), `github` (git-github
+  skill uses gh CLI), `LinkedIn`/`buffer` (plaintext creds; social-media-management uses APIs/browser),
+  `filesystem`, `sequential-thinking`, `qnfo-mcp-portal`, `qwav-platform` (alias), `mcd-mcp`, `nowledge-mem`.
+- Tokens refreshed 13/13 via fleet-oauth-refresh.py (2026-08-17); 8 Cloudflare servers re-registered in
+  the live store (app_db/agent.db mcp_servers) — previously phantom entries in mcp-settings.json only.
+- Backup: mcp-settings.json.bak-mcptrim2-20260817-202041, agent.db.bak-mcptrim2-20260817-202041.
 
 ### MCP Server Portals (Zero Trust AI controls — 2026-08-11)
 
@@ -1916,7 +1929,7 @@ The deepchat agent has these Cloudflare MCP tools available directly — use the
 | `workers_list()` | List all Workers | `npx wrangler deploy list` / `GET /accounts/.../workers/scripts` |
 | `workers_get_worker(scriptName)` | Get Worker details | `GET /accounts/.../workers/scripts/{name}` |
 | `workers_get_worker_code(scriptName)` | Get Worker source code | Manual Dashboard code view |
-| `query_worker_observability(query, timeframe)` | Worker logs, metrics, invocation tracing | `curl /health` endpoint, `cloudflare-observability` MCP |
+| `query_worker_observability(query, timeframe)` | REMOVED 2026-08-17 (server unregistered) | Use GraphQL `viewer.workersInvocationsAdaptiveGroups` or Workers REST logs API |
 | `search_cloudflare_documentation(query)` | Search Cloudflare docs | Web search, `cloudflare-docs` MCP |
 | `search_papers(query)` / `search_papers_enriched(query)` | Semantic paper search via Vectorize | Manual D1 queries |
 | `query_graph(endpoint, params)` | Knowledge graph queries | Manual Cypher/SQL |
@@ -1932,52 +1945,46 @@ For other Cloudflare MCP servers (bindings, builds, auditlogs, graphql, etc.), t
 | Search Cloudflare docs/prod limits | `cloudflare-docs` | `search_cloudflare_documentation` tool | Web search for Cloudflare docs |
 | Inspect Workers bindings/wrangler.toml | `cloudflare-bindings` | Read wrangler.jsonc locally | Guess from memory |
 | Check Pages/Worker build logs, CI/CD deploy history | `cloudflare-builds` | `npx wrangler deployments list` | Claim "deployed" without build confirmation |
-| Monitor Worker health, logs, invocation tracing | `cloudflare-observability` | `curl /health` endpoint | `workers_get_worker_code` alone |
+| Monitor Worker health, logs, invocation tracing | GraphQL `workersInvocationsAdaptiveGroups` (via `cloudflare-graphql`) | `curl /health` endpoint | `workers_get_worker_code` alone |
 | Inspect AI Gateway logs, prompt/response tracing | `cloudflare-ai-gateway` | Raw Gateway REST API | Assume AI calls worked |
 | Cross-product analytics (all Cloudflare products) | `cloudflare-graphql` | Per-product REST APIs | Manual aggregation |
 | Query account audit trail, compliance reports | `cloudflare-auditlogs` | Manual `GET /accounts/{id}/audit_logs` | Trust "it was deployed" narrative |
-| Internet insights, BGP, traffic trends, domain rankings | `cloudflare-radar` | External internet stats tools | Guess traffic patterns |
-| Export/stream Workers logs to external destinations | `cloudflare-logpush` | Manual log download via REST | Lose logs between sessions |
-| Headless browser automation, screenshots, PDF gen | `cloudflare-browser-mcp-server` | YoBrowser / CDP | Local browser (thin-client) |
-| DNS query analytics, query volumes, top queries | `dns-analytics` | `nslookup` / `dig` | Guess zone traffic |
-| Deploy Docker containers on Cloudflare edge | `containers-mcp` | Manual REST + Container Registry | Local Docker (no edge) |
-| SaaS security audits, CASB scanning | `cloudflare-casb-mcp-server` | Manual SaaS config review | Assume connected apps are secure |
-| Automated RAG with Workers AI + Vectorize | `cloudflare-autorag-mcp-server` | Manual Vectorize insert + Workers AI call | Skip RAG entirely |
+| Internet insights, BGP, traffic trends, domain rankings | (removed 2026-08-17) | External internet stats tools | Guess traffic patterns |
+| Export/stream Workers logs to external destinations | (removed 2026-08-17) | Manual log download via REST | Lose logs between sessions |
+| Headless browser automation, screenshots, PDF gen | (removed 2026-08-17) | YoBrowser / CDP | Local browser (thin-client) |
+| DNS query analytics, query volumes, top queries | (removed 2026-08-17) | `nslookup` / `dig` / GraphQL zone analytics | Guess zone traffic |
+| Deploy Docker containers on Cloudflare edge | (removed 2026-08-17) | Manual REST + Container Registry | Local Docker (no edge) |
+| SaaS security audits, CASB scanning | (removed 2026-08-17) | Manual SaaS config review | Assume connected apps are secure |
+| Automated RAG with Workers AI + Vectorize | (removed 2026-08-17) | Manual Vectorize insert + Workers AI call | Skip RAG entirely |
 | Search blog.cloudflare.com for announcements | `cloudflare-blog` | Web search for "Cloudflare blog" | Assume nothing changed |
-| Digital Experience monitoring, network perf | `dex-analysis` | Manual `curl` latency tests | Assume "it's fine" |
+| Digital Experience monitoring, network perf | (removed 2026-08-17) | Manual `curl` latency tests | Assume "it's fine" |
 
 ### Multi-Server Workflows
 
 **Infrastructure Audit (full ecosystem):**
 ```
 1. cloudflare             → list Workers, D1, R2, KV, Pages, Queues, DNS zones
-2. cloudflare-observability → per-Worker metrics, error rates, invocation counts
-3. cloudflare-graphql     → cross-product analytics (bandwidth, requests, threat data)
-4. cloudflare-auditlogs   → deployment audit trail, who changed what when
-5. dns-analytics          → per-zone query volumes, top domain queries
-6. cloudflare-builds      → verify latest deployment for each Worker/Pages project
-7. cloudflare-bindings    → cross-reference declared vs actual bindings per Worker
+2. cloudflare-graphql     → per-Worker metrics/error rates (workersInvocationsAdaptiveGroups) + cross-product analytics
+3. cloudflare-auditlogs   → deployment audit trail, who changed what when
+4. cloudflare-builds      → verify latest deployment for each Worker/Pages project
+5. cloudflare-bindings    → cross-reference declared vs actual bindings per Worker
 ```
 **Result:** A single audit that answers "what exists, is it healthy, who touched it, and how much traffic does it get" — all from MCP servers without a single `curl` or `wrangler` call.
 
 **Post-Deploy Verification:**
 ```
 1. cloudflare-builds      → confirm deploy succeeded, get build ID
-2. cloudflare-observability → confirm new Worker is receiving healthy invocations
+2. cloudflare-graphql     → confirm new Worker receives healthy invocations (workersInvocationsAdaptiveGroups)
 3. cloudflare-auditlogs   → confirm deploy action appears in audit trail
 4. cloudflare-bindings    → verify bindings match wrangler.jsonc
-5. dns-analytics          → (if custom domain) confirm DNS resolution traffic
-6. dex-analysis           → verify end-user latency is within baseline
 ```
 
 **Research Publication → Production (full pipeline):**
 ```
 1. cloudflare             → D1 insert (living-paper), R2 archive, DNS DNSLink
-2. cloudflare-observability → confirm papers-server Worker serves new paper
-3. cloudflare-graphql     → confirm CDN cache hit ratio increasing (paper gaining readers)
-4. cloudflare-radar       → check papers.qnfo.org domain ranking trend
-5. cloudflare-blog        → search for relevant Cloudflare announcements to cite
-6. cloudflare-auditlogs   → complete publication audit trail
+2. cloudflare-graphql     → confirm papers-server Worker healthy + CDN cache hit ratio increasing
+3. cloudflare-blog        → search for relevant Cloudflare announcements to cite
+4. cloudflare-auditlogs   → complete publication audit trail
 ```
 
 **Security Posture Review:**
@@ -1992,10 +1999,10 @@ For other Cloudflare MCP servers (bindings, builds, auditlogs, graphql, etc.), t
 ### MCP Anti-Phantom Gate for Operations
 
 When an MCP server call returns a success response, treat it with the same verification rigor as CLI/REST:
-1. **`cloudflare-observability`** — a Worker listed as "healthy" by the MCP is a STARTING POINT, not verification. Cross-reference against `cloudflare-builds` (deploy date matches) and `cloudflare-auditlogs` (deploy action recorded).
-2. **`cloudflare-builds`** — "deploy succeeded" must be paired with `cloudflare-observability` showing healthy invocations within the same timeframe.
-3. **`cloudflare-graphql`** — analytics results must be time-bounded and cross-referenced against `cloudflare-observability` for consistency.
-4. **MCP-only verification chain:** two MCP servers independently confirming the same fact (e.g., Worker X is healthy per observability AND its latest deploy succeeded per builds AND the deploy action appears in auditlogs) constitutes a verified claim. Single-MCP-server results are directionally useful but not verified.
+1. **`cloudflare-graphql`** — invocation/metrics data (workersInvocationsAdaptiveGroups) is a STARTING POINT, not verification. Cross-reference against `cloudflare-builds` (deploy date matches) and `cloudflare-auditlogs` (deploy action recorded). (Observability MCP removed 2026-08-17 — GraphQL + REST logs API replace it.)
+2. **`cloudflare-builds`** — "deploy succeeded" must be paired with GraphQL analytics showing healthy invocations within the same timeframe.
+3. **`cloudflare-graphql`** — analytics results must be time-bounded and cross-referenced against a second independent source (builds/auditlogs) for consistency.
+4. **MCP-only verification chain:** two MCP servers independently confirming the same fact (e.g., Worker X is healthy per GraphQL analytics AND its latest deploy succeeded per builds AND the deploy action appears in auditlogs) constitutes a verified claim. Single-MCP-server results are directionally useful but not verified.
 
 ---
 
@@ -2012,8 +2019,8 @@ for discovery and verification — never assume the agent will recall them from 
 | `workers_list` | Enumerate all Workers + modified_on timestamps | ANY infra audit (STALE-AUDIT-1 gate) |
 | `workers_get_worker(scriptName)` | Worker details | Single-worker inspection |
 | `workers_get_worker_code(scriptName)` | Worker source | Verify handler actually uses a binding |
-| `query_worker_observability(query, timeframe)` | Logs, metrics, invocations | Health verification post-deploy |
-| `observability_keys` / `observability_values` | Log field discovery | Building observability queries |
+| `query_worker_observability(query, timeframe)` | (REMOVED 2026-08-17) | Use cloudflare-graphql workersInvocationsAdaptiveGroups instead |
+| `observability_keys` / `observability_values` | (REMOVED 2026-08-17) | GraphQL analytics dimensions |
 | `search_cloudflare_documentation(query)` | Cloudflare docs | Limits, API reference, config schema |
 | `migrate_pages_to_workers_guide` | Pages→Workers migration | Migration tasks |
 | `search_papers` / `search_papers_enriched` | Vectorize semantic search | Paper retrieval (MCP layer) |
@@ -2067,12 +2074,12 @@ live Worker endpoint probe) in its own instructions — not rely on the agent re
 | `ON CONFLICT` upsert against a D1 table with FTS5 shadow tables (HTTP 400) | Use `scripts/d1-safe-write.js` (CHECK-THEN-WRITE, never a combined upsert) — see `references/d1-rest-api-schema.json`. |
 | Large D1 write payloads built via PowerShell `ConvertTo-Json` silently corrupting to `"[object Object]"` (KIF-21) | Use `scripts/d1-safe-write.js` (Node-native JSON construction + mandatory length-verification re-GET) instead of PowerShell string-building for any payload > a few hundred characters. |
 | **KIF-59: Using PowerShell for ANY Cloudflare operation (2026-07-31 incident)** | **HARD BLOCK.** PowerShell corrupts UTF-8, mangles quoting, aliases `curl` to `Invoke-WebRequest`, and `ConvertTo-Json` silently produces garbage. Use MCP tools (`workers_list`, `query_worker_observability`, etc.) FIRST, `npx wrangler` SECOND, REST API with Python THIRD. PowerShell is NEVER acceptable for Cloudflare operations — even `curl.exe` must be invoked directly (not via PowerShell which may intercept it). See §EXECUTION GATE for the full decision ladder. |
-| Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include all high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-observability`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, and `cloudflare-radar`. See §DeepChat MCP Server Coverage for the canonical list. |
+| Not configuring Cloudflare MCP servers that are directly relevant to QNFO operations (KIF-48) | DeepChat's `mcp-settings.json` must include the high-value Cloudflare MCP servers: `cloudflare` (main), `cloudflare-docs`, `cloudflare-bindings`, `cloudflare-builds`, `cloudflare-ai-gateway`, `cloudflare-graphql`, `cloudflare-auditlogs`, `cloudflare-blog`, `cloudflare-agents-docs`. See §DeepChat MCP Server Coverage (v3.45 — 9/9 registered). |
 | Trusting that an MCP server is reachable without a live HTTP probe | Verify with `curl.exe -s -o NUL -w "%{http_code}" https://<subdomain>.mcp.cloudflare.com/mcp` — 401 = live (auth required), 404/530 = not deployed. Never claim an MCP server "is working" from config validation alone. |
-| Using raw `npx wrangler` or REST API when an MCP server exists for that operation (KIF-49) | Consult §MCP-Driven Operations decision matrix FIRST. `cloudflare-observability` replaces `curl /health`. `cloudflare-builds` replaces `npx wrangler deployments list`. `cloudflare-auditlogs` replaces manual audit log REST queries. CLI/REST are FALLBACKS, not defaults. |
+| Using raw `npx wrangler` or REST API when an MCP server exists for that operation (KIF-49) | Consult §MCP-Driven Operations decision matrix FIRST. `cloudflare-graphql` (workersInvocationsAdaptiveGroups) replaces `curl /health`. `cloudflare-builds` replaces `npx wrangler deployments list`. `cloudflare-auditlogs` replaces manual audit log REST queries. CLI/REST are FALLBACKS, not defaults. |
 | Claiming "deployed" or "healthy" from a single MCP server response alone (MCP Anti-Phantom Gate) | Cross-reference any operational claim against at least TWO independent MCP servers (e.g., observability + builds + auditlogs = verified). Single-MCP feed is directional, not confirmed. |
-| Skipping `cloudflare-observability` during infrastructure audits in favor of REST/curl health checks | Observability MCP provides structured metrics (error rates, p50/p99 latency, invocation counts) that a raw `curl /health` cannot. Use it as the FIRST health check, not the last. |
-| Running DNS zone audits without `dns-analytics` | `dns-analytics` MCP shows actual query volumes and top queries per zone — a zone could have perfect DNS records but zero traffic (dead domain). `nslookup` alone misses this. |
+| Skipping structured metrics during infrastructure audits in favor of REST/curl health checks | `cloudflare-observability` MCP REMOVED 2026-08-17 (no OAuth token — cannot stay connected). Use `cloudflare-graphql` workersInvocationsAdaptiveGroups for structured metrics (error rates, p50/p99 latency, invocation counts), REST Workers logs API as fallback. |
+| Running DNS zone audits without query-volume data | `dns-analytics` MCP REMOVED 2026-08-17. Use GraphQL zone analytics (httpRequests1dGroups by zone) or Cloudflare API zone analytics to detect dead zones (perfect records, zero traffic). |
 | Deploying Workers/Pages without checking `cloudflare-builds` for build confirmation | `cloudflare-builds` MCP is the canonical deploy-history source. Wrangler's `deploy` exit code confirms the REQUEST was accepted, not that the build pipeline succeeded and the artifact is serving. |
 | **KIF-50:** Deploying Workers via REST API PUT without binding metadata (2026-07-30 incident) | A `PUT /accounts/{id}/workers/scripts/{name}` without `metadata.bindings` silently drops ALL D1, R2, KV, and Vectorize bindings from the Worker. The Worker code still references `env.LIVING_PAPER`/`env.DB`/`env.QNFO_BUCKET` but they are `undefined` at runtime → HTTP 500. **ALWAYS use `npx wrangler deploy` from a `wrangler.toml`/`wrangler.jsonc` that declares EVERY binding.** After any deploy, verify ALL data-dependent routes return 200 (not just `/health`). Impact: 4 public domains down for ~30 min when gateway lost 3 bindings. |
 | **KIF-51:** Account-level `http_request_redirect` rulesets silently intercepting traffic before Pages/Workers (2026-07-30 finding, FIXED v3.13) | The Cloudflare Rules Engine executes redirect phases at position 5, BEFORE Workers (position 10). **Diagnose with `curl -v https://domain/`** — look for `Location:` and `CF-RAY`. **Fix via API (NO DASHBOARD):** `GET /accounts/{id}/rulesets` to find the ruleset, then `DELETE /accounts/{id}/rulesets/{id}`. Requires token scope `Account:Rulesets:Edit`. The prior claim that API tokens couldn't manage these was a permissions issue, not an API limitation. |
@@ -2151,7 +2158,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.53** (R2-OBJECTS-LISTING-SHAPE-1; 2026-08-17) (cloudflare — ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1; Cost Control $90/30d + COST-AUDIT-MISS-AI-1 + budget <$100/$200 preserved; 2026-08-17) (cloudflare — red-team fix cycle: tier-0 gateway routing LIVE (qnfo-ai v4.3.9) + AI Search deployed (qnfo-ai-search v1.0.1) + User Insights/dynamic-route docs; 2026-08-12) (cloudflare — ALL 12 official Cloudflare skills fully merged inline (email REST/mistakes/deliverability, One full + migrations, Agents SDK full, DO full, Workers BP full, Sandbox stable/@next/migrate, Turnstile wizard, Web Perf phases, Wrangler CLI full); 2026-08-11) (cloudflare — C5 RESOLVED: MCP portal gateway origin gateway.agents.cloudflare.com; 2026-08-11) (cloudflare — 5-repo fork family: skills + agent-skills-discovery-rfc + mcp + playwright-mcp + workers-mcp, all forked to QNFO + in sync + RFC 0.2.0 discovery implemented live as qnfo-skills-discovery Worker; sandbox-sdk→sandbox-stable/next/migrate-to-next; 2026-08-11) (cloudflare — MCP ecosystem source repos + observability/radar OAuth complete; 2026-08-11) (cloudflare — MCP Server Portals + radar OAuth correction; 2026-08-11) (cloudflare — Worker fleet baseline 9→12 + qnfo-skill-sync + qnfo-agent-orchestrator + PHANTOM-DEPLOY-VERSION; 2026-08-10) (cloudflare — Cloudflare Fork Policy: official Cloudflare skills forked to QNFO/cloudflare-skill-forks, NEVER backed up in qnfo-skills; modifications PRd back to Cloudflare; user directive 2026-08-05)
+Current: **v3.54** (VECTORIZE-TOP-K-50-1 — Vectorize topK 50-cap with returnValues=true; 2026-08-17)
 
 ---
 
