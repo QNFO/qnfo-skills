@@ -1,3 +1,20 @@
+> **v1.22 UPDATE (2026-08-17, kaizen — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated against canonical CMD templates; MODEL-KEY-FILE-DRIFT-1 #12):**
+> Red-team: direct parent-agent audit (session this — user report: "2 DIFFERENT CUSTOM PROMPT
+> VERSIONS/TYPES LOADING NOW: CMD PROMPTS AND NON-CMD-PREFIX. AUDIT AND CONSOLIDATE/DE-DUPLICATE").
+> HARD: 1. SOFT: 0. Changes:
+> (1) [HARD] **26→18 consolidation** — of the 17 legacy commands imported in v1.20, 8 duplicated
+>     canonical CMD templates (created pre-v1.5 before the 9-CMD architecture existed) and were
+>     DROPPED: CONTINUE MY WORK→CMD CONTINUE, CLOSE THIS SESSION→CMD CLOSEOUT, START NEW
+>     RESEARCH→CMD RESEARCH, EXECUTE RED TEAM→CMD RED TEAM/SUB, UPDATE PLAN AND CONTINUE→CMD
+>     EXECUTE, DEPLOY TO PRODUCTION→CMD DEPLOY, PUBLISH THIS PAPER→CMD PUBLISH, RUN SYSTEM
+>     UPDATE→CMD SKILLS UPDATE. 9 unique quick-commands KEPT with refreshed self-contained
+>     content (no fake `/CMD X` references) + `{{topic}}`/`{{file}}` placeholders fixed (the fill
+>     tool substitutes `{{param}}`, NOT `[param]`). Final set: 9 CMD + 9 quick = 18, byte-identical
+>     4/4 stores, 0 schema violations. custom_prompts.json retained as the legacy archive.
+> (2) [SOFT] **MODEL-KEY-FILE-DRIFT-1 #12** — preferredModel re-drifted to deepseek-v4-pro
+>     (running app save); reset to flash in both JSON files + both DBs; verify passes exit 0.
+> Cross-reference: kaizen v2.65, system-prompt v3.36, deepchat-settings v1.20/1.21, session this.
+
 > **v1.21 UPDATE (2026-08-17, kaizen — DISASTER-RECOVERY: restore-custom-prompts.py + version-controlled canonical store; red-team of the recovery failure):**
 > Red-team: direct parent-agent audit (session this — user lesson-learned: "WHY COULDN'T YOU
 > IMMEDIATELY LOAD BACKED-UP WORKING CUSTOM PROMPTS?"). HARD: 4. SOFT: 1. Findings:
@@ -189,7 +206,7 @@
 
 ---
 name: deepchat-settings
-version: 1.21
+version: 1.22
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -647,4 +664,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.21** (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.22** (deepchat-settings — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated vs CMD templates; {{param}} placeholders fixed; MODEL-KEY-FILE-DRIFT-1 #12; 2026-08-17) (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

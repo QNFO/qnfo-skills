@@ -60,7 +60,16 @@ schema-valid local backup → legacy palette. Always restarts DeepChat afterward
 Run `restore-custom-prompts.py export` after ANY prompt change (CMD SKILLS UPDATE cycles,
 UI edits) and commit this file. If this file is newer than the stores, restore from it.
 
-Current state (2026-08-17): **26 entries** — 9 CMD templates (cmd-continue … cmd-deploy)
-+ 17 user commands (cmd-menu … init-session), all schema-valid, byte-identical across the
-4 stores (Roaming app-settings.json / .deepchat mirror / app_db agent.db / legacy
-.deepchat agent.db). System prompt v3.36 (sha16 b7f060a2eb1e5594) untouched by restores.
+Current state (2026-08-17, consolidated): **18 entries** — 9 CMD templates
+(cmd-continue … cmd-deploy) + 9 quick commands (📋 CMD MENU, RESUME FROM HANDOFF,
+SAVE MY STATE, AUDIT INFRASTRUCTURE, SYNC ALL SKILLS, FIND PAPERS ON TOPIC, VALIDATE
+CITATIONS, SHARE TO SOCIAL MEDIA, 🚀 INIT SESSION), all schema-valid, byte-identical
+across the 4 stores (Roaming app-settings.json / .deepchat mirror / app_db agent.db /
+legacy .deepchat agent.db). System prompt v3.36 (sha16 b7f060a2eb1e5594) untouched by
+restores. History: the 26-entry set (9 CMD + 17 legacy commands) was consolidated on
+2026-08-17 — 8 legacy commands duplicated canonical CMD templates (CONTINUE MY WORK→CMD
+CONTINUE, CLOSE THIS SESSION→CMD CLOSEOUT, START NEW RESEARCH→CMD RESEARCH, EXECUTE RED
+TEAM→CMD RED TEAM/SUB, UPDATE PLAN AND CONTINUE→CMD EXECUTE, DEPLOY TO PRODUCTION→CMD
+DEPLOY, PUBLISH THIS PAPER→CMD PUBLISH, RUN SYSTEM UPDATE→CMD SKILLS UPDATE) and were
+dropped; kept commands' content refreshed (self-contained instructions, `{{topic}}`/
+`{{file}}` placeholders for the fill tool).
