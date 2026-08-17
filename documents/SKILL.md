@@ -9,6 +9,13 @@ platform: local
 autonomous: false
 self_sufficient: true
 ---
+> **v2.5 UPDATE (2026-08-17, kaizen — N-2 frontmatter/banner alignment repair):**
+> Red-team: CMD SKILLS UPDATE red-team audit (session lWvwLSVUTTvLoIH3t7tG7).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Frontmatter 2.5 had no v2.5 banner** — newest banner was v2.4 (2026-08-02);
+>     this banner restores N-2 (frontmatter version == latest banner version).
+> Cross-reference: kaizen v2.61, system-prompt v3.35, session lWvwLSVUTTvLoIH3t7tG7.
+
 
 > **v0.1 UPDATE (2026-08-03, kaizen — skill merge):**
 > Merged `doc-coauthoring` skill (376 lines) into this skill.
@@ -626,3 +633,6 @@ Announce document completion. Provide a few final tips:
 Current: **v2.5** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
 
+## Version
+
+Current: **v2.5** (documents — N-2 footer alignment; 2026-08-17)

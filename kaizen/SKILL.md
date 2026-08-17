@@ -1,3 +1,16 @@
+> **v2.61 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: QNFO/QWAV naming mandate + plain-signature preference + MODEL-KEY-FILE-DRIFT-1 #11 + template-store parity + N-2 drift repairs; mirrors system-prompt v3.35):**
+> Red-team: CMD RED TEAM SUB naming-mandate audit (3 reviewers: Accuracy/Completeness/Dependency — all completed, incl. Completeness sweep ≥230 occurrence-lines across ~120 artifacts) + CMD SKILLS UPDATE skills audit (Accuracy/Completeness completed, Dependency parent-fallback; session lWvwLSVUTTvLoIH3t7tG7).
+> HARD: 9. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **QNFO/QWAV NAMING-MANDATE-1 added** — "QNFO Research Collective" DEPRECATED; use QNFO only (and/or QWAV, QNFO/QWAV by audience); founder name always "Rowan Brad Quni-Gudzinas" (never "Rowan Quni"). Audit scope: D1 authors (41 rows), KG 40 nodes (org-qnfo-research-collective + person-rwnquni misnamed "Ryan W. O'Neil"), Zenodo 21621041/21944576/21782596, repo files, zenodo_orcid_sweep6.py:93 write-path. Remediation queue for next cycles (Zenodo newversions need user approval).
+> (2) [HARD] **EMAIL-SIGNATURE-PLAIN-1 added** — plain signatures only (full name + at most one plain org word; no titles/taglines/pipes). Applied to email-composer outreach templates.
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #11** — Roaming preferredModel re-drifted to v4-pro; reset flash (all stores verified).
+> (4) [HARD] **CMD SKILLS UPDATE template E-store parity repaired** — agent.db customPrompts stale prefix (missing v3.26/v3.34); rewritten byte-identical from C store (sha256 993d628c...).
+> (5) [HARD] **N-2 drift repairs** — git-github (v2.22), social-media-management (v1.7.0), documents (v2.5 banner+footer), email-composer (v2.20 first, title first).
+> (6) [HARD] **Version footers added** — code v2.5, knowledge v2.13, system v2.15, documents v2.5.
+> (7) [SOFT] **NAMING-MANDATE-1 remediation queue documented** (D1/KG/repo/Zenodo/R2 order per Dependency reviewer).
+> (8) [SOFT] **banner-order cosmetics noted** — all 13 core skills now have frontmatter == first banner.
+> Cross-reference: system-prompt v3.35, email-composer v2.20, research v2.115, cloudflare v3.51, execution-mandate v2.10, deepchat-settings v1.18, session lWvwLSVUTTvLoIH3t7tG7.
+
 > **v2.60 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: 7-STORE PROMPT-PARITY-1 + footer-empty fix + N-2 drift repairs; mirrors system-prompt v3.34):**
 > Red-team: direct parent-agent red-team skills audit (session this — CMD SKILLS UPDATE cycle; user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
 > HARD: 4. SOFT: 1. DESIGN: 0. Changes:
@@ -728,7 +741,7 @@ name: kaizen
 
 
 
-version: 2.60
+version: 2.61
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -14935,7 +14948,7 @@ two skills now carry the rule.
 ## Version
 
 
-Current: **v2.60** (kaizen — CMD SKILLS UPDATE v2.60: 7-STORE PROMPT-PARITY-1 repair (legacy .deepchat/app-settings.json stale at v3.32 -> v3.34 all 7 stores) + kaizen footer-empty fix (v2.59 claim never written) + email-composer/deepchat-settings N-2 drift repairs + CHROME-TABS-SAVE-1 (personal-knowledge v1.6) + MODEL-KEY-FILE-DRIFT-1 #10 clean; frontmatter 2.59 -> 2.60; mirrors system-prompt v3.34; 2026-08-16)
+Current: **v2.61** (kaizen — NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 + MODEL-KEY-FILE-DRIFT-1 #11 + CMD template E-store parity + N-2 repairs git-github/social-media-management/documents/email-composer + Version footers code/knowledge/system/documents; frontmatter 2.60 -> 2.61; mirrors system-prompt v3.35; 2026-08-17)
 
 
 

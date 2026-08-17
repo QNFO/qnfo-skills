@@ -1,4 +1,17 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.34
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.35
+
+> **v3.35 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: QNFO/QWAV naming mandate + plain-signature preference + MODEL-KEY-FILE-DRIFT-1 #11 + template-store parity + N-2 drift repairs):**
+> Red-team: CMD RED TEAM SUB (naming-mandate audit, 3 reviewers + direct parent audit) + CMD SKILLS UPDATE skills audit (2/3 reviewers + parent fallback; session lWvwLSVUTTvLoIH3t7tG7).
+> HARD: 9. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **QNFO/QWAV NAMING MANDATE-1 added (user directive 2026-08-17)** — Rowan Brad Quni-Gudzinas is Founder/PI of QNFO/QWAV (QNFO = research; QWAV = commercial/industry quantum solutions). His name MUST always be written in full and consistently: "Rowan Brad Quni-Gudzinas" (never "Rowan Quni"). "QNFO Research Collective" is DEPRECATED — use "QNFO" only (and/or "QWAV", "QNFO/QWAV", depending on audience and context). Enforcement: email-composer outreach templates fixed (signatures now plain full name + single org line); D1 authors, KG nodes (40), Zenodo records (21621041 creator-name violation, 21944576/21782596 affiliations), repo files, and write-path script zenodo_orcid_sweep6.py:93 remain for the remediation cycle (Zenodo newversions need user approval; KG/D1 writable).
+> (2) [HARD] **EMAIL-SIGNATURE-PLAIN-1 added (user preference 2026-08-17)** — pretentious signature formats ("Founder/PI, QNFO/QWAV · papers.qnfo.org") are banned: no titles, no role prefixes, no website taglines, no separator pipes. Signature = full name + at most one plain org word. Applied to email-composer/references/outreach-strategy.md (3 blocks) + qnfo-qwav-strategy.md.
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #11** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys + agent.db verified).
+> (4) [HARD] **CMD SKILLS UPDATE template store parity repaired** — agent.db customPrompts (E store) was a stale prefix of Roaming customPrompts (C store), missing v3.26/v3.34 blocks; rewritten byte-identical (sha256 993d628c...).
+> (5) [HARD] **N-2 drift repairs (4 skills)** — git-github (v2.22 banner moved to top), social-media-management (v1.7.0 banner moved to top), documents (v2.5 banner + footer added), email-composer (v2.20 banner first, title first).
+> (6) [HARD] **Version footers added (4 skills)** — code v2.5, knowledge v2.13, system v2.15, documents v2.5 (## Version sections were missing).
+> (7) [SOFT] **NAMING-MANDATE-1 remediation queue** — D1 papers.authors (41 rows), KG org-qnfo-research-collective + person-rwnquni name corruption ("Ryan W. O'Neil"), repo files (6), Zenodo 21621041/21944576/21782596 (immutable, user approval), R2 mirrors (defer).
+> (8) [SOFT] **banner-order cosmetics noted** — first-position banner now matches frontmatter in all 13 core skills; older banners below are historical by design.
+> Cross-reference: kaizen v2.61, email-composer v2.20, research v2.115, cloudflare v3.51, execution-mandate v2.10, deepchat-settings v1.18, session lWvwLSVUTTvLoIH3t7tG7.
 
 > **v3.34 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: 7-store parity repair + kaizen footer-empty + N-2 skill drifts + MODEL-KEY-FILE-DRIFT-1 #10 clean):**
 > Red-team: direct parent-agent red-team skills audit (session this — CMD SKILLS UPDATE cycle; user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
@@ -287,6 +300,19 @@
 > CMD SKILLS UPDATE template (v3.21 mandate line), session this.
 
 
+
+## QNFO/QWAV IDENTITY & NAMING MANDATE (HARD GATE — 2026-08-17)
+
+1. **Founder identity:** Rowan Brad Quni-Gudzinas is the Founder/PI of QNFO and QWAV — QNFO is the research
+   arm, QWAV is the commercial/industry quantum-solutions arm. His name MUST always appear in full and
+   consistently: **"Rowan Brad Quni-Gudzinas"** (never "Rowan Quni", never inverted without Brad).
+2. **Organization naming:** "QNFO Research Collective" is DEPRECATED. Use **QNFO** only — or **QWAV**, or
+   **QNFO/QWAV** — depending on audience and context (research audience → QNFO; commercial/industry audience
+   → QWAV; combined → QNFO/QWAV). Never re-introduce "Research Collective" into new content (NAMING-MANDATE-1).
+3. **Email signatures:** plain format only (EMAIL-SIGNATURE-PLAIN-1) — full name + at most one plain org word
+   ("QNFO" or "QWAV"). No titles, no role prefixes, no website taglines, no "·" separators, no pipes.
+4. **ADR-014 stands:** sole human author of all QNFO/QWAV content is Rowan Brad Quni-Gudzinas; collective or
+   organizational bylines are permanently prohibited.
 
 ## EMAIL & OUTREACH MANDATE + SKILLS-PARITY ROW (HARD GATE — 2026-08-14; PROACTIVE since 2026-08-15)
 
@@ -1553,7 +1579,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.34** (7-store PROMPT-PARITY-1 repair + kaizen footer-empty fix + email-composer/deepchat-settings N-2 drift repairs + CHROME-TABS-SAVE-1; N-2 re-verify kaizen 2.60/research 2.115/cloudflare 3.51/execution-mandate 2.10; 7-store parity byte-identical; 2026-08-16)
+Current: **v3.35** (QNFO/QWAV NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 + MODEL-KEY-FILE-DRIFT-1 #11 + CMD SKILLS UPDATE template-store parity + N-2 drift repairs git-github/social-media-management/documents/email-composer + Version footers code/knowledge/system/documents; 7-store parity byte-identical; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

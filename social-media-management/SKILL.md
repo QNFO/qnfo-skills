@@ -3,6 +3,22 @@ name: social-media-management
 version: 1.7.0
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation path for LinkedIn profile updates.
 ---
+> **v1.7.0 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D7 broadcast):**
+> Red-team: direct parent-agent audit (session waFvkOWgtaYZqNMLWOqdW continuation; reviewer stalled -> fallback).
+> HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
+> Changes:
+> (1) [HARD] **`zenodo_broadcast.py` added to scripts/** — Zenodo Dissemination
+>     Playbook lever D7: composes <280-char "impact copy" (contribution -> DOI ->
+>     3 hashtags, no exclamation points) and dispatches to Mastodon + Bluesky ONLY
+>     with an explicit `--post` flag. Compose-only default (TEST-SEND-EXTERNAL-1
+>     compliance). Enforces BSKY-300-GRAPHEME-1 (290-char cap). Credential discovery
+>     per TOKEN-DISCOVERY-1 (env -> keys.json -> ~/.mastodon_creds.json).
+> (2) [SOFT] **D7 workflow documented** — after a Zenodo record goes live:
+>     `python scripts\zenodo_broadcast.py --doi <doi> --title "<title>"` (compose),
+>     then `--post` when confirmed live. Cross-links knowledge skill v2.11 playbook.
+> Cross-reference: knowledge v2.11 (Zenodo Dissemination Playbook D1-D7),
+> playbook note 2026-08-14, BSKY-300-GRAPHEME-1, TEST-SEND-EXTERNAL-1.
+
 
 > **v1.5.0 UPDATE (2026-08-05, kaizen — UNIFIED CROSS-PLATFORM SOCIAL HUB + linkedin-mcp DELETED):**
 > Red-team: direct parent-agent audit of session yHXrIYDvUfwQ6twlIaWG5.
@@ -79,21 +95,6 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
 
 # SOCIAL MEDIA MANAGEMENT — v1.7.0
-> **v1.7.0 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D7 broadcast):**
-> Red-team: direct parent-agent audit (session waFvkOWgtaYZqNMLWOqdW continuation; reviewer stalled -> fallback).
-> HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
-> Changes:
-> (1) [HARD] **`zenodo_broadcast.py` added to scripts/** — Zenodo Dissemination
->     Playbook lever D7: composes <280-char "impact copy" (contribution -> DOI ->
->     3 hashtags, no exclamation points) and dispatches to Mastodon + Bluesky ONLY
->     with an explicit `--post` flag. Compose-only default (TEST-SEND-EXTERNAL-1
->     compliance). Enforces BSKY-300-GRAPHEME-1 (290-char cap). Credential discovery
->     per TOKEN-DISCOVERY-1 (env -> keys.json -> ~/.mastodon_creds.json).
-> (2) [SOFT] **D7 workflow documented** — after a Zenodo record goes live:
->     `python scripts\zenodo_broadcast.py --doi <doi> --title "<title>"` (compose),
->     then `--post` when confirmed live. Cross-links knowledge skill v2.11 playbook.
-> Cross-reference: knowledge v2.11 (Zenodo Dissemination Playbook D1-D7),
-> playbook note 2026-08-14, BSKY-300-GRAPHEME-1, TEST-SEND-EXTERNAL-1.
 > **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
 > HARD: 1. SOFT: 0. DESIGN: 1. Changes:

@@ -579,3 +579,6 @@ Local working copy: `C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\` (volatil
 
 Current: **v2.13** (Zenodo Dissemination Playbook D1-D7 implemented 2026-08-14 — enhancer/health/bucket-assets scripts + S2-ZENODO-GAP-1/SUBJECT-SCHEME-GAP-1/ALTERNATE-IDENTIFIER-GAP-1/COMMUNITY-COUNT-GAP-1; PhilPapers Discoverability Pipeline — judicious labeling + monthly cadence; QUNTUF/QUNSAI indexed, 2 of ~293)
 
+## Version
+
+Current: **v2.13** (knowledge — N-2 footer alignment; 2026-08-17)

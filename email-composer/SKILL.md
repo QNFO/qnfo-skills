@@ -1,4 +1,3 @@
-> **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
 # email-composer
 
 > **v2.20 UPDATE (2026-08-15, kaizen — PROACTIVE OUTREACH REINSTATED + red-team remediation of the 2026-08-15 round):**
@@ -25,6 +24,8 @@
 > red-team audit this session, qnfo-email Worker v1.8.
 
 
+
+> **v2.17 UPDATE (2026-08-10, kaizen — CMD RED TEAM FIX CYCLE: Repair-Send Protocol + scripted send-guard (PROSE-GATE-ADVISORY-1 enforcement)):**
 > **v2.19 UPDATE (2026-08-14, kaizen — CMD SKILLS UPDATE: SEND-403-BIC-UA-1 + SEND-KEY-BINDINGS-1 + /send verification):**
 > Red-team: direct parent-agent audit (session FJ4ZYy6OEfAnpu8mq30OZ; RES.007 P7 OUTREACH execution).
 > HARD: 2. SOFT: 1. DESIGN: 0.

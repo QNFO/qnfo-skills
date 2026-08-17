@@ -75,15 +75,15 @@ If you have a moment to look at it, I'd be interested in your thoughts
 — especially on [specific open question they could help with].
 
 Best,
-Rowan Quni
-QNFO Research Collective
+Rowan Brad Quni-Gudzinas
+QNFO
 ```
 
 **Anti-patterns**:
 - Leading with "I'm an independent researcher" or "I don't have a PhD" (irrelevant — the paper is the credential)
 - Asking for endorsement or validation ("do you think this is right?")
 - Over-citing your own work (one paper per outreach, maximum)
-- Pretending to be an institution (QNFO is a collective, not a university — own it honestly)
+- Pretending to be an institution (QNFO is an independent research organization, not a university — own it honestly)
 
 ### B. Potential Funders & Grant Bodies
 
@@ -104,11 +104,11 @@ QNFO Research Collective
 ### Funder Template
 
 ```
-Subject: QNFO Research Collective — [Research Area] Programme
+Subject: QNFO — [Research Area] Programme
 
 Dear [Name/Title],
 
-I'm writing from the QNFO Research Collective, an open-science
+I'm writing from QNFO, an open-science
 research program producing peer-reviewable, DOI-archived work in
 [field: theoretical physics / quantum foundations / philosophy of
 science]. I wanted to share our recent publication record and
@@ -132,9 +132,8 @@ The full publication record is at [DOI list or Zenodo community].
 A 15-minute call would let me present the research programme.
 
 Thank you for your consideration,
-Rowan Quni
-QNFO Research Collective
-research@qnfo.org | qnfo.org
+Rowan Brad Quni-Gudzinas
+QNFO
 ```
 
 **Key differences from academic template**: Lead with the publication RECORD (not a research question). Cite infrastructure numbers. Explicitly name the funding need before the close. Call-to-action is a 15-minute call (funders expect this; academics don't).
@@ -188,9 +187,8 @@ identifying fabrication partners]. The whitepaper (DOI
 I'd welcome a brief conversation to discuss whether this aligns
 with your investment thesis.
 
-Rowan Quni
-Founder, QWAV
-rowan.quni@qwav.tech | qwav.tech
+Rowan Brad Quni-Gudzinas
+QWAV
 ```
 
 **Key differences from funder template**: Open with the PROBLEM (market failure), not the record. Cite the Manifesto + JPCUB metric. State what QWAV is BUILDING, not what QNFO has published. Address risk pre-emptively. The ask is a conversation about alignment, not a specific funding ask.

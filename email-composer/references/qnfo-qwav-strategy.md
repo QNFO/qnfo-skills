@@ -2,7 +2,7 @@
 
 Loaded on demand when business communication requires QNFO/QWAV commercial context.
 
-## QNFO (Research Collective)
+## QNFO
 
 Open-science research collective. Focus: publications, knowledge graph, theoretical physics. Identity: open, collaborative, falsification-driven. Revenue: grant/public funding.
 

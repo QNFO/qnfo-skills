@@ -792,4 +792,6 @@ Recompile v3. Never use `setx` for PATH — it truncates at 1024 chars; use winr
 `EXEC-SHELL-FIX.md`. Cross-ref: windows-command-patterns v3.20 §S-1.0.2.
 Current: **2.14** (system — skill-sync v4.0.11 remediation: gitOk false-success fix + SYNC-DIVERGENCE-MERGE-1 (merge-not-rebase) + PROMPT-STORE-4STORE-1 parity; 2026-08-12) (system — nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
+## Version
 
+Current: **v2.15** (system — N-2 footer alignment; 2026-08-17)

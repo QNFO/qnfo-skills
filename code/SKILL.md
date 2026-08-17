@@ -785,4 +785,6 @@ must be cleaned up in the same turn:
 | Drafting MCP server code locally without git commit same-turn | Commit to git in the SAME turn, or treat as not-yet-existing (KIF-09) |
 Current: **v2.5**** (nomenclature — N-2 nomenclature: H1 version-header delimiter standardized from -- to — (em-dash); version line added; 2026-08-04)
 
+## Version
 
+Current: **v2.5** (code — N-2 footer alignment; 2026-08-17)

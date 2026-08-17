@@ -9,6 +9,32 @@ platform: all
 autonomous: false
 self_sufficient: true
 ---
+> **v2.22 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge + GH-API-STDIN-NOOP-1):**
+> Concurrent session's .kaizen_history claimed v2.21 with GITHUB-TOPICS-PATCH-NOOP-1 + GH-API-STDIN-NOOP-1,
+> but the file was still v2.20 at scan time (phantom/aspirational history claim, PHANTOM-CLAIM-2 class).
+> This session's v2.21 (TOPICS-API-1, the canonical PATCH-topics silent-noop finding) landed first; merged
+> past the collision per VERSION-OVERWRITE-1 to v2.22, preserving ALL content. GH-API-STDIN-NOOP-1 folded
+> in as a verified anti-pattern (stdin body PATCH returned 0 without persisting).
+> Changes: (1) [SOFT] Topics API documented (PUT /repos/{x}/topics replace-all; PATCH-topics no-op).
+> (2) [SOFT] GH-API-STDIN-NOOP-1 anti-pattern added. (3) [DESIGN] TOPICS-API-1 anti-pattern added.
+> Cross-reference: TOPICS-API-1, GH-API-STDIN-NOOP-1, MEMORY-TO-SKILL-DRIFT (mem-blydRPUvzC0Z),
+> kaizen API-DOC-GAP-1, VERSION-OVERWRITE-1, session repo-tagging (2026-08-06).
+> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive; session repo-tagging run).
+> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
+> (1) [SOFT] **Topics API documented** in Repository Operations — `PUT /repos/{owner}/{repo}/topics`
+>     with `{"names":[...]}` (replace-all) is the working endpoint; `PATCH /repos/{owner}/{repo}` with
+>     `{"topics":[...]}` is SILENTLY IGNORED (HTTP 200, topics unchanged). Canonical case: 150-repo
+>     taxonomy tagging run 2026-08-06 — 2 false-positive rounds burned before the dedicated Topics
+>     endpoint was confirmed. Memory mem-blydRPUvzC0Z migrated here per MEMORY-TO-SKILL-DRIFT.
+> (2) [DESIGN] **TOPICS-API-1 anti-pattern added** to the anti-patterns table.
+> Cross-reference: kaizen API-DOC-GAP-1, BLAME-EXTERNAL-1, session repo-tagging (2026-08-06).
+> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
+> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
+> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
+> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
+> Canonical case: Zenodo 403 was urllib.Request(method="DELETE") silently sending GET.
+
+
 
 > **v2.12 UPDATE (2026-08-04, kaizen — staleness sweep + N-2 nomenclature):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
@@ -48,31 +74,6 @@ self_sufficient: true
 >     carries CONCRETE [QNFO.UMP.002.P4]-style WBS-coded steps (was no prefix at all);
 >     WBS-NO-CODE HARD GATE example in-file. Cross-ref qnfo-core v1.13 §N-4.
 # GIT-GITHUB — v2.22
-> **v2.22 UPDATE (2026-08-06, kaizen — VERSION-OVERWRITE-1 merge + GH-API-STDIN-NOOP-1):**
-> Concurrent session's .kaizen_history claimed v2.21 with GITHUB-TOPICS-PATCH-NOOP-1 + GH-API-STDIN-NOOP-1,
-> but the file was still v2.20 at scan time (phantom/aspirational history claim, PHANTOM-CLAIM-2 class).
-> This session's v2.21 (TOPICS-API-1, the canonical PATCH-topics silent-noop finding) landed first; merged
-> past the collision per VERSION-OVERWRITE-1 to v2.22, preserving ALL content. GH-API-STDIN-NOOP-1 folded
-> in as a verified anti-pattern (stdin body PATCH returned 0 without persisting).
-> Changes: (1) [SOFT] Topics API documented (PUT /repos/{x}/topics replace-all; PATCH-topics no-op).
-> (2) [SOFT] GH-API-STDIN-NOOP-1 anti-pattern added. (3) [DESIGN] TOPICS-API-1 anti-pattern added.
-> Cross-reference: TOPICS-API-1, GH-API-STDIN-NOOP-1, MEMORY-TO-SKILL-DRIFT (mem-blydRPUvzC0Z),
-> kaizen API-DOC-GAP-1, VERSION-OVERWRITE-1, session repo-tagging (2026-08-06).
-> Red-team: direct parent-agent 5-adversary audit (SKILLS UPDATE directive; session repo-tagging run).
-> HARD: 0. SOFT: 1. DESIGN: 1. Changes:
-> (1) [SOFT] **Topics API documented** in Repository Operations — `PUT /repos/{owner}/{repo}/topics`
->     with `{"names":[...]}` (replace-all) is the working endpoint; `PATCH /repos/{owner}/{repo}` with
->     `{"topics":[...]}` is SILENTLY IGNORED (HTTP 200, topics unchanged). Canonical case: 150-repo
->     taxonomy tagging run 2026-08-06 — 2 false-positive rounds burned before the dedicated Topics
->     endpoint was confirmed. Memory mem-blydRPUvzC0Z migrated here per MEMORY-TO-SKILL-DRIFT.
-> (2) [DESIGN] **TOPICS-API-1 anti-pattern added** to the anti-patterns table.
-> Cross-reference: kaizen API-DOC-GAP-1, BLAME-EXTERNAL-1, session repo-tagging (2026-08-06).
-> **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
-> run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6):
-> STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider
-> infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
-> Canonical case: Zenodo 403 was urllib.Request(method="DELETE") silently sending GET.
-
  (Ultra-Consolidated VC + PM)
 
 > **v2.3 UPDATE (2026-07-29, KIF-32 thin-client temp-volatility incident):**
