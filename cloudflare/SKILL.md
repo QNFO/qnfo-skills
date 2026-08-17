@@ -140,7 +140,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE — v3.51
+# CLOUDFLARE — v3.55
 
 > **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident + AUDIT-COMPLETENESS-1 + QUEUE-BODY-SHAPE-1 + multi-bucket architecture):**
 > Red-team: direct parent-agent audit of the 2026-08-12 daily-verify/R2 incident session
