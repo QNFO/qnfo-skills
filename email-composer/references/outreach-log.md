@@ -227,3 +227,34 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Follow-up eligibility:** if no reply within 3 days → one follow-up 2026-08-19 (conference days 2-3), then archive (no-repeat-contact discipline). On-site registration desk opens Mon 08:45-09:30 — user can also try walk-up.
 
 **Alternative channels verified (unused):** Stephanie Mak (s.n.mak@uva.nl, UvA events coordinator — second coordinator, NOT contacted to avoid double-contact of the same organising group); PC chair John van de Wetering (j.m.m.vandewetering@uva.nl — deliberately NOT used: high-value ZX research target, one-email rule preserved).
+
+---
+
+## 2026-08-17 — Kauffman reply + proactive outreach batch (CST / Exchange Phase / B-F papers)
+
+**REPLY RECEIVED (Type 1: Positive/Engaged) — Louis H. Kauffman (loukau@gmail.com, id=181, 2026-08-17T10:03Z):** "Thank you for your letter. I shall look at your papers and get back to you." Shared 3 works (Fibonacci model phases; Chubb–Eskandarian–Harizanov; knot-logic/Majorana note). His viewpoint: all number systems (Cayley–Dickson, Clifford algebras, more) emerge from the LoF distinction framework; exact phases of models like the Fibonacci model arise naturally mathematically, but physics (e.g., Quantum Hall Effect) needs deeper understanding. **Handled autonomously** (courtesy + substantive reply, thread kept alive, ball left in his court).
+
+**Paper targets:** (1) *Configuration-Space Topology and the Distinction Calculus: The Exchange Scalar, Its ±1 Shadow, and a Pre-Registered Derivation Program* — DOI **10.5281/zenodo.21962450** (v0.3; verified via Zenodo search API + doi.org 2026-08-17); (2) *The Exchange Phase as a Logical Scalar* — DOI **10.5281/zenodo.21964104** (verified via doi.org); (3) *The Boson/Fermion Distinction: Spin-Statistics as Structural Invariant* — DOI **10.5281/zenodo.21962904** (verified via doi.org).
+
+**Sender:** rowan.quni@qnfo.org (canonical academic sender; qnfo.org Email Sending restored since 2026-08-10).
+
+| # | Recipient | Email source | Their paper (arXiv) | Connection point | Message ID | D1 id | Status |
+|---|-----------|--------------|---------------------|------------------|------------|-------|--------|
+| 1 | Louis H. Kauffman (REPLY to id=181) | in-thread (loukau@gmail.com) | — | Acknowledges his LoF-number-systems viewpoint + Quantum-Hall open direction; no new pitch | 15804aec-5622-45c1-821d-fa131747787b | 188 | sent (181 replied) |
+| 2 | Byung Hee An (Kyungpook Nat'l U) | VERIFIED from arXiv source tarball 2608.14350 (`anbyhee@knu.ac.kr` in goldberg_extension_notes.tex) | Extending Goldberg's Exact Sequence to Braid Groups of Graphs and Simplicial Complexes (2608.14350) | Graph configuration spaces as counter-literature ↔ CST paper's scaffold-boundary map | 28518f0b-dce3-415a-a77b-ef773ba90d85 | 189 | sent |
+| 3 | Moty Heiblum (Weizmann) | VERIFIED from arXiv source tarball 2608.12897 (`Moty.Heiblum@weizmann.ac.il`) | Observation of Time-Domain Braiding of Non-Abelian Anyons at ν=5/2 (2608.12897) | Measured braiding phase ↔ R = e^(2πis) as logical scalar | fa7fc6d2-b6c8-4742-bcb1-c71d018964e5 | 190 | sent |
+| 4 | Eric Kubischta (Florida State) | VERIFIED from arXiv source tarball 2608.06339 (`ekubischta@fsu.edu`) | Nuclear-Spin Statistical Weights from Young Diagrams (2608.06339) | Young-diagram statistical weights ↔ B/F dichotomy as derived shadow | fb105ebe-0b1a-4cec-9d9a-434029622f2a | 191 | sent |
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=187 → rwnquni@outlook.com (own mailbox), message_id 137a84df-8903-4779-8520-e43573ce5f3a, status=sent. Send-guard scripted gate passed (exit 0). Preview body contained all 4 payloads.
+
+**Verified but NOT contacted (single-contact-per-group, outreach-strategy §1):** Ian Teixeira (iteixeira@ucsd.edu, co-author of 2608.06339); Tomer Alkalay / Jinhong Park / Minseong Oh / Changki Hong (co-authors of 2608.12897 — Heiblum is the single contact for that group).
+
+**CONNECTION-POINT-UNVERIFIED-1 (no email in source tarball, deferred):** Chetcuti/Goldman/Vignolo/Minguzzi (2608.05290), Schafer-Nameki/Zheng/Antinucci (2608.12303), Cohen/Pakianathan (2606.17193), Kita (2512.12071), Xue (2607.06279), Buican/Huston/Pachos (2607.10181) — no author emails in sources; excluded.
+
+**Send verification (Tool-Call Execution Mandate):** ids 187-191 confirmed status=sent via GET /emails/recent; id=181 auto-marked status=replied (reply_to_id). Canonical sent-classification rule satisfied (sender rowan.quni@qnfo.org + external recipient).
+
+**Dedup check (no-repeat-contact mandate):** all 3 new contacts verified against contact-ledger.md (38 entries → 41) + D1 master list. Zero prior contact. First contact each.
+
+**Hygiene (same-session, verified in D1):** id=178 (jkoti9086@gmail.com, GRANJA JOURNAL predatory solicitation) → spam; ids 139/150/140/162 (newsletter + CF platform notices, incl. duplicate Workbench-legacy notice) + briefing bounces 186/179/165/151 + DMARC reports 182/177/176/175/172/163/161/157 → archived; id=164 (GitHub OAuth figshare notice) → read (kept visible — surfaced in closeout).
+
+**Follow-up eligibility:** An / Heiblum / Kubischta → first eligible **2026-08-31** (14d), one max each, pending response. Kauffman: ACTIVE thread — no follow-up needed.
