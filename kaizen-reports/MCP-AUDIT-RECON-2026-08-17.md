@@ -15,11 +15,20 @@ Session: PI64gnaq9r_E5tiK2Dx_y. Mirrors: system-prompt v3.40→v3.41, cloudflare
    (MCP-REGISTRATION-ONE-STORE-1) now needs updating: writes MUST go to agent.db mcp_servers;
    JSON mirror optional.
 
-2. **FLEET-TOKEN-STALL-1 (HARD — investigation pending)**: Daily Ops cronjob (216e1d12, 03:00 UTC)
-   step 1 runs `fleet-oauth-refresh.py --verify`; on 2026-08-17 all 15 fleet tokens were 4.4 days
-   stale (401 invalid_token) — the cron step had silently stopped applying. Manual refresh
-   succeeded 13/13 (server-side refresh_token grant). Root cause of cron stall NOT yet found —
-   check cron run history (cron_job_runs) and the 03:00 job's output next cycle.
+2. **FLEET-TOKEN-STALL-1 (HARD — root cause CONFIRMED 2026-08-17)**: all 15 fleet tokens were
+   4.4 days stale (401 invalid_token) on 2026-08-17; manual refresh succeeded 13/13 (server-side
+   refresh_token grant). Root cause, two layers:
+   (a) PHANTOM REGISTRATION (primary): the Cloudflare OAuth servers existed only in
+       mcp-settings.json, never in the live registry (app_db agent.db mcp_servers) — they never
+       CONNECTED, so mcp-remote never auto-refreshed their cache tokens (mcp-remote refreshes on
+       connect/request). A registered server self-heals at every app start; a phantom cannot.
+   (b) CRON NEVER FIRES (contributing): cron_job_runs shows ZERO runs ever for 216e1d12
+       (Daily Ops) while 7 other jobs have run histories — the 03:00 UTC slot (= 05:00 Amsterdam)
+       fires only when the DeepChat app is open; the app is closed overnight, so the daily
+       refresh never ran.
+   FIX (applied): live registration of the 8 needed servers = self-healing fleet at every app
+   start (mcp-remote refresh-on-connect). Daily Ops cron remains as a warm-backup. Optional
+   hardening: move fleet-oauth-refresh.py into a SessionStart lifecycle hook (deepchat-hooks).
 
 3. **OBSERVABILITY-NO-TOKEN-1 (HARD — removed)**: `cloudflare-observability` was enabled in the
    live registry but had NO cached OAuth token (needs one-time interactive browser OAuth) —
