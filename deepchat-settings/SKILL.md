@@ -1,3 +1,27 @@
+> **v1.21 UPDATE (2026-08-17, kaizen — DISASTER-RECOVERY: restore-custom-prompts.py + version-controlled canonical store; red-team of the recovery failure):**
+> Red-team: direct parent-agent audit (session this — user lesson-learned: "WHY COULDN'T YOU
+> IMMEDIATELY LOAD BACKED-UP WORKING CUSTOM PROMPTS?"). HARD: 4. SOFT: 1. Findings:
+> (1) [HARD] **RECOVERY-DEPTH-1: no restore recipe existed** — the skill documented read/write
+>     patterns but NO restore-from-backup path; the fix rebuilt content instead of restoring state.
+> (2) [HARD] **RECOVERY-SOURCE-SHAPE-1: NO local backup (2026-08-11..08-16) was loadable** — every
+>     app-settings/agent.db backup held template-only, id-less entries that FAIL the current app's
+>     PromptSchema (id REQUIRED; fill reads content). Backup inventory 2026-08-17: 0 schema-valid
+>     local backups pre-fix. Blind restore re-breaks the store (exactly what v3.35's E-store sync did).
+> (3) [HARD] **RECOVERY-CANONICAL-1: no version-controlled canonical prompt store existed** — prompt
+>     state lived only in mutable local stores + opaque .bak files without a manifest. FIX:
+>     qnfo-skills/prompt-stores/customPrompts.json is the git-tracked canonical copy (26 entries);
+>     export after every prompt change.
+> (4) [HARD] **SCHEMA-VERIFY-BEFORE-RESTORE-1: restores MUST validate against the app's PromptSchema
+>     BEFORE writing** (id min(1), parameters[].required bool, source enum, content present for fills)
+>     and write ALL 4 stores byte-identical + verify post-write (parity + schema + dsp sha + model keys).
+>     Tool: `scripts/restore-custom-prompts.py [verify|inventory|restore|export]`.
+> (5) [SOFT] **RUNTIME-CACHE-CONTRACT-1: external app-settings.json writes do NOT re-push the runtime
+>     customPromptsCache** (verified: DB updated_at unchanged) — restore REQUIRES an app restart.
+> Changes: restore tool added (scripts/restore-custom-prompts.py), canonical store exported
+> (prompt-stores/customPrompts.json + README.md), legacy palette parameters[].required fixed,
+> Disaster Recovery section added below.
+> Cross-reference: kaizen v2.64, system-prompt v3.36, PROMPT-KEY-SCHEMA-ASYMMETRY-1, session this.
+
 > **v1.20 UPDATE (2026-08-17, kaizen — FULL PromptSchema discovery: `id` is REQUIRED + `parameters[].required` mandatory; UI route validation vs MCP tool asymmetry):**
 > Red-team: direct parent-agent audit (session this — user report after restart: "CUSTOM PROMPTS STILL CORRUPTED/NOT LOADING").
 > HARD: 2. SOFT: 0. Changes:
@@ -165,7 +189,7 @@
 
 ---
 name: deepchat-settings
-version: 1.20
+version: 1.21
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -513,6 +537,33 @@ agent_memory, set defaultModel to ensemble, verified 6/6 E2E.
 
 Pattern: `write` tool → stable path → `exec python <stable-path>` → verify → `del <stable-path>`.
 
+### Disaster Recovery — Custom Prompts (added 2026-08-17, v1.21)
+
+**Lesson learned (user): "WHY COULDN'T YOU IMMEDIATELY LOAD BACKED-UP WORKING CUSTOM PROMPTS?"**
+Honest answer: no local backup was loadable — every pre-2026-08-17 backup held
+template-only, id-less entries that fail the current app's schema — and there was no
+canonical copy or restore recipe. Fixed permanently:
+
+1. **Canonical store (git-tracked):** `qnfo-skills/prompt-stores/customPrompts.json`
+   (26 entries: 9 CMD templates + 17 user commands). Export after every prompt change:
+   `python deepchat-settings/scripts/restore-custom-prompts.py export`.
+2. **Restore tool:** `deepchat-settings/scripts/restore-custom-prompts.py`
+   - `verify` — validate current 4-store state (exit 1 on violation)
+   - `inventory` — scan current stores + legacy palette + repo export + all backups,
+     flagging schema-valid sources only
+   - `restore` — best source (repo export → current ROAM_DB → newest schema-valid backup
+     → legacy palette), normalize to the full app model, write ALL 4 stores byte-identical,
+     verify (parity + schema + dsp sha + model keys), print restart reminder
+   - `export` — rewrite the canonical repo copy
+3. **Restore rules (HARD):**
+   - Validate candidates against the app PromptSchema BEFORE writing
+     (RECOVERY-SOURCE-SHAPE-1: a "backup" that fails the schema is NOT working state —
+     restoring it re-breaks the store).
+   - Write all 4 stores (RECOVERY-TARGET-ALL-STORES-1): Roaming app-settings.json,
+     .deepchat mirror, app_db agent.db, legacy .deepchat agent.db.
+   - Restart the app after restore — the runtime cache does NOT reload from external
+     file writes (RUNTIME-CACHE-CONTRACT-1, TEMPLATE-STORES-1).
+
 ### SettingsWatcher Behavior
 
 | Change | Auto-detected? | Restart needed? |
@@ -596,4 +647,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.20** (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.21** (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
