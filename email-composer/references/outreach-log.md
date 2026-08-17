@@ -258,3 +258,17 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Hygiene (same-session, verified in D1):** id=178 (jkoti9086@gmail.com, GRANJA JOURNAL predatory solicitation) → spam; ids 139/150/140/162 (newsletter + CF platform notices, incl. duplicate Workbench-legacy notice) + briefing bounces 186/179/165/151 + DMARC reports 182/177/176/175/172/163/161/157 → archived; id=164 (GitHub OAuth figshare notice) → read (kept visible — surfaced in closeout).
 
 **Follow-up eligibility:** An / Heiblum / Kubischta → first eligible **2026-08-31** (14d), one max each, pending response. Kauffman: ACTIVE thread — no follow-up needed.
+
+---
+
+## 2026-08-17 — RED-TEAM REMEDIATION (direct parent-agent audit of the 08-17 batch; 0 HARD / 2 SOFT / 1 DESIGN)
+
+**Verdict:** 0 HARD compliance violations (all 8 hard rules verified: one-email-per-researcher, ledger+D1 dedup, tarball-verified emails, test-send-first id=187 with send-guard exit 0, rowan.quni@qnfo.org sender, cap 4/5, single-contact-per-group, full logging + D1 verification). Both SOFT findings remediated/documented below.
+
+**SOFT-1 — D1 ids 183/184 deleted-row gap (window 2026-08-17T10:17–10:37Z):** ids 183 and 184 absent from /emails/recent (between id=182 google DMARC 10:17 and id=185 briefing 10:37) and return HTTP 404 on /emails/body — deleted rows, same class as the documented ids 107-110 gap (2026-08-12). No API access to deleted rows; documented, no further action possible. Most plausible origin: briefing-pipeline staging rows or concurrent-session worker operations (concurrent skills-update commits 405f383/d7e92b1 today). Risk assessed LOW (no evidence of missed human inbound; all external threads accounted for).
+
+**SOFT-2 — leftover processed DMARC reports (08-14):** ids 141/148/149 (Google/Microsoft DMARC, qwav.tech, arrived 08-14 after that day's hygiene run) remained status=processed and would have been re-surfaced. PATCHed → archived 2026-08-17, re-verified: ZERO rows remain in received/processed. Non-terminal set now = id=131 (Mercatus EV, user action pending — kept read/visible) + id=164 (GitHub OAuth figshare, user decision pending — kept read/visible) only.
+
+**DESIGN-1 — Exchange Phase DOI version consistency (informational):** prior batch (Kauffman/Thamm/Yu-An Chen, 08-16) cited 10.5281/zenodo.21963930 (v1.1); today's Heiblum email cites 10.5281/zenodo.21964104 (current version per QNFO paper DB). Both resolve via doi.org; Kauffman thread remains on the v1.1 DOI. Future batches: cite the QNFO DB-canonical DOI (21964104) for new sends.
+
+**Accuracy cross-check (CONNECTION-POINT-UNVERIFIED-1):** all connection points re-verified post-send — An (Goldberg strand map + graph config spaces as counter-literature in CST abstract), Heiblum (ν=5/2 braiding observation; R = e^(2πis) framing matches Exchange Phase abstract), Kubischta (2608.06339 abstract fetched 2026-08-17: permutation symmetry of identical nuclei, Schur-Weyl + Young tableaux → statistical weights — matches the email's claim that the paper shows which permutation representations are realized for composite systems of given nuclear spin). Kauffman reply quotes only his own email + the paper abstract. All DOIs resolve (doi.org 200).
