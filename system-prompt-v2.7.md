@@ -1,4 +1,12 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.38
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.39
+> **v3.39 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: VECTORIZE-TOP-K-50-1 + ZENODO-VERSION-LABEL-EDIT-1 + GIT-OWNERSHIP-1 file-collision + MODEL-KEY-FILE-DRIFT-1 #6; mirrors kaizen v2.65):**
+> Red-team: direct parent-agent skills audit (session this — UMP.011 P9 closeout cycle; the qnfo-memory-mcp 1101 was root-caused via wrangler tail).
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **VECTORIZE-TOP-K-50-1 added** — qnfo-memory-mcp Worker Error 1101 ROOT CAUSE: Vectorize with returnValues=true caps topK at 50 (VECTOR_QUERY_ERROR 40025, "max top K is 50, but got 60"); the worker queries with topK = 3 x requested limit (rerank buffer) + returnValues=true -> limit >= 17 throws 1101, limit <= 16 works (verified 2026-08-17: limit=16 -> 48 OK, limit=17 -> 51 FAIL). Misdiagnosed 4x as "intermittent/recurrent outage" before wrangler tail captured the stack (tool_search_papers worker.js:54). FIX: clamp topK <= 50 (or returnValues=false + returnMetadata=indexed). BLOCKED: worker content download 405 (no Workers Scripts Edit scope) - owner action. LESSON: NEVER label a Worker error "outage" without wrangler tail evidence - BLAME-EXTERNAL-1 applies to intermittent exceptions; a deterministic per-request failure mode is not an outage.
+> (2) [HARD] **ZENODO-VERSION-LABEL-EDIT-1 added** — deposit-API-created records: records-API /draft path returns 404; version-label fix = POST /api/deposit/depositions/{id}/actions/edit -> GET -> PUT full metadata (preserve ALL fields incl. related_identifiers; drop prereserve_doi/doi) -> POST /actions/publish (same DOI preserved). Canonical: UMP.011 v0.3 record 21983659 (deposit-API newversion otherwise publishes with version:null — LEGACY-PUT-VERSION-OMISSION-1 family).
+> (3) [SOFT] **GIT-OWNERSHIP-1 file-collision nuance** — a concurrent session may commit a STALE version of YOUR evidence file (from a base predating your update); content ownership follows the file's PURPOSE owner: keep YOUR version on rebase (git pull --rebase --autostash), preserve the concurrent session's genuinely-new files untouched (canonical: semantic-sweep-addendum.json 2026-08-17, e9daf8a stale vs 448bf8f completed; concurrent application-quantum-computing file preserved).
+> (4) [SOFT] **MODEL-KEY-FILE-DRIFT-1 recurrence #6** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro on app save; reset both JSON stores to deepseek/deepseek-v4-flash and re-verified.
+> Cross-reference: kaizen v2.65, research v2.116, cloudflare v3.54, execution-mandate v2.10, session this.
 > **v3.38 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors kaizen v2.63):**
 > Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; discovered the v3.37 cycle stopped mid-write).
 > HARD: 3. SOFT: 2. DESIGN: 0. Changes:
@@ -1601,7 +1609,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.38** (PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + kaizen footer N-2 repair; 7-store byte-identical; 2026-08-17)
+Current: **v3.39** (VECTORIZE-TOP-K-50-1 — qnfo-memory-mcp 1101 root-caused via wrangler tail, limit≤16 workaround + ZENODO-VERSION-LABEL-EDIT-1 deposit-API edit flow + GIT-OWNERSHIP-1 file-collision nuance + MODEL-KEY-FILE-DRIFT-1 #6 reset; 7-store byte-identical incl. qnfo-skills repo copy; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
