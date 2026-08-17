@@ -90,7 +90,7 @@ def org_affiliation(org_name):
     n = org_name or ""
     nl = n.lower()
     if "collective" in nl:
-        return "QNFO Research Collective"
+        return "QNFO"  # NAMING-MANDATE-1: QNFO Research Collective deprecated 2026-08-17
     if "qwav" in nl and "qnfo" in nl:
         return "QWAV / QNFO"
     if "qwav" in nl:
