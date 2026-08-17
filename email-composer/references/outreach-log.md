@@ -226,6 +226,8 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 
 **Follow-up eligibility:** if no reply within 3 days → one follow-up 2026-08-19 (conference days 2-3), then archive (no-repeat-contact discipline). On-site registration desk opens Mon 08:45-09:30 — user can also try walk-up.
 
+**UPDATE (2026-08-17):** REPLY RECEIVED id=192 (17:xx UTC) — Zara Eijkman, UvA Conferences & Events (congresbureau@uva.nl): "The registration form is closed as the conference has commenced; however, I have now manually opened it. Kindly register using the following link: https://www.aanmelder.nl/174107/registration. Please note that it is no longer possible to pay via invoice." **USER ACTION: register at the link (EUR 360 full rate, card payment — no invoice).** Courtesy thank-you reply sent in-thread id=194 (message_id d81a96a7-35fb-4819-9bec-66cf2f3ff42a, status=sent; test-pair id=193 → rwnquni@outlook.com, message_id e9ea9378-93f3-4f92-bfba-f817ffc68c5d, status=sent — TEST-SEND-EXTERNAL-1 compliant, send-guard exit 0). id=192 auto-marked replied. Follow-up not needed; thread closed (no-repeat-contact discipline: no further contact to UvA logistics unless user asks).
+
 **Alternative channels verified (unused):** Stephanie Mak (s.n.mak@uva.nl, UvA events coordinator — second coordinator, NOT contacted to avoid double-contact of the same organising group); PC chair John van de Wetering (j.m.m.vandewetering@uva.nl — deliberately NOT used: high-value ZX research target, one-email rule preserved).
 
 ---
