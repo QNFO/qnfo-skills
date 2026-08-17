@@ -1,3 +1,22 @@
+> **v1.19 UPDATE (2026-08-17, kaizen — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: the fill tool reads `content`):**
+> Red-team: direct parent-agent audit (session this — user report "CUSTOM DEEPCHAT PROMPTS NOT LOADING").
+> HARD: 1. SOFT: 1. Changes:
+> (1) [HARD] **PROMPT-KEY-SCHEMA-ASYMMETRY-1 direction REVERSED in practice — stores had `template`-only,
+>     the app fill tool reads `content`** — app.asar `getTemplateDefinition()` builds
+>     `{content: prompt.content || ""}`; entries without `content` render EMPTY fills while
+>     list_all_prompt_template_names still lists the names. Root cause of 2026-08-17: the v3.35
+>     E-store "rewritten byte-identical" sync clobbered the agent.db `content` key. FIX: ALL 4 template
+>     stores (Roaming app-settings.json / .deepchat mirror / app_db agent.db customPrompts / legacy
+>     .deepchat agent.db customPrompts — the legacy store was EMPTY, restored 9/9) now carry BOTH keys,
+>     `content` == `template`, byte-identical. Legacy .deepchat agent.db app_settings column layout may
+>     be (key, value) not (key, value_json) — PRAGMA before write.
+> (2) [SOFT] **custom_prompts.json legacy palette repaired** — object-with-numeric-keys + all
+>     enabled:false → plain ARRAY with enabled:true (documented import shape); stale verbiage fixed
+>     (CMD MENU "15 commands" → 17; INIT SESSION skill_run/qnfo-agent → skill_list + read fallback;
+>     SHARE TO SOCIAL MEDIA Buffer → social-media-management skill; PUBLISH THIS PAPER + R2 mirror).
+>     App docs (in asar): "Prefer SQLite tables... Use JSON files only as legacy fallback."
+> Cross-reference: kaizen v2.62, system-prompt v3.36, PROMPT-KEY-SCHEMA-ASYMMETRY-1, session this.
+
 > **v1.18 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation):**
 > Red-team: direct parent-agent skills audit (session this — DeepChat memory audit + embedding enablement cycle).
 > HARD: 2. SOFT: 0. DESIGN: 0. Changes:
@@ -122,7 +141,7 @@
 
 ---
 name: deepchat-settings
-version: 1.18
+version: 1.19
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -534,7 +553,7 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 | Anti-Pattern | Correct |
 |:-------------|:--------|
 
-| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06)** | agent.db `customPrompts` entries: `{"name":..., "content":"..."}`. app-settings.json `customPrompts` entries: `{"name":..., "template":"..."}`. The prompt TEXT lives under DIFFERENT keys in the two stores. Always read `content` (agent.db) AND `template` (app-settings.json); both must be non-empty. Canonical case: session gpgLR3KXSZxQQkEG_G2HW — a `content`-key read of app-settings.json falsely reported empty templates. |
+| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06, UPDATED 2026-08-17)** | **BOTH keys required in ALL stores.** The app's fill tool (`getTemplateDefinition` in app.asar) reads `prompt.content` — a template-only entry renders EMPTY fills (canonical: 2026-08-17, "CUSTOM DEEPCHAT PROMPTS NOT LOADING"). The settingsWatcher JSON shape is `template`. Write entries as `{name, description, content, template, parameters}` with `content == template`, byte-identical across ALL 4 template stores (Roaming app-settings.json, .deepchat mirror, app_db agent.db customPrompts, legacy .deepchat agent.db customPrompts). Always read BOTH keys when verifying; a single-key read produces a false "empty prompt" flag (or a false "loaded" flag). |
 | **PROMPT-REDISCOVERY-1: Searching for prompt storage locations with 15+ tool calls when the answer is documented here (2026-08-05)** | Custom prompts live in `agent.db` → `app_settings` → `key='customPrompts'` (value_json JSON string). The system prompt is in `agent.db` → `key='systemPrompts'` AND `app-settings.json` → `default_system_prompt`. Read this skill first — do not grep JSON files or walk directory trees. |
 | **DB-SCHEMA-GUESS-1: Guessing database table names instead of querying sqlite_master (2026-08-05)** | Before querying any DeepChat database, run `SELECT name FROM sqlite_master WHERE type='table'` to discover the actual schema. The `app_settings` table uses key-value_json, not typed columns. The `history.db` uses `commands` and `parse_failures` tables, not `prompts`. |
 | **MCP-REGISTRATION-ONE-STORE-1: Registering an MCP server in only ONE of the two stores (2026-08-11)** | Dual-write BOTH: `mcp-settings.json` → `mcpServers` (settingsWatcher live reload) AND `agent.db` → `mcp_servers` (startup persistence). A one-store registration silently vanishes at restart (agent.db missed) or never appears in the live list (mcp-settings.json missed). Canonical case: qwav-platform registration 2026-08-11 — verified both stores needed (28-entry mcp-settings.json + 18-row mcp_servers). Cross-ref: MCP Server Registration section. |
@@ -553,4 +572,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.18** (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.19** (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
