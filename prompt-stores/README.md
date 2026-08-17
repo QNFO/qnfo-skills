@@ -60,16 +60,15 @@ schema-valid local backup → legacy palette. Always restarts DeepChat afterward
 Run `restore-custom-prompts.py export` after ANY prompt change (CMD SKILLS UPDATE cycles,
 UI edits) and commit this file. If this file is newer than the stores, restore from it.
 
-Current state (2026-08-17, consolidated): **18 entries** — 9 CMD templates
-(cmd-continue … cmd-deploy) + 9 quick commands (📋 CMD MENU, RESUME FROM HANDOFF,
-SAVE MY STATE, AUDIT INFRASTRUCTURE, SYNC ALL SKILLS, FIND PAPERS ON TOPIC, VALIDATE
-CITATIONS, SHARE TO SOCIAL MEDIA, 🚀 INIT SESSION), all schema-valid, byte-identical
-across the 4 stores (Roaming app-settings.json / .deepchat mirror / app_db agent.db /
-legacy .deepchat agent.db). System prompt v3.36 (sha16 b7f060a2eb1e5594) untouched by
-restores. History: the 26-entry set (9 CMD + 17 legacy commands) was consolidated on
-2026-08-17 — 8 legacy commands duplicated canonical CMD templates (CONTINUE MY WORK→CMD
-CONTINUE, CLOSE THIS SESSION→CMD CLOSEOUT, START NEW RESEARCH→CMD RESEARCH, EXECUTE RED
-TEAM→CMD RED TEAM/SUB, UPDATE PLAN AND CONTINUE→CMD EXECUTE, DEPLOY TO PRODUCTION→CMD
-DEPLOY, PUBLISH THIS PAPER→CMD PUBLISH, RUN SYSTEM UPDATE→CMD SKILLS UPDATE) and were
-dropped; kept commands' content refreshed (self-contained instructions, `{{topic}}`/
-`{{file}}` placeholders for the fill tool).
+Current state (2026-08-17, deep-consolidated): **10 entries** — 7 CMD templates
+(cmd-closeout, cmd-continue, cmd-execute, cmd-publish, cmd-red-team, cmd-research,
+cmd-skills-update) + 3 quick commands (AUDIT INFRASTRUCTURE, FIND PAPERS ON TOPIC,
+VALIDATE CITATIONS), all schema-valid, byte-identical across the 4 stores (Roaming
+app-settings.json / .deepchat mirror / app_db agent.db / legacy .deepchat agent.db).
+System prompt v3.37 (sha16 baaa05487ddcd615; template-count mandates 7/7) untouched by
+restores. History: the original 26-entry set was consolidated 2026-08-17 — first to 18
+(8 legacy commands duplicated CMD templates and were dropped), then to 10 (CMD RED TEAM
+SUB merged into CMD RED TEAM; CMD DEPLOY, CMD MENU, RESUME FROM HANDOFF, SAVE MY STATE,
+SYNC ALL SKILLS, SHARE TO SOCIAL MEDIA, INIT SESSION dropped as low-actual-use; all
+recoverable from git history + custom_prompts.json archive). Kept commands' content is
+self-contained; `{{topic}}`/`{{file}}` placeholders work with the fill tool.

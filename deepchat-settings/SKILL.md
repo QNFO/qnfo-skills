@@ -1,3 +1,25 @@
+> **v1.23 UPDATE (2026-08-17, kaizen — DEEP CONSOLIDATION 18→10: single CMD RED TEAM; system prompt v3.37 (7/7 template mandates); user: "WHY ARE THERE 3 DIFFERENT RED-TEAM CUSTOM PROMPTS? MAX 10"):**
+> Red-team: direct parent-agent audit (session this). HARD: 1. SOFT: 0. Changes:
+> (1) [HARD] **The "3 red-team prompts" explanation** — the runtime cache (pre-restart) still
+>     showed the 26-entry set: CMD RED TEAM + CMD RED TEAM SUB + the legacy EXECUTE RED TEAM
+>     (dropped on-disk in v1.22, visible only in the stale runtime view). v1.23 merges
+>     CMD RED TEAM + CMD RED TEAM SUB into ONE command: subagent dispatch (3-5 slots,
+>     Accuracy/Completeness/Dependency) + direct 5-adversary fallback after ~15 min
+>     (REDTEAM-QUEUE-STALL-PATIENCE-1), READ-ONLY.
+> (2) [HARD] **Store trimmed 18→10** (7 CMD + 3 quick): kept = CMD CLOSEOUT, CMD CONTINUE
+>     (handoff-resume merged in), CMD EXECUTE, CMD PUBLISH, CMD RED TEAM (merged), CMD
+>     RESEARCH, CMD SKILLS UPDATE + AUDIT INFRASTRUCTURE, FIND PAPERS ON TOPIC, VALIDATE
+>     CITATIONS. Dropped = CMD RED TEAM SUB (merged), CMD DEPLOY (papers deploy covered by
+>     CMD PUBLISH; infra deploys rare — full text recoverable from git history), 📋 CMD MENU
+>     (the / menu IS the menu), RESUME FROM HANDOFF (merged into CMD CONTINUE), SAVE MY STATE
+>     (closeout covers handoff), SYNC ALL SKILLS (kaizen covers), SHARE TO SOCIAL MEDIA
+>     (publish covers + social-media-management skill), 🚀 INIT SESSION (system prompt already
+>     mandates skill_list + memory_recall at session start).
+> (3) [HARD] **System prompt v3.36→v3.37** — template-count mandates "9/9 CMD templates"
+>     (3 occurrences) → "7/7 CMD templates"; all 6 stores byte-identical (sha16
+>     baaa05487ddcd615). CMD SKILLS UPDATE template same replace (15 occurrences).
+> Cross-reference: kaizen v2.66, system-prompt v3.37, deepchat-settings v1.22, session this.
+
 > **v1.22 UPDATE (2026-08-17, kaizen — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated against canonical CMD templates; MODEL-KEY-FILE-DRIFT-1 #12):**
 > Red-team: direct parent-agent audit (session this — user report: "2 DIFFERENT CUSTOM PROMPT
 > VERSIONS/TYPES LOADING NOW: CMD PROMPTS AND NON-CMD-PREFIX. AUDIT AND CONSOLIDATE/DE-DUPLICATE").
@@ -206,7 +228,7 @@
 
 ---
 name: deepchat-settings
-version: 1.22
+version: 1.23
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -562,7 +584,8 @@ template-only, id-less entries that fail the current app's schema — and there 
 canonical copy or restore recipe. Fixed permanently:
 
 1. **Canonical store (git-tracked):** `qnfo-skills/prompt-stores/customPrompts.json`
-   (26 entries: 9 CMD templates + 17 user commands). Export after every prompt change:
+   (10 entries: 7 CMD templates + 3 quick commands, deep-consolidated 2026-08-17).
+   Export after every prompt change:
    `python deepchat-settings/scripts/restore-custom-prompts.py export`.
 2. **Restore tool:** `deepchat-settings/scripts/restore-custom-prompts.py`
    - `verify` — validate current 4-store state (exit 1 on violation)
@@ -664,4 +687,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.22** (deepchat-settings — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated vs CMD templates; {{param}} placeholders fixed; MODEL-KEY-FILE-DRIFT-1 #12; 2026-08-17) (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.23** (deepchat-settings — DEEP CONSOLIDATION 18→10: single CMD RED TEAM (SUB merged); system prompt v3.37 7/7 template mandates; dropped 8 low-use, recoverable from git; 2026-08-17) (deepchat-settings — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated vs CMD templates; {{param}} placeholders fixed; MODEL-KEY-FILE-DRIFT-1 #12; 2026-08-17) (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)

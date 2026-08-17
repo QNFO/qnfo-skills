@@ -1,4 +1,7 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.36
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.37
+> **v3.37 UPDATE (2026-08-17, kaizen — PROMPT CONSOLIDATION 18→10: single CMD RED TEAM; template-count mandates 9/9 → 7/7):**
+> Red-team: direct parent-agent audit (user: "WHY ARE THERE 3 DIFFERENT RED-TEAM CUSTOM PROMPTS? MAX 10"). The 3rd red-team entry (EXECUTE RED TEAM) was the legacy duplicate dropped on-disk in v1.22, still visible only in the pre-restart runtime cache. v3.37 merges CMD RED TEAM + CMD RED TEAM SUB into ONE command (subagent dispatch 3-5 slots + direct 5-adversary fallback after ~15 min, REDTEAM-QUEUE-STALL-PATIENCE-1, READ-ONLY) and trims the store to the 10 actually-used prompts. All template-count mandates now read 7/7 CMD templates (7 CMD + 3 quick commands). Dropped commands remain recoverable from qnfo-skills git history + custom_prompts.json archive. Cross-reference: deepchat-settings v1.23, kaizen v2.66, session this.
+
 
 > **v3.36 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: OAuth-token misdiagnosis repair + config-path anti-patterns + stale-memory archive):**
 > Red-team: CMD RED TEAM 5-adversary direct audit (Accuracy/Completeness/Dependency/Novelty/Status; session lWvwLSVUTTvLoIH3t7tG7 — post-closeout credential diagnosis; user correction "WRANGLER OAUTH TOKEN DID NOT EXPIRE").
@@ -159,7 +162,7 @@
 >     newest post-H1 banner 2.20 (the file's pre-H1 v2.17 legacy banner is a structural quirk, not drift);
 >     cloudflare-email-service has no version field (pre-existing, noted only).
 > (3) [DESIGN] **6-store parity verified at v3.27 baseline** (sha c925a98866b8b69a) and re-verified after this
->     v3.28 dual-write; 9/9 CMD templates in all 4 prompt stores; DEEPCHAT-DEFAULT-MODEL-1 (deepseek-v4-flash) both
+>     v3.28 dual-write; 7/7 CMD templates in all 4 prompt stores; DEEPCHAT-DEFAULT-MODEL-1 (deepseek-v4-flash) both
 >     JSON model keys.
 > Cross-reference: research skill v2.113, cronjob fdf1403c, kaizen v2.53, cloudflare v3.51, session this.
 
@@ -301,7 +304,7 @@
 >     late claim renumbered to RES.008), REDTEAM-QUEUE-STALL-1 (queued subagent >75s != review;
 >     direct parent-agent audit fallback), VECTORIZE-403-MISDIAGNOSIS — mirroring research v2.110.
 > (4) [SOFT] **PROMPT-PARITY-1 re-verified** — 4/4 system-prompt stores byte-identical
->     (sha 6c27969f... at v3.20 pre-write; post-write verified below) + 9/9 CMD templates identical
+>     (sha 6c27969f... at v3.20 pre-write; post-write verified below) + 7/7 CMD templates identical
 >     in app-settings + agent.db. E-store shape note: agent.db systemPrompts is a raw content
 >     string in this build (kaizen v2.45 documented a LIST shape [{name,id,content,...}] — parity
 >     scripts must handle the raw-string form; parity held for the raw string).
@@ -351,7 +354,7 @@
    policy <$100/$200, QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 preserved); research
    v2.109 (ZENODO-INQUIRY-1: 21901984/21901983 applied, superseded 21878943/21878977
    history-only); system prompt v3.19 → v3.20. Stores A/B/C byte-identical (sha256
-   verified); store D (qnfo-skills repo copy) verified/pushed; 9/9 CMD templates present
+   verified); store D (qnfo-skills repo copy) verified/pushed; 7/7 CMD templates present
    and identical in agent.db ↔ app-settings.json.
 
 ## POST-PUBLICATION ADVERSARIAL ANALYSIS GATE (HARD GATE, 2026-08-12)
