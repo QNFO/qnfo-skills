@@ -1,3 +1,12 @@
+> **v2.62 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: OAuth misdiagnosis repair + 2 new anti-patterns; mirrors system-prompt v3.36):**
+> Red-team: CMD RED TEAM 5-adversary direct audit (session lWvwLSVUTTvLoIH3t7tG7 — post-closeout credential diagnosis; user correction "WRANGLER OAUTH TOKEN DID NOT EXPIRE").
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **ACCESS-TOKEN-EXPIRY-CONFLATION-1** — wrangler `expiration_time` = access-token TTL only; refresh_token (offline_access) + grant_type=refresh_token flow verified in wrangler dist @5304906; never declare OAuth session dead from expiration_time alone. Canonical: 2026-08-17 closeout false claim.
+> (2) [HARD] **WRANGLER-CONFIG-PATH-1** — OAuth config at `%APPDATA%\xdg.config\.wrangler\config\default.toml`; exec shell lacks XDG_CONFIG_HOME/HOME → `wrangler whoami` "not authenticated" with configFileType:none = config NOT FOUND, not token invalid. Working REST credential: `C:\Users\LENOVO\tokens\cloudflare`.
+> (3) [SOFT] **env CLOUDFLARE_API_TOKEN staleness confirmed** — genuinely invalid (10000/9106); token file verified working (D1 list 200, handoffs 28594).
+> (4) [SOFT] **stale PowerShell heuristic archived** — mem:heuristic:1785312704261 contradicts Git-Bash regime.
+> Cross-reference: system-prompt v3.36, cloudflare v3.52, TOKEN-VERIFY-SCOPE-1, HOOK-STALE-TOKEN-1, session lWvwLSVUTTvLoIH3t7tG7.
+
 > **v2.61 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: QNFO/QWAV naming mandate + plain-signature preference + MODEL-KEY-FILE-DRIFT-1 #11 + template-store parity + N-2 drift repairs; mirrors system-prompt v3.35):**
 > Red-team: CMD RED TEAM SUB naming-mandate audit (3 reviewers: Accuracy/Completeness/Dependency — all completed, incl. Completeness sweep ≥230 occurrence-lines across ~120 artifacts) + CMD SKILLS UPDATE skills audit (Accuracy/Completeness completed, Dependency parent-fallback; session lWvwLSVUTTvLoIH3t7tG7).
 > HARD: 9. SOFT: 2. DESIGN: 0. Changes:
@@ -741,7 +750,7 @@ name: kaizen
 
 
 
-version: 2.61
+version: 2.62
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -14948,7 +14957,7 @@ two skills now carry the rule.
 ## Version
 
 
-Current: **v2.61** (kaizen — NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 + MODEL-KEY-FILE-DRIFT-1 #11 + CMD template E-store parity + N-2 repairs git-github/social-media-management/documents/email-composer + Version footers code/knowledge/system/documents; frontmatter 2.60 -> 2.61; mirrors system-prompt v3.35; 2026-08-17)
+Current: **v2.62** (kaizen — ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1 + env-token staleness + stale heuristic archive; frontmatter 2.61 -> 2.62; mirrors system-prompt v3.36; 2026-08-17)
 
 
 

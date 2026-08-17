@@ -1,4 +1,13 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.35
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.36
+
+> **v3.36 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: OAuth-token misdiagnosis repair + config-path anti-patterns + stale-memory archive):**
+> Red-team: CMD RED TEAM 5-adversary direct audit (Accuracy/Completeness/Dependency/Novelty/Status; session lWvwLSVUTTvLoIH3t7tG7 — post-closeout credential diagnosis; user correction "WRANGLER OAUTH TOKEN DID NOT EXPIRE").
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **ACCESS-TOKEN-EXPIRY-CONFLATION-1 added** — wrangler OAuth `expiration_time` in default.toml is the ACCESS-token TTL, NOT session death; the config carries `refresh_token` (offline_access scope) and wrangler auto-refreshes via `grant_type=refresh_token` (verified in dist @5304906). NEVER declare an OAuth token "expired" from `expiration_time` alone — test the refresh grant or config-path resolution first. Canonical: 2026-08-17 closeout misdiagnosis (claimed "wrangler OAuth token expired 2026-05-28" — user corrected; the OAuth session never expired).
+> (2) [HARD] **WRANGLER-CONFIG-PATH-1 added** — wrangler OAuth config lives at `%APPDATA%\xdg.config\.wrangler\config\default.toml` (written when HOME/XDG pointed there at login); the exec shell has XDG_CONFIG_HOME/HOME unset, so `wrangler whoami` reports "You are not authenticated" with metrics `configFileType:"none"` — a config-file NOT FOUND problem, NOT token invalidity. Run wrangler with XDG_CONFIG_HOME/HOME aligned, or use the working REST credential at `C:\Users\LENOVO\tokens\cloudflare` (verified: D1 list 200, handoffs insert 28594).
+> (3) [SOFT] **env CLOUDFLARE_API_TOKEN confirmed stale** — genuinely invalid at account scope (10000/9106), independent of the OAuth path; the closeout note pointing to `tokens\cloudflare` was CORRECT.
+> (4) [SOFT] **stale heuristic archived** — mem:heuristic:1785312704261 ("exec = PowerShell", 2026-07-29) contradicts the Git-Bash regime (2026-08-15+); archived 2026-08-17.
+> Cross-reference: kaizen v2.62, cloudflare v3.52, TOKEN-VERIFY-SCOPE-1, HOOK-STALE-TOKEN-1, D1-REST-PAYLOAD-1, session lWvwLSVUTTvLoIH3t7tG7.
 
 > **v3.35 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: QNFO/QWAV naming mandate + plain-signature preference + MODEL-KEY-FILE-DRIFT-1 #11 + template-store parity + N-2 drift repairs):**
 > Red-team: CMD RED TEAM SUB (naming-mandate audit, 3 reviewers + direct parent audit) + CMD SKILLS UPDATE skills audit (2/3 reviewers + parent fallback; session lWvwLSVUTTvLoIH3t7tG7).
@@ -1579,7 +1588,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.35** (QNFO/QWAV NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 + MODEL-KEY-FILE-DRIFT-1 #11 + CMD SKILLS UPDATE template-store parity + N-2 drift repairs git-github/social-media-management/documents/email-composer + Version footers code/knowledge/system/documents; 7-store parity byte-identical; 2026-08-17)
+Current: **v3.36** (ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1 + env-token staleness confirmed + stale PowerShell heuristic archived; 7-store parity byte-identical; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
