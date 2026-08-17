@@ -1,3 +1,14 @@
+> **v2.64 UPDATE (2026-08-17, kaizen — email-composer v2.21 cycle: session-lesson anti-patterns + 9/9 template-store restoration + 7-store parity verification; mirrors email-composer v2.21):**
+> Red-team: direct parent-agent 5-adversary audit of the 2026-08-17 email/outreach cycle + this cycle's CMD SKILLS UPDATE mandatory checks, executed from the email/outreach agent session (2dYfuSlv-QQgarZdV_MOo).
+> HARD: 0. SOFT: 1. DESIGN: 3 (all remediated). Changes:
+> (1) [SOFT] **PHANTOM-EXEC-SESSION-1 added (email-composer v2.21)** — exec tool reports "Session ... not running" while the command actually completed; verify via `process list` + session log BEFORE retrying (10+ occurrences 2026-08-17; blind retries duplicated git commits/sweeps harmlessly).
+> (2) [SOFT] **THREAD-RESOLUTION-SUPERSEDED-1 added (email-composer v2.21)** — when a reply resolves a thread, mark stale follow-up eligibility lines "(SUPERSEDED by the UPDATE below — ...)" (canonical: QPL section, outreach-log.md 2026-08-17).
+> (3) [SOFT] **RECEIPT-PLACEHOLDER-TOKEN-1 recurrence fixed** — unresolved "(17:xx UTC)" timestamp token in outreach-log.md QPL UPDATE replaced with verified received_at 2026-08-17T14:00:12Z.
+> (4) [SOFT] **Template-store restoration (9/9)** — CMD RED TEAM SUB + CMD DEPLOY were ABSENT from all 4 template stores (app-settings x2 + agent.db x2, 7/9); restored with content+template keys from the runtime registry (12 entries per store now).
+> (5) [SOFT] **7-store prompt parity VERIFIED** — v3.38 sha d666fc26c4f905cb across canonical/repo worktree/origin master/app-settings x2/agent.db x2; stale Documents clone (v3.37, HEAD a50e97e) ff-pulled to 5339ab3.
+> (6) [SOFT] **N-2 repairs** — email-composer description 207 -> 162 chars (<=176 limit); SKILL version 2.20 -> 2.21 (the v2.61 cycle edited strategy files without a SKILL bump — drift fixed here); NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 codified in email-composer Phase 4 (note: QPL replies ids 193/194 predate codification, absorbed as errata, no resend).
+> Cross-reference: email-composer v2.21, system-prompt v3.38, cloudflare v3.53, 5-adversary red-team audit 2026-08-17, session 2dYfuSlv-QQgarZdV_MOo.
+
 > **v2.63 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors system-prompt v3.38):**
 > Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; v3.37 cycle stopped mid-write).
 > HARD: 3. SOFT: 2. DESIGN: 0. Changes:
@@ -45,7 +56,7 @@
 > Red-team: direct parent-agent red-team skills audit (session 6427jDZRyelzVeXaHMTty — GTD weekly-review expansion + reviewer HARD-1 delta-anchor finding).
 > HARD: 3. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **DELTA-ANCHOR-1** — any DELTA sweep MUST pin its anchor (existing artifact's OWN header timestamp `> YYYY-MM-DD HH:MM`; fallback = file mtime − 30 min; CATCH-ALL: any window item not already listed in the existing artifact is IN SCOPE — when in doubt, include). Canonical: GTD Friday task 382376cd HARD-1 2026-08-16 — an unpinned `-newermt` mtime anchor would have dropped the DECISION-READY QPL note (11:21) before QPL 2026 (Aug 17–21). Mirror of system-prompt v3.33.
-> (2) [HARD] **KAizen footer drift repaired** — Version-section footer said `Current: **v2.63** (CMD SKILLS UPDATE 2026-08-17: PROMPT-PARITY-1 v3.37 repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 pattern; mirrors system-prompt v3.38)` while banner/frontmatter were v2.58 (FOOTER-PARENTHETICAL-DRIFT-1 class); footer now v2.59.
+> (2) [HARD] **KAizen footer drift repaired** — Version-section footer said `Current: **v2.64** (CMD SKILLS UPDATE 2026-08-17: PROMPT-PARITY-1 v3.37 repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 pattern; mirrors system-prompt v3.38)` while banner/frontmatter were v2.58 (FOOTER-PARENTHETICAL-DRIFT-1 class); footer now v2.59.
 > (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #9** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys flash).
 > (4) [SOFT] **GTD WEEKLY-REVIEW FLEET STATE** — the SINGLE weekly-review scheduled task = "QNFO Weekly Review (GTD, Friday — merged triage)" id 382376cd (Fri 15:00 UTC, cron `0 15 * * 5`), GTD-expanded (STEP 1 delta rule, sections NEXT-7-DAYS/WAITING-FOR/UIA-REGISTER-DUE/SOMEDAY-MAYBE, portfolio triage 4a0–4e); NEVER create new weekly-review tasks.
 > Cross-reference: system-prompt v3.33, research v2.115, cloudflare v3.51, execution-mandate v2.10, session 6427jDZRyelzVeXaHMTty.
@@ -760,7 +771,7 @@ name: kaizen
 
 
 
-version: 2.63
+version: 2.64
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 

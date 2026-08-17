@@ -1,5 +1,15 @@
 # email-composer
 
+> **v2.21 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE cycle: red-team skills audit + session-lesson anti-patterns + mandate codification):**
+> Red-team: direct parent-agent 5-adversary audit of the 2026-08-17 outreach cycle (0 HARD) + this cycle's mandatory checks (7-store prompt parity v3.38 VERIFIED sha d666fc26; 9/9 CMD templates restored in all 4 template stores — CMD RED TEAM SUB + CMD DEPLOY were missing; DEEPCHAT-DEFAULT-MODEL-1 PASS; Cloudflare cost section v3.53 PASS). Changes:
+> (1) [SOFT] **RECEIPT-PLACEHOLDER-TOKEN-1 recurrence (2026-08-17)** — outreach-log.md QPL UPDATE carried an unresolved timestamp token "(17:xx UTC)"; resolved to verified `received_at 2026-08-17T14:00:12Z`. Log entries must carry resolved timestamps at write time.
+> (2) [SOFT] **THREAD-RESOLUTION-SUPERSEDED-1 (new)** — when a reply resolves a pending thread, mark the old follow-up-eligibility line "(SUPERSEDED by the UPDATE below — ...)" so future readers cannot misread it. Canonical: QPL section, outreach-log.md 2026-08-17.
+> (3) [SOFT] **PHANTOM-EXEC-SESSION-1 (new)** — exec tool reports "Session ... not running" while the command actually completed; verify via `process list` BEFORE retrying (observed 10+ times 2026-08-17; blind retries caused duplicate git commits/sweeps).
+> (4) [SOFT] **NAMING-MANDATE-1 + EMAIL-SIGNATURE-PLAIN-1 codified in Phase 4** (system-prompt v3.35+): signature = full name "Rowan Brad Quni-Gudzinas" + at most one plain org word ("QNFO"); no titles/role prefixes/taglines/pipes/URLs. NOTE: QPL replies ids 193/194 (2026-08-17) predate codification and used the deprecated "Rowan Quni / QNFO Research Collective" signature — absorbed as errata, NO resend (no-repeat-contact).
+> (5) [SOFT] Description trimmed 207 -> 162 chars (must be <=176); frontmatter/H1/banner aligned 2.20 -> 2.21 (concurrent d7e92b1 cycle edited strategy files without a SKILL version bump — N-2 drift fixed here).
+> (6) [SOFT] Paper-Sharing Pre-Flight: cite the QNFO DB-canonical DOI for the paper's CURRENT version (Exchange Phase = 10.5281/zenodo.21964104, not the v1.1 21963930 of the 08-16 batch) — DESIGN-1 of the 08-17 audit.
+> Cross-reference: kaizen v2.64, system-prompt v3.38, 5-adversary red-team audit 2026-08-17, PHANTOM-EXEC-SESSION-1 (mem-CmU4mIm_MwJV), outreach-log.md 2026-08-17.
+
 > **v2.20 UPDATE (2026-08-15, kaizen — PROACTIVE OUTREACH REINSTATED + red-team remediation of the 2026-08-15 round):**
 > Red-team: 4-parallel-reviewer audit (Accuracy / Completeness / Dependency / Compliance) + direct parent-agent
 > fallback of the 2026-08-15 proactive outreach round (3 sends: Santamato / Naser-Moghadasi / Plaat).
@@ -338,10 +348,10 @@ v2.12 UPDATE (2026-08-07, kaizen — AUTONOMOUS OUTREACH: cronjob now SENDS, not
 name: email-composer
 
 
-description: Email triage, drafting, reading, and sending for qnfo.org via the qnfo-email Cloudflare Worker. Use when the user asks to check email, read messages, reply, compose, or manage filters for @qnfo.org addresses.
+description: Email triage, drafting, reading, and sending for qnfo.org via qnfo-email Cloudflare Worker. Use when checking, replying, composing, or managing @qnfo.org filters.
 
 
-version: 2.20
+version: 2.21
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -366,7 +376,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.20
+# Email Composer — v2.21
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -1038,6 +1048,7 @@ Returns: sender, recipient, subject, body_text, body_html, headers_json, classif
 
 
 5. Present the draft to the user with explicit strategic rationale before sending.
+6. Sign every send with the canonical signature: full name **"Rowan Brad Quni-Gudzinas"** + at most one plain org word ("QNFO") — no titles, no role prefixes, no taglines, no pipes, no URLs (NAMING-MANDATE-1 / EMAIL-SIGNATURE-PLAIN-1, system-prompt v3.35+).
 
 
 
@@ -1208,7 +1219,7 @@ memory_remember(category="task_outcome", content="Email interaction: <sender> �
 
 ### Paper-Sharing Pre-Flight
 
-Before ANY outreach email: verify the paper is DOI-archived, identify ≥3 specific researchers whose work connects to the paper, research each recipient's recent work for a personalized connection point, use the academic researcher template from `references/outreach-strategy.md`.
+Before ANY outreach email: verify the paper is DOI-archived, identify ≥3 specific researchers whose work connects to the paper, research each recipient's recent work for a personalized connection point, use the academic researcher template from `references/outreach-strategy.md`. Cite the QNFO DB-canonical DOI for the paper's CURRENT version (resolve via search_papers_enriched before each batch — e.g., Exchange Phase = 10.5281/zenodo.21964104, not the v1.1 DOI 21963930 sent in the 08-16 batch).
 
 ---
 
@@ -1538,6 +1549,9 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **SEARCH-Q-EMAIL-TOKEN-1: /emails/search?q=<full-email-with-@> returns count:0 for real records — the @ tokenizes away (2026-08-10)** | **HARD.** `GET /emails/search?q=tp53@rice.edu` → `{"count":0,"emails":[]}` while /emails/recent shows the record (id=61) — the query tokenizer drops @-containing full addresses. For dedup and lookups: use bare tokens (`q=rice`), subject keywords, or `/emails/recent?limit=N` + recipient filter. NEVER conclude "no prior contact" from a count:0 full-address search (would violate the no-repeat-contact mandate). Canonical case: 2026-08-10 dedup probe — count:0 for two sent outreach recipients. Owner: email-composer v2.15. |
 | **MESSAGE-ID-NE-DELIVERY-1: Worker /send returns its OWN uuid (crypto.randomUUID), NOT Cloudflare delivery state — 200 = accepted, not delivered (2026-08-10)** | **SOFT.** The qnfo-email Worker wraps `env.SEND_EMAIL.send()` and returns `message_id` = its own random UUID (source: `crypto.randomUUID()`), NOT Cloudflare's `delivered/permanent_bounces/queued` array. A 200 + message_id proves ACCEPTANCE only. Delivery monitoring (bounces, suppression, quota) requires the Email Sending REST API or deliverability.md endpoints (`/email/sending/limits`, `/email/sending/suppression`). Canonical case: 2026-08-10 — message_ids 3a0ec65a/391562a5 returned for the outreach batch; D1 status=sent confirms acceptance, not recipient delivery. Owner: email-composer v2.15. Cross-ref: cloudflare-email-service deliverability.md. |
 | **TEST-SEND-EXTERNAL-1: Sending test/diagnostic emails to REAL external recipients — including already-contacted researchers (2026-08-10)** | **HARD GATE.** Test and diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses (alerts@qnfo.org, qnfo@qwav.org, rowan.quni@qnfo.org). NEVER to a real external address — even with an explicit "test"/"matrix" subject, it is still a contact: it can burn the recipient, look unprofessional, and violates the no-repeat-contact mandate (a researcher who already received genuine outreach MUST NEVER get a second email, test or otherwise, without user permission). When a diagnostic needs an "external recipient works" control, use the user's own external mailbox (rwnquni@outlook.com). Canonical case: 2026-08-10 — the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent "MATRIX E" to tp53@rice.edu (Tirthak Patel) at 11:54:48Z (D1 id=66), a second contact to a researcher who had already received genuine outreach that same day (id=61); the external control should have been rwnquni@outlook.com (already control A/D). Owner: email-composer v2.16. Cross-ref: CONNECTION-POINT-UNVERIFIED-1, OUTREACH-SENT-AS-ARCHIVED-1, outreach-strategy.md §4 (test-send to OWN inbox only). ENFORCED BY: scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR PLAYBOOK: Repair-Send Protocol section (v2.17). |
+| **PHANTOM-EXEC-SESSION-1: exec tool reports "Session ... is not running" while the command actually completed in background (2026-08-17)** | Check `process list` + read the session log BEFORE retrying; blind retries duplicate harmless-but-noisy work (duplicate git commits, duplicate sweeps). Canonical: 10+ occurrences in the 2026-08-17 email/outreach cycle — every operation was verified via process list. |
+| **THREAD-RESOLUTION-SUPERSEDED-1: pending follow-up eligibility lines left unmarked after a reply resolves the thread (2026-08-17)** | When a reply resolves a thread, prefix the old eligibility line with "(SUPERSEDED by the UPDATE below — ...)" so future readers cannot misread the stale follow-up date. Canonical: QPL section, outreach-log.md 2026-08-17. |
+| **RECEIPT-PLACEHOLDER-TOKEN-1 RECURRENCE: unresolved timestamp token "(17:xx UTC)" written into outreach-log.md (2026-08-17)** | Resolve received_at from the Worker (/emails/body?id=N) BEFORE writing the log entry; a record must never carry an unresolved token. Canonical: QPL UPDATE, outreach-log.md 2026-08-17 — fixed to received_at 2026-08-17T14:00:12Z. |
 ## References
 
 
