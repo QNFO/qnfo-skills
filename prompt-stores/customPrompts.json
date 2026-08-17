@@ -10,7 +10,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786965219410
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-continue",
@@ -23,7 +23,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786970252762
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-execute",
@@ -36,7 +36,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786965219410
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-publish",
@@ -49,7 +49,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786965219410
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-red-team",
@@ -62,7 +62,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786970252762
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-research",
@@ -75,7 +75,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786965219410
+    "updatedAt": 1786996929782
   },
   {
     "id": "cmd-skills-update",
@@ -88,7 +88,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1786970252762
+    "updatedAt": 1786996929782
   },
   {
     "id": "audit-infrastructure",
@@ -101,7 +101,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1784213884168,
-    "updatedAt": 1786966797923
+    "updatedAt": 1786996929782
   },
   {
     "id": "find-papers-on-topic",
@@ -120,7 +120,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1784213884168,
-    "updatedAt": 1786966797923
+    "updatedAt": 1786996929782
   },
   {
     "id": "validate-citations",
@@ -139,6 +139,6 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1784213884168,
-    "updatedAt": 1786966797923
+    "updatedAt": 1786996929782
   }
 ]
