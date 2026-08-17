@@ -1,4 +1,10 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.40
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.41
+> **v3.41 UPDATE (2026-08-17, kaizen — RECONCILIATION: WRITE-TEXT-NEWLINE-1 codified + 7-store byte-unification after concurrent v3.40; mirrors kaizen v2.65):**
+> Red-team: direct parent-agent reconciliation (session this — the v3.39→v3.40 transition left the 7 stores MIXED: E1 CRLF (2e8a20ad) vs E3-E6 LF (37fe72e8) vs E2/E7 stale v3.39 (857354da); my prior v3.40 edits failed against the concurrent header and a phantom completion was logged).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **WRITE-TEXT-NEWLINE-1 codified into PROMPT-PARITY-1** — prompt-store writes on Windows MUST use `write_text(..., newline='\n')` (default newline=None translates \n → \r\n → byte drift); parity verification MUST use `read_bytes` RAW-sha (read_text NORMALIZES CRLF→LF and MASKS drift). Canonical: the concurrent v3.40 write left E1 CRLF (sha 2e8a20ad = LF-normalized 37fe72e8) while E3-E6 were LF — a masked 5-store "parity" claim. THIS v3.41 reconciles: all 7 stores byte-identical LF.
+> Cross-reference: kaizen v2.65, cloudflare v3.55, PROMPT-PARITY-1, WRITE-TEXT-NEWLINE-1, session this.
+> Completed 2026-08-17 by MCP-audit cycle: footer synced to v3.41; ALL 7 stores byte-identical LF (raw-sha verified); MCP fleet trim post-restart verified 14/14 enabled; red-team skills audit dispatched (Accuracy/Completeness/Dependency).
 > **v3.40 UPDATE (2026-08-17, MCP audit — fleet trim prompt sync):**
 > MCP audit removed unneeded/unreliable servers (cloudflare-observability + cloudflare-radar =
 > no cached OAuth tokens — could not stay connected; logpush/browser-mcp/dns-analytics/containers/
@@ -1618,7 +1624,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.40** (MCP audit fleet-trim prompt sync + VECTORIZE-TOP-K-50-1 — qnfo-memory-mcp 1101 root-caused via wrangler tail, limit≤16 workaround + ZENODO-VERSION-LABEL-EDIT-1 deposit-API edit flow + GIT-OWNERSHIP-1 file-collision nuance + MODEL-KEY-FILE-DRIFT-1 #6 reset; 7-store byte-identical incl. qnfo-skills repo copy; 2026-08-17)
+Current: **v3.41** (WRITE-TEXT-NEWLINE-1 codified + 7-store LF byte-unification + MCP fleet-trim prompt sync + red-team skills audit clean; 7-store byte-identical LF raw-sha; 2026-08-17)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
