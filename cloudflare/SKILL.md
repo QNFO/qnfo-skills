@@ -1,3 +1,9 @@
+> **v3.53 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: R2-OBJECTS-LISTING-SHAPE-1; mirrors system-prompt v3.38):**
+> Red-team: direct parent-agent skills audit (session this — RES.006 R2 mirror verification).
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **R2-OBJECTS-LISTING-SHAPE-1 added** — `GET /accounts/{acct}/r2/buckets/{bucket}/objects` returns `result` as a PLAIN LIST of objects (NOT `{objects:[...]}`); paginate via `result_info.cursor` (default 20/page). Parse `result` as a list; scripts using `result.objects` misreport 0 objects when objects exist (canonical: RES.006 mirror verify 2026-08-17 — 53 files present, two scripts printed 0). List `prefix` must be RAW (URL-encoding the slashes → HTTP 400 Bad Request); PUT object keys MUST be percent-encoded (`urllib.parse.quote(key, safe='')`). S3-style list with `limit` + `cursor` params on the CF API.
+> Cross-reference: system-prompt v3.38, kaizen v2.63, R2-MIRROR-AFTER-PUBLISH-1, session this.
+
 > **v3.52 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1; mirrors system-prompt v3.36):**
 > Red-team: CMD RED TEAM 5-adversary direct audit (session lWvwLSVUTTvLoIH3t7tG7 — post-closeout credential diagnosis; user correction "WRANGLER OAUTH TOKEN DID NOT EXPIRE").
 > HARD: 2. SOFT: 0. DESIGN: 0. Changes:
@@ -121,12 +127,6 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
-> **v3.53 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: R2-OBJECTS-LISTING-SHAPE-1; mirrors system-prompt v3.38):**
-> Red-team: direct parent-agent skills audit (session this — RES.006 R2 mirror verification).
-> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
-> (1) [HARD] **R2-OBJECTS-LISTING-SHAPE-1 added** — `GET /accounts/{acct}/r2/buckets/{bucket}/objects` returns `result` as a PLAIN LIST of objects (NOT `{objects:[...]}`); paginate via `result_info.cursor` (default 20/page). Parse `result` as a list; scripts using `result.objects` misreport 0 objects when objects exist (canonical: RES.006 mirror verify 2026-08-17 — 53 files present, two scripts printed 0). List `prefix` must be RAW (URL-encoding the slashes → HTTP 400 Bad Request); PUT object keys MUST be percent-encoded (`urllib.parse.quote(key, safe='')`). S3-style list with `limit` + `cursor` params on the CF API.
-> Cross-reference: system-prompt v3.38, kaizen v2.63, R2-MIRROR-AFTER-PUBLISH-1, session this.
-
 
 # CLOUDFLARE — v3.51
 

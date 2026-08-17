@@ -1,3 +1,13 @@
+> **v2.63 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors system-prompt v3.38):**
+> Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; v3.37 cycle stopped mid-write).
+> HARD: 3. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **PROMPT-PARITY-1 v3.37 partial-write repaired** — v3.37 cycle left footer v3.36 + store B stale (v3.36 content); v3.38 dual-wrote ALL stores byte-identical, header==footer==v3.38 (REPO-COPY-PHANTOM-1 class recurrence; canonical: v3.37 2026-08-17 partial write, backup .bak-consolidate2-20260817-143732).
+> (2) [HARD] **kaizen footer N-2 drift repaired** — footer stuck at v2.49 through v2.50–v2.62 (13 versions); repaired to v2.63 == frontmatter == banner.
+> (3) [HARD] **R2-OBJECTS-LISTING-SHAPE-1** — CF R2 objects list API `result` is a PLAIN LIST (not {objects:[]}); pagination via result_info.cursor (20/page); list prefix RAW (encoded slashes → HTTP 400); PUT key MUST be percent-encoded (quote(key, safe='')). Canonical: RES.006 mirror verify 2026-08-17 (2 misparses → 0 vs 53 objects).
+> (4) [SOFT] **CROSS-STORE-PUBLISH-SYNC-1 execution order** — R2 mirror → D1 papers (doi/zenodo_doi/r2_key/body_md frontmatter) → paper_ids upsert → KG json_set (paper distributed + project P8) → Vectorize /index?slug= + webhook verify → residual-DOI sweep. Canonical: RES.006 21929626→21979060 2026-08-17.
+> (5) [SOFT] **NEWVERSION-FRONTMATTER-CARRYOVER-1 extended to D1 body_md** — body_md keeps the parent self-DOI after re-publish; corpus re-point MUST replace body_md frontmatter + re-index (canonical: RES.006 21979060).
+> Cross-reference: system-prompt v3.38, cloudflare v3.53, knowledge v2.14, session this.
+
 > **v2.62 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: OAuth misdiagnosis repair + 2 new anti-patterns; mirrors system-prompt v3.36):**
 > Red-team: CMD RED TEAM 5-adversary direct audit (session lWvwLSVUTTvLoIH3t7tG7 — post-closeout credential diagnosis; user correction "WRANGLER OAUTH TOKEN DID NOT EXPIRE").
 > HARD: 2. SOFT: 2. DESIGN: 0. Changes:
@@ -739,16 +749,6 @@
 > N-2-SCAN-FALSE-POSITIVE-1, session this.
 
 ---
-> **v2.63 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: PROMPT-PARITY-1 v3.37 partial-write repair + R2-OBJECTS-LISTING-SHAPE-1 + CROSS-STORE-PUBLISH-SYNC-1 re-point pattern; mirrors system-prompt v3.38):**
-> Red-team: direct parent-agent skills audit (session this — CMD SKILLS UPDATE cycle; v3.37 cycle stopped mid-write).
-> HARD: 3. SOFT: 2. DESIGN: 0. Changes:
-> (1) [HARD] **PROMPT-PARITY-1 v3.37 partial-write repaired** — v3.37 cycle left footer v3.36 + store B stale (v3.36 content); v3.38 dual-wrote ALL stores byte-identical, header==footer==v3.38 (REPO-COPY-PHANTOM-1 class recurrence; canonical: v3.37 2026-08-17 partial write, backup .bak-consolidate2-20260817-143732).
-> (2) [HARD] **kaizen footer N-2 drift repaired** — footer stuck at v2.49 through v2.50–v2.62 (13 versions); repaired to v2.63 == frontmatter == banner.
-> (3) [HARD] **R2-OBJECTS-LISTING-SHAPE-1** — CF R2 objects list API `result` is a PLAIN LIST (not {objects:[]}); pagination via result_info.cursor (20/page); list prefix RAW (encoded slashes → HTTP 400); PUT key MUST be percent-encoded (quote(key, safe='')). Canonical: RES.006 mirror verify 2026-08-17 (2 misparses → 0 vs 53 objects).
-> (4) [SOFT] **CROSS-STORE-PUBLISH-SYNC-1 execution order** — R2 mirror → D1 papers (doi/zenodo_doi/r2_key/body_md frontmatter) → paper_ids upsert → KG json_set (paper distributed + project P8) → Vectorize /index?slug= + webhook verify → residual-DOI sweep. Canonical: RES.006 21929626→21979060 2026-08-17.
-> (5) [SOFT] **NEWVERSION-FRONTMATTER-CARRYOVER-1 extended to D1 body_md** — body_md keeps the parent self-DOI after re-publish; corpus re-point MUST replace body_md frontmatter + re-index (canonical: RES.006 21979060).
-> Cross-reference: system-prompt v3.38, cloudflare v3.53, knowledge v2.14, session this.
-
 
 
 
