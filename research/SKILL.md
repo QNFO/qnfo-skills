@@ -1,3 +1,17 @@
+# RESEARCH — v2.118
+
+> **v2.118 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — 5 publication gates + forensic-deposit rule codified; mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PUBLICATION GATES codified in this skill (system-prompt HARD gates previously absent here)** —
+>    - R2-MIRROR-AFTER-PUBLISH-1: every Zenodo publication MUST be mirrored to the canonical R2 papers bucket `qnfo-releases` at `YYYY/MM/<slug>/` (main file + README.md + ALL source files) within the same cycle, and the KG Paper node updated to `distribution_status: distributed` + `r2_path` + `r2_readme`; verify via bucket listing after write. Publishing to Zenodo alone leaves the artifact at `published`; a missing R2 mirror is a HARD finding.
+>    - WRONG-BUCKET-SELECTION-1: the canonical papers bucket is `qnfo-releases`, NOT the bare `releases` bucket; verify the target bucket against a known sibling object (list an existing paper folder first) before any R2 write.
+>    - ZENODO-PLACEHOLDER-DOI-1: `prereserved_doi` may return None — NEVER rely on it; verify the UPLOADED FILE (fetch back; assert no `<RESERVED>` remains) BEFORE publish; a published placeholder is immutable — remediate via a new version.
+>    - ZENODO-CONCEPT-DOI-CITE-1: versioned records' How-to-Cite blocks MUST cite the CONCEPT DOI, not the v1 record DOI; after publish read `conceptrecid` and confirm cite block + frontmatter.
+>    - POST-PUBLICATION ADVERSARIAL ANALYSIS GATE: every published artifact MUST receive a critical adversarial analysis AFTER publication (CMD RED TEAM SUB: 3-5 reviewer slots Accuracy/Completeness/Dependency; WAIT per REDTEAM-QUEUE-STALL-PATIENCE-1 ~15-min budget; aggregate; READ-ONLY; fallback = direct 5-adversary audit). HARD findings become next-cycle kaizen items — publish-then-audit, never publish-then-forget.
+>    - FORENSIC-DEPOSIT-1: forensic analyses MUST be deposited as artifacts with the publication (2026-08-12 audit HARD finding: "forensic analyses not deposited"); never keep forensic evidence in private notes only.
+> (2) [SOFT] **H1 added** — this skill had no current-version H1 title (first H1 was a Zenodo API header); H1 now v2.118 == frontmatter == latest banner.
+> Cross-reference: system-prompt v3.43 (PROMPT gates), kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v2.117 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PUBLICATION-PROSE-GATE-1; mirrors system-prompt v3.42 + kaizen v2.67):**
 > Red-team: direct parent-agent skills audit (session this — UMP.012 v0.1→v0.2 user-correction cycle).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -205,7 +219,7 @@ name: research
 
 
 
-version: 2.116
+version: 2.118
 description: >
 
 

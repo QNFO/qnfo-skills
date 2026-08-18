@@ -1,5 +1,10 @@
 # email-composer
 
+> **v2.22 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — footer N-2 drift repaired (footer stayed v2.20 while banner/FM advanced to v2.21); mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Footer N-2 drift repaired** — footer `Current: **v2.20**` bumped to v2.22 == banner == frontmatter.
+> Cross-reference: system-prompt v3.43, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v2.21 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE cycle: red-team skills audit + session-lesson anti-patterns + mandate codification):**
 > Red-team: direct parent-agent 5-adversary audit of the 2026-08-17 outreach cycle (0 HARD) + this cycle's mandatory checks (7-store prompt parity v3.38 VERIFIED sha d666fc26; 9/9 CMD templates restored in all 4 template stores — CMD RED TEAM SUB + CMD DEPLOY were missing; DEEPCHAT-DEFAULT-MODEL-1 PASS; Cloudflare cost section v3.53 PASS). Changes:
 > (1) [SOFT] **RECEIPT-PLACEHOLDER-TOKEN-1 recurrence (2026-08-17)** — outreach-log.md QPL UPDATE carried an unresolved timestamp token "(17:xx UTC)"; resolved to verified `received_at 2026-08-17T14:00:12Z`. Log entries must carry resolved timestamps at write time.
@@ -351,7 +356,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via qnfo-email Cloudflare Worker. Use when checking, replying, composing, or managing @qnfo.org filters.
 
 
-version: 2.21
+version: 2.22
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -1594,5 +1599,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.20** (email-composer — PROACTIVE OUTREACH REINSTATED (EMAIL-COMPOSER-PROACTIVE-1, v3.27 reversal of the 08-13 detection-only mandate); red-team remediation 2026-08-15; N-2 footer repair 2026-08-16)
+Current: **v2.22** (email-composer — PROACTIVE OUTREACH REINSTATED (EMAIL-COMPOSER-PROACTIVE-1, v3.27 reversal of the 08-13 detection-only mandate); red-team remediation 2026-08-15; N-2 footer repair 2026-08-16)
 

@@ -1,3 +1,9 @@
+> **v1.25 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — PROMPT-PARITY-1 store map updated 4-store → 7-store (E1–E7) + H1 sync; mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Parity discipline updated to the 7-store map** — this skill encoded 4-store/6-store parity; canonical is E1–E7 per system-prompt PROMPT-PARITY-1: E1 `.deepchat/system-prompt-v2.7.md`, E2 `.deepchat/skills/system-prompt-v2.7.md`, E3 qnfo-skills repo copy, E4 `.deepchat/app-settings.json` default_system_prompt, E5 Roaming `app-settings.json` default_system_prompt, E6 `.deepchat/agent.db` systemPrompts (raw), E7 Roaming `app_db/agent.db` systemPrompts (value_json list).
+> (2) [SOFT] **H1 sync** — H1 was v1.18; now v1.25 == frontmatter == latest banner.
+> Cross-reference: system-prompt v3.43 PROMPT-PARITY-1, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v1.24 UPDATE (2026-08-17, kaizen — CONCURRENT-CYCLE COLLISION: customPrompts must be written ONLY from the repo canonical; schema-valid source enum):**
 > Red-team: direct parent-agent audit (session this — user restarted after v1.23; runtime showed
 > 12 prompts: a concurrent kaizen cycle had re-added CMD RED TEAM SUB + CMD DEPLOY into all 4
@@ -7,7 +13,7 @@
 >     mandate dropped, with SCHEMA-INVALID entries: `source: "custom"` (app enum is
 >     local|imported|builtin → whole UI list rejected again) + fresh UUID per store
 >     (byte-identical 4/4 False) + CMD DEPLOY template != content. FIX: re-applied the canonical
->     10-entry set from the repo export (all 4 stores byte-identical, schema-clean) — user mandate
+>     10-entry set from the repo export (all 7 stores byte-identical per the E1–E7 map, schema-clean) — user mandate
 >     wins. RULE: **customPrompts writes MUST source from qnfo-skills/prompt-stores/
 >     customPrompts.json (repo canonical) — NEVER from a hardcoded template list**; after ANY
 >     write run `restore-custom-prompts.py verify` (exit 0) and confirm `source` enum +
@@ -249,7 +255,7 @@
 
 ---
 name: deepchat-settings
-version: 1.24
+version: 1.25
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -259,7 +265,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.18
+# DeepChat Settings — v1.25
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped

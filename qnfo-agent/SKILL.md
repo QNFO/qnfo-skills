@@ -1,10 +1,16 @@
 ---
 name: qnfo-agent
-version: "3.61"
+version: "3.62"
 description: MUST LOAD FIRST via skill_view. Activates 24-skill trigger table, safety, discovery. Core QNFO identity v3.61: Research Integrity, EXECUTE MODE, KIF-01 to KIF-45.
 ---
 
 # QNFO-AGENT — v3.61 (KIF-43, KIF-44, KIF-45 — PowerShell quoting + Zenodo upload + Buffer token kaizen)
+
+> **v3.62 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — staleness + shell note + mission; mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Staleness flagged + mission added** — this skill was 20 days stale (v3.61, 2026-07-29) with PowerShell-era guidance; the exec shell is now Git Bash (GIT-BASH-SHELL-1, system v2.15) — treat PowerShell snippets as legacy reference only. Mission: QNFO/QWAV energy-efficiency benchmark for quantum computing (MISSION-1, system-prompt v3.43).
+> (2) [SOFT] **Version bump** v3.61 → v3.62 (frontmatter + banner synced).
+> Cross-reference: system-prompt v3.43 MISSION-1, kaizen v2.68, system v2.15, session f_bH6KMZ4Og2Wvw79S9rU.
 
 > **v3.61 UPDATE (2026-07-29, KIF-43/44/45 — PowerShell + Zenodo + Buffer kaizen):**
 

@@ -1,3 +1,12 @@
+# KAIZEN — v2.68
+
+> **v2.68 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — top H1 restored + Version-section repair + skill_view fix + registry-gap list; mirrors system-prompt v3.43 + research v2.118):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 2. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Structural repair** — file had NO top H1 (first H1 was the v2.49 history divider at L1378); the mid-file stale `## Version` section was already removed by the concurrent v2.67 cycle — verified absent in this cycle; H1 restored to v2.68; footer == frontmatter == latest banner.
+> (2) [HARD] **skill_view("research") fixed** — the cross-verify protocol at L7115 instructed `skill_view("research")`, which FAILS (research not in the registry, SKILL-REGISTRY-GAP-1); now `read research/SKILL.md`.
+> (3) [SOFT] **SKILL-REGISTRY-GAP-1 list updated** — actual unregistered-with-SKILL.md = 7 core (+ research, email-composer) plus qnfo-core, qnfo-agent, personal-knowledge, cloudflare-email-service, skill-creator (see system-prompt v3.43 gate).
+> Cross-reference: system-prompt v3.43, research v2.118, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v2.67 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PUBLICATION-PROSE-GATE-1; mirrors system-prompt v3.42 + research v2.117):**
 > Red-team: direct parent-agent skills audit (session this — UMP.012 v0.1→v0.2 user-correction cycle).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -793,7 +802,7 @@ name: kaizen
 
 
 
-version: 2.66
+version: 2.68
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -7112,7 +7121,7 @@ When the kaizen skill is kaizening itself (self-kaizen), the agent MUST:
 
 
 
-2. **Cross-verify every version reference** — the canonical case study (research skill) must be live-verified via `skill_view("research")` to confirm the version header matches. Never trust a `skill_list` description field for version numbers; those are separate metadata that may drift independently of the actual SKILL.md heading.
+2. **Cross-verify every version reference** — the canonical case study (research skill) must be live-verified via `read research/SKILL.md` to confirm the version header matches. Never trust a `skill_list` description field for version numbers; those are separate metadata that may drift independently of the actual SKILL.md heading.
 
 
 
@@ -14997,26 +15006,6 @@ newversion-only (never in-place .md overwrite on a published record — 415/403)
 row are the enforcement. Likelihood: [HIGH] — verified live 2026-08-10 (drafts 21878976/21878977);
 two skills now carry the rule.
 
-## Version
-
-
-Current: **v2.62** (kaizen — ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFIG-PATH-1 + env-token staleness + stale heuristic archive; frontmatter 2.61 -> 2.62; mirrors system-prompt v3.36; 2026-08-17)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 > **v1.38 UPDATE (2026-08-05, kaizen — Session retrospective + red-team anti-pattern discovery):**
 
 
@@ -15170,7 +15159,7 @@ Current: **v2.62** (kaizen — ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFI
 
 
 
-Current: **v2.67** (PUBLICATION-PROSE-GATE-1 mirror — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
+Current: **v2.68** (red-team remediation — publication gates + mirror alignment — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
 
 
 

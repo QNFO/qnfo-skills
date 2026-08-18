@@ -1,37 +1,19 @@
+---
+name: qnfo-core
+version: "1.29"
+description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
+---
+
+> **v1.29 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — frontmatter drift repaired (FM 1.27 vs banner v1.28) + FM repositioned to byte 0; mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Frontmatter drift repaired** — FM was `version: "1.27"` while the latest banner was v1.28; now v1.29 == banner.
+> (2) [SOFT] **Frontmatter repositioned to byte 0** — the banner block previously preceded the FM block; registry parsers expect FM first.
+> Cross-reference: system-prompt v3.43, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v1.28 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
 > Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
 > Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS); 6 refs updated.
 > Cross-ref: kaizen v2.34, research v2.104, execution-mandate v2.10.
-
----
-
-
-
-
-
-
-name: qnfo-core
-
-
-
-
-
-
-version: "1.27"
-
-
-
-
-
-
-description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
-
-
-
-
-
-
----
 
 > **v1.27 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: N-2 header fix):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE — session this). Watchtower: qnfo-core v1.26 hdr stale (v1.18) — FIXED. HARD: 0. SOFT: 1. Changes:

@@ -171,7 +171,7 @@ kif_tags: [KIF-32]
 
 
 
-# windows-command-patterns — v3.21
+# windows-command-patterns — v3.23
 > **v3.20 UPDATE (2026-08-10, kaizen — NODE-MJS-ESM-1: Node require-based scripts must be `.cjs`):**
 > Red-team: direct parent-agent 5-adversary audit (CMD SKILLS UPDATE; session dlnKXUpIJK48EWgWj5SmP —
 > QNFO.UMP.005 v0.7 CDP PDF build). HARD: 0. SOFT: 1. DESIGN: 0. Changes:

@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.14
+version: 2.15
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,6 +9,14 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
+# KNOWLEDGE — v2.15
+
+> **v2.15 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — mirror re-pointed to system-prompt v3.43 (was v3.38) + H1 sync; mirrors system-prompt v3.43 + kaizen v2.68):**
+> Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **Mirror-pointer chain repaired** — banner claimed "mirrors system-prompt v3.38" (3 cycles stale); now mirrors v3.43.
+> (2) [SOFT] **H1 sync** — H1 was v2.13; now v2.15 == frontmatter == latest banner.
+> Cross-reference: system-prompt v3.43, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
+
 > **v2.14 UPDATE (2026-08-17, kaizen — CMD SKILLS UPDATE: CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LISTING-SHAPE-1; mirrors system-prompt v3.38):**
 > Red-team: direct parent-agent skills audit (session this — RES.006 corpus re-point 21929626→21979060).
 > HARD: 2. SOFT: 0. DESIGN: 0. Changes:
@@ -105,7 +113,7 @@ self_sufficient: true
 > Cross-reference: kaizen v1.20, research v2.65, qnfo-core N-2, KIF-23,
 > session 1tz85-vMiqh2TyFySznBA.
 
-# KNOWLEDGE — v2.13
+# KNOWLEDGE — v2.15
 (70a58cb3-b2cd-498d-877f-ecca86859a22), session 0SnaUK-QccIJkohojGMQS.
 > **v2.6 UPDATE (2026-08-04, kaizen — staleness sweep + KG-D1 reconciliation result):**
 > Red-team: direct parent-agent audit (session C8CxG7CWs3AOR9w37Q5c8).
