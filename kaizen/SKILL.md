@@ -1,4 +1,9 @@
-# KAIZEN — v2.68
+# KAIZEN — v2.69
+
+> **v2.69 UPDATE (2026-08-18, kaizen — CMD CONTINUE: QNFO/QWAV strategy-alignment — ATTENTION-SELECTIVITY-1 + priority framework; mirrors system-prompt v3.44):**
+> Red-team: direct parent-agent strategy-alignment audit (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **ATTENTION-SELECTIVITY-1 codified in system-prompt v3.44** — the QNFO/QWAV priority tiers (1–5) and attention rules are canonical; kaizen cycles MUST preserve them and MUST NOT introduce new attention sinks (each new instruction must map to a tier).
+> Cross-reference: system-prompt v3.44, WBS.TAXONOMY §3/§8, MISSION-1, session f_bH6KMZ4Og2Wvw79S9rU.
 
 > **v2.68 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — top H1 restored + Version-section repair + skill_view fix + registry-gap list; mirrors system-prompt v3.43 + research v2.118):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 2. SOFT: 1. DESIGN: 0. Changes:
@@ -802,7 +807,7 @@ name: kaizen
 
 
 
-version: 2.68
+version: 2.69
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -15159,7 +15164,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.68** (red-team remediation — publication gates + mirror alignment — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
+Current: **v2.69** (ATTENTION-SELECTIVITY-1 strategy-alignment — publication gates + mirror alignment — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
 
 
 
