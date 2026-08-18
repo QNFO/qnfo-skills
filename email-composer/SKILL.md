@@ -1,5 +1,15 @@
 # email-composer
 
+> **v2.23 UPDATE (2026-08-18, kaizen — wave-2 red-team audit (3-parallel reviewers) + DEFAULT-SENDER-DRIFT-1 + Turing-test assessment):**
+> Red-team: POST-PUBLICATION ADVERSARIAL ANALYSIS GATE on the 2026-08-18 wave-2 sends (Heiblum reply id=215, Landsman reply id=216, Camino outreach id=217, Jipdi outreach id=218) — 3 parallel reviewer subagents (Accuracy / Completeness / Dependency-Tone). VERDICT: **0 HARD** across all three; each PASS-WITH-SOFT-FINDINGS; Turing scores 7-8/10; no bothersome patterns; no recipient mismatch; no dangling obligations. Changes:
+> (1) [HARD] **DEFAULT-SENDER-DRIFT-1 anti-pattern added** — Worker `/send` WITHOUT explicit `from` defaults From to `qnfo@qnfo.org` (verified: D1 ids 214-218 all show qnfo@qnfo.org while wave-1 ids 202-204 show rowan.quni@qnfo.org because that session passed `from` explicitly). Canonical academic-outreach sender is `rowan.quni@qnfo.org` (strategy §1.A). Rule: EVERY `/send` payload passes `"from": "rowan.quni@qnfo.org"`. Wave-2 deviation absorbed as errata, NO resend (no-repeat-contact mandate).
+> (2) [SOFT] **LLM-tell list for future drafts** (Dependency-Tone reviewer): avoid recurring "One question …" openers across a batch; avoid recurring "I would be glad to hear/expand …" closers with hedge-stacks; a reply to a short inbound must NOT run ~8× its length (E1: 230 words vs 27); a "plain terms" promise must deliver — E1 promised plain terms then used "core scalar of the theory"/"by-products of the algebra" (Completeness F1); avoid "we" from a solo signatory (E3); onboard jargon in cold outreach ("re-entrant mark" dropped un-onboarded in E4).
+> (3) [SOFT] Accuracy: Camino paraphrase adds "only when" over the abstract's "when" (necessity reading — defensible). E4 identity R=(e^{iπ})^{2s}=(−1)^{2s} VERIFIED verbatim in the full Exchange Phase abstract (reviewer truncation artifact, not an error). DOIs parent-verified: JPCUB P0 = 10.5281/zenodo.21637028 (DB record); Exchange Phase = 10.5281/zenodo.21964104 (DB-canonical per v2.21 pre-flight rule).
+> (4) [DESIGN] **"Re:" prefix on cold outreach** (template §1.A prescribes it) mimics reply threads and is a spam-folder watch item — kept for template consistency (40+ prior sends, no junk reports); changing the policy = user decision.
+> (5) [DESIGN] Watch item: Exchange Phase v1.3 frontmatter carries version-level DOI 21964359 while DB-canonical record DOI = 21964104 — resolve version identity at the next paper-sharing pre-flight.
+> (6) [SOFT] Completeness confirmed: Heiblum + Landsman follow-up eligibility permanently CLOSED (never re-contact; the ONLY permitted future contact = in-thread plain-terms simplification if Heiblum reports continued difficulty). Landsman's "entropic enclosure" question stays unanswered BY DESIGN (Type 4, no follow-up ever).
+> Cross-reference: red-team delegations w2TKAyAeY6aKSWNTrL1Ua (Completeness) / fFeVsWoBkYRGEGWCtdru8 (Dependency-Tone) / nejE4O3EBlVY36QnXa6YS (Accuracy), outreach-log.md 2026-08-18 wave-2 red-team addendum, system-prompt v3.43, kaizen v2.68, session tfRpmza-s0y5lUQXnWczm.
+
 > **v2.22 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — footer N-2 drift repaired (footer stayed v2.20 while banner/FM advanced to v2.21); mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **Footer N-2 drift repaired** — footer `Current: **v2.20**` bumped to v2.22 == banner == frontmatter.
@@ -356,7 +366,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via qnfo-email Cloudflare Worker. Use when checking, replying, composing, or managing @qnfo.org filters.
 
 
-version: 2.22
+version: 2.23
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 
@@ -1599,5 +1609,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.22** (email-composer — PROACTIVE OUTREACH REINSTATED (EMAIL-COMPOSER-PROACTIVE-1, v3.27 reversal of the 08-13 detection-only mandate); red-team remediation 2026-08-15; N-2 footer repair 2026-08-16)
+Current: **v2.23** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); wave-2 red-team audit 2026-08-18: 0 HARD, DEFAULT-SENDER-DRIFT-1 added, Turing 7-8/10)
 
