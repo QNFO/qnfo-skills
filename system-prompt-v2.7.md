@@ -1,4 +1,18 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.44
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.45
+> **v3.45 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: UMP.012 post-publication red team (3-reviewer, 2 HARD) → v0.3+v0.4 remediation; PRACTITIONER-RELEVANCE-1 + GTD-CLOSEOUT-AAR-1 + README-MISSING-ON-PUBLISH-1 + ZENODO-VENUE-ATTRIBUTION-1 codified; built on the concurrent v3.44 strategy-alignment cycle; mirrors kaizen v2.70 + research v2.120):**
+> Red-team: 3-reviewer subagent dispatch (Accuracy/Completeness/Dependency — ALL completed) + direct parent-agent fallback; aggregated BEFORE remediation (READ-ONLY during audit).
+> HARD: 3. SOFT: 6. DESIGN: 2. Changes:
+> (1) [HARD] **README-MISSING-ON-PUBLISH-1 (new)** — UMP.012 locale paper v0.2 shipped without README.md (Zenodo 10 files + R2 mirror 10 objects; KG r2_readme mis-pointed at PROJECT-PLAN.md). Remediated v0.3 (10.5281/zenodo.21990604). Gate: verify the ACTUAL post-publish Zenodo file list against PUBLICATION-SOURCE-COMPLETENESS-1, not the intended list.
+> (2) [HARD] **ZENODO-VENUE-ATTRIBUTION-1 (new)** — ref [3] (Brenner/Dias/Koenig, arXiv:2509.18854) is genuine but was attributed to "presented at QPL 2026"; it appears NOWHERE in the official QPL 2026 program (Accuracy + Dependency independent agreement). A venue claim is a first-class citation field — verify against the official program page, not the arXiv listing. Remediated v0.4 (10.5281/zenodo.21991270): abstract/Table 1/§2/§7/§8 state "one independent arXiv result"; table header "Documented at QPL 2026" → "Documentation".
+> (3) [HARD] **PUBLICATION-PROSE-GATE-1 self-violation (v0.3 metadata)** — my v0.3 record description used literal labels "Why a reader should care:"/"Premise-depth:" (prohibited by the v3.42 gate); v0.4 rewrote the description as plain prose. Lesson: re-check the prose gate BEFORE publish on every metadata extension.
+> (4) [SOFT] **PRACTITIONER-RELEVANCE-1 (new gate, user directive 2026-08-18)** — every paper must speak to practitioners: explicit implementation path / tangible product embodiment / professional-engineering language, consilient (no niche-terminology dead-ends). "What can a practitioner DO with this" is a standing publication question. (UMP.012 already embodies it: §3 decision tool, §4 spec-sheet, §5 cost, §6 deployables.)
+> (5) [SOFT] **GTD-CLOSEOUT-AAR-1 (new)** — closeouts include an after-action report: questions raised, problems hit, next actions (GTD).
+> (6) [SOFT] **ZENODO-VERSION-LABEL-EDIT-1 recurrence** — metadata.version must be set on the newversion DRAFT pre-publish; post-publish edits return 404/500. v0.4 set it pre-publish (label renders on the record page).
+> (7) [SOFT] **papers.identifier convention** — identifier = immutable first-registration anchor (arXiv-ID analog); doi/zenodo_doi/version/r2_key/r2_path track the current version; never churn the PK on newversion. Backfilled papers.kg_node_id + r2_key/r2_path for the locale paper.
+> (8) [SOFT] **bib hygiene (UMP.012)** — [4] venue "QPL 2026 proceedings, EPTCS" premature (latest EPTCS QPL volume 2025/426) → "QPL 2026, accepted talk"; missing Boson/Fermion bib entry added (concept DOI 10.5281/zenodo.21938970, v1.6 record 21964598); [12] pin v1.4 → v1.6 + title aligned to the canonical record.
+> (9) [SOFT] **Zenodo read-API propagation lag** — a freshly published newversion can 404 on /api/records/{id} for minutes while doi.org + the record page + the search index already serve it; verify via doi.org HEAD + search index, re-check the direct API at closeout (BLAME-EXTERNAL-1: differential test against a 3h-old record passed).
+> Cross-reference: kaizen v2.70, research v2.120, PUBLICATION-PROSE-GATE-1, session this.
+
 > **v3.44 UPDATE (2026-08-18, kaizen — CMD CONTINUE: QNFO/QWAV strategy-alignment — ATTENTION-SELECTIVITY-1 + priority framework (canonical WBS registry); mirrors kaizen v2.69 + research v2.118):**
 > Red-team: direct parent-agent strategy-alignment audit (session f_bH6KMZ4Og2Wvw79S9rU). User mandate 2026-08-18: "clearer alignment with QNFO/QWAV research/priorities/strategy; I can't care about everything I hear and need to be selective in my attention."
 > HARD: 2. SOFT: 1. DESIGN: 0. Changes:
@@ -1679,7 +1693,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.44** (ATTENTION-SELECTIVITY-1 + QNFO/QWAV priority framework; MISSION-1 preserved; 7-store parity; red-team remediation lineage — mission block, PROMPT-PARITY-1 7-store gate body, cronjob ID 8eb69c12, registry-gap 7, mirror alignment — publication text must be plain scholarly prose, no pipeline vocabulary; user standard: timely, engaging, relevant; UMP.012 v0.1→v0.2 canonical; 2026-08-18)
+Current: **v3.45** (UMP.012 red team 2-HARD remediation to v0.4; PRACTITIONER-RELEVANCE-1 + GTD-CLOSEOUT-AAR-1 + README-MISSING-ON-PUBLISH-1 + ZENODO-VENUE-ATTRIBUTION-1 codified; 2026-08-18)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

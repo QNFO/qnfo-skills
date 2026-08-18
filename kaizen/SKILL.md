@@ -1,4 +1,17 @@
-# KAIZEN — v2.69
+# KAIZEN — v2.70
+> **v2.70 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: UMP.012 post-publication red team (3-reviewer) + v0.3/v0.4 remediation; mirrors system-prompt v3.45 + research v2.120):**
+> Red-team: subagent dispatch (Accuracy/Completeness/Dependency — ALL completed) + direct parent-agent fallback; 2 HARD + 6 SOFT + 2 DESIGN aggregated BEFORE remediation.
+> HARD: 2. SOFT: 4. DESIGN: 2. Changes:
+> (1) [HARD] **README-MISSING-ON-PUBLISH-1 added** — a publication can pass its pipeline with no README.md in the Zenodo deposit AND the R2 mirror (UMP.012 v0.2 did; KG r2_readme fell back to PROJECT-PLAN.md). Remediated v0.3 (10.5281/zenodo.21990604). Gate: post-publish, verify the ACTUAL Zenodo file list against the required set.
+> (2) [HARD] **ZENODO-VENUE-ATTRIBUTION-1 added** — ref [3] (Brenner/Dias/Koenig, arXiv:2509.18854) was attributed to "presented at QPL 2026" but appears nowhere in the official program (Accuracy + Dependency agreement). Venue claims are first-class citation fields: verify a claimed conference presentation against the official program page, not the arXiv listing. Remediated v0.4 (10.5281/zenodo.21991270).
+> (3) [SOFT] **PUBLICATION-PROSE-GATE-1 self-violation** — v0.3 metadata used literal labels "Why a reader should care:"/"Premise-depth:" (prohibited by the v3.42 gate); v0.4 rewrote the description in plain prose. Re-check the prose gate BEFORE publish on every metadata extension.
+> (4) [SOFT] **ZENODO-VERSION-LABEL-EDIT-1 recurrence** — metadata.version must be set on the newversion DRAFT pre-publish (post-publish edits 404/500); v0.4 did it pre-publish and the label renders on the record page.
+> (5) [SOFT] **PRACTITIONER-RELEVANCE-1 added** — every paper needs a practitioner-facing section (implementation path, tangible product embodiment, engineering language; consilient, no niche-terminology dead-ends). User directive 2026-08-18.
+> (6) [SOFT] **GTD-CLOSEOUT-AAR-1 added** — closeouts include an after-action report: questions raised, problems hit, next actions (GTD).
+> (7) [SOFT] **papers.identifier convention** — identifier = immutable first-registration anchor (arXiv-ID analog); doi/zenodo_doi/version/r2_key/r2_path track the current version; never churn the PK on newversion. Also backfilled papers.kg_node_id + r2_key/r2_path.
+> (8) [SOFT] **bib hygiene (UMP.012)** — [4] venue "EPTCS" premature → "accepted talk"; Boson/Fermion entry added with concept DOI; [12] pin v1.4 → v1.6 + canonical title.
+> Cross-reference: system-prompt v3.45, research v2.120, session this.
+
 
 > **v2.69 UPDATE (2026-08-18, kaizen — CMD CONTINUE: QNFO/QWAV strategy-alignment — ATTENTION-SELECTIVITY-1 + priority framework; mirrors system-prompt v3.44):**
 > Red-team: direct parent-agent strategy-alignment audit (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -807,7 +820,7 @@ name: kaizen
 
 
 
-version: 2.69
+version: 2.70
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -15164,7 +15177,7 @@ two skills now carry the rule.
 
 
 
-Current: **v2.69** (ATTENTION-SELECTIVITY-1 strategy-alignment — publication gates + mirror alignment — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
+Current: **v2.70** (UMP.012 red team 2-HARD remediation to v0.4; PRACTITIONER-RELEVANCE-1 + GTD-CLOSEOUT-AAR-1 + README-MISSING-ON-PUBLISH-1 + ZENODO-VENUE-ATTRIBUTION-1 codified; mirrors system-prompt v3.45 + research v2.120; 2026-08-18)
 
 
 

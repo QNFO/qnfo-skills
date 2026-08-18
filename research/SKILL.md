@@ -1,4 +1,11 @@
-# RESEARCH — v2.118
+# RESEARCH — v2.120
+> **v2.120 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PRACTITIONER-RELEVANCE-1 gate + UMP.012 post-publication remediation; mirrors system-prompt v3.45 + kaizen v2.70):**
+> Red-team: 3-reviewer subagent audit of UMP.012 (2 HARD: missing README, venue mis-attribution) — both remediated (v0.3 + v0.4) this cycle.
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **PRACTITIONER-RELEVANCE-1 (Publication gate, 2026-08-18)** — every paper must include a practitioner-facing section stating what a practitioner can DO with the result: explicit implementation path, tangible product embodiment (demo/SDK/benchmark/spec-sheet/decision tool), written in professional/engineering language. Consilience constraint: no niche-terminology dead-ends — every framework term anchored to a practitioner-usable concept within two sentences. The standing question (user directive 2026-08-18): "what can a practitioner actually implement in a tangible product?"
+> (2) [DESIGN] **Venue claims are first-class citation fields** — a claimed conference presentation must be verified against the official program page (ZENODO-VENUE-ATTRIBUTION-1); the arXiv listing proves existence, not venue.
+> Cross-reference: system-prompt v3.45, kaizen v2.70, SO-WHAT-GATE-1, PUBLICATION-PROSE-GATE-1, session this.
+
 
 > **v2.118 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — 5 publication gates + forensic-deposit rule codified; mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -60,6 +67,15 @@
 >     claims are bounded by the depth of their assumptions (canonical: RES.011 — the abelian-pair postulate is a NAMED INPUT,
 >     so "statistics from logic" is as deep as that premise, nothing more). Mirror of system-prompt v3.29 SO-WHAT-GATE-1.
 > Cross-reference: SO-WHAT-GATE-1, system-prompt v3.29, kaizen v2.55.
+
+**PRACTITIONER-RELEVANCE-1 (HARD GATE, 2026-08-18):** Every paper must speak to practitioners,
+not only theoreticians. Required: (a) an explicit practitioner-facing section stating what a
+practitioner can DO with the result — implementation path, tangible product embodiment (demo,
+SDK, benchmark, spec-sheet, decision tool), in professional/engineering language; (b) each
+practitioner claim paired with the domain where it holds (conditional truth); (c) consilience —
+no niche-terminology dead-ends: every framework term anchored to a practitioner-usable concept
+within two sentences. Standing question (user directive 2026-08-18): "I have written enough
+high-level theory — what can a practitioner actually implement in a tangible product?"
 
 > **v2.113 UPDATE (2026-08-15, kaizen — CMD SKILLS UPDATE: BRIEFING-DENSITY-1 (no empty daily-briefing notes) + system-prompt v3.28):**
 > Red-team: direct parent-agent skills audit (session this — cycle 2; user mandate: only highly relevant research,
@@ -219,7 +235,7 @@ name: research
 
 
 
-version: 2.118
+version: 2.120
 description: >
 
 
