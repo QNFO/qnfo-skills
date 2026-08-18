@@ -1,10 +1,25 @@
 ---
 name: qnfo-core
-version: "1.30"
+version: "1.31"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.30
+# QNFO-CORE — v1.31
+
+> **v1.31 UPDATE (2026-08-18, kaizen — PERSONAL ALIGNMENT: experimental portfolio + tribe map + red-team soft-gap fixes):**
+> Red-team: direct parent-agent (user directive "DEFINITELY UPDATE MY PERSONAL SKILL...AND OTHERS
+> TO ALIGN WITH MY VISION, VALUES, AND MOTIVATIONS").
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **§0.8 extended** — experimental portfolio (six PoC bets, external-only traction,
+>     pre-registered kill criteria, max-3-LIVE, quarterly rebalance next 2026-10-30), tribe map
+>     (LoF28 Aug 2028 Cambridge — no 2027 edition; QIP27 Singapore Feb 2027, abstracts 2026-10-05;
+>     ASC/IS4SI 2027; DICE2026; become-a-node strategy), and the three 2026-08-18 red-team
+>     soft-gap fixes (shortlist-memory cross-ref, energy-signal logging specification,
+>     essay + play directive). Authoritative venue corrections referenced: memory f94805ee.
+> Cross-reference: portfolio memory 1e82547d, venue corrections f94805ee,
+> session gtblUizh8IJisfcn-08HI. kaizen + research mirror rows: next CMD SKILLS UPDATE cycle
+> (both carry concurrent-session dirt — GIT-OWNERSHIP-1). System-prompt/CMD-template mirror:
+> next scheduled CMD SKILLS UPDATE cycle (PROMPT-PARITY-1).
 
 > **v1.30 UPDATE (2026-08-18, kaizen — Personal Orientation Layer §0.8):**
 > Red-team: direct parent-agent audit + user directive 2026-08-18 ("AUDIT SKILLS TO ALIGN WITH MY
@@ -5292,6 +5307,44 @@ any time; revisions supersede this text.
 6. **Facet model.** Different stages for different facets is design, not fragmentation.
    The ultrametric physicist, the playful formalist, the epistemologist are all him.
 
+### The experimental portfolio (v1.31, HARD — 2026-08-18)
+
+QNFO/QWAV is the LAB VEHICLE, not the bet — the person survives any single program
+dying. Six PoC bets (LIVE: UMP ultrametric/QEC, AI-research epistemology, DEM demos;
+SEED: SLB boundary algebra, INM infomatics, CFE public forecasting). Rules:
+(1) traction signals are EXTERNAL only (citations, replies, acceptances, invitations,
+leaderboard rank, demo usage) — never self-referential engagement metrics;
+(2) kill criteria pre-registered per bet; (3) max 3 LIVE bets; (4) quarterly rebalance
+(next 2026-10-30, then last Friday each quarter, folded into the Friday GTD review).
+Canonical file: D:\Obsidian\notes\v1\_portfolio-of-poc.md. Memory:
+mem:project_fact:1787053440839:1e82547d.
+
+### The tribe map (v1.31, HARD — 2026-08-18)
+
+The user's tribe is scattered by design — boundary-walkers meet at the seams, not in
+one conference. Verified gathering points (authoritative corrections:
+mem:task_outcome:1787052555276:f94805ee — supersedes all stale venue claims):
+- LoF28: 7-11 Aug 2028, Wolfson College, Cambridge (NO 2027 edition exists).
+- QIP27: 20-26 Feb 2027, Singapore (abstract deadline 2026-10-05) — ultrametric home.
+- ASC 2027 (cybernetics as conversation); IS4SI Summit 2027 (information science).
+- DICE2026: 5-9 Oct 2026, Castiglioncello (registration via elze@df.unipi.it).
+- Digital constellation: mathstodon.xyz, stream.syscoi.com, math4wisdom seminars,
+  the 96-account registry (social-media-management skill).
+Strategy: BECOME A NODE — monthly presence on one LoF-adjacent channel plus the D1-D7
+broadcast playbook per event, so the scattered tribe finds the work.
+
+### Soft-gap fixes (v1.31, from the 2026-08-18 red-team audit)
+
+1. Venue shortlist memory cross-referenced: mem:user_preference:1787051243141:2fde2c8a
+   joins the lens + tasting-menu memories as §0.8 sources.
+2. Energy-signal logging specification: signals are logged via
+   remember_fact(category="user_preference", content="ENERGY SIGNAL: <date> — <event> —
+   drained|energized") AND appended to the register ENERGY LOG; the Monday check-in
+   executes both.
+3. Essay + play directive: essays (Aeon/Noema) and play venues (Science Slam,
+   math4wisdom, Bridges) are whole-person formats — they outrank additional conference
+   slots when energy is scarce.
+
 ### Motivation protocol (the user's own admission, 2026-08-18)
 
 "I won't know or be aware otherwise without external support." Therefore:
@@ -5879,7 +5932,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.30** (qnfo-core — Personal Orientation Layer §0.8; 2026-08-18) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.31** (qnfo-core — §0.8 extended: experimental portfolio + tribe map + soft-gap fixes; 2026-08-18) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 

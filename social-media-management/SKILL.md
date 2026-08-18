@@ -1,6 +1,6 @@
 ---
 name: social-media-management
-version: 1.7.0
+version: "1.8.0"
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation path for LinkedIn profile updates.
 ---
 > **v1.7.0 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D7 broadcast):**
@@ -94,7 +94,19 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
 
-# SOCIAL MEDIA MANAGEMENT — v1.7.0
+# SOCIAL MEDIA MANAGEMENT — v1.8.0
+
+> **v1.8.0 UPDATE (2026-08-18, kaizen — PERSONAL ALIGNMENT: Become-a-Node strategy):**
+> Red-team: direct parent-agent (user directive "DEFINITELY UPDATE MY PERSONAL SKILL...AND OTHERS
+> TO ALIGN WITH MY VISION, VALUES, AND MOTIVATIONS").
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Become-a-Node Strategy section added** — the QNFO tribe is scattered across
+>     boundaries; scattered tribes find members through nodes, not conferences: monthly presence
+>     on one LoF-adjacent channel (math4wisdom / stream.syscoi.com), D1-D7 broadcast per event,
+>     per-bet portfolio broadcasts with external-only traction, authoritative venue facts via
+>     memory f94805ee (supersedes stale venue claims). FM version quoted per ecosystem convention.
+> Cross-reference: qnfo-core v1.31 §0.8, portfolio memory 1e82547d, venue corrections f94805ee,
+> session gtblUizh8IJisfcn-08HI.
 > **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
 > Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
 > HARD: 1. SOFT: 0. DESIGN: 1. Changes:
@@ -552,7 +564,31 @@ social-media-management/
 |:-----------|:--------|:--------|
 | 2026-08-05 | v1.0.0  | Initial skill: Bluesky + Mastodon scripts, QNFO registry, unified CLI |
 | 2026-08-14 | v1.7.0  | Zenodo broadcast (D7) — compose+post script, publish workflow |
+| 2026-08-18 | v1.8.0  | Become-a-Node strategy + tribe map (personal alignment) |
+
+## Become-a-Node Strategy (v1.8.0, HARD — 2026-08-18)
+
+The QNFO tribe is scattered across boundaries (Laws of Form, cybernetics, information
+science, heterodox quantum foundations). Scattered tribes find their members through
+NODES, not conferences. Cadence over reach:
+
+1. **Monthly presence** on one LoF-adjacent channel: math4wisdom seminar or
+   stream.syscoi.com — the tribe assembles around regulars.
+2. **D1-D7 broadcast per event** — every talk/appearance runs the Zenodo broadcast
+   playbook (record -> post -> broadcast), converting one-day performances into
+   permanent dissemination assets.
+3. **Per-bet portfolio broadcasts** — each of the six PoC bets
+   (D:\Obsidian\notes\v1\_portfolio-of-poc.md) gets zenodo_broadcast copy when a
+   milestone publishes. Traction signals are EXTERNAL only — never self-referential
+   engagement metrics (AI-QUALITY-GATE-1 class).
+4. **Authoritative venue facts** (LoF28: 7-11 Aug 2028 Wolfson College Cambridge, no
+   2027 edition; QIP27: 20-26 Feb 2027 Singapore, abstract deadline 2026-10-05;
+   ASC 2027; IS4SI Summit 2027) — see durable memory f94805ee. Never re-derive venue
+   claims from older memories.
+
+Cross-reference: qnfo-core §0.8 v1.31 (tribe map), portfolio memory 1e82547d, venue
+corrections f94805ee, session gtblUizh8IJisfcn-08HI.
 
 ## Version
 
-Current: **v1.7.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP REMOVED 2026-08-17, QNFO account registry; 2026-08-14)
+Current: **v1.8.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP REMOVED 2026-08-17, QNFO account registry, Become-a-Node strategy; 2026-08-18)
