@@ -1,5 +1,12 @@
 # email-composer
 
+> **v2.24 UPDATE (2026-08-18, kaizen — user mandate: REGISTER-MIRRORING-1 (mirror the recipient's language) + RECIPIENT-STYLE-USE-1 (all information is useful)):**
+> User answered the v2.23 open-policy questions (session tfRpmza-s0y5lUQXnWczm): "ANSWERS TO OPTIONAL QUESTIONS: YES, MIRROR RECIPIENT'S LANGUAGE. ALL INFORMATION IS USEFUL SO WHEN WE KNOW SOMETHING ABOUT A RECIPIENT'S PREFERRED COMMUNICATION STYLE (OR NOT) USE THAT INFORMATION." Changes:
+> (1) [HARD] **REGISTER-MIRRORING-1 rule added** — replies MUST mirror the recipient's register: informal inbound ("hi rowan, regards moty") → informal reply ("Hi Moty … Best, Rowan"); formal inbound → formal ("Dear Professor …"). Applies to in-thread replies and follow-ups; cold outreach keeps the §1.A formality baseline until the recipient's style is known.
+> (2) [HARD] **RECIPIENT-STYLE-USE-1 rule added** — "all information is useful": use ANY known information about a recipient's preferred communication style (inbound language, greeting/salutation habits, channel) in drafting; absence of style information is itself information (default to the §1.A baseline).
+> (3) [SOFT] v2.23 watch item (4) (register-matching = user question) RESOLVED by this mandate. v2.23 watch item (2) ("Re:" prefix on cold outreach) remains OPEN — no user answer; template-consistent (strategy §1.A) until decided.
+> Cross-reference: user mandate 2026-08-18, outreach-strategy.md §1.A (register-mirroring note added), v2.23 banner, memory user_preference (RECIPIENT-REGISTER-MIRRORING-1), session tfRpmza-s0y5lUQXnWczm.
+
 > **v2.23 UPDATE (2026-08-18, kaizen — wave-2 red-team audit (3-parallel reviewers) + DEFAULT-SENDER-DRIFT-1 + Turing-test assessment):**
 > Red-team: POST-PUBLICATION ADVERSARIAL ANALYSIS GATE on the 2026-08-18 wave-2 sends (Heiblum reply id=215, Landsman reply id=216, Camino outreach id=217, Jipdi outreach id=218) — 3 parallel reviewer subagents (Accuracy / Completeness / Dependency-Tone). VERDICT: **0 HARD** across all three; each PASS-WITH-SOFT-FINDINGS; Turing scores 7-8/10; no bothersome patterns; no recipient mismatch; no dangling obligations. Changes:
 > (1) [HARD] **DEFAULT-SENDER-DRIFT-1 anti-pattern added** — Worker `/send` WITHOUT explicit `from` defaults From to `qnfo@qnfo.org` (verified: D1 ids 214-218 all show qnfo@qnfo.org while wave-1 ids 202-204 show rowan.quni@qnfo.org because that session passed `from` explicitly). Canonical academic-outreach sender is `rowan.quni@qnfo.org` (strategy §1.A). Rule: EVERY `/send` payload passes `"from": "rowan.quni@qnfo.org"`. Wave-2 deviation absorbed as errata, NO resend (no-repeat-contact mandate).
@@ -366,7 +373,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via qnfo-email Cloudflare Worker. Use when checking, replying, composing, or managing @qnfo.org filters.
 
 
-version: 2.23
+version: 2.24
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 

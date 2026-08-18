@@ -79,6 +79,8 @@ Rowan Brad Quni-Gudzinas
 QNFO
 ```
 
+**Register mirroring (HARD, user mandate 2026-08-18 — REGISTER-MIRRORING-1):** replies MUST mirror the recipient's register — informal inbound ("hi rowan, regards moty") → informal reply ("Hi Moty … Best, Rowan"); formal inbound → formal ("Dear Professor …"). Cold outreach keeps the formal baseline until the recipient's style is known. **Recipient-style use (RECIPIENT-STYLE-USE-1):** all information is useful — use ANY known information about a recipient's preferred communication style in drafting (inbound language, greeting habits, channel); absence of style info = default to this template's baseline.
+
 **Anti-patterns**:
 - Leading with "I'm an independent researcher" or "I don't have a PhD" (irrelevant — the paper is the credential)
 - Asking for endorsement or validation ("do you think this is right?")
