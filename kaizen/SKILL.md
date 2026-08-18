@@ -1,3 +1,8 @@
+> **v2.67 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PUBLICATION-PROSE-GATE-1; mirrors system-prompt v3.42 + research v2.117):**
+> Red-team: direct parent-agent skills audit (session this — UMP.012 v0.1→v0.2 user-correction cycle).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PUBLICATION-PROSE-GATE-1 mirror row added** — kaizen mirror of research v2.117 / system-prompt v3.42: publication-facing text MUST be plain scholarly prose for a human reader; internal pipeline vocabulary (gate names, WBS codes, T1–T8/"seams catalog" shorthand, "companion artifact", "research-cycle record", "Why a reader should care:" as a label, ops/data-quality findings) is PROHIBITED in the publication text. The SO-WHAT-GATE and premise-depth requirements are satisfied BY THE PROSE ITSELF, never by naming the gates. User standard (2026-08-18): publications must be timely, engaging to read, and relevant to current practice and research. Canonical: UMP.012 v0.1 (21985456) rejected → v0.2 (21990225) accepted.
+> Cross-reference: system-prompt v3.42, research v2.117, SO-WHAT-GATE-1, session this.
 > **v2.66 UPDATE (2026-08-17, kaizen — CMD CONTINUE iteration: WRITE-TEXT-NEWLINE-1 + OAuth-session-dead confirmation; mirrors system-prompt v3.40):**
 > Red-team: direct parent-agent iteration (session this — v3.39 verification caught E3 CRLF drift; worker-fix owner-block probe).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -15165,7 +15170,7 @@ Current: **v2.62** (kaizen — ACCESS-TOKEN-EXPIRY-CONFLATION-1 + WRANGLER-CONFI
 
 
 
-Current: **v2.66** (RECONCILIATION: WRITE-TEXT-NEWLINE-1 + VECTORIZE-TOP-K-50-1 + ZENODO-VERSION-LABEL-EDIT-1 + GIT-OWNERSHIP-1 + MODEL-KEY-FILE-DRIFT-1 #6; mirrors system-prompt v3.41; 2026-08-17)
+Current: **v2.67** (PUBLICATION-PROSE-GATE-1 mirror — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
 
 
 

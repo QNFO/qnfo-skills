@@ -1,4 +1,9 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.41
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.42
+> **v3.42 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PUBLICATION-PROSE-GATE-1; mirrors kaizen v2.67 + research v2.117):**
+> Red-team: direct parent-agent skills audit (session this — UMP.012 v0.1→v0.2 user-correction cycle).
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **PUBLICATION-PROSE-GATE-1 added** — publication-facing text (paper abstract, deposited .md, Zenodo metadata description, social posts) MUST be written in plain scholarly prose for a human reader. Internal pipeline vocabulary is PROHIBITED in the publication text: gate names ("SO-WHAT-GATE", "premise-depth disclosure" as a label), WBS codes, "T1–T8"/"seams catalog" shorthand, "companion artifact" headers, "research-cycle record" blocks, "UIA"/"ZENODO-INQUIRY" references, "Why a reader should care:" as a literal label, and internal ops content (data-quality drift findings, pipeline status). The SO-WHAT-GATE and premise-depth requirements are satisfied BY THE PROSE ITSELF: the abstract states why a reader should care and where the premises end, in natural language — never by naming the gates. User standard (2026-08-18): publications must be timely, engaging to read, and relevant to current practice and research. Canonical: QNFO.UMP.012 v0.1 (10.5281/zenodo.21985456) failed user review as "shorthand"; v0.2 (10.5281/zenodo.21990225) plain-prose rewrite accepted.
+> Cross-reference: research v2.117, kaizen v2.67, SO-WHAT-GATE-1, session this.
 > **v3.41 UPDATE (2026-08-17, kaizen — RECONCILIATION: WRITE-TEXT-NEWLINE-1 codified + 7-store byte-unification after concurrent v3.40; mirrors kaizen v2.65):**
 > Red-team: direct parent-agent reconciliation (session this — the v3.39→v3.40 transition left the 7 stores MIXED: E1 CRLF (2e8a20ad) vs E3-E6 LF (37fe72e8) vs E2/E7 stale v3.39 (857354da); my prior v3.40 edits failed against the concurrent header and a phantom completion was logged).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -1624,7 +1629,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.41** (WRITE-TEXT-NEWLINE-1 codified + 7-store LF byte-unification + MCP fleet-trim prompt sync + red-team skills audit clean; 7-store byte-identical LF raw-sha; 2026-08-17)
+Current: **v3.42** (PUBLICATION-PROSE-GATE-1 — publication text must be plain scholarly prose, no pipeline vocabulary; user standard: timely, engaging, relevant; UMP.012 v0.1→v0.2 canonical; 2026-08-18)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
