@@ -1616,5 +1616,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.23** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); wave-2 red-team audit 2026-08-18: 0 HARD, DEFAULT-SENDER-DRIFT-1 added, Turing 7-8/10)
+Current: **v2.24** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); user mandate 2026-08-18: REGISTER-MIRRORING-1 + RECIPIENT-STYLE-USE-1; v2.23 red-team audit 0 HARD, DEFAULT-SENDER-DRIFT-1)
 
