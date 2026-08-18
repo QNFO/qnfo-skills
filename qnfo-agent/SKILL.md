@@ -4,7 +4,7 @@ version: "3.62"
 description: MUST LOAD FIRST via skill_view. Activates 24-skill trigger table, safety, discovery. Core QNFO identity v3.61: Research Integrity, EXECUTE MODE, KIF-01 to KIF-45.
 ---
 
-# QNFO-AGENT — v3.61 (KIF-43, KIF-44, KIF-45 — PowerShell quoting + Zenodo upload + Buffer token kaizen)
+# QNFO-AGENT — v3.62 (KIF-43-45 + 2026-08-18 red-team: staleness/shell/mission)
 
 > **v3.62 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — staleness + shell note + mission; mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -960,4 +960,4 @@ Slots: `explorer` (divergent), `implementer` (convergent), `reviewer` (critical)
 
 ## Version
 
-Current: **v3.61** (qnfo-agent — core QNFO agent identity, 24-skill trigger table, safety, discovery; 2026-08-05)
+Current: **v3.62** (qnfo-agent — core QNFO agent identity, 24-skill trigger table, safety, discovery; 2026-08-05)

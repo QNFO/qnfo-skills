@@ -145,7 +145,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE — v3.55
+# CLOUDFLARE — v3.56
 
 > **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident + AUDIT-COMPLETENESS-1 + QUEUE-BODY-SHAPE-1 + multi-bucket architecture):**
 > Red-team: direct parent-agent audit of the 2026-08-12 daily-verify/R2 incident session
@@ -2163,7 +2163,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.55** (VECTORIZE-TOP-K-50-1 — Vectorize topK 50-cap with returnValues=true; OAuth invalid_grant session-dead; 2026-08-17)
+Current: **v3.56** (VECTORIZE-TOP-K-50-1 — Vectorize topK 50-cap with returnValues=true; OAuth invalid_grant session-dead; 2026-08-17)
 
 ---
 

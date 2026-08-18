@@ -4,6 +4,8 @@ version: "1.29"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
+# QNFO-CORE — v1.29
+
 > **v1.29 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — frontmatter drift repaired (FM 1.27 vs banner v1.28) + FM repositioned to byte 0; mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **Frontmatter drift repaired** — FM was `version: "1.27"` while the latest banner was v1.28; now v1.29 == banner.
@@ -5348,7 +5350,7 @@ Map cross-pillar merges; every task has a merge target. Cross-ref: research KIF-
 
 
 
-# DeepChat Settings Modification Skill
+# QNFO-CORE — v1.29 (legacy embedded section — superseded by top H1)
 
 
 
@@ -5782,7 +5784,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.28** (qnfo-core — CMD EXECUTE red-team fix cycle: frontmatter quoting consistency; 2026-08-11) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.29** (qnfo-core — CMD EXECUTE red-team fix cycle: frontmatter quoting consistency; 2026-08-11) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 
