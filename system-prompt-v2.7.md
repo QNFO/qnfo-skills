@@ -1,4 +1,14 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.52
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.53
+> **v3.53 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: QCA Toy Model computational-verification closeout — COMPUTATIONAL-VERIFICATION-1 canonical case + Zenodo upload discipline; mirrors kaizen v2.78 + research v2.123):**
+> Red-team: direct parent-agent skills audit. HARD: 5. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **COMPUTATIONAL-VERIFICATION-1 canonical case added** — QCA Toy Model (concept 10.5281/zenodo.18183774): v1.0 tables (10.5281/zenodo.21993706) were unreproducible under the stated methods (|00…0⟩ is a fixed point of the Fredkin gate; endpoint mutual information is erasure-invariant by lemma); v1.1 (10.5281/zenodo.22012557) replaced every table with exact state-vector reproductions; final v1.1.2 (10.5281/zenodo.22012694) — 75 files, simulation source sim-qca-verification.py deposited, every number reproducible, R2-mirrored + D1/KG distributed. The paper itself is the template for the gate.
+> (2) [HARD] **ZENODO-BUCKET-PUT-415-1** — deposit-API bucket PUT with text/markdown Content-Type → HTTP 415; use application/octet-stream + access_token query param on the bucket URL.
+> (3) [HARD] **ZENODO-DEPOSIT-FILE-DOWNLOAD-1** — deposit-API file links.self returns the file's JSON metadata (NOT content); links.download/links.content carry the bytes; published records-API files may expose links.self only (no download key) where self IS the content.
+> (4) [HARD] **ZENODO-DELETE-COUNT-VERIFY-1** — file-delete loops can silently delete 0 (key/filename field mismatch); MUST verify deleted count == expected BEFORE publish; never publish with unconfirmed deletions.
+> (5) [HARD] **ZENODO-RECORDS-PIDS-ON-DEPOSIT-DRAFT-1** — POST /api/records/{draft}/draft/pids/doi (Bearer) is the reliable DOI reservation for ANY draft incl. deposit-API newversion drafts (legacy prereserve_doi PUT returns empty dois — ZENODO-PLACEHOLDER-DOI-1).
+> (6) [SOFT] **Drift repairs** — cloudflare v3.57 banner block was tangled inside the v3.56 blockquote (reordered; v3.57 on top per TITLE-LINE-PARITY-1); research frontmatter 2.121→2.122 (N-2).
+> Cross-reference: kaizen v2.78, research v2.123, cloudflare v3.57, QCA Toy Model 10.5281/zenodo.22012694, session this.
+
 > **v3.52 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: user mandate "MORE COMPUTATIONAL ANALYSIS/VERIFICATION IN RESEARCH"):**
 > Red-team: direct parent-agent skills audit (explicit-collaboration session; SUBAGENT-SLOT-FAILURE-1 pattern avoided).
 > HARD: 4. SOFT: 2. DESIGN: 0. Changes:
@@ -1851,7 +1861,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.52** (COMPUTATIONAL-VERIFICATION-1 + TITLE-LINE-PARITY-1 + REPO-COPY-PHANTOM-1 repair + MODEL-KEY-FILE-DRIFT-1 #7; PROMPT-PARITY-1 7-store LF byte-identical; 2026-08-19)
+Current: **v3.53** (COMPUTATIONAL-VERIFICATION-1 canonical QCA case 10.5281/zenodo.22012694; ZENODO-BUCKET-PUT-415-1 + ZENODO-DEPOSIT-FILE-DOWNLOAD-1 + ZENODO-DELETE-COUNT-VERIFY-1 + ZENODO-RECORDS-PIDS-ON-DEPOSIT-DRAFT-1; R2-mirror + D1/KG distributed; 2026-08-19)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
