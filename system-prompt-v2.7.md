@@ -1,4 +1,20 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.47
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.48
+
+> **v3.48 UPDATE (2026-08-19, kaizen — CMD CLOSEOUT: scheduled-task fleet migration — AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1 + MODEL-KEY-FILE-DRIFT-1 recurrence #6 + Automation-agent architecture):**
+> Red-team: reviewer subagent truncated at turn 1 (SUBAGENT-SLOT-FAILURE-1 pattern, 7th cycle) → direct parent-agent audit authoritative: 22/22 cronjobs conforming (agent=automation, tz=Europe/Amsterdam), NON-CONFORMING: NONE.
+> HARD: 3. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **AGENT-SOURCE-ENUM-1** — agents.source enum = builtin|manual|registry (app.asar decodeExecutableAgentDescriptor); agent_type "deepchat" REQUIRES builtin|manual; "custom"/"user" → AgentUnavailableError "invalid-source" at cron run. Scheduler resolves agents live from agent.db (no restart for runs; UI lists after restart). Canonical: Automation agent creation 2026-08-19.
+> (2) [HARD] **CRON-TZ-AMS-1** — ALL scheduled tasks timezone=Europe/Amsterdam, cronExpr in local wall-clock; UTC conversions MUST preserve firing instants (CEST +2, CET +1 — Nov one-shots 10:00 AMS) and verify nextRunAt unchanged; DST zone-handled.
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #6** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash.
+> (4) [DESIGN] **AUTOMATION-AGENT-1** — dedicated Automation agent hosts ALL scheduled tasks (user decision); PDB job a82062c7 = only daily user-facing digest.
+> Cross-reference: kaizen v2.73, qnfo-core v1.32, session Nf6Ed44Zyls7cLUyMx3og, D1 handoff 28620.
+
+## SCHEDULED TASKS & AGENT OPERATIONS (HARD GATES — 2026-08-19)
+
+1. **AGENT-SOURCE-ENUM-1 (HARD):** the agents table `source` enum is `["builtin","manual","registry"]`; agent_type "deepchat" accepts ONLY builtin|manual. A DB-inserted agent with source "custom"/"user" fails scheduled runs with `AgentUnavailableError "invalid-source"` (canonical: Automation agent 2026-08-19 — 2 failed smoke tests, fixed with source="manual", then completed end-to-end: settings-backup run bbd10a09, R2 13/13 + GitHub 41315aa). The cron runner resolves agents LIVE from agent.db — no app restart needed for runs; the UI lists new agents after restart. Always verify a new agent with a run_now smoke test on a silent job.
+2. **CRON-TZ-AMS-1 (HARD):** all scheduled tasks run timezone=Europe/Amsterdam with cronExpr in Amsterdam wall-clock. When converting an existing UTC schedule: PRESERVE THE FIRING INSTANT (summer CEST = UTC+2; winter CET = UTC+1 — November one-shots convert to 10:00 AMS, NOT 11:00) and verify nextRunAt is unchanged after the update; DST is then zone-handled. Canonical: 22/22 jobs converted 2026-08-19, fleet audit NON-CONFORMING: NONE.
+3. **AUTOMATION-AGENT-1 (DESIGN, 2026-08-19):** ALL scheduled tasks run under agentId "automation" (dedicated agent, source=manual, deepseek-v4-flash, proactive orchestration) per user decision ("All to Automation agent"). The main thread is interactive-only; scheduled-run history lives in the Automation agent workspace; notifications still reach the user app-level. The President's Daily Briefing job (a82062c7, "Daily Briefing — Decision Items", Mon-Fri 08:30 Amsterdam) is the ONLY daily user-facing digest — decision items only (email replies needing decisions via D1 qnfo-audit.emails, deadlines ≤14d, outreach follow-ups); zero items = exactly one line 'Daily briefing: no decision items.'. Email/outreach job (3851f539) cadence 2×/day (08:00+14:00 Amsterdam, weekends-off).
+
 > **v3.47 UPDATE (2026-08-18, kaizen — CMD RED TEAM cycle: v3.46 dual-write audited CLEAN (7/7 stores byte-identical, header==footer, 12/12 gates, templates 10/10, models flash) + record-straightening linkage audit CONFIRMED 5 HARD cross-record gaps → Wave F1 pending; mirrors kaizen v2.72 + research v2.120):**
 > Red-team: 3-slot dispatch (Accuracy/Completeness/Dependency — queued, no events) + Status slot from the prior cycle COMPLETED (classification handoff) → direct 5-adversary audit authoritative (SUBAGENT-SLOT-FAILURE-1 pattern).
 > HARD: 5 (record-level, CONFIRMED — Zenodo linkage, not prompt). SOFT: 2. DESIGN: 0. Changes:
@@ -1724,7 +1740,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.47** (CMD RED TEAM cycle: v3.46 dual-write audited clean — 7/7 stores/gates/templates/models; linkage audit CONFIRMED 5 HARD cross-record gaps → Wave F1 pending; 2026-08-18)
+Current: **v3.48** (AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1 + MODEL-KEY-FILE-DRIFT-1 #6; 2026-08-19)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

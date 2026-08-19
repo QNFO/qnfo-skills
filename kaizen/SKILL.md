@@ -1,4 +1,26 @@
-# KAIZEN — v2.70
+# KAIZEN — v2.73
+> **v2.73 UPDATE (2026-08-19, kaizen — scheduled-task fleet migration + right-sizing: AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1; closeout of the Automation-agent migration cycle):**
+> Red-team: reviewer subagent truncated at turn 1 (SUBAGENT-SLOT-FAILURE-1 pattern, 7th cycle) → direct parent-agent audit authoritative: 22/22 cronjobs conforming (agent=automation, tz=Europe/Amsterdam), NON-CONFORMING: NONE. HARD: 2. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **AGENT-SOURCE-ENUM-1** — agents.source enum = z.enum(["builtin","manual","registry"]) (verified in app.asar decodeExecutableAgentDescriptor); agent_type "deepchat" REQUIRES source builtin|manual; DB-inserted agents with source "custom"/"user" fail cron runs with AgentUnavailableError "invalid-source" (canonical: Automation agent creation 2026-08-19 — 2 failed smoke tests, source=manual fix, then completed end-to-end). The cron runner resolves agents LIVE from agent.db at run time — no restart needed for runs; the UI shows new agents after restart.
+> (2) [HARD] **CRON-TZ-AMS-1** — all scheduled tasks run Europe/Amsterdam (user timezone): cron conversions MUST preserve the original firing instant — summer CEST=UTC+2, winter CET=UTC+1 (November one-shots convert to 10:00 AMS, NOT 11:00); verify nextRunAt unchanged after conversion; DST zone-handled. Same cycle: email/outreach cadence cut 4x/day → 2x/day (08:00+14:00 AMS).
+> Cross-reference: system-prompt v3.47+ mirror next scheduled CMD SKILLS UPDATE cycle (PROMPT-PARITY-1), qnfo-core DeepChat Settings section, session Nf6Ed44Zyls7cLUyMx3og, D1 handoff 28620.
+> **v2.72 UPDATE (2026-08-18, kaizen — CMD RED TEAM cycle: v3.46 dual-write audited CLEAN (7/7 stores, gates, templates, models) + linkage audit CONFIRMED 5 HARD cross-record gaps → Wave F1 pending; mirrors system-prompt v3.47 + research v2.120):**
+> Red-team: 3-slot dispatch (queued, no events) + Status reviewer from prior cycle COMPLETED (classification handoff: 4 CURRENT / 7 SUPERSEDED / 13 HISTORICAL / 8 SIBLING; all 28 records valid, 6 errata-corrected) → direct 5-adversary audit authoritative (SUBAGENT-SLOT-FAILURE-1 pattern, 6th cycle).
+> HARD: 5 (record-level, CONFIRMED). SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **Wave F1 confirmed pending** — cross-record program links missing on Strange Loop 17419332 (→21964453/21962450/21964104), Toy Model 18183774 (→19396321/20154558/20109836), Prime Optimization 17502946 (→21918838/21979060), PQS 17184229 (→21208346, self-declared in its ERRATA), Number Theory as Physics 19453007 (→19425939+21208346, dropped in re-assertion regression). Wave F4: 16 SSRN-only works → canonical deposits.
+> (2) [SOFT] **Continuation records with D1 doi=null (~10)** — hydrodynamic gating, topological hydrodynamics, 4K/twistronics, bio-QC corpus threads have NO Zenodo records; classifications may shift when DOIs exist.
+> (3) [SOFT] **Audit pattern note** — reviewer slots: 6th consecutive cycle with failures/stalls; Status slot completed once; direct audit remains authoritative and faster.
+> Cross-reference: system-prompt v3.47, research v2.120, RECORD-LINKAGE-SEMANTICS-1, Wave F1/F4, session this.
+> **v2.71 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: record-straightening program closeout — RECORD-LINKAGE-SEMANTICS-1 + OLD-RECORD-OBSOLETION-TAG-1 + ZENODO-NEWVERSION-BECOMES-HEAD-1 + ZENODO-NEWVERSION-COPY-DROPS-RELS-1 + SUBAGENT-SLOT-FAILURE-1; mirrors system-prompt v3.46 + research v2.120):**
+> Red-team: 4-slot reviewer dispatch (Accuracy/Completeness/Dependency/Status — 2 slots FAILED/truncated: "Child session failed"/"completed without a final answer"; 2 stalled >15 min) → direct 5-adversary parent-agent audit fallback (Accuracy/Completeness/Dependency/Novelty/Status; all findings live-verified). User challenge ("you are linking to the same records, different versions — are these records still valid or superseded?") CONFIRMED by the audit.
+> HARD: 4. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **OLD-RECORD-OBSOLETION-TAG-1 (user directive)** — superseded records must carry isObsoletedBy/isSupersededBy tags to the canonical successor. Implemented 2026-08-18: 40 tag-only versions (label X-superseded) across 28 concepts + 28 canonical re-assertions + 20 relation-repair versions; final heads verified 28/28, relations 24/24, tags 40/40. Program total: 122 Zenodo versions in one cycle.
+> (2) [HARD] **ZENODO-NEWVERSION-BECOMES-HEAD-1** — any newversion becomes the concept head (concept DOI = most recently published version). 40 obsoletion tags displaced 28 concept heads; repaired same-cycle with canonical re-assertions from the previous heads. Tag + re-assert = paired operation; never tag without re-asserting.
+> (3) [HARD] **ZENODO-NEWVERSION-COPY-DROPS-RELS-1** — newversion metadata copy drops custom related_identifiers (19 SSRN isIdenticalTo + CIR isReviewedBy lost in re-assertions) and auto-adds isObsoletedBy→parent; re-add relations explicitly in the PUT and verify post-publish.
+> (4) [HARD] **RECORD-LINKAGE-SEMANTICS-1** — version-chain tags ≠ record-level supersession; 18/28 canonical heads lacked cross-record program links (audit); successors verified live (Re-Entrant Distinctions 21964453, Exchange Phase 21964104, Config-Space Topology 21962450, Prime Valuation Depth 21918838, Arithmetic Gauge 20137343, UQC 20154558/21046993, Ultrametric Code Spaces 21824396, Adelic QEC 21204621); Prime-Coded program links (isContinuedBy→19425939, isSupplementedBy→21208346) were dropped in a re-assertion — regression class of this cycle.
+> (5) [SOFT] **SUBAGENT-SLOT-FAILURE-1** — reviewer slots can fail outright (2/4 this cycle) or stall (2/4 >15 min); both = no review → direct fallback; do not re-dispatch identical prompts.
+> (6) [SOFT] **Research N-2 drift repaired** — research SKILL.md footer was v2.117 while banner v2.120; footer synced to v2.120 (mirrors system-prompt v3.45).
+> Cross-reference: system-prompt v3.46, research v2.120, PROMPT-PARITY-1, session this.
 > **v2.70 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: UMP.012 post-publication red team (3-reviewer) + v0.3/v0.4 remediation; mirrors system-prompt v3.45 + research v2.120):**
 > Red-team: subagent dispatch (Accuracy/Completeness/Dependency — ALL completed) + direct parent-agent fallback; 2 HARD + 6 SOFT + 2 DESIGN aggregated BEFORE remediation.
 > HARD: 2. SOFT: 4. DESIGN: 2. Changes:
@@ -13192,6 +13214,8 @@ Session Failure → Session Retrospective detects failure pattern
 
 
 | Reactive-only kaizen — never scanning for drift | Run the proactive forecast protocol at least monthly, or after any major ecosystem change. Skills rot silently. |
+| **AGENT-SOURCE-ENUM-1: Creating a custom DeepChat agent via DB insert with an invalid `source` value (2026-08-19)** | **HARD.** agents.source enum = builtin|manual|registry; agent_type "deepchat" accepts ONLY builtin|manual — "custom"/"user" → AgentUnavailableError "invalid-source" at cron run. Fix: source="manual"; verify with a run_now smoke test on a silent job (canonical: Automation agent creation 2026-08-19, 2 failed smoke tests then end-to-end pass). The cron runner resolves agents live from agent.db — no app restart needed for runs; UI lists the agent after restart. |
+| **CRON-TZ-AMS-1: Scheduling DeepChat tasks in UTC for an Amsterdam user (2026-08-19)** | **HARD.** All scheduled tasks use timezone=Europe/Amsterdam with cronExpr in local wall-clock. When converting an existing UTC schedule: PRESERVE THE FIRING INSTANT (summer CEST +2h; winter CET +1h — November one-shots convert to 10:00 AMS, NOT 11:00) and verify nextRunAt is unchanged after the update; DST is zone-handled. Canonical: 22/22 jobs converted 2026-08-19, fleet audit NON-CONFORMING: NONE. |
 
 
 
@@ -15369,3 +15393,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
   app_db agent.db) - sha256 4ce146c6cc4f7940, header==footer v3.15. 9/9 CMD templates synced across
   both stores (CMD CLOSEOUT gained D1-access note; CMD SKILLS UPDATE gained 5-store verification note).
 - Skills updated: windows-command-patterns (EXEC-SHELL-QUOTE-1), wrangler (D1 quick-reference).
+
+## Version
+
+Current: **v2.73** (AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1 + footer restored per system-prompt v3.34 mandate; 2026-08-19)
