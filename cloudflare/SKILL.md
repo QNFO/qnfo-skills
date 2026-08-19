@@ -1,4 +1,6 @@
 > **v3.56 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — mirror re-pointed to system-prompt v3.43 (was v3.40); mirrors system-prompt v3.43 + kaizen v2.68):**
+> **v3.57 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
+> (1) [HARD] **GATEWAY-BUNDLE-DRIFT-1 added** - a previously-fixed worker regression reappeared site-wide because the DEPLOYED bundle differed from the correct local file. Canonical (2026-08-19): papers.qnfo.org JSON-LD invalid on ALL paper pages - deployed qnfo-gateway emitted escaped "<\/script>" (carried from a .bak-jsonld-fix variant) while the local deploy bundle (C:\Users\LENOVO\.deepchat\gateway-deploy\qnfo-gateway.js line 384) had the correct literal "</script>". Protocol: when a fixed regression reappears, FIRST compare deployed code (workers_get_worker_code MCP) against the local bundle; redeploy the local canonical; verify json.loads on >=3 pages. Do NOT assume the fix was lost - assume the wrong bundle was deployed.
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **Mirror-pointer chain repaired** — banner claimed "mirrors system-prompt v3.40" (2 cycles stale); now mirrors v3.43.
 > Cross-reference: system-prompt v3.43, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.
@@ -136,7 +138,7 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (9-MCP Coverage — fleet trimmed 2026-08-17) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.56
+version: 3.57
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -2163,7 +2165,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.56** (VECTORIZE-TOP-K-50-1 — Vectorize topK 50-cap with returnValues=true; OAuth invalid_grant session-dead; 2026-08-17)
+Current: **v3.57** (GATEWAY-BUNDLE-DRIFT-1: deployed-vs-local bundle divergence root-caused and redeployed 41635fcd; JSON-LD verified 3/3 pages; 2026-08-19)
 
 ---
 

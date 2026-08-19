@@ -1,12 +1,15 @@
 # QNFO Outreach Master Contact Ledger
 
 Canonical dedup list for ALL scheduled tasks / LLM processes. Check BEFORE any send.
-Last updated: 2026-08-17 (Kauffman reply + CST / Exchange Phase / B-F batch)
+Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / Landsman)
+
+**OUTREACH HALT (2026-08-18 → ~2026-08-22, user directive):** QPL 2026 (Amsterdam, Aug 17-21) — do NOT send cold outreach to anyone who may be present at the conference while the user is attending in person; in-person contact replaces email. Frozen pool: Koch, Calcluth/GKP group, Deaconu/Mosca/Yard group (IQC), Brenner (arXiv-only). This halt supersedes proactive outreach for conference attendees; the post-conference reminder cronjob (2026-08-22) handles the unfreeze + in-person-contact check.
 
 | Email | Name | First contact | Source / paper | Note |
 |---|---|---|---|---|
 | admin@quantumconsortium.org | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | anbyhee@knu.ac.kr | Byung Hee An | 2026-08-17 | 2608.14350 Goldberg's exact sequence graph braid groups | NEW 2026-08-17 |
+| b.camino@ucl.ac.uk | Bruno Camino | 2026-08-18 | 2608.16568 scientific apps of QC — full-cost accounting | NEW 2026-08-18 |
 | arghyamaityphysics@gmail.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | aske.plaat@gmail.com | Aske Plaat | 2026-08-15 | 2503.23037 agentic LLM survey | NEW 2026-08-15 |
 | cbanbury@g.harvard.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
@@ -29,6 +32,7 @@ Last updated: 2026-08-17 (Kauffman reply + CST / Exchange Phase / B-F batch)
 | klaus.lange@hpe.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | kohteckseng@ntu.edu.sg | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | loukau@gmail.com | Louis H. Kauffman | 2026-08-16 | 2605.29246 Q-Calculus LoF | NEW 2026-08-16 |
+| landsman@math.ru.nl | Klaas Landsman | 2026-08-17 | 2608.14523 Okinawa Lectures on Entropy | REPLIED 2026-08-18 (id=199, thread reply id=216 sent) |
 | lyhung@fudan.edu.cn | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | lzihan9175@gmail.com | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | mahdi@brightmind-ai.com | Mahdi Naser-Moghadasi | 2026-08-15 | 2605.17831 cost-aware agentic | NEW 2026-08-15 |
@@ -37,7 +41,7 @@ Last updated: 2026-08-17 (Kauffman reply + CST / Exchange Phase / B-F batch)
 | matilde@caltech.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | mheydema@caltech.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | michele.mosca@uwaterloo.ca | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
-| Moty.Heiblum@weizmann.ac.il | Moty Heiblum | 2026-08-17 | 2608.12897 time-domain braiding nu=5/2 | NEW 2026-08-17 |
+| Moty.Heiblum@weizmann.ac.il | Moty Heiblum | 2026-08-17 | 2608.12897 time-domain braiding nu=5/2 | REPLIED 2026-08-18 (id=198, thread reply id=215 sent) |
 | nicolasqu@alice.it | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | nlnet@nlnet.nl | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | okunishi@phys.sc.niigata-u.ac.jp | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
@@ -46,6 +50,13 @@ Last updated: 2026-08-17 (Kauffman reply + CST / Exchange Phase / B-F batch)
 | thamm@itp.uni-leipzig.de | Matthias Thamm | 2026-08-16 | 2606.24831 anyon exchange phase | NEW 2026-08-16 |
 | tp53@rice.edu | ? | <=2026-08-14 | (see outreach-log.md) | prior contact |
 | yuanchen@pku.edu.cn | Yu-An Chen | 2026-08-16 | 2607.02280 Bockstein braiding | NEW 2026-08-16 |
+| maltesson.alex@gmail.com | Alex Maltesson | 2026-08-18 | 2510.08546 CV/DV equivalence (QPL 2026 plenary) | NEW 2026-08-18 |
+| manuel.mekonnen@oeaw.ac.at | Manuel Mekonnen | 2026-08-18 | 2502.17576 invariance under quantum permutations | NEW 2026-08-18 |
+| t.hoffreumon@gmail.com | Timothée Hoffreumon | 2026-08-18 | 2603.19208 real-valued quantum theory | NEW 2026-08-18 |
+| jmichaelnicky@yahoo.fr | M. N. Jipdi | 2026-08-18 | 2608.15829 EP braiding braid programming | NEW 2026-08-18 |
+| jxzhong@shu.edu.cn | Jian-Xin Zhong | 2026-08-19 | 2605.18622 Rule-54 QCA scars | NEW 2026-08-19 |
+| wangzhongemail@tsinghua.edu.cn | Zhong Wang | 2026-08-19 | 2606.19430 Rule-201 QCA influence matrix | NEW 2026-08-19 |
+| yaoyao2016@scut.edu.cn | Yao Yao | 2026-08-19 | 2504.14453 QCA word statistics | NEW 2026-08-19 |
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 41 entries = 38 prior + 3 new (2026-08-17 batch: An, Heiblum, Kubischta). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 50 entries = 47 prior + 3 new (2026-08-19 wave: Zhong, Wang, Yao — QCA toy model paper-sharing). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.

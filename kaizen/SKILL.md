@@ -1,4 +1,8 @@
 # KAIZEN — v2.75
+> **v2.76 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
+> (1) [HARD] **Mirror rows (research v2.121):** P3.AUTHOR-GATE-EVERY-ENTRY-1 (RES.016 pass-1 caught 3 fabricated author attributions in a PUBLISHED record that sampled-DOI spot-checks missed - every entry needs live verification, never a sample) + NEWVERSION-FILE-CARRYOVER-1 (newversion carries over ALL files byte-identical; ANY repo file changed since prior publish must be replaced in the draft - canonical: RES.016 v1.1 stale RESEARCH-CONTINUITY-REGISTRY.md blob caught by md5 comparison).
+> (2) [HARD] **GATEWAY-BUNDLE-DRIFT-1 mirror (cloudflare v3.57):** a previously-fixed worker regression (papers.qnfo.org JSON-LD escaped close) reappeared site-wide because the DEPLOYED bundle differed from the correct LOCAL file - compare deployed code (workers_get_worker_code) against the local deploy bundle BEFORE re-fixing; root cause was deployment of a stale alternate bundle while the local canonical file was correct.
+> (3) [HARD] **N-2 footer drift reconciled in this cycle** - kaizen frontmatter/footer/banner all set to v2.76.
 > **v2.75 UPDATE (2026-08-19, kaizen — user mandate: "DEEPCHAT CHANGES RAPIDLY — regular updates and skills improvements MUST consider latest DeepChat release documentation and changelog" — DEEPCHAT-RELEASE-TRACK-1 + v1.1.1-beta watchlist; mirrors system-prompt v3.50):**
 > Red-team: direct parent-agent audit (SUBAGENT-SLOT-FAILURE-1 pattern, 8th consecutive cycle); release facts verified live via gh api (releases list + CHANGELOG.md, 2026-08-19).
 > HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -856,7 +860,7 @@ name: kaizen
 
 
 
-version: 2.70
+version: 2.76
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -15416,4 +15420,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.75** (DEEPCHAT-RELEASE-TRACK-1 + DEEPCHAT-V111-BETA-WATCH-1; 2026-08-19)
+Current: **v2.76** (RES.016 mirror rows: P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 + GATEWAY-BUNDLE-DRIFT-1; frontmatter/footer reconciled; 2026-08-19)

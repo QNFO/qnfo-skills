@@ -1,4 +1,9 @@
-# RESEARCH — v2.120
+# RESEARCH — v2.121
+> **v2.121 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
+> (1) [HARD] **P3.AUTHOR-GATE-EVERY-ENTRY-1 added** - the RES.016 pass-1 accuracy audit (2026-08-19) caught 3 fabricated author attributions in a PUBLISHED record (v1.0, 10.5281/zenodo.22009653) that in-session spot-checks of 4-5 sampled DOIs MISSED: "Caruana" (RMP Kochen-Specker review), "Khodjaev" (Entropy p-adic qubit), "VVZ 1998" (DOI 10.2748/tmpub.10.1 actually authored by Youngho Jang). P3.AUTHOR-GATE now requires live Crossref/OpenAlex verification of EVERY entry author list, never a sample. Remediated in v1.1 (10.5281/zenodo.22010489).
+> (2) [HARD] **NEWVERSION-FILE-CARRYOVER-1 added** - newversion drafts carry over ALL parent files byte-identical, not just the frontmatter .md. ANY repo file that changed since the prior publish (auxiliary living docs like RESEARCH-CONTINUITY-REGISTRY.md) must ALSO be replaced in the draft. Canonical: RES.016 v1.1 - deposited registry was a v1.0-era blob (4484 B vs 4834 B HEAD) missing one session-log row; caught by the completeness reviewer md5 comparison (NEWVERSION-FRONTMATTER-CARRYOVER-1 is necessary but NOT sufficient).
+> (3) [SOFT] **ZENODO-VERSION-LABEL-EDIT-1 re-confirmed** - deposit-API newversion publishes with version=None; fixed via actions/edit then full-metadata PUT (carry ALL fields incl. related_identifiers) then publish. DataCite subjects read-back (not the Zenodo GET-view) is the authoritative subject check (RES.016 v1.1: GET-view empty, DataCite 10 subjects).
+
 > **v2.120 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: PRACTITIONER-RELEVANCE-1 gate + UMP.012 post-publication remediation; mirrors system-prompt v3.45 + kaizen v2.70):**
 > Red-team: 3-reviewer subagent audit of UMP.012 (2 HARD: missing README, venue mis-attribution) — both remediated (v0.3 + v0.4) this cycle.
 > HARD: 1. SOFT: 0. DESIGN: 1. Changes:
@@ -235,7 +240,7 @@ name: research
 
 
 
-version: 2.120
+version: 2.121
 description: >
 
 
@@ -9526,7 +9531,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.117** (PUBLICATION-PROSE-GATE-1 — publication text must be plain scholarly prose, no pipeline vocabulary; UMP.012 v0.1→v0.2 canonical; mirrors system-prompt v3.42; 2026-08-18)
+Current: **v2.121** (RES.016 publish-then-audit: P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 codified; fabricated-authors incident + registry carryover caught by pass-1/2 adversarial audits; mirrors system-prompt v3.51; 2026-08-19)
 
 
 

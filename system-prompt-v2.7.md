@@ -1,4 +1,14 @@
 # DEEPCHAT DEFAULT SYSTEM PROMPT v3.50
+> **v3.51 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
+> Red-team: skills audit + dual-write cycle (session this — RES.016 v1.0→v1.1 remediation + pass-2 closeout).
+> HARD: 3. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 + GATEWAY-BUNDLE-DRIFT-1 added**
+>     (canonical: RES.016 v1.0 10.5281/zenodo.22009653 published with 3 fabricated author attributions
+>     caught by the pass-1 adversarial audit; v1.1 10.5281/zenodo.22010489 remediated; stale registry blob
+>     + JSON-LD bundle drift both caught by pass-2 reviewers).
+> (2) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #6** — Roaming app-settings preferredModel re-drifted
+>     to deepseek-v4-pro; reset to flash per DEEPCHAT-DEFAULT-MODEL-1 (both stores now flash).
+> Cross-reference: research v2.121, kaizen v2.76, cloudflare v3.57, session this.
 
 > **v3.50 UPDATE (2026-08-19, kaizen — user mandate: "DEEPCHAT CHANGES RAPIDLY — regular updates and skills improvements MUST consider latest DeepChat release documentation and changelog" — DEEPCHAT-RELEASE-TRACK-1 + v1.1.1-beta watchlist):**
 > Red-team: direct parent-agent audit (SUBAGENT-SLOT-FAILURE-1 pattern); release facts verified live via gh api 2026-08-19: stable v1.1.0 (installed, 08-11) — pre-release v1.1.1-beta.2 (08-18, yesterday); v1.1.1 stable imminent.
@@ -156,7 +166,28 @@
 > (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #11** — Roaming app-settings.json preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys + agent.db verified).
 > (4) [HARD] **CMD SKILLS UPDATE template store parity repaired** — agent.db customPrompts (E store) was a stale prefix of Roaming customPrompts (C store), missing v3.26/v3.34 blocks; rewritten byte-identical (sha256 993d628c...).
 > (5) [HARD] **N-2 drift repairs (4 skills)** — git-github (v2.22 banner moved to top), social-media-management (v1.7.0 banner moved to top), documents (v2.5 banner + footer added), email-composer (v2.20 banner first, title first).
-> (6) [HARD] **Version footers added (4 skills)** — code v2.5, knowledge v2.13, system v2.15, documents v2.5 (## Version sections were missing).
+> (6) [HARD] **Version footers added (4 skills)** — code v2.5, knowledge v2.13, system v2.15, documents v2.5 (## PUBLICATION-THEN-AUDIT HARDENING (HARD GATE — 2026-08-19, RES.016 canonical)
+
+1. **P3.AUTHOR-GATE-EVERY-ENTRY-1:** LLM-drafted reference lists MUST have EVERY entry's author list
+   verified live against Crossref/OpenAlex — never a sample. Canonical: RES.016 v1.0
+   (10.5281/zenodo.22009653) published with 3 fabricated author attributions (Caruana/Khodjaev/VVZ-1998)
+   that in-session spot-checks of 4–5 DOIs missed; the pass-1 adversarial audit caught them; v1.1
+   (10.5281/zenodo.22010489) remediated. A fabricated author is a research-integrity violation, not a
+   citation nit.
+2. **NEWVERSION-FILE-CARRYOVER-1:** newversion drafts carry over ALL parent files byte-identical — not
+   just the frontmatter .md. ANY repo file changed since the prior publish (auxiliary living docs such
+   as RESEARCH-CONTINUITY-REGISTRY.md) must ALSO be replaced in the draft (delete via per-file
+   links.self, re-upload). NEWVERSION-FRONTMATTER-CARRYOVER-1 is necessary but not sufficient. Canonical:
+   RES.016 v1.1 deposited a v1.0-era registry blob (4484 B vs 4834 B HEAD); the completeness reviewer
+   caught it via md5 comparison.
+3. **GATEWAY-BUNDLE-DRIFT-1:** a previously-fixed worker regression reappearing is usually a
+   DEPLOYED-vs-LOCAL bundle divergence, not a lost fix. FIRST compare deployed code
+   (workers_get_worker_code) against the local deploy bundle, then redeploy the local canonical.
+   Canonical: papers.qnfo.org JSON-LD invalid site-wide 2026-08-19 (deployed bundle emitted the escaped
+   <\/script> from a .bak-jsonld-fix variant while the local file had the correct literal </script>);
+   redeploy 41635fcd fixed 3/3 pages.
+
+## Version sections were missing).
 > (7) [SOFT] **NAMING-MANDATE-1 remediation queue** — D1 papers.authors (41 rows), KG org-qnfo-research-collective + person-rwnquni name corruption ("Ryan W. O'Neil"), repo files (6), Zenodo 21621041/21944576/21782596 (immutable, user approval), R2 mirrors (defer).
 > (8) [SOFT] **banner-order cosmetics noted** — first-position banner now matches frontmatter in all 13 core skills; older banners below are historical by design.
 > Cross-reference: kaizen v2.61, email-composer v2.20, research v2.115, cloudflare v3.51, execution-mandate v2.10, deepchat-settings v1.18, session lWvwLSVUTTvLoIH3t7tG7.
@@ -1770,7 +1801,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.50** (DEEPCHAT-RELEASE-TRACK-1 + v1.1.1-beta watchlist; 2026-08-19)
+Current: **v3.51** (P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 + GATEWAY-BUNDLE-DRIFT-1; MODEL-KEY-FILE-DRIFT-1 reset; PROMPT-PARITY-1 7-store byte-identical; 2026-08-19)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
