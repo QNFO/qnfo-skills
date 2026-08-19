@@ -1,4 +1,21 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.48
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.49
+
+> **v3.49 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: post-restart DeepChat settings audit — DEEPCHAT-LAUNCH-AT-LOGIN-1 + AGENT-MEMORY-PARITY-1 + REASONING-EFFORT-DRIFT-1 + PER-AGENT-SKILL-CATALOG-1):**
+> Red-team: N-2 drift audit CLEAN 6/6 skills (kaizen v2.74 / research v2.120 / cloudflare v3.56 / execution-mandate v2.10 / system v2.15 / qnfo-core v1.32 — header==banner==footer each); direct parent-agent audit authoritative (SUBAGENT-SLOT-FAILURE-1 pattern, 8th consecutive cycle).
+> HARD: 2. SOFT: 2. DESIGN: 0. Changes:
+> (1) [HARD] **DEEPCHAT-LAUNCH-AT-LOGIN-1** — launchAtLoginEnabled=false kills the scheduler + all cronjobs on reboot; the agent CLI CANNOT set it (settings.updatePublic permission_denied — outside the agent allowlist); UI-only: Settings → General → Launch at login.
+> (2) [HARD] **AGENT-MEMORY-PARITY-1** — new agents must mirror the deepchat agent's memory block (memoryEnabled + memoryEmbedding bge-base-en-v1.5 via AI Gateway + memoryRetrieval topK6/rrf60/weights) or their sessions get extraction-only memory (canonical: automation agent upgraded 2026-08-19).
+> (3) [SOFT] **REASONING-EFFORT-DRIFT-1** — deepseek-v4-flash effective reasoningEffort = "max" (v1.1.0 app default) vs documented "high"; models.setPublicConfig callers=["human"] — a cost/quality decision on the $90/30d budget, documented, not agent-fixable.
+> (4) [SOFT] **PER-AGENT-SKILL-CATALOG-1** — v1.1.0 skill catalogs are per-agent with explicit imports; new agents start EMPTY; cronjob prompts keep script-restore + direct-path read patterns; import operational skills into the automation agent via UI.
+> Cross-reference: kaizen v2.74, session Nf6Ed44Zyls7cLUyMx3og, D1 handoff 28620.
+
+## DEEPCHAT OPERATIONS — POST-RESTART GATES (2026-08-19)
+
+1. **DEEPCHAT-LAUNCH-AT-LOGIN-1 (HARD):** `launchAtLoginEnabled` MUST be true — the scheduler, all 22 scheduled tasks, the PDB, and the email/outreach pipeline die on every reboot until DeepChat is manually launched. The agent CLI CANNOT set this key (`settings.updatePublic` permission_denied — outside the agent allowlist); it is UI-only: Settings → General → Launch at login. Re-verify after every restart (post-restart audit 2026-08-19: value = false; user action pending).
+2. **AGENT-MEMORY-PARITY-1 (HARD):** every agent (esp. DB-created ones) MUST carry the memory pipeline block mirroring the deepchat agent: `memoryEnabled: true`, `memoryEmbedding: {"providerId": "-_X6Z7YffrNPktrj3Vhjo", "modelId": "workers-ai/@cf/baai/bge-base-en-v1.5"}`, `memoryRetrieval: {"topK": 6, "rrfK": 60, "similarityThreshold": 0.2, "weights": {"similarity": 0.6, "recency": 0.25, "importance": 0.15}}`, `memoryExtractionModel` = deepseek-v4-flash. A new agent without it gets extraction-only memory (no semantic recall). Canonical: automation agent upgraded 2026-08-19 (mirror of the deepchat block verified by read-back).
+3. **REASONING-EFFORT-DRIFT-1 (SOFT):** deepseek-v4-flash effective reasoningEffort = "max" (v1.1.0 app default; verified via `deepchat model config-get`) while DEEPSEEK-PARAM-DEFAULTS-1 documents "high". `models.setPublicConfig` callers = ["human"] — the agent cannot change it. Present the cost/quality trade-off to the user ($90/30d gateway budget, ~50 scheduled sessions/week); document the actual state, never claim the documented default is live.
+4. **PER-AGENT-SKILL-CATALOG-1 (SOFT):** v1.1.0 gives every agent an ISOLATED skills catalog with explicit imports; a new agent's catalog is EMPTY — its sessions fail every `skill_view` call. Scheduled-task prompts must keep the established patterns: script-restore from GitHub + direct-path file reads (read tool). Import the operational skills (qnfo-core, windows-command-patterns, git-github, cloudflare-email-service, knowledge, social-media-management) into the automation agent via UI (Settings → Agents → Automation → Skills).
+
 
 > **v3.48 UPDATE (2026-08-19, kaizen — CMD CLOSEOUT: scheduled-task fleet migration — AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1 + MODEL-KEY-FILE-DRIFT-1 recurrence #6 + Automation-agent architecture):**
 > Red-team: reviewer subagent truncated at turn 1 (SUBAGENT-SLOT-FAILURE-1 pattern, 7th cycle) → direct parent-agent audit authoritative: 22/22 cronjobs conforming (agent=automation, tz=Europe/Amsterdam), NON-CONFORMING: NONE.
@@ -1740,7 +1757,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.48** (AGENT-SOURCE-ENUM-1 + CRON-TZ-AMS-1 + MODEL-KEY-FILE-DRIFT-1 #6; 2026-08-19)
+Current: **v3.49** (DEEPCHAT-LAUNCH-AT-LOGIN-1 + AGENT-MEMORY-PARITY-1 + REASONING-EFFORT-DRIFT-1 + PER-AGENT-SKILL-CATALOG-1; 2026-08-19)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
