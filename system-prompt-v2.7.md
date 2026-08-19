@@ -1,4 +1,17 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.49
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.50
+
+> **v3.50 UPDATE (2026-08-19, kaizen — user mandate: "DEEPCHAT CHANGES RAPIDLY — regular updates and skills improvements MUST consider latest DeepChat release documentation and changelog" — DEEPCHAT-RELEASE-TRACK-1 + v1.1.1-beta watchlist):**
+> Red-team: direct parent-agent audit (SUBAGENT-SLOT-FAILURE-1 pattern); release facts verified live via gh api 2026-08-19: stable v1.1.0 (installed, 08-11) — pre-release v1.1.1-beta.2 (08-18, yesterday); v1.1.1 stable imminent.
+> HARD: 1. SOFT: 1. DESIGN: 0. Changes:
+> (1) [HARD] **DEEPCHAT-RELEASE-TRACK-1** — every CMD SKILLS UPDATE cycle MUST fetch the DeepChat releases list + latest stable & pre-release bodies + CHANGELOG head, compare vs installed appVersion, and fold relevant features into the settings audit; daily automated check folded into the Daily Ops job (newer STABLE = action-required).
+> (2) [SOFT] **v1.1.1-beta watchlist** — minimal Agent run mode, virtualized tool surfaces, Tape Trace Inspector, model-configured timeouts, MCP startup repair, empty-file read fix, bounded exec stdin + shell dialect declaration. updateChannel=stable (never pre-release on the production host).
+> Cross-reference: kaizen v2.75, session Nf6Ed44Zyls7cLUyMx3og.
+
+## DEEPCHAT RELEASE TRACKING (HARD GATE — 2026-08-19)
+
+1. **DEEPCHAT-RELEASE-TRACK-1 (HARD, user mandate 2026-08-19):** DeepChat changes rapidly — every CMD SKILLS UPDATE / skills-improvement cycle MUST check the release state BEFORE finalizing kaizen: `gh api repos/ThinkInAIXYZ/deepchat/releases` (stable vs pre-release cadence), read the latest STABLE + latest PRE-RELEASE bodies and `CHANGELOG.md` head, compare the newest stable tag vs the installed `appVersion` (app-settings.json), and fold relevant features into the settings audit + user decision list. Baseline 2026-08-19: installed stable v1.1.0 (2026-08-11); pre-release v1.1.1-beta.2 (2026-08-18) — a v1.1.1 stable is imminent. The Daily Ops job (216e1d12) runs an automated check daily: a newer STABLE release = action-required report (user updates via the app); pre-release-only movement = silent one-liner. NEVER enable pre-release updates on the production host (updateChannel stays "stable").
+2. **v1.1.1-beta feature watchlist (apply when stable lands):** (a) minimal Agent run mode → automation-agent cronjobs (cost/latency); (b) virtualized tool surfaces — on-demand tool loading with search, canary gates, permission-gated activation → reduces skill-pruning urgency on the 6 GB host; (c) Tape Trace Inspector → red-team audits of runs/tool-calls/skill usage; (d) provider model-configured timeouts honored (fixes the 300 s undici default seen in CLI timeouts); (e) MCP startup repair; (f) Agent no longer silently reads empty files; (g) bounded exec stdin + explicit shell dialect declaration (Git Bash declaration formalized).
+
 
 > **v3.49 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: post-restart DeepChat settings audit — DEEPCHAT-LAUNCH-AT-LOGIN-1 + AGENT-MEMORY-PARITY-1 + REASONING-EFFORT-DRIFT-1 + PER-AGENT-SKILL-CATALOG-1):**
 > Red-team: N-2 drift audit CLEAN 6/6 skills (kaizen v2.74 / research v2.120 / cloudflare v3.56 / execution-mandate v2.10 / system v2.15 / qnfo-core v1.32 — header==banner==footer each); direct parent-agent audit authoritative (SUBAGENT-SLOT-FAILURE-1 pattern, 8th consecutive cycle).
@@ -1757,7 +1770,7 @@ adapter throws NoSuchModelError({modelType:"embeddingModel"}).
 ## Version
 
 
-Current: **v3.49** (DEEPCHAT-LAUNCH-AT-LOGIN-1 + AGENT-MEMORY-PARITY-1 + REASONING-EFFORT-DRIFT-1 + PER-AGENT-SKILL-CATALOG-1; 2026-08-19)
+Current: **v3.50** (DEEPCHAT-RELEASE-TRACK-1 + v1.1.1-beta watchlist; 2026-08-19)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
