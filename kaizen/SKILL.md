@@ -1,4 +1,9 @@
-# KAIZEN — v2.75
+# KAIZEN — v2.77
+> **v2.77 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: COMPUTATIONAL-VERIFICATION-1 + TITLE-LINE-PARITY-1):**
+> Red-team: direct parent-agent skills audit. HARD: 4. SOFT: 2. DESIGN: 0.
+> (1) [HARD] **Mirror rows (research v2.122 / system-prompt v3.52):** COMPUTATIONAL-VERIFICATION-1 (user mandate 2026-08-19: every quantitative claim computationally verified before publish — VERIFY-IN-CODE-1, artifacts/verification/ deposited, qwav-demo-kit DEM-E0 demo gate for flagship results) + TITLE-LINE-PARITY-1 (version parity = H1 title + top banner + footer Current: ALL equal; canonical 2026-08-19: prompt title v3.50 vs footer v3.51, kaizen title v2.75 vs v2.76, cloudflare title v3.56 vs v3.57 — footer/banner updated but H1 left stale in 3 skills).
+> (2) [HARD] **REPO-COPY-PHANTOM-1 recurrence #2** — E3 (qnfo-skills repo copy) was stale at v3.50 content while E1/E2/E4-E7 held v3.51 (163,352 vs 166,015 LF chars); "7-store parity" claims MUST include the repo copy's COMMITTED+PUSHED state verified via ls-remote before closeout.
+> (3) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #7** — Roaming app-settings preferredModel re-drifted to v4-pro; reset to flash.
 > **v2.76 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
 > (1) [HARD] **Mirror rows (research v2.121):** P3.AUTHOR-GATE-EVERY-ENTRY-1 (RES.016 pass-1 caught 3 fabricated author attributions in a PUBLISHED record that sampled-DOI spot-checks missed - every entry needs live verification, never a sample) + NEWVERSION-FILE-CARRYOVER-1 (newversion carries over ALL files byte-identical; ANY repo file changed since prior publish must be replaced in the draft - canonical: RES.016 v1.1 stale RESEARCH-CONTINUITY-REGISTRY.md blob caught by md5 comparison).
 > (2) [HARD] **GATEWAY-BUNDLE-DRIFT-1 mirror (cloudflare v3.57):** a previously-fixed worker regression (papers.qnfo.org JSON-LD escaped close) reappeared site-wide because the DEPLOYED bundle differed from the correct LOCAL file - compare deployed code (workers_get_worker_code) against the local deploy bundle BEFORE re-fixing; root cause was deployment of a stale alternate bundle while the local canonical file was correct.
@@ -15420,4 +15425,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.76** (RES.016 mirror rows: P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 + GATEWAY-BUNDLE-DRIFT-1; frontmatter/footer reconciled; 2026-08-19)
+Current: **v2.77** (COMPUTATIONAL-VERIFICATION-1 + TITLE-LINE-PARITY-1 mirrors; REPO-COPY-PHANTOM-1 #2; MODEL-KEY-FILE-DRIFT-1 #7; 2026-08-19)

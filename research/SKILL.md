@@ -1,4 +1,7 @@
-# RESEARCH — v2.121
+# RESEARCH — v2.122
+> **v2.122 UPDATE (2026-08-19, kaizen — CMD SKILLS UPDATE: user mandate "MORE COMPUTATIONAL ANALYSIS/VERIFICATION IN RESEARCH"):**
+> (1) [HARD] **COMPUTATIONAL-VERIFICATION-1 gate added (Phase 5; mirrors system-prompt v3.52)** — every research artifact with quantitative/mathematical/statistical claims MUST carry computational verification BEFORE publication: numerical evaluation of key formulas (golden values, edge cases, limits, dimensional consistency), seeded Monte Carlo for probabilistic claims, recomputation of derived quantities; VERIFY-IN-CODE-1 (any claim a computer can check MUST be checked in code before assertion); verification scripts + outputs in artifacts/verification/ AND included in the Zenodo deposit (extends PUBLICATION-SOURCE-COMPLETENESS-1); reproducibility statement (runtime/seed/versions/re-run); flagship results get interactive demos via qwav-demo-kit DEM-E0-T01..T05 (research must demonstrably execute in code).
+> (2) [HARD] **TITLE-LINE-PARITY-1** — version parity = H1 title + top banner + footer "Current:" ALL equal (the v2.121-era cycle left the H1 title stale; class now codified).
 > **v2.121 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
 > (1) [HARD] **P3.AUTHOR-GATE-EVERY-ENTRY-1 added** - the RES.016 pass-1 accuracy audit (2026-08-19) caught 3 fabricated author attributions in a PUBLISHED record (v1.0, 10.5281/zenodo.22009653) that in-session spot-checks of 4-5 sampled DOIs MISSED: "Caruana" (RMP Kochen-Specker review), "Khodjaev" (Entropy p-adic qubit), "VVZ 1998" (DOI 10.2748/tmpub.10.1 actually authored by Youngho Jang). P3.AUTHOR-GATE now requires live Crossref/OpenAlex verification of EVERY entry author list, never a sample. Remediated in v1.1 (10.5281/zenodo.22010489).
 > (2) [HARD] **NEWVERSION-FILE-CARRYOVER-1 added** - newversion drafts carry over ALL parent files byte-identical, not just the frontmatter .md. ANY repo file that changed since the prior publish (auxiliary living docs like RESEARCH-CONTINUITY-REGISTRY.md) must ALSO be replaced in the draft. Canonical: RES.016 v1.1 - deposited registry was a v1.0-era blob (4484 B vs 4834 B HEAD) missing one session-log row; caught by the completeness reviewer md5 comparison (NEWVERSION-FRONTMATTER-CARRYOVER-1 is necessary but NOT sufficient).
@@ -5318,6 +5321,30 @@ Systematic backcasting across target disciplines with tiered forks (Tier 1: ~20y
 
 
 
+### COMPUTATIONAL-VERIFICATION-1 (HARD GATE — 2026-08-19, user mandate "MORE COMPUTATIONAL ANALYSIS/VERIFICATION IN RESEARCH")
+
+Every research artifact making quantitative, mathematical, or statistical claims MUST carry
+computational verification with evidence deposited, BEFORE publication:
+
+1. **NUMERICAL SANITY:** every key equation/formula/identity gets a numerical check against
+   independent evaluation (Python/JS; arbitrary precision where relevant) — golden values, edge
+   cases, asymptotics, limit behavior, dimensional consistency. Extends BP-1 (Fit-Verify) beyond
+   fits to EVERY non-trivial formula in the paper.
+2. **VERIFY-IN-CODE-1:** any claim a computer can check MUST be checked in code before it is
+   asserted. Compute-checkable claims asserted without code = HARD finding. "Analytic proof only"
+   is not a substitute when a claim is numerically checkable.
+3. **SIMULATION FOR STATISTICAL CLAIMS:** probabilistic/statistical claims get seeded Monte
+   Carlo/simulation runs with explicit test statistics — never hand-waved bounds.
+4. **VERIFICATION ARTIFACTS DEPOSITED:** verification scripts + result outputs live in
+   artifacts/verification/ and are INCLUDED in the Zenodo deposit (extends
+   PUBLICATION-SOURCE-COMPLETENESS-1); the paper cites its verification evidence files.
+5. **REPRODUCIBILITY STATEMENT:** runtime, seed, dependency versions, and re-run instructions
+   (README section or dedicated "Verification" appendix).
+6. **DEMO GATE (flagship results):** flagship/core results get an interactive executable demo via
+   qwav-demo-kit (DEM-E0-T01..T05: golden-value verification, CDP test-demo.py + Playwright
+   click-everything suite, gh-pages deploy with same-turn anti-phantom verification) — published
+   research must demonstrably execute in code.
+
 ### Numeracy Red Flags Checklist
 
 
@@ -9531,7 +9558,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.121** (RES.016 publish-then-audit: P3.AUTHOR-GATE-EVERY-ENTRY-1 + NEWVERSION-FILE-CARRYOVER-1 codified; fabricated-authors incident + registry carryover caught by pass-1/2 adversarial audits; mirrors system-prompt v3.51; 2026-08-19)
+Current: **v2.122** (COMPUTATIONAL-VERIFICATION-1 gate + TITLE-LINE-PARITY-1; mirrors system-prompt v3.52; 2026-08-19)
 
 
 
