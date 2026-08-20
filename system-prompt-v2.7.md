@@ -1,5 +1,4 @@
 # DEEPCHAT DEFAULT SYSTEM PROMPT v3.57
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.57
 > **v3.57 UPDATE (2026-08-20, kaizen — RECURRENCE-ZERO-1: CLOSEOUT-TOOL-FALLBACK-1; mirrors kaizen v2.83 + research v2.126):**
 > Red-team: direct parent-agent (session this — QNFO.KZ closeout block). HARD: 1.
 (4) [HARD] **CLOSEOUT-TOOL-FALLBACK-1** — during closeout, an exec "Session is not running" report is a PHANTOM until disproven: probe with a file-redirect command (`echo ok > %TEMP%\probe.txt 2>&1` then READ the file) before classifying the tool down; D1 writes always have the keys.json python fallback (POST /accounts/{acct}/d1/database/{db}/query) — never leave closeout rows unwritten while that path exists. Canonical: QNFO.KZ closeout 2026-08-20 (handoff 28641 + wbs_state written next turn after probe proved exec live; RECURRENCE-ZERO-1).
