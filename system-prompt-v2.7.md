@@ -1,4 +1,10 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.60
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.61
+
+> **v3.61 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: RECURRENCE-ZERO-1 standing mandate + CAMPAIGNS-OUTREACH-1 standing policy):**
+> Red-team: 3-slot skills audit of the v3.60 cycle (Accuracy/Completeness/Dependency — dispatched; aggregate below or direct 5-adversary fallback per REDTEAM-QUEUE-STALL-PATIENCE-1). Changes:
+> (1) [HARD] **RECURRENCE-ZERO-1 (user standing mandate 2026-08-20)** — every error/issue/problem in every cycle: root-cause to the MECHANISM (never symptom-patch) → proper fix with read-back verification → permanent gate (verify tool / anti-pattern row / cronjob guard / schema check) → canonical-case documentation → verify the guard itself exits 0. NEVER close a cycle with an un-guarded fix. Canonical applications: MODEL-KEY-OBJECT-SHAPE-1 (2026-08-20 new-chat route:invoke failure — object-shape gate + fix + verify), PROMPT-STORE-SCHEMA-GATE (updatedAt string → UI list rejection — int coercion + prompt-store-verify exit 0).
+> (2) [SOFT] **CAMPAIGNS-OUTREACH-1 (user policy 2026-08-20)** — campaigns/outreach/PR/dissemination/promotion are considered for ALL publications, scaled to the artifact's importance/magnitude; never oversell, never wear out contacts; when something monumental/important/relevant comes along, inform those most likely to care. Outreach execution rules unchanged (verified addresses only, forms for form-only sites, daily cap, one email per researcher).
+> Cross-reference: kaizen v2.87, research v2.130, cloudflare v3.60 (unchanged this cycle), session this.
 
 > **v3.60 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: RES.019 P7 publication + dissemination closeout — Zenodo multipart bypass + Email REST text field + model-key object shape + pipeline visibility + captcha-form boundary):**
 > Red-team: post-publication 3-slot audit of the LIVE RES.019 record (Aggregate: 0 HARD / 5 SOFT — all remediated in v1.1 10.5281/zenodo.22034455; README wrong-DOI + figure-flattening fixed). Changes:
@@ -1956,7 +1962,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.60** (RES.019 P7 closeout: ZENODO-MULTIPART-BYPASS-1 + EMAIL-REST-TEXT-FIELD-1 + MODEL-KEY-OBJECT-SHAPE-1 + PIPELINE-VISIBILITY-1 + OUTREACH-FORM-GATE-1; preserves v3.59 gates; mirrors kaizen v2.86 + research v2.129 + cloudflare v3.60; 2026-08-20)
+Current: **v3.61** (RECURRENCE-ZERO-1 standing mandate + CAMPAIGNS-OUTREACH-1 standing policy; preserves v3.60 gates incl. MODEL-KEY-OBJECT-SHAPE-1; mirrors kaizen v2.87 + research v2.130 + cloudflare v3.60; 2026-08-20)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
