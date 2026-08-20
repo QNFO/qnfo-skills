@@ -1,10 +1,24 @@
 ---
 name: qnfo-core
-version: "1.32"
+version: "1.33"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.32
+# QNFO-CORE — v1.33
+> **v1.33 UPDATE (2026-08-20, kaizen — CALENDAR/EVENT/TO-DO MANDATE added (user mandate 2026-08-20):** anything with a date must be created on the Outlook calendar (rowan.quni@outlook.com) and/or Outlook task (Microsoft To Do) AT CONFIRMATION TIME by the agent — never ask the user to schedule. Tool: email-composer/scripts/calendar-sync.py (add / add-task / sync-register / sync-tasks / complete); reminders 1440 min day-before (10080 week-before for conferences); source of truth: GTD register D:\Obsidian
+otes1\_personal-gtd.md; daily sync Mon-Fri 07:30 (cronjob 78136b24). N-2 repair: frontmatter/H1 already 1.33; banner + footer reconciled to v1.33 this cycle.)
+
+## CALENDAR/EVENT/TO-DO MANDATE (v1.33, HARD — user mandate 2026-08-20, binds ALL threads/agents/executions)
+
+**Anything with a date lives on the Outlook calendar and/or as an Outlook to-do — maintained automatically, WITHOUT user intervention, forever.**
+- Calendar: **Outlook.com** (rowan.quni@outlook.com default calendar in the desktop client — online store, syncs to outlook.live.com web). To-dos: **Outlook Tasks** (olFolderTasks → Microsoft To Do), completable.
+- **Tool (the ONLY supported mechanism):** `python C:\Users\LENOVO\.deepchat\skills\email-composer\scripts\calendar-sync.py`
+  - `list` / `tasks` — read state · `add --title T --start "YYYY-MM-DD HH:MM" [--end E] [--loc L] [--reminder MIN] [--body B]` — calendar event (idempotent) · `add-task --title T --due YYYY-MM-DD [--note N]` — to-do (idempotent) · `sync-register` + `sync-tasks` — GTD register ↔ Outlook sync (also run automatically Mon-Fri 07:30 by cronjob 78136b24) · `complete --title T`.
+- **Every agent, in every thread and scheduled task:** at the moment an event/date is confirmed (meeting, deadline, conference, dated commitment — QNFO or personal) → create the calendar event AND/OR task at confirmation time via the tool (body carries prep/talking points). Never ask the user to schedule anything; never leave a dated item only in prose.
+- Reminder defaults: 1440 min day-before (meetings/deadlines); 10080 min week-before (long-lead, conferences); prep-heavy meetings get tailored reminders + cronjob prep layers (Outlook supports ONE native reminder per event — "one or more" = native + cronjob layers).
+- Completion: when a register line ticks `[x]` or a commitment is fulfilled, the agent marks the matching task complete (`sync-tasks` does this automatically).
+- Source of truth: **GTD register** `D:\Obsidian\notes\v1\_personal-gtd.md` NEXT STEPS (dated format `- [ ] YYYY-MM-DD[ HH:MM] — subject`). Cronjob 78136b24 (Mon-Fri 07:30 Amsterdam) runs sync-register + sync-tasks; reports only on changes.
+- Single source of truth for calendar data = register + tool output; never fabricate dates/titles/reminders.
 
 > **v1.32 UPDATE (2026-08-18, kaizen — red-team remediation: 5 Completeness HARD fixes):**
 > Red-team: CMD RED TEAM 3-slot dispatch COMPLETED (stall-resume, REDTEAM-QUEUE-STALL-PATIENCE-1):
@@ -5949,7 +5963,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.32** (qnfo-core — §0.8 hardened: 5 Completeness HARD fixes remediated; 2026-08-18) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.33** (CALENDAR/EVENT/TO-DO MANDATE; N-2 banner/footer repair; 2026-08-20)  (qnfo-core — §0.8 hardened: 5 Completeness HARD fixes remediated; 2026-08-18) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
 
 
 
