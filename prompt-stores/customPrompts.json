@@ -29,14 +29,14 @@
     "id": "cmd-continue",
     "name": "CMD CONTINUE",
     "description": "Resume work (from handoff if present): plan → execute → verify → iterate.",
-    "content": "CMD CONTINUE: if a handoff exists, resume from it first (load handoff state, skip re-audit, execute Phase 0) → update_plan → execute → verify → iterate. Complete autonomously. `update_plan` `exec` `memory_recall`",
-    "template": "CMD CONTINUE: if a handoff exists, resume from it first (load handoff state, skip re-audit, execute Phase 0) → update_plan → execute → verify → iterate. Complete autonomously. `update_plan` `exec` `memory_recall`",
+    "content": "CMD CONTINUE: if a handoff exists, resume from it first (load handoff state, skip re-audit, execute Phase 0) → update_plan → execute → verify → iterate. Complete autonomously. `update_plan` `exec` `memory_recall`\nAny exec whose output matters: redirect to a file and READ IT BACK (EXEC-AUTOBG-READBACK-1); after any git push: ls-remote verify (EXEC-PHANTOM-DOUBLE-EDGED-1, v3.59).",
+    "template": "CMD CONTINUE: if a handoff exists, resume from it first (load handoff state, skip re-audit, execute Phase 0) → update_plan → execute → verify → iterate. Complete autonomously. `update_plan` `exec` `memory_recall`\nAny exec whose output matters: redirect to a file and READ IT BACK (EXEC-AUTOBG-READBACK-1); after any git push: ls-remote verify (EXEC-PHANTOM-DOUBLE-EDGED-1, v3.59).",
     "parameters": [],
     "files": [],
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1787142150748
+    "updatedAt": 1787235312361
   },
   {
     "id": "cmd-execute",
@@ -88,7 +88,7 @@
     "enabled": true,
     "source": "local",
     "createdAt": 1786964920222,
-    "updatedAt": 1787218898640
+    "updatedAt": 1787235312361
   },
   {
     "id": "cmd-skills-update",
