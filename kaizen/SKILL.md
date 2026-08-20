@@ -1,4 +1,28 @@
-# KAIZEN — v2.81
+---
+name: kaizen
+version: "2.84"
+---
+
+# KAIZEN — v2.84
+
+> **v2.84 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program + launch-cycle gates; mirrors system-prompt v3.58 + research v2.127):**
+> Red-team: 3-slot reviewer dispatch + direct parent-agent 5-adversary audit (Accuracy CLEAN 0 HARD/1 SOFT; Dependency child failed → direct; Completeness pending → direct findings authoritative). N-2 drift repairs: research fm 2.121/banner 2.125/footer 2.126 → 2.127 + H1 dedupe; kaizen H1 dedupe (v2.83/v2.82); E1/E3 parity repair (7-store sha 207ea69db0c5, 2026-08-20). HARD: 3. SOFT: 3. DESIGN: 0. New gates:
+> (1) [HARD] **D1-QUOTED-RESERVED-COLS-1** — SQLite reserved keywords as D1 column names MUST be double-quoted (`"references"`); unquoted → SQLITE_ERROR 7500. Canonical: ai-accelerated-research insert 2026-08-20.
+> (2) [HARD] **ZENODO-NEWVERSION-FILE-REPLACE-1** — newversion replacement: DELETE links.self (204) → PUT re-upload (201); POST → 405. Canonical: v1.1 22028851.
+> (3) [HARD] **CONCEPT-DOI-PRE-BUILD-1** — conceptrecid from the DEPOSIT object pre-upload; README How-to-Cite uses the concept DOI (22028787 ≠ record 22028788).
+> (4) [SOFT] **ESSAY-DEPOSIT-EVIDENCE-PACK-1** — essay deposits include the producing scripts + summary JSON; raw CSVs excluded (privacy) and documented. Remediation: v1.2 newversion next cycle.
+> (5) [SOFT] **DOIDOT-403-BOT-1** (doi.org 403 = bot block; DataCite findable is authoritative; DataCite 404s on browser UA — use qnfo-audit UA).
+> (6) [SOFT] **GIT-MERGE-BRANCH-FETCH-1** (fetch branch before merge; tag after merge commit) + **R2-RCLONE-TEMP-CONFIG-1** (temp rclone.conf; remote name = bucket).
+> Cross-reference: system-prompt v3.58, research v2.127, qnfo-core v1.34, cloudflare v3.58, session this.
+
+> **v2.82 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1; mirrors system-prompt v3.56 + research v2.125):**
+> Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1** — on a Zenodo draft, the two APIs are MUTUALLY DESTRUCTIVE on license vs resource_type: the deposit API PUT stores `license` (string) but CLEARS `resource_type` (echoes null, publish then fails "Missing data for required field"); the records API PUT stores `resource_type` (id-form `{"id": "publication-preprint"}` + `publisher`) but CLEARS `license` (echoes null). Final state = license XOR rtype, never both. Root trigger: a prereserve_doi PUT via the deposit API is a FULL metadata replacement (PARTIAL-PUT-CLEARS-FIELDS-1) that destroys inherited metadata. Canonical: RES.017 v1.4 (10.5281/zenodo.22025544) + industry brief (10.5281/zenodo.22028078), both 2026-08-20 — published records show license=null in the public API view while .md frontmatter carries CC BY-NC-SA 4.0. Remediation: accept rtype (required for publish) + document license gap; UI edit or next version for license.
+> (2) [HARD] **PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1** — prereserve a newversion's DOI via the RECORDS API reserve_doi link (POST /api/records/{id}/draft/pids/doi, Bearer) — NEVER via deposit API PUT `{"metadata": {"prereserve_doi": true}}` (full-replacement wipe of title/creators/keywords/license/related_identifiers; canonical RES.017 v1.4 2026-08-20). If prereserved DOI unknown, convention fallback: DOI = 10.5281/zenodo.{deposit_id} (ZENODO-DEPOSIT-DOI-CONVENTION-1), verify equality at publish.
+> (3) [HARD] **PDF-SUPERSCRIPT-UNICODE-1** — Unicode superscripts (U+207B ⁻, U+2074 ⁴) in publication text render as U+FFFD in the CDP PDF pipeline (font gap): the binary byte scan (0xEF BF BD) catches them; fix = write the notation as MathJax (`$2.0\times10^{-4}$`) or plain ASCII in the source. Canonical: industry brief 2026-08-20 — 2.0×10⁻⁴/1.1×10⁻² in plain text → 1 bad byte in PDF; converted to MathJax, rescan PASS.
+> (4) [SOFT] **DISPATCH-WAVE-2026-08-20** — 3 first-contact outreach sends prepared for the industry brief (10.5281/zenodo.22028078): Zúñiga-Galindo (wilson.zunigagalindo@utrgv.edu, 2410.13048), Konno (konno@ynu.ac.jp, quant-ph/0602070), Svampa (ilaria.svampa@unicam.it, 2112.03362) — all tarball-verified, dedup-clean (single-contact-per-group: Aniello skipped, same Mancini group as Svampa), QPL-halt-clean. Record published + R2-mirrored + papers.qnfo.org live.
+> Cross-reference: system-prompt v3.56, research v2.125, ZENODO-DEPOSIT-DOI-CONVENTION-1, NEWVERSION-DRAFT-FILES-SHAPE-1, PARTIAL-PUT-CLEARS-FIELDS-1, session this.
+
 > **v2.81 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: kaizen-draft-2026-08-20-newversion-draft-files-shape-1 installed — NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1; mirrors system-prompt v3.55 + research v2.124):**
 > Red-team: direct parent-agent skills audit (session this — draft-install cycle; SUBAGENT-SLOT-FAILURE-1 pattern). HARD: 3. SOFT: 0. DESIGN: 1.
 > (1) [HARD] **NEWVERSION-DRAFT-FILES-SHAPE-1** — Zenodo NEWVERSION draft (legacy deposit API): file metadata uses `filename` (NOT `key`); upload endpoint = POST /api/deposit/depositions/{id}/files (multipart/form-data); the bucket-level URL (.../files/{filename}) → 405 on POST; per-file deletion ONLY via DELETE {file.links.self} (204), never via .../files/{filename} (500 — ZENODO-DEPOSIT-DELETE-500-1). Replace workflow: GET /files → DELETE each links.self → re-POST multipart. Canonical: RES.017 v1.1/v1.2 remediation → v1.3 (10.5281/zenodo.22017933), 2026-08-19; RES.009 v1.1 (draft 21939493), 2026-08-14.
@@ -890,7 +914,6 @@ name: kaizen
 
 
 
-version: 2.76
 description: Autonomous continuous-improvement protocol — audit, upgrade, harden, and self-monitor any skill or configuration artifact. Mandatory red-team review with parallel subagent orchestration. Runs Autonomous Watchtower at session start, Session Retrospective at session end, and Continuous Monitoring after kaizen closeout. Uses structured forecasting to predict skill needs BEFORE users report problems. Incorporates the research skill's forecast protocol as a design pattern for anticipating future skill requirements. Use when the user asks to audit, improve, update, or kaizen a skill; when a skill shows staleness signals; when a skill's dependencies have changed; when proactively scanning for skill rot across the ecosystem; or when any session retrospective reveals tool-failure patterns or anti-pattern accumulation.
 
 
@@ -1472,7 +1495,7 @@ description: Autonomous continuous-improvement protocol — audit, upgrade, hard
 > Cross-reference: email-composer v2.17, research v2.92, qnfo-core v1.23, session this.
 
 
-# KAIZEN — v2.49
+# KAIZEN — v2.84
 > **v1.98 UPDATE (2026-08-10, kaizen — TEST-SEND-EXTERNAL-1 HARD GATE mirror; email-composer v2.16):**
 > Red-team: direct parent-agent audit (user directive — "SENDING A TEST EMAIL TO A REAL EMAIL ADDRESS IS A HUGE NO-NO!"). Trigger: the EMAIL-SENDING-DOMAIN-10002 isolation matrix sent a "matrix test" payload to tp53@rice.edu (Tirthak Patel, D1 id=66) — a second contact to a researcher who had already received genuine outreach the same day (id=61). HARD: 1 (email-composer-side). SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **TEST-SEND-EXTERNAL-1 mirror row added (owner: email-composer v2.16)** — test/diagnostic sends go ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal QNFO/QWAV addresses; NEVER to a real external address, even with an explicit "test"/"matrix" subject (still a contact; burns the recipient; violates no-repeat-contact). External-recipient diagnostic controls use the user's own mailbox. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66).
@@ -15281,6 +15304,7 @@ Current: **v2.70** (UMP.012 red team 2-HARD remediation to v0.4; PRACTITIONER-RE
 
 
 
+| **CLOSEOUT-TOOL-FALLBACK-1: A tool "failure" during closeout is treated as down without a file-read-back probe (2026-08-20)** | **RECURRENCE-ZERO-1 gate.** When exec reports "Session is not running" (phantom), the command may have ACTUALLY RUN (EXEC-AUTOBG-READBACK-1): ALWAYS probe with a file-redirect command (`echo ok > %TEMP%\probe.txt 2>&1; cat %TEMP%\probe.txt`) and READ THE FILE before classifying any tool down. D1 writes ALWAYS have the keys.json python fallback (urllib POST to /accounts/{acct}/d1/database/{db}/query) — never leave closeout rows unwritten while that path exists. Canonical case: QNFO.KZ closeout 2026-08-20 — exec phantom errors misdiagnosed as dead tool; D1 handoff + wbs_state left unwritten for a full turn; file-read-back proved exec live; rows 28641 written next turn (changes=1 each, read-back verified). |
 | **SKILL-WRITE-COLLISION-1: Sequential write+read to same skill file by two independent processes produces stale reads (2026-08-04)** | When agent A writes a skill file and agent B reads it milliseconds later, agent B may read the OLD content (filesystem caching, write delays). The version string and anti-pattern table are the most vulnerable sections. Fix: (A) prefer `write` (atomic overwrite) over `edit` (surgical replace) for skill-file kaizen; (B) after writing, flush and re-read in the SAME Python script that did the write (ensures filesystem has committed); (C) for cross-process verification, the reader must open the file fresh (no cached handles). |
 
 
@@ -15450,4 +15474,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.81** (NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 installed from kaizen draft 2026-08-20; 7-store parity repair sha 7767f026; MODEL-KEY-FILE-DRIFT-1 #13; 2026-08-20)  (RECURRENCE-ZERO-1 — user standing mandate 2026-08-20 'DON'T LET IT HAPPEN AGAIN' applied to EVERY error/issue/problem: root-cause → fix+verify → permanent gate → canonical-case doc; prompt-store string-timestamp safeguards: PROMPT-STORE-SCHEMA-GATE-1 + prompt-store-verify.py + restore v2 + Daily Ops check #6) (ZENODO-DEPOSIT-CREATE-SHAPE-1 + R2-VERIFY-VIA-REST-1 + D1-WRITE-VIA-WRANGLER-1; OPENREVIEW-SUBMIT-IDEMPOTENCY-1 + ONE-SHOT-CRON-DOUBLE-DISPATCH-1 + OPENREVIEW-API-SUBMIT-FALLBACK-1 + SESSION-JWT-HYGIENE-1 + VENUE-LIST-IS-TRUTH-1; 2026-08-20)
+Current: **v2.84** (post-publication audit of the $1,032 Research Program; D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1 + DOIDOT-403-BOT-1 + GIT-MERGE-BRANCH-FETCH-1 + R2-RCLONE-TEMP-CONFIG-1; N-2 drift repairs; mirrors system-prompt v3.58; 2026-08-20)

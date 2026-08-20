@@ -1,4 +1,29 @@
-# RESEARCH — v2.124
+---
+name: research
+version: "2.127"
+---
+
+# RESEARCH — v2.127
+
+> **v2.127 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program (10.5281/zenodo.22028851) + launch-cycle gates; mirrors system-prompt v3.58 + kaizen v2.84):**
+> Red-team: direct parent-agent + 3-slot reviewer dispatch (Accuracy CLEAN; Dependency child failed → direct audit). HARD: 3. SOFT: 3. DESIGN: 0. Changes:
+> (1) [HARD] **D1-QUOTED-RESERVED-COLS-1 (Phase 6)** — living-paper.papers column `references` is a SQLite reserved keyword: INSERT/UPDATE MUST double-quote it (`"references"`); unquoted → SQLITE_ERROR near "references" (code 7500). Canonical: ai-accelerated-research insert 2026-08-20 (400 → quoted fix).
+> (2) [HARD] **ZENODO-NEWVERSION-FILE-REPLACE-1 (Phase 5)** — newversion file replacement: GET /files → DELETE each links.self (204; /files/{FILENAME} form → 500 per ZENODO-DEPOSIT-DELETE-500-1) → re-upload with **PUT** (requests.put raw bytes → 201); **POST to bucket URL → 405**. Canonical: v1.1 newversion 22028851 (2026-08-20).
+> (3) [HARD] **CONCEPT-DOI-PRE-BUILD-1 (Phase 5)** — read `conceptrecid` from the DEPOSIT object immediately after creation; build the README How-to-Cite with the CONCEPT DOI BEFORE first upload (record DOI ≠ concept DOI — canonical: 22028787 vs 22028788). Shipping the record DOI labeled "concept DOI" is a HARD finding → v1.1 newversion remediation.
+> (4) [SOFT] **ESSAY-DEPOSIT-EVIDENCE-PACK-1 (Phase 5)** — essay/ledger deposits MUST include the aggregation + verification scripts and summary JSON that produced the figures (canonical: aggregate_usage.py, usage_summary.json, verify_essay.py); raw usage CSVs excluded for privacy (user_id + masked api_key), documented in PROVENANCE. Remediation (registered next cycle): v1.2 newversion adding the evidence pack + dissemination package.
+> (5) [SOFT] Mirror rows — GIT-MERGE-BRANCH-FETCH-1 (fetch branch before merge in fresh clones; tag AFTER the merge commit) + R2-RCLONE-TEMP-CONFIG-1 (temp rclone.conf, remote name = bucket name) + DOIDOT-403-BOT-1 (doi.org 403 = bot block; verify via DataCite findable + records API state=done).
+> Cross-reference: system-prompt v3.58, kaizen v2.84, qnfo-core v1.34, session this.
+
+> **v2.125 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1 (Phase 5/6); mirrors system-prompt v3.56 + kaizen v2.82):**
+> Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 (Phase 5/6)** — deposit API PUT stores license but clears resource_type; records API PUT stores resource_type (id-form + publisher) but clears license; final state = rtype ✓ license ✗ in public API view, .md frontmatter carries the license. Canonicals: RES.017 v1.4 (22025544) + industry brief (22028078), 2026-08-20. Accept rtype + document; UI edit or next version for license.
+> (2) [HARD] **PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 (Phase 5)** — prereserve via records API reserve_doi (POST /api/records/{id}/draft/pids/doi), NEVER deposit prereserve_doi PUT (full replacement). Fallback DOI = 10.5281/zenodo.{deposit_id}.
+> (3) [HARD] **PDF-SUPERSCRIPT-UNICODE-1 (PANDOC-SAFE build)** — Unicode superscripts → U+FFFD in CDP PDFs; source must use MathJax ($2.0\times10^{-4}$) or ASCII. Canonical: industry brief 2026-08-20 (byte scan caught 1 bad byte).
+> (4) [SOFT] Dispatch wave 2026-08-20 prepared (3 first contacts, record 22028078).
+(4) [HARD] **CLOSEOUT-TOOL-FALLBACK-1 (closeout protocol)** — exec phantom errors ("Session is not running") mean the command may have RUN: probe via file-redirect + read-back before classifying down (EXEC-AUTOBG-READBACK-1); D1 closeout rows use the keys.json python fallback — never defer a handoff write while that path exists. Canonical: QNFO.KZ 2026-08-20 (handoff 28641).
+> Cross-reference: system-prompt v3.56, kaizen v2.82, NEWVERSION-DRAFT-FILES-SHAPE-1, session this.
+> **v2.124 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 installed; mirrors system-prompt v3.55 + kaizen v2.81):**
+
 > **v2.124 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 installed; mirrors system-prompt v3.55 + kaizen v2.81):**
 > Red-team: direct parent-agent skills audit (session this — draft-install cycle). HARD: 2. SOFT: 0. DESIGN: 1.
 > (1) [HARD] **NEWVERSION-DRAFT-FILES-SHAPE-1 added (Phase 5/6 file replacement)** — Zenodo NEWVERSION draft (legacy deposit API): file metadata uses `filename` (NOT `key`); upload = POST /api/deposit/depositions/{id}/files (multipart); bucket-level URL → 405 on POST; per-file deletion ONLY DELETE {file.links.self} (204) — never .../files/{filename} (500). Replace: GET /files → DELETE each links.self → re-POST multipart. Canonical: RES.017 v1.3 (10.5281/zenodo.22017933) 2026-08-19; RES.009 v1.1 (21939493) 2026-08-14. Extends NEWVERSION-FRONTMATTER-CARRYOVER-1 / NEWVERSION-FILE-CARRYOVER-1 remediation paths.
@@ -255,7 +280,6 @@ name: research
 
 
 
-version: 2.121
 description: >
 
 
@@ -9570,7 +9594,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.124** (NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1; repo-copy repair; 2026-08-20)  (ZENODO-DEPOSIT-CREATE-SHAPE-1 + R2-VERIFY-VIA-REST-1 + D1-WRITE-VIA-WRANGLER-1; OpenReview mirror rows; 2026-08-20)
+Current: **v2.127** (D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1; mirrors system-prompt v3.58 + kaizen v2.84; 2026-08-20)
 
 
 

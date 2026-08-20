@@ -1,10 +1,20 @@
 ---
 name: qnfo-core
-version: "1.33"
+version: "1.34"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.33
+# QNFO-CORE — v1.34
+> **v1.34 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program; owner mirrors; mirrors system-prompt v3.58 + kaizen v2.84 + research v2.127):**
+> Red-team: direct parent-agent + 3-slot reviewer dispatch. HARD: 3. SOFT: 3. DESIGN: 0. Owner-level enforcement mirrors:
+> (1) [HARD] **D1-QUOTED-RESERVED-COLS-1** — SQLite reserved keywords as D1 column names MUST be double-quoted (`"references"`); unquoted → SQLITE_ERROR 7500 (canonical: ai-accelerated-research insert 2026-08-20).
+> (2) [HARD] **ZENODO-NEWVERSION-FILE-REPLACE-1** — newversion replacement: DELETE links.self (204) → PUT re-upload (201); POST → 405 (canonical: v1.1 22028851).
+> (3) [HARD] **CONCEPT-DOI-PRE-BUILD-1** — conceptrecid from the DEPOSIT object pre-upload; README How-to-Cite cites the concept DOI (22028787 ≠ 22028788).
+> (4) [SOFT] **ESSAY-DEPOSIT-EVIDENCE-PACK-1** — essay/ledger deposits include the producing scripts + summary JSON; raw usage CSVs excluded for privacy, documented (remediation: v1.2 newversion next cycle).
+> (5) [SOFT] **DOIDOT-403-BOT-1** — doi.org 403 = bot block (verify via DataCite findable); DataCite 404 on browser UA — use qnfo-audit UA.
+> (6) [SOFT] **GIT-MERGE-BRANCH-FETCH-1** + **R2-RCLONE-TEMP-CONFIG-1** mirror rows (fresh-clone fetch-before-merge; temp rclone.conf; remote name = bucket).
+> Cross-reference: system-prompt v3.58, kaizen v2.84, research v2.127, session this.
+
 > **v1.33 UPDATE (2026-08-20, kaizen — CALENDAR/EVENT/TO-DO MANDATE added (user mandate 2026-08-20):** anything with a date must be created on the Outlook calendar (rowan.quni@outlook.com) and/or Outlook task (Microsoft To Do) AT CONFIRMATION TIME by the agent — never ask the user to schedule. Tool: email-composer/scripts/calendar-sync.py (add / add-task / sync-register / sync-tasks / complete); reminders 1440 min day-before (10080 week-before for conferences); source of truth: GTD register D:\Obsidian
 otes1\_personal-gtd.md; daily sync Mon-Fri 07:30 (cronjob 78136b24). N-2 repair: frontmatter/H1 already 1.33; banner + footer reconciled to v1.33 this cycle.)
 
@@ -5963,7 +5973,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.33** (CALENDAR/EVENT/TO-DO MANDATE; N-2 banner/footer repair; 2026-08-20)  (qnfo-core — §0.8 hardened: 5 Completeness HARD fixes remediated; 2026-08-18) (qnfo-core — MAP-TERRITORY-1 owner mirror row + research v2.99 cross-ref; 2026-08-11) (qnfo-core — UIA cross-reference + Q5 falsifiability instrument; 2026-08-10)
+Current: **v1.34** (owner mirrors D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1 + DOIDOT-403-BOT-1 + GIT-MERGE-BRANCH-FETCH-1 + R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58; 2026-08-20)
 
 
 

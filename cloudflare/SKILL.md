@@ -1,3 +1,15 @@
+---
+name: cloudflare
+version: "3.58"
+---
+
+# CLOUDFLARE — v3.58
+
+> **v3.58 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58 + kaizen v2.84):**
+> Red-team: direct parent-agent (post-publication audit of the $1,032 Research Program launch cycle). HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **R2-RCLONE-TEMP-CONFIG-1** — inline `:s3,provider=Cloudflare,access_key_id=...,endpoint=<url>:` breaks on the endpoint URL (S3 resolve auth scheme: 'Custom endpoint `https` was not a valid URI'); write a temp rclone.conf file (`[remote] type=s3 provider=Cloudflare access_key_id=... secret_access_key=... endpoint=https://<acct>.r2.cloudflarestorage.com region=auto no_check_bucket=true`) and name the remote AFTER THE BUCKET (account-level R2 keys reach every bucket). Canonical: qnfo-releases/2026/08/ai-accelerated-research mirror (sibling probe per WRONG-BUCKET-SELECTION-1, rclone check 0 differences, 2026-08-20).
+> Cross-reference: system-prompt v3.58, kaizen v2.84, session this.
+
 > **v3.57 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
 > (1) [HARD] **GATEWAY-BUNDLE-DRIFT-1 added** - a previously-fixed worker regression reappeared site-wide because the DEPLOYED bundle differed from the correct local file. Canonical (2026-08-19): papers.qnfo.org JSON-LD invalid on ALL paper pages - deployed qnfo-gateway emitted escaped "<\/script>" (carried from a .bak-jsonld-fix variant) while the local deploy bundle (C:\Users\LENOVO\.deepchat\gateway-deploy\qnfo-gateway.js line 384) had the correct literal "</script>". Protocol: when a fixed regression reappears, FIRST compare deployed code (workers_get_worker_code MCP) against the local bundle; redeploy the local canonical; verify json.loads on >=3 pages. Do NOT assume the fix was lost - assume the wrong bundle was deployed.
 
@@ -139,7 +151,6 @@
 ---
 name: cloudflare
 description: ULTRA-CONSOLIDATED Cloudflare Full-Stack (9-MCP Coverage — fleet trimmed 2026-08-17) -- Workers, Pages, D1, R2, KV, Vectorize, Queues, Durable Objects, AI, DNS, Zero Trust, Email, WAF, CDN, Turnstile, Infrastructure Audit, MCP Server Management. The ONLY infrastructure skill. NEVER treat Cloudflare components in isolation -- ALL code, outputs, and deliverables must evaluate the full Cloudflare stack end-to-end.
-version: 3.57
 triggers: ["cloudflare-deployer", "deploy", "wrangler", "Pages", "Workers", "R2", "D1", "DNS", "KV", "Vectorize", "Queues", "AI", "Durable Objects", "Zero Trust", "Access", "Gateway", "WARP", "Tunnel", "WAF", "CDN", "Turnstile", "email", "SPF", "DKIM", "DMARC", "infrastructure", "audit", "health check", "orphan", "lifecycle", "worker route", "route conflict", "522", "CNAME", "Cloudflare", "upload", "migrate", "Pages Functions", "Workers for Platforms", "Cron Triggers", "Tail Workers", "Smart Placement", "Hyperdrive", "Secrets Store", "Pipelines", "Browser Rendering", "Zaraz", "Argo", "Spectrum", "TURN", "Network Interconnect", "Cache Reserve", "Bot Management", "API Shield", "DDoS", "Analytics Engine", "Web Analytics", "GraphQL API", "Observability", "Miniflare", "Sandbox", "Workerd", "Terraform", "Pulumi", "Snippets", "Containers", "Workflows", "Artifacts", "R2 Data Catalog", "R2 SQL", "Static Assets", "Bindings", "Image", "Stream", "RealtimeKit", "Flagship", "feature flags", "Agents SDK", "AI Gateway", "AI Search", "Workers AI", "do", "durable", "sandbox", "turnstile", "web-perf", "thin client", "IaC", "consolidation", "4-D", "IPFS bridge", "DNSLink", "Arweave", "Filecoin", "distributed", "durable", "discoverable", "duplicated"]
 related: ["qnfo-core", "research"]
 priority: 1
@@ -148,7 +159,7 @@ autonomous: true
 self_sufficient: true
 ---
 
-# CLOUDFLARE — v3.57
+# CLOUDFLARE — v3.58
 
 > **v3.50 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: R2 corruption-loop incident + AUDIT-COMPLETENESS-1 + QUEUE-BODY-SHAPE-1 + multi-bucket architecture):**
 > Red-team: direct parent-agent audit of the 2026-08-12 daily-verify/R2 incident session
@@ -2166,7 +2177,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.57** (GATEWAY-BUNDLE-DRIFT-1: deployed-vs-local bundle divergence root-caused and redeployed 41635fcd; JSON-LD verified 3/3 pages; 2026-08-19)
+Current: **v3.58** (R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58 + kaizen v2.84; 2026-08-20)
 
 ---
 
