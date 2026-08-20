@@ -1,5 +1,14 @@
 # email-composer
 
+> **v2.26 UPDATE (2026-08-20, kaizen — GTD-INBOX-ZERO-1: personal Outlook inbox-zero triage + GTD routing):**
+> User directive 2026-08-20: "CLEAN UP/CLEAR OUT MY OUTLOOK INBOXES. I ONLY WANT TO SEE WHAT I MUST RESPOND TO OR ACT UPON. EVERYTHING ELSE NEEDS TO BE DISPATCHED AUTONOMOUSLY (GTD/INBOX ZERO)... KEEP ALL MY INBOXES CLEAN AND FIGURE OUT HOW TO ROUTE NEXT ACTIONS, SOMEDAY/MAYBE, WAITING FOR, ETC IN A WAY THAT DOESN'T REQUIRE MY ATTENTION UNTIL ACTIONABLE."
+> HARD: 3. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **GTD-INBOX-ZERO-1 added** — PERMANENT personal-inbox GTD triage: `scripts/outlook-gtd-triage.py` (COM-only invisible; BOTH accounts rowan.quni@outlook.com + rwnquni@outlook.com; store lookup = ns.Folders root → root.Store.GetDefaultFolder(6), verified 2026-08-20). Routing: ACTION stays in Inbox (red-flagged, unread) = the user's actionable surface; WAITING → Inbox/GTD-Waiting For; SOMEDAY → Inbox/GTD-Someday Maybe; REFERENCE → Inbox/GTD-Reference; NOISE → Deleted Items (recoverable — never permanent delete). Idempotent; state → `logs/email-gtd-state.json` + `logs/email-triage-log.md`. Cronjob `754b49ce` "Outlook Inbox GTD Triage (Mon-Fri)" 09:00+15:00 Amsterdam; silent on success (the Inbox itself is the signal), notify on failure.
+> (2) [HARD] **Weekly-review consumption (382376cd STEP 5.5)** — Friday weekly review reads email-gtd-state.json: WAITING items >7d or due-horizon only; STALE ACTION items still flagged >7d with zero reply; GTD-Someday Maybe overflow (>10 → oldest 5 purge candidates). Surface ≤6 lines; never send email from the review; never permanent-delete.
+> (3) [HARD] **Classifier policy (deterministic, conservative)** — financial institutions NEVER noise (alerts ACTION, statements REFERENCE); human-domain senders default ACTION (receipts → REFERENCE, waiting-patterns → WAITING, newsletters → SOMEDAY); bulk/machine senders default NOISE (security alerts ACTION for cloudflare/microsoft/google, receipts REFERENCE, system notices NOISE, codes REFERENCE <1d else NOISE); unknown domains conservative (receipts REFERENCE, waiting WAITING, system notices NOISE, ambiguous ACTION — keep visible); meeting requests (IPM.Schedule.Meeting) always ACTION; QNFO system mail REFERENCE unless Re: (then ACTION).
+> (4) [DESIGN] **Fleet GTD principle** — the user's attention surface = Inbox (flagged ACTION) + PDB decision items + Friday weekly review (WAITING-FOR/NEXT-7-DAYS/UIA-REGISTER-DUE/SOMEDAY-MAYBE). Everything else silent-until-actionable; no new daily notification jobs.
+> Cross-reference: calendar-sync.py (register→calendar/tasks), _personal-gtd.md register, weekly review 382376cd STEP 5.5, cronjob 754b49ce, mem-J8X6yO9zBjfn (COM-only invisible), session this.
+
 > **v2.25 UPDATE (2026-08-20, kaizen — daily-briefing red-team + user dispositions):**
 > Red-team: adversarial audit of the 2026-08-20 Daily Briefing run + the user's same-day dispositions ("EXECUTE RED TEAM AND UPDATE SKILLS..."; "I DO NOT WANT TO BOTHER PEOPLE BY EMAIL..."; "THESE ARE ALL YOUR TASKS TO RESOLVE. DO NOT CONTINUE TO BOTHER ME ABOUT TASKS THAT YOU INITIATED AND YOU NEED TO OWN."). VERDICT: HARD 3 / SOFT 5 / DESIGN 1. Root cause shared by all three HARDs: the briefing ran ad-hoc scan/filter logic instead of consuming the email agent's already-resolved state.
 > (1) [HARD] **SRS-ENVELOPE-SENDER-1** — Cloudflare Email Sending SRS-rewrites inbound envelopes: external replies arrive as `SRS0=<hash>=<orig-domain>=<user>@qnfo.org` (verified: IOCPh grant id=224, 2026-08-19) or `bounces+<...>@...<token>.openreview.net` (OpenReview notices ids 219/220/225). A filter `sender NOT LIKE '%qnfo.org%'` silently drops REAL external replies. Classify external via the header From when available; else strip SRS/bounce envelope prefixes. ALWAYS run an id-anchored completeness dump (all rows id > last anchor, no sender filter) alongside any filtered query.
@@ -781,6 +790,18 @@ curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
 
 
 
+
+## Calendar Sync (HARD — CALENDAR-SYNC-1, user mandate 2026-08-20)
+
+**Every confirmed event** (meetings, deadlines, conferences, dated commitments — QNFO or personal) MUST be created on the **Outlook.com calendar** (`rowan.quni@outlook.com`, default calendar of the desktop Outlook client — online store, syncs to outlook.live.com web) with **ONE OR MORE advance reminders**. Applies to ALL future events; permanent.
+
+- **Tool:** `C:\Users\LENOVO\.deepchat\skills\email-composer\scripts\calendar-sync.py` (pywin32 Outlook COM — desktop client already authenticated; no passwords needed; NEVER use the stale web-login password from memory — rejected by Microsoft 2026-08-20).
+  - `python calendar-sync.py list` — upcoming 120 days with reminder state
+  - `python calendar-sync.py add --title T --start "YYYY-MM-DD HH:MM" [--end E] [--loc L] [--reminder MIN] [--body B]` — idempotent
+  - `python calendar-sync.py sync-register` — GTD register dated items → calendar (safety net; also run by daily cronjob 07:30 Mon-Fri)
+- **Reminder defaults:** meetings/deadlines 1440 (day before); long-lead items 10080 (1 week, e.g. conferences); prep-heavy meetings get a tailored reminder (e.g. Amal tour 1050 = Wed 17:00 for Thu 10:30) PLUS cronjob prep reminders (Outlook supports ONE native reminder per event — "one or more" = native + cronjob layers).
+- **Workflow:** at event confirmation time → create via `calendar-sync.py add` (with body = prep/talking points) AND add the register entry. Daily sync job backstops anything missed.
+- **To-dos (CALENDAR-TASKS-1):** action items (DECISION/registration/abstract/pitch/venue/rebalance/apply/submit/register/print/deadline) → Outlook Tasks (Microsoft To Do) via `calendar-sync.py add-task` / `sync-tasks`; tasks auto-complete when register lines tick `[x]` or vanish. `complete --title T` for explicit completion. Source of truth = GTD register; cronjob 78136b24 (Mon-Fri 07:30) runs both syncs automatically. Mandate also codified in qnfo-core v1.33 + system prompt (binds ALL agents).
 
 ## Canonical Address Registry (2026-08-06 red-team — user directive: 3-5 addresses MAX)
 
