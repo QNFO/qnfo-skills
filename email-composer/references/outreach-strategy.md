@@ -446,3 +446,15 @@ Runs `research-daily-brief.py --mode daily --email alerts@qnfo.org` — the dail
 - `email-composer` SKILL.md — Core email workflow (discovery, triage, analysis, drafting, sending)
 - `research` SKILL.md — Publication pipeline, Phase 7 dissemination
 - `qnfo-core` SKILL.md — Research Integrity Mandate, banned words, certainty calibration
+
+
+---
+
+## NO-FOLLOW-UP-DEFAULT-1 (HARD, user policy 2026-08-20 — SUPERSEDES the No Response Protocol for silent recipients)
+
+User (2026-08-20): "I DO NOT WANT TO BOTHER PEOPLE BY EMAIL, LET ALONE ACADEMICS IF THEY DONT WANT TO ACKNOWLEDGE MY INITIAL EMAIL THAT'S ON THEM."
+
+- Follow-up emails to SILENT recipients are PERMANENTLY CANCELLED. All previously scheduled follow-up waves (08-06 batch and later) are CLOSED. The old "ONE follow-up at 14-21 days, pending approval" pattern no longer applies — ZERO follow-ups is the default for silence.
+- In-thread replies to recipients who DO respond remain normal behavior (replying to a responder is not bothering).
+- The Daily Briefing must never surface follow-up approvals or dispositions as user decisions (AGENT-OWNED-LEAK-1) — the email agent owns follow-up disposition autonomously.
+- Cross-reference: email-composer SKILL.md v2.25 banner, outreach-log.md 2026-08-20 red-team addendum, user disposition 2026-08-20.

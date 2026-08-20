@@ -1,5 +1,13 @@
 # email-composer
 
+> **v2.25 UPDATE (2026-08-20, kaizen — daily-briefing red-team + user dispositions):**
+> Red-team: adversarial audit of the 2026-08-20 Daily Briefing run + the user's same-day dispositions ("EXECUTE RED TEAM AND UPDATE SKILLS..."; "I DO NOT WANT TO BOTHER PEOPLE BY EMAIL..."; "THESE ARE ALL YOUR TASKS TO RESOLVE. DO NOT CONTINUE TO BOTHER ME ABOUT TASKS THAT YOU INITIATED AND YOU NEED TO OWN."). VERDICT: HARD 3 / SOFT 5 / DESIGN 1. Root cause shared by all three HARDs: the briefing ran ad-hoc scan/filter logic instead of consuming the email agent's already-resolved state.
+> (1) [HARD] **SRS-ENVELOPE-SENDER-1** — Cloudflare Email Sending SRS-rewrites inbound envelopes: external replies arrive as `SRS0=<hash>=<orig-domain>=<user>@qnfo.org` (verified: IOCPh grant id=224, 2026-08-19) or `bounces+<...>@...<token>.openreview.net` (OpenReview notices ids 219/220/225). A filter `sender NOT LIKE '%qnfo.org%'` silently drops REAL external replies. Classify external via the header From when available; else strip SRS/bounce envelope prefixes. ALWAYS run an id-anchored completeness dump (all rows id > last anchor, no sender filter) alongside any filtered query.
+> (2) [HARD] **AGENT-OWNED-LEAK-1** — never surface items the email agent can resolve autonomously (declines → archive + close line; blocked forms → one surfacing max then close; disposition flags → resolve with standing policy). User: "THESE ARE ALL YOUR TASKS TO RESOLVE." Decision-surface filter order: good-vibes → ownership → decision-required.
+> (3) [HARD] **NO-FOLLOW-UP-DEFAULT-1** — user policy: no follow-up emails to silent recipients, ever ("I DO NOT WANT TO BOTHER PEOPLE BY EMAIL, LET ALONE ACADEMICS IF THEY DONT WANT TO ACKNOWLEDGE MY INITIAL EMAIL THAT'S ON THEM"). ALL silent-recipient follow-up waves CANCELLED permanently (08-06 batch included); No Response Protocol 14-21d windows superseded for silence. In-thread replies to responders remain normal.
+> (4) [SOFT] **D1-QUERY-TIMEOUT-1** (d1_database_query MCP tool timed out 3/4 on 2026-08-20; canonical query path = `execute` + cloudflare.request POST /accounts/{acct}/d1/database/{db}/query), **COMPLETENESS-ANCHOR-1** (id-anchored dump every cycle), **GOOD-VIBES-VIOLATION-1** (declines are negative by definition — the email agent archives them; the briefing never surfaces them), **PREEMPT-1** (if a scheduled one-shot fires AFTER the hard window it gates, run_now pre-empt AND verify the run completed — both manual runs 341dc2bf/a82ffe68 failed 2026-08-20 with 'Cron job runner stopped before completion'; re-trigger on failure), **PATH-CANONICALIZATION-1** (outreach-log canonical = `.deepchat/skills/email-composer/references/outreach-log.md`; `QNFO/qnfo-research/artifacts/` does not exist locally).
+> (5) [DESIGN] **HEADER-DRIFT-1** — line-401 version header was stale (v2.21) while banner/footer were v2.24; repaired to v2.25.
+> Cross-reference: outreach-log.md 2026-08-20 red-team addendum, outreach-strategy.md NO-FOLLOW-UP-DEFAULT-1, .kaizen_history v2.25, daily-briefing cronjob a82062c7 v2.25 rules, user dispositions 2026-08-20, session this.
 > **v2.24 UPDATE (2026-08-18, kaizen — user mandate: REGISTER-MIRRORING-1 (mirror the recipient's language) + RECIPIENT-STYLE-USE-1 (all information is useful)):**
 > User answered the v2.23 open-policy questions (session tfRpmza-s0y5lUQXnWczm): "ANSWERS TO OPTIONAL QUESTIONS: YES, MIRROR RECIPIENT'S LANGUAGE. ALL INFORMATION IS USEFUL SO WHEN WE KNOW SOMETHING ABOUT A RECIPIENT'S PREFERRED COMMUNICATION STYLE (OR NOT) USE THAT INFORMATION." Changes:
 > (1) [HARD] **REGISTER-MIRRORING-1 rule added** — replies MUST mirror the recipient's register: informal inbound ("hi rowan, regards moty") → informal reply ("Hi Moty … Best, Rowan"); formal inbound → formal ("Dear Professor …"). Applies to in-thread replies and follow-ups; cold outreach keeps the §1.A formality baseline until the recipient's style is known.
@@ -398,7 +406,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.21
+# Email Composer — v2.25
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 
@@ -609,6 +617,22 @@ sent emails — never from a status filter.
 follow-ups due; first eligibility 2026-08-20). Replies: 1 human positive (Nicola Smigliani, ID=26 —
 accepts Five Pillars offer, requires human reply, NOT auto-sent per policy), 1 auto-reply (Ringbauer
 OOO, ID=42 — alternate contact Patricia Moser quantumoptics-blatt@uibk.ac.at). 7 silent <14d.
+## Inbound Sender Classification (v2.25, HARD — SRS-ENVELOPE-SENDER-1)
+
+Cloudflare Email Sending SRS-rewrites ALL inbound envelopes to the receiving domain. Verified in D1 qnfo-audit.emails (2026-08-19/20):
+- `SRS0=YOB6=mg=mdpi.com=riley.liu@qnfo.org` — genuine MDPI reply (IOCPh late-abstract grant, id=224)
+- `bounces+3069401-8d2a-rowan.quni=qnfo.org@em9666.openreview.net` — OpenReview account notices (ids 219/220/225)
+- `bounces+110404681-...-rowan.quni=qnfo.org@em1697.evalsignal.xyz` — newsletter (id=241)
+
+HARD consequences:
+1. An external-sender filter `sender NOT LIKE '%qnfo.org%'` is WRONG — it drops real external replies whose SRS/bounce envelope carries the qnfo.org domain. The 2026-08-20 Daily Briefing missed the IOCPh grant (id=224) with exactly this filter; only the id-anchored completeness dump caught it.
+2. Classify inbound as external from the MIME header `From:` when headers are available (headers_json), not the envelope sender.
+3. Envelope-only fallback: strip `SRS0=<hash>=<orig-domain>=<user>@<domain>` and `bounces+<...>@<token>.<domain>` prefixes before the domain check.
+4. ALWAYS run a completeness scan — every row with `id > <last-known-id>` regardless of sender — in addition to any filtered query (COMPLETENESS-ANCHOR-1).
+
+Canonical case: 2026-08-20 Daily Briefing (D1 ids 224, 240, 242, 219/220/225).
+Cross-reference: SKILL.md v2.25 banner, outreach-strategy.md NO-FOLLOW-UP-DEFAULT-1, daily-briefing cronjob a82062c7 v2.25 rules.
+
 ## Quick Start
 
 
@@ -1616,5 +1640,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.24** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); user mandate 2026-08-18: REGISTER-MIRRORING-1 + RECIPIENT-STYLE-USE-1; v2.23 red-team audit 0 HARD, DEFAULT-SENDER-DRIFT-1)
+Current: **v2.25** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); user mandate 2026-08-18: REGISTER-MIRRORING-1 + RECIPIENT-STYLE-USE-1; v2.23 red-team audit 0 HARD, DEFAULT-SENDER-DRIFT-1)
 
