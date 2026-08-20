@@ -60,3 +60,6 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
 **Counts:** 50 entries = 47 prior + 3 new (2026-08-19 wave: Zhong, Wang, Yao — QCA toy model paper-sharing). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+| wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
+| konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
+| ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |

@@ -488,4 +488,24 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 5. **[SOFT] Obsidian daily note without duplicate alert email:** save the briefing stdout to a temp file and use `write-to-obsidian.py --file` instead of re-running the pipeline into a pipe — the re-run would re-send the alerts@qnfo.org email (verified: id=252 sent once).
 6. **[PROCESS] Daily cap resets at day boundary** — verified-but-unsent candidates (Khrennikov, and secondarily Terasawa) are queued in the outreach-log with verified addresses so the next session can send without re-verifying. Next-wave priority: Khrennikov (Adelic Shannon Theory, keyword-level connection), cap slots permitting.
 
+---
 
+## 2026-08-20 — Industry brief + benchmark spec dispatch wave (DISPATCH order, CMD CONTINUE cycle)
+
+**Paper:** *Why Measure Error Correlations Before Choosing a Code: An Industry Brief and Pre-Registered Benchmark Protocol* — DOI **10.5281/zenodo.22028078** (concept 22028077, published 2026-08-20; isSupplementTo register 10.5281/zenodo.22025544 + GitHub branch)
+**Sender:** rowan.quni@qnfo.org (explicit `from` per DEFAULT-SENDER-DRIFT-1)
+**Cycle:** post-publish dispatch for the RES.017 red-team 55x-challenge answer
+
+| # | Recipient | Email source | Their paper (arXiv) | Connection point | D1 id | Status |
+|---|-----------|--------------|---------------------|------------------|-------|--------|
+| 1 | W. A. Zuniga-Galindo (UT Rio Grande Valley) | VERIFIED from arXiv source tarball 2410.13048 (`wilson.zunigagalindo@utrgv.edu` in author block) | p-Adic quantum mechanics, infinite potential wells, CTQW (2410.13048) | Their p-adic well/CTQW construction = analytic counterpart of register R3's effective transient dimensions; benchmark spec is theory-neutral + kill-rule binding | 259 | sent |
+| 2 | Norio Konno (Yokohama) | VERIFIED from arXiv source tarball quant-ph/0602070 (`konno@ynu.ac.jp`) | Continuous-time quantum walks on ultrametric spaces (quant-ph/0602070) | Localization for any location = R3's analytic counterpart; question on engineered hierarchical coupling graphs | 260 | sent |
+| 3 | Ilaria Svampa (Camerino) | VERIFIED from arXiv source tarball 2112.03362 (`ilaria.svampa@unicam.it`) | p-adic qubits from SO(3)_p (2112.03362) | p-qubit scaffolding for R4's unclaimed fault-tolerance step; benchmark spec's symmetric kill-rule | 261 | sent |
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=258 -> rwnquni@outlook.com "Error-correlation outreach batch preview (2026-08-20)", status=sent.
+**Dedup:** contact-ledger.md (50 entries pre-wave) + D1 searches — zero prior contact for all 3 (single-contact-per-group: Aniello skipped, same Mancini group as Svampa; Maity/Onggadinata/Koh already contacted 08-14 — NOT re-contacted).
+**QPL HALT compliance:** Zuniga-Galindo (UTRGV), Konno (Yokohama), Svampa (Camerino) — definitively NOT QPL 2026 attendees; frozen pool untouched.
+**Daily cap:** 3 new outreach sends (cap 3-5) — 2026-08-20 prior outbound: 0. 3/5 used.
+**D1 verification:** ids 258-261 status=sent read-back verified (sender rowan.quni@qnfo.org, external recipients 259-261).
+**Follow-up eligibility:** NO-FOLLOW-UP-DEFAULT-1 — no follow-ups to silent recipients, ever (user policy 2026-08-20). In-thread replies to responders remain normal.
+**Record pre-flight:** DOI 22028078 published + verified (doi.org 200, DataCite findable, concept 22028077, 6 files, R2 mirror byte-identical, KG distributed, papers.qnfo.org 200); post-publication 3-slot red-team dispatched (Accuracy PASS 0 HARD / Completeness PASS 0 HARD / Dependency+Prose pending).
