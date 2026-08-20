@@ -1,4 +1,15 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.57
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.58
+
+> **v3.58 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program (10.5281/zenodo.22028851) + launch-cycle gates):**
+> Red-team: 3-slot reviewer dispatch + direct parent-agent 5-adversary audit (Accuracy/Completeness/Dependency/Novelty/Status). Accuracy reviewer CLEAN (0 HARD, 1 SOFT — PROVENANCE.md lacks literal "96.4%": states 48.08B/1.79B components, 96.43% derivable; README + essay body state it). Dependency reviewer failed (REDTEAM-CHILD-FAIL-1) — direct audit authoritative. HARD: 3. SOFT: 3. DESIGN: 0. Changes:
+> (1) [HARD] **D1-QUOTED-RESERVED-COLS-1** — SQLite reserved keywords used as D1 column names MUST be double-quoted in SQL (`"references"`); unquoted `references` → SQLITE_ERROR near "references" (code 7500). Canonical: 2026-08-20 ai-accelerated-research papers insert (living-paper) — 400 → fixed with `"references"` quoting.
+> (2) [HARD] **ZENODO-NEWVERSION-FILE-REPLACE-1** — newversion file replacement: GET /files → DELETE each file's links.self (204; the /files/{FILENAME} form returns 500 per ZENODO-DEPOSIT-DELETE-500-1) → re-upload with **PUT** (requests.put raw bytes → 201); **POST to the bucket URL returns 405** on this API version; multipart not required. Canonical: v1.1 newversion draft 22028851 (2026-08-20).
+> (3) [HARD] **ZENODO-CONCEPT-DOI-CITE-1 execution detail** — a fresh deposit's `conceptrecid` is available on the DEPOSIT object (GET the deposit right after creation) and is NOT the record ID (canonical: 22028787 vs 22028788). Build the README How-to-Cite block with the CONCEPT DOI BEFORE the first upload; shipping the record DOI labeled as the concept DOI is a HARD finding → v1.1 newversion remediation (2026-08-20).
+> (4) [SOFT] **DOIDOT-403-BOT-1** — doi.org HEAD/GET from urllib returns 403 (bot block), NOT "DOI missing"; DataCite API may 404 browser-UA clients — use the qnfo-audit UA. Authoritative DOI verification = DataCite state=findable (qnfo-audit UA) + Zenodo records API state=done. Canonical: 10.5281/zenodo.22028851 (2026-08-20).
+> (5) [SOFT] **GIT-MERGE-BRANCH-FETCH-1** — fresh clones lack sibling branch refs: `git fetch origin <branch>` BEFORE `git merge <branch>` ("not something we can merge"); create release tags AFTER the merge commit (a tag placed on pre-merge main HEAD must be deleted + re-created on the merge commit). Canonical: v1.0-dissemination (b80bda3 → d7c7c786 on 1371fee, 2026-08-20).
+> (6) [SOFT] **R2-RCLONE-TEMP-CONFIG-1** — inline `:s3,provider=Cloudflare,...endpoint=<url>:` breaks on the endpoint URL (URI parse error); write a temp rclone.conf file instead; account-level R2 keys reach every bucket — name the remote after the bucket. Canonical: qnfo-releases/2026/08/ai-accelerated-research mirror (2026-08-20).
+> Cross-reference: kaizen v2.84, research v2.127, qnfo-core v1.34, cloudflare v3.58, session this.
+
 > **v3.57 UPDATE (2026-08-20, kaizen — RECURRENCE-ZERO-1: CLOSEOUT-TOOL-FALLBACK-1; mirrors kaizen v2.83 + research v2.126):**
 > Red-team: direct parent-agent (session this — QNFO.KZ closeout block). HARD: 1.
 (4) [HARD] **CLOSEOUT-TOOL-FALLBACK-1** — during closeout, an exec "Session is not running" report is a PHANTOM until disproven: probe with a file-redirect command (`echo ok > %TEMP%\probe.txt 2>&1` then READ the file) before classifying the tool down; D1 writes always have the keys.json python fallback (POST /accounts/{acct}/d1/database/{db}/query) — never leave closeout rows unwritten while that path exists. Canonical: QNFO.KZ closeout 2026-08-20 (handoff 28641 + wbs_state written next turn after probe proved exec live; RECURRENCE-ZERO-1).
@@ -1928,7 +1939,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.57** (GTD-INBOX-ZERO-1 Outlook inbox-zero + GTD routing; OUTLOOK-COM-STORE-PATTERN-1; REPO-COPY-PHANTOM-1 #3 E2/E3 sync; MODEL-KEY-FILE-DRIFT-1 #14; 2026-08-20)
+Current: **v3.58** (post-publication audit of the $1,032 Research Program 10.5281/zenodo.22028851; D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + concept-DOI pre-build + DOIDOT-403-BOT-1 + GIT-MERGE-BRANCH-FETCH-1 + R2-RCLONE-TEMP-CONFIG-1; 7-store parity repair; 2026-08-20)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
