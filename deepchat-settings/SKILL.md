@@ -1,3 +1,32 @@
+> **v1.26 UPDATE (2026-08-20, kaizen — PROMPT-STORE-SCHEMA-GATE-1: 'CUSTOM PROMPTS NOT LOADING' root-caused + permanent safeguards):**
+> Red-team: direct parent-agent audit (session this — user report "CUSTOM PROMPTS NOT LOADING").
+> HARD: 2. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **String-timestamp root cause** — a v3.54-era dual-write left `updatedAt` as a JSON STRING
+>     ('1787166894113') on cmd-research + cmd-skills-update in ALL 4 live stores. The app's
+>     PromptSchema (`/out/main/index.js`) declares `updatedAt: z.number().int().optional()` — TWO bad
+>     fields fail the zod validation of the WHOLE `config.listCustomPrompts` array → the UI prompt list
+>     shows nothing while the unvalidated MCP path (list_all_prompt_template_names / fill) keeps working.
+>     One mistyped field in ONE entry = entire UI list dead. Fixed: merged canonical (live base + repo's
+>     cmd-publish which live had silently truncated) + int coercion; all 6 sources (repo, script canon,
+>     4 live stores) byte-identical + schema-valid.
+> (2) [HARD] **EXACT PromptSchema documented** — PromptParameterSchema requires BOTH `name: z.string()` AND
+>     `required: z.boolean()` (not optional!); FileItemSchema items require id/name/type/path strings;
+>     PromptMessageSchema requires role + content.text; PromptSchema requires id (min 1)/name/description
+>     strings, optional content/parameters/files/messages/enabled/source(local|imported|builtin)/
+>     createdAt/updatedAt(INT). Any violation in any entry rejects the entire UI array.
+> (3) [SOFT] **Permanent guard tooling** — `prompt-store-verify.py` (read-only exact-schema + 6-source
+>     parity, exit 0/1/2) + `restore_custom_prompts.py` v2 (schema-gated: REFUSES invalid canonicals,
+>     coerces timestamps to int, repo canonical preferred). Both live in qnfo-skills/prompt-stores/ +
+>     .deepchat/scripts/. Daily Ops cronjob (216e1d12) check #6 runs the verify daily (report-only,
+>     notify-on-failure). CMD SKILLS UPDATE template now mandates `prompt-store-verify.py` exit 0 at
+>     every cycle closeout (PROMPT-STORE-SCHEMA-GATE).
+> (4) [DESIGN] **Content-drift discipline** — repo canonical and live stores had DIVERGED on 3 entries
+>     (live publish dropped the v3.42 prose-gate tail; repo research/skills-update were stale prefixes).
+>     Rule: template writes source ONLY from the repo canonical; merges take the longer/complete side
+>     per entry after prefix analysis.
+> Cross-reference: PROMPT-KEY-SCHEMA-ASYMMETRY-1, CONCURRENT-REWRITE-1, SCHEMA-VERIFY-BEFORE-RESTORE-1,
+> session this.
+
 > **v1.25 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — PROMPT-PARITY-1 store map updated 4-store → 7-store (E1–E7) + H1 sync; mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
 > (1) [HARD] **Parity discipline updated to the 7-store map** — this skill encoded 4-store/6-store parity; canonical is E1–E7 per system-prompt PROMPT-PARITY-1: E1 `.deepchat/system-prompt-v2.7.md`, E2 `.deepchat/skills/system-prompt-v2.7.md`, E3 qnfo-skills repo copy, E4 `.deepchat/app-settings.json` default_system_prompt, E5 Roaming `app-settings.json` default_system_prompt, E6 `.deepchat/agent.db` systemPrompts (raw), E7 Roaming `app_db/agent.db` systemPrompts (value_json list).
@@ -255,7 +284,7 @@
 
 ---
 name: deepchat-settings
-version: 1.25
+version: 1.26
 description: DeepChat app settings modification (DeepChat 设置/偏好) skill. Covers both UI-level settings (theme, language, font size) AND back-end programmatic modification (custom prompts, system prompt via agent.db + app-settings.json). Activate ONLY for DeepChat settings. Do NOT activate for OS/system settings, editor settings, or other apps.
 allowedTools:
   - deepchat_settings_toggle
@@ -265,7 +294,7 @@ allowedTools:
   - deepchat_settings_open
 ---
 
-# DeepChat Settings — v1.25
+# DeepChat Settings — v1.26
 > **v1.10 UPDATE (2026-08-11, kaizen — USER MANDATE: skills updates MUST/SHALL also update system prompt + custom templates):**
 > Red-team: direct parent-agent 5-adversary audit (session i3NHS7gJBTyozMCNeaZm- — CMD SKILLS UPDATE with
 > the new standing mandate). Watchtower: 19/19 QNFO skills N-2 CLEAN pre/post (kaizen 2.17 + dsp 1.9 bumped
@@ -603,7 +632,7 @@ agent_memory, set defaultModel to ensemble, verified 6/6 E2E.
 
 Pattern: `write` tool → stable path → `exec python <stable-path>` → verify → `del <stable-path>`.
 
-### Disaster Recovery — Custom Prompts (added 2026-08-17, v1.21)
+### Disaster Recovery — Custom Prompts (added 2026-08-17, v1.21; v2 tools 2026-08-20)
 
 **Lesson learned (user): "WHY COULDN'T YOU IMMEDIATELY LOAD BACKED-UP WORKING CUSTOM PROMPTS?"**
 Honest answer: no local backup was loadable — every pre-2026-08-17 backup held
@@ -613,16 +642,21 @@ canonical copy or restore recipe. Fixed permanently:
 1. **Canonical store (git-tracked):** `qnfo-skills/prompt-stores/customPrompts.json`
    (10 entries: 7 CMD templates + 3 quick commands, deep-consolidated 2026-08-17).
    Export after every prompt change:
-   `python deepchat-settings/scripts/restore-custom-prompts.py export`.
-2. **Restore tool:** `deepchat-settings/scripts/restore-custom-prompts.py`
-   - `verify` — validate current 4-store state (exit 1 on violation)
-   - `inventory` — scan current stores + legacy palette + repo export + all backups,
-     flagging schema-valid sources only
-   - `restore` — best source (repo export → current ROAM_DB → newest schema-valid backup
-     → legacy palette), normalize to the full app model, write ALL 4 stores byte-identical,
-     verify (parity + schema + dsp sha + model keys), print restart reminder
-   - `export` — rewrite the canonical repo copy
-3. **Restore rules (HARD):**
+   `python .deepchat/scripts/restore_custom_prompts.py export`.
+2. **Verify tool (2026-08-20):** `.deepchat/scripts/prompt-store-verify.py` (repo:
+   `qnfo-skills/prompt-stores/prompt-store-verify.py`) — read-only EXACT mirror of the
+   app's zod schemas + 6-source parity. Exit 0 = healthy; 1 = violation; 2 = unreadable.
+   Run after EVERY customPrompts write and at every CMD SKILLS UPDATE closeout
+   (PROMPT-STORE-SCHEMA-GATE). Scheduled: Daily Ops cronjob (216e1d12) check #6.
+3. **Restore tool (v2, 2026-08-20):** `.deepchat/scripts/restore_custom_prompts.py`
+   - `verify` — validate current 6-source state (exit 1 on violation)
+   - `inventory` — store table
+   - `restore` — schema-GATED: canonical source order repo → backup file → live Roaming
+     JSON → Roaming DB; candidates that fail the exact schema are REFUSED (never
+     blind-restored — RECOVERY-SOURCE-SHAPE-1); timestamps coerced to int; write ALL
+     4 stores byte-identical + verify read-back; prints restart reminder
+   - `export` — rewrite the canonical backup copy
+4. **Restore rules (HARD):**
    - Validate candidates against the app PromptSchema BEFORE writing
      (RECOVERY-SOURCE-SHAPE-1: a "backup" that fails the schema is NOT working state —
      restoring it re-breaks the store).
@@ -630,6 +664,21 @@ canonical copy or restore recipe. Fixed permanently:
      .deepchat mirror, app_db agent.db, legacy .deepchat agent.db.
    - Restart the app after restore — the runtime cache does NOT reload from external
      file writes (RUNTIME-CACHE-CONTRACT-1, TEMPLATE-STORES-1).
+5. **EXACT app schema (from app.asar `/out/main/index.js`, verified 2026-08-20):**
+   `PromptSchema = z.looseObject({ id: z.string().min(1), name: z.string(), description:
+   z.string(), content: z.string().optional(), parameters: z.array(PromptParameterSchema)
+   .optional(), files: z.array(FileItemSchema).optional(), messages:
+   z.array(PromptMessageSchema).optional(), enabled: z.boolean().optional(), source:
+   z.enum(["local","imported","builtin"]).optional(), createdAt: z.number().int().optional(),
+   updatedAt: z.number().int().optional() })` — with `PromptParameterSchema = z.object({
+   name: z.string(), description: z.string().optional(), required: z.boolean() })` (name AND
+   required are REQUIRED per parameter), `FileItemSchema = z.looseObject({ id: z.string()
+   .min(1), name: z.string(), type: z.string(), path: z.string(), ... })`, and
+   `PromptMessageSchema = z.object({ role: z.string(), content: z.object({ text: z.string()
+   }) })`. **One invalid field in ONE entry fails zod for the WHOLE array** — the UI
+   `config.listCustomPrompts` route returns an error and the prompts panel shows nothing,
+   while the unvalidated MCP path (PromptSettings) keeps working. That asymmetry IS the
+   "not loading" signature. Canonical case: 2026-08-20 — `updatedAt` as string on 2 entries.
 
 ### SettingsWatcher Behavior
 
@@ -695,7 +744,8 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 | Anti-Pattern | Correct |
 |:-------------|:--------|
 
-| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06, UPDATED 2026-08-17)** | **BOTH keys required in ALL stores + `id` REQUIRED.** The app's fill tool (`getTemplateDefinition` in app.asar) reads `prompt.content` — a template-only entry renders EMPTY fills. The UI route `config.listCustomPrompts` validates `z.array(PromptSchema)` with `id: z.string().min(1)` REQUIRED — an id-less entry fails the WHOLE list in the UI while the MCP tool still works (canonical: 2026-08-17, "CUSTOM PROMPTS STILL CORRUPTED/NOT LOADING" after restart #1). Write entries as the full app model `{id, name, description, content, template, parameters (with required:boolean), files: [], enabled: true, source: "local", createdAt, updatedAt}` byte-identical across ALL 4 template stores. Always simulate the zod schema after writing; verify both the MCP fill path AND the UI route path. |
+| **PROMPT-KEY-SCHEMA-ASYMMETRY-1: Reading customPrompts with the wrong key (2026-08-06, UPDATED 2026-08-17/20)** | **BOTH keys required in ALL stores + `id` REQUIRED + exact zod schema.** The app's fill tool (`getTemplateDefinition` in app.asar) reads `prompt.content` — a template-only entry renders EMPTY fills. The UI route `config.listCustomPrompts` validates `z.array(PromptSchema)` with `id: z.string().min(1)` REQUIRED — an id-less entry fails the WHOLE list in the UI while the MCP tool still works (canonical: 2026-08-17, "CUSTOM PROMPTS STILL CORRUPTED/NOT LOADING" after restart #1). Write entries as the full app model `{id, name, description, content, template, parameters (with required:boolean), files: [], enabled: true, source: "local", createdAt, updatedAt}` byte-identical across ALL 4 template stores. Always simulate the zod schema after writing; verify both the MCP fill path AND the UI route path. See Disaster Recovery §5 for the exact schema. |
+| **PROMPT-TIMESTAMP-TYPE-1: Writing createdAt/updatedAt as JSON strings or other non-int types in customPrompts entries (2026-08-20)** | **HARD.** `createdAt`/`updatedAt` must be `z.number().int()` — a STRING timestamp fails the zod validation of the WHOLE `config.listCustomPrompts` array, killing the UI prompt list while agent-side tools still work (canonical: 2026-08-20, 'CUSTOM PROMPTS NOT LOADING' — 2 entries with updatedAt as string took down all 10). Coerce `str.isdigit() → int` before every write; drop non-numeric junk. Gate every write with `prompt-store-verify.py` exit 0. |
 | **PROMPT-REDISCOVERY-1: Searching for prompt storage locations with 15+ tool calls when the answer is documented here (2026-08-05)** | Custom prompts live in `agent.db` → `app_settings` → `key='customPrompts'` (value_json JSON string). The system prompt is in `agent.db` → `key='systemPrompts'` AND `app-settings.json` → `default_system_prompt`. Read this skill first — do not grep JSON files or walk directory trees. |
 | **DB-SCHEMA-GUESS-1: Guessing database table names instead of querying sqlite_master (2026-08-05)** | Before querying any DeepChat database, run `SELECT name FROM sqlite_master WHERE type='table'` to discover the actual schema. The `app_settings` table uses key-value_json, not typed columns. The `history.db` uses `commands` and `parse_failures` tables, not `prompts`. |
 | **MCP-REGISTRATION-ONE-STORE-1: Registering an MCP server in only ONE of the two stores (2026-08-11)** | Dual-write BOTH: `mcp-settings.json` → `mcpServers` (settingsWatcher live reload) AND `agent.db` → `mcp_servers` (startup persistence). A one-store registration silently vanishes at restart (agent.db missed) or never appears in the live list (mcp-settings.json missed). Canonical case: qwav-platform registration 2026-08-11 — verified both stores needed (28-entry mcp-settings.json + 18-row mcp_servers). Cross-ref: MCP Server Registration section. |
@@ -714,4 +764,4 @@ the app's loader. Three sources of truth disagreed; sessions trusted different o
 
 ## Version
 
-Current: **v1.25** (deepchat-settings — DEEP CONSOLIDATION 18→10: single CMD RED TEAM (SUB merged); system prompt v3.37 7/7 template mandates; dropped 8 low-use, recoverable from git; 2026-08-17) (deepchat-settings — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated vs CMD templates; {{param}} placeholders fixed; MODEL-KEY-FILE-DRIFT-1 #12; 2026-08-17) (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
+Current: **v1.26** (deepchat-settings — PROMPT-STORE-SCHEMA-GATE-1: string updatedAt killed the whole UI prompt list; exact PromptSchema documented; prompt-store-verify.py + restore v2 schema-gated tools + Daily Ops check #6; merged canonical + int coercion; 2026-08-20) (deepchat-settings — DEEP CONSOLIDATION 18→10: single CMD RED TEAM (SUB merged); system prompt v3.37 7/7 template mandates; dropped 8 low-use, recoverable from git; 2026-08-17) (deepchat-settings — PROMPT CONSOLIDATION 26→18: legacy commands de-duplicated vs CMD templates; {{param}} placeholders fixed; MODEL-KEY-FILE-DRIFT-1 #12; 2026-08-17) (deepchat-settings — DISASTER-RECOVERY: restore-custom-prompts.py + git-tracked canonical store prompt-stores/customPrompts.json; RECOVERY-DEPTH-1/SOURCE-SHAPE-1/CANONICAL-1/SCHEMA-VERIFY-BEFORE-RESTORE-1; 2026-08-17) (deepchat-settings — FULL PromptSchema: `id` REQUIRED + `parameters[].required`; 26-prompt store incl. 17-command import; UI route validation vs MCP tool asymmetry; 2026-08-17) (deepchat-settings — PROMPT-KEY-SCHEMA-ASYMMETRY-1 live-fix: fill tool reads `content`; 4-store template parity with `content`+`template` keys; 2026-08-17) (deepchat-settings — N-2 footer repair 2026-08-16: frontmatter 1.18 aligned; 7-STORE PROMPT-PARITY-1 now includes .deepchat/app-settings.json legacy mirror) (deepchat-settings — DEEPCHAT-MEMORY-EMBEDDING-1 + memory-config documentation; 2026-08-15) (deepchat-settings — DEEPCHAT-QUESTION-LIMITS-1 + hash-algorithm sha256 discipline; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.4 cost-gate correction + CMD SKILLS UPDATE template cost mandate; 2026-08-12) (deepchat-settings — CMD SKILLS UPDATE: system prompt v3.3 + AI-stack cost-management integration; 2026-08-12)
