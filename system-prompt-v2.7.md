@@ -1,4 +1,14 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.55
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.56
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.56
+> **v3.56 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1; mirrors kaizen v2.82 + research v2.125):**
+> Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
+> (1) [HARD] **ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1** — deposit API PUT stores license but CLEARS resource_type; records API PUT stores resource_type (id-form) but CLEARS license; final published state = rtype ✓ / license ✗ (public API view) while .md frontmatter carries the license. Canonicals: RES.017 v1.4 (22025544) + industry brief (22028078), 2026-08-20. Remediation: accept rtype + document; UI edit or next version for license.
+> (2) [HARD] **PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1** — prereserve newversion DOIs via the records API reserve_doi link (POST /api/records/{id}/draft/pids/doi), NEVER via deposit API prereserve_doi PUT (full metadata replacement; canonical RES.017 v1.4 2026-08-20). Fallback: DOI = 10.5281/zenodo.{deposit_id}, verify at publish.
+> (3) [HARD] **PDF-SUPERSCRIPT-UNICODE-1** — Unicode superscripts (U+207B etc.) → U+FFFD in CDP PDFs; use MathJax or ASCII in source (canonical: industry brief 2026-08-20).
+> (4) [SOFT] Dispatch wave 2026-08-20: 3 first contacts for the industry brief record (Zúñiga-Galindo, Konno, Svampa; tarball-verified, dedup-clean).
+> Cross-reference: kaizen v2.82, research v2.125, ZENODO-DEPOSIT-DOI-CONVENTION-1, session this.
+> **v3.55 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: kaizen-draft-2026-08-20-newversion-draft-files-shape-1 installed — NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1; E5-superset merge + 7-store parity repair; mirrors kaizen v2.81 + research v2.124 + cloudflare v3.57):**
+
 > **v3.55 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: kaizen-draft-2026-08-20-newversion-draft-files-shape-1 installed — NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1; E5-superset merge + 7-store parity repair; mirrors kaizen v2.81 + research v2.124 + cloudflare v3.57):**
 > Red-team: direct parent-agent skills audit (session this — draft-install cycle; SUBAGENT-SLOT-FAILURE-1 pattern, direct parent-audit authoritative).
 > HARD: 3. SOFT: 0. DESIGN: 1. Changes:
@@ -1903,7 +1913,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.55** (NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 from kaizen draft 2026-08-20; E5-superset 7-store parity repair — CALENDAR/EVENT/TO-DO MANDATE merged to ALL stores; MODEL-KEY-FILE-DRIFT-1 #13; 2026-08-20)
+Current: **v3.56** (NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 from kaizen draft 2026-08-20; E5-superset 7-store parity repair — CALENDAR/EVENT/TO-DO MANDATE merged to ALL stores; MODEL-KEY-FILE-DRIFT-1 #13; 2026-08-20)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
