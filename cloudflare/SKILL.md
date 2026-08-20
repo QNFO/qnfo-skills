@@ -1,6 +1,7 @@
-> **v3.56 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — mirror re-pointed to system-prompt v3.43 (was v3.40); mirrors system-prompt v3.43 + kaizen v2.68):**
 > **v3.57 UPDATE (2026-08-19, kaizen - CMD SKILLS UPDATE: RES.016 publish-then-audit closeout):**
 > (1) [HARD] **GATEWAY-BUNDLE-DRIFT-1 added** - a previously-fixed worker regression reappeared site-wide because the DEPLOYED bundle differed from the correct local file. Canonical (2026-08-19): papers.qnfo.org JSON-LD invalid on ALL paper pages - deployed qnfo-gateway emitted escaped "<\/script>" (carried from a .bak-jsonld-fix variant) while the local deploy bundle (C:\Users\LENOVO\.deepchat\gateway-deploy\qnfo-gateway.js line 384) had the correct literal "</script>". Protocol: when a fixed regression reappears, FIRST compare deployed code (workers_get_worker_code MCP) against the local bundle; redeploy the local canonical; verify json.loads on >=3 pages. Do NOT assume the fix was lost - assume the wrong bundle was deployed.
+
+> **v3.56 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — mirror re-pointed to system-prompt v3.43 (was v3.40); mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **Mirror-pointer chain repaired** — banner claimed "mirrors system-prompt v3.40" (2 cycles stale); now mirrors v3.43.
 > Cross-reference: system-prompt v3.43, kaizen v2.68, session f_bH6KMZ4Og2Wvw79S9rU.

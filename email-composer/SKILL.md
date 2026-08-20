@@ -390,7 +390,7 @@ name: email-composer
 description: Email triage, drafting, reading, and sending for qnfo.org via qnfo-email Cloudflare Worker. Use when checking, replying, composing, or managing @qnfo.org filters.
 
 
-version: 2.24
+version: 2.26
 triggers: ["check email", "read email", "send email", "reply to", "compose email", "draft email", "my inbox", "manage filters", "block sender", "auto-reply", "email history", "search email", "qnfo email", "inter-personal communication"]
 
 

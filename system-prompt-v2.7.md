@@ -1,5 +1,16 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.56
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.56
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.57
+
+> **v3.57 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: GTD-INBOX-ZERO-1 — Outlook inbox-zero + GTD routing; mirrors email-composer v2.26):**
+> Red-team: direct parent-agent skills audit (session this — Outlook inbox cleanup + prevention wiring; direct parent-agent audit authoritative).
+> HARD: 4. SOFT: 1. DESIGN: 1. Changes:
+> (1) [HARD] **GTD-INBOX-ZERO-1 added** — user mandate 2026-08-20: "I ONLY WANT TO SEE WHAT I MUST RESPOND TO OR ACT UPON. EVERYTHING ELSE DISPATCHED AUTONOMOUSLY (GTD/INBOX ZERO)... KEEP ALL MY INBOXES CLEAN... ROUTE NEXT ACTIONS/SOMEDAY-MAYBE/WAITING-FOR IN A WAY THAT DOESN'T REQUIRE ATTENTION UNTIL ACTIONABLE." PERMANENT Outlook triage: `email-composer/scripts/outlook-gtd-triage.py` (COM-only invisible, both accounts, idempotent). Routing: ACTION stays in Inbox (red-flagged) = the ONLY actionable surface; WAITING → GTD-Waiting For; SOMEDAY → GTD-Someday Maybe; REFERENCE → GTD-Reference; NOISE → Deleted Items (recoverable). Cronjob 754b49ce (Mon-Fri 09:00+15:00 Amsterdam, silent unless failure); Friday weekly review STEP 5.5 surfaces waiting>7d / stale actions>7d / someday overflow. Fleet GTD principle: attention = Inbox + PDB + Friday review only; no new daily notification jobs.
+> (2) [HARD] **OUTLOOK-COM-STORE-PATTERN-1 added** — ns.Folders yields store-ROOT MAPIFolders (not Store objects); an account's Inbox resolves via root.Store.GetDefaultFolder(6) (root.SmtpAddress/GetDefaultFolder unavailable; verified 2026-08-20 on both Outlook.com stores).
+> (3) [HARD] **REPO-COPY-PHANTOM-1 recurrence #3 repaired** — concurrent v3.56 cycle dual-wrote E1/E4/E5/E6/E7 (sha ede582fc4478) but left E2/E3 repo copy STALE (7767f0267b0b); this v3.57 syncs ALL 7 stores byte-identical + commits/pushes E3.
+> (4) [HARD] **MODEL-KEY-FILE-DRIFT-1 recurrence #14** — E5 (Roaming app-settings.json) preferredModel re-drifted to deepseek-v4-pro; reset to deepseek-v4-flash (both JSON model keys flash).
+> (5) [SOFT] **email-composer N-2 frontmatter drift repaired** — frontmatter 2.24 → 2.26 (matched the v2.26 inbox-zero banner).
+> (6) [DESIGN] **cloudflare SKILL.md tangle repaired** — v3.57 banner was tangled inside the v3.56 blockquote (TITLE-LINE-PARITY-1: top banner must equal frontmatter 3.57); reordered v3.57 on top.
+> Cross-reference: kaizen v2.82, research v2.125, cloudflare v3.57, email-composer v2.26, PROMPT-PARITY-1, session this.
+
 > **v3.56 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1; mirrors kaizen v2.82 + research v2.125):**
 > Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
 > (1) [HARD] **ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1** — deposit API PUT stores license but CLEARS resource_type; records API PUT stores resource_type (id-form) but CLEARS license; final published state = rtype ✓ / license ✗ (public API view) while .md frontmatter carries the license. Canonicals: RES.017 v1.4 (22025544) + industry brief (22028078), 2026-08-20. Remediation: accept rtype + document; UI edit or next version for license.
@@ -1913,7 +1924,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.56** (NEWVERSION-DRAFT-FILES-SHAPE-1 + PUBLISH-CHECKLIST-PORTFOLIO-REPOINT-1 from kaizen draft 2026-08-20; E5-superset 7-store parity repair — CALENDAR/EVENT/TO-DO MANDATE merged to ALL stores; MODEL-KEY-FILE-DRIFT-1 #13; 2026-08-20)
+Current: **v3.57** (GTD-INBOX-ZERO-1 Outlook inbox-zero + GTD routing; OUTLOOK-COM-STORE-PATTERN-1; REPO-COPY-PHANTOM-1 #3 E2/E3 sync; MODEL-KEY-FILE-DRIFT-1 #14; 2026-08-20)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

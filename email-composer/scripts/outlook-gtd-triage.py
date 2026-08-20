@@ -5,23 +5,38 @@ outlook-gtd-triage.py — GTD inbox-zero triage for personal Outlook accounts
 see what I must respond to or act upon; everything else dispatched autonomously
 (GTD/Inbox Zero); keep all inboxes clean").
 
-Modes:
+Modes (mutually exclusive):
   --dry-run   classify + print plan, move NOTHING
-  --apply     classify + move (idempotent; NOISE -> Deleted Items = recoverable)
-  --report    print current inbox/Gtd-folder state (used by Friday weekly review)
+  --apply     classify + move (idempotent; NOISE -> per-account Deleted Items)
+  --report    print current inbox/GTD-folder state (non-mutating; enumerates
+              GTD-Waiting For items with dates for the Friday weekly review)
 
 GTD routing (permanent folders under each Inbox):
   ACTION    stays in Inbox, red-flagged + unread  -> user must respond/act
   WAITING   -> Inbox/GTD-Waiting For              -> ball in someone else's court
   SOMEDAY   -> Inbox/GTD-Someday Maybe            -> read later / maybe
   REFERENCE -> Inbox/GTD-Reference                -> receipts, confirmations, records
-  NOISE     -> Deleted Items (recoverable)        -> marketing, notifications, codes
+  NOISE     -> THIS ACCOUNT's Deleted Items       -> marketing, notifications, codes
 
 HARD CONSTRAINTS (mem-J8X6yO9zBjfn, user directive 2026-08-05/08-12):
   - COM ONLY, INVISIBLE: never opens Outlook UI; no visible OUTLOOK.EXE.
   - Outlook is quit ONLY if this script started it (GetObject fallback).
   - Never permanently deletes mail (Deleted Items is recoverable).
   - Idempotent: safe to run every day; items already in GTD folders are skipped.
+
+Red-team remediation 2026-08-20 (completeness audit H-1/S-1..S-5 + D-1..D-4/D-6):
+  H-1: Deleted Items resolved PER STORE (inbox.Store.GetDefaultFolder(3)) — the
+       namespace-level default store previously swallowed the other account's NOISE.
+  S-1: moved items marked read (UnRead=False) before Move.
+  S-2: ACTION items marked unread + red-flagged (attention surface).
+  S-3: per-account fault isolation (one failing account no longer aborts the other).
+  S-4: meeting cancellations/responses -> REFERENCE; only live requests -> ACTION.
+  S-5: empty sender falls through to conservative unknown-domain rules (not bulk NOISE).
+  D-1: --report enumerates GTD-Waiting For items with received dates (weekly review).
+  D-2: --report never creates folders (non-mutating lookup).
+  D-3: --dry-run/--apply/--report are mutually exclusive.
+  D-4: triage log rotated to last 500 lines.
+  D-6: state actions[] carry a 160-char body snippet.
 
 State: writes logs/email-gtd-state.json (last run) + appends logs/email-triage-log.md
 for the Friday weekly review + PDB to consume (waiting-for overdue surfacing).
@@ -43,6 +58,7 @@ GTD_FOLDERS = {F_WAITING, F_SOMEDAY, F_REF}
 LOG_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs"))
 STATE_FILE = os.path.join(LOG_DIR, "email-gtd-state.json")
 TRIAGE_LOG = os.path.join(LOG_DIR, "email-triage-log.md")
+LOG_ROTATION = 500
 
 # Machine/bulk senders: notification noise by default (subject may upgrade)
 BULK_DOMAINS = {
@@ -62,7 +78,7 @@ BULK_DOMAINS = {
     "microsoft.com", "apple.com", "amazon.com", "amazonaws.com", "npmjs.com",
     "pypi.org", "crates.io", "docker.com", "stackoverflow.com", "arxiv.org",
     "researchgate.net", "academia.edu", "orcid.org", "paypal.com", "stripe.com",
-    "klarna.com", "afterpay.com", "revolut.com", "mailer-daemon@", "postmaster@",
+    "klarna.com", "afterpay.com", "revolut.com",
 }
 # Financial institutions: NEVER noise; alerts/statements are ACTION/REFERENCE
 FINANCIAL_DOMAINS = {
@@ -146,12 +162,18 @@ def classify(item):
     except Exception:
         age_days = 0
 
-    # 1. Meeting requests / responses -> ACTION (must respond)
-    if "IPM.Schedule.Meeting" in (msgclass or ""):
+    # 1. Meeting items (S-4 refinement): only LIVE requests need ACTION;
+    #    cancellations auto-update the calendar, responses are informational.
+    mc = msgclass or ""
+    if mc.startswith("IPM.Schedule.Meeting.Canceled"):
+        return "REFERENCE"
+    if mc.startswith("IPM.Schedule.Meeting.Resp"):
+        return "REFERENCE"
+    if "IPM.Schedule.Meeting" in mc:
         return "ACTION"
 
     # 2. Delivery/read reports -> NOISE
-    if msgclass.startswith("IPM.Report") or msgclass.startswith("REPORT."):
+    if mc.startswith("IPM.Report") or mc.startswith("REPORT."):
         return "NOISE"
 
     dom = domain_of(sender)
@@ -178,8 +200,10 @@ def classify(item):
             return "SOMEDAY"
         return "ACTION"
 
-    # 6. Bulk/machine senders -> refine by subject, else NOISE
-    if dom in BULK_DOMAINS or not dom:
+    # 6. Bulk/machine senders -> refine by subject, else NOISE.
+    #    (S-5: empty/unknown sender falls through to the conservative
+    #    unknown-domain rules below — never forced through the bulk branch.)
+    if dom in BULK_DOMAINS:
         if RX_SECURITY.search(subject):
             return "ACTION" if dom in ("cloudflare.com", "microsoft.com", "google.com") else "WAITING"
         if RX_RECEIPT.search(subject):
@@ -255,6 +279,17 @@ def ensure_folder(inbox, name):
     return inbox.Folders.Add(name)
 
 
+def find_folder(inbox, name):
+    """Non-mutating folder lookup (D-2: report mode must never create folders)."""
+    try:
+        for f in inbox.Folders:
+            if f.Name == name:
+                return f
+    except Exception:
+        pass
+    return None
+
+
 def process_inbox(app, ns, email, apply):
     inbox = get_inbox(ns, email)
     if inbox is None:
@@ -263,7 +298,7 @@ def process_inbox(app, ns, email, apply):
     waiting = ensure_folder(inbox, F_WAITING)
     someday = ensure_folder(inbox, F_SOMEDAY)
     ref = ensure_folder(inbox, F_REF)
-    deleted = ns.GetDefaultFolder(3)  # olFolderDeletedItems
+    deleted = inbox.Store.GetDefaultFolder(3)  # olFolderDeletedItems (H-1: PER STORE)
 
     counts = {"ACTION": 0, "WAITING": 0, "SOMEDAY": 0, "REFERENCE": 0, "NOISE": 0}
     actions = []
@@ -286,10 +321,16 @@ def process_inbox(app, ns, email, apply):
             except Exception:
                 rec_s = "?"
             if cls == "ACTION":
-                actions.append({"from": sender, "subject": subject, "received": rec_s})
+                snippet = ""
+                try:
+                    snippet = (item.Body or "")[:160]
+                except Exception:
+                    pass
+                actions.append({"from": sender, "subject": subject, "received": rec_s, "snippet": snippet})
                 if apply:
                     try:
                         item.FlagStatus = 2  # olFlagMarked (red flag)
+                        item.UnRead = True   # S-2: ACTION stays unread (attention surface)
                         item.Save()
                     except Exception:
                         pass
@@ -299,6 +340,8 @@ def process_inbox(app, ns, email, apply):
             dest = {"WAITING": waiting, "SOMEDAY": someday, "REFERENCE": ref, "NOISE": deleted}[cls]
             if apply:
                 try:
+                    item.UnRead = False  # S-1: moved items read (no unread badges in GTD folders)
+                    item.Save()
                     item.Move(dest)
                     moved += 1
                 except Exception as e:
@@ -335,20 +378,44 @@ def cmd_report(ns):
         print(f"[{email}] inbox total={total} unread={unread} flagged={flagged}")
         for fname in GTD_FOLDERS:
             try:
-                f = ensure_folder(inbox, fname)
+                f = find_folder(inbox, fname)
+                if f is None:
+                    print(f"   {fname}: (not created)")
+                    continue
                 n = 0
                 for _ in f.Items:
                     n += 1
                 print(f"   {fname}: {n}")
+                if fname == F_WAITING:
+                    for it in f.Items:  # D-1: enumerate waiting items w/ dates for weekly review
+                        try:
+                            rec = it.ReceivedTime
+                            if hasattr(rec, "tzinfo") and rec.tzinfo is not None:
+                                rec = rec.astimezone().replace(tzinfo=None)
+                            print(f"      WAIT {rec:%Y-%m-%d} | {(it.Subject or '')[:80]}")
+                        except Exception:
+                            pass
             except Exception:
                 pass
 
 
+def _rotate_triage_log():
+    """Keep the triage log bounded (D-4: last 500 lines)."""
+    try:
+        lines = open(TRIAGE_LOG, encoding="utf-8").read().splitlines()
+        if len(lines) > LOG_ROTATION:
+            open(TRIAGE_LOG, "w", encoding="utf-8", newline="\n").write(
+                "\n".join(lines[-LOG_ROTATION:]) + "\n")
+    except Exception:
+        pass
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--apply", action="store_true")
-    ap.add_argument("--report", action="store_true")
+    g = ap.add_mutually_exclusive_group()  # D-3: modes never combine
+    g.add_argument("--dry-run", action="store_true")
+    g.add_argument("--apply", action="store_true")
+    g.add_argument("--report", action="store_true")
     args = ap.parse_args()
 
     os.makedirs(LOG_DIR, exist_ok=True)
@@ -360,9 +427,13 @@ def main():
             return
         results = []
         for email in ACCOUNTS:
-            r = process_inbox(app, ns, email, apply=args.apply)
-            if r:
-                results.append(r)
+            try:  # S-3: per-account fault isolation
+                r = process_inbox(app, ns, email, apply=args.apply)
+                if r:
+                    results.append(r)
+            except Exception as e:
+                print(f"[{email}] ACCOUNT FAILURE: {e}")
+                results.append({"account": email, "error": str(e)})
         if args.apply:
             state = {"run_at": dt.datetime.now().isoformat(timespec="seconds"),
                      "accounts": results}
@@ -375,6 +446,7 @@ def main():
                                    f"R{r['counts']['REFERENCE']} N{r['counts']['NOISE']} "
                                    f"(moved {r['moved']})" for r in results))
                 f.write(line + "\n")
+            _rotate_triage_log()
             print("STATE:", STATE_FILE)
     finally:
         if started:
