@@ -1,4 +1,13 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.59
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.60
+
+> **v3.60 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: RES.019 P7 publication + dissemination closeout — Zenodo multipart bypass + Email REST text field + model-key object shape + pipeline visibility + captcha-form boundary):**
+> Red-team: post-publication 3-slot audit of the LIVE RES.019 record (Aggregate: 0 HARD / 5 SOFT — all remediated in v1.1 10.5281/zenodo.22034455; README wrong-DOI + figure-flattening fixed). Changes:
+> (1) [HARD] **ZENODO-MULTIPART-BYPASS-1 added** — when the records-API file-commit endpoint enters its persistent 500 window (error_id-prefixed server errors, hours-long): delete the stuck subdir entries via their `links.self` (204), then re-register via the deposit-API multipart POST (`POST /api/deposit/depositions/{id}/files`, multipart/form-data `name`+`file` fields), which writes DIRECTLY into the deposit registry (201) and satisfies the publish validator; flat keys via bucket PUT. Cosmetic cost: slashed subdir keys sanitize to underscores (`figures_fig1.svg`) — acceptable, document. Canonical: RES.019 v1.0 (10.5281/zenodo.22031556), 2026-08-20 — published (202) after hours of commit-endpoint 500s.
+> (2) [HARD] **EMAIL-REST-TEXT-FIELD-1 added** — the Cloudflare Email Sending REST payload uses `text` (and/or `html`) — NOT `text_body`; `text_body` → 400 `invalid_request_schema` (10001). Canonical: RES.019 P7 sends (2026-08-20) — first attempt 400, corrected to `text` → 200 queued, 0 bounces.
+> (3) [HARD] **MODEL-KEY-OBJECT-SHAPE-1 added (MODEL-KEY-FILE-DRIFT-1 companion)** — `defaultModel`/`preferredModel` in app-settings.json must be OBJECTS (`{"providerId": "deepseek", "modelId": "deepseek-v4-flash"}`); a bare string breaks new-chat `deepchat:route:invoke` ("expected object, received string"). Verify SHAPE + value in E4/E5 every cycle. Canonical: 2026-08-20 new-chat failure — fixed, user-confirmed.
+> (4) [SOFT] **PIPELINE-VISIBILITY-1 (user mandate 2026-08-20)** — keep the user informed of the ENTIRE pipeline (P0–P?) as it executes, with a live phase-status table, so they do not prematurely close out the session.
+> (5) [SOFT] **OUTREACH-FORM-GATE-1** — captcha-gated site forms (HubSpot + reCAPTCHA Enterprise) are NOT reliably automatable; never circumvent anti-bot controls; document such targets as user-assisted rather than fabricate submissions. Canonical: Ben's Bites + DeepLearning.AI, 2026-08-20.
+> Cross-reference: kaizen v2.86, research v2.129, cloudflare v3.60, session this.
 
 > **v3.59 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: RES.019 pipeline discipline — phantom-exec double edge + verification-fix-rerun + hypothesis-card pattern):**
 > Red-team: 3-slot reviewer dispatch (Accuracy/Completeness/Dependency) on the RES.019 draft milestone (pre-publish; per the gate's pipeline-milestone clause). HARD: 0. SOFT: 0. DESIGN: 2 (pending collection — aggregate report follows). Changes:
@@ -1947,7 +1956,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.59** (RES.019 pipeline discipline: EXEC-PHANTOM-DOUBLE-EDGED-1 + VERIFY-FIX-RERUN-1 + HYPOTHESIS-CARD-1 + WBS-REGISTRY-ORDER-1; preserves COMPUTATIONAL-VERIFICATION-1 canonical case; mirrors kaizen v2.85 + research v2.128 + cloudflare v3.59; 2026-08-20)
+Current: **v3.60** (RES.019 P7 closeout: ZENODO-MULTIPART-BYPASS-1 + EMAIL-REST-TEXT-FIELD-1 + MODEL-KEY-OBJECT-SHAPE-1 + PIPELINE-VISIBILITY-1 + OUTREACH-FORM-GATE-1; preserves v3.59 gates; mirrors kaizen v2.86 + research v2.129 + cloudflare v3.60; 2026-08-20)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
