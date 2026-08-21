@@ -1,9 +1,14 @@
 ---
 name: research
-version: "2.132"
+version: "2.133"
 ---
 
-# RESEARCH — v2.132
+# RESEARCH — v2.133
+> **v2.133 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-META-PROSE-1 extension (user directive — superfluous meta-commentary expunged); mirrors system-prompt v3.65 + kaizen v2.88):**
+> Red-team: 3 slots on the CWI poster set (15 definite meta-prose hits); remediation executed (commit 0317073). Repairs the footer drift left by the v2.132 cycle (footer 2.131 -> 2.133).
+> (1) [HARD] **PUBLICATION-META-PROSE-1 (user directive 2026-08-21)** — extends the Publication Language Gate: banned "published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence". State the fact; the DOI carries the evidence.
+> Cross-reference: system-prompt v3.65, kaizen v2.88, cloudflare v3.59, session this.
+
 > **v2.132 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: FRONTMATTER-DUPLICATION-1 extended (user-caught title-page duplication) + PLATFORM-NAME-SOURCE-MATCH-1; mirrors kaizen v2.87):**
 > Red-team: 3 reviewer slots dispatched (queued) + direct parent-agent audit authoritative (QNFO.JPC.002 paper v0.1 P5 cycle). HARD: 2 (self-caught pre-aggregation). SOFT: 0.
 > (1) [HARD] **FRONTMATTER-DUPLICATION-1 extended** — the gate now covers (a) author/byline lines in the body (e.g., `**Author** · org · date · version` under a YAML author/date block) and (b) a body H1 mirroring the YAML title. pandoc renders YAML title/subtitle/author/date/abstract; ANY of them repeated in the body duplicates the title page. Canonical: QNFO.JPC.002 paper v0.1 (2026-08-21) shipped a body byline + H1 under YAML title/author/date; the user caught the duplicate on review; fixed (byline + H1 removed) and the gate extended. Gate: zero body `**Date:**`/`**Abstract:**`/`**Author**` bylines, zero body H1 mirroring the YAML title, exactly one rendered abstract div.
@@ -5518,6 +5523,8 @@ Scan for: internal language, credential leaks, bare Unicode math, AI-generated f
 
 
 ### Publication Language Gate — Brand-Token Ban (PUBLICATION-BRAND-LANGUAGE-1, HARD — 2026-08-21, user directive)
+Meta-commentary narrating the act of publishing/disclosing — or grading it — is banned (PUBLICATION-META-PROSE-1, 2026-08-21): "published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence". State the fact; the DOI carries the evidence.
+
 
 Branded register/ledger/honesty vocabulary is banned from publication prose (extends PUBLICATION-PROSE-GATE-1). Banned brand tokens: "falsifiability register", "honest null ledger", "pre-registered observables", "kill-conditions", "published nulls" used as recurring labels; "honest question", "The Honest Landscape", "honestly reported", "Honest caveat/residual", "Honest Accounting", "weigh this record"; confidence tags (`[speculative]`) in abstracts; internal gate names as section headers ("So What? Why Should a Reader Care About This Research?"). Rules: pre-registration = a fact with its identifier (OSF DOI); disconfirmation criteria = numbers, labeled "Disconfirmation criterion:" (never "Kill-condition:"); negative results = results ("no log-periodic signal was found; bootstrap p=0.89"). Canonical offenders: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544 (CMD RED TEAM 2026-08-21, Language=CONFIRMED).
 
@@ -9626,7 +9633,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.131** (Beginner's Guide v1.3.x publish-then-audit cycle; mirrors system-prompt v3.64 + kaizen v2.86 + cloudflare v3.59; 2026-08-21)
+Current: **v2.133** (PUBLICATION-META-PROSE-1 extension; mirrors system-prompt v3.65 + kaizen v2.88)
 
 
 

@@ -1,9 +1,15 @@
 ---
 name: kaizen
-version: "2.87"
+version: "2.88"
 ---
 
-# KAIZEN — v2.87
+# KAIZEN — v2.88
+> **v2.88 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-META-PROSE-1 (user directive — superfluous meta-commentary expunged); mirrors system-prompt v3.65 + research v2.133 + cloudflare v3.59 unchanged):**
+> Red-team: 3 slots (Accuracy/Completeness/Dependency) on the CWI poster set — 15 definite meta-prose hits + 8 borderline; remediation executed same cycle (commit 0317073 in QNFO/cwi-qec-poster-2026). Also repairs the footer drift left by the v2.87 cycle (footer 2.86 -> 2.88).
+> (1) [HARD] **PUBLICATION-META-PROSE-1 (user directive 2026-08-21)** — banned: phrases narrating the act of publishing/disclosing/correcting ("published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence"). State the fact; the DOI carries the evidence. Extends PUBLICATION-BRAND-LANGUAGE-1.
+> (2) [SOFT] Immutable carriers: register 22025544, guides 22036025/22038733 (suspected: 21979060, 21964674) — newversion queue.
+> Cross-reference: system-prompt v3.65, research v2.133, cloudflare v3.59, session this.
+
 > **v2.87 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE mirror: FRONTMATTER-DUPLICATION-1 extension + PLATFORM-NAME-SOURCE-MATCH-1; mirrors research v2.132):**
 > Red-team: 3 reviewer slots dispatched (queued) + direct parent-agent audit authoritative. HARD: 2. SOFT: 0.
 > (1) [HARD] **FRONTMATTER-DUPLICATION-1 extended (research v2.132)** — body author/byline lines and body H1 mirroring the YAML title are duplication defects: pandoc renders YAML title/subtitle/author/date/abstract, so any body repeat duplicates the title page. Canonical: QNFO.JPC.002 paper v0.1 (2026-08-21) shipped `**Author** · QNFO · date · v0.1` + an H1 under the YAML block; user caught it on review; fixed + gate extended (zero body Date:/Abstract:/Author bylines, zero body H1 mirroring YAML title).
@@ -13877,6 +13883,9 @@ Session Failure → Session Retrospective detects failure pattern
 | **TEST-SEND-EXTERNAL-1: test/diagnostic emails sent to real external recipients (2026-08-10)** | **HARD GATE** (mirror; owner email-composer v2.16). Test sends ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal qnfo/qwav addresses; an external-recipient diagnostic control uses the user's own mailbox. NEVER to a real external address — even a "test"/"matrix" subject is still a contact and violates no-repeat-contact. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66; second contact to Patel). ENFORCED BY: email-composer/scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR: email-composer v2.17 Repair-Send Protocol. | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
 ## Red-Team Findings 2026-08-21 (register/ledger-language corpus audit)
 
+- **PUBLICATION-META-PROSE-1 (HARD, user directive 2026-08-21):** meta-commentary narrating the act of publishing/disclosing/correcting ("published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence") is superfluous and banned from publications, presentations, and documents. State the fact; the DOI carries the evidence. Canonical: CWI poster set expungement 2026-08-21 (commit 0317073).
+
+
 - **PUBLICATION-BRAND-LANGUAGE-1 (HARD, user directive):** branded register/ledger/kill-condition/honesty language in publication prose is banned — it reads as marketing and damages credibility. State the substance (OSF DOI, numeric disconfirmation criteria, negative results as results) plainly. "Kill-condition:" -> "Disconfirmation criterion:". Canonical: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544.
 - **PUBLICATION-STATUS-STALE-1 (HARD):** corpus sweep for status-changing records before every publish + newversion. Canonical: guide v1.2/v1.2.2 "E1 unexecuted" vs 21902891 null (red team 2026-08-21).
 - **INTERNAL-ANCHOR-DANGLING-1 (HARD):** internal cross-refs must resolve; annotate newversion fixes. Canonical: v1.2 "open problem 7" dangling, added silently in v1.2.2.
@@ -15510,4 +15519,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.86** (CALENDAR-SYNC-TOOL-GAP-1 + NO-CATCH-UP-1 + SILENT-ROLLOVER-1 + DEAD-NOTIFY-CHAIN-1 + 6 fleet SOFT gates; mirrors system-prompt v3.64 + research v2.131 + cloudflare v3.59; 2026-08-21)
+Current: **v2.88** (PUBLICATION-META-PROSE-1; mirrors system-prompt v3.65 + research v2.133 + cloudflare v3.59)
