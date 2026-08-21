@@ -1,9 +1,14 @@
 ---
 name: kaizen
-version: "2.86"
+version: "2.87"
 ---
 
-# KAIZEN — v2.86
+# KAIZEN — v2.87
+> **v2.87 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE mirror: FRONTMATTER-DUPLICATION-1 extension + PLATFORM-NAME-SOURCE-MATCH-1; mirrors research v2.132):**
+> Red-team: 3 reviewer slots dispatched (queued) + direct parent-agent audit authoritative. HARD: 2. SOFT: 0.
+> (1) [HARD] **FRONTMATTER-DUPLICATION-1 extended (research v2.132)** — body author/byline lines and body H1 mirroring the YAML title are duplication defects: pandoc renders YAML title/subtitle/author/date/abstract, so any body repeat duplicates the title page. Canonical: QNFO.JPC.002 paper v0.1 (2026-08-21) shipped `**Author** · QNFO · date · v0.1` + an H1 under the YAML block; user caught it on review; fixed + gate extended (zero body Date:/Abstract:/Author bylines, zero body H1 mirroring YAML title).
+> (2) [HARD] **PLATFORM-NAME-SOURCE-MATCH-1 (research v2.132)** — platform rows must name the material system the cited source measured ("InAs/Al" cited 1702.02578 = InSb/NbTiN; renamed to match).
+> Cross-reference: research v2.132, system-prompt v3.59, session this.
 
 > **v2.86 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: scheduled-task fleet red-team codification — CALENDAR-SYNC-TOOL-GAP-1 + NO-CATCH-UP-1 + SILENT-ROLLOVER-1 + DEAD-NOTIFY-CHAIN-1 + 6 SOFT fleet gates; mirrors system-prompt v3.64 + research v2.131 + cloudflare v3.59):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit (scheduled-task failures; RC1-RC6). HARD: 4. SOFT: 6. DESIGN: 0. New gates:

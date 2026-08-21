@@ -1,9 +1,14 @@
 ---
 name: research
-version: "2.131"
+version: "2.132"
 ---
 
-# RESEARCH — v2.131
+# RESEARCH — v2.132
+> **v2.132 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: FRONTMATTER-DUPLICATION-1 extended (user-caught title-page duplication) + PLATFORM-NAME-SOURCE-MATCH-1; mirrors kaizen v2.87):**
+> Red-team: 3 reviewer slots dispatched (queued) + direct parent-agent audit authoritative (QNFO.JPC.002 paper v0.1 P5 cycle). HARD: 2 (self-caught pre-aggregation). SOFT: 0.
+> (1) [HARD] **FRONTMATTER-DUPLICATION-1 extended** — the gate now covers (a) author/byline lines in the body (e.g., `**Author** · org · date · version` under a YAML author/date block) and (b) a body H1 mirroring the YAML title. pandoc renders YAML title/subtitle/author/date/abstract; ANY of them repeated in the body duplicates the title page. Canonical: QNFO.JPC.002 paper v0.1 (2026-08-21) shipped a body byline + H1 under YAML title/author/date; the user caught the duplicate on review; fixed (byline + H1 removed) and the gate extended. Gate: zero body `**Date:**`/`**Abstract:**`/`**Author**` bylines, zero body H1 mirroring the YAML title, exactly one rendered abstract div.
+> (2) [HARD] **PLATFORM-NAME-SOURCE-MATCH-1 added (Phase 5/6)** — a scorecard/platform row MUST name the material system its cited source actually measured. Canonical: the paper row read "Majorana, InAs/Al (~200 µeV)" citing arXiv:1702.02578, which measured InSb/NbTiN — renamed to match the source before publish. Check every platform name against its citation's actual system.
+> Cross-reference: system-prompt v3.59, kaizen v2.87, BIB-ORPHAN-1, COMPUTATIONAL-VERIFICATION-1, session this.
 > **v2.131 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: Beginner's Guide v1.3.x publish-then-audit cycle — SUBSTANTIVE-UPDATE-MANDATE-1 + rendering/deposit gates):**
 > Red-team: 3-slot reviewer dispatch (Accuracy/Completeness/Dependency) on the v1.3.2 package. HARD: 5. SOFT: 2. Changes:
 > (1) [HARD] **SUBSTANTIVE-UPDATE-MANDATE-1 added** — updates to records released months ago MUST incorporate the latest research SUBSTANTIVELY (new sections/evidence), not merely minor corrections; due diligence applies to update cycles. Canonical: Beginner's Guide v1.3 (benchmark section, E3 register design, falsification exemplar, calibrated displacement assessment, thermodynamic successors).
