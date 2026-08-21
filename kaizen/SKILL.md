@@ -4,6 +4,11 @@ version: "2.88"
 ---
 
 # KAIZEN — v2.88
+> **v2.88 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE mirror: publish-race gates; mirrors research v2.133):**
+> HARD: 3 (mirror of research v2.133): TITLE-EXISTENCE-PRE-PUBLISH-1 (Zenodo title search before deposit; two concepts 22044217/22044106 created for one paper by parallel sessions 2026-08-21), PUBLISH-LOCK-1 (portfolio-state claim row with UNIQUE constraint before P8 publish), VERIFICATION-PROSE-GATE-1 (publication verification sections plain prose; banned pipeline phrases + Unicode-sup scan + version-label uniqueness; canonical RES.021 v1.0.1 §9 raw closeout -> v1.0.2 fixed). Remediated 2026-08-21: v1.0.2 canonical 22046458, duplicate repaired 22046491.
+> Cross-reference: research v2.133, system-prompt v3.59, session this.
+
+# KAIZEN — v2.88
 > **v2.88 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-META-PROSE-1 (user directive — superfluous meta-commentary expunged); mirrors system-prompt v3.65 + research v2.133 + cloudflare v3.59 unchanged):**
 > Red-team: 3 slots (Accuracy/Completeness/Dependency) on the CWI poster set — 15 definite meta-prose hits + 8 borderline; remediation executed same cycle (commit 0317073 in QNFO/cwi-qec-poster-2026). Also repairs the footer drift left by the v2.87 cycle (footer 2.86 -> 2.88).
 > (1) [HARD] **PUBLICATION-META-PROSE-1 (user directive 2026-08-21)** — banned: phrases narrating the act of publishing/disclosing/correcting ("published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence"). State the fact; the DOI carries the evidence. Extends PUBLICATION-BRAND-LANGUAGE-1.

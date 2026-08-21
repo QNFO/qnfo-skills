@@ -4,6 +4,15 @@ version: "2.133"
 ---
 
 # RESEARCH — v2.133
+> **v2.133 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: duplicate-record publish-race remediation gates — TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; mirrors kaizen v2.88):**
+> Red-team: Accuracy + Completeness reviewer slots COMPLETED + direct parent audit (QNFO.RES.021 duplicate records 22044379/22045617). HARD: 4. Remediated: canonical chain advanced to v1.0.2 (10.5281/zenodo.22046458, concept 22044217 — §9 verification prose rewritten plain-publication, README How-to-Cite concept DOI, frontmatter own-DOI verified by download); duplicate concept head repaired (10.5281/zenodo.22046491 — isObsoletedBy -> canonical, license+keywords, natural creator, supersession README); R2 19 flattened legacy keys deleted (29-object mirror == deposit); D1 body_md replaced + Vectorize re-indexed.
+> New Phase-6/8 permanent gates (RECURRENCE-ZERO-1):
+> (1) [HARD] **TITLE-EXISTENCE-PRE-PUBLISH-1** — BEFORE creating any Zenodo deposit, run `GET https://zenodo.org/api/records?q=title:"<exact-title>"`; if a PUBLISHED record with the same title exists on a DIFFERENT concept, BLOCK and reconcile (the parallel-session race created two concepts 22044217/22044106 for one paper, 2026-08-21). Also check D1/KG/registry for the slug.
+> (2) [HARD] **PUBLISH-LOCK-1** — before P8 publish, take a publish-lock in portfolio-state (write a claim row: session_id + wbs_code + target concept, UNIQUE constraint); two sessions writing the same RES.021.P8 unclaimed created the duplicate (handoffs 28675/28676).
+> (3) [HARD] **VERIFICATION-PROSE-GATE-1** — publication §Verification sections MUST be plain scholarly prose (results table + reproducibility statement); BANNED in publication text: "falsifier live", "pre-registered", "bugs in the checks", "post-publication audit", "Results (seed", "CPython" as pipeline voice, "verification discipline"; raw run logs live ONLY in artifacts/verification/. Gate: grep for the banned phrases + Unicode-superscript scan (U+2070-U+209C) + version-label uniqueness (Zenodo metadata version == md frontmatter version) before publish. Canonical: RES.021 v1.0.1 §9 embedded the raw verification closeout (user-caught "WTF IS THIS?"); v1.0.2 fixed.
+> Cross-reference: system-prompt v3.59, kaizen v2.88, OLD-RECORD-OBSOLETION-TAG-1, ZENODO-NEWVERSION-BECOMES-HEAD-1, session this.
+
+# RESEARCH — v2.133
 > **v2.133 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-META-PROSE-1 extension (user directive — superfluous meta-commentary expunged); mirrors system-prompt v3.65 + kaizen v2.88):**
 > Red-team: 3 slots on the CWI poster set (15 definite meta-prose hits); remediation executed (commit 0317073). Repairs the footer drift left by the v2.132 cycle (footer 2.131 -> 2.133).
 > (1) [HARD] **PUBLICATION-META-PROSE-1 (user directive 2026-08-21)** — extends the Publication Language Gate: banned "published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence". State the fact; the DOI carries the evidence.
