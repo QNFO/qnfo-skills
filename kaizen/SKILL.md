@@ -1,9 +1,9 @@
 ---
 name: kaizen
-version: "2.84"
+version: "2.85"
 ---
 
-# KAIZEN — v2.84
+# KAIZEN — v2.85
 
 > **v2.84 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program + launch-cycle gates; mirrors system-prompt v3.58 + research v2.127):**
 > Red-team: 3-slot reviewer dispatch + direct parent-agent 5-adversary audit (Accuracy CLEAN 0 HARD/1 SOFT; Dependency child failed → direct; Completeness pending → direct findings authoritative). N-2 drift repairs: research fm 2.121/banner 2.125/footer 2.126 → 2.127 + H1 dedupe; kaizen H1 dedupe (v2.83/v2.82); E1/E3 parity repair (7-store sha 207ea69db0c5, 2026-08-20). HARD: 3. SOFT: 3. DESIGN: 0. New gates:
@@ -14,6 +14,15 @@ version: "2.84"
 > (5) [SOFT] **DOIDOT-403-BOT-1** (doi.org 403 = bot block; DataCite findable is authoritative; DataCite 404s on browser UA — use qnfo-audit UA).
 > (6) [SOFT] **GIT-MERGE-BRANCH-FETCH-1** (fetch branch before merge; tag after merge commit) + **R2-RCLONE-TEMP-CONFIG-1** (temp rclone.conf; remote name = bucket).
 > Cross-reference: system-prompt v3.58, research v2.127, qnfo-core v1.34, cloudflare v3.58, session this.
+
+> **v2.85 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CMD RED TEAM (4-slot) of the register/ledger-language corpus; mirrors system-prompt v3.63 + research v2.128 + cloudflare v3.58 unchanged):**
+> Red-team: 4 reviewer slots (Accuracy/Completeness/Dependency/Language) against 8 published records carrying the register/ledger framing — READ-ONLY; Language completed naturally; 3 slots stalled ~15 min on reviewed_contract read approvals then FLUSHED complete answers on interrupt (REDTEAM-INTERRUPT-FLUSH-1). Verdicts: Language=CONFIRMED, Accuracy=CONCERNS, Completeness=FAIL, Dependency=CONCERNS. HARD: 3. SOFT: 7. New gates:
+> (1) [HARD] **PUBLICATION-BRAND-LANGUAGE-1 (user directive 2026-08-21)** — "falsifiability register", "honest null ledger", "pre-registered observables", "kill-conditions", "published nulls" as recurring branded labels are OVERUSED/TRITE/marketing-like and make publications seem MORE speculative and LESS credible. State the substance plainly (OSF pre-registration DOIs, numeric disconfirmation criteria, negative results as results). Banned brand tokens: "honest question", "The Honest Landscape", "honestly reported", "Honest caveat/residual", "Honest Accounting", "weigh this record", confidence tags (`[speculative]`) in abstracts, internal gate names as section headers. "Kill-condition:" -> "Disconfirmation criterion:". Canonical: guide 22036025/22038733 ("honest question" / Part I "The Honest Landscape" / App A "weigh this record"), QEC-Darwinism 21964674 (7× "honest" + §2 header "So What? Why Should a Reader Care..."), BTQP 20109836 ("honest threshold advantage ratios" + §6.3 "Honest Accounting"), register 22025544 ("kept on the same ledger").
+> (2) [HARD] **PUBLICATION-STATUS-STALE-1** — sweep the corpus for status-changing records before every publish AND every newversion. Canonical: guide v1.2 (22036025) AND v1.2.2 (22038733) App A + Ch.16 "E1 ... remain unexecuted as of 2026-08-20" while 21902891 (2026-08-12) reports a certified null on that exact test and the same-day register lists "the cosmological log-periodic null"; v1.2.2 carried the stale sentence unchanged.
+> (3) [HARD] **INTERNAL-ANCHOR-DANGLING-1** — internal cross-references must resolve in the published artifact; a newversion that adds the missing target MUST annotate the change. Canonical: v1.2 App A "(Chapter 20, open problem 7)" vs six problems listed; v1.2.2 adds the 7th silently.
+> (4) [SOFT] **REDTEAM-INTERRUPT-FLUSH-1** — a reviewer slot stalled mid-turn on a reviewed_contract read approval can hold a COMPLETED answer; interrupt flushes it (3/3 slots returned full reports on interrupt). Try interrupt BEFORE the direct-audit fallback when effectState=read.
+> (5) [SOFT] Corpus bookkeeping confirmed: bispectrum A_LPO<3e-3 comparator untraceable in 21902891 (ceiling 2-5e-4); register does not cite the guide; title drift 21964674 + mixed version labels (register §12 self-discloses); thresholds CLEAN.
+> Cross-reference: system-prompt v3.63, research v2.128, cloudflare v3.58, session this.
 
 > **v2.82 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1; mirrors system-prompt v3.56 + research v2.125):**
 > Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
@@ -13846,6 +13855,13 @@ Session Failure → Session Retrospective detects failure pattern
 | **WSH-OUTLOOK-COM-MEM-1: cscript fails on this host — pywin32 COM is the Outlook path (2026-08-10)** | **HARD** (mirror; owner windows-command-patterns v3.20). cscript/WSH dies with 'Not enough memory resources'; pywin32 win32com verified (7 Outlook appointments). |
 | **CUA-DRIVER-QUARANTINE-1: quarantined cua-driver blocks list_apps (2026-08-10)** | **SOFT** (mirror; owner windows-command-patterns v3.20). Fall back to COM/filesystem; user clicks Retry runtime to re-enable. |
 | **TEST-SEND-EXTERNAL-1: test/diagnostic emails sent to real external recipients (2026-08-10)** | **HARD GATE** (mirror; owner email-composer v2.16). Test sends ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal qnfo/qwav addresses; an external-recipient diagnostic control uses the user's own mailbox. NEVER to a real external address — even a "test"/"matrix" subject is still a contact and violates no-repeat-contact. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66; second contact to Patel). ENFORCED BY: email-composer/scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR: email-composer v2.17 Repair-Send Protocol. | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
+## Red-Team Findings 2026-08-21 (register/ledger-language corpus audit)
+
+- **PUBLICATION-BRAND-LANGUAGE-1 (HARD, user directive):** branded register/ledger/kill-condition/honesty language in publication prose is banned — it reads as marketing and damages credibility. State the substance (OSF DOI, numeric disconfirmation criteria, negative results as results) plainly. "Kill-condition:" -> "Disconfirmation criterion:". Canonical: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544.
+- **PUBLICATION-STATUS-STALE-1 (HARD):** corpus sweep for status-changing records before every publish + newversion. Canonical: guide v1.2/v1.2.2 "E1 unexecuted" vs 21902891 null (red team 2026-08-21).
+- **INTERNAL-ANCHOR-DANGLING-1 (HARD):** internal cross-refs must resolve; annotate newversion fixes. Canonical: v1.2 "open problem 7" dangling, added silently in v1.2.2.
+- **REDTEAM-INTERRUPT-FLUSH-1 (SOFT):** interrupt flushes a stalled reviewer's completed answer (3/3 on 2026-08-21) — try before direct-audit fallback.
+
 ## Cross-Skill Integration
 
 
@@ -15474,4 +15490,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.84** (post-publication audit of the $1,032 Research Program; D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1 + DOIDOT-403-BOT-1 + GIT-MERGE-BRANCH-FETCH-1 + R2-RCLONE-TEMP-CONFIG-1; N-2 drift repairs; mirrors system-prompt v3.58; 2026-08-20)
+Current: **v2.85** (PUBLICATION-BRAND-LANGUAGE-1 + PUBLICATION-STATUS-STALE-1 + INTERNAL-ANCHOR-DANGLING-1 + REDTEAM-INTERRUPT-FLUSH-1; mirrors system-prompt v3.63 + research v2.128)

@@ -1,9 +1,20 @@
 ---
 name: research
-version: "2.127"
+version: "2.131"
 ---
 
-# RESEARCH — v2.127
+# RESEARCH — v2.131
+> **v2.131 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: Beginner's Guide v1.3.x publish-then-audit cycle — SUBSTANTIVE-UPDATE-MANDATE-1 + rendering/deposit gates):**
+> Red-team: 3-slot reviewer dispatch (Accuracy/Completeness/Dependency) on the v1.3.2 package. HARD: 5. SOFT: 2. Changes:
+> (1) [HARD] **SUBSTANTIVE-UPDATE-MANDATE-1 added** — updates to records released months ago MUST incorporate the latest research SUBSTANTIVELY (new sections/evidence), not merely minor corrections; due diligence applies to update cycles. Canonical: Beginner's Guide v1.3 (benchmark section, E3 register design, falsification exemplar, calibrated displacement assessment, thermodynamic successors).
+> (2) [HARD] **CURRENCY-DOLLAR-ESCAPE-1 added** — unescaped currency dollars create false MathJax $...$ pairs (canonical: golden-table row rendered as TeX). Every currency amount MUST be \$-escaped; gate = artifacts/verification/check_rendering.py (odd-$ + currency scans; 8 PASS/0 FAIL).
+> (3) [HARD] **FRONTMATTER-DUPLICATION-1 added** — pandoc renders YAML title/subtitle/date/abstract; the body MUST NOT repeat them (canonical: body Date/Abstract duplicated YAML fields across 3 published versions). Gate: zero body **Date:**/**Abstract:** lines + exactly one rendered abstract div.
+> (4) [HARD] **FFFD-RAW-FALSE-POSITIVE-1 added** — raw-byte U+FFFD inside compressed PDF streams is a coincidence, NOT a text replacement char; the authoritative gate = decompressed-text-stream scan (0 hits) + DOM check (merrorCount=0, no U+FFFD). Never block a build on a raw-byte hit alone.
+> (5) [HARD] **LICENSE-CLOBBER-1 + README-CLOBBER-1 added** — git-restore of repo LICENSE/README clobbers DEPOSIT files; publish scripts MUST assert LICENSE size/CC-header AND README How-to-Cite marker before upload (canonical: v1.2.1 + v1.3 shipped QNFO-ULA/blueprint; guards in v1.3.2). Deposit files rebuild from LICENSE-CC-BY-4.0.txt / README-DEPOSIT.md.
+> (6) [SOFT] R2 stale-edge-cache re-confirmed — GET download-back can serve stale bytes after overwrite; LIST etag=md5 is authoritative (R2-VERIFY-VIA-LIST-1).
+> (7) [SOFT] Publish-time structural guards (not per-cycle fix-ups) end deposit-file defect recurrence.
+> Cross-reference: system-prompt v3.62, kaizen v2.88, session this.
+
 
 > **v2.127 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program (10.5281/zenodo.22028851) + launch-cycle gates; mirrors system-prompt v3.58 + kaizen v2.84):**
 > Red-team: direct parent-agent + 3-slot reviewer dispatch (Accuracy CLEAN; Dependency child failed → direct audit). HARD: 3. SOFT: 3. DESIGN: 0. Changes:
@@ -13,6 +24,10 @@ version: "2.127"
 > (4) [SOFT] **ESSAY-DEPOSIT-EVIDENCE-PACK-1 (Phase 5)** — essay/ledger deposits MUST include the aggregation + verification scripts and summary JSON that produced the figures (canonical: aggregate_usage.py, usage_summary.json, verify_essay.py); raw usage CSVs excluded for privacy (user_id + masked api_key), documented in PROVENANCE. Remediation (registered next cycle): v1.2 newversion adding the evidence pack + dissemination package.
 > (5) [SOFT] Mirror rows — GIT-MERGE-BRANCH-FETCH-1 (fetch branch before merge in fresh clones; tag AFTER the merge commit) + R2-RCLONE-TEMP-CONFIG-1 (temp rclone.conf, remote name = bucket name) + DOIDOT-403-BOT-1 (doi.org 403 = bot block; verify via DataCite findable + records API state=done).
 > Cross-reference: system-prompt v3.58, kaizen v2.84, qnfo-core v1.34, session this.
+
+> **v2.128 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-BRAND-LANGUAGE-1 + PUBLICATION-STATUS-STALE-1 + INTERNAL-ANCHOR-DANGLING-1 (CMD RED TEAM 4-slot, 2026-08-21); mirrors system-prompt v3.63 + kaizen v2.85):**
+> Red-team of 8 records carrying the register/ledger framing: Language=CONFIRMED (user directive — branded register/ledger/honesty language banned from publication prose), Accuracy=CONCERNS, Completeness=FAIL, Dependency=CONCERNS. New Phase-5 gates: (1) Publication Language Gate extended with the banned-token list + "Disconfirmation criterion:" label (PUBLICATION-BRAND-LANGUAGE-1); (2) pre-publish + pre-newversion corpus status sweep (PUBLICATION-STATUS-STALE-1; canonical: guide v1.2/v1.2.2 E1 "unexecuted" vs 21902891 null); (3) internal-anchor resolution check (INTERNAL-ANCHOR-DANGLING-1; canonical: v1.2 "open problem 7" dangling). Canonical worst offenders: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544.
+> Cross-reference: system-prompt v3.63, kaizen v2.85, cloudflare v3.58, session this.
 
 > **v2.125 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: ZENODO-LICENSE-RTYPE-MUTUAL-EXCLUSION-1 + PRERESERVE-VIA-RECORDS-API-RESERVE_DOI-1 + PDF-SUPERSCRIPT-UNICODE-1 (Phase 5/6); mirrors system-prompt v3.56 + kaizen v2.82):**
 > Red-team: direct parent-agent skills audit (session this — RES.017 v1.4 + industry-brief publish cycles). HARD: 3. SOFT: 1. DESIGN: 0.
@@ -5497,6 +5512,18 @@ Scan for: internal language, credential leaks, bare Unicode math, AI-generated f
 
 
 
+### Publication Language Gate — Brand-Token Ban (PUBLICATION-BRAND-LANGUAGE-1, HARD — 2026-08-21, user directive)
+
+Branded register/ledger/honesty vocabulary is banned from publication prose (extends PUBLICATION-PROSE-GATE-1). Banned brand tokens: "falsifiability register", "honest null ledger", "pre-registered observables", "kill-conditions", "published nulls" used as recurring labels; "honest question", "The Honest Landscape", "honestly reported", "Honest caveat/residual", "Honest Accounting", "weigh this record"; confidence tags (`[speculative]`) in abstracts; internal gate names as section headers ("So What? Why Should a Reader Care About This Research?"). Rules: pre-registration = a fact with its identifier (OSF DOI); disconfirmation criteria = numbers, labeled "Disconfirmation criterion:" (never "Kill-condition:"); negative results = results ("no log-periodic signal was found; bootstrap p=0.89"). Canonical offenders: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544 (CMD RED TEAM 2026-08-21, Language=CONFIRMED).
+
+### Cross-Record Status Sync (PUBLICATION-STATUS-STALE-1, HARD — 2026-08-21)
+
+Before EVERY publish AND every newversion: sweep the corpus for records that change any experiment-status sentence in the artifact. Canonical: guide v1.2 (22036025) AND v1.2.2 (22038733) Appendix A + Ch.16 state "E1 (CMB log-periodic oscillations) ... remain unexecuted as of 2026-08-20" while 21902891 (2026-08-12) reports a certified null on that exact test and the same-day register lists "the cosmological log-periodic null". A newversion that ships a stale status sentence is a HARD finding even when other fixes ship.
+
+### Internal Anchor Resolution (INTERNAL-ANCHOR-DANGLING-1, HARD — 2026-08-21)
+
+Every internal cross-reference ("Chapter N, open problem M", "see §X") must resolve in the published artifact. A newversion that adds the missing target MUST annotate the change in the changelog/appendix. Canonical: guide v1.2 Appendix A cites "(Chapter 20, open problem 7)" while Ch.20 lists six; v1.2.2 adds the 7th silently.
+
 ### Physics Writing Standards
 
 
@@ -9594,7 +9621,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.127** (D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1; mirrors system-prompt v3.58 + kaizen v2.84; 2026-08-20)
+Current: **v2.128** (PUBLICATION-BRAND-LANGUAGE-1 + PUBLICATION-STATUS-STALE-1 + INTERNAL-ANCHOR-DANGLING-1; mirrors system-prompt v3.63 + kaizen v2.85)
 
 
 
