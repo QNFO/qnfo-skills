@@ -1,4 +1,11 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.64
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.65
+
+> **v3.65 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: user directive — superfluous meta-commentary expunged (PUBLICATION-META-PROSE-1); mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59 unchanged):**
+> Red-team: 3 reviewer slots on the CWI poster set for the meta-commentary class (Accuracy/Completeness/Dependency — all completed; 15 definite hits + 8 borderline found; numbers cross-consistent; expungement structurally safe). User directive 2026-08-21: phrases that narrate the act of stating/disclosing/publishing — or grade it as a virtue — are ENTIRELY SUPERFLUOUS and are omitted/expunged from publications, presentations, and documents. Changes:
+> (1) [HARD] **PUBLICATION-META-PROSE-1 (user directive 2026-08-21)** — banned class: "published, not hidden", "published here rather than hidden", "runs and publishes nulls", "reported as a null not hidden", "rather than the confirmation", "kept on the same ledger", "graded/reported honestly", "weigh this record", "not a silence". Rule: state the fact and stop — the DOI carries the publication evidence, the prose carries only the claim. Extends PUBLICATION-BRAND-LANGUAGE-1.
+> (2) [HARD] Remediation executed 2026-08-21: CWI poster set expunged — v5 poster "Boundary, published:" -> "Boundary:" + labeled footer DOIs; v5 handout 3 hits; v2 3 hits ("Null reported, not hidden.", "honestly", "reported provisionally") + full name; v4-nozx 4 hits ("notebook made public", "feigned" caption, affiliation -> QNFO, unmatched <strong>); talking-points 3 SPOKEN hits; roadmap 6 (incl. dual-DOI annotation 21964674 / concept 21809888); README 7 (title drift + 9->6 DOI count). All PDFs re-rendered + mediabox/fill verified; commit 0317073 pushed (LOCAL==ORIGIN).
+> (3) [SOFT] Immutable records carrying the class — register 22025544 ("published here rather than hidden"), guides 22036025/22038733 ("weigh this record"); suspected 21979060/21964674 — newversion remediation deferred to the next RES cycle (user decision).
+> Cross-reference: kaizen v2.88, research v2.133, cloudflare v3.59 (unchanged), session this.
 
 > **v3.64 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: scheduled-task fleet red-team codification — CALENDAR-SYNC-TOOL-GAP-1 + NO-CATCH-UP-1 + SILENT-ROLLOVER-1 + DEAD-NOTIFY-CHAIN-1 + 6 SOFT fleet gates; mirrors kaizen v2.86 + research v2.131 + cloudflare v3.59):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered; Accuracy 10/10 P-findings supported, P6/P7 re-worded, P10 measured values; Completeness 8 gaps incl. research v2.131 mirror break + email-composer frontmatter gap; Dependency write-chain: E4/E5 char-vs-byte skew resolved, E6/E7 store-shape asymmetry, git stale-ref FF sequence) layered on the 5-slot fleet audit (scheduled-task failures — RC1-RC6, 9 novel mechanisms). HARD: 4. SOFT: 6. DESIGN: 0. Changes:
@@ -742,6 +749,14 @@ post-publication audit is the enforcement loop.
    problem M", section pointers, "see §X") must resolve in the published artifact; when a
    newversion adds the missing target, annotate the change in the changelog/appendix (canonical:
    guide v1.2 dangling "open problem 7" added silently in v1.2.2).
+
+4. **PUBLICATION-META-PROSE-1 (HARD, user directive 2026-08-21):** meta-commentary that
+   narrates the act of stating/disclosing/publishing — or grades it as a virtue — is superfluous
+   and banned: "published, not hidden", "published here rather than hidden", "runs and publishes
+   nulls", "reported as a null not hidden", "rather than the confirmation", "kept on the same
+   ledger", "graded/reported honestly", "weigh this record", "not a silence". Rule: state the
+   fact and stop — the citation or DOI carries the publication evidence; the prose carries only
+   the claim. Extends PUBLICATION-BRAND-LANGUAGE-1.
 
 ## ZENODO INQUIRY/RESEARCH MANDATE (HARD GATE, 2026-08-12)
 
@@ -2022,7 +2037,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.64** (CALENDAR-SYNC-TOOL-GAP-1 + NO-CATCH-UP-1 + SILENT-ROLLOVER-1 + DEAD-NOTIFY-CHAIN-1 + 6 fleet SOFT gates; 2026-08-21 fleet red-team cycle; mirrors kaizen v2.86 + research v2.131 + cloudflare v3.59)
+Current: **v3.65** (PUBLICATION-META-PROSE-1 + poster-set expungement; preserves v3.64 fleet gates; mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59; 2026-08-21)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
