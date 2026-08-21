@@ -361,6 +361,9 @@ def cmd_sync_tasks(app, ns, args):
     created = 0
     completed = 0
     # 1. Create tasks for OPEN action lines not yet present.
+    #    Subject is DATE-PREFIXED ("YYYY-MM-DD — <title>") so the completion
+    #    gate below can distinguish register-derived tasks from
+    #    agent-maintained ones (H-CAL-1 fix 2026-08-21).
     for t in open_tasks:
         if _title_exists(folder, t["title"]):
             continue
@@ -368,7 +371,7 @@ def cmd_sync_tasks(app, ns, args):
         if due < dt.datetime.now() - dt.timedelta(days=30):
             continue
         item = folder.Items.Add(3)
-        item.Subject = t["title"]
+        item.Subject = f"{t['due']} — {t['title']}"
         item.DueDate = due
         item.StartDate = due - dt.timedelta(days=1)
         item.Body = t["note"]
@@ -378,13 +381,16 @@ def cmd_sync_tasks(app, ns, args):
         created += 1
         print(f"created task: {t['title']} (due {t['due']})")
     # 2. Complete register-derived tasks whose line became [x] or vanished.
-    #    SAFETY: only complete when the task Subject token-overlaps (>=3) a
-    #    DONE register subject AND does NOT overlap (>=2) any OPEN line —
-    #    agent-maintained tasks (no register anchor) are NEVER auto-completed.
+    #    SAFETY (H-CAL-1 fix 2026-08-21, remediation reviewer): auto-complete
+    #    ONLY tasks whose Subject starts with a DATE PREFIX (YYYY-MM-DD — the
+    #    register-derived signature) AND token-overlaps (>=3) a DONE register
+    #    subject AND does NOT overlap (>=2) any OPEN line. Tasks without a
+    #    date prefix are agent-maintained and are NEVER auto-completed —
+    #    complete them explicitly via `complete --title`.
     try:
         for it in list(folder.Items):
             s = _subj(it)
-            if not s:
+            if not s or not RX_TASK_DATE_PREFIX.match(s):
                 continue
             try:
                 if it.Complete:
