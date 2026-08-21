@@ -1,4 +1,12 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.65
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.66
+> **v3.66 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: RES.021 duplicate-record publish-race remediation — TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; mirrors kaizen v2.88 + research v2.133):**
+> Red-team: Accuracy + Completeness reviewer slots COMPLETED + direct parent audit (QNFO.RES.021 duplicate records 22044379/22045617 — parallel-session publish race created two concepts 22044217/22044106 for one paper). HARD: 4. Remediated 2026-08-21: canonical chain advanced to v1.0.2 (10.5281/zenodo.22046458, concept 22044217 — §9 verification prose rewritten plain-publication, README How-to-Cite concept DOI, frontmatter own-DOI verified by download); duplicate chain head repaired (10.5281/zenodo.22046491 — isObsoletedBy → canonical, license+keywords, natural creator, supersession README); R2 19 flattened legacy keys deleted (29-object mirror == deposit); D1 body_md replaced + Vectorize re-indexed. New Phase-6/8 gates:
+> (1) [HARD] **TITLE-EXISTENCE-PRE-PUBLISH-1** — BEFORE creating any Zenodo deposit, run `GET https://zenodo.org/api/records?q=title:"<exact-title>"`; if a PUBLISHED record with the same title exists on a DIFFERENT concept, BLOCK and reconcile (canonical: RES.021 two concepts 22044217/22044106, 2026-08-21). Also check D1/KG/registry for the slug.
+> (2) [HARD] **PUBLISH-LOCK-1** — before P8 publish, take a publish-lock in portfolio-state (claim row: session_id + wbs_code + target concept, UNIQUE constraint); two sessions writing the same RES.021.P8 unclaimed created the duplicate (handoffs 28675/28676).
+> (3) [HARD] **VERIFICATION-PROSE-GATE-1** — publication §Verification sections MUST be plain scholarly prose (results table + reproducibility statement); BANNED in publication text: "falsifier live", "pre-registered", "bugs in the checks", "post-publication audit", "Results (seed", "verification discipline" as pipeline voice; raw run logs live ONLY in artifacts/verification/. Gate: banned-phrase grep + Unicode-superscript scan (U+2070-U+209C) + version-label uniqueness (Zenodo metadata version == md frontmatter version) before publish. Canonical: RES.021 v1.0.1 §9 embedded the raw verification closeout (user-caught "WTF IS THIS?"); v1.0.2 fixed.
+> (4) [SOFT] Zenodo deposit-API facts (verified 2026-08-21): related_identifiers relation enum REJECTS "isRelatedTo" (400 "Invalid value isrelatedto") — use cites/isSupplementTo; license = SPDX "CC-BY-4.0"; records-API pids response carries doi at TOP level (d["doi"]); newversion file replace = DELETE file.links.self (204) + PUT raw bytes to bucket?access_token (201); R2 objects list = plain array, 20/page pagination via result_info.cursor (R2-OBJECTS-LISTING-SHAPE-1).
+> Cross-reference: kaizen v2.88, research v2.133, cloudflare v3.59 (unchanged), session this.
+
 
 > **v3.65 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: user directive — superfluous meta-commentary expunged (PUBLICATION-META-PROSE-1); mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59 unchanged):**
 > Red-team: 3 reviewer slots on the CWI poster set for the meta-commentary class (Accuracy/Completeness/Dependency — all completed; 15 definite hits + 8 borderline found; numbers cross-consistent; expungement structurally safe). User directive 2026-08-21: phrases that narrate the act of stating/disclosing/publishing — or grade it as a virtue — are ENTIRELY SUPERFLUOUS and are omitted/expunged from publications, presentations, and documents. Changes:
@@ -2037,7 +2045,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.65** (PUBLICATION-META-PROSE-1 + poster-set expungement; preserves v3.64 fleet gates; mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59; 2026-08-21)
+Current: **v3.66** (RES.021 duplicate-record remediation: TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; preserves v3.65 meta-prose + v3.64 fleet gates; mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59; 2026-08-21)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
