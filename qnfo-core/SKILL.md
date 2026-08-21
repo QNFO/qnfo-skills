@@ -1,10 +1,15 @@
 ---
 name: qnfo-core
-version: "1.34"
+version: "1.35"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.34
+# QNFO-CORE — v1.35
+> **v1.35 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 status on the ONLY-supported-mechanism tool + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131):**
+> Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the ONLY supported mechanism `email-composer/scripts/calendar-sync.py` does NOT exist (disk / git log --all / origin/master; verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). The MANDATE remains binding; the TOOL is pending authoring — agents MUST NOT claim calendar events/tasks were created until the tool exists.
+> Cross-reference: system-prompt v3.64, kaizen v2.86, research v2.131, session this.
+
 > **v1.34 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: post-publication audit of the $1,032 Research Program; owner mirrors; mirrors system-prompt v3.58 + kaizen v2.84 + research v2.127):**
 > Red-team: direct parent-agent + 3-slot reviewer dispatch. HARD: 3. SOFT: 3. DESIGN: 0. Owner-level enforcement mirrors:
 > (1) [HARD] **D1-QUOTED-RESERVED-COLS-1** — SQLite reserved keywords as D1 column names MUST be double-quoted (`"references"`); unquoted → SQLITE_ERROR 7500 (canonical: ai-accelerated-research insert 2026-08-20).
@@ -23,6 +28,7 @@ otes1\_personal-gtd.md; daily sync Mon-Fri 07:30 (cronjob 78136b24). N-2 repair
 **Anything with a date lives on the Outlook calendar and/or as an Outlook to-do — maintained automatically, WITHOUT user intervention, forever.**
 - Calendar: **Outlook.com** (rowan.quni@outlook.com default calendar in the desktop client — online store, syncs to outlook.live.com web). To-dos: **Outlook Tasks** (olFolderTasks → Microsoft To Do), completable.
 - **Tool (the ONLY supported mechanism):** `python C:\Users\LENOVO\.deepchat\skills\email-composer\scripts\calendar-sync.py`
+  - **STATUS 2026-08-21 (CALENDAR-SYNC-TOOL-GAP-1):** this script does NOT exist yet — not on disk, not in git history, not on origin/master. Cronjob 78136b24 fails at its 300s cap until authored + committed. The mandate is binding; the tool is pending authoring — NEVER claim calendar events/tasks were created.
   - `list` / `tasks` — read state · `add --title T --start "YYYY-MM-DD HH:MM" [--end E] [--loc L] [--reminder MIN] [--body B]` — calendar event (idempotent) · `add-task --title T --due YYYY-MM-DD [--note N]` — to-do (idempotent) · `sync-register` + `sync-tasks` — GTD register ↔ Outlook sync (also run automatically Mon-Fri 07:30 by cronjob 78136b24) · `complete --title T`.
 - **Every agent, in every thread and scheduled task:** at the moment an event/date is confirmed (meeting, deadline, conference, dated commitment — QNFO or personal) → create the calendar event AND/OR task at confirmation time via the tool (body carries prep/talking points). Never ask the user to schedule anything; never leave a dated item only in prose.
 - Reminder defaults: 1440 min day-before (meetings/deadlines); 10080 min week-before (long-lead, conferences); prep-heavy meetings get tailored reminders + cronjob prep layers (Outlook supports ONE native reminder per event — "one or more" = native + cronjob layers).
@@ -5973,7 +5979,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.34** (owner mirrors D1-QUOTED-RESERVED-COLS-1 + ZENODO-NEWVERSION-FILE-REPLACE-1 + CONCEPT-DOI-PRE-BUILD-1 + ESSAY-DEPOSIT-EVIDENCE-PACK-1 + DOIDOT-403-BOT-1 + GIT-MERGE-BRANCH-FETCH-1 + R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58; 2026-08-20)
+Current: **v1.35** (CALENDAR-SYNC-TOOL-GAP-1 status + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131; 2026-08-21)
 
 
 

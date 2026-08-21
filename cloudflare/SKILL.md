@@ -1,9 +1,14 @@
 ---
 name: cloudflare
-version: "3.58"
+version: "3.59"
 ---
 
-# CLOUDFLARE — v3.58
+# CLOUDFLARE — v3.59
+
+> **v3.59 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh only — content unchanged (Cost Control §v3.49 verified present: spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1 aiInferenceAdaptiveGroups, budget <$100/$200; R2 anti-patterns QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 preserved); mirrors system-prompt v3.64 + kaizen v2.86):**
+> Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered). HARD: 0. SOFT: 1. DESIGN: 0. Changes:
+> (1) [SOFT] **Mirror-pointer chain refreshed** — footer previously pointed at system-prompt v3.58 + kaizen v2.84 (6 cycles stale); now mirrors system-prompt v3.64 + kaizen v2.86 (MIRROR-POINTER discipline, cloudflare v3.56 precedent).
+> Cross-reference: system-prompt v3.64, kaizen v2.86, session this.
 
 > **v3.58 UPDATE (2026-08-20, kaizen — CMD SKILLS UPDATE: R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58 + kaizen v2.84):**
 > Red-team: direct parent-agent (post-publication audit of the $1,032 Research Program launch cycle). HARD: 0. SOFT: 1. DESIGN: 0. Changes:
@@ -2177,7 +2182,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.58** (R2-RCLONE-TEMP-CONFIG-1; mirrors system-prompt v3.58 + kaizen v2.84; 2026-08-20)
+Current: **v3.59** (mirror-pointer refresh; Cost Control + R2 rows verified; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
 
 ---
 

@@ -23,7 +23,7 @@ version: "2.131"
 > (3) [HARD] **CONCEPT-DOI-PRE-BUILD-1 (Phase 5)** — read `conceptrecid` from the DEPOSIT object immediately after creation; build the README How-to-Cite with the CONCEPT DOI BEFORE first upload (record DOI ≠ concept DOI — canonical: 22028787 vs 22028788). Shipping the record DOI labeled "concept DOI" is a HARD finding → v1.1 newversion remediation.
 > (4) [SOFT] **ESSAY-DEPOSIT-EVIDENCE-PACK-1 (Phase 5)** — essay/ledger deposits MUST include the aggregation + verification scripts and summary JSON that produced the figures (canonical: aggregate_usage.py, usage_summary.json, verify_essay.py); raw usage CSVs excluded for privacy (user_id + masked api_key), documented in PROVENANCE. Remediation (registered next cycle): v1.2 newversion adding the evidence pack + dissemination package.
 > (5) [SOFT] Mirror rows — GIT-MERGE-BRANCH-FETCH-1 (fetch branch before merge in fresh clones; tag AFTER the merge commit) + R2-RCLONE-TEMP-CONFIG-1 (temp rclone.conf, remote name = bucket name) + DOIDOT-403-BOT-1 (doi.org 403 = bot block; verify via DataCite findable + records API state=done).
-> Cross-reference: system-prompt v3.58, kaizen v2.84, qnfo-core v1.34, session this.
+> Cross-reference: system-prompt v3.64, kaizen v2.86, qnfo-core v1.35, session this.
 
 > **v2.128 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: PUBLICATION-BRAND-LANGUAGE-1 + PUBLICATION-STATUS-STALE-1 + INTERNAL-ANCHOR-DANGLING-1 (CMD RED TEAM 4-slot, 2026-08-21); mirrors system-prompt v3.63 + kaizen v2.85):**
 > Red-team of 8 records carrying the register/ledger framing: Language=CONFIRMED (user directive — branded register/ledger/honesty language banned from publication prose), Accuracy=CONCERNS, Completeness=FAIL, Dependency=CONCERNS. New Phase-5 gates: (1) Publication Language Gate extended with the banned-token list + "Disconfirmation criterion:" label (PUBLICATION-BRAND-LANGUAGE-1); (2) pre-publish + pre-newversion corpus status sweep (PUBLICATION-STATUS-STALE-1; canonical: guide v1.2/v1.2.2 E1 "unexecuted" vs 21902891 null); (3) internal-anchor resolution check (INTERNAL-ANCHOR-DANGLING-1; canonical: v1.2 "open problem 7" dangling). Canonical worst offenders: guide 22036025/22038733, QEC-Darwinism 21964674, BTQP 20109836, register 22025544.
@@ -9621,7 +9621,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.128** (PUBLICATION-BRAND-LANGUAGE-1 + PUBLICATION-STATUS-STALE-1 + INTERNAL-ANCHOR-DANGLING-1; mirrors system-prompt v3.63 + kaizen v2.85)
+Current: **v2.131** (Beginner's Guide v1.3.x publish-then-audit cycle; mirrors system-prompt v3.64 + kaizen v2.86 + cloudflare v3.59; 2026-08-21)
 
 
 

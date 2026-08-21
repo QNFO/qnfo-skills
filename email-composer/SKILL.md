@@ -1,4 +1,15 @@
+---
+name: email-composer
+version: "2.27"
+---
+
 # email-composer
+
+> **v2.27 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: scheduled-task fleet red-team — CALENDAR-SYNC-TOOL-GAP-1 status + YAML frontmatter added (unloadable-skill root cause); mirrors system-prompt v3.64 + kaizen v2.86):**
+> Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 2. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the mandated tool `calendar-sync.py` of CALENDAR-SYNC-1/CALENDAR-TASKS-1 does NOT exist: not on disk (`scripts/` = email-send-guard.py + outlook-gtd-triage.py only), not in git history, not on origin/master (verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). Until authored + committed: the job CANNOT succeed; NEVER claim calendar events/tasks were created. Authoring pending user approval (rebuild decision surfaced 2026-08-21).
+> (2) [HARD] **YAML frontmatter added** — this file previously had NO frontmatter (opened at `# email-composer`), the exact unloadable-skill root cause from the 08-21 outreach stall (skill_list "(none)" while files exist on disk). Now `name: email-composer, version: "2.27"` (N-2 drift check MANDATORY v3.21: frontmatter == banner).
+> Cross-reference: system-prompt v3.64, kaizen v2.86, qnfo-core v1.35, session this.
 
 > **v2.26 UPDATE (2026-08-20, kaizen — GTD-INBOX-ZERO-1: personal Outlook inbox-zero triage + GTD routing):**
 > User directive 2026-08-20: "CLEAN UP/CLEAR OUT MY OUTLOOK INBOXES. I ONLY WANT TO SEE WHAT I MUST RESPOND TO OR ACT UPON. EVERYTHING ELSE NEEDS TO BE DISPATCHED AUTONOMOUSLY (GTD/INBOX ZERO)... KEEP ALL MY INBOXES CLEAN AND FIGURE OUT HOW TO ROUTE NEXT ACTIONS, SOMEDAY/MAYBE, WAITING FOR, ETC IN A WAY THAT DOESN'T REQUIRE MY ATTENTION UNTIL ACTIONABLE."
@@ -796,6 +807,8 @@ curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
 **Every confirmed event** (meetings, deadlines, conferences, dated commitments — QNFO or personal) MUST be created on the **Outlook.com calendar** (`rowan.quni@outlook.com`, default calendar of the desktop Outlook client — online store, syncs to outlook.live.com web) with **ONE OR MORE advance reminders**. Applies to ALL future events; permanent.
 
 - **Tool:** `C:\Users\LENOVO\.deepchat\skills\email-composer\scripts\calendar-sync.py` (pywin32 Outlook COM — desktop client already authenticated; no passwords needed; NEVER use the stale web-login password from memory — rejected by Microsoft 2026-08-20).
+
+> **STATUS 2026-08-21 (CALENDAR-SYNC-TOOL-GAP-1):** the script does NOT exist yet — not on disk, not in git history, not on origin/master. Cronjob 78136b24 fails at its 300s cap until it is authored + committed. The mandate is binding; the tool is pending authoring — NEVER claim calendar events/tasks were created.
   - `python calendar-sync.py list` — upcoming 120 days with reminder state
   - `python calendar-sync.py add --title T --start "YYYY-MM-DD HH:MM" [--end E] [--loc L] [--reminder MIN] [--body B]` — idempotent
   - `python calendar-sync.py sync-register` — GTD register dated items → calendar (safety net; also run by daily cronjob 07:30 Mon-Fri)
@@ -1661,5 +1674,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.25** (email-composer — PROACTIVE OUTREACH (EMAIL-COMPOSER-PROACTIVE-1); user mandate 2026-08-18: REGISTER-MIRRORING-1 + RECIPIENT-STYLE-USE-1; v2.23 red-team audit 0 HARD, DEFAULT-SENDER-DRIFT-1)
+Current: **v2.27** (CALENDAR-SYNC-TOOL-GAP-1 status + YAML frontmatter added; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
 
