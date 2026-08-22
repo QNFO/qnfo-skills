@@ -1,9 +1,14 @@
 ---
 name: kaizen
-version: "2.88"
+version: "2.89"
 ---
 
-# KAIZEN — v2.88
+# KAIZEN — v2.89
+> **v2.89 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: system-prompt v3.67 fold-in mirror — Beginner's Guide v1.3.x gates folded into the system prompt body + CMD RESEARCH template; mirrors system-prompt v3.67 + research v2.133 + cloudflare v3.59):**
+> Red-team: direct parent-agent skills audit (session this — handoff 28684 fold-in; research v2.131-2.133 already carries the five gates). HARD: 1 (GIT-AUTOSTASH-CONFLICT-1, new). Changes:
+> (1) [HARD] **GIT-AUTOSTASH-CONFLICT-1 added** — `git pull --rebase --autostash` can end with "Applying autostash resulted in conflicts" and KEEP the stash; the working tree then holds conflict-marked files. After ANY pull that reports a conflict: grep the tree for `<<<<<<<` BEFORE `git add`, and verify the pushed BLOB sha against the canonical (`git show HEAD:<file> | sha256sum`) — a clean ls-remote does NOT prove clean content. Canonical: 2026-08-21 qnfo-skills commit 6abc073 pushed a conflicted system-prompt-v2.7.md (2 markers) because a blind `git add` followed the conflicted pull; caught by the blob-sha check; repaired by abe8e99 (blob sha 7af198fc == canonical).
+> (2) [SOFT] **v3.67 fold-in mirror** — SUBSTANTIVE-UPDATE-MANDATE-1, CURRENCY-DOLLAR-ESCAPE-1, FRONTMATTER-DUPLICATION-1, FFFD-RAW-FALSE-POSITIVE-1, LICENSE/README-CLOBBER-1 now live in the system prompt body + CMD RESEARCH template; 7-store parity sha 7af198fc + prompt-store-verify.py exit 0; repo copy pushed (abe8e99, ls-remote verified).
+> Cross-reference: system-prompt v3.67, research v2.133, cloudflare v3.59, session this.
 > **v2.88 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE mirror: publish-race gates; mirrors research v2.133):**
 > HARD: 3 (mirror of research v2.133): TITLE-EXISTENCE-PRE-PUBLISH-1 (Zenodo title search before deposit; two concepts 22044217/22044106 created for one paper by parallel sessions 2026-08-21), PUBLISH-LOCK-1 (portfolio-state claim row with UNIQUE constraint before P8 publish), VERIFICATION-PROSE-GATE-1 (publication verification sections plain prose; banned pipeline phrases + Unicode-sup scan + version-label uniqueness; canonical RES.021 v1.0.1 §9 raw closeout -> v1.0.2 fixed). Remediated 2026-08-21: v1.0.2 canonical 22046458, duplicate repaired 22046491.
 > Cross-reference: research v2.133, system-prompt v3.59, session this.
@@ -15524,4 +15529,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.88** (PUBLICATION-META-PROSE-1; mirrors system-prompt v3.65 + research v2.133 + cloudflare v3.59)
+Current: **v2.89** (GIT-AUTOSTASH-CONFLICT-1 + system-prompt v3.67 fold-in mirror; mirrors system-prompt v3.67 + research v2.133 + cloudflare v3.59)
