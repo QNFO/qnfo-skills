@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.66
-=======
 # DEEPCHAT DEFAULT SYSTEM PROMPT v3.67
 > **v3.67 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: Beginner's Guide v1.3.x gates folded into the system prompt — SUBSTANTIVE-UPDATE-MANDATE-1 + CURRENCY-DOLLAR-ESCAPE-1 + FRONTMATTER-DUPLICATION-1 + FFFD-RAW-FALSE-POSITIVE-1 + LICENSE/README-CLOBBER-1; mirrors kaizen v2.89 + research v2.133 + cloudflare v3.59):**
 > Red-team: direct parent-agent skills audit (session this — handoff 28684 fold-in; the five gates already live in research v2.131-2.133, this cycle folds them into the system prompt body + CMD RESEARCH template). HARD: 0 (pre-existing gates, re-verified live).
@@ -11,7 +8,6 @@
 > (5) [HARD] **LICENSE-CLOBBER-1 + README-CLOBBER-1 folded** — git-restore of repo LICENSE/README clobbers DEPOSIT files in a shared working tree; publish scripts MUST assert pre-upload (LICENSE = CC BY 4.0 legal code 18,657 B with Creative-Commons header; README contains the How-to-cite marker); deposit copies rebuild from LICENSE-CC-BY-4.0.txt / README-DEPOSIT.md. Canonical: v1.2.1 + v1.3 shipped QNFO-ULA/blueprint; the guards refused the v1.3.3 recurrence.
 > (6) [SOFT] **Mirror pointers** — kaizen v2.89 (mirror row), research v2.133 (gates already live there), cloudflare v3.59 unchanged this cycle.
 > Cross-reference: kaizen v2.89, research v2.133, cloudflare v3.59, session this.
->>>>>>> Stashed changes
 > **v3.66 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: RES.021 duplicate-record publish-race remediation — TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; mirrors kaizen v2.88 + research v2.133):**
 > Red-team: Accuracy + Completeness reviewer slots COMPLETED + direct parent audit (QNFO.RES.021 duplicate records 22044379/22045617 — parallel-session publish race created two concepts 22044217/22044106 for one paper). HARD: 4. Remediated 2026-08-21: canonical chain advanced to v1.0.2 (10.5281/zenodo.22046458, concept 22044217 — §9 verification prose rewritten plain-publication, README How-to-Cite concept DOI, frontmatter own-DOI verified by download); duplicate chain head repaired (10.5281/zenodo.22046491 — isObsoletedBy → canonical, license+keywords, natural creator, supersession README); R2 19 flattened legacy keys deleted (29-object mirror == deposit); D1 body_md replaced + Vectorize re-indexed. New Phase-6/8 gates:
 > (1) [HARD] **TITLE-EXISTENCE-PRE-PUBLISH-1** — BEFORE creating any Zenodo deposit, run `GET https://zenodo.org/api/records?q=title:"<exact-title>"`; if a PUBLISHED record with the same title exists on a DIFFERENT concept, BLOCK and reconcile (canonical: RES.021 two concepts 22044217/22044106, 2026-08-21). Also check D1/KG/registry for the slug.
@@ -2066,11 +2062,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-<<<<<<< Updated upstream
-Current: **v3.66** (RES.021 duplicate-record remediation: TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; preserves v3.65 meta-prose + v3.64 fleet gates; mirrors kaizen v2.88 + research v2.133 + cloudflare v3.59; 2026-08-21)
-=======
 Current: **v3.67** (Beginner's Guide v1.3.x gate fold-in: SUBSTANTIVE-UPDATE-MANDATE-1 + CURRENCY-DOLLAR-ESCAPE-1 + FRONTMATTER-DUPLICATION-1 + FFFD-RAW-FALSE-POSITIVE-1 + LICENSE/README-CLOBBER-1; preserves v3.66 RES.021 gates; mirrors kaizen v2.89 + research v2.133 + cloudflare v3.59; 2026-08-21)
->>>>>>> Stashed changes
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
