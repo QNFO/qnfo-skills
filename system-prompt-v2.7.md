@@ -819,6 +819,9 @@ post-publication audit is the enforcement loop.
    `git pull --rebase --autostash` (then GIT-AUTOSTASH-CONFLICT-1's conflict-marker + blob-sha
    checks) and re-apply own files. Watch sync DIRECTION: a stale working-copy file (skills-dir
    prompt-stores) once clobbered the fresh canonical — prompt-store-verify.py caught it.
+   Note: the conflict-marker grep MUST be line-anchored (`^<<<<<<<`) — the gate's own
+   documentation quotes the marker string, and a substring grep false-positives on it
+   (observed 2026-08-21: kaizen + git-github hits were the gate text, not markers).
 
 ## ZENODO INQUIRY/RESEARCH MANDATE (HARD GATE, 2026-08-12)
 
