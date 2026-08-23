@@ -1,9 +1,18 @@
 ---
 name: kaizen
-version: "2.89"
+version: "2.90"
 ---
 
-# KAIZEN — v2.89
+# KAIZEN — v2.90
+> **v2.90 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: print-artifact + execution-order discipline (EDGE-PDF-PAGE-KEYWORD-1, POSTER-FILL-MEASURE-1, SVG-LABEL-EXTENT-1, WRITE-EXEC-ORDER-1, CONCURRENT-REPO-SYNC-1); mirrors system-prompt v3.68 + research v2.134 + cloudflare v3.59 unchanged):**
+> Red-team skills audit: direct parent (evidence-based). N-2 drift clean (all 8 skills fm==banner==footer). New gates from the CWI poster marathon 2026-08-21:
+> (1) [HARD] **EDGE-PDF-PAGE-KEYWORD-1** — Chromium ignores `@page` A0/A1 keywords (silent US Letter fallback). Explicit mm sizes + MediaBox verify before any size claim.
+> (2) [HARD] **POSTER-FILL-MEASURE-1** — pixel fill measurement (headless screenshot + PIL content-bbox vs page) before any full-bleed claim; auto-tune mm fonts.
+> (3) [HARD] **SVG-LABEL-EXTENT-1** — no hand-placed SVG text; est-width fit check (len×fs×0.55) pre-render; HTML typography carries annotation.
+> (4) [HARD] **WRITE-EXEC-ORDER-1** — writes and execs in SEPARATE batches; completion claims require read-back files (narrated-but-unexecuted state twice on 2026-08-21).
+> (5) [SOFT] **CONCURRENT-REPO-SYNC-1** — pre-edit HEAD check + `git pull --rebase --autostash` + sync-direction care (stale skills-dir prompt-stores clobbered the fresh canonical).
+> Cross-reference: system-prompt v3.68, research v2.134, cloudflare v3.59, session this.
+
 > **v2.89 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: system-prompt v3.67 fold-in mirror — Beginner's Guide v1.3.x gates folded into the system prompt body + CMD RESEARCH template; mirrors system-prompt v3.67 + research v2.133 + cloudflare v3.59):**
 > Red-team: direct parent-agent skills audit (session this — handoff 28684 fold-in; research v2.131-2.133 already carries the five gates). HARD: 1 (GIT-AUTOSTASH-CONFLICT-1, new). Changes:
 > (1) [HARD] **GIT-AUTOSTASH-CONFLICT-1 added** — `git pull --rebase --autostash` can end with "Applying autostash resulted in conflicts" and KEEP the stash; the working tree then holds conflict-marked files. After ANY pull that reports a conflict: grep the tree for `<<<<<<<` BEFORE `git add`, and verify the pushed BLOB sha against the canonical (`git show HEAD:<file> | sha256sum`) — a clean ls-remote does NOT prove clean content. Canonical: 2026-08-21 qnfo-skills commit 6abc073 pushed a conflicted system-prompt-v2.7.md (2 markers) because a blind `git add` followed the conflicted pull; caught by the blob-sha check; repaired by abe8e99 (blob sha 7af198fc == canonical).
@@ -13893,6 +13902,13 @@ Session Failure → Session Retrospective detects failure pattern
 | **TEST-SEND-EXTERNAL-1: test/diagnostic emails sent to real external recipients (2026-08-10)** | **HARD GATE** (mirror; owner email-composer v2.16). Test sends ONLY to user-owned mailboxes (rwnquni@outlook.com) or internal qnfo/qwav addresses; an external-recipient diagnostic control uses the user's own mailbox. NEVER to a real external address — even a "test"/"matrix" subject is still a contact and violates no-repeat-contact. Canonical case: 2026-08-10 MATRIX E -> tp53@rice.edu (D1 id=66; second contact to Patel). ENFORCED BY: email-composer/scripts/email-send-guard.py (scripted gate per PROSE-GATE-ADVISORY-1). REPAIR: email-composer v2.17 Repair-Send Protocol. | | **HARD.** Verify connection points pre-send (au: query + title match); unverifiable -> SKIP. Canonical case: email 41 Heydeman 2018 p-adic claim unconfirmed. Owner: email-composer v2.14. |
 ## Red-Team Findings 2026-08-21 (register/ledger-language corpus audit)
 
+- **EDGE-PDF-PAGE-KEYWORD-1 (HARD):** `@page` A0/A1 keywords are silently ignored by Chromium (US Letter fallback); use explicit `841mm 1189mm` / `594mm 841mm` + MediaBox-verify (2383.9×3370.1pt / 1684.1×2383.9pt). Canonical: CWI v3/v4 "A0" PDFs were US Letter.
+- **POSTER-FILL-MEASURE-1 (HARD):** full-bleed claims require pixel measurement (Edge headless screenshot at exact page px + PIL content-bbox; B margin 6–45mm; auto-tune mm fonts). Canonical: v5 layout collapse = 531mm empty band.
+- **SVG-LABEL-EXTENT-1 (HARD):** no hand-placed SVG text; est-width = len×font_size×0.55 must fit its container; annotation in HTML typography. Canonical: root label 150 units vs circle 88.
+- **WRITE-EXEC-ORDER-1 (HARD):** writes/edits in batch A, execs in batch B, read-backs in batch C; never claim completion without the read-back file. Canonical: twice 2026-08-21 (script executed before written; commit before edit landed).
+- **CONCURRENT-REPO-SYNC-1 (SOFT):** pre-edit HEAD check vs origin; divergent push -> pull --rebase --autostash + GIT-AUTOSTASH-CONFLICT-1 checks; mind sync direction (stale-copy clobber).
+
+
 - **PUBLICATION-META-PROSE-1 (HARD, user directive 2026-08-21):** meta-commentary narrating the act of publishing/disclosing/correcting ("published, not hidden", "rather than the confirmation", "kept on the same ledger", "not a silence") is superfluous and banned from publications, presentations, and documents. State the fact; the DOI carries the evidence. Canonical: CWI poster set expungement 2026-08-21 (commit 0317073).
 
 
@@ -15529,4 +15545,4 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.89** (GIT-AUTOSTASH-CONFLICT-1 + system-prompt v3.67 fold-in mirror; mirrors system-prompt v3.67 + research v2.133 + cloudflare v3.59)
+Current: **v2.90** (EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1 + CONCURRENT-REPO-SYNC-1; mirrors system-prompt v3.68 + research v2.134 + cloudflare v3.59)

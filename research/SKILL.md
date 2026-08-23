@@ -1,9 +1,13 @@
 ---
 name: research
-version: "2.133"
+version: "2.134"
 ---
 
-# RESEARCH — v2.133
+# RESEARCH — v2.134
+> **v2.134 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: print-artifact gates — EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1; mirrors system-prompt v3.68 + kaizen v2.90):**
+> Red-team skills audit: direct parent; N-2 clean. Numbering note: two independent v2.133 cycles collided on 2026-08-21 (PUBLICATION-META-PROSE-1 extension + duplicate-record publish-race remediation) — reconciled here in v2.134. Phase-5 PDF Building extended: explicit A0/A1 page sizes (the CSS `A0` keyword is ignored by Chromium -> US Letter), MediaBox verification, pixel fill measurement for posters, no hand-placed SVG text. Canonical: CWI poster set 2026-08-21.
+> Cross-reference: system-prompt v3.68, kaizen v2.90, cloudflare v3.59, session this.
+
 > **v2.133 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: duplicate-record publish-race remediation gates — TITLE-EXISTENCE-PRE-PUBLISH-1 + PUBLISH-LOCK-1 + VERIFICATION-PROSE-GATE-1; mirrors kaizen v2.88):**
 > Red-team: Accuracy + Completeness reviewer slots COMPLETED + direct parent audit (QNFO.RES.021 duplicate records 22044379/22045617). HARD: 4. Remediated: canonical chain advanced to v1.0.2 (10.5281/zenodo.22046458, concept 22044217 — §9 verification prose rewritten plain-publication, README How-to-Cite concept DOI, frontmatter own-DOI verified by download); duplicate concept head repaired (10.5281/zenodo.22046491 — isObsoletedBy -> canonical, license+keywords, natural creator, supersession README); R2 19 flattened legacy keys deleted (29-object mirror == deposit); D1 body_md replaced + Vectorize re-indexed.
 > New Phase-6/8 permanent gates (RECURRENCE-ZERO-1):
@@ -5822,6 +5826,8 @@ Zero BOM, zero U+FFFD, zero U+FFFF in all source files. All Python: `encoding='u
 
 
 ### PDF Building (v2.72 — CANONICAL CDP PIPELINE ONLY)
+**Print-size gates (2026-08-21):** `@page { size: A0 portrait }` is IGNORED by Chromium (A0 is not a supported page keyword — silent US Letter fallback). Use explicit `size: 841mm 1189mm` (A1 = `594mm 841mm`) and verify every rendered PDF's MediaBox (A0 = 2383.9×3370.1pt). Poster fill claims require a pixel measurement (Edge headless screenshot at exact page px + PIL content-bbox; margins = design padding). No hand-placed SVG text — annotation lives in HTML typography (SVG-LABEL-EXTENT-1).
+
 
 
 
@@ -9642,7 +9648,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 
 
-Current: **v2.133** (PUBLICATION-META-PROSE-1 extension; mirrors system-prompt v3.65 + kaizen v2.88)
+Current: **v2.134** (EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1 in Phase 5; mirrors system-prompt v3.68 + kaizen v2.90)
 
 
 
