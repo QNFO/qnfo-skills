@@ -1,9 +1,18 @@
 ---
 name: kaizen
-version: "2.90"
+version: "2.92"
 ---
 
-# KAIZEN — v2.90
+> **v2.92 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit mirror — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 (HARD) + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1 (SOFT), canonical 10.5281/zenodo.22075544 + RES.023 v2.5 10.5281/zenodo.22075809; mirrors system-prompt v3.70 + research v2.136 + cloudflare v3.59):**
+> Red-team: 3-slot dispatch on 22075544 (Dependency 1 HARD/3 SOFT; Accuracy + Completeness child FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: scripts re-run byte-match, validate 9/9, rendering PASS, DOIs live). HARD: 4. SOFT: 6.
+> Cross-reference: system-prompt v3.70, research v2.136, cloudflare v3.59 (unchanged), session this.
+
+# KAIZEN — v2.92
+> **v2.91 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: TERMINOLOGY-SILO-LESSONS-1 (user directive: apply terminology-silo lessons to ALL QNFO/QWAV research and publications) — title-visible bridges, partitionality audits, built-not-discovered semantic links, bridge infrastructure; canonical: QNFO.CGS.002 10.5281/zenodo.22075544 + RES.023 v2.5 10.5281/zenodo.22075809; mirrors system-prompt v3.69 + research v2.135 + cloudflare v3.59):**
+> Red-team: direct parent-agent skills audit + N-2 drift check (research v2.134 / kaizen v2.90 / cloudflare v3.59 / system v3.68 clean; research footer added this cycle). HARD: 1 (new gate). SOFT: 2.
+> Cross-reference: system-prompt v3.69, research v2.135, cloudflare v3.59 (unchanged), session this.
+
+# KAIZEN — v2.91
 > **v2.90 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: print-artifact + execution-order discipline (EDGE-PDF-PAGE-KEYWORD-1, POSTER-FILL-MEASURE-1, SVG-LABEL-EXTENT-1, WRITE-EXEC-ORDER-1, CONCURRENT-REPO-SYNC-1); mirrors system-prompt v3.68 + research v2.134 + cloudflare v3.59 unchanged):**
 > Red-team skills audit: direct parent (evidence-based). N-2 drift clean (all 8 skills fm==banner==footer). New gates from the CWI poster marathon 2026-08-21:
 > (1) [HARD] **EDGE-PDF-PAGE-KEYWORD-1** — Chromium ignores `@page` A0/A1 keywords (silent US Letter fallback). Explicit mm sizes + MediaBox verify before any size claim.
@@ -15545,4 +15554,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.90** (EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1 + CONCURRENT-REPO-SYNC-1; mirrors system-prompt v3.68 + research v2.134 + cloudflare v3.59)
+Current: **v2.92** (Terminology Silos audit mirror: REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + research v2.136 + cloudflare v3.59)
+

@@ -1,9 +1,25 @@
 ---
 name: research
-version: "2.134"
+version: "2.136"
 ---
 
-# RESEARCH — v2.134
+> **v2.136 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit gates — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + kaizen v2.92):**
+> Red-team: 3-slot dispatch on 10.5281/zenodo.22075544 (Dependency completed: 1 HARD/3 SOFT; Accuracy + Completeness child sessions FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: deposited scripts re-run, outputs byte-match evidence JSONs, seed validation 9/9, rendering gates PASS, all cited DOIs published, frontmatter self-DOI clean). HARD: 4 (record-level). SOFT: 6.
+> New Phase 5/6/8 permanent gates (RECURRENCE-ZERO-1):
+> (1) [HARD] **REFERENCE-TITLE-FIDELITY-1** — every rendered reference entry MUST match the citation-audited bib title EXACTLY (DataCite/Zenodo title; never a description-as-title). Gate: automated rendered-vs-bib title cross-check before publish. Canonical: 22075544 ref #5 — record 19564091 is titled "Projective Geometric Frameworks for Semantic Structures: ... Large Language Models", rendered as "Ultrametric topology in semantic memory with invariant cross-ratio stability" (bib + citation-audit correct; rendered list the outlier).
+> (2) [HARD] **METADATA-RELATIONS-ASSERT-1** — deposit metadata MUST carry related_identifiers at CREATION (GitHub isSupplementTo branch URL + relation links); post-publish verify related_identifiers non-empty. Canonical: 22075544 published with related_identifiers=null.
+> (3) [HARD] **DEPOSIT-LAYOUT-VERIFY-1** — before closeout, download the published deposit fresh and EXECUTE the README reproduce commands against the deposited layout; scripts MUST be layout-agnostic (paths relative to script dir) or the upload MUST preserve directory keys (scripts/, docs/, artifacts/); README paths must match the actual deposit. Canonical: 22075544 flat deposit — validate_seed_vs_published.py + hsilo3_semantic_links.py crash (artifacts/external-search/ absent); README commands reference scripts/ + artifacts/ paths.
+> (4) [HARD] **POST-PUBLISH-FRONTMATTER-ASSERT-1** — after EVERY publish/newversion, download the deposited .md and assert frontmatter doi+version == record doi+version; mismatch → immediate edit → replace → publish in the SAME cycle (never defer). Canonical: RES.023 v2.5 (10.5281/zenodo.22075809) published .md still v2.4/22073477 (interrupted remediation, 2026-08-24).
+> (5) [SOFT] **HYPOTHESIS-CARD-EXECUTION-PARITY-1** — at the results gate, reconcile each hypothesis card's claim/prediction wording with the executed test (family definitions, thresholds); document drift in the premises section. Canonical: H-SILO-2 card "structurally general concept families" vs executed method/pattern family (22075544).
+> (6) [SOFT] **INTERNAL-COUNTS-SWEEP-1** — cross-document corpus counts (PROJECT-PLAN vs paper vs README) swept pre-publish (extends PUBLICATION-STATUS-STALE-1). Canonical: PROJECT-PLAN "399 titles" vs paper "578 titled records".
+> Cross-reference: system-prompt v3.70, kaizen v2.92, cloudflare v3.59, session this.
+
+# RESEARCH — v2.136
+> **v2.135 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: TERMINOLOGY-SILO-LESSONS-1 folded into Phase 1 due diligence + Phase 5 publication — title-visible bridges (name cross-domain connections in title/abstract), partitionality audit of any taxonomy/vocabulary corpus (instrument scripts/terminology_silos.py, QNFO.CGS.002), semantic links built explicitly (KG edges) not assumed lexically discoverable, bridge infrastructure maintained; canonical: 10.5281/zenodo.22075544 + RES.023 v2.5 10.5281/zenodo.22075809; mirrors system-prompt v3.69 + kaizen v2.91):**
+> Red-team: direct parent + N-2 clean. Research footer added (was missing — pre-existing gap closed).
+> Cross-reference: system-prompt v3.69, kaizen v2.91, cloudflare v3.59 (unchanged), session this.
+
+# RESEARCH — v2.135
 > **v2.134 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: print-artifact gates — EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1; mirrors system-prompt v3.68 + kaizen v2.90):**
 > Red-team skills audit: direct parent; N-2 clean. Numbering note: two independent v2.133 cycles collided on 2026-08-21 (PUBLICATION-META-PROSE-1 extension + duplicate-record publish-race remediation) — reconciled here in v2.134. Phase-5 PDF Building extended: explicit A0/A1 page sizes (the CSS `A0` keyword is ignored by Chromium -> US Letter), MediaBox verification, pixel fill measurement for posters, no hand-placed SVG text. Canonical: CWI poster set 2026-08-21.
 > Cross-reference: system-prompt v3.68, kaizen v2.90, cloudflare v3.59, session this.
@@ -9632,24 +9648,5 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Current: **v2.134** (EDGE-PDF-PAGE-KEYWORD-1 + POSTER-FILL-MEASURE-1 + SVG-LABEL-EXTENT-1 + WRITE-EXEC-ORDER-1 in Phase 5; mirrors system-prompt v3.68 + kaizen v2.90)
-
-
-
+Current: **v2.136** (Terminology Silos audit gates: REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + kaizen v2.92 + cloudflare v3.59)
 
