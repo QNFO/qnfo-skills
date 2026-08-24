@@ -1,7 +1,11 @@
 ---
 name: kaizen
-version: "2.92"
+version: "2.93"
 ---
+
+> **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
+> Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
+> Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
 
 > **v2.92 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit mirror — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 (HARD) + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1 (SOFT), canonical 10.5281/zenodo.22075544 + RES.023 v2.5 10.5281/zenodo.22075809; mirrors system-prompt v3.70 + research v2.136 + cloudflare v3.59):**
 > Red-team: 3-slot dispatch on 22075544 (Dependency 1 HARD/3 SOFT; Accuracy + Completeness child FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: scripts re-run byte-match, validate 9/9, rendering PASS, DOIs live). HARD: 4. SOFT: 6.
@@ -15554,5 +15558,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.92** (Terminology Silos audit mirror: REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + research v2.136 + cloudflare v3.59)
+Current: **v2.93** (INTERACTIVE-NOTETAKING-1: interactive conference-notetaking workflow — short replies, proactive research value, daily Obsidian transcription, end-of-event synthesis; preserves v2.92 deposit gates; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59)
 
