@@ -509,3 +509,95 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **D1 verification:** ids 258-261 status=sent read-back verified (sender rowan.quni@qnfo.org, external recipients 259-261).
 **Follow-up eligibility:** NO-FOLLOW-UP-DEFAULT-1 — no follow-ups to silent recipients, ever (user policy 2026-08-20). In-thread replies to responders remain normal.
 **Record pre-flight:** DOI 22028078 published + verified (doi.org 200, DataCite findable, concept 22028077, 6 files, R2 mirror byte-identical, KG distributed, papers.qnfo.org 200); post-publication 3-slot red-team dispatched (Accuracy PASS 0 HARD / Completeness PASS 0 HARD / Dependency+Prose pending).
+
+---
+
+## 2026-08-24 — Sala quantum-metric outreach (QEC workshop session)
+
+**Recipient:** Giacomo Sala (UNIGE) — giacomo.sala@unige.ch
+**Paper:** Probing the quantum metric of 3D topological insulators (Nature Materials; arXiv:2509.17135)
+**Connection:** quantum metric / geometric protection as the controllable lever in topological matter; cross-links Superconductivity Quadrangle (10.5281/zenodo.18496889) + Twisted Cuprate Twistronics (10.5281/zenodo.17904337)
+**Sender:** rowan.quni@qnfo.org (DEFAULT-SENDER-DRIFT-1 compliant)
+**Message ID:** <3SK2oIMua7iKCgbtxKpzyKtIDc7Qtzjcc9Uy@qnfo.org>
+**Status:** queued (accepted, no permanent bounces) 2026-08-24
+**D1 id:** pending
+
+
+---
+
+## 2026-08-24 — IOCPh 2026 abstract expansion: MDPI in-thread follow-through (agent-owned)
+
+**Context:** MDPI (riley.liu@mdpi.com, inbound id=264, 2026-08-21) required an extended abstract >=300 words (our draft <200); offered to upload the abstract on our behalf once expanded. Agent-owned follow-through per 2026-08-20 IOCPh escalation closeout.
+
+**Reply sent (id=287):** to riley.liu@mdpi.com, subject "Re: IOCPh 2026 - late abstract submission request", reply_to_id=264 (marks 264 status=replied, D1-verified), sender rowan.quni@qnfo.org (canonical), message_id e0e27ba1-6ab3-4154-8954-e41168fbf55d, sent 2026-08-24T12:04:07Z, status=sent (D1-verified). Expanded abstract: 319 words (requirement >=300, verified by count). Content: same title/author/keywords as id=250 with two additional sentences (theory-neutral null-result framing; transferability of measurement bases to other quantum simulation platforms).
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=286 -> rwnquni@outlook.com "[PREVIEW] Re: IOCPh 2026 - late abstract submission request (expanded abstract 319w)", message_id c65b97d7-c015-41a5-a5ca-53bf3387e7c0, sent 2026-08-24T12:03:58Z (strictly first), status=sent (D1-verified).
+**Next step (agent-owned):** MDPI uploads abstract -> IOCPh submission complete; acceptance notice expected 15 Sep (watch item). If further revision requested, execute autonomously.
+**Daily cap:** in-thread reply = uncapped (precedent 2026-08-20/08-21). Outreach cap today: Sala (08-24, id logged as queued but ABSENT from D1 - see ERRATA below) counts 1/3-5.
+**ERRATA (D1-logging anomaly 2026-08-24):** Sala wave send (giacomo.sala@unige.ch, message_id <3SK2oIMua7iKCgbtxKpzyKtIDc7Qtzjcc9Uy@qnfo.org>) logged in this file as queued with D1 id "pendi" but is NOT present in the D1 emails table (verified 2026-08-24 via D1 query by recipient + message_id: 0 rows; /emails/recent ids 271-285 contain no sala row). Mail was accepted by provider (message_id issued) - do NOT re-send (H1). Root cause unconfirmed; flag for worker audit (send-accept path without D1 insert).
+
+
+---
+
+## 2026-08-24 — IOCPh 2026 abstract expansion: MDPI in-thread follow-through (agent-owned)
+
+**Context:** MDPI (riley.liu@mdpi.com, inbound id=264, 2026-08-21) required an extended abstract >=300 words (our draft <200); offered to upload the abstract on our behalf once expanded. Agent-owned follow-through per 2026-08-20 IOCPh escalation closeout.
+
+**Reply sent (id=287):** to riley.liu@mdpi.com, subject Re: IOCPh 2026 - late abstract submission request, reply_to_id=264 (marks 264 status=replied, D1-verified), sender rowan.quni@qnfo.org (canonical), message_id e0e27ba1-6ab3-4154-8954-e41168fbf55d, sent 2026-08-24T12:04:07Z, status=sent (D1-verified). Expanded abstract: 319 words (requirement >=300, verified by count). Content: same title/author/keywords as id=250 with two additional sentences (theory-neutral null-result framing; transferability of measurement bases to other quantum simulation platforms).
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=286 -> rwnquni@outlook.com [PREVIEW] Re: IOCPh 2026 - late abstract submission request (expanded abstract 319w), message_id c65b97d7-c015-41a5-a5ca-53bf3387e7c0, sent 2026-08-24T12:03:58Z (strictly first), status=sent (D1-verified).
+**Next step (agent-owned):** MDPI uploads abstract -> IOCPh submission complete; acceptance notice expected 15 Sep (watch item). If further revision requested, execute autonomously.
+**Daily cap:** in-thread reply = uncapped (precedent 2026-08-20/08-21). Outreach cap today: Sala (08-24) counts 1/3-5.
+**ERRATA (D1-logging anomaly 2026-08-24):** Sala wave send (giacomo.sala@unige.ch, message_id 3SK2oIMua7iKCgbtxKpzyKtIDc7Qtzjcc9Uy@qnfo.org) logged in this file as queued with D1 id pendi but is NOT present in the D1 emails table (verified 2026-08-24 via D1 query by recipient + message_id: 0 rows; /emails/recent ids 271-285 contain no sala row). Mail was accepted by provider (message_id issued) - do NOT re-send (H1). Root cause unconfirmed; flag for worker audit (send-accept path without D1 insert).
+
+
+---
+
+## 2026-08-24 (second wave) — Quantum metric multipoles outreach (extends Sala 08-24 quantum-metric thread)
+
+**Paper (theirs):** Revealing quantum metric multipoles in magnetic topological insulator MnBi2Te4 (arXiv:2605.29595, 2026-05-28)
+**QNFO paper shared:** Superconductivity Quadrangle: Tensor-Locked Resilience in Topological Substrates — DOI **10.5281/zenodo.18496889** (DB-canonical; one paper per email rule)
+**Sender:** rowan.quni@qnfo.org (canonical; from passed explicitly per DEFAULT-SENDER-DRIFT-1)
+
+| # | Recipient | Email source | Connection point | Message ID | D1 id | Status |
+|---|-----------|--------------|------------------|------------|-------|--------|
+| 1 | Lars Sjostrom (Chalmers, first author) | VERIFIED from arXiv source tarball 2605.29595 (\email{sjolars@chalmers.se} in author block) | Their multipole-resolved nonlinear-transport readout of the quantum metric as a theory-neutral probe of a geometry-controlled (PxG tensor-locked) regime; question: is the multipole channel sensitive enough to detect a tensor-locked phase, and is MnBi2Te4 suitable for strain-resolved follow-up | 55b8ee16-cf8b-49db-b8bb-52fe95a259ac | 289 | sent |
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=288 -> rwnquni@outlook.com "[PREVIEW] Re: Quantum metric multipoles in MnBi2Te4 ...", message_id 6c279ab8-3d12-4b80-95b1-3c38fe61c5f0, sent 2026-08-24T12:06:03Z (strictly first), status=sent (D1-verified).
+**Dedup:** contact-ledger.md + D1 (q=sjolars, chalmers, dash -> count:0) + recent scan clean. Zero prior contact. First contact. Single-contact-per-group (Sjostrom only; Dash/Canali/Rout et al. NOT contacted).
+**Daily cap:** Sala (08-24, 1) + Sjostrom (1) = **2/3-5 used** for 2026-08-24. MDPI reply (287) = in-thread, uncapped.
+**D1 verification:** ids 286-289 status=sent via D1 query + GET /emails/recent read-back (sender rowan.quni@qnfo.org, external recipients 287/289).
+
+
+---
+
+## 2026-08-24 — ERRATA: IOCPh abstract send id=287 was UNNECESSARY (submission already complete)
+
+**User report (2026-08-24):** "I ALREADY SUBMITTED MDPI!"
+
+**Correct state (user-confirmed 2026-08-21, GTD register DONE + durable memory mem-ZDl3eDL2lCft):** IOCPh 2026 abstract was SUBMITTED via sciforum success page (ORCID login, **389 words**) on 2026-08-21. D1 id=264 (MDPI asking >=300 words) was recorded as an agent-owned in-thread follow-through: **reply with the existing 389-word version; do NOT duplicate the submission**.
+
+**What this session did wrong:** read id=264, interpreted it as "draft a NEW expanded abstract", composed a different **319-word** abstract (id=286 preview + id=287 sent to riley.liu@mdpi.com, reply_to_id=264, 264 marked replied). The submission was already complete; 287 sent a third abstract text into the thread instead of the 389-word submitted version. Miss cause: resume-from-state read only state.json (absent) + outreach-log tail; did NOT check the GTD register or durable memories before drafting.
+
+**Damage:** MDPI may now hold two different abstracts (sciforum 389-word + email 319-word). Corrective action PENDING USER DECISION (2026-08-24). No re-send without direction.
+
+
+---
+
+## 2026-08-24 — USER DIRECTIVE (HARD): NO FURTHER EMAILS TO MDPI. IOCPh thread CLOSED.
+
+**User (2026-08-24, verbatim):** "I ALREADY SUBMITTED MDPI!" and "DON'T SEND ANOTHER EMAIL TO MDPI"
+
+**Confirmed correct state:** IOCPh 2026 abstract was SUBMITTED 2026-08-21 via sciforum.net/submissions/IOCPH2026/3 (ORCID login 0009-0002-4317-5604, success page, **389 words**, title "Auditing Not-Knowing: The Universal Ignorance Audit and the Epistemology of an AI-Assisted Research Pipeline"). User-confirmed; GTD register + durable memory mem-ZDl3eDL2lCft.
+
+**Error made this cycle:** id=287 sent 2026-08-24T12:04Z to riley.liu@mdpi.com with a newly drafted 319-word abstract (reply_to_id=264). The submission was already complete; the correct handling per memory was to reply with the existing 389-word version or take no action at all. 287 created a third abstract text in the thread. No corrective email will be sent (user directive). MDPI thread = CLOSED. D1 rows 213/224/250/264/286/287 remain as-is; no further /send to any @mdpi.com address without explicit user approval.
+
+
+---
+
+## 2026-08-24 — Amal HoQ tour RESCHEDULE request (in-thread, user-directed)
+
+**Conflict (user-flagged 2026-08-24):** tour Friday 28 Aug 10:30 (Amal's email 271 said "Thursday" — day-name slip; 28 Aug 2026 is Friday) collides with CWI QEC Workshop Lecture 4B QA (A. Gilyen, Fri 10:15-12:00). User told Amal they are at the CWI QEC workshop. Register + memory annotated; user chose "Move to after lecture".
+
+**Reply sent (id=291):** to amal@cwi.nl, subject "Re: QPL follow-up — coworking and a possible tour", reply_to_id=271 (271 status=replied, D1-verified), sender rowan.quni@qnfo.org, message_id d92d0a17-3588-46ad-80d9-b92bf6c874e8, sent 2026-08-24T12:24:34Z, status=sent (D1-verified). Body: proposes 12:30 same day (after the 10:15-12:00 lecture); informal mirror of Amal's register style ("Hi Amal" / "Best, Rowan").
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=290 -> rwnquni@outlook.com [PREVIEW], message_id 7e7f1b04-98e9-48b7-8efb-95dd202c5f45, sent 12:24:20Z (strictly first), status=sent (D1-verified).
+**Reminder cronjobs:** 14ca6a32 + cd8e6f27 NOT FOUND in scheduler (cronjob show: not found) — register references stale job IDs; no retime possible. Register annotation notes the tour time is pending Amal's confirmation.
+**Next step (agent-owned):** on Amal's reply confirming 12:30 -> update GTD register tour line time to 12:30 + close annotation. If she proposes another time -> ask user (one question) before committing.
