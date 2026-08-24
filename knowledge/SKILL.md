@@ -1,7 +1,7 @@
 ---
 name: knowledge
 description: QNFO Knowledge Graph and durable memory management -- graph querying for due diligence and impact analysis (stats, nodes, neighbors, impact, query endpoints), ultrametric clustering and taxonomy edge seeding, semantic memory search via Vectorize, persistent fact storage in D1/Vectorize, cross-system discovery, and paper context retrieval. Use for remembering, recalling, and discovering knowledge across the QNFO ecosystem.
-version: 2.15
+version: 2.16
 triggers: ["knowledge graph", "KG", "graph", "graph-api", "dependencies", "impact", "neighbors", "nodes", "edges", "due diligence", "memory", "remember", "recall", "durable learning", "semantic search", "Vectorize", "D1 memory", "fact storage", "discovery", "cross-system", "ultrametric", "p-adic", "taxonomy", "impact analysis", "what exists", "who depends", "ecosystem", "paper search", "memory search", "fact", "knowledge base"]
 related: ["qnfo-core"]
 priority: 1
@@ -9,7 +9,19 @@ platform: cloudflare
 autonomous: true
 self_sufficient: true
 ---
-# KNOWLEDGE — v2.15
+# KNOWLEDGE — v2.16
+
+> **v2.16 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: CROSSWALK-INFRASTRUCTURE-1 — term-crosswalk.md v1.0 created as canonical cross-domain terminology infrastructure (user directive: cross-domain insights + interdisciplinary terminology/crosswalks are critical — no silos, no jargon, no domain walls); D1 living-paper.term_crosswalks (17 rows) mirrors the file; canonical record 10.5281/zenodo.22076806 (v1.1); mirrors system-prompt v3.72 + research v2.137 + kaizen v2.94):**
+> Red-team: direct parent. Changes: (1) [HARD] CROSSWALK-INFRASTRUCTURE-1 gate section added; (2) references/term-crosswalk.md v1.0 created (canonical source; D1 mirror — CROSSWALK-PARITY-1).
+
+## CROSSWALK-INFRASTRUCTURE-1 (HARD GATE — 2026-08-24)
+
+Cross-domain terminology crosswalks/translations are first-class QNFO infrastructure (user directive: no silos, no jargon, no domain walls). Quantified baseline (10.5281/zenodo.22076806): ~97% of scientific vocabulary is domain-local; bridges are 2.8% and method-biased (Fisher exact p = 8.5e-7, OR 70.2); cross-domain links carry zero lexical signal unless an author wrote the bridge into the title.
+
+1. [HARD] **Canonical crosswalk** — `references/term-crosswalk.md` v1.0 (this skill) is the canonical source; D1 `living-paper.term_crosswalks` is the machine mirror. Keep them row-identical (CROSSWALK-PARITY-1); verify after every extension.
+2. [HARD] **Search discipline** — any cross-domain due-diligence search runs >=2 vocabulary regimes (program terms + method-level bridge terms + target-domain terms); semantic search (Vectorize) is REQUIRED — lexical search alone sees ~0% of cross-domain links.
+3. [HARD] **Tagging discipline** — paper indexing tags domain codes + bridge terms used; a paper that authors a new cross-domain bridge gets a crosswalk row.
+4. [HARD] **Extension loop** — new bridge → add row (file + D1) → re-run partitionality audit (scripts/terminology_silos.py, QNFO.CGS.002) → verify parity. A crosswalk row without its partitionality re-check is a claim without evidence.
 
 > **v2.15 UPDATE (2026-08-18, kaizen — CMD SKILLS UPDATE: red-team remediation — mirror re-pointed to system-prompt v3.43 (was v3.38) + H1 sync; mirrors system-prompt v3.43 + kaizen v2.68):**
 > Red-team: CMD RED TEAM cycle 2026-08-18 (session f_bH6KMZ4Og2Wvw79S9rU). HARD: 1. SOFT: 1. DESIGN: 0. Changes:
@@ -595,4 +607,4 @@ Current: **v2.15** (CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LIS
 
 ## Version
 
-Current: **v2.15** (CROSS-STORE-PUBLISH-SYNC-1 re-point pattern + R2-OBJECTS-LISTING-SHAPE-1; 2026-08-17) (knowledge — N-2 footer alignment; 2026-08-17)
+Current: **v2.16** (CROSSWALK-INFRASTRUCTURE-1: term-crosswalk.md v1.0 canonical + D1 living-paper.term_crosswalks mirror — no silos, no jargon, no domain walls; 2026-08-24)
