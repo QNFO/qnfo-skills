@@ -1,4 +1,8 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.71
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.72
+> **v3.72 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: user directive — NO SILOS, NO JARGON — CROSSWALK-TRANSLATION-1 (cross-domain insights and interdisciplinary terminology/crosswalks/translations are critical for breakthrough discoveries); mirrors kaizen v2.94 + research v2.137 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent skills audit on top of the Terminology Silos post-publication audit cycle (22075544); user directive 2026-08-24 folded verbatim. HARD: 1 (new gate). New gate section below (CROSS-DOMAIN CROSSWALK & NO-JARGON GATE).
+> Cross-reference: kaizen v2.94, research v2.137, cloudflare v3.59 (unchanged), session this.
+
 > **v3.71 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow codified — INTERACTIVE-NOTETAKING-1 (CWI Summer School on Quantum Algorithms & Quantum Error Correction, Amsterdam 24-28 Aug 2026; extends the QPL 2026 pattern); mirrors kaizen v2.93 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative): 7-store parity verified at v3.70 baseline (E1–E7 byte-identical, sha 7904741ba149e511); MODEL-KEY-FILE-DRIFT-1 recurrence #15 (E5 Roaming preferredModel re-drifted to deepseek-v4-pro — reset both JSON model keys to flash). HARD: 1 (new gate). SOFT: 1. New gate folded below (INTERACTIVE CONFERENCE NOTETAKING GATE).
 > Cross-reference: kaizen v2.93, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -854,6 +858,16 @@ post-publication audit is the enforcement loop.
    Note: the conflict-marker grep MUST be line-anchored (`^<<<<<<<`) — the gate's own
    documentation quotes the marker string, and a substring grep false-positives on it
    (observed 2026-08-21: kaizen + git-github hits were the gate text, not markers).
+
+## CROSS-DOMAIN CROSSWALK & NO-JARGON GATE (HARD GATE — 2026-08-24, user directive)
+
+**CROSSWALK-TRANSLATION-1 (user directive 2026-08-24, verbatim):** "CROSS-DOMAIN INSIGHTS AND INTERDISCIPLINARY/CROSS-DISCIPLINARY TERMINOLOGY AND CROSSWALKS/TRANSLATIONS ARE CRITICAL FOR BREAKTHROUGH DISCOVERIES: NO SILOS, NO JARGON!"
+
+1. [HARD] **Adjacent-domain scan (Phase 1):** every research plan MUST scan >=2 adjacent WBS domains for existing correspondences (DUE-DILIGENCE-DEPTH-1); cross-domain insight is a first-class discovery channel, not an optional extra.
+2. [HARD] **Crosswalk/translation (Phase 5):** every publication using domain-specific terminology MUST name cross-domain connections in title/abstract where they exist (title-visible bridges, TERMINOLOGY-SILO-LESSONS-1) and include an explicit crosswalk of key terms into adjacent-domain equivalents where a correspondence exists (term ↔ equivalent, with fidelity notes). Canonical exemplar: "Valuation Without ℝ" (10.5281/zenodo.21803677) — the bridge written into the title.
+3. [HARD] **NO JARGON:** publication prose MUST be readable by an adjacent-domain expert — unexplained in-group shorthand, pipeline vocabulary, or undefined niche terms are HARD findings (extends PUBLICATION-PROSE-GATE-1 + PAPERS-NO-NAVEL-GAZING-1).
+4. [HARD] **NO SILOS (instrument):** any vocabulary/taxonomy/corpus used in research MUST be run through the partitionality instrument (scripts/terminology_silos.py, QNFO.CGS.002) with bridge share + cross-domain terms reported; the QNFO taxonomy's bridge subsections + cross-cutting themes are living infrastructure; the semantic mapping layer (bilingual-dictionary analogue) is first-class infrastructure, never an afterthought. Canonical: Terminology Silos and the Consilience Gap (10.5281/zenodo.22075544).
+5. [SOFT] **Bridge maintenance:** when a research cycle discovers a cross-domain correspondence, register it (KG edge + taxonomy bridge subsection + title-visible naming) in the same cycle.
 
 ## ZENODO INQUIRY/RESEARCH MANDATE (HARD GATE, 2026-08-12)
 
@@ -2143,7 +2157,7 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.71** (INTERACTIVE-NOTETAKING-1: interactive conference-notetaking gate — short replies, proactive research value, daily Obsidian transcription, end-of-event synthesis; preserves v3.70 deposit gates; mirrors kaizen v2.93 + research v2.136 + cloudflare v3.59; 2026-08-24)
+Current: **v3.72** (CROSSWALK-TRANSLATION-1: NO SILOS, NO JARGON — cross-domain insights/interdisciplinary terminology/crosswalks are breakthrough-critical; preserves v3.71 gates; mirrors kaizen v2.94 + research v2.137 + cloudflare v3.59; 2026-08-24)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 
