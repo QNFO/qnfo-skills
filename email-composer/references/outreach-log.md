@@ -520,7 +520,7 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Sender:** rowan.quni@qnfo.org (DEFAULT-SENDER-DRIFT-1 compliant)
 **Message ID:** <3SK2oIMua7iKCgbtxKpzyKtIDc7Qtzjcc9Uy@qnfo.org>
 **Status:** queued (accepted, no permanent bounces) 2026-08-24
-**D1 id:** pending
+**D1 id:** 292 (verified 2026-08-24)
 
 
 ---
