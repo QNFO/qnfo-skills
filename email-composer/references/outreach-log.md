@@ -601,3 +601,14 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=290 -> rwnquni@outlook.com [PREVIEW], message_id 7e7f1b04-98e9-48b7-8efb-95dd202c5f45, sent 12:24:20Z (strictly first), status=sent (D1-verified).
 **Reminder cronjobs:** 14ca6a32 + cd8e6f27 NOT FOUND in scheduler (cronjob show: not found) — register references stale job IDs; no retime possible. Register annotation notes the tour time is pending Amal's confirmation.
 **Next step (agent-owned):** on Amal's reply confirming 12:30 -> update GTD register tour line time to 12:30 + close annotation. If she proposes another time -> ask user (one question) before committing.
+
+---
+
+## 2026-08-25 — RES.018 Phase 1: Maik Reddiger (first contact)
+
+**Target:** Maik Reddiger, Anhalt University of Applied Sciences (Kothen, Germany). Madelung-equations math (arXiv:2207.11367 with B. Poirier), Kolmogorov foundations of quantum probability (arXiv:2405.05710), quantum time-of-arrival (arXiv:2508.11368, published T&F OA).
+**Email verified** from the arXiv 2508.11368 published CONTACT block: maik.reddiger@hs-anhalt.de (CONNECTION-POINT-UNVERIFIED-1 satisfied). No prior contact (ledger + D1 checked).
+**Paper shared:** Measurement-Triggered Relaxation Dynamics: A Falsifiable Mechanism Test for the Hydrodynamic Re-Grounding of Quantum Mechanics (10.5281/zenodo.22026562).
+**Test-send:** id=305 -> rwnquni@outlook.com, message_id <dpAM0iXFwINDypT9t6zOWXmSSxVx9H2HHDNo@qnfo.org>, queued, 0 bounces.
+**Send:** id=304 -> maik.reddiger@hs-anhalt.de, message_id <HW6MJg3p6oKYg2DvpweXKAv4C2NRpb7edPTn@qnfo.org>, queued, 0 bounces, sender rowan.quni@qnfo.org, 2026-08-25. Ledger 51 entries. Follow-up eligible 2026-09-08 (14d), once max.
+
