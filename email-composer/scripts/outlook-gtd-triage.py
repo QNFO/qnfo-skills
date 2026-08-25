@@ -96,6 +96,28 @@ HUMAN_DOMAINS = {
 }
 QNFO_DOMAINS = {"qnfo.org", "qwav.org", "qwav.tech", "qnfo.io"}
 
+# USER-WITHDRAWN CONTEXTS (2026-08-25, user directive): contexts the user has
+# explicitly withdrawn from. Sender domain + subject keyword match -> NOISE
+# (Deleted Items, recoverable), never ACTION. Receipts are still protected:
+# a receipt subject from a withdrawn domain does NOT match the context
+# keywords (e.g., "Confirmation of order 101825" vs CWI keywords), so it falls
+# through to the unknown-domain RX_RECEIPT rule -> REFERENCE (canonical: CWI
+# order #101825 kept). Canonical context: CWI Summer School 2026 — poster
+# withdrawn (NO-GO, mem-1PfbIHhO_YRj), user not participating/attending
+# (mem-POIBBCi_hVEA); CWI summer-school mail is clutter.
+WITHDRAWN_CONTEXTS = {
+    "cwi.nl": ("CWI Summer School 2026", ("summer school", "poster", "slides", "practical information")),
+}
+
+
+def _withdrawn_context(dom, subject):
+    """Return True if sender+subject match a context the user withdrew from."""
+    if dom not in WITHDRAWN_CONTEXTS:
+        return False
+    _label, keywords = WITHDRAWN_CONTEXTS[dom]
+    sl = (subject or "").lower()
+    return any(k in sl for k in keywords)
+
 RX_RECEIPT = re.compile(
     r"receipt|invoice|statement|payment (received|confirmed)|order confirmation|"
     r"confirmation of order|your order|shipping confirmation|tracking (number|#)|"
@@ -185,6 +207,11 @@ def classify(item):
         if RX_SECURITY.search(subject):
             return "ACTION"
         return "ACTION"  # conservative: bank mail is never noise
+
+    # 3b. USER-WITHDRAWN CONTEXTS (2026-08-25): contexts the user explicitly
+    #      withdrew from are NOISE, never ACTION (canonical: CWI Summer School).
+    if _withdrawn_context(dom, subject):
+        return "NOISE"
 
     # 4. QNFO system mail -> REFERENCE unless a reply (then ACTION)
     if dom in QNFO_DOMAINS:

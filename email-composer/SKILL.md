@@ -1,9 +1,14 @@
 ---
 name: email-composer
-version: "2.27"
+version: "2.28"
 ---
 
 # email-composer
+
+> **v2.28 UPDATE (2026-08-25, kaizen — USER-WITHDRAWN-CONTEXTS-1: context-specific triage gate after CWI clutter finding):**
+> Red-team: user correction — the triage kept CWI summer-school emails (Poster, Slides summer school) as ACTION while the user had withdrawn (poster NO-GO, not attending). Root cause: the classifier had no user-context registry, so it treated cwi.nl mail as actionable. HARD: 1. SOFT: 0. Changes:
+> (1) [HARD] **USER-WITHDRAWN-CONTEXTS-1 added** — `scripts/outlook-gtd-triage.py` gains `WITHDRAWN_CONTEXTS` (sender domain → label + subject keywords) and `_withdrawn_context()`, checked as rule 3b inside classify() BEFORE the QNFO/human/bulk rules: sender domain + subject keyword match → NOISE (Deleted Items, recoverable), never ACTION. Receipts stay protected: a receipt subject from a withdrawn domain does not match the context keywords and falls through to the unknown-domain RX_RECEIPT rule → REFERENCE (canonical: CWI order confirmation #101825 kept in GTD-Reference). Canonical context: CWI Summer School 2026 — cwi.nl + "summer school"/"poster"/"slides"/"practical information" — poster withdrawn (NO-GO, mem-1PfbIHhO_YRj), user not participating/attending (mem-POIBBCi_hVEA, mem-puLll9smUJ5t). Dry-run verified NOISE; apply moved both inbox CWI emails + the GTD-Reference practical-info email to Deleted Items; rowan.quni inbox 0, rwnquni inbox 0. Lesson (context-specific intelligence): before classifying ANY mail ACTION, check durable memory/conversations for user withdrawal decisions; the registry is the permanent gate (RECURRENCE-ZERO-1).
+> Cross-reference: system-prompt v3.67, email-composer v2.26 (GTD-INBOX-ZERO-1), memory mem:user_preference:1787652600468, session eOqObQdc1UotJXL4sDE__.
 
 > **v2.27 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: scheduled-task fleet red-team — CALENDAR-SYNC-TOOL-GAP-1 status + YAML frontmatter added (unloadable-skill root cause); mirrors system-prompt v3.64 + kaizen v2.86):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 2. SOFT: 0. DESIGN: 0. Changes:
