@@ -1,7 +1,11 @@
 ---
 name: kaizen
-version: "2.94"
+version: "2.95"
 ---
+
+> **v2.95 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE mirror: ANTI-TELEGRAPH-1 (user directive "DON'T TELEGRAPH" 2026-08-24 — no stylistic tells that announce AI construction; play the action not the effect; formal provenance disclosure stays; extends PUBLICATION-META-PROSE-1/PUBLICATION-PROSE-GATE-1); mirrors system-prompt v3.73 + research v2.137 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent skills audit (session this — ANTI-TELEGRAPH-1 fold-in resumed from handoff 28705, QNFO.KZ P8). HARD: 1 (mirror row).
+> Cross-reference: system-prompt v3.73, research v2.137 (unchanged), cloudflare v3.59 (unchanged), session this.
 
 > **v2.94 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE mirror: CROSSWALK-TRANSLATION-1 (user directive 2026-08-24 — NO SILOS, NO JARGON; cross-domain insights/interdisciplinary terminology/crosswalks are breakthrough-critical); mirrors system-prompt v3.72 + research v2.137 + cloudflare v3.59):**
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
@@ -15563,5 +15567,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.94** (CROSSWALK-TRANSLATION-1 mirror: NO SILOS/NO JARGON user directive 2026-08-24; preserves v2.93 gates; mirrors system-prompt v3.72 + research v2.137 + cloudflare v3.59)
+Current: **v2.95** (ANTI-TELEGRAPH-1 mirror: "DON'T TELEGRAPH" user directive — no stylistic AI tells in QNFO/QWAV output; preserves v2.94 gates; mirrors system-prompt v3.73 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
 
