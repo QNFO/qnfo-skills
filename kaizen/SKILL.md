@@ -1,7 +1,11 @@
 ---
 name: kaizen
-version: "2.95"
+version: "2.96"
 ---
+
+> **v2.96 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE mirror: DOI-DISCREPANCY-RESOLVE-1 (resolve every candidate ID via /api/records/{id} + follow isNewVersionOf to the head; search hits/sibling DOIs are not evidence; title-sync + dedup close false alarms; canonical zbw-p5-capstone v1 21574555 -> v2 head 21609223); mirrors system-prompt v3.74 + research v2.137 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent skills audit (session this — QNFO.RES DOI-discrepancy closeout). HARD: 1 (mirror row).
+> Cross-reference: system-prompt v3.74, research v2.137 (unchanged), cloudflare v3.59 (unchanged), session this.
 
 > **v2.95 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE mirror: ANTI-TELEGRAPH-1 (user directive "DON'T TELEGRAPH" 2026-08-24 — no stylistic tells that announce AI construction; play the action not the effect; formal provenance disclosure stays; extends PUBLICATION-META-PROSE-1/PUBLICATION-PROSE-GATE-1); mirrors system-prompt v3.73 + research v2.137 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent skills audit (session this — ANTI-TELEGRAPH-1 fold-in resumed from handoff 28705, QNFO.KZ P8). HARD: 1 (mirror row).
@@ -15567,5 +15571,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.95** (ANTI-TELEGRAPH-1 mirror: "DON'T TELEGRAPH" user directive — no stylistic AI tells in QNFO/QWAV output; preserves v2.94 gates; mirrors system-prompt v3.73 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
+Current: **v2.96** (DOI-DISCREPANCY-RESOLVE-1 mirror: resolve DOI mismatches via records API + isNewVersionOf-to-head; canonical zbw-p5-capstone v1 21574555 -> v2 head 21609223; preserves v2.95 gates; mirrors system-prompt v3.74 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
 
