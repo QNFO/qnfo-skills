@@ -215,6 +215,10 @@ def classify(item):
 
     # 4. QNFO system mail -> REFERENCE unless a reply (then ACTION)
     if dom in QNFO_DOMAINS:
+        # S2 (completeness audit 2026-08-25): agent test/litter sends must not
+        # re-accumulate in GTD-Reference — [PREVIEW]/batch-preview subjects NOISE.
+        if "[PREVIEW]" in subject or "batch preview" in subject.lower() or "outreach batch" in subject.lower():
+            return "NOISE"
         return "ACTION" if (subject[:3].lower() in ("re:", "aw:", "sv:")) else "REFERENCE"
 
     # 5. Human senders (personal domains) -> default ACTION, refined by subject
