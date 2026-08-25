@@ -63,3 +63,5 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 | wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
 | konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
 | ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |
+
+| 2026-08-24 | Lars Sjostrom | sjolars@chalmers.se | Chalmers Univ. Technology | arXiv:2605.29595 (MnBi2Te4 quantum metric multipoles) | 289 | sent | Superconductivity Quadrangle 10.5281/zenodo.18496889 |
