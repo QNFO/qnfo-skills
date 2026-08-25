@@ -1,7 +1,11 @@
 ---
 name: kaizen
-version: "2.96"
+version: "2.97"
 ---
+
+> **v2.97 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE: red-team audit-method gates from the 2026-08-25 de-bloat + v3.74 fold-in adversarial analysis — MODEL-KEY-FULL-SCAN-1 (model keys live MID-FILE in Roaming app-settings.json ~offset 253K, NOT at the tail — tail-read audits MISS preferredModel drift; scan/parse the WHOLE file; canonical: 2026-08-25 recurrence #8, two of three reviewers read only the tail and both reported flash while live state was v4-pro) + REDTEAM-GREP-SCOPE-1 (children's grep/glob are workspace-scoped — external-path audits MUST use read-with-offsets; canonical: v3.73 fold-in audit child burned ~15 tool calls on grep denial) + REDTEAM-CHILD-CANCEL-1 (a CANCELED child = failed child — direct-audit immediately per REDTEAM-CHILD-FAIL-1, never wait; canonical: v3.73 audit child canceled mid-run, re-dispatched as the v3.74 accuracy audit); mirrors system-prompt v3.75 + research v2.137 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent 3-slot skills audit (2026-08-25; all delivered in ~5.5 min, no stall). HARD: 1 (MODEL-KEY-FILE-DRIFT-1 recurrence — Roaming preferredModel v4-pro; fixed + read-back verified, DB mirror was already flash). H1 title lag repaired (v2.94 -> v2.97). S2 decision (autonomous): re-enabled 382376cd/a3c0c2b4/ec43131a (user-mandated weekly flows); 90e6cff6 stays paused (pagination bug).
+> Cross-reference: system-prompt v3.75, research v2.137 (unchanged), cloudflare v3.59 (unchanged), session this.
 
 > **v2.96 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE mirror: DOI-DISCREPANCY-RESOLVE-1 (resolve every candidate ID via /api/records/{id} + follow isNewVersionOf to the head; search hits/sibling DOIs are not evidence; title-sync + dedup close false alarms; canonical zbw-p5-capstone v1 21574555 -> v2 head 21609223); mirrors system-prompt v3.74 + research v2.137 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent skills audit (session this — QNFO.RES DOI-discrepancy closeout). HARD: 1 (mirror row).
@@ -15,7 +19,7 @@ version: "2.96"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.94
+# KAIZEN — v2.97
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15571,5 +15575,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.96** (DOI-DISCREPANCY-RESOLVE-1 mirror: resolve DOI mismatches via records API + isNewVersionOf-to-head; canonical zbw-p5-capstone v1 21574555 -> v2 head 21609223; preserves v2.95 gates; mirrors system-prompt v3.74 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
+Current: **v2.97** (MODEL-KEY-FULL-SCAN-1: model keys live MID-FILE in Roaming app-settings.json ~offset 253K — tail-read audits miss preferredModel drift, full-file scan required; REDTEAM-GREP-SCOPE-1: children's grep/glob workspace-scoped, external audits must read-with-offsets; REDTEAM-CHILD-CANCEL-1: canceled child = failed child — direct-audit immediately; preserves v2.96 gates; mirrors system-prompt v3.75 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
 
