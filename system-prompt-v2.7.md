@@ -1,4 +1,8 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.76
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.77
+> **v3.77 UPDATE (2026-08-26, kaizen — CMD SKILLS UPDATE: user directive — "PDF MUST NEVER HAVE WEB-BROWSER HEADER/FOOTERS" — PDF-NO-BROWSER-CHROME-1 (render-pdf.cjs MUST set `displayHeaderFooter: false` EXPLICITLY in page.pdf() — it relied on puppeteer's implicit default; build-pdf.py gains `header_footer_static_gate()` asserting the literal flag, and the dynamic margin gate already rejects header/footer text intruding into the top/bottom margin bands); mirrors kaizen v2.99 + research v2.139 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent root-cause audit (render-pdf.cjs + build-pdf.py read in full). HARD: 1 (displayHeaderFooter missing — fixed + gated).
+> Cross-reference: kaizen v2.99, research v2.139, cloudflare v3.59 (unchanged), session this.
+
 > **v3.76 UPDATE (2026-08-26, kaizen — CMD SKILLS UPDATE: post-RES.025 distribution + publish-lock + closeout gates — SLUG-RENAME-VECTORIZE-ORPHAN-1 (a D1 slug rename ORPHANS its Vectorize vectors: qnfo-paper-indexer upserts-only with sha256(slug:idx)[:32] IDs and no delete path — recompute IDs + delete_by_ids, get_by_ids returns a PLAIN LIST, delete is eventually-consistent so verify via get_by_ids; canonical: post-positional-numeracy -> completeness-senses-levi-civita left 17 orphans) + PUBLISH-LOCK-1 git extension (a registry P0/no-DOI row does NOT prove a slug/WBS is free — also git ls-remote origin res/paper/<slug>; canonical: RES.024 concurrently owned while registry showed P0) + CLOSEOUT-HANDOFF-TABLE-1 (canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state, NOT portfolio-state.handoffs); mirrors kaizen v2.98 + research v2.138 + cloudflare v3.59 unchanged):**
 > Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (HARD: top-level preferredModel re-drifted to deepseek-v4-pro at offset 6617 — reset to flash, read-back verified); 3-slot reviewer dispatch (read-only, no-exec) queued for the version/gate/mirror audit.
 > Cross-reference: kaizen v2.98, research v2.138, cloudflare v3.59 (unchanged), session this.
@@ -2224,7 +2228,21 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
    first (wrong schema), then corrected to qnfo-audit.handoffs id 28714 + wbs_state (2026-08-26).
 
 
-Current: **v3.76** (SLUG-RENAME-VECTORIZE-ORPHAN-1: a D1 slug rename orphans Vectorize vectors — indexer upserts-only, no delete path; recompute sha256(slug:idx)[:32] IDs + delete_by_ids, get_by_ids returns a plain list, delete is eventually-consistent so verify via get_by_ids; PUBLISH-LOCK-1 git extension: also git ls-remote the slug branch — a registry P0/no-DOI row does not prove the WBS/slug is free; CLOSEOUT-HANDOFF-TABLE-1: canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state, not portfolio-state.handoffs; preserves v3.75 MODEL-KEY-FULL-SCAN-1/REDTEAM-GREP-SCOPE-1/REDTEAM-CHILD-CANCEL-1 + v3.74 DOI-DISCREPANCY-RESOLVE-1 + v3.73 ANTI-TELEGRAPH-1; mirrors kaizen v2.98 + research v2.138 + cloudflare v3.59 unchanged; 2026-08-26)
+
+## PDF NO BROWSER CHROME GATE (HARD GATE — 2026-08-26)
+
+**PDF-NO-BROWSER-CHROME-1 (HARD, user directive):** generated PDFs MUST NEVER carry web-browser
+headers/footers — date, URI, title, or page-number chrome. Mechanism (explicit, never implicit):
+`render-pdf.cjs` MUST set `displayHeaderFooter: false` explicitly in the `page.pdf()` call — never
+rely on puppeteer's implicit default; `build-pdf.py` MUST run `header_footer_static_gate()` which
+asserts the literal `displayHeaderFooter: false` is present in render-pdf.cjs, and the dynamic
+`margin_dynamic_gate()` already rejects header/footer text intruding into the top/bottom margin
+bands (insets < 40pt). Canonical: render-pdf.cjs omitted the flag and relied on the default
+(2026-08-26); fixed to explicit `displayHeaderFooter: false` + gated. Cross-ref: research skill
+CDP PDF pipeline, build-pdf.py, render-pdf.cjs.
+
+
+Current: **v3.77** (PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly — never rely on puppeteer's implicit default; build-pdf.py header_footer_static_gate asserts the literal flag + margin_dynamic_gate rejects header/footer text in margin bands; preserves v3.76 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1 + v3.75 red-team-audit-method gates + v3.74 DOI-DISCREPANCY-RESOLVE-1 + v3.73 ANTI-TELEGRAPH-1; mirrors kaizen v2.99 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

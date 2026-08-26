@@ -1,7 +1,12 @@
 ---
 name: research
-version: "2.138"
+version: "2.139"
 ---
+
+> **v2.139 UPDATE (2026-08-26, CMD SKILLS UPDATE: PDF-NO-BROWSER-CHROME-1 — generated PDFs must never carry web-browser headers/footers; render-pdf.cjs displayHeaderFooter:false explicit + build-pdf.py header_footer_static_gate (Phase 5 PDF build); mirrors system-prompt v3.77 + kaizen v2.99 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent root-cause audit (HARD: displayHeaderFooter missing — fixed + gated).
+> Cross-reference: system-prompt v3.77, kaizen v2.99, session this.
+
 
 > **v2.138 UPDATE (2026-08-26, CMD SKILLS UPDATE: SLUG-RENAME-VECTORIZE-ORPHAN-1 (Phase 6 distribution — slug rename orphans Vectorize vectors, delete via delete_by_ids) + PUBLISH-LOCK-1 git extension (Phase 8 — also git ls-remote the slug branch); mirrors system-prompt v3.76 + kaizen v2.98 + cloudflare v3.59 unchanged):**
 > Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (preferredModel re-drifted — reset flash).

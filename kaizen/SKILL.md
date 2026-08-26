@@ -1,7 +1,12 @@
 ---
 name: kaizen
-version: "2.98"
+version: "2.99"
 ---
+
+> **v2.99 UPDATE (2026-08-26, CMD SKILLS UPDATE: PDF-NO-BROWSER-CHROME-1 — render-pdf.cjs must set displayHeaderFooter:false explicitly (never rely on the implicit default); build-pdf.py header_footer_static_gate; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent root-cause audit (HARD: displayHeaderFooter missing — fixed + gated).
+> Cross-reference: system-prompt v3.77, research v2.139, session this.
+
 
 > **v2.98 UPDATE (2026-08-26, CMD SKILLS UPDATE: SLUG-RENAME-VECTORIZE-ORPHAN-1 + PUBLISH-LOCK-1 git extension + CLOSEOUT-HANDOFF-TABLE-1 (qnfo-audit.handoffs/wbs_state canonical); mirrors system-prompt v3.76 + research v2.138 + cloudflare v3.59 unchanged):**
 > Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (preferredModel re-drifted to v4-pro — reset flash). 3-slot dispatch (read-only, no-exec) queued.
@@ -15580,5 +15585,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.98** (SLUG-RENAME-VECTORIZE-ORPHAN-1: D1 slug rename orphans Vectorize vectors — recompute sha256(slug:idx)[:32] IDs + delete_by_ids, get_by_ids returns a plain list, delete is eventually-consistent; PUBLISH-LOCK-1 git extension: also git ls-remote the slug branch; CLOSEOUT-HANDOFF-TABLE-1: canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state; preserves v2.97 gates; mirrors system-prompt v3.76 + research v2.138 + cloudflare v3.59 unchanged; 2026-08-26)
+Current: **v2.99** (PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
 

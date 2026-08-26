@@ -70,6 +70,7 @@ function findChrome() {
       path: OUT,
       format: 'A4',
       printBackground: true,
+      displayHeaderFooter: false,
       margin: { top: '2cm', bottom: '2cm', left: '2cm', right: '2cm' }
     });
     const size = statSync(OUT).size;
