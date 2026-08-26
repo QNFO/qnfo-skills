@@ -1,7 +1,12 @@
 ---
 name: kaizen
-version: "2.99"
+version: "2.100"
 ---
+
+> **v2.100 UPDATE (2026-08-26, CMD SKILLS UPDATE: publication reference/deposit discipline gates — REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1 (canonical QNFO.JPC.003 v1.0→v1.6 publish saga); mirrors system-prompt v3.78 + research v2.140 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent audit. HARD: 5.
+> Cross-reference: system-prompt v3.78, research v2.140, session this.
+
 
 > **v2.99 UPDATE (2026-08-26, CMD SKILLS UPDATE: PDF-NO-BROWSER-CHROME-1 — render-pdf.cjs must set displayHeaderFooter:false explicitly (never rely on the implicit default); build-pdf.py header_footer_static_gate; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent root-cause audit (HARD: displayHeaderFooter missing — fixed + gated).
@@ -29,7 +34,7 @@ version: "2.99"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.97
+# KAIZEN — v2.100
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15585,5 +15590,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.99** (PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
+Current: **v2.100** (REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
 

@@ -1,7 +1,12 @@
 ---
 name: research
-version: "2.139"
+version: "2.140"
 ---
+
+> **v2.140 UPDATE (2026-08-26, CMD SKILLS UPDATE: publication reference/deposit discipline gates — REFERENCE-RENDER-FROM-BIB-1 (render reference lists FROM references.bib via a renderer, never hand-type) + SLUG-FILE-NAMING-1 (<slug>.md/.html/.pdf, never paper.*; scripts parameterized to the slug) + PDF-SUPERSCRIPT-ASCII-1 (Unicode superscripts ×10⁻²¹ → tofu; convert to ASCII e-notation in source) + ZENODO-DEPOSIT-NOHUP-RETRY-1 (nohup long-deposit + transient 5xx/429 retry + metadata-first-on-clean-draft + publish-only-fail==0) + PUBLISH-LOCK-RECHECK-1 (publish_locks row + git fetch origin + concept version check before every newversion); canonical QNFO.JPC.003; mirrors system-prompt v3.78 + kaizen v2.100 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent audit. HARD: 5 (folded as Phase 5/8 gates).
+> Cross-reference: system-prompt v3.78, kaizen v2.100, session this.
+
 
 > **v2.139 UPDATE (2026-08-26, CMD SKILLS UPDATE: PDF-NO-BROWSER-CHROME-1 — generated PDFs must never carry web-browser headers/footers; render-pdf.cjs displayHeaderFooter:false explicit + build-pdf.py header_footer_static_gate (Phase 5 PDF build); mirrors system-prompt v3.77 + kaizen v2.99 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent root-cause audit (HARD: displayHeaderFooter missing — fixed + gated).
@@ -18,7 +23,7 @@ version: "2.139"
 > (1) [HARD] **CROSSWALK-TRANSLATION-1 (user directive 2026-08-24: "CROSS-DOMAIN INSIGHTS AND INTERDISCIPLINARY/CROSS-DISCIPLINARY TERMINOLOGY AND CROSSWALKS/TRANSLATIONS ARE CRITICAL FOR BREAKTHROUGH DISCOVERIES: NO SILOS, NO JARGON!")** — Phase 1 due diligence MUST include an adjacent-domain scan (>=2 adjacent WBS domains, DUE-DILIGENCE-DEPTH-1) looking for correspondences; Phase 5 publications MUST (a) name cross-domain connections in title/abstract where they exist (title-visible bridges, TERMINOLOGY-SILO-LESSONS-1), (b) include an explicit crosswalk/translation of key domain terms into adjacent-domain equivalents where a correspondence exists, and (c) be readable by an adjacent-domain expert — unexplained in-group jargon/shorthand is a HARD finding (extends PUBLICATION-PROSE-GATE-1 + PAPERS-NO-NAVEL-GAZING-1). Any vocabulary/taxonomy corpus used triggers the partitionality instrument (scripts/terminology_silos.py, QNFO.CGS.002) with bridge share reported; the semantic mapping layer (bilingual-dictionary analogue) is first-class infrastructure, not an afterthought. Canonical: 10.5281/zenodo.22075544 (the instrument + infrastructure response); "Valuation Without ℝ" (10.5281/zenodo.21803677) as the title-visible crosswalk exemplar.
 > Cross-reference: system-prompt v3.72, kaizen v2.94, TERMINOLOGY-SILO-LESSONS-1, PUBLICATION-PROSE-GATE-1, session this.
 
-# RESEARCH — v2.137
+# RESEARCH — v2.140
 > **v2.136 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit gates — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + kaizen v2.92):**
 > Red-team: 3-slot dispatch on 10.5281/zenodo.22075544 (Dependency completed: 1 HARD/3 SOFT; Accuracy + Completeness child sessions FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: deposited scripts re-run, outputs byte-match evidence JSONs, seed validation 9/9, rendering gates PASS, all cited DOIs published, frontmatter self-DOI clean). HARD: 4 (record-level). SOFT: 6.
 > New Phase 5/6/8 permanent gates (RECURRENCE-ZERO-1):
