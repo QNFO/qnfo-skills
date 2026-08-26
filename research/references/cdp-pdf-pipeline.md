@@ -186,6 +186,7 @@ async function render(htmlName, pdfName) {
             path: pdfFile,
             format: 'A4',
             printBackground: true,
+            displayHeaderFooter: false,   // PDF-NO-BROWSER-CHROME-1: NEVER emit browser header/footer (date/URI/title/page chrome)
             margin: { top: '2cm', bottom: '2cm', left: '2cm', right: '2cm' }
         });
         
