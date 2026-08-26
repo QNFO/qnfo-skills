@@ -1,7 +1,12 @@
 ---
 name: kaizen
-version: "2.97"
+version: "2.98"
 ---
+
+> **v2.98 UPDATE (2026-08-26, CMD SKILLS UPDATE: SLUG-RENAME-VECTORIZE-ORPHAN-1 + PUBLISH-LOCK-1 git extension + CLOSEOUT-HANDOFF-TABLE-1 (qnfo-audit.handoffs/wbs_state canonical); mirrors system-prompt v3.76 + research v2.138 + cloudflare v3.59 unchanged):**
+> Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (preferredModel re-drifted to v4-pro — reset flash). 3-slot dispatch (read-only, no-exec) queued.
+> Cross-reference: system-prompt v3.76, research v2.138, session this.
+
 
 > **v2.97 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE: red-team audit-method gates from the 2026-08-25 de-bloat + v3.74 fold-in adversarial analysis — MODEL-KEY-FULL-SCAN-1 (model keys live MID-FILE in Roaming app-settings.json ~offset 253K, NOT at the tail — tail-read audits MISS preferredModel drift; scan/parse the WHOLE file; canonical: 2026-08-25 recurrence #8, two of three reviewers read only the tail and both reported flash while live state was v4-pro) + REDTEAM-GREP-SCOPE-1 (children's grep/glob are workspace-scoped — external-path audits MUST use read-with-offsets; canonical: v3.73 fold-in audit child burned ~15 tool calls on grep denial) + REDTEAM-CHILD-CANCEL-1 (a CANCELED child = failed child — direct-audit immediately per REDTEAM-CHILD-FAIL-1, never wait; canonical: v3.73 audit child canceled mid-run, re-dispatched as the v3.74 accuracy audit); mirrors system-prompt v3.75 + research v2.137 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent 3-slot skills audit (2026-08-25; all delivered in ~5.5 min, no stall). HARD: 1 (MODEL-KEY-FILE-DRIFT-1 recurrence — Roaming preferredModel v4-pro; fixed + read-back verified, DB mirror was already flash). H1 title lag repaired (v2.94 -> v2.97). S2 decision (autonomous): re-enabled 382376cd/a3c0c2b4/ec43131a (user-mandated weekly flows); 90e6cff6 stays paused (pagination bug).
@@ -15575,5 +15580,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.97** (MODEL-KEY-FULL-SCAN-1: model keys live MID-FILE in Roaming app-settings.json ~offset 253K — tail-read audits miss preferredModel drift, full-file scan required; REDTEAM-GREP-SCOPE-1: children's grep/glob workspace-scoped, external audits must read-with-offsets; REDTEAM-CHILD-CANCEL-1: canceled child = failed child — direct-audit immediately; preserves v2.96 gates; mirrors system-prompt v3.75 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
+Current: **v2.98** (SLUG-RENAME-VECTORIZE-ORPHAN-1: D1 slug rename orphans Vectorize vectors — recompute sha256(slug:idx)[:32] IDs + delete_by_ids, get_by_ids returns a plain list, delete is eventually-consistent; PUBLISH-LOCK-1 git extension: also git ls-remote the slug branch; CLOSEOUT-HANDOFF-TABLE-1: canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state; preserves v2.97 gates; mirrors system-prompt v3.76 + research v2.138 + cloudflare v3.59 unchanged; 2026-08-26)
 

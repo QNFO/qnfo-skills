@@ -1,4 +1,8 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.75
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.76
+> **v3.76 UPDATE (2026-08-26, kaizen — CMD SKILLS UPDATE: post-RES.025 distribution + publish-lock + closeout gates — SLUG-RENAME-VECTORIZE-ORPHAN-1 (a D1 slug rename ORPHANS its Vectorize vectors: qnfo-paper-indexer upserts-only with sha256(slug:idx)[:32] IDs and no delete path — recompute IDs + delete_by_ids, get_by_ids returns a PLAIN LIST, delete is eventually-consistent so verify via get_by_ids; canonical: post-positional-numeracy -> completeness-senses-levi-civita left 17 orphans) + PUBLISH-LOCK-1 git extension (a registry P0/no-DOI row does NOT prove a slug/WBS is free — also git ls-remote origin res/paper/<slug>; canonical: RES.024 concurrently owned while registry showed P0) + CLOSEOUT-HANDOFF-TABLE-1 (canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state, NOT portfolio-state.handoffs); mirrors kaizen v2.98 + research v2.138 + cloudflare v3.59 unchanged):**
+> Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (HARD: top-level preferredModel re-drifted to deepseek-v4-pro at offset 6617 — reset to flash, read-back verified); 3-slot reviewer dispatch (read-only, no-exec) queued for the version/gate/mirror audit.
+> Cross-reference: kaizen v2.98, research v2.138, cloudflare v3.59 (unchanged), session this.
+
 > **v3.75 UPDATE (2026-08-25, kaizen — CMD SKILLS UPDATE: red-team audit-method gates from the 2026-08-25 de-bloat + v3.74 fold-in adversarial analysis — MODEL-KEY-FULL-SCAN-1 (model keys live MID-FILE in Roaming app-settings.json ~offset 253K, NOT at the tail — tail-read audits MISS preferredModel drift; scan/parse the WHOLE file; canonical: 2026-08-25 recurrence #8, two of three reviewers read only the tail and both reported flash while live state was v4-pro) + REDTEAM-GREP-SCOPE-1 (children's grep/glob are workspace-scoped — external-path audits MUST use read-with-offsets; canonical: v3.73 fold-in audit child burned ~15 tool calls on grep denial) + REDTEAM-CHILD-CANCEL-1 (a CANCELED child = failed child — direct-audit immediately per REDTEAM-CHILD-FAIL-1, never wait; canonical: v3.73 audit child canceled mid-run, re-dispatched as the v3.74 accuracy audit); mirrors kaizen v2.97 + research v2.137 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent 3-slot skills audit (2026-08-25; all delivered in ~5.5 min, no stall). HARD: 1 (MODEL-KEY-FILE-DRIFT-1 recurrence — Roaming preferredModel v4-pro; fixed + read-back verified, DB mirror was already flash). S2 decision (autonomous, user delegated): re-enabled 382376cd/a3c0c2b4/ec43131a (user-mandated weekly flows); 90e6cff6 stays paused (pagination bug would fabricate duplicates).
 > Cross-reference: kaizen v2.97, research v2.137 (unchanged), cloudflare v3.59 (unchanged), session this.
@@ -2185,7 +2189,42 @@ documents the anti-pattern in the system prompt, but the publish checklist did n
 ## Version
 
 
-Current: **v3.75** (MODEL-KEY-FULL-SCAN-1: model keys live MID-FILE in Roaming app-settings.json ~offset 253K — tail-read audits miss preferredModel drift, full-file scan required; REDTEAM-GREP-SCOPE-1: children's grep/glob workspace-scoped, external audits must read-with-offsets; REDTEAM-CHILD-CANCEL-1: canceled child = failed child — direct-audit immediately; preserves v3.74 DOI-DISCREPANCY-RESOLVE-1 + v3.73 ANTI-TELEGRAPH-1; mirrors kaizen v2.97 + research v2.137 + cloudflare v3.59 unchanged; 2026-08-25)
+
+## SLUG-RENAME, PUBLISH-LOCK & CLOSEOUT GATES (HARD GATE — 2026-08-26)
+
+1. **SLUG-RENAME-VECTORIZE-ORPHAN-1 (HARD):** renaming a D1 living-paper `slug` ORPHANS its
+   Vectorize vectors. The `qnfo-paper-indexer` worker only UPSERTS vectors keyed
+   `sha256(slug + ":" + idx)[:32]` (metadata `{slug, chunk, total}`) and has NO delete path.
+   After any slug rename (D1 papers.slug / KG node / R2 path), delete the old-slug vectors:
+   recompute the deterministic IDs and call Vectorize `delete_by_ids`
+   (`POST /accounts/{acct}/vectorize/v2/indexes/{index}/delete_by_ids`). Two execution facts:
+   `get_by_ids` returns `result` as a PLAIN LIST of `{id, metadata, values}` (NOT `{vectors:[...]}`),
+   and both `get_by_ids`/`delete_by_ids` cap at 20 ids per call (batch). Vectorize delete is
+   EVENTUALLY CONSISTENT — `delete_by_ids` returns a `mutationId` immediately but query replicas lag,
+   so verify via `get_by_ids` (converges faster than search) before declaring the orphans gone.
+   Canonical: post-positional-numeracy -> completeness-senses-levi-civita left 17 orphaned vectors
+   (metadata total=17); deleted by ID, get_by_ids confirmed 0/17 remaining (2026-08-26).
+
+2. **PUBLISH-LOCK-1 git-branch extension (HARD):** the publish-lock claim row (portfolio-state:
+   session_id + wbs_code + target_concept, UNIQUE) is NECESSARY but NOT SUFFICIENT. A registry row
+   at P0/no-DOI does NOT prove a slug/WBS is free — a concurrent session may have committed branch
+   work under the same slug/WBS. Before P8 publish, ALSO run `git ls-remote origin res/paper/<slug>`;
+   if the branch exists with commits, BLOCK and reconcile (re-home to a free WBS code/slug, or integrate).
+   Canonical: QNFO.RES.024 `post-positional-numeracy` was concurrently owned (remote branch with 4
+   commits: Phase 0 / UIA / Phase-1 due-diligence / red-team) while the registry row showed P0/no-DOI —
+   the record was re-homed to QNFO.RES.025 `completeness-senses-levi-civita` (2026-08-26).
+
+3. **CLOSEOUT-HANDOFF-TABLE-1 (HARD):** the canonical closeout tables are in `qnfo-audit`
+   (D1 uuid 35e2e573-...), NOT portfolio-state: `handoffs` (id INTEGER AUTOINCREMENT, session_id,
+   project_id, phase_completed, summary, pending_work, next_action, r2_handoff_path, timestamp,
+   wbs_code) and `wbs_state` (project_id PK, current_phase, total_phases, phase_data, last_updated,
+   session_id). portfolio-state has a DIFFERENT legacy `handoffs` table (from_agent/to_agent/r2_path/urn).
+   CMD CLOSEOUT must INSERT into `qnfo-audit.handoffs` + UPSERT `qnfo-audit.wbs_state` — writing the
+   legacy portfolio-state table is a HARD finding. Canonical: RES.025 closeout wrote portfolio-state.handoffs
+   first (wrong schema), then corrected to qnfo-audit.handoffs id 28714 + wbs_state (2026-08-26).
+
+
+Current: **v3.76** (SLUG-RENAME-VECTORIZE-ORPHAN-1: a D1 slug rename orphans Vectorize vectors — indexer upserts-only, no delete path; recompute sha256(slug:idx)[:32] IDs + delete_by_ids, get_by_ids returns a plain list, delete is eventually-consistent so verify via get_by_ids; PUBLISH-LOCK-1 git extension: also git ls-remote the slug branch — a registry P0/no-DOI row does not prove the WBS/slug is free; CLOSEOUT-HANDOFF-TABLE-1: canonical closeout tables = qnfo-audit.handoffs + qnfo-audit.wbs_state, not portfolio-state.handoffs; preserves v3.75 MODEL-KEY-FULL-SCAN-1/REDTEAM-GREP-SCOPE-1/REDTEAM-CHILD-CANCEL-1 + v3.74 DOI-DISCREPANCY-RESOLVE-1 + v3.73 ANTI-TELEGRAPH-1; mirrors kaizen v2.98 + research v2.138 + cloudflare v3.59 unchanged; 2026-08-26)
 
 ## EXEC SHELL — Git Bash (POSIX, permanent 2026-08-15)
 

@@ -1,7 +1,12 @@
 ---
 name: research
-version: "2.137"
+version: "2.138"
 ---
+
+> **v2.138 UPDATE (2026-08-26, CMD SKILLS UPDATE: SLUG-RENAME-VECTORIZE-ORPHAN-1 (Phase 6 distribution — slug rename orphans Vectorize vectors, delete via delete_by_ids) + PUBLISH-LOCK-1 git extension (Phase 8 — also git ls-remote the slug branch); mirrors system-prompt v3.76 + kaizen v2.98 + cloudflare v3.59 unchanged):**
+> Red-team: MODEL-KEY-FULL-SCAN-1 full-file parse (preferredModel re-drifted — reset flash).
+> Cross-reference: system-prompt v3.76, kaizen v2.98, session this.
+
 
 > **v2.137 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: user directive — NO SILOS, NO JARGON — CROSSWALK-TRANSLATION-1 folded into Phase 1/4/5 (cross-domain insights and interdisciplinary terminology/crosswalks are breakthrough-critical); mirrors system-prompt v3.72 + kaizen v2.94):**
 > Red-team: direct parent-agent skills audit (N-2 clean at v2.136); user directive 2026-08-24 applied verbatim. HARD: 1 (new gate). SOFT: 0.
