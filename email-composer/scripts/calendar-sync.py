@@ -22,9 +22,10 @@ Tool (the ONLY supported mechanism for calendar/task creation):
 GTD register source of truth: D:\\Obsidian\\notes\\v1\\_personal-gtd.md, NEXT STEPS
 section, dated line format:  - [ ] YYYY-MM-DD[ HH:MM][ to DD|YYYY-MM-DD] — subject
 (also accepts a leading "By "). [x] lines are skipped; sync-tasks completes the
-matching to-do. Reminder defaults: 1440 min day-before (meetings/deadlines),
-10080 min week-before (multi-day/conference ranges). One native reminder per
-event; prep-heavy meetings add cronjob prep layers on top.
+matching to-do. Reminder defaults: single-day events fire 09:00 the DAY
+BEFORE (planning — user checks the calendar primarily in the morning,
+mandate 2026-08-25); multi-day ranges keep 10080 min week-before. One native
+reminder per event; prep-heavy meetings add cronjob prep layers on top.
 
 HARD CONSTRAINTS (mirrors outlook-gtd-triage.py):
   - COM ONLY, INVISIBLE: never opens the Outlook UI.
@@ -32,8 +33,9 @@ HARD CONSTRAINTS (mirrors outlook-gtd-triage.py):
   - Idempotent: same title+start event / same title task = skipped; title
     similarity is token-based (parenthetical variants do not duplicate).
   - Never fabricates dates/titles/reminders; report only on changes.
-  - Per-account fault isolation (rowan.quni@outlook.com primary; falls back
-    to any store containing the address or any calendar store).
+  - Per-account fault isolation (CAL_ACCOUNT env override; defaults to
+    rowan.quni@outlook.com; falls back to any store containing the address
+    or any calendar store). Personal events use CAL_ACCOUNT=rwnquni@outlook.com.
   - Completion safety: auto-complete ONLY tasks whose Subject starts with a
     date prefix (YYYY-MM-DD) and whose register line is [x] or absent; tasks
     without a date prefix are agent-maintained and NEVER auto-completed.
@@ -47,7 +49,9 @@ import sys
 import win32com.client
 
 REGISTER = r"D:\Obsidian\notes\v1\_personal-gtd.md"
-CAL_ACCOUNT = "rowan.quni@outlook.com"
+# Default account is the QNFO-facing calendar; PERSONAL events must go to
+# the personal account via: CAL_ACCOUNT=rwnquni@outlook.com (user mandate 2026-08-25).
+CAL_ACCOUNT = os.environ.get("CAL_ACCOUNT", "rowan.quni@outlook.com")
 
 OL_FOLDER_CALENDAR = 9    # olFolderCalendar
 OL_FOLDER_TASKS = 13      # olFolderTasks
@@ -64,6 +68,14 @@ RX_TIME = re.compile(r"^(\d{1,2}:\d{2})")
 RX_RANGE = re.compile(r"^to\s+(\d{4}-\d{2}-\d{2}|\d{1,2})", re.I)
 RX_LIST = re.compile(r"^-\s*\[([ xX])\]\s*(.*)$")
 RX_TASK_DATE_PREFIX = re.compile(r"^\d{4}-\d{2}-\d{2}")
+
+
+def _morning_reminder(start):
+    """Reminder fires 09:00 the day BEFORE the event (user mandate 2026-08-25:
+    user checks the calendar primarily in the morning; reminders must be
+    sufficiently in advance to allow planning)."""
+    base = (start - dt.timedelta(days=1)).replace(hour=9, minute=0, second=0, microsecond=0)
+    return int((start - base).total_seconds() // 60)
 
 
 def get_outlook():
@@ -143,12 +155,26 @@ def _similar(a, b):
     return (na and nb and (na in nb or nb in na)) and min(len(na), len(nb)) >= 8
 
 
-def _title_exists(folder, title, start=None):
-    """Idempotency check: similar Subject (and same Start when given)."""
+def _norm_title(t):
+    """Normalized title: parentheticals stripped, lowercased, whitespace-collapsed."""
+    return re.sub(r"\s+", " ", re.sub(r"\s*\(.*?\)\s*", " ", (t or "").lower())).strip()
+
+
+def _title_exists(folder, title, start=None, strict=False):
+    """Idempotency check: similar Subject (and same Start when given).
+
+    strict=True (tasks): normalized-title equality/containment only — no token
+    overlap, which false-matches distinct titles sharing date/location tokens.
+    """
     try:
         for it in list(folder.Items):
             s = _subj(it)
             if not s:
+                continue
+            if strict:
+                na, nb = _norm_title(s), _norm_title(title)
+                if na and nb and min(len(na), len(nb)) >= 8 and (na == nb or na in nb or nb in na):
+                    return True
                 continue
             if _similar(s, title):
                 if start is None:
@@ -207,7 +233,7 @@ def cmd_add_task(app, ns, args):
     except ValueError:
         print("ERROR: --due must be YYYY-MM-DD")
         return 2
-    if _title_exists(folder, args.title):
+    if _title_exists(folder, args.title, strict=True):
         print(f"skip (exists): {args.title}")
         return 0
     t = folder.Items.Add(3)  # olTaskItem
@@ -302,10 +328,10 @@ def parse_register():
                     end = dt.datetime.strptime(d2, "%Y-%m-%d").replace(hour=18, minute=0)
                 except ValueError:
                     end = start + dt.timedelta(hours=1)
-                reminder = 10080 if (end - start).days >= 4 else 1440
+                reminder = 10080 if (end - start).days >= 4 else _morning_reminder(start)
             else:
                 end = start + dt.timedelta(hours=1)
-                reminder = 1440
+                reminder = _morning_reminder(start)
             # past lines (yesterday or older) are stale
             if start < now - dt.timedelta(days=1):
                 continue
