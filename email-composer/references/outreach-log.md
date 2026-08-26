@@ -612,3 +612,13 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Test-send:** id=305 -> rwnquni@outlook.com, message_id <dpAM0iXFwINDypT9t6zOWXmSSxVx9H2HHDNo@qnfo.org>, queued, 0 bounces.
 **Send:** id=304 -> maik.reddiger@hs-anhalt.de, message_id <HW6MJg3p6oKYg2DvpweXKAv4C2NRpb7edPTn@qnfo.org>, queued, 0 bounces, sender rowan.quni@qnfo.org, 2026-08-25. Ledger 51 entries. Follow-up eligible 2026-09-08 (14d), once max.
 
+---
+
+## 2026-08-26 — RES.024 P7: Romain Lebreton (first contact)
+
+**Target:** Romain Lebreton, LIRMM — University of Montpellier. Simultaneous rational number codes line (Abbondati–Guerrini–Lebreton, arXiv:2504.08472; JSC 132:102481, 10.1016/j.jsc.2025.102481).
+**Email verified** from the arXiv SOURCE tarball (2002.08748 main.tex `\email{guerrini, lebreton, zappatore@lirmm.fr}`) -> lebreton@lirmm.fr (CONNECTION-POINT-UNVERIFIED-1 satisfied; the 2504.08472 tarball itself carries no emails — verified via the group's earlier tarball). No prior contact (ledger + D1 checked). Single-contact-per-group: Lebreton only.
+**Paper shared:** Post-Positional Numeracy: Finite-Adele Encoding and Product-Formula-Verified Exact Rational Arithmetic (10.5281/zenodo.22114388; v1.0.1 = 22114495).
+**Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=312 -> rowan.quni@outlook.com [send path confirmation], message_id caeb5bcf-2d08-4675-aa40-eb5c70639251, sent 2026-08-26T16:10:51Z, status=sent (D1-verified).
+**Send:** id=313 -> lebreton@lirmm.fr, message_id 3e839b51-d486-4a6e-a45b-e41faa8dcdaf, sender rowan.quni@qnfo.org, sent 2026-08-26T16:10:53Z, status=sent (D1-verified). Ledger 52 entries. Follow-up eligible 2026-09-09 (14d), once max.
+

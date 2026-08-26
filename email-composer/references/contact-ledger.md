@@ -59,10 +59,11 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 | yaoyao2016@scut.edu.cn | Yao Yao | 2026-08-19 | 2504.14453 QCA word statistics | NEW 2026-08-19 |
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 51 entries = 50 prior + 1 new (2026-08-25: Reddiger — RES.018 hydrodynamic re-grounding test). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 52 entries = 51 prior + 1 new (2026-08-26: Lebreton — RES.024 post-positional-numeracy). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
 | wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
 | konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
 | ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |
+| lebreton@lirmm.fr | Romain Lebreton | 2026-08-26 | 2504.08472 simultaneous rational number codes (AGL) | NEW 2026-08-26 |
 
 | 2026-08-24 | Lars Sjostrom | sjolars@chalmers.se | Chalmers Univ. Technology | arXiv:2605.29595 (MnBi2Te4 quantum metric multipoles) | 289 | sent | Superconductivity Quadrangle 10.5281/zenodo.18496889 |
 | maik.reddiger@hs-anhalt.de | Maik Reddiger | 2026-08-25 | 2508.11368 time-of-arrival; Madelung 2207.11367; Kolmogorov 2405.05710 | NEW 2026-08-25 (D1 id=304) |
