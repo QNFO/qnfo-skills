@@ -94,7 +94,12 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
 
-# SOCIAL MEDIA MANAGEMENT — v1.8.0
+# SOCIAL MEDIA MANAGEMENT — v1.9.0
+
+> **v1.9.0 UPDATE (2026-08-26, kaizen — BUFFER-TOKEN-ENV-1: Buffer token env-sourced + queue-clear resume):**
+> Red-team: direct parent-agent (RES.024 P7 Buffer social 2026-08-26). HARD: 1. Changes:
+> (1) [HARD] **BUFFER-TOKEN-ENV-1 added** — Buffer API token discovery: **env `BUFFER_TOKEN` is now the primary source** (TOKEN-DISCOVERY-1 order: env → tokens dir → keys.json → memory). The Buffer MCP was REMOVED 2026-08-17 (per v1.8.0); the canonical path is the **Buffer GraphQL API** `api.buffer.com/graphql` with `Authorization: Bearer $BUFFER_TOKEN` — discover org via `account { organizations { id name } }`, channels via top-level `channels(input:{organizationId})` (check `isDisconnected`), post via `createPost` with UNION fragments and REQUIRED `mode: addToQueue, needsApproval: false, schedulingType: "automatic"`. When the user clears the queue ("THERE ARE NO POSTS IN BUFFER QUEUE"), the earlier queue-full/expired-token block is lifted — re-check env for a fresh token and resume P7 posting. Canonical: RES.024 2026-08-26 — 3 scheduled posts (LinkedIn 6a8fc1aa, X 6a8fc1ab, Mastodon 6a8fc1ad), 266-char D7 copy, concept DOI 10.5281/zenodo.22114388.
+> Cross-reference: research v2.141 (Buffer GraphQL dictionary), kaizen v2.101, system-prompt v3.78, session this.
 
 > **v1.8.0 UPDATE (2026-08-18, kaizen — PERSONAL ALIGNMENT: Become-a-Node strategy):**
 > Red-team: direct parent-agent (user directive "DEFINITELY UPDATE MY PERSONAL SKILL...AND OTHERS
