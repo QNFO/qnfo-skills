@@ -58,8 +58,11 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 | wangzhongemail@tsinghua.edu.cn | Zhong Wang | 2026-08-19 | 2606.19430 Rule-201 QCA influence matrix | NEW 2026-08-19 |
 | yaoyao2016@scut.edu.cn | Yao Yao | 2026-08-19 | 2504.14453 QCA word statistics | NEW 2026-08-19 |
 
+| nicolas.medina.sanchez@univie.ac.at | Nicolás Medina Sánchez | 2026-08-27 | 2306.05919 transtatistics reconstruction | NEW 2026-08-27 (D1 id=324, RES.027) |
+| daiwusheng@tju.edu.cn | Wu-Sheng Dai | 2026-08-27 | 2505.17361 3D statistics exclusivity | NEW 2026-08-27 (D1 id=325, RES.027) |
+
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 52 entries = 51 prior + 1 new (2026-08-26: Lebreton — RES.024 post-positional-numeracy). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 54 entries = 52 prior + 2 new (2026-08-27: Medina Sánchez + Dai — RES.027 adelic-quantum-statistics). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
 | wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
 | konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
 | ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |

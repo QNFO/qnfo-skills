@@ -622,3 +622,30 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Test-send (TEST-SEND-EXTERNAL-1 compliant):** id=312 -> rowan.quni@outlook.com [send path confirmation], message_id caeb5bcf-2d08-4675-aa40-eb5c70639251, sent 2026-08-26T16:10:51Z, status=sent (D1-verified).
 **Send:** id=313 -> lebreton@lirmm.fr, message_id 3e839b51-d486-4a6e-a45b-e41faa8dcdaf, sender rowan.quni@qnfo.org, sent 2026-08-26T16:10:53Z, status=sent (D1-verified). Ledger 52 entries. Follow-up eligible 2026-09-09 (14d), once max.
 
+
+
+---
+
+## 2026-08-27 — Inbound reply wave (3 in-thread replies, uncapped)
+
+**Inbound classified:** 314 Dhawal Patel (IBM, pateldha@us.ibm.com) — cold inbound re AssetOpsBench (found QNFO via GitHub) → courtesy reply. 311 Adlin (Latent Space) — polite decline → absorbed, NO reply (good-vibes rule). 309 Maik Reddiger — substantive scientific reply: Sec.2 dynamical equation "nowhere mentioned" in their work (ERRATA absorbed: connection was at question level, not equation level); measurement question "more than justified"; put us on the list for part III. 302 Amal Whyte (CWI) — 12:30 unavailable, proposes September reschedule → holding reply sent (no date committed); **pending_user: choose September slot** (per recorded next-step; HARDENING-3 no-question-in-cron).
+
+**Test-sends (TEST-SEND-EXTERNAL-1 compliant, strictly first):** id=316 [PREVIEW] Reddiger, 317 [PREVIEW] Amal, 318 [PREVIEW] Patel → rwnquni@outlook.com, all status=sent, 2026-08-27T06:03:14-15Z.
+
+**Real sends (id=319-321, sender rowan.quni@qnfo.org canonical, all status=sent, D1-verified):**
+| id | Recipient | reply_to | Message ID |
+|----|-----------|----------|-----------|
+| 319 | Maik.Reddiger@hs-anhalt.de | 309 | 83414bd1-510b-457b-b114-65920c020165 |
+| 320 | amal@cwi.nl | 302 | 7b410d01-d20f-412e-95e0-79965801f739 |
+| 321 | pateldha@us.ibm.com | 314 | 265aa5ce-11be-4474-af64-0978473d412f |
+
+**D1 verification:** ids 316-321 status=sent (sender rowan.quni@qnfo.org); originals 302/309/314 status=replied. /emails/recent read-back matches.
+**Cap:** 0 new outreach used (all in-thread replies, uncapped per 08-20/08-21 precedent). Follow-up eligibility unchanged: Reddiger 2026-09-08, Lebreton 2026-09-09.
+**Noise:** 315/307/306/303/310/308 DMARC + spam invitations → no action.
+
+
+## 2026-08-27 — RES.027 adelic-quantum-statistics (10.5281/zenodo.22123068) first contacts
+- **Medina Sánchez, Nicolás** (nicolas.medina.sanchez@univie.ac.at) — 2306.05919 transtatistics. Sent: message_id 420a1242-30fe-438b-8038-6a03dedfc027, D1 id=324, status=sent. Angle: bounded-occupation interpolation family as the arithmetic counterpart to operational reconstruction.
+- **Dai, Wu-Sheng** (daiwusheng@tju.edu.cn) — 2505.17361 3D exclusivity. Sent: message_id f94a6773-950e-4044-b179-2279a92914c3, D1 id=325, status=sent. Angle: the three-dimensional boundary of the interpolation family.
+- Test-send to rwnquni@outlook.com (message_id 43bd312c) — internal delivery check, TEST-SEND-EXTERNAL-1.
+- **Deferred (address not verifiable from the arXiv source or an institutional page this cycle):** Hartnoll/Yang (2502.02661), Wang/Hazzard (2308.05203). Never send to unverified addresses (CONNECTION-POINT-UNVERIFIED-1).
