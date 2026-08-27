@@ -690,7 +690,8 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Cap:** 5 total outreach contacts today (4 RES.027 + 1 RES.028) — at the daily cap; no further sends today.
 **Follow-up:** none (NO-FOLLOW-UP-DEFAULT-1 — no follow-up to silent recipients).
 
-**Queued for the next wave (2026-08-28+, one per group, cap 3):**
-- Marchetti, Pieralberto (Ye/Marchetti/Su/Yu, 1512.01783 — the HES↔braid anchor of RES.028 §4) — email unverified; verify via the Padova/INFN institutional profile (browser) before any send. INSPIRE id 1028901 (no public email).
-- Svaiter, Nami F. (Dueñas/Svaiter, 1401.8190 — Riemann-gas thermodynamics) — unverified; CBPF institutional profile. INSPIRE id 1024505 (no public email).
-- Ng, Y. Jack (Chen/Ng, cond-mat/9411008 — HES-anyon perturbative) — unverified; UNC institutional profile. INSPIRE id 995756 (no public email).
+**Queued for the next wave (2026-08-28+, one per group, cap 3) — all addresses now VERIFIED via official institutional pages (browser, 2026-08-27):**
+- Marchetti, Pieralberto (Ye/Marchetti/Su/Yu, 1512.01783 — the HES↔braid anchor of RES.028 §4) — **VERIFIED: pieralberto.marchetti@unipd.it** (official DFA Padova live-people page, "Indirizzo email" field). INSPIRE id 1028901.
+- Svaiter, Nami F. (Dueñas/Svaiter, 1401.8190 — Riemann-gas thermodynamics) — **VERIFIED: nfuxsvai@cbpf.br** (official gov.br CBPF "Corpo de Pesquisadores" page). INSPIRE id 1024505.
+- Ng, Y. Jack (Chen/Ng, cond-mat/9411008 — HES-anyon perturbative) — **VERIFIED: yjng@physics.unc.edu** (official UNC Physics & Astronomy profile page, mailto link). INSPIRE id 995756.
+- Send order for tomorrow's wave: Marchetti first (closest anchor to RES.028 §4), then Svaiter, then Ng; test-send first, one per group, within the fresh daily cap.
