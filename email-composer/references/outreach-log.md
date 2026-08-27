@@ -695,3 +695,22 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 - Svaiter, Nami F. (Dueñas/Svaiter, 1401.8190 — Riemann-gas thermodynamics) — **VERIFIED: nfuxsvai@cbpf.br** (official gov.br CBPF "Corpo de Pesquisadores" page). INSPIRE id 1024505.
 - Ng, Y. Jack (Chen/Ng, cond-mat/9411008 — HES-anyon perturbative) — **VERIFIED: yjng@physics.unc.edu** (official UNC Physics & Astronomy profile page, mailto link). INSPIRE id 995756.
 - Send order for tomorrow's wave: Marchetti first (closest anchor to RES.028 §4), then Svaiter, then Ng; test-send first, one per group, within the fresh daily cap.
+
+## 2026-08-27T19:15Z — RES.028 wave-2 completion: Marchetti + Svaiter + Jack Ng
+
+**Wave state:** 3 real sends (queue from the wave-1 section; all addresses verified 2026-08-27 via official institutional pages).
+
+**Test-send (TEST-SEND-EXTERNAL-1, strictly first):** id=335 → rwnquni@outlook.com, message_id 31bf8ebc-8dc1-45e9-9710-52b48618db12, status=sent (D1-verified).
+
+**Real sends (sender rowan.quni@qnfo.org canonical, all status=sent, D1-verified):**
+
+| id | Recipient | Group | Message ID |
+|----|-----------|-------|-----------|
+| 336 | pieralberto.marchetti@unipd.it | Ye/Marchetti/Su/Yu (1512.01783) | e7dd70e0-a404-4011-a2b4-718140d386d5 |
+| 337 | nfuxsvai@cbpf.br | Dueñas/Svaiter (1401.8190) | 276d5969-90a7-47e2-a4eb-fc911669a5c1 |
+| 338 | yjng@physics.unc.edu | Chen/Ng (cond-mat/9411008) | 9af7b361-63ce-48f0-9ea0-f6e7fb43022f |
+
+**CAP-DEVIATION FLAG (accuracy of record):** the wave-2 dispatch was premised on a local-clock reading of 2026-08-28 00:07 Amsterdam; the worker's authoritative UTC timestamps place the sends at 2026-08-27T19:15Z (21:15 Amsterdam, **Aug 27**). The Aug-27 daily total is therefore 8 real sends (RES.027 wave 4 + RES.028 wave-1 Makhaldiani 1 + wave-2 3) against the 3-5 daily cap — **exceeded by 3**. Root cause: the date-rollover check was taken from a clock reading that disagrees with Cloudflare's UTC (the machine clock appears ~3 h ahead). Corrective note for future waves: account the daily cap on the WORKER's UTC calendar day (D1 received_at), never on the local machine clock alone; cross-check both before dispatching a queued wave.
+
+**Dedup:** all three recipients checked against the ledger + D1 before sending — zero prior contact; first contacts only, one per group.
+**Follow-up:** none (NO-FOLLOW-UP-DEFAULT-1).

@@ -1,7 +1,7 @@
 # QNFO Outreach Master Contact Ledger
 
 Canonical dedup list for ALL scheduled tasks / LLM processes. Check BEFORE any send.
-Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Hartnoll / Wang; RES.028 — Makhaldiani)
+Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Hartnoll / Wang; RES.028 — Makhaldiani + wave-2 Marchetti / Svaiter / Jack Ng)
 
 **OUTREACH HALT (2026-08-18 → ~2026-08-22, user directive):** QPL 2026 (Amsterdam, Aug 17-21) — do NOT send cold outreach to anyone who may be present at the conference while the user is attending in person; in-person contact replaces email. Frozen pool: Koch, Calcluth/GKP group, Deaconu/Mosca/Yard group (IQC), Brenner (arXiv-only). This halt supersedes proactive outreach for conference attendees; the post-conference reminder cronjob (2026-08-22) handles the unfreeze + in-person-contact check.
 
@@ -62,7 +62,7 @@ Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Har
 | daiwusheng@tju.edu.cn | Wu-Sheng Dai | 2026-08-27 | 2505.17361 3D statistics exclusivity | NEW 2026-08-27 (D1 id=325, RES.027) |
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 67 entries = 56 prior + 11 new (2026-08-27: scan queue 10 — Teklu, Bao, Feng, D'Alberto, Yenilen, Schirk, Spring, Davids, Basu, Bruno — arXiv-tarball-verified, send pending via email job 3851f539; + RES.028 Makhaldiani id=334, sent). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 70 entries = 56 prior + 14 new (2026-08-27: scan queue 10 — Teklu, Bao, Feng, D'Alberto, Yenilen, Schirk, Spring, Davids, Basu, Bruno — arXiv-tarball-verified, send pending via email job 3851f539; + RES.028 Makhaldiani id=334; + RES.028 wave-2 Marchetti id=336, Svaiter id=337, Jack Ng id=338 — sent 2026-08-27T19:15Z; CAP-DEVIATION FLAGGED in outreach-log.md: Aug-27 total 8 real sends vs the 3-5 daily cap, root cause machine-clock-vs-worker-UTC mismatch). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
 | wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
 | konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
 | ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |
@@ -85,3 +85,6 @@ Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Har
 | debarshi.128@gmail.com | Debarshi Basu | 2026-08-27 | 2608.25783 PEE/bit threads in AdS subregions (with Wen) | NEW 2026-08-27 (scan queue — send pending) |
 | rbruno@unisa.it | Roberto Bruno | 2026-08-27 | 2608.25533 constrained max-entropy contiguous aggregations (with Vaccaro) | NEW 2026-08-27 (scan queue — send pending) |
 | mnv@jinr.ru | Nugzar Makhaldiani | 2026-08-27 | 1802.01971 supersymmetric zeta-functions (fermion factorization) | NEW 2026-08-27 (D1 id=334, RES.028, sent) |
+| pieralberto.marchetti@unipd.it | Pieralberto Marchetti | 2026-08-27 | 1512.01783 Hall effect/edge states/HES in 2D (with Ye, Su, Yu) | NEW 2026-08-27 (D1 id=336, RES.028 wave-2, sent) |
+| nfuxsvai@cbpf.br | Nami Fux Svaiter | 2026-08-27 | 1401.8190 thermodynamics of the bosonic randomized Riemann gas (with Dueñas) | NEW 2026-08-27 (D1 id=337, RES.028 wave-2, sent) |
+| yjng@physics.unc.edu | Y. Jack Ng | 2026-08-27 | cond-mat/9411008 fractional exclusion statistics and anyons (with Chen) | NEW 2026-08-27 (D1 id=338, RES.028 wave-2, sent) |
