@@ -1,7 +1,7 @@
 # QNFO Outreach Master Contact Ledger
 
 Canonical dedup list for ALL scheduled tasks / LLM processes. Check BEFORE any send.
-Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / Landsman)
+Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Hartnoll / Wang; RES.028 — Makhaldiani)
 
 **OUTREACH HALT (2026-08-18 → ~2026-08-22, user directive):** QPL 2026 (Amsterdam, Aug 17-21) — do NOT send cold outreach to anyone who may be present at the conference while the user is attending in person; in-person contact replaces email. Frozen pool: Koch, Calcluth/GKP group, Deaconu/Mosca/Yard group (IQC), Brenner (arXiv-only). This halt supersedes proactive outreach for conference attendees; the post-conference reminder cronjob (2026-08-22) handles the unfreeze + in-person-contact check.
 
@@ -62,7 +62,7 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 | daiwusheng@tju.edu.cn | Wu-Sheng Dai | 2026-08-27 | 2505.17361 3D statistics exclusivity | NEW 2026-08-27 (D1 id=325, RES.027) |
 
 **Rules:** 1 email per researcher/name/email. Never re-contact the same email unless replying. D1 `emails` table remains authoritative; this ledger is the coordination snapshot.
-**Counts:** 54 entries = 52 prior + 2 new (2026-08-27: Medina Sánchez + Dai — RES.027 adelic-quantum-statistics). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
+**Counts:** 67 entries = 56 prior + 11 new (2026-08-27: scan queue 10 — Teklu, Bao, Feng, D'Alberto, Yenilen, Schirk, Spring, Davids, Basu, Bruno — arXiv-tarball-verified, send pending via email job 3851f539; + RES.028 Makhaldiani id=334, sent). Reddiger added 2026-08-25 (RES.018). Heiblum + Landsman rows updated to REPLIED (in-thread, no new rows). Kauffman reply (id=188) is an in-thread reply to the 08-16 contact — no new ledger row. Probe artifacts (`*.invalid`, `*.example`, `attacker-probe@example.invalid`) are EXCLUDED from dedup (SOFT-4, 2026-08-15); they were D1 security-probe rows, never outreach recipients.
 | wilson.zunigagalindo@utrgv.edu | W. A. Zuniga-Galindo | 2026-08-20 | 2410.13048 p-adic QM / CTQW | NEW 2026-08-20 |
 | konno@ynu.ac.jp | Norio Konno | 2026-08-20 | quant-ph/0602070 ultrametric CTQW | NEW 2026-08-20 |
 | ilaria.svampa@unicam.it | Ilaria Svampa | 2026-08-20 | 2112.03362 p-adic qubits SO(3)_p | NEW 2026-08-20 |
@@ -70,3 +70,18 @@ Last updated: 2026-08-18 (wave 2: Camino / Jipdi + in-thread replies Heiblum / L
 
 | 2026-08-24 | Lars Sjostrom | sjolars@chalmers.se | Chalmers Univ. Technology | arXiv:2605.29595 (MnBi2Te4 quantum metric multipoles) | 289 | sent | Superconductivity Quadrangle 10.5281/zenodo.18496889 |
 | maik.reddiger@hs-anhalt.de | Maik Reddiger | 2026-08-25 | 2508.11368 time-of-arrival; Madelung 2207.11367; Kolmogorov 2405.05710 | NEW 2026-08-25 (D1 id=304) |
+| hartnoll@stanford.edu | Sean Hartnoll | 2026-08-27 | 2502.02661 conformal primon gas (with Yang) | NEW 2026-08-27 (D1 id=329, RES.027 wave) |
+| zhiyuan.wang.physics@gmail.com | Zhiyuan Wang | 2026-08-27 | 2308.05203 parastatistics (with Hazzard) | NEW 2026-08-27 (D1 id=330, RES.027 wave) |
+
+<!-- SCAN-QUEUE 2026-08-27 (scan agent fdf1403c): outreach candidates from daily scan, emails tarball-verified. Email job 3851f539: verify + send within cap; update rows with D1 id. -->
+| berihu.gebrehiwot@ku.ac.ae | B. Teklu | 2026-08-27 | 2608.25953 Double-Morse info measures (with Chogle, Damiani) | NEW 2026-08-27 (scan queue — send pending) |
+| ningbao75@gmail.com | Ning Bao | 2026-08-27 | 2608.25287 holographic entropy inequalities beyond SSA (with Ferko) | NEW 2026-08-27 (scan queue — send pending) |
+| feng.tianfeng.phys@gmail.com | Tianfeng Feng | 2026-08-27 | 2608.25896 distributed Trotterization entanglement cost (with Sun, Xiao, Zhao) | NEW 2026-08-27 (scan queue — send pending) |
+| paolo.dalberto@amd.com | Paolo D'Alberto | 2026-08-27 | 2608.25254 Pauli Lightcone error mitigation (AMD) | NEW 2026-08-27 (scan queue — send pending) |
+| b.yenilen@fz-juelich.de | Berat Yenilen | 2026-08-27 | 2608.25797 FT sqrt(T) state prep (with Müller, Rispler) | NEW 2026-08-27 (scan queue — send pending) |
+| johannes.schirk@wmi.badw.de | Johannes Schirk | 2026-08-27 | 2608.25503 fluxonium connectivity-four processor | NEW 2026-08-27 (scan queue — send pending) |
+| peter.spring@riken.jp | Peter A. Spring | 2026-08-27 | 2608.25484 low-leakage sub-100ns measurement (RIKEN) | NEW 2026-08-27 (scan queue — send pending) |
+| pdavids@sandia.gov | Paul S. Davids | 2026-08-27 | 2608.26028 coupled-cavity frequency beam splitter (Sandia; Cohen et al.) | NEW 2026-08-27 (scan queue — send pending) |
+| debarshi.128@gmail.com | Debarshi Basu | 2026-08-27 | 2608.25783 PEE/bit threads in AdS subregions (with Wen) | NEW 2026-08-27 (scan queue — send pending) |
+| rbruno@unisa.it | Roberto Bruno | 2026-08-27 | 2608.25533 constrained max-entropy contiguous aggregations (with Vaccaro) | NEW 2026-08-27 (scan queue — send pending) |
+| mnv@jinr.ru | Nugzar Makhaldiani | 2026-08-27 | 1802.01971 supersymmetric zeta-functions (fermion factorization) | NEW 2026-08-27 (D1 id=334, RES.028, sent) |

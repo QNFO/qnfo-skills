@@ -643,9 +643,54 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Cap:** 0 new outreach used (all in-thread replies, uncapped per 08-20/08-21 precedent). Follow-up eligibility unchanged: Reddiger 2026-09-08, Lebreton 2026-09-09.
 **Noise:** 315/307/306/303/310/308 DMARC + spam invitations → no action.
 
+---
+
+## 2026-08-27 — RES.027 wave completion: Hartnoll + Wang (wave owner: Medina Sánchez + Dai)
+
+**Paper:** Quantum Statistics from the Adelic Product Formula: The Squarefree Origin of the Fermi-Dirac/Bose-Einstein Distinction — DOI 10.5281/zenodo.22123068 (concept 22123067), published 2026-08-27 07:14.
+**Wave state:** tier-1 P7 plan = 4 groups. The publish-lock owner (session fROPBQTIhlUaTLrEMaxXj) sent 2 at 07:31 (Medina Sánchez id=324, Dai id=325, sender rowan@qnfo.org — Worker default, DEFAULT-SENDER-DRIFT-1 errata). This session completed the wave at 08:00.
+
+**Test-sends (TEST-SEND-EXTERNAL-1 compliant, strictly first):** id=326 → rwnquni@outlook.com, message_id 604e6d69-6a5e-487a-9d5b-61c709361711, status=sent (D1-verified). [Owner's: id=323, 07:31.]
+
+**Real sends (id=329-330, sender rowan.quni@qnfo.org canonical, all status=sent, D1-verified):**
+| id | Recipient | Group | Message ID |
+|----|-----------|-------|-----------|
+| 329 | hartnoll@stanford.edu | Hartnoll+Yang (2502.02661) | d34ed8d9-72b5-4bfc-bf55-a1ec099af104 |
+| 330 | zhiyuan.wang.physics@gmail.com | Wang+Hazzard (2308.05203) | 47dcaceb-763b-40be-8048-e95981571afb |
+
+**Address verification (CONNECTION-POINT-UNVERIFIED-1):** both tarballs (2502.02661, 2308.05203) carry NO author emails in the sources — the published-contact-block route was used. Hartnoll verified from the official Stanford Physics profile page (browser, 2026-08-27). Wang verified from the INSPIRE-HEP author record 2918990 (public email_addresses; matching ORCID 0000-0001-5341-1880 + Google Scholar). Single contact per group: Hartnoll; Wang.
+
+**Dedup:** contact-ledger + D1 checked before each send — zero prior contact with either target; ledger now carries all four wave rows (count 56). No repeats.
+**Cap:** 4 new outreach contacts total today (2 owner + 2 this session) — within the 3-5 daily cap.
+**Follow-up eligible:** 2026-09-10 (14d), once max.
+
 
 ## 2026-08-27 — RES.027 adelic-quantum-statistics (10.5281/zenodo.22123068) first contacts
 - **Medina Sánchez, Nicolás** (nicolas.medina.sanchez@univie.ac.at) — 2306.05919 transtatistics. Sent: message_id 420a1242-30fe-438b-8038-6a03dedfc027, D1 id=324, status=sent. Angle: bounded-occupation interpolation family as the arithmetic counterpart to operational reconstruction.
 - **Dai, Wu-Sheng** (daiwusheng@tju.edu.cn) — 2505.17361 3D exclusivity. Sent: message_id f94a6773-950e-4044-b179-2279a92914c3, D1 id=325, status=sent. Angle: the three-dimensional boundary of the interpolation family.
 - Test-send to rwnquni@outlook.com (message_id 43bd312c) — internal delivery check, TEST-SEND-EXTERNAL-1.
 - **Deferred (address not verifiable from the arXiv source or an institutional page this cycle):** Hartnoll/Yang (2502.02661), Wang/Hazzard (2308.05203). Never send to unverified addresses (CONNECTION-POINT-UNVERIFIED-1).
+
+## 2026-08-27 — RES.028 arithmetic-anyon-contact (10.5281/zenodo.22124744) first contact: Makhaldiani
+
+**Paper:** Arithmetic Anyons: The Bounded-Occupation Family, Gentile Statistics, and the Roots of Unity That Carry Braid Phases — DOI 10.5281/zenodo.22124744 (concept 22124743), published 2026-08-27.
+**Wave state:** 1 real send today (the RES.027 wave used 4 of the daily 3-5 cap; this wave sends 1, total 5 = cap).
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant, strictly first):** id=333 → rwnquni@outlook.com, message_id c1c865be-d66a-482d-9a99-ec31a36bcc42, status=sent (D1-verified).
+
+**Real send (id=334, sender rowan.quni@qnfo.org canonical, status=sent, D1-verified):**
+
+| id | Recipient | Group | Message ID |
+|----|-----------|-------|-----------|
+| 334 | mnv@jinr.ru | Makhaldiani (1802.01971, single author) | ec4e6d1f-3c49-4239-9351-e0bc69da380f |
+
+**Address verification (CONNECTION-POINT-UNVERIFIED-1):** mnv@jinr.ru extracted from the 1802.01971 arXiv source tarball itself (single-author paper; the only email address in the source) — the strongest verification tier.
+
+**Dedup:** contact-ledger + D1 checked before the send — zero prior contact with Makhaldiani. Excluded: Hartnoll (contacted today, RES.027 wave id=329 — never re-contact), Heiblum (active thread).
+**Cap:** 5 total outreach contacts today (4 RES.027 + 1 RES.028) — at the daily cap; no further sends today.
+**Follow-up:** none (NO-FOLLOW-UP-DEFAULT-1 — no follow-up to silent recipients).
+
+**Queued for the next wave (2026-08-28+, one per group, cap 3):**
+- Marchetti, Pieralberto (Ye/Marchetti/Su/Yu, 1512.01783 — the HES↔braid anchor of RES.028 §4) — email unverified; verify via the Padova/INFN institutional profile (browser) before any send. INSPIRE id 1028901 (no public email).
+- Svaiter, Nami F. (Dueñas/Svaiter, 1401.8190 — Riemann-gas thermodynamics) — unverified; CBPF institutional profile. INSPIRE id 1024505 (no public email).
+- Ng, Y. Jack (Chen/Ng, cond-mat/9411008 — HES-anyon perturbative) — unverified; UNC institutional profile. INSPIRE id 995756 (no public email).
