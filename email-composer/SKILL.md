@@ -1,9 +1,15 @@
 ---
 name: email-composer
-version: "2.29"
+version: "2.30"
 ---
 
 # email-composer
+
+> **v2.30 UPDATE (2026-08-27, kaizen — CAP-CLOCK-AUTHORITY-1: the daily send cap is accounted on the WORKER's UTC calendar day (D1 received_at), never on a local clock reading alone):**
+> Red-team: direct parent-agent dispatch audit (RES.028 wave-2, 2026-08-27). HARD: 1. SOFT: 1. Changes:
+> (1) [HARD] **CAP-CLOCK-AUTHORITY-1 anti-pattern added** — a queued wave was dispatched on a misread date check (the rollover to 2026-08-28 was believed to have occurred); the worker's authoritative UTC timestamps placed all 3 sends on Aug 27, making the UTC-day total 8 real sends vs the 3-5 daily cap (exceeded by 3). Follow-up verification (remote Date headers) proved the machine clock CORRECT to +0.4 s — the failure was the reading, not the clock. Rule: the worker UTC calendar day (D1 received_at) is the cap-accounting authority; before dispatching a queued wave, cross-check any local reading against the last D1 received_at.
+> (2) [SOFT] **Footer N-2 drift repaired** — footer stayed v2.27 while banner/frontmatter advanced to v2.29 (the v2.28/v2.29 banners never bumped it); footer == banner == frontmatter v2.30 now.
+> Cross-reference: outreach-log.md 2026-08-27T19:15Z wave-2 section (CAP-DEVIATION FLAG, root cause corrected to the misread), contact-ledger.md counts line, system-prompt v3.74 unchanged, session this.
 
 > **v2.29 UPDATE (2026-08-26, kaizen — EMAIL-WORKER-SEND-BODY-FIELD-1: the qnfo-email Worker /send schema):**
 > Red-team: direct parent-agent (RES.024 outreach send 2026-08-26 — first attempt 500 "text or html must have content"). HARD: 1. Changes:
@@ -1643,6 +1649,7 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 | **PHANTOM-EXEC-SESSION-1: exec tool reports "Session ... is not running" while the command actually completed in background (2026-08-17)** | Check `process list` + read the session log BEFORE retrying; blind retries duplicate harmless-but-noisy work (duplicate git commits, duplicate sweeps). Canonical: 10+ occurrences in the 2026-08-17 email/outreach cycle — every operation was verified via process list. |
 | **THREAD-RESOLUTION-SUPERSEDED-1: pending follow-up eligibility lines left unmarked after a reply resolves the thread (2026-08-17)** | When a reply resolves a thread, prefix the old eligibility line with "(SUPERSEDED by the UPDATE below — ...)" so future readers cannot misread the stale follow-up date. Canonical: QPL section, outreach-log.md 2026-08-17. |
 | **RECEIPT-PLACEHOLDER-TOKEN-1 RECURRENCE: unresolved timestamp token "(17:xx UTC)" written into outreach-log.md (2026-08-17)** | Resolve received_at from the Worker (/emails/body?id=N) BEFORE writing the log entry; a record must never carry an unresolved token. Canonical: QPL UPDATE, outreach-log.md 2026-08-17 — fixed to received_at 2026-08-17T14:00:12Z. |
+| **CAP-CLOCK-AUTHORITY-1: dispatching a queued outreach wave on a misread date/time check — the daily cap is accounted on the WORKER's UTC calendar day (D1 received_at), not on any local reading (2026-08-27)** | **HARD.** Before dispatching a queued wave: read the local clock AND cross-check against the worker's UTC timestamps (the last D1 received_at) or a remote Date header; the local reading alone is NOT cap evidence — a misread rollover can dispatch on the wrong calendar day and overrun the 3-5 daily cap. The worker (Cloudflare) clock is authoritative for cap accounting. Canonical case: RES.028 wave-2 2026-08-27 — dispatch premised on a misread local date check (believed post-rollover to Aug 28) while the true time was ~21:10 Amsterdam Aug 27; the worker timestamps placed all 3 sends on Aug 27, making the UTC-day total 8 real sends vs the 3-5 cap (exceeded by 3). The machine clock was subsequently verified CORRECT (+0.4 s vs remote Date headers) — the failure was the reading, not the clock. Cross-ref: MESSAGE-ID-NE-DELIVERY-1 (worker timestamps authoritative), NO-FOLLOW-UP-DEFAULT-1. |
 ## References
 
 
@@ -1685,5 +1692,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.27** (CALENDAR-SYNC-TOOL-GAP-1 status + YAML frontmatter added; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
+Current: **v2.30** (CAP-CLOCK-AUTHORITY-1 — cap accounted on the worker UTC calendar day (D1 received_at); footer drift v2.27 → v2.30 repaired; 2026-08-27)
 
