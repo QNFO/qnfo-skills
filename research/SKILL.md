@@ -1,7 +1,14 @@
 ---
 name: research
-version: "2.140"
+version: "2.141"
 ---
+
+> **v2.141 UPDATE (2026-08-26, CMD SKILLS UPDATE: RES.024 publish marathon gates — DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; mirrors system-prompt v3.78 + kaizen v2.101 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent audit (RES.024 post-positional-numeracy v1.0.1 publish + distribute, 2026-08-26). HARD: 3. Changes:
+> (1) [HARD] **DNS-FLAP-IP-PIN-1 added** — the machine's local resolver flaps intermittently (socket.gaierror 11001 getaddrinfo failed) across hosts mid-run (zenodo.org, api.cloudflare.com, workers.dev). Resilient pattern for API hosts: retry system getaddrinfo (6x, 3-9s backoff) → fallback `nslookup <host> 8.8.8.8` + parse IP → pin IP with Host-header routing over ssl._create_unverified_context(). CAVEAT: Cloudflare Workers hosts (workers.dev) do NOT tolerate IP pinning (403) — for workers use direct host resolution with generous retries (6x, 3-15s) + browser UA; a 403 with browser UA on workers.dev = transport problem (IP pinning), not a token problem.
+> (2) [HARD] **ZENODO-DELETE-404-ALREADY-GONE-1 added** — on a Zenodo newversion draft, deposit-API DELETE via file.links.self returns 404 {'message': "Record '<id>' has no file '<name>'."} when the file is ALREADY deleted; retry loops that re-issue the DELETE after transient errors can succeed server-side yet report 404 to the caller, so 'DELETED n of N' mismatch is NOT evidence of failure. Rule: treat 404 as already-absent; after any delete batch RE-LIST both deposit-API and records-API file lists and diff against targets before uploading (the two lists can transiently disagree while deletes are in flight — re-list until consistent). Canonical: RES.024 v1.0.1 draft 22114495 2026-08-26.
+> (3) [HARD] **R2-OBJECTS-LISTING-IS_TRUNCATED-1 added** — the R2 objects list API pagination field is `result_info.is_truncated` + `cursor` (per_page 20), NOT `more`; R2-OBJECTS-LISTING-SHAPE-1's pagination note corrected (a loop keyed on `more` silently stops after page 1). Canonical: RES.024 R2 mirror verify — 12/42 reported on page-1-only, 42/42 after is_truncated loop.
+> Cross-reference: system-prompt v3.78, kaizen v2.101, cloudflare v3.59, session this.
 
 > **v2.140 UPDATE (2026-08-26, CMD SKILLS UPDATE: publication reference/deposit discipline gates — REFERENCE-RENDER-FROM-BIB-1 (render reference lists FROM references.bib via a renderer, never hand-type) + SLUG-FILE-NAMING-1 (<slug>.md/.html/.pdf, never paper.*; scripts parameterized to the slug) + PDF-SUPERSCRIPT-ASCII-1 (Unicode superscripts ×10⁻²¹ → tofu; convert to ASCII e-notation in source) + ZENODO-DEPOSIT-NOHUP-RETRY-1 (nohup long-deposit + transient 5xx/429 retry + metadata-first-on-clean-draft + publish-only-fail==0) + PUBLISH-LOCK-RECHECK-1 (publish_locks row + git fetch origin + concept version check before every newversion); canonical QNFO.JPC.003; mirrors system-prompt v3.78 + kaizen v2.100 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent audit. HARD: 5 (folded as Phase 5/8 gates).

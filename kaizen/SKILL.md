@@ -1,7 +1,12 @@
 ---
 name: kaizen
-version: "2.100"
+version: "2.101"
 ---
+
+> **v2.101 UPDATE (2026-08-26, CMD SKILLS UPDATE: RES.024 publish marathon mirror rows — EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; mirrors system-prompt v3.78 + research v2.141 + email-composer v2.29 + cloudflare v3.59 unchanged):**
+> Red-team: direct parent-agent audit (RES.024 post-positional-numeracy v1.0.1 publish + P7 outreach + Buffer social, 2026-08-26). HARD: 5 (mirror rows to owner skills).
+> (1) [HARD] **Mirror rows added** — EMAIL-WORKER-SEND-BODY-FIELD-1 (owner email-composer v2.29: worker /send uses `body`, direct REST uses `text`/`html`); DNS-FLAP-IP-PIN-1 (owner research v2.141: retry + nslookup-8.8.8.8 IP-pin for API hosts; workers.dev direct-host only); ZENODO-DELETE-404-ALREADY-GONE-1 (owner research v2.141: 404 = already deleted; re-list-and-diff); R2-OBJECTS-LISTING-IS_TRUNCATED-1 (owner research v2.141: `is_truncated` + cursor, NOT `more`); BUFFER-TOKEN-ENV-1 (owner social-media-management v1.9.0: BUFFER_TOKEN now env-sourced; queue-clear resume pattern verified 2026-08-26).
+> Cross-reference: system-prompt v3.78, research v2.141, email-composer v2.29, social-media-management v1.9.0, session this.
 
 > **v2.100 UPDATE (2026-08-26, CMD SKILLS UPDATE: publication reference/deposit discipline gates — REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1 (canonical QNFO.JPC.003 v1.0→v1.6 publish saga); mirrors system-prompt v3.78 + research v2.140 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent audit. HARD: 5.

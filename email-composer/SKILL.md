@@ -1,9 +1,14 @@
 ---
 name: email-composer
-version: "2.28"
+version: "2.29"
 ---
 
 # email-composer
+
+> **v2.29 UPDATE (2026-08-26, kaizen — EMAIL-WORKER-SEND-BODY-FIELD-1: the qnfo-email Worker /send schema):**
+> Red-team: direct parent-agent (RES.024 outreach send 2026-08-26 — first attempt 500 "text or html must have content"). HARD: 1. Changes:
+> (1) [HARD] **EMAIL-WORKER-SEND-BODY-FIELD-1 added** — the qnfo-email Worker `/send` input field is **`body`** (schema destructures `{to, subject, body, html?, reply_to_id?, from?}`); sending `text` is silently DROPPED → CF Email REST 500 "text or html must have content". EMAIL-REST-TEXT-FIELD-1 (REST payload uses `text`/`html`) applies to DIRECT Cloudflare Email Sending REST calls, NOT to the worker wrapper. Rule: worker /send → `body`; direct REST → `text`/`html`. Worker source verified via workers_get_worker_code; from defaults to qnfo@qnfo.org with ALLOWED_DOMAINS gate (qnfo.org/qwav.org/qwav.tech/etc.) when from is passed. Canonical: RES.024 outreach to lebreton@lirmm.fr 2026-08-26 (test-send D1 id=312 + real send id=313 status=sent).
+> Cross-reference: system-prompt v3.78, research v2.141, kaizen v2.101, session this.
 
 > **v2.28 UPDATE (2026-08-25, kaizen — USER-WITHDRAWN-CONTEXTS-1: context-specific triage gate after CWI clutter finding):**
 > Red-team: user correction — the triage kept CWI summer-school emails (Poster, Slides summer school) as ACTION while the user had withdrawn (poster NO-GO, not attending). Root cause: the classifier had no user-context registry, so it treated cwi.nl mail as actionable. HARD: 1. SOFT: 0. Changes:
