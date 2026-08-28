@@ -1,9 +1,16 @@
 ---
 name: cloudflare
-version: "3.59"
+version: "3.60"
 ---
 
-# CLOUDFLARE — v3.59
+# CLOUDFLARE — v3.60
+
+> **v3.60 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.80 + kaizen v2.102 + research v2.141):**
+> Red-team: direct parent-agent audit (session this — qnfo-tools-mcp/qnfo-ai/qnfo-infra/personal-api worker fleet). HARD: 3. Changes:
+> (1) [HARD] **BINDING-PRESERVATION-1** — a wrangler deploy on a worker last updated via the script API OVERRIDES and DROPS any binding not reproduced in wrangler.toml (canonical 2026-08-28: qnfo-tools-mcp first deploy dropped AUDIT D1 + QNFO_AI/QNFO_INTENT/QNFO_INFRA/PL_SEARCH service bindings; caught by bindings read-back, restored with a full-config redeploy). Rule: before ANY wrangler deploy on a script-API-managed worker, reproduce ALL existing bindings in wrangler.toml; read back bindings BEFORE and AFTER deploy; regression-test one tool per binding family after deploy.
+> (2) [HARD] **WORKER-EDIT-BASE-VERIFY-1** — before editing a worker whose source lives in git, diff repo HEAD against the DEPLOYED bundle (workers_get_worker_code); a stale edit base silently clobbers newer deployed features (canonical 2026-08-28: personal-api repo HEAD v1.4.7 vs a v1.4.5-era edit base — caught by repo-HEAD diff before commit; restored v1.4.7). Extends GATEWAY-BUNDLE-DRIFT-1 to the edit direction.
+> (3) [HARD] **PERSONAL-QNFO-SEPARATION-1** — the Personal Digital Twin and QNFO Research are SEPARATE: personal-api never calls the QNFO records oracle; the research gateway (qnfo-ai) serves research/infra only, scope=personal blocked (400); the QNFO oracle (qnfo-infra) MUST NOT bind PL_VZ or query env.PERSONAL for content (PERSONAL D1 only for aggregate /records counts). Structural, not policy-only.
+> Cross-reference: system-prompt v3.80, kaizen v2.102, QNFO/qnfo-workers commit 79d8c4c, session this.
 
 > **v3.59 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh only — content unchanged (Cost Control §v3.49 verified present: spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1 aiInferenceAdaptiveGroups, budget <$100/$200; R2 anti-patterns QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 preserved); mirrors system-prompt v3.64 + kaizen v2.86):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered). HARD: 0. SOFT: 1. DESIGN: 0. Changes:
@@ -2182,7 +2189,16 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
-Current: **v3.59** (mirror-pointer refresh; Cost Control + R2 rows verified; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
+
+
+## CLOUDFLARE BINDING & SEPARATION GATES (HARD GATE — 2026-08-28)
+
+1. **BINDING-PRESERVATION-1 (HARD):** a wrangler deploy on a script-API-managed worker OVERRIDES and DROPS any binding not reproduced in wrangler.toml (canonical: qnfo-tools-mcp 2026-08-28 — first deploy dropped AUDIT D1 + QNFO_AI/QNFO_INTENT/QNFO_INFRA/PL_SEARCH service bindings; caught by bindings read-back, restored with a full-config redeploy). Before ANY wrangler deploy on such a worker: reproduce ALL existing bindings in wrangler.toml; read back bindings BEFORE and AFTER deploy; regression-test one tool per binding family after deploy.
+2. **WORKER-EDIT-BASE-VERIFY-1 (HARD):** before editing a worker whose source lives in git, diff repo HEAD against the DEPLOYED bundle (workers_get_worker_code); a stale edit base silently clobbers newer deployed features (canonical: personal-api 2026-08-28 — repo HEAD v1.4.7 carried /v1/stats + /v1/express + CF_TOKEN infra while an earlier edit base was v1.4.5-era; the repo-HEAD diff caught it before commit and v1.4.7 was restored). When the repo is NEWER than your base, re-base on HEAD.
+3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
+
+
+Current: **v3.60** (BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.80 + kaizen v2.102; 2026-08-28) (mirror-pointer refresh; Cost Control + R2 rows verified; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
 
 ---
 

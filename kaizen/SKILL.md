@@ -1,7 +1,14 @@
 ---
 name: kaizen
-version: "2.101"
+version: "2.102"
 ---
+
+> **v2.102 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: Cloudflare AI gateway full-records parity + structural personal/QNFO separation; mirrors system-prompt v3.80 + cloudflare v3.60 + research v2.141):**
+> Red-team: direct parent-agent audit (session this). HARD: 3 (mirror rows). Changes:
+> (1) [HARD] **BINDING-PRESERVATION-1** — wrangler deploy on a script-API-managed worker overrides/drops bindings not reproduced in wrangler.toml (canonical qnfo-tools-mcp 2026-08-28); read back bindings before AND after deploy + regression-test each binding family. Owner: cloudflare v3.60.
+> (2) [HARD] **WORKER-EDIT-BASE-VERIFY-1** — diff repo HEAD vs deployed bundle before editing any git-sourced worker (canonical personal-api v1.4.7 vs v1.4.5-era base 2026-08-28); re-base on HEAD when newer. Owner: cloudflare v3.60.
+> (3) [HARD] **PERSONAL-QNFO-SEPARATION-1** — personal twin and QNFO research separate at every layer: twin personal-only (never calls oracle), research gateway research/infra-only (scope=personal blocked), oracle no PL_VZ + no env.PERSONAL content queries. Owners: cloudflare v3.60 + system-prompt v3.80.
+> Cross-reference: system-prompt v3.80, cloudflare v3.60, QNFO/qnfo-workers commit 79d8c4c, session this.
 
 > **v2.101 UPDATE (2026-08-26, CMD SKILLS UPDATE: RES.024 publish marathon mirror rows — EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; mirrors system-prompt v3.78 + research v2.141 + email-composer v2.29 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent audit (RES.024 post-positional-numeracy v1.0.1 publish + P7 outreach + Buffer social, 2026-08-26). HARD: 5 (mirror rows to owner skills).
@@ -15595,5 +15602,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.101** (EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; preserves v2.100 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
+Current: **v2.102** (BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1 mirror rows; system-prompt v3.80; 2026-08-28) (EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; preserves v2.100 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
 
