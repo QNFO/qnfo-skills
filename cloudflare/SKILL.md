@@ -1,9 +1,18 @@
 ---
 name: cloudflare
-version: "3.60"
+version: "3.62"
 ---
 
-# CLOUDFLARE — v3.60
+# CLOUDFLARE — v3.61
+
+> **v3.62 UPDATE (2026-08-28, kaizen — DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; mirrors system-prompt v3.82 + kaizen v2.103 + research v2.141):**
+> (1) [HARD] DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 — deepseek-v4-flash (and v4-pro) on Workers AI are CHAT/THINKING models, NOT completion models: the single `prompt` format returns garbage (echoes a text-davinci-003 JSON template). MUST use `messages:[{role,content}]` and read `choices[0].message.content` (NOT `.response`, which is empty). Model ids @cf/deepseek-ai/deepseek-v4-flash-0731 / @cf/deepseek-ai/deepseek-v4-pro-0813; binding type "ai" name "AI".
+> (2) [SOFT] WORKERS-DEV-REACHABILITY-1 — workers.dev: 1010 (Bot Fight Mode blocks non-browser UA - send browser UA) + 1042 (Worker not bound until POST /workers/scripts/{name}/subdomain {"enabled":true} + ~15s propagation). HTTP callers only; cron/scheduled runs internally, unaffected.
+> **v3.61 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.81 + kaizen v2.103 + research v2.141):**
+> Red-team: direct parent-agent audit (session this — qnfo-cloud-ops scheduled Worker migration + its red-team remediation). HARD: 2. Changes:
+> (1) [HARD] **CLOUDFLARE-CRON-DOW-7-1** — Cloudflare Cron Triggers use day-of-week 1–7 where 7 = Sunday (NOT the Unix 0=Sunday convention). A cron string `0 6 * * 0` is REJECTED at deploy with `invalid cron string ... [code: 10100]`, and — critically — when one cron in the `[triggers] crons` array is invalid, wrangler reports "Trigger configuration was only partially updated": the VALID crons deploy, the invalid one is silently absent. Canonical: qnfo-cloud-ops 2026-08-28 — `0 6 * * 0` weekly-ops was dropped, and because the `scheduled()` dispatch ALSO matched `0 6 * * 0`, the job never fired even after the wrangler.toml was corrected to `0 6 * * 7`. Rules: (a) Sunday = 7 always; (b) after ANY wrangler deploy, verify the registered schedules via GET /accounts/{acct}/workers/scripts/{name}/schedules and assert every intended cron is present; (c) keep the `scheduled()` dispatch cron strings and the wrangler.toml crons array byte-identical (a corrected .toml with a stale dispatch = the job still never fires).
+> (2) [HARD] **WORKER-CLOUD-MIGRATION-COMPLETENESS-1** — migrating scheduled tasks from the local scheduler to a Cloudflare Worker cron replicates only the DIGEST/SUMMARY surface. Before pausing ANY local scheduled task, map its FULL function list; a job with un-replicated deep functions (proactive outreach drafting, GTD register maintenance, contact-ledger extraction, Zenodo ADR-014/SEO audits, Zenodo stats upserts) must NOT be paused — pausing silently drops those functions. The cloud worker runs as an ADDITIONAL digest layer until the deep functions' data sources (contact-ledger, GTD register, Zenodo/Outlook scripts) move cloud-side. Canonical: 2026-08-28 red-team H3 — pausing 5 local jobs dropped proactive outreach (a user stable preference) + GTD grounding + Zenodo audits; all 5 resumed.
+> Cross-reference: system-prompt v3.81, kaizen v2.103, QNFO/qnfo-workers commit 1f7b01f, session this.
 
 > **v3.60 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.80 + kaizen v2.102 + research v2.141):**
 > Red-team: direct parent-agent audit (session this — qnfo-tools-mcp/qnfo-ai/qnfo-infra/personal-api worker fleet). HARD: 3. Changes:
@@ -2198,7 +2207,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.60** (BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.80 + kaizen v2.102; 2026-08-28) (mirror-pointer refresh; Cost Control + R2 rows verified; mirrors system-prompt v3.64 + kaizen v2.86; 2026-08-21)
+Current: **v3.62** (CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.81 + kaizen v2.103; 2026-08-28)
 
 ---
 
