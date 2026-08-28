@@ -1,9 +1,15 @@
 ---
 name: email-composer
-version: "2.30"
+version: "2.31"
 ---
 
 # email-composer
+
+> **v2.31 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: QNFO Cloudflare AI agent email tools live (qnfo-tools-mcp v1.1.0) — user directive: "I WANT THE QNFO CLOUDFLARE AI AGENT TO BE ABLE TO CHECK AND RESPOND TO MY CLOUDFLARE DOMAIN EMAIL ACCOUNTS"):**
+> Red-team: direct parent-agent audit (session this — capability build + live verification cycle). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **MCP EMAIL TOOLS SHIPPED + VERIFIED** — the Cloudflare AI agent's MCP surface `qnfo-tools-mcp` now exposes `email_check`, `email_stats`, `email_search`, `email_respond`, `email_mark`, wired to the qnfo-email Worker via a service binding (EMAIL + EMAIL_API_KEY). All 15 tools live at https://qnfo-tools-mcp.q08.workers.dev/health; commit 8af5ce7 in QNFO/qnfo-workers. Verified live 2026-08-28: email_check (5 rows, ids 341-345), email_stats (320 total / 32 last24h), email_search ("glint" → 3), email_respond test (rowan.quni@qnfo.org → rwnquni@outlook.com, D1 id=347 status=sent). New section "Cloudflare AI Agent Email Tools" documents the full check → triage → respond flow. THIS is the standing answer to "asking DeepChat to check email knows how to process and respond" for qnfo.org mail.
+> (2) [SOFT] **BINDING-PRESERVATION-1 lesson** — the first deploy used a wrangler.toml with ONLY the new EMAIL binding; wrangler overrode the script-API bindings and dropped AUDIT D1 + QNFO_AI/QNFO_INTENT/QNFO_INFRA/PL_SEARCH service bindings (caught by bindings read-back immediately; restored in the full config, redeployed, verified all bindings + secrets intact). Every wrangler deploy on a script-API-managed worker MUST reproduce ALL existing bindings in wrangler.toml (bindings read-back before AND after deploy).
+> Cross-reference: system-prompt v3.74, kaizen v2.96, research v2.137, cloudflare v3.59, QNFO/qnfo-workers commit 8af5ce7, session this.
 
 > **v2.30 UPDATE (2026-08-27, kaizen — CAP-CLOCK-AUTHORITY-1: the daily send cap is accounted on the WORKER's UTC calendar day (D1 received_at), never on a local clock reading alone):**
 > Red-team: direct parent-agent dispatch audit (RES.028 wave-2, 2026-08-27). HARD: 1. SOFT: 1. Changes:
@@ -815,7 +821,31 @@ curl -s -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers.dev/stats
 
 ---
 
+## Cloudflare AI Agent Email Tools — qnfo-tools-mcp (HARD, 2026-08-28 — user directive: "I WANT THE QNFO CLOUDFLARE AI AGENT TO BE ABLE TO CHECK AND RESPOND TO MY CLOUDFLARE DOMAIN EMAIL ACCOUNTS")
 
+The **QNFO Cloudflare AI agent** (the Cloudflare-hosted MCP surface `qnfo-tools-mcp`, endpoint `https://qnfo-tools-mcp.q08.workers.dev`) now exposes five email tools wired to the qnfo-email Worker via a service binding (v1.1.0, commit 8af5ce7, repo `QNFO/qnfo-workers` `qnfo-tools-mcp/`). Any MCP client (DeepChat, Chatbox, Claude, the automation agent, the PWA) can CHECK and RESPOND to all Cloudflare-domain email accounts through these tools — no local Outlook/COM needed for qnfo.org mail.
+
+**Auth:** same MCP token as the other tools (`tokens/qnfo-ai`, `?token=` or `Authorization: Bearer`).
+
+**Tools** (verified live 2026-08-28 against the production worker):
+1. `email_check` — list recent inbound/outbound email across ALL QNFO domain accounts (qnfo@/research@/alerts@/publications@/rowan.quni@qnfo.org + qwav.tech + q08.org catch-alls). Params: `limit` (1-100, default 20), `status` (received/processed/sent/replied/archived/spam/read/rejected), `body_id` (fetch full body + headers of one email).
+2. `email_stats` — totals: total / last24h / byClassification / byStatus.
+3. `email_search` — search subject/sender/body (`q`, `limit`). NOTE: SEARCH-Q-EMAIL-TOKEN-1 applies — a full email with `@` tokenizes away; use bare tokens.
+4. `email_respond` — send a reply or new email FROM a QNFO domain account. Params: `to`, `subject`, `body` (required), `html` (optional), `reply_to_id` (marks the inbound row replied), `from` (default `qnfo@qnfo.org`; **academic outreach MUST pass `rowan.quni@qnfo.org`** per DEFAULT-SENDER-DRIFT-1). All EMAIL & OUTREACH MANDATE rails still apply (TEST-SEND-EXTERNAL-1, no-repeat-contact, daily cap, master-list check).
+5. `email_mark` — update row status (received/processed/sent/replied/archived/spam/read/rejected).
+
+**Direct curl equivalents** (the tools call the same qnfo-email endpoints internally; for scripts, the curl forms in Quick Start above remain canonical).
+
+**Why this matters:** the agent previously could only reach qnfo.org mail through manual curl + D1 queries. Now the full check → triage → respond loop is a native MCP tool call, which is what the user's standing preference demands ("all qnfo.org email interaction to happen exclusively through DeepChat, with the email skill updated so asking DeepChat to check email knows how to process and respond").
+
+**Operational flow for any email request from the user:**
+1. `email_check` (limit 20) → triage list.
+2. For an actionable item: `email_check` with `body_id` → read full content.
+3. Draft the reply per §1.A register-mirroring (REGISTER-MIRRORING-1) + PROSE-GATE.
+4. `email_respond` with `reply_to_id` + `from: rowan.quni@qnfo.org` (academic) — verify D1 `status=sent` after.
+5. `email_mark` archived when handled (GTD inbox-zero for qnfo.org mail).
+
+---
 
 
 
@@ -1692,5 +1722,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.30** (CAP-CLOCK-AUTHORITY-1 — cap accounted on the worker UTC calendar day (D1 received_at); footer drift v2.27 → v2.30 repaired; 2026-08-27)
+Current: **v2.31** (QNFO Cloudflare AI agent email tools — qnfo-tools-mcp v1.1.0: email_check/email_stats/email_search/email_respond/email_mark; check → triage → respond flow; commit 8af5ce7; 2026-08-28)
 
