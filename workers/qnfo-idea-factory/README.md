@@ -41,6 +41,9 @@ ideas.qnfo.org/api/*  (PUBLIC read, research only, redacted)
 | `GET /api/sessions?limit=&offset=&q=` | Research sessions list (q=search title/content) |
 | `GET /api/session/:id` | One research session's full messages |
 | `GET /api/feed?after=` | Real-time feed of new research sessions |
+| `POST /api/ask` | Ask the corpus (proxies qnfo-qwav) + related research threads |
+| `POST /api/proposals` | Public idea proposal (honeypot + rate limit) |
+| `GET /api/proposals` | Private review queue (X-Sync-Token required) |
 | `GET /health` | Health + D1 binding check |
 | `GET /robots.txt` | Allow all |
 
@@ -101,6 +104,18 @@ Route: `ideas.qnfo.org/*` → `qnfo-idea-factory` (created 2026-08-28).
 nav, and the paper-detail nav — all pointing at `https://ideas.qnfo.org`.
 
 ## Changelog
+
+### v1.3 (2026-08-28) — Ask + participation layer
+- Fixed ask.qwav.tech: qnfo-qwav `/ai/ask` now uses the AVAILABLE AI + Vectorize
+  + D1 bindings (embed → search qwav-research-v2 → enrich from living-paper →
+  compose via Workers AI chat). The old AI-Search (QNFO_SEARCH) path was never
+  bound; this is the working path. CORS now `*` for the public read-only API.
+- Ask box on ideas.qnfo.org: `/api/ask` proxies to qnfo-qwav and surfaces
+  related research threads (tokenized ANY-match; short queries need 1 match).
+- Propose an idea: public form → `idea_proposals` D1 table (honeypot + 3/hr/IP
+  rate limit); private review at `GET /api/proposals` (X-Sync-Token).
+- ask.qwav.tech page: nav link to ideas.qnfo.org, canonical/og → ask.qwav.tech
+  (deployed via wrangler pages).
 
 ### v1.2 (2026-08-28)
 - v3 content-based research classifier (agent rule + research-dominant content

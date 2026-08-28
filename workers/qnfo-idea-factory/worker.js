@@ -16,6 +16,9 @@ export default {
       if (path === "/api/sessions") return handleSessions(url, env);
       if (path.startsWith("/api/session/")) return handleSession(path, env);
       if (path === "/api/feed") return handleFeed(url, env);
+      if (path === "/api/ask" && request.method === "POST") return handleAsk(url, request, env);
+      if (path === "/api/proposals" && request.method === "POST") return handleProposalPost(request, env);
+      if (path === "/api/proposals" && request.method === "GET") return handleProposalList(request, env);
       if (path === "/") return serveUI();
       return json({ error: "Not found" }, 404);
     } catch (e) {
@@ -197,6 +200,123 @@ function normTs(v) {
 }
 
 // ---------------------------------------------------------------------------
+// ASK + PARTICIPATION — public, read-only for threads; questions answered from
+// the corpus via qnfo-qwav /ai/ask; related research threads surfaced.
+// ---------------------------------------------------------------------------
+async function handleAsk(url, request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { body = {}; }
+  const query = String(body.query || "").trim().slice(0, 500);
+  if (!query) return json({ error: "Missing query" }, 400);
+  try {
+    const [qwavResp, threadRes] = await Promise.all([
+      fetch("https://qnfo-qwav.q08.workers.dev/ai/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "User-Agent": "qnfo-idea-factory/1.2" },
+        body: JSON.stringify({ query })
+      }).then((r) => r.json()).catch(() => ({ error: "ask backend unreachable" })),
+      relatedThreads(query, env)
+    ]);
+    const threads = [];
+    for (const t of threadRes || []) {
+      threads.push({
+        id: t.id,
+        title: t.title,
+        created_at: t.created_at,
+        message_count: t.message_count
+      });
+    }
+    return json({
+      query,
+      answer: qwavResp.answer || null,
+      sources: (qwavResp.sources || []).slice(0, 6).map((s) => ({ file: redact(s.file || ""), slug: s.slug, score: s.score })),
+      model: qwavResp.model || null,
+      backend_error: qwavResp.error || null,
+      threads
+    });
+  } catch (e) {
+    return json({ error: "Ask failed: " + e.message }, 502);
+  }
+}
+
+// Find research threads related to a query: tokenize into meaningful terms and
+// match ANY term against title or message content (phrase-LIKE misses multi-word
+// queries). Sorted by newest; deduped by id.
+async function relatedThreads(query, env, limit = 6) {
+  const terms = String(query || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9+\- ]+/g, " ")
+    .split(/\s+/)
+    .filter((t) => t.length >= 3)
+    .slice(0, 8);
+  if (!terms.length) return [];
+  const res = await env.QNFO_AUDIT.prepare(
+    "SELECT thread_id, title, messages, created_at, updated_at FROM chat_sessions WHERE category = 'research'"
+  ).all();
+  const scored = [];
+  for (const t of res.results || []) {
+    let messages = [];
+    try { messages = JSON.parse(t.messages || "[]"); } catch (e) { messages = []; }
+    if (!Array.isArray(messages) || messages.length === 0) continue;
+    const hay = ((t.title || "") + " " + messages.map((m) => m && m.content || "").join(" ")).toLowerCase();
+    let score = 0;
+    for (const term of terms) {
+      if (hay.includes(term)) score++;
+    }
+    if (terms.length <= 3 ? score >= 1 : score >= 2) {
+      scored.push({
+        id: t.thread_id,
+        title: redact((t.title || (messages.find((m) => m && m.role === "user") || {}).content || t.thread_id).slice(0, 300)),
+        created_at: normTs(t.updated_at || t.created_at),
+        message_count: messages.length,
+        score
+      });
+    }
+  }
+  scored.sort((a, b) => (b.score - a.score) || ((b.created_at || "").localeCompare(a.created_at || "")));
+  return scored.slice(0, limit);
+}
+
+async function handleProposalPost(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { body = {}; }
+  // Honeypot: bots fill the website field; humans leave it empty
+  if (String(body.website || "").trim()) return json({ ok: true, status: "submitted" }, 200);
+  const idea = String(body.idea || "").trim().slice(0, 2000);
+  if (idea.length < 20) return json({ error: "Please share a bit more (at least 20 characters)." }, 400);
+  const name = String(body.name || "").trim().slice(0, 100);
+  const contact = String(body.contact || "").trim().slice(0, 200);
+  const cf = request.headers.get("CF-Connecting-IP") || "";
+  const ipHash = await sha256(cf).catch(() => "");
+  // Rate limit: max 3 proposals per IP per hour
+  const hourAgo = new Date(Date.now() - 3600 * 1000).toISOString();
+  const recent = await env.QNFO_AUDIT.prepare(
+    "SELECT COUNT(*) AS n FROM idea_proposals WHERE ip_hash = ? AND created_at > ?"
+  ).bind(ipHash, hourAgo).first();
+  if ((recent?.n || 0) >= 3) return json({ error: "Please wait a bit before submitting again." }, 429);
+  const res = await env.QNFO_AUDIT.prepare(
+    "INSERT INTO idea_proposals (name, idea, contact, status, ip_hash, created_at) VALUES (?, ?, ?, 'new', ?, ?)"
+  ).bind(name, idea, contact, ipHash, new Date().toISOString()).run();
+  return json({ ok: true, status: "submitted", id: res.meta.last_row_id });
+}
+
+async function handleProposalList(request, env) {
+  // Private review endpoint: requires X-Sync-Token (not exposed in the UI).
+  const auth = request.headers.get("X-Sync-Token");
+  if (!auth || auth !== (env.SYNC_TOKEN || "")) return json({ error: "Unauthorized" }, 401);
+  const res = await env.QNFO_AUDIT.prepare(
+    "SELECT id, name, idea, contact, status, created_at FROM idea_proposals ORDER BY created_at DESC LIMIT 100"
+  ).all();
+  return json({ count: res.results.length, proposals: res.results });
+}
+
+async function sha256(s) {
+  const data = new TextEncoder().encode(String(s));
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// ---------------------------------------------------------------------------
 // UI
 // ---------------------------------------------------------------------------
 const UI_HTML = `<!DOCTYPE html>
@@ -260,6 +380,36 @@ body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;margin:0;c
 .load-more:hover{border-color:var(--blue)}
 .footer-note{position:sticky;bottom:0;background:rgba(255,255,255,.9);border-top:1px solid var(--border);padding:.6rem 1.5rem;font-size:.72rem;color:var(--muted);text-align:center}
 a{color:var(--blue)}
+/* Ask + participation */
+.ask-box{margin:1rem 0 0;padding:1rem 1.1rem;background:rgba(255,255,255,.85);border:1px solid var(--blue-light);border-radius:var(--radius-lg)}
+.ask-box .row{display:flex;gap:.5rem}
+.ask-box input{flex:1;padding:.65rem .8rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.9rem;outline:none}
+.ask-box input:focus{border-color:var(--blue)}
+.ask-box button{padding:.65rem 1.1rem;border-radius:var(--radius);border:none;cursor:pointer;background:var(--blue);color:#fff;font-weight:600;font-size:.88rem}
+.ask-box button:disabled{opacity:.5;cursor:wait}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+.chips button{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:.3rem .7rem;font-size:.74rem;cursor:pointer;transition:all .15s;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips button:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-subtle)}
+#ask-result{margin-top:.8rem;display:none}
+#ask-result .ans{background:var(--asst-bubble);border-radius:12px;padding:.85rem 1rem;font-size:.88rem;white-space:pre-wrap;line-height:1.6}
+#ask-result .srcs{margin-top:.5rem}
+#ask-result .srcs .src{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;margin-bottom:.3rem;font-size:.78rem;display:flex;justify-content:space-between;gap:.5rem}
+#ask-result .srcs .src a{color:var(--blue);font-weight:500}
+#ask-result .threads{margin-top:.6rem}
+#ask-result .threads .th{background:var(--blue-subtle);border:1px solid var(--blue-light);border-radius:8px;padding:.45rem .7rem;margin-bottom:.3rem;font-size:.8rem;cursor:pointer}
+#ask-result .threads .th:hover{border-color:var(--blue)}
+.propose{margin:1rem 0 0;padding:1rem 1.1rem;background:rgba(255,255,255,.85);border:1px solid var(--border);border-radius:var(--radius-lg)}
+.propose h3{margin:0 0 .4rem;font-size:.9rem;color:var(--text)}
+.propose p{margin:0 0 .6rem;font-size:.78rem;color:var(--muted)}
+.propose textarea{width:100%;padding:.6rem .8rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.88rem;font-family:inherit;outline:none;resize:vertical;min-height:70px}
+.propose textarea:focus{border-color:var(--blue)}
+.propose .mini{display:flex;gap:.5rem;margin-top:.5rem}
+.propose .mini input{flex:1;padding:.5rem .7rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;outline:none}
+.propose .mini input:focus{border-color:var(--blue)}
+.propose .mini button{padding:.55rem 1rem;border-radius:var(--radius);border:none;cursor:pointer;background:var(--blue);color:#fff;font-weight:600;font-size:.84rem;white-space:nowrap}
+.propose .mini button:disabled{opacity:.5;cursor:wait}
+.propose .hp{position:absolute;left:-9999px;opacity:0}
+#propose-status{font-size:.78rem;margin-top:.5rem;color:var(--muted)}
 @media(max-width:820px){.layout{grid-template-columns:1fr}.sidebar{max-height:34vh;border-right:none;border-bottom:1px solid var(--border)}.main{height:auto;min-height:60vh}.conv{padding:1rem}.msg .body{max-width:88%}}
 </style>
 </head>
@@ -282,6 +432,26 @@ a{color:var(--blue)}
     <div class="hero">
       <h1>Where the ideas form</h1>
       <p>A public, read-only window into the QNFO research conversations — the full thread of prompts, explorations, and open questions as they develop, in real time. Infrastructure and internal operations are never shown here. Sensitive details (tokens, emails, paths) are redacted automatically.</p>
+      <div class="ask-box">
+        <div class="row">
+          <input id="ask-input" type="text" maxlength="500" placeholder="Ask the research corpus anything…" autocomplete="off">
+          <button id="ask-go" onclick="doAsk()">Ask</button>
+        </div>
+        <div class="chips" id="ask-chips"></div>
+        <div id="ask-result"></div>
+      </div>
+      <div class="propose">
+        <h3>💡 Propose an idea</h3>
+        <p>Have a question, experiment, or direction the QNFO research should explore? Share it — the proposals are reviewed by the research lead and the best ones enter the queue.</p>
+        <textarea id="prop-idea" maxlength="2000" placeholder="Describe the idea, question, or experiment…"></textarea>
+        <div class="mini">
+          <input id="prop-name" maxlength="100" placeholder="Your name (optional)">
+          <input id="prop-contact" maxlength="200" placeholder="Email / handle (optional)">
+          <button id="prop-go" onclick="doPropose()">Submit</button>
+        </div>
+        <input class="hp" id="prop-website" tabindex="-1" autocomplete="off">
+        <div id="propose-status"></div>
+      </div>
     </div>
     <div class="conv" id="conv"><div class="empty"><div class="big">💬</div>Select a research session to read the full conversation.</div></div>
     <div class="footer-note">QNFO Idea Factory · read-only public archive · research threads only · ideas.qnfo.org · <a href="https://qnfo.org" target="_blank" rel="noopener">QNFO Research</a></div>
@@ -359,7 +529,57 @@ function pollFeed(){
   }).catch(function(){});
 }
 $('#search').addEventListener('input',function(){state.q=this.value.trim();loadSessions(true);});
+$('#ask-input').addEventListener('keydown',function(e){if(e.key==='Enter')doAsk();});
+function doAsk(){
+  var q=$('#ask-input').value.trim();if(!q)return;
+  var box=$('#ask-result');box.style.display='block';box.innerHTML='<div class="ans">⏳ Searching the research corpus…</div>';
+  var btn=$('#ask-go');btn.disabled=true;
+  fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})}).then(function(r){return r.json();}).then(function(d){
+    if(d.error){box.innerHTML='<div class="ans">⚠️ '+esc(d.error)+'</div>';return;}
+    var html='';
+    if(d.answer){html+='<div class="ans">'+esc(d.answer)+'</div>';}
+    else if(d.backend_error){html+='<div class="ans">⚠️ '+esc(d.backend_error)+'</div>';}
+    if(d.sources&&d.sources.length){
+      html+='<div class="srcs"><h3 style="font-size:.8rem;color:var(--muted);text-transform:uppercase;margin:.6rem 0 .3rem">Sources ('+d.sources.length+')</h3>';
+      d.sources.forEach(function(s){
+        var label=esc(s.file||s.slug||'source');
+        html+='<div class="src">'+(s.slug?'<a href="https://papers.qnfo.org/papers/'+encodeURIComponent(s.slug)+'" target="_blank" rel="noopener">'+label+'</a>':'<span>'+label+'</span>')+(s.score!=null?'<span style="color:var(--muted)">'+Number(s.score).toFixed(3)+'</span>':'')+'</div>';
+      });
+      html+='</div>';
+    }
+    if(d.threads&&d.threads.length){
+      html+='<div class="threads"><h3 style="font-size:.8rem;color:var(--muted);text-transform:uppercase;margin:.6rem 0 .3rem">Related idea threads ('+d.threads.length+')</h3>';
+      d.threads.forEach(function(t){
+        html+='<div class="th" data-id="'+esc(t.id)+'" onclick="openSession(this.dataset.id)">'+esc(t.title||'(untitled)')+'<span style="color:var(--muted);font-size:.72rem"> · '+t.message_count+' messages</span></div>';
+      });
+      html+='</div>';
+    }
+    if(!d.answer&&!d.backend_error&&(!d.threads||!d.threads.length)){html='<div class="ans">No research found for that yet — try a different phrasing.</div>';}
+    box.innerHTML=html;
+  }).catch(function(e){box.innerHTML='<div class="ans">Failed: '+esc(String(e))+'</div>';}).finally(function(){btn.disabled=false;});
+}
+function loadAskChips(){
+  fetch('/api/sessions?limit=8').then(function(r){return r.json();}).then(function(d){
+    if(!d.sessions||!d.sessions.length)return;
+    var el=$('#ask-chips');el.innerHTML='';
+    d.sessions.slice(0,6).forEach(function(s){
+      var b=document.createElement('button');b.textContent=s.title&&s.title.length>60?s.title.slice(0,60)+'…':(s.title||'ask');
+      b.title=s.title||'';b.onclick=function(){$('#ask-input').value=s.title||'';doAsk();};el.appendChild(b);
+    });
+  }).catch(function(){});
+}
+function doPropose(){
+  var idea=$('#prop-idea').value.trim();
+  var st=$('#propose-status');
+  if(idea.length<20){st.textContent='Please share a bit more (at least 20 characters).';return;}
+  var btn=$('#prop-go');btn.disabled=true;st.textContent='Submitting…';
+  fetch('/api/proposals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idea:idea,name:$('#prop-name').value.trim(),contact:$('#prop-contact').value.trim(),website:$('#prop-website').value})}).then(function(r){return r.json();}).then(function(d){
+    if(d.error){st.textContent=esc(d.error);}
+    else{st.innerHTML='✅ Submitted. Thank you — it will be reviewed for the research queue.';$('#prop-idea').value='';$('#prop-name').value='';$('#prop-contact').value='';}
+  }).catch(function(e){st.textContent='Failed: '+esc(String(e));}).finally(function(){btn.disabled=false;});
+}
 loadSessions(true);
+loadAskChips();
 setInterval(pollFeed,30000);
 </script>
 </body>
