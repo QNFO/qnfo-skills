@@ -574,7 +574,7 @@ $('#search').addEventListener('input',function(){state.q=this.value.trim();loadS
 $('#ask-input').addEventListener('keydown',function(e){if(e.key==='Enter')doAsk();});
 function doAsk(){
   var q=$('#ask-input').value.trim();if(!q)return;
-  var box=$('#ask-result');box.style.display='block';box.innerHTML='<div class="ans">⏳ Searching the research corpus…</div>';
+  var box=$('#ask-result');box.style.display='block';box.innerHTML='<div class="ans">⏳ Searching for "'+esc(q)+'"…</div>';
   var btn=$('#ask-go');btn.disabled=true;
   fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})}).then(function(r){return r.json();}).then(function(d){
     if(d.error){box.innerHTML='<div class="ans">⚠️ '+esc(d.error)+'</div>';return;}
