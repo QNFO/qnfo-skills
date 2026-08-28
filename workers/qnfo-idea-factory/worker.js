@@ -1,4 +1,4 @@
-// qnfo-idea-factory v1.3.0 — public read-only "Idea Factory" chat UI.
+// qnfo-idea-factory v1.4.0 — public read-only "Idea Factory" chat UI.
 // RESEARCH THREADS ONLY (category='research' in qnfo-audit.chat_sessions).
 // Infra/delegation/automation sessions are stored (category='infra') but NEVER served publicly.
 // Full multi-message conversations are rendered as LLM-style chat bubbles.
@@ -11,7 +11,7 @@ export default {
       return new Response(null, { status: 204, headers: cors() });
     }
     try {
-      if (path === "/health") return json({ status: "ok", worker: "qnfo-idea-factory", version: "1.3.0", bindings: { d1: !!env.QNFO_AUDIT } });
+      if (path === "/health") return json({ status: "ok", worker: "qnfo-idea-factory", version: "1.4.0", bindings: { d1: !!env.QNFO_AUDIT } });
       if (path === "/robots.txt") return new Response("User-agent: *\nAllow: /\n", { headers: { "Content-Type": "text/plain", "Cache-Control": "public, max-age=86400" } });
       if (path === "/api/sessions") return handleSessions(url, env);
       if (path.startsWith("/api/session/")) return handleSession(path, env);
