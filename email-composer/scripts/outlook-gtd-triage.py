@@ -281,6 +281,8 @@ def classify(item):
         return "NOISE"
     if RX_SOMEDAY.search(subject):
         return "SOMEDAY"
+    if RX_CODE.search(subject):
+        return "REFERENCE" if age_days < 1 else "NOISE"
     if RX_NEWSLETTER.search(subject) or RX_MARKETING.search(subject):
         return "SOMEDAY" if RX_NEWSLETTER.search(subject) else "NOISE"
     return "ACTION"  # unknown sender: keep visible (conservative)
