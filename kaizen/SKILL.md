@@ -1,3 +1,14 @@
+> **v2.108 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: mirror rows for the Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + cloudflare v3.64 + research v2.143 unchanged):**
+ - [HARD] WORKER-AI-MULTIMODAL-FLATTEN-1 (system-prompt v3.88 + cloudflare v3.64): Workers AI text-gen rejects OpenAI multimodal content arrays (400 "required properties at '/' are 'prompt'"); flatten array→string before forwarding. Canonical qnfo-ai v4.7.1.
+ - [HARD] WORKER-AI-VISION-IMAGE-URL-OBJECT-1 (system-prompt v3.88 + cloudflare v3.64): vision image_url must be {url:"data:..."} object, not a bare string (3043). Canonical qnfo-ai v5.1.0.
+ - [HARD] WORKER-AI-VISION-TOOLS-DIRECT-1 (system-prompt v3.88 + cloudflare v3.64): vision + function-calling go DIRECT to env.AI.run (gateway compat mangles multimodal + drops tools). Canonical qnfo-ai runWorkersAI.
+ - [HARD] WORKER-AI-FP8-FAST-CTX-1 (system-prompt v3.88 + cloudflare v3.64): -fp8-fast llama variant = 24k ctx (NOT 128k); ~4 chars/token estimator; boundary tests must exceed the limit by a clear margin. Canonical qnfo-ai v5.2.3.
+ - [HARD] ROUTER-AUTO-ENSEMBLE-CODE-1 (system-prompt v3.88 + cloudflare v3.64): autoEnsemble excludes wantsCode; run_code forces non-stream. Canonical qnfo-ai v5.2.1/v5.2.3.
+ - [HARD] ROUTER-DATA-ENDPOINT-AUTH-1 (system-prompt v3.88 + cloudflare v3.64): all 4 data endpoints auth-gated (CORS * otherwise exfiltratable). Canonical qnfo-ai v5.2.1-v5.2.2.
+ - [SOFT] ROUTER-RUN-CODE-SANDBOX-1 (system-prompt v3.88 + cloudflare v3.64): new Function is global-scope (SSRF surface); env secrets safe (closure); accepted risk. Canonical qnfo-ai executeCode.
+ - System prompt dual-write + 7-store parity + 10/10 CMD templates + prompt-store-verify exit 0 + model keys flash.
+ - Mirrors: system-prompt v3.88, research v2.143, cloudflare v3.64.
+
 > **v2.107 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: mirror rows for QUESTION-AUTONOMY-1 + SPECTRAL-ESTIMATOR-CONSTRUCTION-1 + DATASET-SOURCE-FALLBACK-1 + WAIT-CURSOR-ADVANCE-1 + TITLE-LINE-PARITY-1 repair; mirrors system-prompt v3.87 + research v2.143 + cloudflare v3.63 unchanged):**
  - [HARD] QUESTION-AUTONOMY-1 (system-prompt v3.87 + research v2.143): user directive 2026-08-28 — never ask questions the agent can audit/resolve autonomously; research-direction/disposition decisions resolve from corpus+registry+null-ledger+red-team evidence; deepchat_question only when no evidence path exists; canonical UMP.014 disposition.
  - [HARD] SPECTRAL-ESTIMATOR-CONSTRUCTION-1 (system-prompt v3.87 + research v2.143): six estimator-construction checks (pair correlation k-th-neighbor per-order normalization; expi(log x) Li unfolding; full Dyson number-variance formula; no rank unfolding; Montgomery-Odlyzko = zeros not primes; single-realization form factor report-only); canonical UMP.014 P3-exec 8/8 PASS commit 39381f6.
@@ -22,7 +33,7 @@
 
 ---
 name: kaizen
-version: "2.106"
+version: "2.108"
 ---
 
 > **v2.104 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1 + ERRATA-PIPELINE-1; system-prompt v3.84):**
@@ -15639,5 +15650,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.106** (DATASET-ACQUISITION-1 mirror row + repo-copy sync + pointer repair; preserves v2.105 OSF-CREDENTIAL-REDUNDANCY-1 + OSF-COMMENT-API-1; preserves v2.104 PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1 + ERRATA-PIPELINE-1; preserves v2.103 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1 + DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + QNFO-SOCIAL-PIPELINE-1; mirrors system-prompt v3.86 + research v2.142 + cloudflare v3.63; 2026-08-28)
+Current: **v2.108** (WORKER-AI router-gate mirror rows — WORKER-AI-MULTIMODAL-FLATTEN-1 + WORKER-AI-VISION-IMAGE-URL-OBJECT-1 + WORKER-AI-VISION-TOOLS-DIRECT-1 + WORKER-AI-FP8-FAST-CTX-1 + ROUTER-AUTO-ENSEMBLE-CODE-1 + ROUTER-DATA-ENDPOINT-AUTH-1 + ROUTER-RUN-CODE-SANDBOX-1; preserves v2.107 QUESTION-AUTONOMY-1 + SPECTRAL-ESTIMATOR-CONSTRUCTION-1 + DATASET-SOURCE-FALLBACK-1 + WAIT-CURSOR-ADVANCE-1 + TITLE-LINE-PARITY-1 repair; preserves v2.106 DATASET-ACQUISITION-1 mirror row + repo-copy sync + pointer repair; preserves v2.105 OSF-CREDENTIAL-REDUNDANCY-1 + OSF-COMMENT-API-1; mirrors system-prompt v3.88 + research v2.143 + cloudflare v3.64; 2026-08-28)
 
