@@ -112,7 +112,7 @@ RX_SOMEDAY = re.compile(
     r"register now|webinar|meetup|event announcement|opportunity|nominations? (open|now)", re.I)
 RX_ACTION = re.compile(
     r"^re:|^aw:|^sv:|deadline|action required|response required|please respond|"
-    r"rsvp|decision needed|approval needed|urgent|final reminder|herinnering", re.I)
+    r"rsvp|decision needed|approval needed|urgent|reminder|herinnering", re.I)
 RX_CODE = re.compile(
     r"verification code|login code|security code|one-time (password|code)|otp|"
     r"confirm your email|email verification", re.I)
@@ -170,9 +170,7 @@ def classify(sender, subject, age_days):
                 return "NOISE"
 
     if _dom_in(dom, QNFO_DOMAINS):
-        if "[PREVIEW]" in subject or "batch preview" in subject.lower() or "outreach batch" in subject.lower():
-            return "NOISE"
-        return "ACTION" if (subject[:3].lower() in ("re:", "aw:", "sv:")) else "REFERENCE"
+        return "NOISE"
 
     if _dom_in(dom, HUMAN_DOMAINS):
         if RX_RECEIPT.search(subject):
@@ -220,7 +218,7 @@ def classify(sender, subject, age_days):
         return "SOMEDAY" if RX_NEWSLETTER.search(subject) else "NOISE"
     if RX_ACTION.search(subject):
         return "ACTION"
-    if sender.lower().startswith(("noreply", "no-reply", "info@", "news@")):
+    if sender.lower().startswith(("noreply", "no-reply")):
         return "NOISE"
     return "ACTION"
 

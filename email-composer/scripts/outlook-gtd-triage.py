@@ -139,7 +139,7 @@ RX_SOMEDAY = re.compile(
     r"register now|webinar|meetup|event announcement|opportunity|nominations? (open|now)", re.I)
 RX_ACTION = re.compile(
     r"^re:|^aw:|^sv:|deadline|action required|response required|please respond|"
-    r"rsvp|decision needed|approval needed|urgent|final reminder", re.I)
+    r"rsvp|decision needed|approval needed|urgent|reminder", re.I)
 RX_CODE = re.compile(
     r"verification code|login code|security code|one-time (password|code)|otp|"
     r"confirm your email|email verification", re.I)
@@ -228,13 +228,15 @@ def classify(item):
     if _withdrawn_context(dom, subject):
         return "NOISE"
 
-    # 4. QNFO system mail -> REFERENCE unless a reply (then ACTION)
+    # 4. QNFO system mail -> NOISE in a PERSONAL inbox (2026-08-28 root-cause):
+    #    every qnfo.org/qwav.org-origin message reaching a personal Outlook/Gmail
+    #    inbox is the agent's OWN outbound copy (outreach "Re:" copies, [PREVIEW],
+    #    outreach-check / pre-publish notes). Inbound qnfo.org correspondence is
+    #    captured by the qnfo-email Worker in D1 and is never forwarded here, so
+    #    nothing in this branch needs the user's action. The real correspondence
+    #    lives in the qnfo-email D1 (qnfo-audit.emails).
     if _dom_in(dom, QNFO_DOMAINS):
-        # S2 (completeness audit 2026-08-25): agent test/litter sends must not
-        # re-accumulate in GTD-Reference — [PREVIEW]/batch-preview subjects NOISE.
-        if "[PREVIEW]" in subject or "batch preview" in subject.lower() or "outreach batch" in subject.lower():
-            return "NOISE"
-        return "ACTION" if (subject[:3].lower() in ("re:", "aw:", "sv:")) else "REFERENCE"
+        return "NOISE"
 
     # 5. Human senders (personal domains) -> default ACTION, refined by subject
     if _dom_in(dom, HUMAN_DOMAINS):
