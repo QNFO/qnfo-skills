@@ -1,9 +1,23 @@
 ---
 name: cloudflare
-version: "3.62"
+version: "3.64"
 ---
 
-# CLOUDFLARE — v3.62
+# CLOUDFLARE — v3.64
+
+> **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
+> 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.
+> 2. [HARD] **WORKER-AI-VISION-IMAGE-URL-OBJECT-1** — Workers AI vision schema requires `image_url` as an OBJECT `{url:"data:..."}` (pattern ^data:*); a bare string → 3043, HTTP URLs rejected. Canonical: qnfo-ai v5.1.0.
+> 3. [HARD] **WORKER-AI-VISION-TOOLS-DIRECT-1** — vision + function-calling go DIRECT to `env.AI.run()`; the AI Gateway `/compat/chat/completions` endpoint mangles multimodal image_url and drops `tools`/`tool_choice`. Canonical: qnfo-ai runWorkersAI `directOnly = !!(tools&&tools.length) || !!vision`.
+> 4. [HARD] **WORKER-AI-FP8-FAST-CTX-1** — Workers AI `-fp8-fast` variants (llama-3.3-70b-instruct-fp8-fast) have a REDUCED 24000-token context (NOT 128k); estimator ~4 chars/token. A context-boundary test must exceed the limit by a clear margin and compute tokens with ~4 chars/token, else "N passed" is a false negative. Canonical: qnfo-ai v5.2.3.
+> 5. [HARD] **ROUTER-AUTO-ENSEMBLE-CODE-1** — auto-ensemble must exclude code-execution intent (`!wantsCode`) and run_code must force non-stream; otherwise run_code is hijacked by ensemble on code queries or dropped in stream mode. Canonical: qnfo-ai v5.2.1/v5.2.3.
+> 6. [HARD] **ROUTER-DATA-ENDPOINT-AUTH-1** — every data-returning endpoint (/v1/search,/v1/history,/v1/records,/v1/context) MUST be auth-gated (Bearer), especially with `Access-Control-Allow-Origin:*`. Canonical: qnfo-ai v5.2.1-v5.2.2.
+> 7. [SOFT] **ROUTER-RUN-CODE-SANDBOX-1** — `new Function` in a Worker is GLOBAL scope (fetch/crypto reachable = SSRF); env/bindings/secrets are closure-scoped (safe); accepted risk, do not market as isolated. Canonical: qnfo-ai executeCode.
+
+> **v3.63 UPDATE (2026-08-28, kaizen — PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1; ERRATA-PIPELINE-1):**
+> 1. [HARD] **PDF-IN-WORKER-BROWSER-RENDERING-1** — in-Worker PDF generation uses `import puppeteer from "@cloudflare/puppeteer"` + `puppeteer.launch(env.BROWSER)` (NOT `env.BROWSER.start()` — that fails "The RPC receiver does not implement the method start"). Requires: (a) a `browser` binding (`{"type":"browser","name":"BROWSER"}`); (b) `compatibility_flags: ["nodejs_compat"]` (the package imports `node:buffer`); (c) a BUNDLED deploy — `npx wrangler deploy --dry-run --outdir=dist` bundles the npm import (npm allow-scripts blocks esbuild's postinstall, so use wrangler's internal bundler), then upload `dist/worker.js` via the raw Workers API with the exact bindings; (d) `page.setContent(html, {waitUntil:"networkidle0"})` so MathJax loads from CDN before `page.pdf({format:"A4",printBackground:true})`. Verified 2026-08-28: auth-gated `/debug/pdf` returned `%PDF-1.4` (23 KB, rendered MathJax content). Canonical: qnfo-errata-publish v0.6.0 (repo QNFO/qnfo-errata-pipeline).
+> 2. [HARD] **AUTH-FAIL-CLOSED-1** — any auth-gated `/run/*`/`/debug/*` handler's `authorized()` MUST fail CLOSED: `if (!env.TOKEN) return false;` — never `return true;` (fail-open makes the endpoint public if the secret is ever unbound). Found 2026-08-28: watch 0.2.0 + respond 0.4.0 still fail-open (publish had been fixed); re-deployed fail-closed (0.2.1/0.4.1). Verify EVERY worker's authorized() posture.
+> 3. [SOFT] **ERRATA-PIPELINE-1** — the cloud-native errata pipeline: qnfo-errata-watch (cron `0 * * * *`) detect → qnfo-errata-respond (`15 * * * *`) draft/apply/stage/notify + concept-DOI resolution → qnfo-errata-publish (`30 * * * *`) Zenodo newversion + D1/KG/R2 re-point + in-Worker PDF. All auth-gated fail-closed. D1 tables: errata_queue / errata_watch / errata_actions (qnfo-audit). Sources: QNFO/qnfo-errata-pipeline. Red-team verified (10 HARD + 6 SOFT → 0).
 
 > **v3.62 UPDATE (2026-08-28, kaizen — DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; mirrors system-prompt v3.82 + kaizen v2.103 + research v2.141):**
 > (1) [HARD] DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 — deepseek-v4-flash (and v4-pro) on Workers AI are CHAT/THINKING models, NOT completion models: the single `prompt` format returns garbage (echoes a text-davinci-003 JSON template). MUST use `messages:[{role,content}]` and read `choices[0].message.content` (NOT `.response`, which is empty). Model ids @cf/deepseek-ai/deepseek-v4-flash-0731 / @cf/deepseek-ai/deepseek-v4-pro-0813; binding type "ai" name "AI".
