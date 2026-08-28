@@ -1,0 +1,11 @@
+α ≈ 1/137 is called the most mysterious number in physics. It may just be the cross-ratio of two measurable electron length scales.
+---THREAD---
+A cross-ratio is a projective invariant: it survives any change of coordinates. If α is one, its apparent arbitrariness dissolves into pure geometry.
+---THREAD---
+The paper extends the cross-ratio to the adelic setting — on Bruhat-Tits buildings — and, crucially, states explicit falsifiability conditions.
+---THREAD---
+That means it's testable: the paper names the measurements that would refute the reframing.
+---THREAD---
+A century-old mystery, reframed as a ratio you can measure — and falsify: https://zenodo.org/records/21335639. Is α really a cross-ratio?
+---THREAD---
+QNFO — the energy-efficiency benchmark for quantum computing (JPCUB). Follow for the next thread.

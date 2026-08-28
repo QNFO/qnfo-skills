@@ -1,0 +1,11 @@
+Von Neumann machines spend much of their energy moving data, not computing it. That's the wall AI is hitting.
+---THREAD---
+A new architecture thesis: delegate problem classes to physical substrates whose natural dynamics mirror the math — coupled oscillators for optimization, photonic interferometers for linear algebra.
+---THREAD---
+Computation becomes guided physical inference: the system converges to the answer because physics does the heavy lifting.
+---THREAD---
+It comes with proven isomorphisms between problem classes and physical systems — the kind of cost an energy benchmark prices. That benchmark is JPCUB: what a correct answer costs in energy (10.5281/zenodo.21821767).
+---THREAD---
+A path past the data-movement wall: https://zenodo.org/records/17440316. Which workload would you delegate to physics first?
+---THREAD---
+QNFO — the energy-efficiency benchmark for quantum computing (JPCUB). Follow for the next thread.

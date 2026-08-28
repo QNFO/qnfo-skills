@@ -1,0 +1,11 @@
+The Standard Model has 19+ free parameters and a gauge structure nobody chose. What if it's not arbitrary at all?
+---THREAD---
+A new paper derives it from one axiom: the universe preserves information against entropic decay. From that single principle, the Standard Model emerges as the unique stable solution of a fixed-point equation.
+---THREAD---
+The argument runs through homotopy type theory, K-theory, and a modular curve — and claims all 19+ parameters are determined by its topology and geometry, not tuned by hand.
+---THREAD---
+Extraordinary claims need scrutiny, not applause. The full derivation and error bounds are open access — find the gap, name it.
+---THREAD---
+The full derivation is open for scrutiny: https://zenodo.org/records/21993254. Where do you think it breaks?
+---THREAD---
+QNFO — the energy-efficiency benchmark for quantum computing (JPCUB). Follow for the next thread.
