@@ -1,9 +1,29 @@
+> **v2.106 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: DATASET-ACQUISITION-1 mirror row + repo-copy sync + pointer repair; mirrors system-prompt v3.86 + research v2.142 + cloudflare v3.63 unchanged):**
+ - [HARD] DATASET-ACQUISITION-1 (system-prompt v3.86 + research v2.142): acquire original research datasets (Zenodo record files / GitHub isSupplementTo repos) into artifacts/external-datasets/ with provenance (URL/DOI/license/date/sha256); run through analysis; recompute derived quantities (BP-10); no dataset = documented absence; never fabricate.
+ - [HARD] Repo-copy drift repaired: repo kaizen was 2 cycles behind live (v2.103 vs v2.105); this cycle syncs repo == live v2.106. v2.104 banner pointer corrected (system-prompt v3.81 → v3.84).
+ - [SOFT] Deployed template copy synced: .deepchat/skills/prompt-stores/customPrompts.json had been left stale by the concurrent v3.85 cycle (repo + scripts canon updated only).
+ - System prompt dual-write + 7-store parity + 10/10 CMD templates + prompt-store-verify exit 0 + model keys flash.
+ - Mirrors: system-prompt v3.86, research v2.142, cloudflare v3.63.
+
+> **v2.105 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: OSF fleet update mirror — OSF-CREDENTIAL-REDUNDANCY-1 + OSF-COMMENT-API-1; mirrors system-prompt v3.85 + cloudflare v3.63 + research v2.141):**
+> Red-team: 3 reviewer slots on the OSF update work (queued). HARD: 2 (mirror rows). Changes:
+> (1) [HARD] **OSF-CREDENTIAL-REDUNDANCY-1** — OSF tokens in >=3 redundant stores (tokens/osf + .deepchat/osf-credentials.json + Credential Manager OSF_API + R2 qnfo-backups/credentials/osf-token.txt); update ALL stores the same cycle a token rotates; verify via GET /v2/users/me before use; never ask the user before checking stores (TOKEN-DISCOVERY-FAILURE-1 recurrence: the July token was never persisted and got revoked).
+> (2) [HARD] **OSF-COMMENT-API-1** — results attach to frozen registrations as comments: POST /v2/registrations/{id}/comments/ with relationships.target.data type "nodes" (registrations are frozen nodes; "registrations" -> 409; missing relationships -> 400; deleted drafts -> 410); verify via GET /v2/comments/{id}. Canonical: 2026-08-28 six results comments; audit log R2 qnfo-audit/osf/audit-2026-08-28.md.
+> Cross-reference: system-prompt v3.85, cloudflare v3.63, research v2.141, session this.
+
 ---
 name: kaizen
-version: "2.103"
+version: "2.106"
 ---
 
-> **v2.103 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: scheduled-task cloud migration + Workers AI chat-model + social pipeline; mirrors system-prompt v3.82 + cloudflare v3.62 + research v2.141):**
+> **v2.104 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1 + ERRATA-PIPELINE-1; system-prompt v3.84):**
+ - [HARD] PDF-IN-WORKER-BROWSER-RENDERING-1 (cloudflare v3.63): in-Worker PDF via @cloudflare/puppeteer + puppeteer.launch(env.BROWSER); nodejs_compat required; wrangler dry-run bundling; networkidle0 for MathJax. Canonical: qnfo-errata-publish v0.6.0.
+ - [HARD] AUTH-FAIL-CLOSED-1 (cloudflare v3.63): authorized() MUST fail closed (missing token = reject). watch/respond re-deployed 0.2.1/0.4.1 (were fail-open).
+ - [SOFT] ERRATA-PIPELINE-1 (cloudflare v3.63): 3-worker pipeline watch→respond→publish; sources QNFO/qnfo-errata-pipeline; red-team verified (10 HARD + 6 SOFT → 0).
+ - System prompt dual-write + 7-store parity + 10/10 CMD templates + prompt-store-verify exit 0 + model keys flash.
+ - Mirrors: cloudflare v3.63, research v2.141.
+
+ **v2.103 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: scheduled-task cloud migration + Workers AI chat-model + social pipeline; mirrors system-prompt v3.82 + cloudflare v3.62 + research v2.141):**
 > Red-team: direct parent-agent audit (session this — qnfo-cloud-ops migration + red-team remediation + qnfo-social). HARD: 4 (mirror rows). Changes:
 > (1) [HARD] **CLOUDFLARE-CRON-DOW-7-1** — Cloudflare Cron Triggers day-of-week is 1–7 (7=Sunday), NOT 0; `0 6 * * 0` is rejected (code 10100) and one invalid cron in the array makes wrangler report "only partially updated" — the valid crons deploy, the invalid one silently absent. Keep `scheduled()` dispatch cron strings byte-identical to the wrangler.toml crons array; verify via GET .../schedules after deploy. Owner: cloudflare v3.62.
 > (2) [HARD] **WORKER-CLOUD-MIGRATION-COMPLETENESS-1** — a cloud Worker cron replicates only the DIGEST surface; before pausing ANY local scheduled task, map its FULL function list — un-replicated deep functions (proactive outreach, GTD grounding, Zenodo audits) must NOT be paused. Owner: cloudflare v3.62.
@@ -15610,5 +15630,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.103** (CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1 + DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 mirror rows; preserves v2.102 BINDING-PRESERVATION-1/WORKER-EDIT-BASE-VERIFY-1/PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.82 + cloudflare v3.62; 2026-08-28) (EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; preserves v2.100 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
+Current: **v2.106** (DATASET-ACQUISITION-1 mirror row + repo-copy sync + pointer repair; preserves v2.105 OSF-CREDENTIAL-REDUNDANCY-1 + OSF-COMMENT-API-1; preserves v2.104 PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1 + ERRATA-PIPELINE-1; preserves v2.103 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1 + DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + QNFO-SOCIAL-PIPELINE-1; mirrors system-prompt v3.86 + research v2.142 + cloudflare v3.63; 2026-08-28)
 

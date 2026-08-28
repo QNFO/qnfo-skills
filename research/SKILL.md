@@ -1,7 +1,12 @@
 ---
 name: research
-version: "2.141"
+version: "2.142"
 ---
+
+> **v2.142 UPDATE (2026-08-28, CMD SKILLS UPDATE: DATASET-ACQUISITION-1 — acquire original research datasets (Zenodo/GitHub, provided by paper authors) as part of the research pipeline and overall data analysis; provenance+sha256 evidence; recompute derived quantities from raw data (BP-10); no dataset = documented absence; never fabricate; extends DUE-DILIGENCE-DEPTH-1 + COMPUTATIONAL-VERIFICATION-1; mirrors system-prompt v3.86 + kaizen v2.106 + cloudflare v3.63 unchanged):**
+> Red-team: direct parent-agent skills audit (session this). HARD: 1 (new gate). Changes:
+> (1) [HARD] **DATASET-ACQUISITION-1 added** — full gate section below: Phase 1 due diligence checks every paper under analysis for its original dataset (Zenodo record file list / GitHub isSupplementTo repo / data-availability statement); acquired datasets run through the analysis with provenance + license + sha256; derived quantities recomputed from raw data (BP-10 — citation is not verification); no dataset = documented absence; never fabricate.
+> Cross-reference: system-prompt v3.86, kaizen v2.106, cloudflare v3.63, session this.
 
 > **v2.141 UPDATE (2026-08-26, CMD SKILLS UPDATE: RES.024 publish marathon gates — DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; mirrors system-prompt v3.78 + kaizen v2.101 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent audit (RES.024 post-positional-numeracy v1.0.1 publish + distribute, 2026-08-26). HARD: 3. Changes:
@@ -9676,5 +9681,12 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.141** (DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.137 CROSSWALK-TRANSLATION-1: NO SILOS, NO JARGON — user directive 2026-08-24; cross-domain insights/interdisciplinary terminology/crosswalks are breakthrough-critical; extends TERMINOLOGY-SILO-LESSONS-1; mirrors system-prompt v3.72 + kaizen v2.94 + cloudflare v3.59)
+Current: **v2.142** (DATASET-ACQUISITION-1 — original datasets acquired from authors' Zenodo/GitHub repositories where possible; provenance+sha256 evidence; recompute from raw data (BP-10); never fabricate; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.86 + kaizen v2.106 + cloudflare v3.63; 2026-08-28)
+
+
+## DATASET-ACQUISITION-1 (HARD GATE — 2026-08-28, user directive)
+
+**User directive:** "WHERE POSSIBLE ACQUIRE OTHER RESEARCH DATASETS WHEN PERFORMING RESEARCH PIPELINE ALONG AS PART OF OVERALL DATA ANALYSIS. ORIGINAL DATASETS MAY YIELD NEW RELEVANT INSIGHTS AND SHOULD BE PROVIDED BY PAPER AUTHORS, SUCH AS IN REPOSITORIES LIKE ZENODO AND ON GITHUB."
+
+Phase 1 (due diligence) + Phase 5 (analysis/verification): for every paper under analysis, check for the ORIGINAL dataset — (a) the paper's Zenodo record file list (deposited scripts/data/verification artifacts per PUBLICATION-SOURCE-COMPLETENESS-1), (b) the GitHub repo named in related_identifiers (isSupplementTo), (c) the data-availability statement. Acquire into artifacts/external-datasets/ with provenance (URL/DOI/license/download-date/sha256 — DUE-DILIGENCE-DEPTH-1 §5 evidence discipline), RUN it through the analysis pipeline, and recompute derived quantities from the raw data (BP-10: citation is not verification). No dataset = documented absence, then proceed. License discipline: CC BY/CC0 reuse with attribution; NC/ND document constraints without redistribution; proprietary cite-only. Never fabricate a dataset. Dataset-derived findings are first-class evidence (KG edge + citation).
 
