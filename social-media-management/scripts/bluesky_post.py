@@ -98,8 +98,12 @@ def main():
         print(f"Posted: {result['uri']}")
     elif subcmd == "thread":
         raw = sys.argv[2:] if len(sys.argv) > 2 else [sys.stdin.read().strip()]
-        if not raw[0]: raw = sys.stdin.read().strip().split("---THREAD---")
-        else: raw = [r for r in raw if r.strip()]
+        if not raw[0]:
+            raw = sys.stdin.read().strip().split("---THREAD---")
+        elif len(raw) == 1 and "---THREAD---" in raw[0]:
+            raw = raw[0].split("---THREAD---")
+        else:
+            raw = [r for r in raw if r.strip()]
         posts = [p.strip() for p in raw if p.strip()]
         root_uri = root_cid = parent_uri = parent_cid = None
         for i, pt in enumerate(posts):
