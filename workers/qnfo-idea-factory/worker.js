@@ -87,6 +87,18 @@ function redact(s) {
 // ---------------------------------------------------------------------------
 // API handlers — RESEARCH THREADS ONLY
 // ---------------------------------------------------------------------------
+function collapseThreads(items){
+  var map={}, order=[];
+  for (var i=0;i<items.length;i++){
+    var it=items[i];
+    var key=(it.title||'').toLowerCase().replace(/\s+/g,' ').trim().slice(0,80);
+    if(!key||key==='test'||key==='hi'||key==='hello'||key==='.')continue;
+    if(!(key in map)){map[key]=it;order.push(key);}
+    else if((it.message_count||0)>(map[key].message_count||0)){map[key]=it;}
+  }
+  return order.map(function(k){return map[k];});
+}
+
 async function handleSessions(url, env) {
   const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "50", 10), 1), 100);
   const offset = Math.max(parseInt(url.searchParams.get("offset") || "0", 10), 0);
@@ -98,8 +110,7 @@ async function handleSessions(url, env) {
     sql += " AND (title LIKE ? OR messages LIKE ?)";
     params.push("%" + q + "%", "%" + q + "%");
   }
-  sql += " ORDER BY COALESCE(updated_at, created_at) DESC LIMIT ? OFFSET ?";
-  params.push(limit, offset);
+  sql += " ORDER BY COALESCE(updated_at, created_at) DESC";
 
   const res = await env.QNFO_AUDIT.prepare(sql).bind(...params).all();
   const items = [];
@@ -119,11 +130,14 @@ async function handleSessions(url, env) {
     });
   }
 
+  const collapsed = collapseThreads(items);
+  const page = collapsed.slice(offset, offset + limit);
+
   return json({
-    count: items.length,
+    count: collapsed.length,
     limit,
     offset,
-    sessions: items.map((s) => ({ id: s.id, kind: s.kind, title: s.title, created_at: s.created_at, message_count: s.message_count, model: s.model, tags: s.tags }))
+    sessions: page.map((s) => ({ id: s.id, kind: s.kind, title: s.title, created_at: s.created_at, message_count: s.message_count, model: s.model, tags: s.tags }))
   });
 }
 
@@ -187,7 +201,8 @@ async function handleFeed(url, env) {
     }
   }
   items.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || "")).slice(0, limit);
-  return json({ after: now, count: items.length, sessions: items });
+  const collapsed = collapseThreads(items);
+  return json({ after: now, count: collapsed.length, sessions: collapsed });
 }
 
 function normTs(v) {
@@ -332,6 +347,8 @@ const UI_HTML = `<!DOCTYPE html>
 <meta property="og:url" content="https://ideas.qnfo.org">
 <link rel="canonical" href="https://ideas.qnfo.org">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a56db'/><text x='16' y='23' text-anchor='middle' font-size='16' fill='white' font-family='system-ui'>Q</text></svg>">
+<script>var BS=String.fromCharCode(92);window.MathJax={tex:{inlineMath:[[BS+'(',BS+')'],['$','$']],displayMath:[['$$','$$'],[BS+'[',BS+']']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code'],enableMenu:false}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 <style>
 :root{--blue:#1a56db;--blue-dark:#1040a8;--blue-light:#dbeafe;--blue-subtle:#eff6ff;--text:#1a1a2e;--muted:#6b7280;--bg:#ffffff;--surface:#f9fafb;--border:#e5e7eb;--radius:8px;--radius-lg:12px;--user-bubble:#1a56db;--asst-bubble:#f3f4f6}
 *{box-sizing:border-box}
@@ -462,6 +479,29 @@ a{color:var(--blue)}
 var state={q:'',offset:0,limit:50,hasMore:false,lastAfter:Date.now(),sessions:[],selected:null,polling:true};
 var $=function(s){return document.querySelector(s);};
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function renderRich(s){
+  // HTML-escape, then inline markdown (bold/italic/code). Math delimiters
+  // ($...$, $$...$$, \(...\), \[...\]) contain no HTML/markdown chars, so they
+  // pass through untouched and are typeset by MathJax afterwards.
+  // NOTE: built with String.fromCharCode + split/join - NO regex literals or
+  // backtick characters anywhere, because this code lives inside a JS template
+  // literal (a backtick would terminate it).
+  var t=String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var A=String.fromCharCode(42); // asterisk
+  var B=String.fromCharCode(96); // backtick
+  var p,i;
+  // bold: two asterisks, run first so the pair is fully consumed
+  p=t.split(A+A); for(i=0;i<p.length;i++){ if(i%2===1){ p[i]='<strong>'+p[i]+'</strong>'; } } t=p.join('');
+  // italic: single asterisk
+  p=t.split(A); for(i=0;i<p.length;i++){ if(i%2===1){ p[i]='<em>'+p[i]+'</em>'; } } t=p.join('');
+  // inline code: backtick (fromCharCode 96)
+  p=t.split(B); for(i=0;i<p.length;i++){ if(i%2===1){ p[i]='<code>'+p[i]+'</code>'; } } t=p.join('');
+  return t.split(String.fromCharCode(10)).join('<br>');
+}
+function typeset(el){
+  function run(){ if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetPromise([el]).catch(function(){}); } }
+  if(window.MathJax){ run(); } else { setTimeout(run, 300); setTimeout(run, 1200); }
+}
 function fmtTs(ts){if(!ts)return '';var d=new Date(ts);if(isNaN(d))return '';var now=new Date();var sameDay=d.toDateString()===now.toDateString();return sameDay?d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString([],{month:'short',day:'numeric',year:d.getFullYear()===now.getFullYear()?undefined:'numeric'});}
 function renderList(){
   var el=$('#session-list');var items=state.sessions;
@@ -475,7 +515,7 @@ function renderList(){
   var lm=$('#load-more');if(lm)lm.onclick=loadMore;
 }
 function renderMsg(m){
-  var html='<div class="msg '+esc(m.role)+'"><div class="avatar">'+(m.role==='user'?'R':'Q')+'</div><div class="body">'+esc(m.content)+'<span class="meta">'+fmtTs(m.timestamp)+(m.role==='user'?' · Rowan':' · QNFO agent')+'</span></div></div>';
+  var html='<div class="msg '+esc(m.role)+'"><div class="avatar">'+(m.role==='user'?'R':'Q')+'</div><div class="body">'+(m.role==='assistant'?renderRich(m.content):esc(m.content))+'<span class="meta">'+fmtTs(m.timestamp)+(m.role==='user'?' · Rowan':' · QNFO agent')+'</span></div></div>';
   return html;
 }
 function openSession(id){
@@ -493,6 +533,7 @@ function openSession(id){
     }
     body+='</div>';
     conv.innerHTML=head+body;
+    typeset(conv);
     var ci=$('#conv-inner');if(ci)ci.scrollTop=0;
   }).catch(function(e){conv.innerHTML='<div class="empty">Failed to load: '+esc(String(e))+'</div>';});
 }
@@ -538,7 +579,7 @@ function doAsk(){
   fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})}).then(function(r){return r.json();}).then(function(d){
     if(d.error){box.innerHTML='<div class="ans">⚠️ '+esc(d.error)+'</div>';return;}
     var html='';
-    if(d.answer){html+='<div class="ans">'+esc(d.answer)+'</div>';}
+    if(d.answer){html+='<div class="ans">'+renderRich(d.answer)+'</div>';}
     else if(d.backend_error){html+='<div class="ans">⚠️ '+esc(d.backend_error)+'</div>';}
     if(d.sources&&d.sources.length){
       html+='<div class="srcs"><h3 style="font-size:.8rem;color:var(--muted);text-transform:uppercase;margin:.6rem 0 .3rem">Sources ('+d.sources.length+')</h3>';
@@ -556,7 +597,7 @@ function doAsk(){
       html+='</div>';
     }
     if(!d.answer&&!d.backend_error&&(!d.threads||!d.threads.length)){html='<div class="ans">No research found for that yet — try a different phrasing.</div>';}
-    box.innerHTML=html;
+    box.innerHTML=html;typeset(box);
   }).catch(function(e){box.innerHTML='<div class="ans">Failed: '+esc(String(e))+'</div>';}).finally(function(){btn.disabled=false;});
 }
 function loadAskChips(){

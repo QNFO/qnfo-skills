@@ -105,6 +105,16 @@ nav, and the paper-detail nav — all pointing at `https://ideas.qnfo.org`.
 
 ## Changelog
 
+### v1.4 (2026-08-28) — math rendering + dedupe
+- MathJax (tex-svg) + markdown-inline renderer (`renderRich` + `typeset`) on BOTH
+  surfaces: ideas.qnfo.org Ask box, conversation message bubbles, and the
+  ask.qwav.tech answer panel. `\(...\)`/`$$...$$`/`$...$` now render as math,
+  `**bold**`/`*italic*`/code as HTML. renderRich is backslash/backtick-free
+  (String.fromCharCode + split/join) because it lives inside a template literal.
+- Thread dedupe + junk filter: `collapseThreads()` merges duplicate titles
+  (the June scrape's ~40 "What is ultrametric geometry?" duplicates collapse to
+  one; junk "test"/"hi"/"hello" dropped). 118 -> 62 research threads.
+
 ### v1.3 (2026-08-28) — Ask + participation layer
 - Fixed ask.qwav.tech: qnfo-qwav `/ai/ask` now uses the AVAILABLE AI + Vectorize
   + D1 bindings (embed → search qwav-research-v2 → enrich from living-paper →
