@@ -106,13 +106,18 @@ def main():
     base = os.path.splitext(md)[0]
     html = base + ".html"
     pdf = base + ".pdf"
-    refs = os.path.join(os.path.dirname(md), "refs.bib")
+    refs = None
+    for _cand in ("refs.bib", "references.bib"):
+        _p = os.path.join(os.path.dirname(md), _cand)
+        if os.path.exists(_p):
+            refs = _p
+            break
 
     if not skip_pandoc:
         cmd = [pandoc, "--mathjax", "--standalone", md, "-o", html]
-        if os.path.exists(refs):
+        if refs:
             cmd += ["--citeproc", "--bibliography=" + refs]
-            print("CITEPROC: refs.bib found — citations + bibliography enabled")
+            print("CITEPROC: %s found — citations + bibliography enabled" % os.path.basename(refs))
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         print("PANDOC-RC:", r.returncode)
         if r.returncode != 0:
