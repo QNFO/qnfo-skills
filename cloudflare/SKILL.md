@@ -3,7 +3,7 @@ name: cloudflare
 version: "3.62"
 ---
 
-# CLOUDFLARE — v3.61
+# CLOUDFLARE — v3.62
 
 > **v3.62 UPDATE (2026-08-28, kaizen — DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; mirrors system-prompt v3.82 + kaizen v2.103 + research v2.141):**
 > (1) [HARD] DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 — deepseek-v4-flash (and v4-pro) on Workers AI are CHAT/THINKING models, NOT completion models: the single `prompt` format returns garbage (echoes a text-davinci-003 JSON template). MUST use `messages:[{role,content}]` and read `choices[0].message.content` (NOT `.response`, which is empty). Model ids @cf/deepseek-ai/deepseek-v4-flash-0731 / @cf/deepseek-ai/deepseek-v4-pro-0813; binding type "ai" name "AI".
@@ -2207,7 +2207,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.62** (CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.81 + kaizen v2.103; 2026-08-28)
+Current: **v3.62** (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
 
 ---
 

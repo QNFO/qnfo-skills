@@ -1,7 +1,15 @@
 ---
 name: kaizen
-version: "2.102"
+version: "2.103"
 ---
+
+> **v2.103 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: scheduled-task cloud migration + Workers AI chat-model + social pipeline; mirrors system-prompt v3.82 + cloudflare v3.62 + research v2.141):**
+> Red-team: direct parent-agent audit (session this — qnfo-cloud-ops migration + red-team remediation + qnfo-social). HARD: 4 (mirror rows). Changes:
+> (1) [HARD] **CLOUDFLARE-CRON-DOW-7-1** — Cloudflare Cron Triggers day-of-week is 1–7 (7=Sunday), NOT 0; `0 6 * * 0` is rejected (code 10100) and one invalid cron in the array makes wrangler report "only partially updated" — the valid crons deploy, the invalid one silently absent. Keep `scheduled()` dispatch cron strings byte-identical to the wrangler.toml crons array; verify via GET .../schedules after deploy. Owner: cloudflare v3.62.
+> (2) [HARD] **WORKER-CLOUD-MIGRATION-COMPLETENESS-1** — a cloud Worker cron replicates only the DIGEST surface; before pausing ANY local scheduled task, map its FULL function list — un-replicated deep functions (proactive outreach, GTD grounding, Zenodo audits) must NOT be paused. Owner: cloudflare v3.62.
+> (3) [HARD] **DEEPSEEK-WORKERS-AI-CHAT-MODEL-1** — deepseek-v4-flash/pro on Workers AI are CHAT models, not completion models; use messages:[{role,content}] and read choices[0].message.content. Owner: cloudflare v3.62.
+> (4) [SOFT] **WORKERS-DEV-REACHABILITY-1** — workers.dev 1010 (Bot Fight Mode) + 1042 (subdomain not bound). Owner: cloudflare v3.62.
+> Cross-reference: system-prompt v3.82, cloudflare v3.62, research v2.141, QNFO/qnfo-workers commits 1f7b01f + qnfo-cloud-ops, session this.
 
 > **v2.102 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: Cloudflare AI gateway full-records parity + structural personal/QNFO separation; mirrors system-prompt v3.80 + cloudflare v3.60 + research v2.141):**
 > Red-team: direct parent-agent audit (session this). HARD: 3 (mirror rows). Changes:
@@ -15602,5 +15610,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.102** (BINDING-PRESERVATION-1 + WORKER-EDIT-BASE-VERIFY-1 + PERSONAL-QNFO-SEPARATION-1 mirror rows; system-prompt v3.80; 2026-08-28) (EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; preserves v2.100 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
+Current: **v2.103** (CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1 + DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 mirror rows; preserves v2.102 BINDING-PRESERVATION-1/WORKER-EDIT-BASE-VERIFY-1/PERSONAL-QNFO-SEPARATION-1; mirrors system-prompt v3.82 + cloudflare v3.62; 2026-08-28) (EMAIL-WORKER-SEND-BODY-FIELD-1 + DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2-OBJECTS-LISTING-IS_TRUNCATED-1 + BUFFER-TOKEN-ENV-1; preserves v2.100 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; preserves v2.99 PDF-NO-BROWSER-CHROME-1: render-pdf.cjs must set displayHeaderFooter:false explicitly; build-pdf.py header_footer_static_gate; preserves v2.98 SLUG-RENAME-VECTORIZE-ORPHAN-1/PUBLISH-LOCK-1-git/CLOSEOUT-HANDOFF-TABLE-1; mirrors system-prompt v3.77 + research v2.139 + cloudflare v3.59 unchanged; 2026-08-26)
 
