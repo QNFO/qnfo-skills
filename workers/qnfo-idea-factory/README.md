@@ -52,13 +52,25 @@ ideas.qnfo.org/api/*  (PUBLIC read, research only, redacted)
 | `GET /health` | Health |
 | `GET /stats` | Category counts |
 
-## Classification (research vs infra)
+## Classification (research vs infra) — v3 content-based
 
-`scripts/log_threads.py` classifies each session at push time:
-- **research** = agent_id `deepchat` + session_kind `regular` (the user's
-  research agent conversations)
-- **infra** = everything else (automation agent, personal agent, subagent
-  audits, delegation prompts)
+`scripts/log_threads.py` classifies each session at push time with a
+**content-based scoring classifier** (calibrated 2026-08-28 on the full
+deepchat-regular corpus: 5 research / 138 infra of 143 sessions):
+
+- **research** requires BOTH:
+  1. agent_id `deepchat` + session_kind `regular` (automation/personal/
+     subagent sessions are NEVER public), AND
+  2. content test: the title or ANY user-message intent scores >= 2 research
+     terms and more research terms than infra terms (vocabulary in
+     `log_threads.py`: p-adic/ultrametric/quantum/anyon/critique/paper/
+     numeracy/laws-of-form ... vs ui/api/cloudflare/email/git/audit/...).
+- User-message intent = text BEFORE the first `CMD <WORD>:` marker (CMD
+  RESEARCH / CMD PUBLISH / CMD CONTINUE / CMD RED TEAM ...) with file paths
+  stripped — CMD boilerplate (git/commit/branch/worker words) never pollutes
+  the score.
+- Display titles fall back to the first meaningful user intent for sessions
+  whose title is only a file path.
 
 The public worker hard-filters `category='research'` server-side — an infra
 session id returns `404 Session not found or not public`.
@@ -88,8 +100,15 @@ Route: `ideas.qnfo.org/*` → `qnfo-idea-factory` (created 2026-08-28).
 "Ideas" to the hub nav, the hub cards ("Idea Factory" card), the Papers index
 nav, and the paper-detail nav — all pointing at `https://ideas.qnfo.org`.
 
-## v1.1 changelog (2026-08-28)
+## Changelog
 
+### v1.2 (2026-08-28)
+- v3 content-based research classifier (agent rule + research-dominant content
+  scoring of title/user intents; CMD boilerplate + paths stripped). Calibrated:
+  5 research / 138 infra. Empty closeout stubs skipped. Display titles derived
+  from first meaningful user intent.
+
+### v1.1 (2026-08-28)
 - Research-only public feed (category filter server-side; infra never served).
 - Full multi-message threads (extractor + ingest worker + schema columns
   `category/agent_id/title/model_id/source` on `chat_sessions`).
