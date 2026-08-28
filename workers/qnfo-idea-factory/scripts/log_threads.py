@@ -7,9 +7,16 @@ chat_logs; this script reconstructs the COMPLETE user/assistant conversation fro
 local agent.db (deepchat_messages + deepchat_user_messages + deepchat_assistant_blocks)
 and pushes it to qnfo-thread-ingest /threads for the public Idea Factory.
 
-Classification (research vs infra) - the public feed serves ONLY research:
-  research = agent_id 'deepchat' AND session_kind 'regular'   (the user's research agent)
-  infra    = everything else (automation, personal, subagent audits)
+Classification (v3, content-based) - the public feed serves ONLY genuine research:
+  A session is 'research' ONLY when BOTH hold:
+    1. agent_id == 'deepchat' AND session_kind == 'regular'
+       (automation/personal/subagent sessions are NEVER public)
+    2. CONTENT TEST: the title or ANY user-message intent scores >= 2 research
+       terms AND more research terms than infra terms.
+  User-message intent = text BEFORE the first CMD <WORD>: marker (CMD RESEARCH /
+  CMD PUBLISH / CMD CONTINUE / CMD RED TEAM / CMD CLOSEOUT / CMD SKILLS UPDATE...)
+  and file paths are stripped. This keeps CMD boilerplate (git/commit/branch/
+  worker words) from polluting the score.
 
 Usage:
   python C:/Users/LENOVO/.deepchat/scripts/log_threads.py [--all] [--dry-run] [--limit N]
@@ -18,13 +25,55 @@ Usage:
     --limit N  max sessions to process (default 200)
 """
 
-import sqlite3, json, os, sys, time, argparse, urllib.request
+import sqlite3, json, os, sys, time, re, argparse, urllib.request
 
 AGENT_DB = os.path.expandvars(r"%APPDATA%\DeepChat\app_db\agent.db")
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log_threads_state.json")
 API = "https://qnfo-thread-ingest.q08.workers.dev/threads"
 MAX_CONTENT = 20000
 MAX_MESSAGES = 500
+
+# ---------------------------------------------------------------------------
+# Research / infrastructure vocabulary (v3 — calibrated 2026-08-28 on the
+# full deepchat-regular corpus: 5 research / 15 infra)
+# ---------------------------------------------------------------------------
+RESEARCH_TERMS = [
+    # mathematics / number theory / ultrametric
+    "p-adic", "ultrametric", "adelic", "ostrowski", "number theory", "numeracy",
+    "positional", "numeral", "zeta", "gamma function", "langlands", "tate",
+    "morita", "valuation",
+    "laws of form", "distinction", "re-entrant", "reentrant", "nested",
+    # physics
+    "quantum", "qubit", "qudit", "qec", "error correction", "stabilizer",
+    "majorana", "anyon", "spin-statistics", "condensed matter", "topological",
+    "holograph", "zitterbewegung", "zbw", "boson", "fermion", "particle",
+    "field theory", "gravity", "cosmology", "black hole", "entropy",
+    "information theory", "infomatics", "computation", "complexity",
+    "benchmark", "joules", "energy efficiency", "landauer", "margolus",
+    # research activity
+    "critique", "paper", "publication", "theorem", "proof", "conjecture",
+    "hypothesis", "thesis", "deep-dive", "deep dive", "compare with",
+    "research topics", "potential papers", "paradigm", "consilience",
+    "epistemolog", "ignorance audit", "open problem",
+    # venues / programs
+    "cwi", "qpl", "quantum algorithms", "summer school", "research inquiry",
+]
+INFRA_TERMS = [
+    # builds / cloud / app config
+    "ui", "web ui", "api", "endpoint", "worker", "deploy", "cloudflare",
+    "openai", "chatbox", "deepseek", "mcp", "skill sync", "install",
+    "access", "sync", "android", "vectorize",
+    # accounts / ops
+    "email", "inbox", "account", "gmail", "outlook", "oauth", "token", "secret",
+    "analytics", "scrape", "archive", "backup",
+    # git / process
+    "git", "commit", "push", "repo", "branch", "closeout", "handoff",
+    "resume", "checklist", "mandate", "workflow", "gates", "protocol",
+    # system / personal
+    "debloat", "slowdown", "cleanup", "disk", "performance",
+    "personal", "inbox-zero", "gtd", "automation", "cron", "scheduled",
+]
+CMD_MARKER = re.compile(r"\bCMD\s+[A-Z][A-Z\s]*?:", re.I)
 
 
 def _token():
@@ -65,8 +114,70 @@ def unwrap_user_text(raw):
         return raw
 
 
-def classify(agent_id, session_kind):
-    if agent_id == "deepchat" and session_kind == "regular":
+def _strip_noise(text):
+    t = str(text or "")
+    t = re.sub(r"[A-Za-z]:\\[^\s]*", " ", t)
+    t = re.sub(r"\b[A-Za-z]:[^\s]*", " ", t)
+    t = re.sub(r"\u2192", " ", t)
+    t = re.sub(r"\s+", " ", t)
+    return t.lower()
+
+
+def _score_text(text):
+    t = _strip_noise(text)
+    if len(t) < 4:
+        return (0, 0)
+    r = sum(1 for term in RESEARCH_TERMS if term in t)
+    i = sum(1 for term in INFRA_TERMS if term in t)
+    return (r, i)
+
+
+def _user_intent(m):
+    """User-message text BEFORE the first CMD marker (the genuine instruction)."""
+    parts = CMD_MARKER.split(str(m or ""))
+    return parts[0] if parts else ""
+
+
+def _meaningful_intents(user_msgs):
+    """User intents with real content (strip CMD boilerplate + path-only dumps)."""
+    out = []
+    for m in user_msgs:
+        intent = _user_intent(m).strip()
+        stripped = _strip_noise(intent)
+        if len(stripped) >= 20:
+            out.append(intent)
+    return out
+
+
+def derive_title(title, user_msgs):
+    """Use the session title; fall back to the first meaningful user intent."""
+    t = (title or "").strip()
+    stripped = _strip_noise(t).strip()
+    if t and len(stripped) >= 10 and not stripped.startswith(("d:", "c:")):
+        return t[:300]
+    for intent in _meaningful_intents(user_msgs):
+        return intent[:300]
+    return t[:300]
+
+
+def classify(agent_id, session_kind, title, user_msgs):
+    """v3 content-based classification.
+
+    Returns 'research' only when the session is a deepchat regular session AND
+    the title/user-intent content is research-dominant.
+    """
+    if agent_id != "deepchat" or session_kind != "regular":
+        return "infra"
+    best_r, best_i = 0, 0
+    t_stripped = _strip_noise(title)
+    if t_stripped and not t_stripped.startswith(("d:", "c:")):
+        tr, ti = _score_text(title)
+        best_r, best_i = tr // 2, ti // 2
+    for m in user_msgs:
+        r, i = _score_text(_user_intent(m))
+        best_r = max(best_r, r)
+        best_i = max(best_i, i)
+    if best_r >= 2 and best_r > best_i:
         return "research"
     return "infra"
 
@@ -94,11 +205,10 @@ def fetch_threads(last_updated, all_sessions, limit):
     out = []
     for s in sessions:
         sid = s["session_id"]
-        category = classify(s.get("agent_id"), s.get("session_kind"))
-        title = (s.get("title") or "").strip()[:300]
+        raw_title = (s.get("title") or "").strip()[:300]
         model = (s.get("model_id") or "").strip()[:100]
 
-        # 2. Messages in order
+        # 2. User messages (for classification) + full ordered thread
         cur.execute(
             "SELECT id, order_seq, role, content, created_at FROM deepchat_messages "
             "WHERE session_id = ? ORDER BY order_seq LIMIT ?",
@@ -106,18 +216,19 @@ def fetch_threads(last_updated, all_sessions, limit):
         )
         msgs = [dict(r) for r in cur.fetchall()]
 
+        user_texts = []
         clean = []
         prev_sig = None
         for m in msgs:
             role = m["role"]
             content = ""
             if role == "user":
-                # Prefer the plain-text table; fall back to unwrapping the JSON wrapper
                 cur.execute("SELECT text FROM deepchat_user_messages WHERE message_id = ?", (m["id"],))
                 ur = cur.fetchone()
                 content = ur["text"] if ur and ur["text"] else unwrap_user_text(m["content"])
+                if content.strip():
+                    user_texts.append(content)
             elif role == "assistant":
-                # Assistant text = concatenated 'content' blocks (NOT reasoning/tool_call/action)
                 cur.execute(
                     "SELECT text_content FROM deepchat_assistant_blocks "
                     "WHERE message_id = ? AND block_type = 'content' ORDER BY block_index",
@@ -125,7 +236,7 @@ def fetch_threads(last_updated, all_sessions, limit):
                 )
                 blocks = [r["text_content"] for r in cur.fetchall() if r["text_content"]]
                 if not blocks:
-                    continue  # tool-call-only or reasoning-only turn: not part of the visible thread
+                    continue
                 content = "\n\n".join(blocks)
             else:
                 continue
@@ -144,7 +255,6 @@ def fetch_threads(last_updated, all_sessions, limit):
                 except Exception:
                     ts_iso = None
 
-            # Dedupe consecutive identical messages (CMD prompts repeat)
             sig = role + "|" + content[:80]
             if sig == prev_sig:
                 continue
@@ -154,6 +264,9 @@ def fetch_threads(last_updated, all_sessions, limit):
 
         if len(clean) < 1:
             continue
+
+        category = classify(s.get("agent_id"), s.get("session_kind"), raw_title, user_texts)
+        title = derive_title(raw_title, user_texts)
 
         out.append({
             "session_id": str(sid)[:200],

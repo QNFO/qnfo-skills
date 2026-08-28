@@ -104,6 +104,7 @@ async function handleSessions(url, env) {
     let messages = [];
     try { messages = JSON.parse(t.messages || "[]"); } catch (e) { messages = []; }
     if (!Array.isArray(messages)) messages = [];
+    if (messages.length === 0) continue; // skip empty closeout stubs
     items.push({
       id: t.thread_id,
       kind: "thread",
@@ -171,13 +172,14 @@ async function handleFeed(url, env) {
     if (ms > afterMs) {
       let messages = [];
       try { messages = JSON.parse(t.messages || "[]"); } catch (e) { messages = []; }
-      const userMsg = Array.isArray(messages) ? messages.find((m) => m && m.role === "user") : null;
+      if (!Array.isArray(messages) || messages.length === 0) continue; // skip empty closeout stubs
+      const userMsg = messages.find((m) => m && m.role === "user");
       items.push({
         id: t.thread_id,
         kind: "thread",
         title: redact((t.title || (userMsg && userMsg.content) || t.thread_id).slice(0, 300)),
         created_at: ts,
-        message_count: Array.isArray(messages) ? messages.length : 0
+        message_count: messages.length
       });
     }
   }
