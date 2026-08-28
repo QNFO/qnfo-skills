@@ -316,7 +316,7 @@ light theme, desktop + mobile. Run against BOTH localhost and the deployed URL.
 demo, not a demo. Fix the wiring until ≥50% change state AND the changed ones
 are the PRIMARY controls (the ones the README tells users to click). The 15/15
 playwright-click-test.py suite remains the standard for QWAV's own demos;
-generic-click-test.py is the MINIMUM gate every demo must clear.
+generic-click-test.py is the MINIMUM gate every demo must clear. For chat/LLM-style interfaces (no canvas; MathJax-injected stylesheet false-positives), use scripts/chat-ui-click-test.py — real-background light-theme scan, canvas optional, plus a mobile 375px overflow check (it caught a template-literal script break + a grid blowout on ideas.qnfo.org, 2026-08-28).
 
 ### Test Runner 1: `scripts/test-demo.py` (CDP — zero dependencies)
 

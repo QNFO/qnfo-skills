@@ -105,6 +105,19 @@ nav, and the paper-detail nav — all pointing at `https://ideas.qnfo.org`.
 
 ## Changelog
 
+### v1.5 (2026-08-28) — RSS + embed + hash deep-links + chat-UI gate
+- /rss.xml (40-item research-thread feed), /embed (iframe widget, 60s refresh)
+- #/s/<id> hash deep-links (RSS/embed/topics link straight into a thread)
+- scripts/chat-ui-click-test.py added to qwav-demo-kit: real-background light
+  theme scan (fixes the MathJax 'black' false positive), canvas optional,
+  mobile 375px overflow check. ALL CHECKS PASSED on both surfaces.
+- log_threads.py v4: dedicated research agent (id 'research') sessions are
+  research by definition — hard separation; deepchat regular keeps the content
+  test as safety net.
+- qnfo-cloud-ops v1.2.1: briefing + weekly include idea_proposals review.
+- Fixed: template-literal regex corruption (hash handler broke the UI script),
+  mobile grid blowout (min-width:0 + overflow-wrap:anywhere).
+
 ### v1.4 (2026-08-28) — math rendering + dedupe
 - MathJax (tex-svg) + markdown-inline renderer (`renderRich` + `typeset`) on BOTH
   surfaces: ideas.qnfo.org Ask box, conversation message bubbles, and the

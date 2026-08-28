@@ -1,4 +1,4 @@
-// qnfo-idea-factory v1.4.0 — public read-only "Idea Factory" chat UI.
+// qnfo-idea-factory v1.5.0 — public read-only "Idea Factory" chat UI.
 // RESEARCH THREADS ONLY (category='research' in qnfo-audit.chat_sessions).
 // Infra/delegation/automation sessions are stored (category='infra') but NEVER served publicly.
 // Full multi-message conversations are rendered as LLM-style chat bubbles.
@@ -11,8 +11,10 @@ export default {
       return new Response(null, { status: 204, headers: cors() });
     }
     try {
-      if (path === "/health") return json({ status: "ok", worker: "qnfo-idea-factory", version: "1.4.0", bindings: { d1: !!env.QNFO_AUDIT } });
+      if (path === "/health") return json({ status: "ok", worker: "qnfo-idea-factory", version: "1.5.0", bindings: { d1: !!env.QNFO_AUDIT } });
       if (path === "/robots.txt") return new Response("User-agent: *\nAllow: /\n", { headers: { "Content-Type": "text/plain", "Cache-Control": "public, max-age=86400" } });
+      if (path === "/rss.xml") return handleRss(env);
+      if (path === "/embed") return serveEmbed();
       if (path === "/api/sessions") return handleSessions(url, env);
       if (path.startsWith("/api/session/")) return handleSession(path, env);
       if (path === "/api/feed") return handleFeed(url, env);
@@ -362,7 +364,7 @@ body{font-family:'Inter','Segoe UI',system-ui,sans-serif;margin:0;color:var(--te
 .top-nav .live .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .layout{display:grid;grid-template-columns:340px 1fr;min-height:calc(100vh - 56px)}
-.sidebar{border-right:1px solid var(--border);background:var(--surface);overflow-y:auto;padding:1rem}
+.sidebar{border-right:1px solid var(--border);background:var(--surface);overflow-y:auto;padding:1rem;min-width:0}
 .sidebar h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .6rem}
 .search{width:100%;padding:.55rem .75rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.85rem;margin-bottom:.8rem;outline:none}
 .search:focus{border-color:var(--blue)}
@@ -372,10 +374,10 @@ body{font-family:'Inter','Segoe UI',system-ui,sans-serif;margin:0;color:var(--te
 .session-item{padding:.65rem .75rem;border-radius:var(--radius);cursor:pointer;margin-bottom:.35rem;border:1px solid transparent;transition:all .12s}
 .session-item:hover{background:#fff;border-color:var(--border)}
 .session-item.active{background:var(--blue-subtle);border-color:var(--blue-light)}
-.session-item .t{font-size:.85rem;font-weight:600;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+.session-item .t{font-size:.85rem;font-weight:600;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;overflow-wrap:anywhere;word-break:break-word}
 .session-item .m{font-size:.72rem;color:var(--muted);margin-top:.25rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
 .badge{display:inline-block;background:var(--blue-subtle);color:var(--blue);padding:.08rem .45rem;border-radius:999px;font-size:.68rem;font-weight:600}
-.main{display:flex;flex-direction:column;height:calc(100vh - 56px);position:relative}
+.main{display:flex;flex-direction:column;height:calc(100vh - 56px);position:relative;min-width:0}
 .hero{padding:1.6rem 2rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#eff6ff 0%,#f0f9ff 50%,#faf5ff 100%)}
 .hero h1{margin:0;font-size:1.45rem;font-weight:800;background:linear-gradient(135deg,#1a56db,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero p{margin:.4rem 0 0;color:var(--muted);font-size:.85rem;max-width:640px}
@@ -400,7 +402,7 @@ body{font-family:'Inter','Segoe UI',system-ui,sans-serif;margin:0;color:var(--te
 a{color:var(--blue)}
 /* Ask + participation */
 .ask-box{margin:1rem 0 0;padding:1rem 1.1rem;background:rgba(255,255,255,.85);border:1px solid var(--blue-light);border-radius:var(--radius-lg)}
-.ask-box .row{display:flex;gap:.5rem}
+.ask-box .row{display:flex;gap:.5rem;flex-wrap:wrap}
 .ask-box input{flex:1;padding:.65rem .8rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.9rem;outline:none}
 .ask-box input:focus{border-color:var(--blue)}
 .ask-box button{padding:.65rem 1.1rem;border-radius:var(--radius);border:none;cursor:pointer;background:var(--blue);color:#fff;font-weight:600;font-size:.88rem}
@@ -421,7 +423,7 @@ a{color:var(--blue)}
 .propose p{margin:0 0 .6rem;font-size:.78rem;color:var(--muted)}
 .propose textarea{width:100%;padding:.6rem .8rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.88rem;font-family:inherit;outline:none;resize:vertical;min-height:70px}
 .propose textarea:focus{border-color:var(--blue)}
-.propose .mini{display:flex;gap:.5rem;margin-top:.5rem}
+.propose .mini{display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap}
 .propose .mini input{flex:1;padding:.5rem .7rem;border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;outline:none}
 .propose .mini input:focus{border-color:var(--blue)}
 .propose .mini button{padding:.55rem 1rem;border-radius:var(--radius);border:none;cursor:pointer;background:var(--blue);color:#fff;font-weight:600;font-size:.84rem;white-space:nowrap}
@@ -621,12 +623,97 @@ function doPropose(){
     else{st.innerHTML='✅ Submitted. Thank you — it will be reviewed for the research queue.';$('#prop-idea').value='';$('#prop-name').value='';$('#prop-contact').value='';}
   }).catch(function(e){st.textContent='Failed: '+esc(String(e));}).finally(function(){btn.disabled=false;});
 }
+function handleHash(){
+  var h = location.hash;
+  if (h.indexOf('#/s/') === 0) {
+    var sid = decodeURIComponent(h.slice(4));
+    state.selected = sid;
+    openSession(sid);
+  }
+}
 loadSessions(true);
 loadAskChips();
+handleHash();
+window.addEventListener('hashchange', handleHash);
 setInterval(pollFeed,30000);
 </script>
 </body>
 </html>`;
+
+async function handleRss(env) {
+  // RSS 2.0 feed of research threads (deduped, newest first)
+  const res = await env.QNFO_AUDIT.prepare(
+    "SELECT thread_id, title, messages, created_at, updated_at FROM chat_sessions WHERE category = 'research' ORDER BY COALESCE(updated_at, created_at) DESC"
+  ).all();
+  const items = [];
+  for (const t of res.results || []) {
+    let messages = [];
+    try { messages = JSON.parse(t.messages || "[]"); } catch (e) { messages = []; }
+    if (!Array.isArray(messages) || messages.length === 0) continue;
+    items.push({
+      id: t.thread_id,
+      title: t.title || (messages.find((m) => m && m.role === "user") || {}).content || t.thread_id,
+      created_at: normTs(t.updated_at || t.created_at),
+      message_count: messages.length,
+      description: String(messages[0] && messages[0].content || "").slice(0, 400)
+    });
+  }
+  const collapsed = collapseThreads(items);
+  const base = "https://ideas.qnfo.org";
+  const itemsXml = collapsed.slice(0, 40).map((it) => {
+    const title = xmlEsc(redact(String(it.title || it.id).slice(0, 200)));
+    const link = base + "/#/s/" + encodeURIComponent(it.id);
+    const desc = xmlEsc(redact(it.description || ""));
+    const pub = it.created_at ? new Date(it.created_at).toUTCString() : new Date().toUTCString();
+    return "  <item>\n    <title>" + title + "</title>\n    <link>" + link + "</link>\n    <guid isPermaLink=\"false\">" + it.id + "</guid>\n    <description>" + desc + "</description>\n    <pubDate>" + pub + "</pubDate>\n  </item>";
+  }).join("\n");
+  const now = new Date().toUTCString();
+  const body = '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n  <title>QNFO Idea Factory</title>\n  <link>' + base + '/</link>\n  <description>Public read-only research conversations from QNFO — ideas as they develop.</description>\n  <lastBuildDate>' + now + '</lastBuildDate>\n' + itemsXml + '\n</channel>\n</rss>';
+  return new Response(body, { headers: { "Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, max-age=300" } });
+}
+
+function xmlEsc(t) {
+  return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+function serveEmbed() {
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>QNFO Ideas — live</title>
+<style>
+:root{--blue:#1a56db;--muted:#6b7280;--border:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,'Segoe UI',system-ui,sans-serif;background:#fff;color:#1a1a2e;padding:10px 12px;line-height:1.45}
+.head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.head .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+.head b{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--blue);text-decoration:none;font-size:13px;font-weight:600}
+a:hover{text-decoration:underline}
+.item{padding:6px 0;border-bottom:1px solid var(--border)}
+.item .m{color:var(--muted);font-size:11px}
+.foot{font-size:10px;color:var(--muted);margin-top:8px;text-align:right}
+</style></head><body>
+<div class="head"><span class="dot"></span><b>QNFO Idea Factory — live</b></div>
+<div id="list">loading…</div>
+<div class="foot"><a href="https://ideas.qnfo.org" target="_blank" rel="noopener">Open the full factory →</a></div>
+<script>
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function load(){
+  fetch('/api/sessions?limit=10').then(function(r){return r.json();}).then(function(d){
+    var el=document.getElementById('list');
+    if(!d.sessions||!d.sessions.length){el.textContent='No research threads yet.';return;}
+    el.innerHTML=d.sessions.map(function(s){
+      var d2=s.created_at?s.created_at.slice(0,10):'';
+      return '<div class="item"><a href="https://ideas.qnfo.org/#/s/'+encodeURIComponent(s.id)+'" target="_blank" rel="noopener">'+esc(s.title||'(untitled)')+'</a><div class="m">'+d2+' · '+s.message_count+' messages</div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+load();
+setInterval(load,60000);
+<\/script></body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60" } });
+}
 
 function serveUI() {
   return new Response(UI_HTML, {

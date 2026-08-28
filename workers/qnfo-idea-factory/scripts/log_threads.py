@@ -161,12 +161,22 @@ def derive_title(title, user_msgs):
 
 
 def classify(agent_id, session_kind, title, user_msgs):
-    """v3 content-based classification.
+    """v4 classification — hard separation via the dedicated research agent.
 
-    Returns 'research' only when the session is a deepchat regular session AND
-    the title/user-intent content is research-dominant.
+    'research' when:
+      (a) agent_id == 'research' AND session_kind == 'regular' — the dedicated
+          Research agent's sessions are research BY DEFINITION (the user only
+          uses that agent for research inquiries), OR
+      (b) agent_id == 'deepchat' AND session_kind == 'regular' AND the
+          title/user-intent content is research-dominant (v3 content test —
+          safety net for the general agent).
+    Everything else (automation/personal/subagents) = infra, never public.
     """
-    if agent_id != "deepchat" or session_kind != "regular":
+    if session_kind != "regular":
+        return "infra"
+    if agent_id == "research":
+        return "research"
+    if agent_id != "deepchat":
         return "infra"
     best_r, best_i = 0, 0
     t_stripped = _strip_noise(title)
