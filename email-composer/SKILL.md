@@ -458,7 +458,7 @@ self_sufficient: true
 
 
 
-# Email Composer — v2.25
+# Email Composer — v2.32
 > **v2.4 UPDATE (2026-08-05, kaizen — WORKER-SOURCE-EVICTED-1 + CF API key retrieval):**
 
 

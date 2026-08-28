@@ -1,3 +1,10 @@
+> **v2.110 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: weekly-review triage gates mirror rows; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged):**
+>  - [HARD] GRAPH-SYNC-BULK-ONLY-1 (system-prompt v3.90 + cloudflare v3.66): graph-api /sync accepts EXACTLY {"action":"bulk","nodes":[...],"edges":[]}; any other body shape returns the unhelpful {"error":"Only bulk sync supported"}. Read the documented contract (cloudflare skill F-6, 2026-07-25) BEFORE probing. Canonical: 2026-08-28 weekly review (five wrong-shape probes).
+>  - [HARD] CONSOLIDATION-TARGET-AUDIT-1 (system-prompt v3.90): a node with consolidated_into:<target> requires the TARGET dispositioned too; a consolidated node pointing at an archived target is a stale duplicate remnant. Canonical: 2026-08-28 red team — "Radix-Ultrametric-BruhatTits Synthesis" DRAFT missed by the 08-16 sweep (radix-uw-bt archived, consolidated node not), ARCHIVED + read-back.
+>  - [HARD] REGISTRY-LAG-PARITY-1 (system-prompt v3.90): program_registry status can lag living-paper (RES.026 active vs published); verify BOTH stores before claiming published; update both same-cycle. Canonical: 2026-08-28 RES.026 → published (read-back verified).
+>  - [HARD] ENUMERATION-DRIFT-SNAPSHOT-1 (system-prompt v3.90): full-corpus Project enumeration counts drift under concurrent sessions (158 → 159/160 at audit); verify dispositions by ID, never drop because the total moved. Canonical: 2026-08-28 weekly review.
+> Cross-reference: system-prompt v3.90, cloudflare v3.66, qnfo-core v1.36, research v2.143 (unchanged), session this.
+
 > **v2.109 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged):**
 >  - [HARD] QNFO-ROUTER-DEFAULT-PROMPT-1 (system-prompt v3.89 + qnfo-core v1.36): the qnfo-ai worker's DEFAULT_SYSTEM_PROMPT (injected for a bare request with no client system message) MUST carry anti-generic + QNFO-identity + never-fabricate rules — a bare prompt from ANY client (Chatbox/playground/raw API) must never return generic filler ("I'm happy to continue", "what's on your mind?", suggestion menus) or a hollow "QNFO definition not confirmed" report. The fix lives at the ENDPOINT (worker), not the client. Canonical qnfo-ai 2026-08-28 (three recurrences).
 >  - [HARD] CONTINUATION-CONTEXT-INJECTION-1 (system-prompt v3.89 + qnfo-core v1.36): a bare continuation (CONTINUE/WHAT'S NEXT?/YOU TELL ME.../go on/resume) with a single user message injects the recent logged activity (D1 ai_queries ORDER BY ts DESC LIMIT 20, filtering out the continuation prompts themselves) as system context, so "CONTINUE" returns real recent-work status — never a static mission statement alone, never a fabricated continuation. Canonical qnfo-ai 2026-08-28.
@@ -103,7 +110,7 @@ version: "2.108"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.100
+# KAIZEN — v2.110
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15659,5 +15666,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.109** (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
+Current: **v2.110** (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
 
