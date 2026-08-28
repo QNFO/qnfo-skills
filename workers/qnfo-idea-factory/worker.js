@@ -350,9 +350,10 @@ const UI_HTML = `<!DOCTYPE html>
 <script>var BS=String.fromCharCode(92);window.MathJax={tex:{inlineMath:[[BS+'(',BS+')'],['$','$']],displayMath:[['$$','$$'],[BS+'[',BS+']']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code'],enableMenu:false}};</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
 :root{--blue:#1a56db;--blue-dark:#1040a8;--blue-light:#dbeafe;--blue-subtle:#eff6ff;--text:#1a1a2e;--muted:#6b7280;--bg:#ffffff;--surface:#f9fafb;--border:#e5e7eb;--radius:8px;--radius-lg:12px;--user-bubble:#1a56db;--asst-bubble:#f3f4f6}
 *{box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;margin:0;color:var(--text);background:var(--bg);line-height:1.6}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;margin:0;color:var(--text);background:var(--bg);line-height:1.6}
 .top-nav{display:flex;align-items:center;gap:1rem;padding:.7rem 1.25rem;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;flex-wrap:wrap}
 .top-nav .brand{font-weight:800;font-size:1.05rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.45rem}
 .top-nav a.nav-link{color:var(--muted);text-decoration:none;font-weight:500;font-size:.85rem;padding:.35rem .7rem;border-radius:6px;transition:all .15s}
@@ -384,7 +385,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;margin:0;c
 .msg .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;margin:0 .6rem}
 .msg.user .avatar{background:var(--blue);color:#fff}
 .msg.assistant .avatar{background:#e5e7eb;color:#374151}
-.msg .body{max-width:82%;padding:.75rem 1rem;border-radius:14px;font-size:.9rem;white-space:pre-wrap;word-break:break-word}
+.msg .body{max-width:82%;padding:.75rem 1rem;border-radius:14px;font-size:.95rem;font-family:'Source Serif 4',Georgia,serif;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .msg.user .body{background:var(--user-bubble);color:#fff;border-top-right-radius:4px}
 .msg.assistant .body{background:var(--asst-bubble);border-top-left-radius:4px}
 .msg .meta{font-size:.68rem;color:var(--muted);margin-top:.3rem;display:block}
@@ -408,7 +409,7 @@ a{color:var(--blue)}
 .chips button{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:.3rem .7rem;font-size:.74rem;cursor:pointer;transition:all .15s;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chips button:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-subtle)}
 #ask-result{margin-top:.8rem;display:none}
-#ask-result .ans{background:var(--asst-bubble);border-radius:12px;padding:.85rem 1rem;font-size:.88rem;white-space:pre-wrap;line-height:1.6}
+#ask-result .ans{background:var(--asst-bubble);border-radius:12px;padding:.85rem 1rem;font-size:.95rem;font-family:'Source Serif 4',Georgia,serif;line-height:1.7;white-space:pre-wrap}
 #ask-result .srcs{margin-top:.5rem}
 #ask-result .srcs .src{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;margin-bottom:.3rem;font-size:.78rem;display:flex;justify-content:space-between;gap:.5rem}
 #ask-result .srcs .src a{color:var(--blue);font-weight:500}
