@@ -1,9 +1,18 @@
 ---
 name: email-composer
-version: "2.31"
+version: "2.32"
 ---
 
 # email-composer
+
+> **v2.32 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: inbox-zero root-cause — DIGEST-TO-PERSONAL-1 + triage classify() content-driven + TEST-SEND-TARGET-1; mirrors system-prompt v3.83):**
+> Red-team: direct parent-agent audit (session this — "deal with all my emails, inbox zero" cycle). HARD: 3. SOFT: 2. Changes:
+> (1) [HARD] **DIGEST-TO-PERSONAL-1** — two same-day Workers emailed daily digests into rwnquni@outlook.com (qnfo-cloud-ops: 6 digests via `env.DIGEST_TO || "rwnquni@outlook.com"`; qnfo-intent-orchestrator: intent digest via `env.DIGEST_TO`). NO automation digest may target a personal inbox — the PDB (cronjob a82062c7) is the ONLY daily user-facing digest. Fix: `wrangler secret put DIGEST_TO --name <worker>` → alerts@qnfo.org (D1 sink, never forwarded to personal).
+> (2) [HARD] **triage classify() content-driven** — removed the blanket `info@`/`news@` sender-prefix NOISE rule (a "Free Registration Reminder" from info@sciforum.net required ACTION); restored bare `reminder` to RX_ACTION (a reminder is a prompt to act); added `_dom_in()` base-domain matcher (notify.cloudflare.com → cloudflare.com; `endswith(".domain")` so lookalikes don't match); QNFO_DOMAINS branch returns NOISE in a PERSONAL inbox (all qnfo.org-origin mail there is the agent's own outbound copy; inbound qnfo.org mail is captured in D1, never forwarded).
+> (3) [HARD] **TEST-SEND-TARGET-1** — the outreach test-send/preview target is alerts@qnfo.org (D1 sink, verify via email_check), NEVER the personal Outlook/Gmail (was rwnquni@outlook.com). Applied to cronjob 3851f539 task_prompt + task_system_instruction + description (direct DB update).
+> (4) [SOFT] qnfo-cloud-ops + qnfo-intent-orchestrator are REDUNDANT with the silenced DeepChat cronjobs (digests duplicate the PDB); deletion deferred pending concurrent-session confirmation.
+> (5) [SOFT] MODEL-KEY providerId divergence: Roaming preferredModel providerId "deepseek" vs "QNFO-ROUTER" elsewhere; modelId deepseek-v4-flash everywhere (no pro/gemma drift).
+> Cross-reference: system-prompt v3.83, scripts/outlook-gtd-triage.py + scripts/gmail-gtd-triage.py (committed), cronjob 3851f539, session this.
 
 > **v2.31 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: QNFO Cloudflare AI agent email tools live (qnfo-tools-mcp v1.1.0) — user directive: "I WANT THE QNFO CLOUDFLARE AI AGENT TO BE ABLE TO CHECK AND RESPOND TO MY CLOUDFLARE DOMAIN EMAIL ACCOUNTS"):**
 > Red-team: direct parent-agent audit (session this — capability build + live verification cycle). HARD: 1. SOFT: 0. DESIGN: 0. Changes:
@@ -1722,5 +1731,5 @@ curl -s -X DELETE -H "Authorization: Bearer $KEY" https://qnfo-email.q08.workers
 
 
 
-Current: **v2.31** (QNFO Cloudflare AI agent email tools — qnfo-tools-mcp v1.1.0: email_check/email_stats/email_search/email_respond/email_mark; check → triage → respond flow; commit 8af5ce7; 2026-08-28)
+Current: **v2.32** (inbox-zero root-cause: DIGEST-TO-PERSONAL-1 + triage classify() content-driven + TEST-SEND-TARGET-1; mirrors system-prompt v3.83; 2026-08-28)
 
