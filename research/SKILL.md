@@ -9676,5 +9676,5 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.137** (CROSSWALK-TRANSLATION-1: NO SILOS, NO JARGON — user directive 2026-08-24; cross-domain insights/interdisciplinary terminology/crosswalks are breakthrough-critical; extends TERMINOLOGY-SILO-LESSONS-1; mirrors system-prompt v3.72 + kaizen v2.94 + cloudflare v3.59)
+Current: **v2.141** (DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.137 CROSSWALK-TRANSLATION-1: NO SILOS, NO JARGON — user directive 2026-08-24; cross-domain insights/interdisciplinary terminology/crosswalks are breakthrough-critical; extends TERMINOLOGY-SILO-LESSONS-1; mirrors system-prompt v3.72 + kaizen v2.94 + cloudflare v3.59)
 
