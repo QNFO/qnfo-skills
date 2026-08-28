@@ -1,9 +1,16 @@
+> **v3.65 UPDATE (2026-08-28, kaizen — QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + kaizen v2.109 + qnfo-core v1.36):**
+> 1. [HARD] **WORKER-API-DEPLOY-REVERT-1** — a Workers-API-only deploy (editing the deployed bundle via PUT /scripts/{name}, no repo commit) is REVERTED by the next repo-based wrangler deploy; the durable fix is committing to the worker's repo (extends WORKER-EDIT-BASE-VERIFY-1). Canonical: qnfo-ai endpoint fix v5.2.5 (API-only) reverted by a concurrent v5.3.0 repo deploy 2026-08-28.
+> 2. [HARD] **WORKER-UPLOAD-FILENAME-1** — the Workers API module upload multipart requires filename="worker.js" on the module part (Content-Disposition: form-data; name="worker.js"; filename="worker.js"); omitting it → HTTP 10021 "No such module: worker.js". Extract the bundle between var __defProp and //# sourceMappingURL=worker.js.map.
+> 3. [HARD] **QNFO-ROUTER-DEFAULT-PROMPT-1** — the qnfo-ai worker's DEFAULT_SYSTEM_PROMPT (injected for a bare request) MUST carry anti-generic + QNFO-identity + never-fabricate rules; the fix lives at the ENDPOINT, not the client.
+> 4. [HARD] **CONTINUATION-CONTEXT-INJECTION-1** — a bare continuation injects the recent logged activity (D1 ai_queries) as context so "CONTINUE" returns real recent-work status.
+> 5. [HARD] **WORKER-FALLBACK-TEXT-1** — the empty-output fallback ("All models failed.") MUST be a substantive QNFO-state message, never a cryptic error.
+
 ---
 name: cloudflare
-version: "3.64"
+version: "3.65"
 ---
 
-# CLOUDFLARE — v3.64
+# CLOUDFLARE — v3.65
 
 > **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
 > 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.

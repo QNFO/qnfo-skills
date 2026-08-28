@@ -1,10 +1,19 @@
+> **v1.36 UPDATE (2026-08-28, kaizen — QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65):**
+> Red-team: direct parent-agent audit (session this — Chatbox↔DeepChat parity + qnfo-ai endpoint generic-filler fix). HARD: 4. SOFT: 1. Changes:
+> (1) [HARD] **QNFO-ROUTER-DEFAULT-PROMPT-1** — the qnfo-ai worker's DEFAULT_SYSTEM_PROMPT (injected for a bare request with no client system message) MUST carry anti-generic + QNFO-identity + never-fabricate rules; a bare prompt from ANY client (Chatbox/playground/raw API) must never return generic filler or a hollow "QNFO definition not confirmed" report. The fix lives at the ENDPOINT, not the client.
+> (2) [HARD] **CONTINUATION-CONTEXT-INJECTION-1** — a bare continuation (CONTINUE/WHAT'S NEXT?/YOU TELL ME...) with a single user message injects the recent logged activity (D1 ai_queries) as context so "CONTINUE" returns real recent-work status.
+> (3) [HARD] **WORKER-FALLBACK-TEXT-1** — a worker's empty-output fallback ("All models failed.") MUST be a substantive QNFO-state message, never a cryptic error.
+> (4) [HARD] **WORKER-API-DEPLOY-REVERT-1** — a Workers-API-only deploy (no repo commit) is REVERTED by the next repo-based wrangler deploy; commit to the repo (extends WORKER-EDIT-BASE-VERIFY-1).
+> (5) [SOFT] **CHATBOX-CLIENT-PARITY-1** — Chatbox re-fetches /v1/models (can shrink the model list); autoLaunch needs the HKCU Run registry entry; the anti-generic lever is settings.defaultPrompt (no per-model prompt field).
+> Cross-reference: system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65, session this.
+
 ---
 name: qnfo-core
-version: "1.35"
+version: "1.36"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.35
+# QNFO-CORE — v1.36
 > **v1.35 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 status on the ONLY-supported-mechanism tool + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the ONLY supported mechanism `email-composer/scripts/calendar-sync.py` does NOT exist (disk / git log --all / origin/master; verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). The MANDATE remains binding; the TOOL is pending authoring — agents MUST NOT claim calendar events/tasks were created until the tool exists.
@@ -5979,7 +5988,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.35** (CALENDAR-SYNC-TOOL-GAP-1 status + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131; 2026-08-21)
+Current: **v1.36** (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 
 
