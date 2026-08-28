@@ -112,9 +112,12 @@ WITHDRAWN_CONTEXTS = {
 
 def _withdrawn_context(dom, subject):
     """Return True if sender+subject match a context the user withdrew from."""
-    if dom not in WITHDRAWN_CONTEXTS:
+    if not dom:
         return False
-    _label, keywords = WITHDRAWN_CONTEXTS[dom]
+    base = next((b for b in WITHDRAWN_CONTEXTS if dom == b or dom.endswith("." + b)), None)
+    if base is None:
+        return False
+    _label, keywords = WITHDRAWN_CONTEXTS[base]
     sl = (subject or "").lower()
     return any(k in sl for k in keywords)
 
@@ -122,7 +125,7 @@ RX_RECEIPT = re.compile(
     r"receipt|invoice|statement|payment (received|confirmed)|order confirmation|"
     r"confirmation of order|your order|shipping confirmation|tracking (number|#)|"
     r"delivery (update|confirm)|tax (receipt|statement)|transaction (receipt|confirm)|"
-    r"payment method|practical information", re.I)
+    r"payment method|practical information|purchase (confirmed|confirmation)", re.I)
 RX_WAITING = re.compile(
     r"application (received|submitted|is under)|received your (submission|paper)|"
     r"we (received|got) your|ticket[ #]?\d|"
@@ -156,6 +159,18 @@ def domain_of(sender):
     if "@" in s:
         return s.rsplit("@", 1)[1]
     return ""
+
+
+def _dom_in(dom, domset):
+    """Match a sender domain against a set of BASE domains, allowing
+    subdomains (notify.cloudflare.com -> cloudflare.com). Exact match first,
+    then suffix match on '.'. A non-subdomain lookalike (evilcloudflare.com)
+    does NOT match (no leading dot)."""
+    if not dom:
+        return False
+    if dom in domset:
+        return True
+    return any(dom.endswith("." + b) for b in domset)
 
 
 def classify(item):
@@ -201,7 +216,7 @@ def classify(item):
     dom = domain_of(sender)
 
     # 3. Financial institutions: alerts ACTION, statements/receipts REFERENCE, rest ACTION
-    if dom in FINANCIAL_DOMAINS:
+    if _dom_in(dom, FINANCIAL_DOMAINS):
         if RX_RECEIPT.search(subject):
             return "REFERENCE"
         if RX_SECURITY.search(subject):
@@ -214,7 +229,7 @@ def classify(item):
         return "NOISE"
 
     # 4. QNFO system mail -> REFERENCE unless a reply (then ACTION)
-    if dom in QNFO_DOMAINS:
+    if _dom_in(dom, QNFO_DOMAINS):
         # S2 (completeness audit 2026-08-25): agent test/litter sends must not
         # re-accumulate in GTD-Reference — [PREVIEW]/batch-preview subjects NOISE.
         if "[PREVIEW]" in subject or "batch preview" in subject.lower() or "outreach batch" in subject.lower():
@@ -222,7 +237,7 @@ def classify(item):
         return "ACTION" if (subject[:3].lower() in ("re:", "aw:", "sv:")) else "REFERENCE"
 
     # 5. Human senders (personal domains) -> default ACTION, refined by subject
-    if dom in HUMAN_DOMAINS:
+    if _dom_in(dom, HUMAN_DOMAINS):
         if RX_RECEIPT.search(subject):
             return "REFERENCE"
         if RX_WAITING.search(subject):
@@ -234,9 +249,9 @@ def classify(item):
     # 6. Bulk/machine senders -> refine by subject, else NOISE.
     #    (S-5: empty/unknown sender falls through to the conservative
     #    unknown-domain rules below — never forced through the bulk branch.)
-    if dom in BULK_DOMAINS:
+    if _dom_in(dom, BULK_DOMAINS):
         if RX_SECURITY.search(subject):
-            return "ACTION" if dom in ("cloudflare.com", "microsoft.com", "google.com") else "WAITING"
+            return "ACTION" if _dom_in(dom, {"cloudflare.com", "microsoft.com", "google.com"}) else "WAITING"
         if RX_RECEIPT.search(subject):
             return "REFERENCE"
         if RX_WAITING.search(subject):
@@ -282,14 +297,27 @@ def get_outlook():
 def get_inbox(ns, email):
     """ns.Folders yields store-ROOT MAPIFolders (not Store objects); the root
     MAPIFolder exposes .Store, whose GetDefaultFolder(6) resolves the Inbox
-    for that account (verified 2026-08-20 on both Outlook.com stores)."""
+    for that account (verified 2026-08-20 on both Outlook.com stores).
+
+    Fix 2026-08-27 (daily-sweep guardrail): the gen_py _Store wrapper may not
+    expose SmtpAddress under early binding; that AttributeError must NOT discard
+    the valid Store (the combined try/except previously set store=None, skipping
+    the working GetDefaultFolder(6) path -> INBOX NOT FOUND for every account).
+    SmtpAddress is now read in its own try; Store survives. The fallback also
+    uses Folders.Item("Inbox") instead of Folders("Inbox") (the _Folders wrapper
+    is not callable under early binding)."""
     for root in ns.Folders:
         name = (root.Name or "").lower()
         try:
             store = root.Store
-            smtp = (store.SmtpAddress or "").lower()
         except Exception:
-            store, smtp = None, ""
+            store = None
+        smtp = ""
+        if store is not None:
+            try:
+                smtp = (store.SmtpAddress or "").lower()
+            except Exception:
+                smtp = ""
         if email.lower() in name or email.lower() in smtp:
             if store is not None:
                 try:
@@ -297,7 +325,7 @@ def get_inbox(ns, email):
                 except Exception:
                     pass
             try:
-                return root.Folders("Inbox")
+                return root.Folders.Item("Inbox")
             except Exception:
                 continue
     return None
