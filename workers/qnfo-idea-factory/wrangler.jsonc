@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "qnfo-idea-factory",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-01",
+  "account_id": "edb167b78c9fb901ea5bca3ce58ccc4b",
+  "d1_databases": [
+    {
+      "binding": "QNFO_AUDIT",
+      "database_name": "qnfo-audit",
+      "database_id": "35e2e573-92f3-46ac-83c6-22f6429fc5e5"
+    }
+  ]
+}
