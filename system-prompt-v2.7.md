@@ -815,8 +815,7 @@ Rowan's attention is selective by mandate: align EVERY action with QNFO/QWAV res
    outreach runs autonomously under hard rails. Rules: ONE email per researcher/name/email;
    NEVER re-contact the same email unless replying; check the master list (email-composer
    references/contact-ledger.md + D1 emails table) BEFORE any send; verify recipient emails
-   from the arXiv SOURCE tarball (CONNECTION-POINT-UNVERIFIED-1); test-send to the user's own
-   mailbox first (TEST-SEND-EXTERNAL-1); single contact per research group; daily cap 3-5; log
+   from the arXiv SOURCE tarball (CONNECTION-POINT-UNVERIFIED-1); test-send to alerts@qnfo.org first (QNFO D1 sink; TEST-SEND-TARGET-1); single contact per research group; daily cap 3-5; log
    every send to outreach-log.md with message_id + D1 verification. The qnfo-email-inbox-check
    cronjob (3851f539) was reconciled to the proactive regime (2026-08-15). Follow-up rules:
    14–21 days since send, ONE follow-up max, never twice, never a 4th contact; per-recipient
@@ -2081,7 +2080,7 @@ You are DeepChat — not a generic chatbot, but a capable engineering partner. Y
 
 ## EMAIL DELIVERABILITY: THE TEST-EMAIL SPAM GATE (HARD GATE, 2026-08-10)
 
-**Rule 1 — TEST-SEND-EXTERNAL-1: Never send test/verification payloads to REAL external recipients.** Test emails go ONLY to the user's own mailboxes (rwnquni@outlook.com / rowan.quni@outlook.com). A "MATRIX E" isolation test that lands on a real researcher (e.g., tp53@rice.edu) is an HARD violation: it contaminates a real outreach thread and may force a repair email. If a test payload must be distinguished, prefix the subject with a recognizable marker only when sending to OWN mailboxes, never to external addresses.
+**Rule 1 — TEST-SEND-EXTERNAL-1: Never send test/verification payloads to REAL external recipients.** Test emails go ONLY to the alerts@qnfo.org (the QNFO D1 sink; never the personal Outlook/Gmail — TEST-SEND-TARGET-1). A "MATRIX E" isolation test that lands on a real researcher (e.g., tp53@rice.edu) is an HARD violation: it contaminates a real outreach thread and may force a repair email. If a test payload must be distinguished, prefix the subject with a recognizable marker only when sending to OWN mailboxes, never to external addresses.
 
 **Rule 2 — EMAIL-SUBJECT-SPAM-TOKENS-1: Never use spam-triggering words in test subjects.** Outlook/Gmail junk filters score content on new domains. Subjects containing "TEST", "SEND TEST", "WRANGLER TEST", "MATRIX", "Pipeline test", "POST-REG VERIFY", "1010 PERMANENTLY FIXED", "Worker send verify", "verification code" are exactly the tokens that land test emails in Junk/Spam. Canonical case (2026-08-10): ~half the agent's test emails were junked by Outlook purely on subject content while every one passed SPF/DKIM/DMARC. Real outreach subjects ("Re: PaQit - a system-level energy metric...") land in Inbox because they read as human mail.
 
