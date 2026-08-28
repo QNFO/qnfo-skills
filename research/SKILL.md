@@ -1,12 +1,19 @@
 ---
 name: research
-version: "2.142"
+version: "2.143"
 ---
 
 > **v2.142 UPDATE (2026-08-28, CMD SKILLS UPDATE: DATASET-ACQUISITION-1 — acquire original research datasets (Zenodo/GitHub, provided by paper authors) as part of the research pipeline and overall data analysis; provenance+sha256 evidence; recompute derived quantities from raw data (BP-10); no dataset = documented absence; never fabricate; extends DUE-DILIGENCE-DEPTH-1 + COMPUTATIONAL-VERIFICATION-1; mirrors system-prompt v3.86 + kaizen v2.106 + cloudflare v3.63 unchanged):**
 > Red-team: direct parent-agent skills audit (session this). HARD: 1 (new gate). Changes:
 > (1) [HARD] **DATASET-ACQUISITION-1 added** — full gate section below: Phase 1 due diligence checks every paper under analysis for its original dataset (Zenodo record file list / GitHub isSupplementTo repo / data-availability statement); acquired datasets run through the analysis with provenance + license + sha256; derived quantities recomputed from raw data (BP-10 — citation is not verification); no dataset = documented absence; never fabricate.
 > Cross-reference: system-prompt v3.86, kaizen v2.106, cloudflare v3.63, session this.
+
+> **v2.143 UPDATE (2026-08-28, CMD SKILLS UPDATE: SPECTRAL-ESTIMATOR-CONSTRUCTION-1 + DATASET-SOURCE-FALLBACK-1 + QUESTION-AUTONOMY-1; mirrors system-prompt v3.87 + kaizen v2.107 + cloudflare v3.63 unchanged):**
+> Red-team: 2 reviewer slots dispatched (parent direct audit authoritative). HARD: 3. Changes:
+> (1) [HARD] **SPECTRAL-ESTIMATOR-CONSTRUCTION-1 added** — Phase 2/5 gate: six canonical construction bugs in statistical-spectral estimators (pair correlation via k-th-neighbor decomposition with per-order normalization — NOT the spacing distribution; exact Li unfolding via scipy.special.expi(log x); full Dyson number-variance formula (1/pi^2)[log(2 pi L)+1+gamma-pi^2/8]; rank unfolding is a tautology — smoothed staircase; Montgomery-Odlyzko = Riemann zeros, primes = Gallagher + twin-gap hard core; single-realization form factor = report-only). Canonical: QNFO.UMP.014 P3-exec suite 8/8 PASS (commit 39381f6).
+> (2) [HARD] **DATASET-SOURCE-FALLBACK-1 added** — extends DATASET-ACQUISITION-1 (Phase 1): canonical dataset without a static bulk endpoint (ENSDF 404/403 search-servlet) → probe static mirrors of the same data class (ExoMol .states.bz2, range-request 206) + certify every blocked path with the HTTP-probe log; never 'no dataset' without probe evidence.
+> (3) [HARD] **QUESTION-AUTONOMY-1 added** — user directive 2026-08-28: research-direction and project-disposition decisions within the agent's audit authority are resolved AUTONOMOUSLY from corpus/registry/null-ledger/red-team evidence; deepchat_question only when no evidence path exists. Canonical: UMP.014 disposition.
+> Cross-reference: system-prompt v3.87, kaizen v2.107, cloudflare v3.63, session this.
 
 > **v2.141 UPDATE (2026-08-26, CMD SKILLS UPDATE: RES.024 publish marathon gates — DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; mirrors system-prompt v3.78 + kaizen v2.101 + cloudflare v3.59 unchanged):**
 > Red-team: direct parent-agent audit (RES.024 post-positional-numeracy v1.0.1 publish + distribute, 2026-08-26). HARD: 3. Changes:

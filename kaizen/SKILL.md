@@ -1,3 +1,12 @@
+> **v2.107 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: mirror rows for QUESTION-AUTONOMY-1 + SPECTRAL-ESTIMATOR-CONSTRUCTION-1 + DATASET-SOURCE-FALLBACK-1 + WAIT-CURSOR-ADVANCE-1 + TITLE-LINE-PARITY-1 repair; mirrors system-prompt v3.87 + research v2.143 + cloudflare v3.63 unchanged):**
+ - [HARD] QUESTION-AUTONOMY-1 (system-prompt v3.87 + research v2.143): user directive 2026-08-28 — never ask questions the agent can audit/resolve autonomously; research-direction/disposition decisions resolve from corpus+registry+null-ledger+red-team evidence; deepchat_question only when no evidence path exists; canonical UMP.014 disposition.
+ - [HARD] SPECTRAL-ESTIMATOR-CONSTRUCTION-1 (system-prompt v3.87 + research v2.143): six estimator-construction checks (pair correlation k-th-neighbor per-order normalization; expi(log x) Li unfolding; full Dyson number-variance formula; no rank unfolding; Montgomery-Odlyzko = zeros not primes; single-realization form factor report-only); canonical UMP.014 P3-exec 8/8 PASS commit 39381f6.
+ - [HARD] DATASET-SOURCE-FALLBACK-1 (system-prompt v3.87 + research v2.143): static-mirror fallback (ExoMol .states) + HTTP-probe evidence when the canonical dataset has no static bulk endpoint.
+ - [SOFT] WAIT-CURSOR-ADVANCE-1 (system-prompt v3.87): deepchat_subagents wait without after=<cursor> replays old events; identical empty waits get flagged.
+ - [HARD] TITLE-LINE-PARITY-1 repair: canonical H1 title was v3.78 vs banner/footer v3.86 — title → v3.87 this cycle.
+ - System prompt dual-write + 7-store parity + 10/10 CMD templates + prompt-store-verify exit 0 + model keys flash.
+ - Mirrors: system-prompt v3.87, research v2.143, cloudflare v3.63.
+
 > **v2.106 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: DATASET-ACQUISITION-1 mirror row + repo-copy sync + pointer repair; mirrors system-prompt v3.86 + research v2.142 + cloudflare v3.63 unchanged):**
  - [HARD] DATASET-ACQUISITION-1 (system-prompt v3.86 + research v2.142): acquire original research datasets (Zenodo record files / GitHub isSupplementTo repos) into artifacts/external-datasets/ with provenance (URL/DOI/license/date/sha256); run through analysis; recompute derived quantities (BP-10); no dataset = documented absence; never fabricate.
  - [HARD] Repo-copy drift repaired: repo kaizen was 2 cycles behind live (v2.103 vs v2.105); this cycle syncs repo == live v2.106. v2.104 banner pointer corrected (system-prompt v3.81 → v3.84).
