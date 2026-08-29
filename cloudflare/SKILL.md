@@ -1,3 +1,8 @@
+> **v3.67 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: model-key DB root-source + D1 Bearer fallback; mirrors system-prompt v3.91 + kaizen v2.111 + qnfo-core v1.36):**
+> 1. [HARD] **MODEL-KEY-DB-ROOT-SOURCE-1** — the running DeepChat app persists preferredModel/defaultModel in Roaming app_db agent.db app_settings (value_json = "<provider>/<model>") and re-writes app-settings.json from them on save; a JSON-only reset is reverted by the next app save. Fix MUST align the DB rows THEN the JSON THEN read-back both stores. Canonical: 2026-08-28 closeout (E4 reverted QNFO-ROUTER/ensemble three times).
+> 2. [HARD] **D1-QUERY-BEARER-FALLBACK-1** — d1_database_query tool unavailable → query D1 via CF API: POST /accounts/{acct}/d1/database/{db_id}/query, Authorization: Bearer $(cat tokens/cloudflare) (cfat_ API token; NOT X-Auth-Key → Authentication error). Canonical: 2026-08-28 handoffs/wbs_state inserts.
+> Cross-reference: system-prompt v3.91, kaizen v2.111, qnfo-core v1.36, session this.
+
 > **v3.66 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: weekly-review triage gates — GRAPH-SYNC-BULK-ONLY-1 codified at F-6 sync contract; mirrors system-prompt v3.90 + kaizen v2.110 + qnfo-core v1.36):**
 > 1. [HARD] **GRAPH-SYNC-BULK-ONLY-1** — POST https://graph-api.qnfo.org/sync (and qnfo-gateway.q08.workers.dev/sync) accepts EXACTLY `{"action":"bulk","nodes":[{"id","name","label","properties"}],"edges":[]}` (F-6 contract, 2026-07-25). Any other body shape returns `{"error":"Only bulk sync supported"}`. Read this section BEFORE probing; batch ≤50 nodes/call; nodes upsert via ON CONFLICT(id). Canonical: 2026-08-28 weekly review (five wrong-shape probes).
 > 2. [HARD] **REGISTRY-LAG-PARITY-1** — program_registry status can lag living-paper (RES.026 active vs published); verify BOTH stores before claiming published. Canonical: 2026-08-28 RES.026 → published.
@@ -12,10 +17,10 @@
 
 ---
 name: cloudflare
-version: "3.66"
+version: "3.67"
 ---
 
-# CLOUDFLARE — v3.66
+# CLOUDFLARE — v3.67
 
 > **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
 > 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.
@@ -2233,7 +2238,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.66** (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
+Current: **v3.67** (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
 
 ---
 

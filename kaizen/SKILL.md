@@ -1,3 +1,8 @@
+> **v2.111 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged):**
+>  - [HARD] MODEL-KEY-DB-ROOT-SOURCE-1 (system-prompt v3.91 + cloudflare v3.67): the running app persists preferredModel/defaultModel in Roaming app_db agent.db app_settings (value_json = "<provider>/<model>") and RE-WRITES app-settings.json from them on save — a JSON-only reset is reverted by the next app save. Fix MUST align the DB rows THEN the JSON THEN read-back both. Canonical: 2026-08-28 closeout (E4 reverted QNFO-ROUTER/ensemble three times despite JSON fix).
+>  - [HARD] D1-QUERY-BEARER-FALLBACK-1 (system-prompt v3.91 + cloudflare v3.67): when d1_database_query tool is unavailable, query D1 via CF API POST /accounts/{acct}/d1/database/{db_id}/query with Authorization: Bearer $(cat tokens/cloudflare) (cfat_ API token; NOT X-Auth-Key). Canonical: 2026-08-28 handoffs/wbs_state inserts.
+> Cross-reference: system-prompt v3.91, cloudflare v3.67, qnfo-core v1.36, research v2.143 (unchanged), session this.
+
 > **v2.110 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: weekly-review triage gates mirror rows; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged):**
 >  - [HARD] GRAPH-SYNC-BULK-ONLY-1 (system-prompt v3.90 + cloudflare v3.66): graph-api /sync accepts EXACTLY {"action":"bulk","nodes":[...],"edges":[]}; any other body shape returns the unhelpful {"error":"Only bulk sync supported"}. Read the documented contract (cloudflare skill F-6, 2026-07-25) BEFORE probing. Canonical: 2026-08-28 weekly review (five wrong-shape probes).
 >  - [HARD] CONSOLIDATION-TARGET-AUDIT-1 (system-prompt v3.90): a node with consolidated_into:<target> requires the TARGET dispositioned too; a consolidated node pointing at an archived target is a stale duplicate remnant. Canonical: 2026-08-28 red team — "Radix-Ultrametric-BruhatTits Synthesis" DRAFT missed by the 08-16 sweep (radix-uw-bt archived, consolidated node not), ARCHIVED + read-back.
@@ -111,7 +116,7 @@ version: "2.108"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.110
+# KAIZEN — v2.111
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15667,5 +15672,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.110** (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
+Current: **v2.111** (model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
 
