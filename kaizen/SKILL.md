@@ -1,3 +1,9 @@
+---
+name: kaizen
+version: "2.113"
+description: The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor.
+---
+
 > **v2.113 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: DPRF-cycle infra gates mirror rows — D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 + FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; mirrors system-prompt v3.93 + research v2.145 + cloudflare v3.68 + qnfo-core v1.38 + execution-mandate v2.12):**
 > Red-team: direct parent-agent skills audit (session this — QNFO.RES.032 DPRF P0/P0.1 + red-team gate cycle). HARD: 4. Changes:
 > (1) [HARD] D1-WRITE-ASCII-1 — D1 TEXT via curl JSON MUST be ASCII-only (\uXXXX-escaped); non-ASCII bytes (em-dash, §) store as raw CP1252 and corrupt the field (U+FFFD on render); "D:\path" parses as \r — escape as D:\\. Fix: rewrite field ASCII-only + re-query verify. Canonical: 2026-08-29 RES.032 registry description.

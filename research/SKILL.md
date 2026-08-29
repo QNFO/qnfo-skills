@@ -1,7 +1,9 @@
 ---
 name: research
 version: "2.145"
+description: QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill.
 ---
+
 
 > **v2.145 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: red-team method extensions — FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; mirrors system-prompt v3.93 + kaizen v2.113 + cloudflare v3.68 unchanged):**
 > Red-team: direct parent-agent skills audit (session this — DPRF QNFO.RES.032 red-team gate). HARD: 2. Changes:

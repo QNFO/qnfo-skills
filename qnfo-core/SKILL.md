@@ -1,3 +1,9 @@
+---
+name: qnfo-core
+version: "1.38"
+description: QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge.
+---
+
 > **v1.38 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — infra gates D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 (canonical DPRF QNFO.RES.032 P0.1); mirrors system-prompt v3.93 + kaizen v2.113 + cloudflare v3.68):**
 
 > **v1.37 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: UIA v0.4 re-point (UIA-REPOINT-V04); mirrors system-prompt v3.92 + kaizen v2.112 + research v2.144 unchanged):**

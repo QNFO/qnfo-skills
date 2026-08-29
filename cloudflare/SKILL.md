@@ -1,3 +1,9 @@
+---
+name: cloudflare
+version: "3.68"
+description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment, wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control, Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure audits.
+---
+
 > **v3.68 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh only — content unchanged (Cost Control § verified present: spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1 aiInferenceAdaptiveGroups, budget <$100/$200; R2 anti-patterns QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 preserved); mirrors system-prompt v3.93 + kaizen v2.113):**
 
 > **v3.67 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: model-key DB root-source + D1 Bearer fallback; mirrors system-prompt v3.91 + kaizen v2.111 + qnfo-core v1.36):**

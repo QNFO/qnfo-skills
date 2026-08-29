@@ -1,3 +1,9 @@
+---
+name: deepchat-settings
+version: "1.26"
+description: DeepChat settings architecture and prompt-store operations: app-settings.json + agent.db store layout, customPrompts/systemPrompts sync, PROMPT-STORE-SCHEMA-GATE, custom-prompt load-failure runbook. Use when changing DeepChat configuration or investigating settings/prompt-store failures.
+---
+
 > **v1.26 UPDATE (2026-08-20, kaizen — PROMPT-STORE-SCHEMA-GATE-1: 'CUSTOM PROMPTS NOT LOADING' root-caused + permanent safeguards):**
 > Red-team: direct parent-agent audit (session this — user report "CUSTOM PROMPTS NOT LOADING").
 > HARD: 2. SOFT: 1. DESIGN: 1. Changes:

@@ -1,3 +1,8 @@
+---
+name: skill-creator
+description: Guide to creating DeepChat skills: frontmatter requirements (name/description/version), SKILL.md structure, folder-discovery registration, references/templates layout. Use when creating, structuring, or validating skills.
+---
+
 > **UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
 > Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
 > Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS).
