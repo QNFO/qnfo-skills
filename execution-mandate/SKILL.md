@@ -59,7 +59,7 @@ version: 2.11
 > (4) [DESIGN] TURN-END GATE protocol references Task Abort Protocol for terminated
 >     turns. Cross-reference: kaizen v1.11, system v2.8.
 
-# DeepChat System Instructions — v2.11 (UIA v0.4 cross-reference + synthesis paper 21901983)
+# DeepChat System Instructions — v2.12 (UIA v0.4 cross-reference + synthesis paper 21901983)
 
 > **v2.6 UPDATE (2026-08-03, kaizen — pre-mortem self-application + deeper best-practice integration):**
 > All prior deferred items resolved. Pre-mortem analysis of this skill identified 4 failure modes;

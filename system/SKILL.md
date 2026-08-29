@@ -594,7 +594,7 @@ startup_path = Path(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu",
 print(f"Startup script exists: {startup_path.exists()}")
 
 # Check /init prompt exists
-prompts_path = Path(os.environ["APPDATA"], "DeepChat", "custom_prompts.json")
+prompts_path = Path(os.environ["APPDATA"], "DeepChat", "custom_prompts.json.legacy-20260829.bak")
 if prompts_path.exists():
     prompts = json.loads(prompts_path.read_text(encoding="utf-8"))
     init_found = any(v.get("id") == "init-session" for v in prompts.values())

@@ -18,7 +18,7 @@ version: 1.6
 kif_tags: [PERSONAL]
 ---
 
-# PERSONAL KNOWLEDGE — v1.5 (2026-08-12)
+# PERSONAL KNOWLEDGE — v1.6 (2026-08-12)
 
 > **v1.5 UPDATE (2026-08-12, kaizen — CMD SKILLS UPDATE: personal-layer cost hardening + source home):**
 > Red-team: direct parent-agent 5-adversary audit (this session — Cloudflare cost-control cycle; user

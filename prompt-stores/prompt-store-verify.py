@@ -179,9 +179,88 @@ def main():
                 print(f"[DRIFT] {name} differs from repo canonical")
                 rc = max(rc, 1)
 
+    rc = max(rc, 1 if check_system_prompt_parity() else 0)
+
     if rc == 0:
-        print("PROMPT-STORE-VERIFY: PASS (all stores schema-valid + parity)")
+        print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity)")
     return rc
+
+
+
+
+# === SYSTEM-PROMPT PARITY (AGENT-PROMPT-PARITY-1, 2026-08-29 remediation) ===
+# Checks the system-prompt stores, INCLUDING the agents table row
+# (agents.deepchat.config_json.systemPrompt), which was frozen at v3.74
+# (2026-08-25) while the canonical stores moved (v3.93).
+SYSPROMPT_STORES = {
+    "canonical_md":   r"C:\Users\LENOVO\.deepchat\system-prompt-v2.7.md",
+    "roaming_json":   r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json",
+    "dotdeep_json":   r"C:\Users\LENOVO\.deepchat\app-settings.json",
+    "app_db_list":    r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
+    "stub_db_raw":    r"C:\Users\LENOVO\.deepchat\agent.db",
+    "repo_copy_md":    r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\system-prompt-v2.7.md",
+    "agents_row":     r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
+}
+
+def read_system_prompt(name, path):
+    try:
+        if name in ("canonical_md", "repo_copy_md"):
+            return open(path, encoding="utf-8").read(), None
+        if name in ("roaming_json", "dotdeep_json"):
+            return json.load(open(path, encoding="utf-8")).get("default_system_prompt"), None
+        if name == "app_db_list":
+            c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
+            v = c.execute("SELECT value_json FROM app_settings WHERE key='systemPrompts'").fetchone()
+            c.close()
+            if not v:
+                return None, "no systemPrompts row"
+            j = json.loads(v[0])
+            if isinstance(j, list) and j:
+                return j[0].get("content"), None
+            if isinstance(j, str):
+                return j, None
+            return None, "unexpected shape %s" % type(j).__name__
+        if name == "stub_db_raw":
+            c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
+            cols = [r[1] for r in c.execute("PRAGMA table_info(app_settings)").fetchall()]
+            vc = "value_json" if "value_json" in cols else "value"
+            v = c.execute("SELECT %s FROM app_settings WHERE key='systemPrompts'" % vc).fetchone()
+            c.close()
+            if not v:
+                return None, "no systemPrompts row"
+            j = v[0]
+            if isinstance(j, str) and j.startswith('"'):
+                j = json.loads(j)
+            return j, None
+        if name == "agents_row":
+            c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
+            v = c.execute("SELECT config_json FROM agents WHERE id='deepchat'").fetchone()
+            c.close()
+            if not v:
+                return None, "no deepchat agent row"
+            return json.loads(v[0]).get("systemPrompt"), None
+        return None, "unknown store"
+    except Exception as e:
+        return None, str(e)
+
+def check_system_prompt_parity():
+    vals, errs = {}, 0
+    for name, path in SYSPROMPT_STORES.items():
+        v, err = read_system_prompt(name, path)
+        if err:
+            print("[SYSPROMPT-STORE-ERROR] %s: %s" % (name, err))
+            errs += 1
+            continue
+        vals[name] = (v or "").strip()
+    ref = vals.get("canonical_md")
+    if ref:
+        for name, v in vals.items():
+            if v != ref:
+                print("[SYSPROMPT-DRIFT] %s != canonical_md (len %d vs %d)" % (name, len(v), len(ref)))
+                errs += 1
+    if errs == 0:
+        print("SYSTEM-PROMPT-PARITY: PASS (%d stores identical)" % len(vals))
+    return errs
 
 
 if __name__ == "__main__":

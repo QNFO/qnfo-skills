@@ -22,7 +22,7 @@ name: cloudflare
 version: "3.67"
 ---
 
-# CLOUDFLARE — v3.67
+# CLOUDFLARE — v3.68
 
 > **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
 > 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.
