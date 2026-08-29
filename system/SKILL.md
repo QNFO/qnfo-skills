@@ -593,11 +593,15 @@ from pathlib import Path
 startup_path = Path(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "deepchat-skill-hygiene.vbs")
 print(f"Startup script exists: {startup_path.exists()}")
 
-# Check /init prompt exists
-prompts_path = Path(os.environ["APPDATA"], "DeepChat", "custom_prompts.json.legacy-20260829.bak")
-if prompts_path.exists():
-    prompts = json.loads(prompts_path.read_text(encoding="utf-8"))
-    init_found = any(v.get("id") == "init-session" for v in prompts.values())
+# Check /init prompt exists (canonical store: SQLite app_db app_settings.customPrompts;
+# legacy custom_prompts.json retired 2026-08-29 -> .legacy-20260829.bak)
+import sqlite3
+_con = sqlite3.connect(Path(os.environ["APPDATA"], "DeepChat", "app_db", "agent.db"))
+_raw = _con.execute("SELECT value_json FROM app_settings WHERE key='customPrompts'").fetchone()
+_con.close()
+if _raw:
+    _cps = json.loads(_raw[0]) if isinstance(_raw[0], str) else _raw[0]
+    init_found = any(isinstance(v, dict) and v.get("id") == "init-session" for v in _cps)
     print(f"/init prompt exists: {init_found}")
 
 # Check startup log

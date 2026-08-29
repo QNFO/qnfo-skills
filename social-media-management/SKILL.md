@@ -3,6 +3,26 @@ name: social-media-management
 version: "1.10.0"
 description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation path for LinkedIn profile updates.
 ---
+> **v1.10.0 UPDATE (2026-08-28, kaizen — qnfo-social cloud posting pipeline):**
+> qnfo-social Worker replaces local bluesky_post.py for Bluesky posting. Pipeline: /compose (deepseek-v4-flash via Workers AI drafts a 5-post thread from title+abstract -> status='draft'), /approve (draft->queued), cron "30 14 * * *" posts the oldest queued thread, /broadcast (409 guard), /queue (sanitized). D1 social_threads (status queued/posting/posted/failed/draft + retry_count + error). Secrets BSKY_HANDLE/BSKY_APP_PASS/SOCIAL_TOKEN. Draft-only compose preserves accuracy. DEEPSEEK-WORKERS-AI-CHAT-MODEL-1: deepseek-v4-flash is a CHAT model - use messages format + read choices[0].message.content, never prompt format / .response. workers.dev: 1010 (Bot Fight Mode, browser UA) + 1042 (subdomain propagation).
+
+> **v1.9.0 UPDATE (2026-08-26, kaizen — BUFFER-TOKEN-ENV-1: Buffer token env-sourced + queue-clear resume):**
+> Red-team: direct parent-agent (RES.024 P7 Buffer social 2026-08-26). HARD: 1. Changes:
+> (1) [HARD] **BUFFER-TOKEN-ENV-1 added** — Buffer API token discovery: **env `BUFFER_TOKEN` is now the primary source** (TOKEN-DISCOVERY-1 order: env → tokens dir → keys.json → memory). The Buffer MCP was REMOVED 2026-08-17 (per v1.8.0); the canonical path is the **Buffer GraphQL API** `api.buffer.com/graphql` with `Authorization: Bearer $BUFFER_TOKEN` — discover org via `account { organizations { id name } }`, channels via top-level `channels(input:{organizationId})` (check `isDisconnected`), post via `createPost` with UNION fragments and REQUIRED `mode: addToQueue, needsApproval: false, schedulingType: "automatic"`. When the user clears the queue ("THERE ARE NO POSTS IN BUFFER QUEUE"), the earlier queue-full/expired-token block is lifted — re-check env for a fresh token and resume P7 posting. Canonical: RES.024 2026-08-26 — 3 scheduled posts (LinkedIn 6a8fc1aa, X 6a8fc1ab, Mastodon 6a8fc1ad), 266-char D7 copy, concept DOI 10.5281/zenodo.22114388.
+> Cross-reference: research v2.141 (Buffer GraphQL dictionary), kaizen v2.101, system-prompt v3.78, session this.
+
+> **v1.8.0 UPDATE (2026-08-18, kaizen — PERSONAL ALIGNMENT: Become-a-Node strategy):**
+> Red-team: direct parent-agent (user directive "DEFINITELY UPDATE MY PERSONAL SKILL...AND OTHERS
+> TO ALIGN WITH MY VISION, VALUES, AND MOTIVATIONS").
+> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
+> (1) [HARD] **Become-a-Node Strategy section added** — the QNFO tribe is scattered across
+>     boundaries; scattered tribes find members through nodes, not conferences: monthly presence
+>     on one LoF-adjacent channel (math4wisdom / stream.syscoi.com), D1-D7 broadcast per event,
+>     per-bet portfolio broadcasts with external-only traction, authoritative venue facts via
+>     memory f94805ee (supersedes stale venue claims). FM version quoted per ecosystem convention.
+> Cross-reference: qnfo-core v1.31 §0.8, portfolio memory 1e82547d, venue corrections f94805ee,
+> session gtblUizh8IJisfcn-08HI.
+
 > **v1.7.0 UPDATE (2026-08-14, kaizen — Zenodo Dissemination Playbook D7 broadcast):**
 > Red-team: direct parent-agent audit (session waFvkOWgtaYZqNMLWOqdW continuation; reviewer stalled -> fallback).
 > HARD: 0. SOFT: 0. DESIGN: 0 (post-fix).
@@ -19,6 +39,16 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > Cross-reference: knowledge v2.11 (Zenodo Dissemination Playbook D1-D7),
 > playbook note 2026-08-14, BSKY-300-GRAPHEME-1, TEST-SEND-EXTERNAL-1.
 
+
+> **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
+> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
+> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
+> (1) [HARD] **BSKY-300-GRAPHEME-1 anti-pattern added** — 300-grapheme hard limit; post 1
+>     (322 chars) rejected 3x before trim.
+> (2) [DESIGN] **bluesky_post.py added to scripts/** — AT Protocol posting client with
+>     credential auto-discovery (env → keys.json → .env → .bsky_credentials) and threaded
+>     posting. Canonical thread: references/bluesky-thread.txt (5 posts, published live).
+> Cross-reference: kaizen v1.51, research v2.79, session 3i_KVLownViukLTZB_BJ1.
 
 > **v1.5.0 UPDATE (2026-08-05, kaizen — UNIFIED CROSS-PLATFORM SOCIAL HUB + linkedin-mcp DELETED):**
 > Red-team: direct parent-agent audit of session yHXrIYDvUfwQ6twlIaWG5.
@@ -93,38 +123,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > 55 QNFO-aligned accounts across 4 platforms (25 Bluesky / 3 Mastodon / 20 X / 7 LinkedIn).
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
-
 # SOCIAL MEDIA MANAGEMENT — v1.10.0
-
-> **v1.10.0 UPDATE (2026-08-28, kaizen — qnfo-social cloud posting pipeline):**
-> qnfo-social Worker replaces local bluesky_post.py for Bluesky posting. Pipeline: /compose (deepseek-v4-flash via Workers AI drafts a 5-post thread from title+abstract -> status='draft'), /approve (draft->queued), cron "30 14 * * *" posts the oldest queued thread, /broadcast (409 guard), /queue (sanitized). D1 social_threads (status queued/posting/posted/failed/draft + retry_count + error). Secrets BSKY_HANDLE/BSKY_APP_PASS/SOCIAL_TOKEN. Draft-only compose preserves accuracy. DEEPSEEK-WORKERS-AI-CHAT-MODEL-1: deepseek-v4-flash is a CHAT model - use messages format + read choices[0].message.content, never prompt format / .response. workers.dev: 1010 (Bot Fight Mode, browser UA) + 1042 (subdomain propagation).
-# SOCIAL MEDIA MANAGEMENT — v1.9.0
-
-> **v1.9.0 UPDATE (2026-08-26, kaizen — BUFFER-TOKEN-ENV-1: Buffer token env-sourced + queue-clear resume):**
-> Red-team: direct parent-agent (RES.024 P7 Buffer social 2026-08-26). HARD: 1. Changes:
-> (1) [HARD] **BUFFER-TOKEN-ENV-1 added** — Buffer API token discovery: **env `BUFFER_TOKEN` is now the primary source** (TOKEN-DISCOVERY-1 order: env → tokens dir → keys.json → memory). The Buffer MCP was REMOVED 2026-08-17 (per v1.8.0); the canonical path is the **Buffer GraphQL API** `api.buffer.com/graphql` with `Authorization: Bearer $BUFFER_TOKEN` — discover org via `account { organizations { id name } }`, channels via top-level `channels(input:{organizationId})` (check `isDisconnected`), post via `createPost` with UNION fragments and REQUIRED `mode: addToQueue, needsApproval: false, schedulingType: "automatic"`. When the user clears the queue ("THERE ARE NO POSTS IN BUFFER QUEUE"), the earlier queue-full/expired-token block is lifted — re-check env for a fresh token and resume P7 posting. Canonical: RES.024 2026-08-26 — 3 scheduled posts (LinkedIn 6a8fc1aa, X 6a8fc1ab, Mastodon 6a8fc1ad), 266-char D7 copy, concept DOI 10.5281/zenodo.22114388.
-> Cross-reference: research v2.141 (Buffer GraphQL dictionary), kaizen v2.101, system-prompt v3.78, session this.
-
-> **v1.8.0 UPDATE (2026-08-18, kaizen — PERSONAL ALIGNMENT: Become-a-Node strategy):**
-> Red-team: direct parent-agent (user directive "DEFINITELY UPDATE MY PERSONAL SKILL...AND OTHERS
-> TO ALIGN WITH MY VISION, VALUES, AND MOTIVATIONS").
-> HARD: 1. SOFT: 0. DESIGN: 0. Changes:
-> (1) [HARD] **Become-a-Node Strategy section added** — the QNFO tribe is scattered across
->     boundaries; scattered tribes find members through nodes, not conferences: monthly presence
->     on one LoF-adjacent channel (math4wisdom / stream.syscoi.com), D1-D7 broadcast per event,
->     per-bet portfolio broadcasts with external-only traction, authoritative venue facts via
->     memory f94805ee (supersedes stale venue claims). FM version quoted per ecosystem convention.
-> Cross-reference: qnfo-core v1.31 §0.8, portfolio memory 1e82547d, venue corrections f94805ee,
-> session gtblUizh8IJisfcn-08HI.
-> **v1.6.0 UPDATE (2026-08-05, kaizen — Bluesky posting script + 300-grapheme limit):**
-> Red-team: direct parent-agent audit of session 3i_KVLownViukLTZB_BJ1 (discoverability sprint).
-> HARD: 1. SOFT: 0. DESIGN: 1. Changes:
-> (1) [HARD] **BSKY-300-GRAPHEME-1 anti-pattern added** — 300-grapheme hard limit; post 1
->     (322 chars) rejected 3x before trim.
-> (2) [DESIGN] **bluesky_post.py added to scripts/** — AT Protocol posting client with
->     credential auto-discovery (env → keys.json → .env → .bsky_credentials) and threaded
->     posting. Canonical thread: references/bluesky-thread.txt (5 posts, published live).
-> Cross-reference: kaizen v1.51, research v2.79, session 3i_KVLownViukLTZB_BJ1.
 
 UNIFIED cross-platform social media hub: follow management (Bluesky/Mastodon),
 curated QNFO account registry (97 accounts), Buffer MCP cross-platform posting, and

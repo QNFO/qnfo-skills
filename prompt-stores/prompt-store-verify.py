@@ -180,6 +180,7 @@ def main():
                 rc = max(rc, 1)
 
     rc = max(rc, 1 if check_system_prompt_parity() else 0)
+    rc = max(rc, 1 if check_skill_anchor_parity() else 0)
 
     if rc == 0:
         print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity)")
@@ -260,6 +261,48 @@ def check_system_prompt_parity():
                 errs += 1
     if errs == 0:
         print("SYSTEM-PROMPT-PARITY: PASS (%d stores identical)" % len(vals))
+    return errs
+
+
+
+
+# === SKILL ANCHOR PARITY (TITLE-LINE-PARITY-1 for skills, 2026-08-29 skills audit) ===
+SKILLS_DIR = r"C:\Users\LENOVO\.deepchat\skills"
+
+def _ver_tuple(v):
+    try:
+        return tuple(int(x) for x in v.split('.'))
+    except Exception:
+        return (0,)
+
+def check_skill_anchor_parity():
+    """H1 title version == newest banner version == last Current footer, per skill."""
+    import re as _re, os as _os
+    errs = 0
+    n = 0
+    for name in sorted(_os.listdir(SKILLS_DIR)):
+        p = _os.path.join(SKILLS_DIR, name, "SKILL.md")
+        if not _os.path.isfile(p):
+            continue
+        t = open(p, encoding="utf-8", errors="ignore").read()
+        hv = None
+        for _l in t.splitlines():
+            if _l.startswith('# '):
+                _m1 = _re.search(r'\bv?([\d.]+)\b', _l)
+                hv = _m1.group(1) if _m1 else None
+                break
+        banners = [_re.sub(r'^v', '', v) for v in _re.findall(r'> \*\*v?([\d.]+) UPDATE', t)]
+        bv = max(banners, key=_ver_tuple) if banners else None
+        cur = _re.findall(r'Current:\s*\*?\*?v?([\d.]+)', t)
+        cv = cur[-1] if cur else None
+        if not (hv and bv and cv):
+            continue
+        n += 1
+        if not (hv == bv == cv):
+            print("[SKILL-ANCHOR-DRIFT] %s: title v%s / newest-banner v%s / current v%s" % (name, hv, bv, cv))
+            errs += 1
+    if errs == 0:
+        print("SKILL-ANCHOR-PARITY: PASS (%d versioned skills)" % n)
     return errs
 
 
