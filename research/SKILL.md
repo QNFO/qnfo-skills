@@ -1,7 +1,12 @@
 ---
 name: research
-version: "2.144"
+version: "2.145"
 ---
+
+> **v2.145 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: red-team method extensions — FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; mirrors system-prompt v3.93 + kaizen v2.113 + cloudflare v3.68 unchanged):**
+> Red-team: direct parent-agent skills audit (session this — DPRF QNFO.RES.032 red-team gate). HARD: 2. Changes:
+> (1) [HARD] FRAMEWORK-DOGFOOD-1 — a framework/governance record MUST apply its own gates to its own locked claims before closeout: DPRF F1–F3 lacked the claim-sheet fields R1 mandates (self-R1 violation) plus two internal citation contradictions (ladder-mapping misstatement; nonexistent 'RES.030 MAP-TERRITORY gate'; 'RES.031 leakage table' not a RES.031 artifact). Claim-sheet fields (level=meta, ontic=methodological, map_territory=map) mandatory at claim-lock. Canonical: 2026-08-29 DPRF red-team (3 slots CONDITIONAL, 4 HIGH, remediated P0.1 tag v0.1.1-phase0-res032).
+> (2) [SOFT] REDTEAM-CHILD-CROSS-CHECK-1 — independent slots converging on the same defect is strong signal; parent re-verifies every HIGH/CRITICAL against primary evidence before aggregation; cross-slot duplicates get consolidated severity.
 
 > **v2.144 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: UIA v0.4 re-point (UIA-REPOINT-V04); mirrors system-prompt v3.92 + kaizen v2.112 + cloudflare v3.67 unchanged):**
 > Red-team: direct parent-agent skills audit (session this — UIA v0.4 publication cycle). HARD: 1. Changes:
@@ -9693,7 +9698,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.144** (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
+Current: **v2.145** (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
 
 
 ## DATASET-ACQUISITION-1 (HARD GATE — 2026-08-28, user directive)
