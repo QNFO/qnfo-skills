@@ -1,3 +1,7 @@
+> **v2.112 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: UIA v0.4 re-point mirror rows + §H update (UIA-REPOINT-V04); mirrors system-prompt v3.92 + research v2.144 + cloudflare v3.67 unchanged):**
+>  - [HARD] UIA-REPOINT-V04 (system-prompt v3.92 + research v2.144): UIA re-pointed to concept DOI 10.5281/zenodo.21878942 (v0.4 = 10.5281/zenodo.22158133, 2026-08-29, CC BY 4.0); superseded chain 21878943 → 21878976 → 21901984 history-only; §H updated (DOI + v0.4 protocol steps 7–11 + termination-condition note; TERMINAL COMMITMENT item reconciled — v0.4 §3.3 step 11 IS the natural terminal condition the skill previously noted as missing). Frontmatter drift fixed (2.108 → 2.112).
+> Cross-reference: system-prompt v3.92, research v2.144, qnfo-core v1.37, execution-mandate v2.11, cloudflare v3.67 (unchanged), session this.
+
 > **v2.111 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged):**
 >  - [HARD] MODEL-KEY-DB-ROOT-SOURCE-1 (system-prompt v3.91 + cloudflare v3.67): the running app persists preferredModel/defaultModel in Roaming app_db agent.db app_settings (value_json = "<provider>/<model>") and RE-WRITES app-settings.json from them on save — a JSON-only reset is reverted by the next app save. Fix MUST align the DB rows THEN the JSON THEN read-back both. Canonical: 2026-08-28 closeout (E4 reverted QNFO-ROUTER/ensemble three times despite JSON fix).
 >  - [HARD] D1-QUERY-BEARER-FALLBACK-1 (system-prompt v3.91 + cloudflare v3.67): when d1_database_query tool is unavailable, query D1 via CF API POST /accounts/{acct}/d1/database/{db_id}/query with Authorization: Bearer $(cat tokens/cloudflare) (cfat_ API token; NOT X-Auth-Key). Canonical: 2026-08-28 handoffs/wbs_state inserts.
@@ -55,7 +59,7 @@
 
 ---
 name: kaizen
-version: "2.108"
+version: "2.112"
 ---
 
 > **v2.104 UPDATE (2026-08-28, kaizen — CMD SKILLS UPDATE: PDF-IN-WORKER-BROWSER-RENDERING-1 + AUTH-FAIL-CLOSED-1 + ERRATA-PIPELINE-1; system-prompt v3.84):**
@@ -116,7 +120,7 @@ version: "2.108"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.111
+# KAIZEN — v2.112
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -11312,9 +11316,9 @@ replaces a sequential task list with a merge-driven execution plan.
 research KIF-29 (Cross-Domain Consilience Gate), CON.002 (Consilience
 Framework), SYNTHESIS-DILIGENCE-1 (kaizen v1.62).
 
-### H. Universal Ignorance Audit (UIA — QNFO-original, DOI 10.5281/zenodo.21901984; 2026-08-10)
+### H. Universal Ignorance Audit (UIA — QNFO-original, concept DOI 10.5281/zenodo.21878942; v0.4 = 10.5281/zenodo.22158133, 2026-08-29; first published 2026-08-10)
 
-The **Universal Ignorance Audit** is a fifteen-question, five-phase method for systematically interrogating the structure of not-knowing in any domain. Published by the QNFO research program (Quni-Gudzinas 2026, DOI 10.5281/zenodo.21901984), the UIA treats ignorance as an active, structured state with architecture — hidden assumptions (scaffolds), representational confusions (map–territory errors), felt anomalies (wobbles), protected zones (taboo and identity-threatening questions), and productive capacities (actionable and relational ignorance).
+The **Universal Ignorance Audit** is a fifteen-question, five-phase method for systematically interrogating the structure of not-knowing in any domain. Published by the QNFO research program (Quni-Gudzinas 2026, concept DOI 10.5281/zenodo.21878942; v0.4 = 10.5281/zenodo.22158133), the UIA treats ignorance as an active, structured state with architecture — hidden assumptions (scaffolds), representational confusions (map–territory errors), felt anomalies (wobbles), protected zones (taboo and identity-threatening questions), and productive capacities (actionable and relational ignorance).
 
 The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5-adversary framework). Where the kaizen audit tests "is this skill correct?", the UIA tests "what is this skill structurally blind to?" Together they form a dual verification pipeline: adversarial correctness + structural ignorance detection.
 
@@ -11346,7 +11350,7 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 
 **UIA self-audit repairs (2026-08-11, from `_uia-self-audit-2026-08-11.md`):** the UIA applied to itself finds the same wobble it detects everywhere — it mistakes its own map for the territory. Four repairs are MANDATORY additions to the protocol above:
 
-4. **TERMINAL COMMITMENT after Q15.** After answering Q15, the auditor MUST write ONE sentence beginning "I will now…" — a commitment to action. If no commitment emerges, the pass is INCOMPLETE (the UIA has no natural terminal condition; without this, audit becomes procrastination — canonical case: 36 UIA analyses on 2026-08-11 with zero repairs).
+4. **TERMINAL COMMITMENT after Q15.** After answering Q15, the auditor MUST write ONE sentence beginning "I will now…" — a commitment to action. If no commitment emerges, the pass is INCOMPLETE (v0.3 had no natural terminal condition; v0.4 (2026-08-29) adds one — administration-protocol step 11 termination condition plus step 10 anti-rumination check. The TERMINAL COMMITMENT sentence remains the kaizen-specific enforcement of that published condition, without which audit becomes procrastination — canonical case: 36 UIA analyses on 2026-08-11 with zero repairs).
 5. **REPAIR-REGISTER INTEGRATION.** Every UIA pass MUST produce at least one row in `UIA-REPAIR-REGISTER.md` (ID, Framework, Question #, Finding, Severity, Fix class, Owner, Status) plus a next-action date — enforcement of UIA-REPAIR-GAP-1. Diagnosis without prescription is self-indulgence.
 6. **QUARTER-AUDIT CAP.** One full UIA pass per framework per quarter, with repairs between passes. 36 passes in one day is over-auditing — the instrument is for preparing to encounter the unknown, not for indefinitely deferring the encounter.
 7. **THE MAP IS A MAP.** Explicitly acknowledge that the UIA is an instrument for *preparing* to encounter the unknown, not the encounter itself. Running the audit is NOT equivalent to confronting the ignorance it maps — the structured map of not-knowing is itself a map–territory risk.
@@ -11357,7 +11361,7 @@ The UIA is a NATURAL COMPLEMENT to the kaizen skill's Phase 2 Red-Team Review (5
 
 **Meta-audit of the UIA itself (from the paper, §4):** The UIA has an analytic, individualistic, extractive slant. It underweights the receptive, surrendering, not-doing dimension of unknowing. It benefits the articulate, time-rich auditor and may silence those whose survival depends on certainty. These limitations are part of the method's specification — they bound its claims.
 
-**Cross-reference:** UIA DOI 10.5281/zenodo.21901984, synthesis paper DOI 10.5281/zenodo.21901983, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question), research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1).
+**Cross-reference:** UIA concept DOI 10.5281/zenodo.21878942 (v0.4 10.5281/zenodo.22158133), synthesis paper DOI 10.5281/zenodo.21901983, qnfo-core §0.0 (Falsifiability Requirement maps to Q5), research KIF-29 (Cross-Domain Consilience maps to Q6 invariant extraction), research Phase 4 Stage 3 (5-adversary maps to Q4/Q7), execution-mandate v2.9 §Question-Driven Execution Protocols (Q1-4, Q7, Q15 mappings), SYNTHESIS-DILIGENCE-1 (Q15 recursive meta-question), research v2.99 (check-map-territory.py — MAP-TERRITORY GATE, scripted enforcement of the UIA Repair Pipeline STEP 4 SCRIPTING MANDATE / PROSE-GATE-ADVISORY-1).
 
 ## Skill Churn vs Content Iteration (DEFINITIVE, added 2026-08-05)
 
@@ -15672,5 +15676,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.111** (model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
+Current: **v2.112** (UIA-REPOINT-V04 mirror rows + §H v0.4 update (termination condition, frontmatter drift fix); mirrors system-prompt v3.92 + research v2.144; 2026-08-29) (model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
 

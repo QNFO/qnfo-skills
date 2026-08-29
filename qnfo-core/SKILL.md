@@ -1,3 +1,8 @@
+> **v1.37 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: UIA v0.4 re-point (UIA-REPOINT-V04); mirrors system-prompt v3.92 + kaizen v2.112 + research v2.144 unchanged):**
+> Red-team: direct parent-agent skills audit (session this). HARD: 1. Changes:
+> (1) [HARD] **UIA-REPOINT-V04** — UIA reference re-pointed: DOI 10.5281/zenodo.21901984 → concept DOI 10.5281/zenodo.21878942 (v0.4 = 10.5281/zenodo.22158133, 2026-08-29); Q5 falsifiability mapping unchanged (canonical fifteen unchanged).
+> Cross-ref: kaizen v2.112, research v2.144.
+
 > **v1.36 UPDATE (2026-08-28, kaizen — QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65):**
 > Red-team: direct parent-agent audit (session this — Chatbox↔DeepChat parity + qnfo-ai endpoint generic-filler fix). HARD: 4. SOFT: 1. Changes:
 > (1) [HARD] **QNFO-ROUTER-DEFAULT-PROMPT-1** — the qnfo-ai worker's DEFAULT_SYSTEM_PROMPT (injected for a bare request with no client system message) MUST carry anti-generic + QNFO-identity + never-fabricate rules; a bare prompt from ANY client (Chatbox/playground/raw API) must never return generic filler or a hollow "QNFO definition not confirmed" report. The fix lives at the ENDPOINT, not the client.
@@ -9,11 +14,11 @@
 
 ---
 name: qnfo-core
-version: "1.36"
+version: "1.37"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.36
+# QNFO-CORE — v1.37
 > **v1.35 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 status on the ONLY-supported-mechanism tool + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the ONLY supported mechanism `email-composer/scripts/calendar-sync.py` does NOT exist (disk / git log --all / origin/master; verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). The MANDATE remains binding; the TOOL is pending authoring — agents MUST NOT claim calendar events/tasks were created until the tool exists.
@@ -2793,7 +2798,7 @@ must pass the gate before claiming cross-domain correspondences as evidence.
 
 research v2.73 (KIF-60, RETRODICTION-1/OVERFITTING-1/CHERRY-PICK-1/ABSORPTION-1),
 user 2026-08-04 methodological injunction (Obsidian note `_26216121020.md`).
-**Universal Ignorance Audit:** Question 5 (Falsifiability test: "What would a world look like in which this was false?") from the UIA (DOI 10.5281/zenodo.21901984; case study: DOI 10.5281/zenodo.21901983) is a concrete instrument for applying the Falsifiability Requirement to any claim. See kaizen v2.01 §H (Universal Ignorance Audit).,
+**Universal Ignorance Audit:** Question 5 (Falsifiability test: "What would a world look like in which this was false?") from the UIA (concept DOI 10.5281/zenodo.21878942 — v0.4 10.5281/zenodo.22158133; case study: DOI 10.5281/zenodo.21901983) is a concrete instrument for applying the Falsifiability Requirement to any claim. See kaizen v2.01 §H (Universal Ignorance Audit).,
 
 
 
@@ -5988,7 +5993,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.36** (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.37** (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 
 

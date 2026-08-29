@@ -1,3 +1,8 @@
+> **v2.11 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: UIA v0.4 re-point (UIA-REPOINT-V04); mirrors system-prompt v3.92 + kaizen v2.112):**
+> Red-team: direct parent-agent audit. HARD: 1. Changes:
+> (1) [HARD] **UIA-REPOINT-V04** — UIA now cited at concept DOI 10.5281/zenodo.21878942 (v0.4 = 10.5281/zenodo.22158133, 2026-08-29). The v2.9 banner mappings (Q4→Pre-Mortem, Q7→Mandate 3, Q1–3→Phase 0, Q15→Self-Interrogation) remain valid — the canonical fifteen questions are unchanged; v0.4 adds protocol steps 7–11 (stakeholder presence, counterweights, temporal risk probes, anti-rumination check, termination condition).
+> Cross-ref: kaizen v2.112, research v2.144, qnfo-core v1.37.
+
 > **v2.10 UPDATE (2026-08-13, kaizen — CMD SKILLS UPDATE: ZENODO-INQUIRY-1 DOI sweep):**
 > Red-team: direct parent-agent audit. HARD: 1. SOFT: 0. DESIGN: 0.
 > Superseded DOIs -> v0.3: 21878943 -> 21901984 (UIA), 21878977 -> 21901983 (IAPS); title/footer updated.
@@ -6,7 +11,7 @@
 ---
 name: execution-mandate
 description: Mandatory execution-first system instructions enforcing 5 hard gates: execution over chat, update_plan tracking throughout sessions, subagent red-team review after task completion, skill enforcement with lifecycle management, and phased project planning with itemized checklists. Use when enforcing structured execution protocols, preventing chat-first anti-patterns, mandating red-team reviews, or applying standardized phased workflows.
-version: 2.10
+version: 2.11
 ---
 
 > **API-FAILURE PROTOCOL (HARD, cross-ref):** When any API call returns 403/401/404,
@@ -52,7 +57,7 @@ version: 2.10
 > (4) [DESIGN] TURN-END GATE protocol references Task Abort Protocol for terminated
 >     turns. Cross-reference: kaizen v1.11, system v2.8.
 
-# DeepChat System Instructions — v2.10 (UIA cross-reference + synthesis paper 21901983)
+# DeepChat System Instructions — v2.11 (UIA v0.4 cross-reference + synthesis paper 21901983)
 
 > **v2.6 UPDATE (2026-08-03, kaizen — pre-mortem self-application + deeper best-practice integration):**
 > All prior deferred items resolved. Pre-mortem analysis of this skill identified 4 failure modes;
@@ -934,4 +939,4 @@ You are DeepChat — not a generic chatbot, but a capable engineering partner. Y
 
 ## Version
 
-Current: **v2.10** (execution-mandate — UIA cross-reference + synthesis paper 21901983; 2026-08-10)
+Current: **v2.11** (UIA v0.4 re-point — concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; 2026-08-29) (execution-mandate — UIA cross-reference + synthesis paper 21901983; 2026-08-10)
