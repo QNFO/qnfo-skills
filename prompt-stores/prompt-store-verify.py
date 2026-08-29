@@ -245,6 +245,7 @@ def read_system_prompt(name, path):
         return None, str(e)
 
 def check_system_prompt_parity():
+    import os as _os, re as _re
     vals, errs = {}, 0
     for name, path in SYSPROMPT_STORES.items():
         v, err = read_system_prompt(name, path)
@@ -259,6 +260,19 @@ def check_system_prompt_parity():
             if v != ref:
                 print("[SYSPROMPT-DRIFT] %s != canonical_md (len %d vs %d)" % (name, len(v), len(ref)))
                 errs += 1
+    hist = r"C:\Users\LENOVO\.deepchat\system-prompt-history-v2.7.md"
+    if not _os.path.isfile(hist):
+        print("[PROMPT-HISTORY] missing history file: " + hist)
+        errs += 1
+    else:
+        _h = open(hist, encoding="utf-8", errors="ignore").read()
+        if len(_re.findall(r"> \*\*v[\d.]+ UPDATE", _h)) < 5:
+            print("[PROMPT-HISTORY] history file has <5 banner chunks")
+            errs += 1
+    _md = vals.get("canonical_md") or ""
+    if len(_md) > 310000:
+        print("[PROMPT-SIZE] canonical base %d chars > 310000 ceiling" % len(_md))
+        errs += 1
     if errs == 0:
         print("SYSTEM-PROMPT-PARITY: PASS (%d stores identical)" % len(vals))
     return errs
@@ -298,6 +312,15 @@ def check_skill_anchor_parity():
         if not (hv and bv and cv):
             continue
         n += 1
+        if not t.startswith('---'):
+            print("[SKILL-FRONTMATTER] %s: file does not start with '---'" % name)
+            errs += 1
+            continue
+        _fvm = _re.search(r'^---\n(?:.*\n)*?version:\s*"?([\d.]+)"?', t)
+        if _fvm and _fvm.group(1) != bv:
+            print("[SKILL-FRONTMATTER-VERSION] %s: frontmatter v%s != banner v%s" % (name, _fvm.group(1), bv))
+            errs += 1
+            continue
         if not (hv == bv == cv):
             print("[SKILL-ANCHOR-DRIFT] %s: title v%s / newest-banner v%s / current v%s" % (name, hv, bv, cv))
             errs += 1

@@ -384,10 +384,10 @@ version: "2.112"
 > (8) [SOFT] **banner-order cosmetics noted** — all 13 core skills now have frontmatter == first banner.
 > Cross-reference: system-prompt v3.35, email-composer v2.20, research v2.115, cloudflare v3.51, execution-mandate v2.10, deepchat-settings v1.18, session lWvwLSVUTTvLoIH3t7tG7.
 
-> **v2.60 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: 7-STORE PROMPT-PARITY-1 + footer-empty fix + N-2 drift repairs; mirrors system-prompt v3.34):**
+> **v2.60 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: 8-STORE PROMPT-PARITY-1 (incl. agents.deepchat.config_json.systemPrompt -- AGENT-PROMPT-PARITY-1) + footer-empty fix + N-2 drift repairs; mirrors system-prompt v3.34):**
 > Red-team: direct parent-agent red-team skills audit (session this — CMD SKILLS UPDATE cycle; user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
 > HARD: 4. SOFT: 1. DESIGN: 0. Changes:
-> (1) [HARD] **7-STORE PROMPT-PARITY-1 REPAIR** — v3.33 claimed "6-store parity" but `.deepchat/app-settings.json` (legacy mirror) was STALE at v3.32; this cycle dual-writes ALL 7 stores byte-identical: canonical .deepchat/system-prompt-v2.7.md, qnfo-skills repo copy, .deepchat/skills live copy, Roaming app-settings.json, .deepchat/app-settings.json (repaired), app_db agent.db systemPrompts (list content), legacy .deepchat/agent.db (raw string). sha256 2e213d79d8c77259f57e19152e831145ff9c02b155becdc431d6dbc30e2f98e8.
+> (1) [HARD] **8-STORE PROMPT-PARITY-1 (incl. agents.deepchat.config_json.systemPrompt -- AGENT-PROMPT-PARITY-1) REPAIR** — v3.33 claimed "6-store parity" but `.deepchat/app-settings.json` (legacy mirror) was STALE at v3.32; this cycle dual-writes ALL 7 stores byte-identical: canonical .deepchat/system-prompt-v2.7.md, qnfo-skills repo copy, .deepchat/skills live copy, Roaming app-settings.json, .deepchat/app-settings.json (repaired), app_db agent.db systemPrompts (list content), legacy .deepchat/agent.db (raw string). sha256 2e213d79d8c77259f57e19152e831145ff9c02b155becdc431d6dbc30e2f98e8.
 > (2) [HARD] **kaizen footer EMPTY repaired** — the v2.59 banner claimed "footer-drift repair (footer v2.49 -> v2.59)" but the `## Version` footer section was EMPTY (the claim was never written to the section); this v2.60 inserts the Current line properly.
 > (3) [HARD] **email-composer N-2 drift repaired** — frontmatter 2.20 vs footer 2.18; footer bumped to v2.20 (PROACTIVE regime).
 > (4) [HARD] **deepchat-settings N-2 drift repaired** — frontmatter 1.18 vs footer 1.16; footer bumped to v1.18.
