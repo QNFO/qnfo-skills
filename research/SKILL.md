@@ -1,9 +1,11 @@
 ---
 name: research
-version: "2.145"
+version: "2.146"
 description: QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill.
 ---
 
+
+> **v2.146 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: publication-deposit gates extension — CITE-AUDIT-LIVE-API-1 (validate sibling DOIs/titles against the live Zenodo records API, not lagging registry rows; canonical RES.032 v0.1 shipped "RES.031 in preparation" while it was already published) + BUILD-PDF-BIB-FILENAME-1 (verify zero literal [@keys in the built HTML/PDF before publish; canonical RES.032 v0.1 defect); mirrors system-prompt v3.94 + kaizen v2.114 + cloudflare v3.69 unchanged):**
 
 > **v2.145 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: red-team method extensions — FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; mirrors system-prompt v3.93 + kaizen v2.113 + cloudflare v3.68 unchanged):**
 > Red-team: direct parent-agent skills audit (session this — DPRF QNFO.RES.032 red-team gate). HARD: 2. Changes:
@@ -54,7 +56,7 @@ description: QNFO/QWAV research pipeline: literature search, due diligence, comp
 > (1) [HARD] **CROSSWALK-TRANSLATION-1 (user directive 2026-08-24: "CROSS-DOMAIN INSIGHTS AND INTERDISCIPLINARY/CROSS-DISCIPLINARY TERMINOLOGY AND CROSSWALKS/TRANSLATIONS ARE CRITICAL FOR BREAKTHROUGH DISCOVERIES: NO SILOS, NO JARGON!")** — Phase 1 due diligence MUST include an adjacent-domain scan (>=2 adjacent WBS domains, DUE-DILIGENCE-DEPTH-1) looking for correspondences; Phase 5 publications MUST (a) name cross-domain connections in title/abstract where they exist (title-visible bridges, TERMINOLOGY-SILO-LESSONS-1), (b) include an explicit crosswalk/translation of key domain terms into adjacent-domain equivalents where a correspondence exists, and (c) be readable by an adjacent-domain expert — unexplained in-group jargon/shorthand is a HARD finding (extends PUBLICATION-PROSE-GATE-1 + PAPERS-NO-NAVEL-GAZING-1). Any vocabulary/taxonomy corpus used triggers the partitionality instrument (scripts/terminology_silos.py, QNFO.CGS.002) with bridge share reported; the semantic mapping layer (bilingual-dictionary analogue) is first-class infrastructure, not an afterthought. Canonical: 10.5281/zenodo.22075544 (the instrument + infrastructure response); "Valuation Without ℝ" (10.5281/zenodo.21803677) as the title-visible crosswalk exemplar.
 > Cross-reference: system-prompt v3.72, kaizen v2.94, TERMINOLOGY-SILO-LESSONS-1, PUBLICATION-PROSE-GATE-1, session this.
 
-# RESEARCH — v2.145
+# RESEARCH — v2.146
 > **v2.136 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit gates — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + kaizen v2.92):**
 > Red-team: 3-slot dispatch on 10.5281/zenodo.22075544 (Dependency completed: 1 HARD/3 SOFT; Accuracy + Completeness child sessions FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: deposited scripts re-run, outputs byte-match evidence JSONs, seed validation 9/9, rendering gates PASS, all cited DOIs published, frontmatter self-DOI clean). HARD: 4 (record-level). SOFT: 6.
 > New Phase 5/6/8 permanent gates (RECURRENCE-ZERO-1):
@@ -9700,7 +9702,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.145** (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
+Current: **v2.146** (CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; canonical RES.032 v0.1->v0.2; preserves v2.145 FRAMEWORK-DOGFOOD-1) (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
 
 
 ## DATASET-ACQUISITION-1 (HARD GATE — 2026-08-28, user directive)

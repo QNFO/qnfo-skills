@@ -1,8 +1,10 @@
 ---
 name: cloudflare
-version: "3.68"
+version: "3.69"
 description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment, wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control, Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure audits.
 ---
+
+> **v3.69 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1 (canonical RES.032 v0.2 newversion 2026-08-29); Cost Control § verified (spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1, budget <$100/$200); mirrors system-prompt v3.94 + kaizen v2.114):**
 
 > **v3.68 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh only — content unchanged (Cost Control § verified present: spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1 aiInferenceAdaptiveGroups, budget <$100/$200; R2 anti-patterns QUEUE-BODY-SHAPE-1 + AUDIT-COMPLETENESS-1 preserved); mirrors system-prompt v3.93 + kaizen v2.113):**
 
@@ -28,7 +30,7 @@ name: cloudflare
 version: "3.67"
 ---
 
-# CLOUDFLARE — v3.68
+# CLOUDFLARE — v3.69
 
 > **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
 > 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.
@@ -2246,7 +2248,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.68** (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
+Current: **v3.69** (Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1; Cost Control § verified; canonical RES.032 v0.2; preserves v3.68) (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
 
 ---
 

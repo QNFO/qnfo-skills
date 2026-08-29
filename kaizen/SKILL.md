@@ -1,8 +1,10 @@
 ---
 name: kaizen
-version: "2.113"
+version: "2.114"
 description: The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor.
 ---
+
+> **v2.114 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror rows for the six v3.94 gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1 + BUILD-PDF-BIB-FILENAME-1 + CITE-AUDIT-LIVE-API-1 (canonical RES.032 v0.2 newversion 2026-08-29); mirrors system-prompt v3.94 + research v2.146 + cloudflare v3.69 + qnfo-core v1.39 + execution-mandate v2.13):**
 
 > **v2.113 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: DPRF-cycle infra gates mirror rows — D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 + FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; mirrors system-prompt v3.93 + research v2.145 + cloudflare v3.68 + qnfo-core v1.38 + execution-mandate v2.12):**
 > Red-team: direct parent-agent skills audit (session this — QNFO.RES.032 DPRF P0/P0.1 + red-team gate cycle). HARD: 4. Changes:
@@ -135,7 +137,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.113
+# KAIZEN — v2.114
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15691,5 +15693,5 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.113** (D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 + FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 P0.1 2026-08-29; preserves v2.112 UIA-REPOINT-V04) (UIA-REPOINT-V04 mirror rows + §H v0.4 update (termination condition, frontmatter drift fix); mirrors system-prompt v3.92 + research v2.144; 2026-08-29) (model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
+Current: **v2.114** (mirror rows for the six v3.94 gates; canonical RES.032 v0.2 newversion; preserves v2.113 D1-WRITE-ASCII-1) (D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 + FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 P0.1 2026-08-29; preserves v2.112 UIA-REPOINT-V04) (UIA-REPOINT-V04 mirror rows + §H v0.4 update (termination condition, frontmatter drift fix); mirrors system-prompt v3.92 + research v2.144; 2026-08-29) (model-key DB root-source + D1 Bearer fallback mirror rows; mirrors system-prompt v3.91 + cloudflare v3.67 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (weekly-review triage gates mirror rows: GRAPH-SYNC-BULK-ONLY-1 + CONSOLIDATION-TARGET-AUDIT-1 + REGISTRY-LAG-PARITY-1 + ENUMERATION-DRIFT-SNAPSHOT-1; mirrors system-prompt v3.90 + cloudflare v3.66 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28) (mirror rows for the QNFO Router endpoint anti-generic + worker deploy-revert discipline; mirrors system-prompt v3.89 + cloudflare v3.65 + qnfo-core v1.36 + research v2.143 unchanged; 2026-08-28)
 

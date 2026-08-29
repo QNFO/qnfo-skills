@@ -1,8 +1,10 @@
 ---
 name: qnfo-core
-version: "1.38"
+version: "1.39"
 description: QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge.
 ---
+
+> **v1.39 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — build-pipeline + Zenodo newversion gates (BUILD-PDF-BIB-FILENAME-1, NEWVERSION-DRAFT-FILE-KEY-1, ZENODO-BUCKET-PUT-CANONICAL-1; canonical RES.032 v0.2); mirrors system-prompt v3.94 + kaizen v2.114 + cloudflare v3.69):**
 
 > **v1.38 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — infra gates D1-WRITE-ASCII-1 + EXEC-AUTOBG-SESSION-ERROR-1 + GIT-REBASE-AFTER-COMMIT-1 (canonical DPRF QNFO.RES.032 P0.1); mirrors system-prompt v3.93 + kaizen v2.113 + cloudflare v3.68):**
 
@@ -26,7 +28,7 @@ version: "1.37"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.38
+# QNFO-CORE — v1.39
 > **v1.35 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 status on the ONLY-supported-mechanism tool + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the ONLY supported mechanism `email-composer/scripts/calendar-sync.py` does NOT exist (disk / git log --all / origin/master; verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). The MANDATE remains binding; the TOOL is pending authoring — agents MUST NOT claim calendar events/tasks were created until the tool exists.
@@ -6001,7 +6003,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.38** (mirror-pointer refresh; preserves v1.37) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.39** (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 
 
