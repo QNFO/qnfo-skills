@@ -1,9 +1,15 @@
 ---
 name: research
-version: "2.146"
+version: "2.147"
 description: "QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill."
 ---
 
+
+> **v2.147 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117):**
+
+### v2.147 — JPCUB research program (2026-08-31)
+
+**JPCUB-BENCHMARK-PROGRAM-1** — active research program: joules-per-compute benchmark (github.com/rwnq8/joules-per-compute-benchmark). Open questions in flight (2026-08-31): Landauer principle as energy floor for cryogenic controllers; Margolus-Levitin bound as lower energy per operation (DOI 10.5281/zenodo.21255013); surface-code energy floor for 1000 logical qubits; 2026 benchmark revision normalizing energy per logical qubit not physical gate; wall-clock-latency vs energy tradeoff. Prior art: 10.1038/s41586-021-03393-4 (IBM Eagle 127-qubit cryo power). Any JPCUB analysis must follow COMPUTATIONAL-VERIFICATION-1 (derive, verify in code, deposit artifacts).
 
 > **v2.146 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: publication-deposit gates extension — CITE-AUDIT-LIVE-API-1 (validate sibling DOIs/titles against the live Zenodo records API, not lagging registry rows; canonical RES.032 v0.1 shipped "RES.031 in preparation" while it was already published) + BUILD-PDF-BIB-FILENAME-1 (verify zero literal [@keys in the built HTML/PDF before publish; canonical RES.032 v0.1 defect); mirrors system-prompt v3.94 + kaizen v2.114 + cloudflare v3.69 unchanged):**
 
@@ -9702,7 +9708,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.146** (CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; canonical RES.032 v0.1->v0.2; preserves v2.145 FRAMEWORK-DOGFOOD-1) (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
+Current: **v2.147** (JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117; preserves v2.146) (CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; canonical RES.032 v0.1->v0.2; preserves v2.145 FRAMEWORK-DOGFOOD-1) (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
 
 
 ## DATASET-ACQUISITION-1 (HARD GATE — 2026-08-28, user directive)

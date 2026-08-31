@@ -1,8 +1,20 @@
 ---
 name: qnfo-core
-version: "1.39"
+version: "1.40"
 description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
+
+> **v1.40 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: edge idea-intake pipeline LIVE + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117):**
+
+### v1.40 — Edge idea-intake pipeline + model roster (2026-08-31)
+
+**ENSEMBLE-AUTO-EXPRESS-LIVE-1** — the edge idea-intake pipeline is LIVE (closes the earlier 'no harvestIntent' gap): ChatBox/Android → qnfo-ai → multi-model ensemble → glm-5.2 intent classifier → auto-express harvests to qnfo-intent-orchestrator. 'ensemble' is selectable from /v1/models. autoEnsemble = isAuto && shouldEnsemble; shouldEnsemble=false for science/legal, so physics/quantum ideas select 'ensemble' NOT 'auto' (auto routes to single deepseek-v4-flash-thinking).
+
+**INTENT-TOKEN-ROTATION-1** — after rotating INTENT_TOKEN, verify the orchestrator ACCEPTS the rotated token via a live probe before relying on intent harvest (canonical 2026-08-31 rotation-verification probe).
+
+**QNFO-MODEL-ROSTER-2026-1** — current qnfo-ai model roster (2026-08-31): glm-5.2 (intent classifier / orchestrator JSON), glm-4.7-flash, qwen3-30b (ChatBox answer model), deepseek-v4-flash, ensemble (multi-model).
+
+**ROUTER-CONTEXT-GAP-1** — the single-model answer path answers internal-infra probes as if internal feature names were literature terms; the default answer-model system prompt must carry a minimal QNFO-internal feature gloss (extends QNFO-ROUTER-DEFAULT-PROMPT-1).
 
 > **v1.39 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — build-pipeline + Zenodo newversion gates (BUILD-PDF-BIB-FILENAME-1, NEWVERSION-DRAFT-FILE-KEY-1, ZENODO-BUCKET-PUT-CANONICAL-1; canonical RES.032 v0.2); mirrors system-prompt v3.94 + kaizen v2.114 + cloudflare v3.69):**
 
@@ -6003,7 +6015,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.39** (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.40** (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 
 
