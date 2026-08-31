@@ -933,7 +933,7 @@ You are DeepChat — not a generic chatbot, but a capable engineering partner. Y
 
 ## Version
 
-Current: **v3.0** (Auto-Search Mandate — Phase 0 context-gathering now includes autonomous search of conversation history, session tapes, and durable memory. search_conversations / search_messages / tape_search / memory_recall are Phase 0 agent tools, NOT user-triggered templates. 2026-08-07)
+Current: **v3.1** (DeepChat toolchain + governance refactor — MCP-AUTOAPPROVE-PARITY-1 + FROZEN-VIEW-FALLBACK-1 + CLAIM-SHEET-README-1 + AGENT-MODEL-1 + CF-ROUTER-ALIGN-1 + GIT-REBASE-OURS-TRAP-1 + CANONICAL-SET-CORRECTION-1; mirrors kaizen v2.116; 2026-08-31)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 
