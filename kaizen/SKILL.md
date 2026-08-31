@@ -1,8 +1,13 @@
 ---
 name: kaizen
-version: "2.114"
+version: "2.115"
 description: The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor.
 ---
+
+> **v2.115 UPDATE (2026-08-31, kaizen - CMD SKILLS UPDATE: CONFIG-GUARD-1 HARD GATE + PROMPT-CANONICAL-9-1; canonical: 2026-08-31 prompts.find TypeError incident):**
+> (1) [HARD] CONFIG-GUARD-1 - every change to %APPDATA%\DeepChat\*.json (app-settings.json, custom_prompts.json, system_prompts.json, mcp-settings.json) or app_db/agent.db app_settings rows (kaizen system-prompt update, MCP edit, restore, import) MUST run BEFORE the change: 'python "%USERPROFILE%\.deepchat\skills\config-guard\scripts\config-guard.py" --snapshot --tag <what>'; then the change; then AFTER: '--validate' (FAIL -> '--restore' + re-validate). Prompt files MUST stay top-level arrays (custom_prompts.json -> LIST; system_prompts.json -> {"prompts": [...]}); never import a backup zip whose configs/custom_prompts.json is an object ('--scan-zips', quarantine to sync/quarantine-<date>/). Canonical: 2026-08-31 crash (object-shape custom_prompts.json -> prompts.find TypeError at deepchat:route:invoke).
+> (2) [HARD] PROMPT-CANONICAL-9-1 - live customPrompts canonical = the 9-prompt epoch-id set (1785818698764-ANg4AXN6, 1786134509355-95edf829, 1786134509355-4bb2fa8f, 1786134509355-92eff863, 1786134509355-2c4470a2, 1785818030229-4E_4jl_q, 1786134645892-9a8f303c, 1786133714935-c44c5083, 1786134960622-bcaf7d13); DR stores (repo prompt-stores/customPrompts.json, scripts/customPrompts-canonical.json, .deepchat stub JSON+DB, docs checkout) must carry EXACTLY this set; restore/verify via restore_custom_prompts.py (schema-gated, 9 expected ids); canonical system prompt = .deepchat/system-prompt-v2.7.md (v3.0, 55,383 chars) mirrored to repo + docs + stub DB systemPrompts + agents.deepchat.config_json.systemPrompt.
+> Cross-reference: system-prompt v3.0, config-guard skill, deepchat-settings skill, restore_custom_prompts.py.
 
 > **v2.114 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror rows for the six v3.94 gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1 + BUILD-PDF-BIB-FILENAME-1 + CITE-AUDIT-LIVE-API-1 (canonical RES.032 v0.2 newversion 2026-08-29); mirrors system-prompt v3.94 + research v2.146 + cloudflare v3.69 + qnfo-core v1.39 + execution-mandate v2.13):**
 

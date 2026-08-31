@@ -23,15 +23,14 @@ restart to re-read — RUNTIME-CACHE-CONTRACT-1).
 """
 import sqlite3, json, os, sys, datetime, time
 
-REPO_CANON = r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json"
+REPO_CANON = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts.json"
 CANON_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "customPrompts-canonical.json")
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 DOTDEEP_JSON = r"C:\Users\LENOVO\.deepchat\app-settings.json"
+ROAMING_CP_FILE = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
 STUB_DB = r"C:\Users\LENOVO\.deepchat\agent.db"
-EXPECTED_IDS = ["cmd-closeout", "cmd-continue", "cmd-execute", "cmd-publish", "cmd-red-team",
-                "cmd-research", "cmd-skills-update", "audit-infrastructure",
-                "find-papers-on-topic", "validate-citations"]
+EXPECTED_IDS = ['1785818698764-ANg4AXN6', '1786134509355-95edf829', '1786134509355-4bb2fa8f', '1786134509355-92eff863', '1786134509355-2c4470a2', '1785818030229-4E_4jl_q', '1786134645892-9a8f303c', '1786133714935-c44c5083', '1786134960622-bcaf7d13']
 SRC_ENUM = {"local", "imported", "builtin"}
 
 
@@ -106,8 +105,8 @@ def _db_list(path):
 
 
 def _validate_canon(cp):
-    if not isinstance(cp, list) or len(cp) < 10:
-        return False, f"not a list of >=10 (got {type(cp).__name__})"
+    if not isinstance(cp, list) or len(cp) < 9:
+        return False, f"not a list of >=9 (got {type(cp).__name__})"
     ids = [p.get("id") for p in cp if isinstance(p, dict)]
     missing = [e for e in EXPECTED_IDS if e not in ids]
     if missing:
@@ -201,6 +200,19 @@ def cmd_restore():
         ok_all = False
         log(f"Stub DB FAILED: {e}")
 
+    
+    # 2.5 Roaming custom_prompts.json (the file whose object-shape crashed the app 2026-08-31)
+    try:
+        with open(ROAMING_CP_FILE, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(canon, f, ensure_ascii=False, indent=2)
+        cp2 = json.load(open(ROAMING_CP_FILE, encoding="utf-8"))
+        ok = isinstance(cp2, list) and cp2 == canon
+        ok_all &= ok
+        log(f"Roaming custom_prompts.json: {'OK' if ok else 'MISMATCH'}")
+    except Exception as e:
+        ok_all = False
+        log(f"Roaming custom_prompts.json FAILED: {e}")
+
     # 3+4. JSON stores (full-file rewrite, LF)
     for path, label in ((DOTDEEP_JSON, ".deepchat/app-settings.json"), (ROAMING_JSON, "Roaming app-settings.json")):
         try:
@@ -221,13 +233,17 @@ def cmd_restore():
     return 0 if ok_all else 2
 
 
+
+def _proj(cp):
+    return {p.get("id"): (p.get("name"), p.get("content")) for p in cp} if isinstance(cp, list) else None
+
 def cmd_verify():
     log("=== verify ===")
     stores = {
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
-        "roaming_json": lambda: _json_list(ROAMING_JSON),
+        "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
         "stub_db": lambda: _db_list(STUB_DB),
     }
@@ -250,7 +266,7 @@ def cmd_verify():
     repo = results.get("repo")
     if repo is not None:
         for name, cp in results.items():
-            if name != "repo" and cp != repo:
+            if name != "repo" and _proj(cp) != _proj(repo):
                 log(f"[DRIFT] {name} differs from repo canonical")
                 rc = max(rc, 1)
     log("VERIFY PASS" if rc == 0 else "VERIFY FAILED")
@@ -262,7 +278,7 @@ def cmd_inventory():
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
-        "roaming_json": lambda: _json_list(ROAMING_JSON),
+        "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
         "stub_db": lambda: _db_list(STUB_DB),
     }

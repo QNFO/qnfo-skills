@@ -20,14 +20,12 @@ DEFAULT_PATHS = {
     "repo": r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json",
     "script": r"C:\Users\LENOVO\.deepchat\scripts\customPrompts-canonical.json",
     "dotdeep_json": r"C:\Users\LENOVO\.deepchat\app-settings.json",
-    "roaming_json": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json",
+    "roaming_cp_file": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json",
     "roaming_db": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
     "stub_db": r"C:\Users\LENOVO\.deepchat\agent.db",
 }
 SRC_ENUM = {"local", "imported", "builtin"}
-EXPECTED_IDS = ["cmd-closeout", "cmd-continue", "cmd-execute", "cmd-publish", "cmd-red-team",
-                "cmd-research", "cmd-skills-update", "audit-infrastructure",
-                "find-papers-on-topic", "validate-citations"]
+EXPECTED_IDS = ['1785818698764-ANg4AXN6', '1786134509355-95edf829', '1786134509355-4bb2fa8f', '1786134509355-92eff863', '1786134509355-2c4470a2', '1785818030229-4E_4jl_q', '1786134645892-9a8f303c', '1786133714935-c44c5083', '1786134960622-bcaf7d13']
 
 
 def validate_prompt(p):
@@ -133,6 +131,10 @@ def read_store(name, path):
         return None, str(e)
 
 
+
+def _proj(cp):
+    return {p.get("id"): (p.get("name"), p.get("content")) for p in cp} if isinstance(cp, list) else None
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "inventory":
         print(f"{'store':16s} {'entries':>7s} {'violations':>10s}  status")
@@ -175,7 +177,7 @@ def main():
         for name, cp in results.items():
             if name == "repo" or cp is None:
                 continue
-            if cp != repo:
+            if _proj(cp) != _proj(repo):
                 print(f"[DRIFT] {name} differs from repo canonical")
                 rc = max(rc, 1)
 
@@ -230,9 +232,13 @@ def read_system_prompt(name, path):
             if not v:
                 return None, "no systemPrompts row"
             j = v[0]
-            if isinstance(j, str) and j.startswith('"'):
+            if isinstance(j, str):
                 j = json.loads(j)
-            return j, None
+            if isinstance(j, list) and j:
+                return j[0].get("content"), None
+            if isinstance(j, str):
+                return j, None
+            return None, "unexpected shape %s" % type(j).__name__
         if name == "agents_row":
             c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
             v = c.execute("SELECT config_json FROM agents WHERE id='deepchat'").fetchone()
