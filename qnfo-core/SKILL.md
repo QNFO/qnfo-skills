@@ -1,7 +1,7 @@
 ---
 name: qnfo-core
 version: "1.39"
-description: QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge.
+description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
 
 > **v1.39 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — build-pipeline + Zenodo newversion gates (BUILD-PDF-BIB-FILENAME-1, NEWVERSION-DRAFT-FILE-KEY-1, ZENODO-BUCKET-PUT-CANONICAL-1; canonical RES.032 v0.2); mirrors system-prompt v3.94 + kaizen v2.114 + cloudflare v3.69):**

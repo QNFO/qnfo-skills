@@ -1,7 +1,10 @@
 ---
 name: cloudflare
-version: "3.69"
-description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment, wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control, Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure audits.
+version: '3.69'
+description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment,
+  wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control,
+  Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure
+  audits.
 ---
 
 > **v3.69 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1 (canonical RES.032 v0.2 newversion 2026-08-29); Cost Control § verified (spend limit $90/30d rule 6f5c29f8, COST-AUDIT-MISS-AI-1, budget <$100/$200); mirrors system-prompt v3.94 + kaizen v2.114):**

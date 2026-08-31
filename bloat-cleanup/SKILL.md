@@ -1,6 +1,11 @@
 ---
 name: bloat-cleanup
-description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat thin-client compliance enforcement. Use when the user wants to clean up disk space, remove bloatware, kill vampire processes, disable unnecessary services, run system audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting and cleaning local project files, purge caches/temp files/browser junk/npm caches, or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
+description: Automated Windows system bloatware cleanup, disk decluttering, and DeepChat
+  thin-client compliance enforcement. Use when the user wants to clean up disk space,
+  remove bloatware, kill vampire processes, disable unnecessary services, run system
+  audits across all drives, enforce DeepChat KIF-32 thin-client mandate by detecting
+  and cleaning local project files, purge caches/temp files/browser junk/npm caches,
+  or optimize a Windows laptop for DeepChat performance by freeing RAM and CPU.
 version: 3.5
 triggers:
 - cleanup

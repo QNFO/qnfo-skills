@@ -1,7 +1,7 @@
 ---
 name: kaizen
 version: "2.115"
-description: The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor.
+description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
 
 > **v2.115 UPDATE (2026-08-31, kaizen - CMD SKILLS UPDATE: CONFIG-GUARD-1 HARD GATE + PROMPT-CANONICAL-9-1; canonical: 2026-08-31 prompts.find TypeError incident):**

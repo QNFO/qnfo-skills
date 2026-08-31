@@ -1,7 +1,15 @@
 ---
 name: qwav-demo-kit
 version: 1.4
-description: Build, test, and deploy interactive scientific demos that prove published research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering self-explanatory UX, math verification against golden values, extensive automated testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native gh-pages branch deployment with same-turn anti-phantom verification, and complete documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes), every control wired to real computation (no dead buttons). Use when building interactive demos, computational PoCs, scientific visualizations, or publishing research that must execute in code.
+description: Build, test, and deploy interactive scientific demos that prove published
+  research executes in code. Five-phase pipeline (DEM-E0-T01 to DEM-E0-T05) covering
+  self-explanatory UX, math verification against golden values, extensive automated
+  testing on Chrome (CDP test-demo.py plus Playwright click-everything suite), native
+  gh-pages branch deployment with same-turn anti-phantom verification, and complete
+  documentation. Light-theme readable UIs (user mandate 2026-08-06 — no dark themes),
+  every control wired to real computation (no dead buttons). Use when building interactive
+  demos, computational PoCs, scientific visualizations, or publishing research that
+  must execute in code.
 ---
 
 # QWAV Demo Kit — v1.4

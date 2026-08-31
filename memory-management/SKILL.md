@@ -1,6 +1,7 @@
 ---
 name: memory-management
-description: Guide the agent to recall, remember, and route durable learning into Memory, Skills, Scheduled Tasks, or Tape.
+description: Guide the agent to recall, remember, and route durable learning into
+  Memory, Skills, Scheduled Tasks, or Tape.
 ---
 
 # Memory Management

@@ -1,7 +1,11 @@
 ---
 name: deepchat-hooks
 version: 1.1
-description: DeepChat lifecycle hooks integration — Cloudflare infrastructure audit on session lifecycle events. Manages the cf_audit_hook.py script, the hooksNotifications config schema, and the qnfo-audit integration (qnfo-lifecycle worker endpoints + D1 audit_sessions). Load when the user asks about DeepChat Hooks, lifecycle events, SessionStart/SessionEnd commands, or the Cloudflare infra audit hook.
+description: DeepChat lifecycle hooks integration — Cloudflare infrastructure audit
+  on session lifecycle events. Manages the cf_audit_hook.py script, the hooksNotifications
+  config schema, and the qnfo-audit integration (qnfo-lifecycle worker endpoints +
+  D1 audit_sessions). Load when the user asks about DeepChat Hooks, lifecycle events,
+  SessionStart/SessionEnd commands, or the Cloudflare infra audit hook.
 ---
 
 # DeepChat Hooks — v1.1 — Cloudflare Infrastructure Audit

@@ -1,18 +1,11 @@
 ---
-
-
 name: windows-command-patterns
-
-
-description: Windows command execution — Python-First Protocol. Python is PRIMARY for ALL operations. PowerShell is DELETED. Exec shell is Git Bash (POSIX) as of v3.23; cmd.exe patterns retained as legacy/revert reference.
-
-
+description: Windows command execution — Python-First Protocol. Python is PRIMARY
+  for ALL operations. PowerShell is DELETED. Exec shell is Git Bash (POSIX) as of
+  v3.23; cmd.exe patterns retained as legacy/revert reference.
 version: 3.23
-
-
-kif_tags: [KIF-32]
-
-
+kif_tags:
+- KIF-32
 ---
 
 

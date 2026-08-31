@@ -1,7 +1,7 @@
 ---
 name: email-composer
 version: "2.32"
-description: Email composition and outreach: inbox-zero triage, DIGEST-TO-PERSONAL-1, send verification, QNFO outreach discipline. Use when composing, triaging, or sending email.
+description: "Email composition and outreach: inbox-zero triage, DIGEST-TO-PERSONAL-1, send verification, QNFO outreach discipline. Use when composing, triaging, or sending email."
 ---
 
 

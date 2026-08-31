@@ -1,7 +1,15 @@
 ---
 name: social-media-management
-version: "1.10.0"
-description: Programmatic social media follow management for Bluesky and Mastodon with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social media presence, or discover accounts in quantum foundations, ultrametric physics, laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science, and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation path for LinkedIn profile updates.
+version: 1.10.0
+description: Programmatic social media follow management for Bluesky and Mastodon
+  with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky
+  / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants
+  to follow/unfollow accounts, bulk-follow QNFO-aligned researchers, manage social
+  media presence, or discover accounts in quantum foundations, ultrametric physics,
+  laws of form, infomatics, CFPE forecasting, consilience, complex systems, AI+science,
+  and related domains. Covers Bluesky AT Protocol API, Mastodon REST API, account
+  registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation
+  path for LinkedIn profile updates.
 ---
 > **v1.10.0 UPDATE (2026-08-28, kaizen — qnfo-social cloud posting pipeline):**
 > qnfo-social Worker replaces local bluesky_post.py for Bluesky posting. Pipeline: /compose (deepseek-v4-flash via Workers AI drafts a 5-post thread from title+abstract -> status='draft'), /approve (draft->queued), cron "30 14 * * *" posts the oldest queued thread, /broadcast (409 guard), /queue (sanitized). D1 social_threads (status queued/posting/posted/failed/draft + retry_count + error). Secrets BSKY_HANDLE/BSKY_APP_PASS/SOCIAL_TOKEN. Draft-only compose preserves accuracy. DEEPSEEK-WORKERS-AI-CHAT-MODEL-1: deepseek-v4-flash is a CHAT model - use messages format + read choices[0].message.content, never prompt format / .response. workers.dev: 1010 (Bot Fight Mode, browser UA) + 1042 (subdomain propagation).

@@ -1,7 +1,7 @@
 ---
 name: personal-knowledge
 version: "1.6"
-description: Rowan's personal-life knowledge: personal events radar, GTD register integration, personal data stores. Use for personal-life questions, events, and personal knowledge retrieval.
+description: "Rowan's personal-life knowledge: personal events radar, GTD register integration, personal data stores. Use for personal-life questions, events, and personal knowledge retrieval."
 ---
 
 > **v1.6 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: CHROME-TABS-SAVE-1 pipeline + 7-store parity note; mirrors system-prompt v3.34):**

@@ -1,7 +1,7 @@
 ---
 name: research
 version: "2.146"
-description: QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill.
+description: "QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill."
 ---
 
 

@@ -1,7 +1,7 @@
 ---
 name: execution-mandate
 version: "2.13"
-description: DeepChat execution mandate: execution-first protocol, planned checklists, subagent red-team review, skill enforcement, phased project planning, infra gates (D1-WRITE-ASCII-1, EXEC-AUTOBG-SESSION-ERROR-1, GIT-REBASE-AFTER-COMMIT-1, FRAMEWORK-DOGFOOD-1, REDTEAM-CHILD-CROSS-CHECK-1). Loaded at session startup.
+description: "DeepChat execution mandate: execution-first protocol, planned checklists, subagent red-team review, skill enforcement, phased project planning, infra gates (D1-WRITE-ASCII-1, EXEC-AUTOBG-SESSION-ERROR-1, GIT-REBASE-AFTER-COMMIT-1, FRAMEWORK-DOGFOOD-1, REDTEAM-CHILD-CROSS-CHECK-1). Loaded at session startup."
 ---
 
 > **v2.13 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — publication-integrity gates CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1 + FRONTMATTER-DUPLICATION-1 reinforced (canonical RES.032 v0.1->v0.2); mirrors system-prompt v3.94 + kaizen v2.114):**

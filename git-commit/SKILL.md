@@ -1,8 +1,9 @@
 ---
 name: git-commit
-description: Generate well-formatted git commit messages following conventional commit standards
+description: Generate well-formatted git commit messages following conventional commit
+  standards
 allowedTools:
-  - run_terminal_cmd
+- run_terminal_cmd
 ---
 
 # Git Commit Message Skill

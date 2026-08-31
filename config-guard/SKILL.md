@@ -1,3 +1,8 @@
+---
+name: config-guard
+description: "config-guard - DeepChat config pre-write backup + validation guard"
+---
+
 # config-guard - DeepChat config pre-write backup + validation guard
 
 **HARD GATE.** Every config write to %APPDATA%\DeepChat\*.json or app_db/agent.db (app_settings rows)

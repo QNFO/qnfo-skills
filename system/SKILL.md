@@ -1,6 +1,6 @@
 ---
 name: system
-description: SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec shell is Git Bash (POSIX) as of 2026-08-15 (GIT-BASH-SHELL-1); cmd.exe/shim history retained as safety-net + revert reference. See EXEC-SHELL-FIX.md + windows-command-patterns v3.23.
+description: "SESSION STARTUP: load after qnfo-core. DeepChat config, skill ecosystem, desktop automation. Settings, MCP, skills lifecycle, CUA GUI automation. Exec shell is Git Bash (POSIX) as of 2026-08-15 (GIT-BASH-SHELL-1); cmd.exe/shim history retained as safety-net + revert reference. See EXEC-SHELL-FIX.md + windows-command-patterns v3.23."
 version: 2.15
 kif_tags: [KIF-32]
 ---

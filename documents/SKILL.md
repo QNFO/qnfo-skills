@@ -1,9 +1,49 @@
 ---
 name: documents
-description: Create, edit, and analyze all document formats - Word (.docx), PowerPoint (.pptx), Excel (.xlsx/.csv/.tsv), PDF. SUPERSEDES the builtin docx/pdf/pptx/xlsx skills (prefer this skill for all document work). -- Word (.docx) with formatting and tracked changes, PowerPoint (.pptx) presentations from outlines, Excel (.xlsx/.csv/.tsv) spreadsheets with formulas and analysis, and PDF manipulation (form filling, merge, split, text/table extraction). For publication-grade LaTeX PDF builds, use the research skill.
-version: "2.5"
-triggers: ["docx", "Word", "document", "PowerPoint", "presentation", "slides", "Excel", "spreadsheet", "CSV", "TSV", "xlsx", "pptx", "PDF", "form", "fill form", "merge PDF", "split PDF", "extract PDF", "table extraction", "tracked changes", "comments", "speaker notes", "formula", "chart", "pivot table", "data analysis", "import", "export", "office", "formatting", "styles", "headers", "footers"]
-related: ["research"]
+description: Create, edit, and analyze all document formats - Word (.docx), PowerPoint
+  (.pptx), Excel (.xlsx/.csv/.tsv), PDF. SUPERSEDES the builtin docx/pdf/pptx/xlsx
+  skills (prefer this skill for all document work). -- Word (.docx) with formatting
+  and tracked changes, PowerPoint (.pptx) presentations from outlines, Excel (.xlsx/.csv/.tsv)
+  spreadsheets with formulas and analysis, and PDF manipulation (form filling, merge,
+  split, text/table extraction). For publication-grade LaTeX PDF builds, use the research
+  skill.
+version: '2.5'
+triggers:
+- docx
+- Word
+- document
+- PowerPoint
+- presentation
+- slides
+- Excel
+- spreadsheet
+- CSV
+- TSV
+- xlsx
+- pptx
+- PDF
+- form
+- fill form
+- merge PDF
+- split PDF
+- extract PDF
+- table extraction
+- tracked changes
+- comments
+- speaker notes
+- formula
+- chart
+- pivot table
+- data analysis
+- import
+- export
+- office
+- formatting
+- styles
+- headers
+- footers
+related:
+- research
 priority: 2
 platform: local
 autonomous: false

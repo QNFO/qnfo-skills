@@ -1,9 +1,35 @@
 ---
 name: code
-description: Code quality review, security audit, and MCP server building. Analyze code for quality/security/anti-patterns with specific line numbers. Build MCP servers in Python (FastMCP) or Node/TypeScript (MCP SDK) for integrating external APIs. Deploy MCP servers as Cloudflare Workers when possible.
+description: Code quality review, security audit, and MCP server building. Analyze
+  code for quality/security/anti-patterns with specific line numbers. Build MCP servers
+  in Python (FastMCP) or Node/TypeScript (MCP SDK) for integrating external APIs.
+  Deploy MCP servers as Cloudflare Workers when possible.
 version: 2.5
-triggers: ["code review", "security audit", "code quality", "best practices", "anti-pattern", "review this code", "audit this", "MCP", "Model Context Protocol", "FastMCP", "MCP server", "API integration", "tool building", "external API", "MCP SDK", "type safety", "SQL injection", "secrets", "race condition", "error handling", "code smell", "refactor"]
-related: ["cloudflare"]
+triggers:
+- code review
+- security audit
+- code quality
+- best practices
+- anti-pattern
+- review this code
+- audit this
+- MCP
+- Model Context Protocol
+- FastMCP
+- MCP server
+- API integration
+- tool building
+- external API
+- MCP SDK
+- type safety
+- SQL injection
+- secrets
+- race condition
+- error handling
+- code smell
+- refactor
+related:
+- cloudflare
 priority: 2
 platform: all
 autonomous: false
