@@ -40,7 +40,7 @@ version: "1.37"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.39
+# QNFO-CORE — v1.40
 > **v1.35 UPDATE (2026-08-21, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 status on the ONLY-supported-mechanism tool + mirror refresh; mirrors system-prompt v3.64 + kaizen v2.86 + research v2.131):**
 > Red-team: 3-slot skills audit (Accuracy/Completeness/Dependency — all delivered) layered on the 5-slot fleet audit. HARD: 1. SOFT: 0. DESIGN: 0. Changes:
 > (1) [HARD] **CALENDAR-SYNC-TOOL-GAP-1 status** — the ONLY supported mechanism `email-composer/scripts/calendar-sync.py` does NOT exist (disk / git log --all / origin/master; verified 2026-08-21). Cronjob 78136b24 (Mon-Fri 07:30) fails at its 300s cap every run (canonical: sole run 08-21 07:30 — "exceeded max duration (300000 ms)"). The MANDATE remains binding; the TOOL is pending authoring — agents MUST NOT claim calendar events/tasks were created until the tool exists.
