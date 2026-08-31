@@ -23,7 +23,8 @@ restart to re-read — RUNTIME-CACHE-CONTRACT-1).
 """
 import sqlite3, json, os, sys, datetime, time
 
-REPO_CANON = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts.json"
+REPO_CANON = r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json"
+SKILLS_COPY = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts.json"  # the local skills mirror — gate-checked, not canonical
 CANON_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "customPrompts-canonical.json")
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 DOTDEEP_JSON = r"C:\Users\LENOVO\.deepchat\app-settings.json"
@@ -241,6 +242,7 @@ def cmd_verify():
     log("=== verify ===")
     stores = {
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
+        "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
@@ -276,6 +278,7 @@ def cmd_verify():
 def cmd_inventory():
     stores = {
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
+        "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
