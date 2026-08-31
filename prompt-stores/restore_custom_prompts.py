@@ -17,7 +17,7 @@ Canonical source order:
   B. backup file next to this script (customPrompts-canonical.json)
   C. live Roaming app-settings.json customPrompts
   D. Roaming DB app_settings row
-All sources must validate against the app schema and carry the 10 expected ids.
+All sources must validate against the app schema and carry the 12 expected ids.
 Safe to run while DeepChat is live (WAL mode; runtime UI cache still needs an app
 restart to re-read — RUNTIME-CACHE-CONTRACT-1).
 """
@@ -30,7 +30,7 @@ DOTDEEP_JSON = r"C:\Users\LENOVO\.deepchat\app-settings.json"
 ROAMING_CP_FILE = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
 STUB_DB = r"C:\Users\LENOVO\.deepchat\agent.db"
-EXPECTED_IDS = ['1785818698764-ANg4AXN6', '1786134509355-95edf829', '1786134509355-4bb2fa8f', '1786134509355-92eff863', '1786134509355-2c4470a2', '1785818030229-4E_4jl_q', '1786134645892-9a8f303c', '1786133714935-c44c5083', '1786134960622-bcaf7d13']
+EXPECTED_IDS = ['1788197658524-RX0DE2xA', '1788197658524-RVSnJFyP', '1788197658524-2Qgtf6l6', '1788197658524-FwEKzK59', '1788197658524-2R2NP0B9', '1788197658524-CzhqBs5V', '1788197658524-hQdwK4UR', '1788197658524-Icw2DWNP', '1788197658524-3KUDUZ2Z', '1788197658524-NmxnpZvx', '1788197658524-TWLRZ2gs', '1788197658524-fVj3nerc']
 SRC_ENUM = {"local", "imported", "builtin"}
 
 
