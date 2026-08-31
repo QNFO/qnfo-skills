@@ -30,7 +30,7 @@ description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment
 
 ---
 name: cloudflare
-version: "3.67"
+version: "3.69"
 ---
 
 # CLOUDFLARE — v3.69
