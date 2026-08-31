@@ -714,3 +714,26 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 
 **Dedup:** all three recipients checked against the ledger + D1 before sending — zero prior contact; first contacts only, one per group.
 **Follow-up:** none (NO-FOLLOW-UP-DEFAULT-1).
+
+
+## 2026-08-31 — Autonomous Monday outreach wave (session rwBv-vLsLZkehA0bDl5CB)
+
+**Papers shared (Zenodo-verified):**
+- P2: "Error Correction Is a Landauer Machine: The Thermodynamic Floor of Quantum Error-Correction Overhead" — DOI 10.5281/zenodo.22117282 (pub 2026-08-26)
+- P1: "A Pre-Registered Falsification of Deterministic Measurement-Triggered Relaxation" — DOI 10.5281/zenodo.22144215 (pub 2026-08-28)
+
+**Test-send (TEST-SEND-EXTERNAL-1 compliant, strictly first):** id=379 → rwnquni@outlook.com, message_id d95ac8b8-5d18-4ac0-973a-75bcf7f48148, status=sent (D1-verified).
+
+**Real sends (sender rowan.quni@qnfo.org canonical, all status=sent, D1-verified ids 380-383):**
+| id | Recipient | Paper | Connection point | Message ID |
+|----|-----------|-------|------------------|-----------|
+| 380 | deffner@umbc.edu | P2 Landauer QEC floor | Energetic cost of Hamiltonian quantum gates (2102.05118); gate-cost picture vs erasure-cost picture | 84a6e5ac-535a-46ff-8542-8f07c69144fc |
+| 381 | gtlandi@if.usp.br | P2 Landauer QEC floor | Thermodynamic analysis of quantum error-correcting engines (1911.06354) | ac955e4e-28c7-447b-9fd2-c8ae60d8c72c |
+| 382 | turkeshi@thp.uni-koeln.de | P1 measurement relaxation falsification | Measurement-induced symmetry restoration / monitored dynamics (2502.19506) | 7d43b2da-2030-4768-8507-ffdfc6bee2f6 |
+| 383 | shixinzhang@iphy.ac.cn | P1 measurement relaxation falsification | Relaxation critical dynamics in measurement-induced transitions (2502.13408) + neural decoders (2604.03550) | 82b3f4bc-1015-4f6b-916b-22720afe28f9 |
+
+**Address verification (CONNECTION-POINT-UNVERIFIED-1):** all 4 verified from official institutional pages: Deffner (physics.umbc.edu faculty page + quthermo.umbc.edu), Landi (web.if.usp.br official IFUSP directory), Turkeshi (qtraj.org official group page, University of Cologne), SX Zhang (sxzgroup.github.io official QMIND LAB page, IoP CAS). No emails fabricated.
+**Dedup:** contact-ledger + D1 (domains umbc.edu / if.usp.br / uni-koeln.de / iphy.ac.cn → zero prior rows) + recent-100 scan clean. First contacts, no repeats.
+**Cap:** 4 new outreach contacts (within 3-5 daily cap); test-send uncapped (own mailbox).
+**Follow-up eligibility:** 2026-09-14 (14d), once max — NOTE: NO-FOLLOW-UP-DEFAULT-1 (user policy 2026-08-20) permanently cancels follow-ups to silent recipients; eligibility window is informational only.
+**Noise:** 377 waff69009@gmail.com "Research Articles" (novyimir.eu predatory journal invite) classified personal→spam; DMARC/bounce spam archived.

@@ -88,3 +88,8 @@ Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Har
 | pieralberto.marchetti@unipd.it | Pieralberto Marchetti | 2026-08-27 | 1512.01783 Hall effect/edge states/HES in 2D (with Ye, Su, Yu) | NEW 2026-08-27 (D1 id=336, RES.028 wave-2, sent) |
 | nfuxsvai@cbpf.br | Nami Fux Svaiter | 2026-08-27 | 1401.8190 thermodynamics of the bosonic randomized Riemann gas (with Dueñas) | NEW 2026-08-27 (D1 id=337, RES.028 wave-2, sent) |
 | yjng@physics.unc.edu | Y. Jack Ng | 2026-08-27 | cond-mat/9411008 fractional exclusion statistics and anyons (with Chen) | NEW 2026-08-27 (D1 id=338, RES.028 wave-2, sent) |
+
+| deffner@umbc.edu | Sebastian Deffner | 2026-08-31 | 10.5281/zenodo.22117282 Landauer QEC floor | NEW 2026-08-31 (D1 id=380, autonomous Monday wave) |
+| gtlandi@if.usp.br | Gabriel T. Landi | 2026-08-31 | 10.5281/zenodo.22117282 Landauer QEC floor | NEW 2026-08-31 (D1 id=381) |
+| turkeshi@thp.uni-koeln.de | Xhek Turkeshi | 2026-08-31 | 10.5281/zenodo.22144215 measurement relaxation falsification | NEW 2026-08-31 (D1 id=382) |
+| shixinzhang@iphy.ac.cn | Shi-Xin Zhang | 2026-08-31 | 10.5281/zenodo.22144215 measurement relaxation falsification | NEW 2026-08-31 (D1 id=383) |
