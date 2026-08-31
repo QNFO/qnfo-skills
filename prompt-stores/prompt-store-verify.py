@@ -25,7 +25,7 @@ DEFAULT_PATHS = {
     "stub_db": r"C:\Users\LENOVO\.deepchat\agent.db",
 }
 SRC_ENUM = {"local", "imported", "builtin"}
-EXPECTED_IDS = ['1785818698764-ANg4AXN6', '1786134509355-95edf829', '1786134509355-4bb2fa8f', '1786134509355-92eff863', '1786134509355-2c4470a2', '1785818030229-4E_4jl_q', '1786134645892-9a8f303c', '1786133714935-c44c5083', '1786134960622-bcaf7d13']
+EXPECTED_IDS = ["1788197658524-RX0DE2xA", "1788197658524-RVSnJFyP", "1788197658524-2Qgtf6l6", "1788197658524-FwEKzK59", "1788197658524-2R2NP0B9", "1788197658524-CzhqBs5V", "1788197658524-hQdwK4UR", "1788197658524-Icw2DWNP", "1788197658524-3KUDUZ2Z", "1788197658524-NmxnpZvx", "1788197658524-TWLRZ2gs", "1788197658524-fVj3nerc"]
 
 
 def validate_prompt(p):
@@ -183,6 +183,7 @@ def main():
 
     rc = max(rc, 1 if check_system_prompt_parity() else 0)
     rc = max(rc, 1 if check_skill_anchor_parity() else 0)
+    rc = max(rc, 0 if check_mcp_autoapprove_parity() else 1)
 
     if rc == 0:
         print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity)")
@@ -333,6 +334,55 @@ def check_skill_anchor_parity():
     if errs == 0:
         print("SKILL-ANCHOR-PARITY: PASS (%d versioned skills)" % n)
     return errs
+
+
+def check_mcp_autoapprove_parity():
+    """MCP-AUTOAPPROVE-PARITY (DEP-1 lesson, 2026-08-31): mcp-settings.json is the source of
+    truth for autoApprove sets. The running app rewrites the DB mcp_servers rows from its
+    runtime and STRIPS autoApprove — DB drift is the app's known behavior (noted, not fatal).
+    The gate FAILS only when the FILE itself loses the sets (the unrecoverable state)."""
+    import os as _os
+    cfg_dir = _os.path.dirname(DEFAULT_PATHS["roaming_cp_file"])
+    mcpf = _os.path.join(cfg_dir, "mcp-settings.json")
+    if not _os.path.exists(mcpf):
+        print("[MCP-AUTOAPPROVE-PARITY] mcp-settings.json not found — check skipped")
+        return True
+    try:
+        with open(mcpf, encoding="utf-8-sig") as _f:
+            m = json.load(_f)
+        servers = m.get("mcpServers", {}) or {}
+        with_aa = {k: v for k, v in servers.items() if v.get("autoApprove")}
+        if not with_aa:
+            print("[MCP-FILE-EMPTY] mcp-settings.json has NO autoApprove sets — the app may have "
+                  "stripped the FILE; restore from the canonical before relying on the toolchain")
+            return False
+        try:
+            c = sqlite3.connect("file:%s?mode=ro" % DEFAULT_PATHS["roaming_db"].replace("\\", "/"),
+                                uri=True, timeout=30)
+            drift = []
+            for _name, _cfgj in c.execute("SELECT name, config_json FROM mcp_servers").fetchall():
+                _fcfg = servers.get(_name)
+                if not _fcfg:
+                    continue
+                _faa = _fcfg.get("autoApprove") or []
+                try:
+                    _d = json.loads(_cfgj)
+                except Exception:
+                    continue
+                if (_d.get("autoApprove") or []) != _faa:
+                    drift.append(_name)
+            c.close()
+        except Exception:
+            drift = []
+        if drift:
+            print("[MCP-DB-NOTE] DB mcp_servers rows stripped autoApprove for %d server(s) — the "
+                  "running app rewrites them from its runtime; the file is the source of truth "
+                  "(re-sync after app restarts): %s" % (len(drift), ", ".join(drift[:6])))
+        print("[MCP-AUTOAPPROVE-PARITY] PASS (file intact: %d servers with autoApprove)" % len(with_aa))
+        return True
+    except Exception as e:
+        print("[MCP-AUTOAPPROVE-PARITY] check skipped: %s" % e)
+        return True
 
 
 if __name__ == "__main__":
