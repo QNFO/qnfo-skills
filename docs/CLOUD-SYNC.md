@@ -34,4 +34,4 @@ Directive (2026-09-01, user): all local/deepchat/GitHub skills + settings must S
 | CSYNC-03 R2 bucket obsidian-vault exists (WEUR) | r2_buckets_list 2026-09-01 | YES | HIGH |
 | CSYNC-04 CLOUD-SYNC.md committed 0039c3c (updated 9e1c7f3 with this sheet) | git ls-remote origin/master == HEAD | YES | HIGH |
 | CSYNC-05 D1 handoffs 28841 + wbs_state cloud-sync 6/6 | D1 SELECT | YES | HIGH |
-| CSYNC-06 job-market-watch Workflow deployed + instance ran (6 steps, success) | Workflows API instance status + D1 self-record 28842 | YES | HIGH |
+| CSYNC-06 job-market-watch Workflow deployed + instance ran (6 steps, success; instance bd1524ba, workflow debe5193) | Workflows API instance status + D1 self-record 28845 | YES | HIGH |
