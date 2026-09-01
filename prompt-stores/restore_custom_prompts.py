@@ -27,10 +27,8 @@ REPO_CANON = r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\custom
 SKILLS_COPY = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts.json"  # the local skills mirror — gate-checked, not canonical
 CANON_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "customPrompts-canonical.json")
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
-DOTDEEP_JSON = r"C:\Users\LENOVO\.deepchat\app-settings.json"
 ROAMING_CP_FILE = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
-STUB_DB = r"C:\Users\LENOVO\.deepchat\agent.db"
 EXPECTED_IDS = ['1788197658524-RX0DE2xA', '1788197658524-RVSnJFyP', '1788197658524-2Qgtf6l6', '1788197658524-FwEKzK59', '1788197658524-2R2NP0B9', '1788197658524-CzhqBs5V', '1788197658524-hQdwK4UR', '1788197658524-Icw2DWNP', '1788197658524-3KUDUZ2Z', '1788197658524-NmxnpZvx', '1788197658524-TWLRZ2gs', '1788197658524-fVj3nerc']
 SRC_ENUM = {"local", "imported", "builtin"}
 
@@ -187,35 +185,8 @@ def cmd_restore():
         ok_all = False
         log(f"Roaming DB FAILED: {e}")
 
-    # 2. stub DB
-    try:
-        c = sqlite3.connect(STUB_DB, timeout=60)
-        c.execute("UPDATE app_settings SET value=? WHERE key='customPrompts'", (canon_json,))
-        c.commit()
-        row = c.execute("SELECT value FROM app_settings WHERE key='customPrompts'").fetchone()
-        c.close()
-        ok = bool(row) and json.loads(row[0]) == canon
-        ok_all &= ok
-        log(f"Stub DB app_settings: {'OK' if ok else 'MISMATCH'}")
-    except Exception as e:
-        ok_all = False
-        log(f"Stub DB FAILED: {e}")
-
-    
-    # 2.5 Roaming custom_prompts.json (the file whose object-shape crashed the app 2026-08-31)
-    try:
-        with open(ROAMING_CP_FILE, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(canon, f, ensure_ascii=False, indent=2)
-        cp2 = json.load(open(ROAMING_CP_FILE, encoding="utf-8"))
-        ok = isinstance(cp2, list) and cp2 == canon
-        ok_all &= ok
-        log(f"Roaming custom_prompts.json: {'OK' if ok else 'MISMATCH'}")
-    except Exception as e:
-        ok_all = False
-        log(f"Roaming custom_prompts.json FAILED: {e}")
-
     # 3+4. JSON stores (full-file rewrite, LF)
-    for path, label in ((DOTDEEP_JSON, ".deepchat/app-settings.json"), (ROAMING_JSON, "Roaming app-settings.json")):
+    for path, label in ((ROAMING_JSON, "Roaming app-settings.json")):
         try:
             d = json.load(open(path, encoding="utf-8"))
             d["customPrompts"] = canon
@@ -244,10 +215,8 @@ def cmd_verify():
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
-        "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
-        "stub_db": lambda: _db_list(STUB_DB),
     }
     rc = 0
     results = {}
@@ -280,10 +249,8 @@ def cmd_inventory():
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
-        "dotdeep_json": lambda: _json_list(DOTDEEP_JSON),
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
-        "stub_db": lambda: _db_list(STUB_DB),
     }
     for name, loader in stores.items():
         try:

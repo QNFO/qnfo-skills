@@ -19,10 +19,8 @@ import json, sqlite3, sys, os
 DEFAULT_PATHS = {
     "repo": r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json",
     "script": r"C:\Users\LENOVO\.deepchat\scripts\customPrompts-canonical.json",
-    "dotdeep_json": r"C:\Users\LENOVO\.deepchat\app-settings.json",
     "roaming_cp_file": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json",
     "roaming_db": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
-    "stub_db": r"C:\Users\LENOVO\.deepchat\agent.db",
 }
 SRC_ENUM = {"local", "imported", "builtin"}
 EXPECTED_IDS = ["1788197658524-RX0DE2xA", "1788197658524-RVSnJFyP", "1788197658524-2Qgtf6l6", "1788197658524-FwEKzK59", "1788197658524-2R2NP0B9", "1788197658524-CzhqBs5V", "1788197658524-hQdwK4UR", "1788197658524-Icw2DWNP", "1788197658524-3KUDUZ2Z", "1788197658524-NmxnpZvx", "1788197658524-TWLRZ2gs", "1788197658524-fVj3nerc"]
@@ -199,9 +197,7 @@ def main():
 SYSPROMPT_STORES = {
     "canonical_md":   r"C:\Users\LENOVO\.deepchat\system-prompt-v2.7.md",
     "roaming_json":   r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json",
-    "dotdeep_json":   r"C:\Users\LENOVO\.deepchat\app-settings.json",
     "app_db_list":    r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
-    "stub_db_raw":    r"C:\Users\LENOVO\.deepchat\agent.db",
     "repo_copy_md":    r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\system-prompt-v2.7.md",
     "agents_row":     r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
 }
@@ -210,7 +206,7 @@ def read_system_prompt(name, path):
     try:
         if name in ("canonical_md", "repo_copy_md"):
             return open(path, encoding="utf-8").read(), None
-        if name in ("roaming_json", "dotdeep_json"):
+        if name == "roaming_json":
             return json.load(open(path, encoding="utf-8")).get("default_system_prompt"), None
         if name == "app_db_list":
             c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
@@ -219,22 +215,6 @@ def read_system_prompt(name, path):
             if not v:
                 return None, "no systemPrompts row"
             j = json.loads(v[0])
-            if isinstance(j, list) and j:
-                return j[0].get("content"), None
-            if isinstance(j, str):
-                return j, None
-            return None, "unexpected shape %s" % type(j).__name__
-        if name == "stub_db_raw":
-            c = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=60)
-            cols = [r[1] for r in c.execute("PRAGMA table_info(app_settings)").fetchall()]
-            vc = "value_json" if "value_json" in cols else "value"
-            v = c.execute("SELECT %s FROM app_settings WHERE key='systemPrompts'" % vc).fetchone()
-            c.close()
-            if not v:
-                return None, "no systemPrompts row"
-            j = v[0]
-            if isinstance(j, str):
-                j = json.loads(j)
             if isinstance(j, list) and j:
                 return j[0].get("content"), None
             if isinstance(j, str):

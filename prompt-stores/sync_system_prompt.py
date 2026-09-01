@@ -22,9 +22,7 @@ import json, sqlite3, datetime
 
 CANON = r"C:\Users\LENOVO\.deepchat\system-prompt-v2.7.md"
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
-DOTDEEP_JSON = r"C:\Users\LENOVO\.deepchat\app-settings.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
-STUB_DB = r"C:\Users\LENOVO\.deepchat\agent.db"
 FLASH = "deepseek/deepseek-v4-flash"
 MODEL_DICT = {"providerId": "deepseek", "modelId": "deepseek-v4-flash"}
 
@@ -33,7 +31,7 @@ with open(CANON, "r", encoding="utf-8") as f:
 print("canonical chars:", len(content))
 
 # 1. JSON files
-for p in (ROAMING_JSON, DOTDEEP_JSON):
+for p in (ROAMING_JSON,):
     d = json.load(open(p, encoding="utf-8"))
     d["default_system_prompt"] = content
     d["defaultModel"] = MODEL_DICT
@@ -43,7 +41,7 @@ for p in (ROAMING_JSON, DOTDEEP_JSON):
     print("json written:", p, "promptlen", len(d["default_system_prompt"]))
 
 # 2. Databases (DB-first per MODEL-KEY-DB-ROOT-SOURCE-1)
-for dbp in (ROAMING_DB, STUB_DB):
+for dbp in (ROAMING_DB,):
     c = sqlite3.connect(dbp, timeout=60)
     c.execute("PRAGMA busy_timeout=15000")
     tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")]
@@ -82,8 +80,6 @@ print("=== READBACK ===")
 d = json.load(open(ROAMING_JSON, encoding="utf-8"))
 print("roaming promptlen:", len(d.get("default_system_prompt", "")))
 print("roaming defaultModel:", d.get("defaultModel"), "preferredModel:", d.get("preferredModel"))
-l = json.load(open(DOTDEEP_JSON, encoding="utf-8"))
-print("legacy promptlen:", len(l.get("default_system_prompt", "")), "preferredModel:", l.get("preferredModel"))
 c = sqlite3.connect(ROAMING_DB, timeout=60)
 for r in c.execute("SELECT key, length(value_json) FROM app_settings WHERE key IN ('systemPrompts','defaultModel','preferredModel')"):
     print("db row:", r)
