@@ -1,10 +1,13 @@
 ---
 name: kaizen
-version: "2.120"
+version: "2.121"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
 
 
+> **v2.121 UPDATE (2026-09-01, kaizen — CMD SKILLS UPDATE: OPS.007 mandate-chain re-alignment of system prompt v3.96 (full v3.49→v3.94 preservation chain added to body per user decision); verified local Research Daily Briefing cron already disabled (cloud worker research-daily-brief fully migrated: cron 0 6 * * *, EMAIL_API_KEY + OUTREACH_DB bindings); mirrors system-prompt v3.96):**
+> (1) [OPS] OPS.007 closed 2026-09-01: system-prompt re-aligned to v3.96 — title+footer+banner updated, MANDATORY GATES PRESERVATION CHAIN section (48 blocks, v3.49→v3.94) spliced before ## Version; canonical 100316 bytes; dual-write via sync_system_prompt.py v4.0 --force (delta guard bypassed deliberately: user-approved realignment); 5-store parity + prompt-store-verify exit 0 re-verified.
+> (2) [HARD] CLOUD-CRON-VERIFY-1 (2026-09-01): before disabling any local DeepChat cronjob, verify the cloud equivalent exists + is enabled with schedule + bindings (research-daily-brief: worker present, cron 0 6 * * * created 2026-09-01T08:30, EMAIL_API_KEY secret + OUTREACH_DB D1 d5077252). Local daily-brief cron was already disabled (fdf1403c enabled:false).
 > **v2.120 UPDATE (2026-09-01, kaizen — CMD SKILLS UPDATE: D1-SCHEMA-PREFIX-HYPHEN-1 + OPS.005 radar closeout + stale-restore recovery; mirrors system-prompt v3.95):**
 > (1) [HARD] D1-SCHEMA-PREFIX-HYPHEN-1 (VERIFIED 2026-09-01): the Cloudflare D1 HTTP /query API SQL parser rejects hyphenated schema prefixes — "qnfo-audit.handoffs" throws SQLITE_ERROR "near '-': syntax error at offset 16" while unqualified "handoffs" works. Use unqualified table names in D1 queries. Canonical: 2026-09-01 conference-radar closeout (handoffs id 28838 + wbs_state QNFO.OPS.005 writes).
 > (2) [OPS] OPS.005 radar cycle closed 2026-09-01: 19 events in window (TQC 2026 appended post-audit), Obsidian note D:/Obsidian/notes/v1/2026/09/01/_conference-radar-2026-09-01.md (verified), handoffs 28838, wbs_state phase 5/5; deferred: radar worker migration + CMD SKILLS UPDATE dedicated sessions.
