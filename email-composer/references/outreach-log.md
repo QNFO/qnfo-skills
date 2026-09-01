@@ -737,3 +737,26 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Cap:** 4 new outreach contacts (within 3-5 daily cap); test-send uncapped (own mailbox).
 **Follow-up eligibility:** 2026-09-14 (14d), once max — NOTE: NO-FOLLOW-UP-DEFAULT-1 (user policy 2026-08-20) permanently cancels follow-ups to silent recipients; eligibility window is informational only.
 **Noise:** 377 waff69009@gmail.com "Research Articles" (novyimir.eu predatory journal invite) classified personal→spam; DMARC/bounce spam archived.
+
+
+## 2026-09-01 — 09-01 wave (sent earlier today, session 0dc89e9e/8d71acfa block) + Tuesday check (agent run, 09:05Z)
+
+**09-01 wave sends (all status=sent, D1-verified, sender rowan.quni@qnfo.org):**
+| id | Recipient | Subject | Message ID |
+|----|-----------|---------|-----------|
+| 389 | julie.shih@stanford.edu | The conformal primon gas and the discipline of arithmetic interpretations | fe509641-a6ae-4382-8145-80b10cc2807b |
+| 390 | md989@cam.ac.uk | Complex primon gases, automorphic L-functions, and a corrected dictionary | 4f64719f-cb87-4e5b-875e-6c32cb343b53 |
+| 391 | katzmik@math.biu.ac.il | Formalism 25 and the empirical filter: a pre-arithmetic framework | 0f7ead49-587e-4203-9eea-ab4c32a08511 |
+| 392 | souvikghosh2012@gmail.com | Identity, aggregation, and the empirical filter in pre-arithmetic | 8098ff6d-2719-407c-b3ee-5d3bb3459159 |
+| 393 | richardahealey@gmail.com | Measurement without ontology: a pre-registered falsification test | 578ca31f-c533-4d17-a339-8c3bc949aa8f |
+| 394 | julie.shih@stanford.edu | Correction: message intended for Prof. Sean Hartnoll | 04280de3-c9bd-495d-8bda-1bed28ab7b6a |
+| 396 | souvikghosh2012@gmail.com | Re: Identity, aggregation... (reply to inbound 395) | 5decae3c-43b7-4ea4-ac04-a47e2db32b3a |
+| 397 | asafico@tau.ac.il | The primon-gas dictionary: prime partitions and zeta partition functions | 0dc89e9e-5f36-4c47-98c5-6b9c9a9cd739 |
+| 398 | zaharesc@illinois.edu | Prime partitions, pseudo-differentiable functions, and the corrected primon-gas dictionary | 8d71acfa-9a6e-4c03-a578-05faf3ced040 |
+
+**Inbound handled today:** 395 souvikghosh2012@gmail.com — "Re: Identity, aggregation..." 08:31Z, reply sent 08:41Z (id 396). Live conversation, positive/engagement.
+**Non-outreach outbound today:** 386 fcachazo@perimeterinstitute.ca (Perimeter Institute joint faculty position — expression of interest, 07:27Z).
+
+**Tuesday check (09:05Z):** No new inbound beyond above; no replies to 08-31 wave (380-383) or 09-01 wave yet (0-2 days); follow-up eligibility NONE (NO-FOLLOW-UP-DEFAULT-1 cancels silent-recipient follow-ups permanently). Cadence day Tuesday = inbox + reply tracking only, no sends.
+**Noise:** 385 casino-leads spam, 384 DMARC spam — archived.
+

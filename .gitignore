@@ -1,0 +1,4 @@
+
+# caches — never commit
+__pycache__/
+.lastActivity

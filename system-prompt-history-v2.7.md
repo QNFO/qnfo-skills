@@ -40,3 +40,6 @@
 > (7) [SOFT] ROUTER-RUN-CODE-SANDBOX-1 — new Function is global-scope (SSRF surface); env secrets safe (closure); accepted risk.
 > Full gate section below (CLOUDFLARE WORKERS AI ROUTER GATES).
 
+
+--- 2026-09-01 v3.5 (RUNCODE-HALT-COMPOUND-1) ---
+system-prompt v3.5: run_code halt compound gates (provider_error halt RUNCODE-HALT-1, sandbox globals RUNCODE-SANDBOX-GLOBALS-1, string-typed subtool outputs RUNCODE-SUBTOOL-STRING-1, exec bg-poll pattern RUNCODE-EXEC-BG-1, 1MiB output cap RUNCODE-OUTPUT-CAP-1, heartbeat RUNCODE-HEARTBEAT-1, ToolCallError RUNCODE-TOOLCALL-1, py-UA-1010 PYTHON-UA-1010-1). 7 stores byte-identical; prompt-store-verify.py exit 0; git 033568e on QNFO/qnfo-skills + rwnq8/qnfo-skills. sha256 c9020373a1838849

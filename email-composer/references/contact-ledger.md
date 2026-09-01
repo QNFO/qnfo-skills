@@ -93,3 +93,12 @@ Last updated: 2026-08-27 (wave 3: RES.027 tier-1 — Medina Sánchez / Dai / Har
 | gtlandi@if.usp.br | Gabriel T. Landi | 2026-08-31 | 10.5281/zenodo.22117282 Landauer QEC floor | NEW 2026-08-31 (D1 id=381) |
 | turkeshi@thp.uni-koeln.de | Xhek Turkeshi | 2026-08-31 | 10.5281/zenodo.22144215 measurement relaxation falsification | NEW 2026-08-31 (D1 id=382) |
 | shixinzhang@iphy.ac.cn | Shi-Xin Zhang | 2026-08-31 | 10.5281/zenodo.22144215 measurement relaxation falsification | NEW 2026-08-31 (D1 id=383) |
+
+| souvikghosh2012@gmail.com | Souvik Ghosh | 2026-09-01 | 10.5281/zenodo.22159758 identity/aggregation/empirical filter (pre-arithmetic) | NEW 2026-09-01 (D1 id=392) + ACTIVE thread (395 inbound, 396 reply) |
+| katzmik@math.biu.ac.il | Mikhail Katz | 2026-09-01 | pre-arithmetic formalism / empirical filter | NEW 2026-09-01 (D1 id=391) |
+| md989@cam.ac.uk | (De Clerck) | 2026-09-01 | complex primon gases / automorphic L-functions | NEW 2026-09-01 (D1 id=390) |
+| richardahealey@gmail.com | Richard Healey | 2026-09-01 | measurement without ontology — falsification test | NEW 2026-09-01 (D1 id=393) |
+| julie.shih@stanford.edu | (Stanford, Hartnoll relay + correction) | 2026-09-01 | conformal primon gas (intended: S. Hartnoll) | NEW 2026-09-01 (D1 ids=389, 394 correction) |
+| asafico@tau.ac.il | Asaf Shapira | 2026-09-01 | primon-gas dictionary / zeta partition functions (arXiv:2606.06068) | NEW 2026-09-01 (D1 id=397) |
+| zaharesc@illinois.edu | Alexandru Zaharescu | 2026-09-01 | primon-gas dictionary / prime partitions (arXiv:2412.20102) | NEW 2026-09-01 (D1 id=398) |
+
