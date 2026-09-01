@@ -773,3 +773,14 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 - D1 qnfo-outreach: outreach_campaigns + cadence_runs + outreach_candidates (parallel effort tables outreach_sends/sent_log preserved).
 - RED-TEAM: direct adversarial audit (subagent spawns user-denied) - F1..F6 findings all addressed in v0.3.1.
 - Cadence parity note: worker queues candidates (email_verified=0) but does NOT send external outreach itself; verified-address sends remain agent-executed (worker is detection/reporting layer).
+
+
+## 2026-09-01 - OPS.003.R3: RED-TEAM blockers closed (v0.3.3) - Monday SEND wave hardened
+
+- RED-TEAM (subagent, accuracy/safety of Monday send wave) verdict on v0.3.2: NOT GO for 2026-09-07 as-is. 2 HIGH blockers + MEDIUMs.
+- HIGH-1: email verification not author-bound (whole-blob regex could pick journal/role mailboxes) -> v0.3.3 adds ROLE_EMAIL_RE + JOURNAL_DOMAIN_RE blocklists, \email{}/mailto: macro extraction, name-token cross-check vs first author; per-paper try/catch.
+- HIGH-2: dedup only matched status='sent' -> now status IN ('sent','replied') (never re-contact mid-conversation).
+- MED: honest subject (no fake "Re:"), AI draft anchored to server-side facts only (no invented claims), e-print pacing/retry (3 attempts, 4/8/12s), atomic run-lock claim (INSERT OR IGNORE lock row).
+- Deployed: version 92dc2b0d-5fbf-462e-afb7-edab958c063c, deployment ae800984-2275-4e88-9380-0b818711b1d2 (100%), DRY_RUN=false. Commit 1245444 pushed to origin/main.
+- Verified live: health v0.3.3, all bindings, auth 401/200, dry cadence ok, deployment 100%.
+- First autonomous Monday SEND wave: 2026-09-07 (receipt to alerts@qnfo.org). Worker sends ONLY author-bound verified addresses, cap 5/day, dedup sent+replied.
