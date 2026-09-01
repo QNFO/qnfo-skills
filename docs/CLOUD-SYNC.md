@@ -32,6 +32,6 @@ Directive (2026-09-01, user): all local/deepchat/GitHub skills + settings must S
 | CSYNC-01 GitHub canonical write-to-obsidian.py on master (HTTP 200) | raw.githubusercontent.com/QNFO/qnfo-skills/master/... (fetch 2026-09-01) | YES | HIGH |
 | CSYNC-02 obsidian-writer Worker deployed (classic, abd78c6d) | Cloudflare Workers API + code readback | YES | HIGH |
 | CSYNC-03 R2 bucket obsidian-vault exists (WEUR) | r2_buckets_list 2026-09-01 | YES | HIGH |
-| CSYNC-04 CLOUD-SYNC.md committed 0039c3c (updated 9e1c7f3 with this sheet) | git ls-remote origin/master == HEAD | YES | HIGH |
+| CSYNC-04 CLOUD-SYNC.md claim sheet committed dcde072 + c60679a, merged/pushed as d136e4f | git ls-remote origin/master == HEAD d136e4f (2026-09-01) | YES | HIGH |
 | CSYNC-05 D1 handoffs 28841 + wbs_state cloud-sync 6/6 | D1 SELECT | YES | HIGH |
 | CSYNC-06 job-market-watch Workflow deployed + instance ran (6 steps, success; instance bd1524ba, workflow debe5193) | Workflows API instance status + D1 self-record 28845 | YES | HIGH |
