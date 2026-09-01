@@ -24,3 +24,14 @@ Directive (2026-09-01, user): all local/deepchat/GitHub skills + settings must S
 3. Settings parity stores -> cloud canonical (prompt-store 10-vs-12, handoff 28823).
 4. First cloud cron runs 2026-09-02 04:00/06:00Z: verify memory_maintain_runs + brief output in cloud vault.
 5. Skills/settings drift check: git status clean each cycle; push-only own files (GIT-OWNERSHIP-1).
+
+
+## CLAIM SHEET (FRAMEWORK-DOGFOOD-1 — this record's locked claims)
+| Claim | Source | Verified | Confidence |
+|---|---|---|---|
+| CSYNC-01 GitHub canonical write-to-obsidian.py on master (HTTP 200) | raw.githubusercontent.com/QNFO/qnfo-skills/master/... (fetch 2026-09-01) | YES | HIGH |
+| CSYNC-02 obsidian-writer Worker deployed (classic, abd78c6d) | Cloudflare Workers API + code readback | YES | HIGH |
+| CSYNC-03 R2 bucket obsidian-vault exists (WEUR) | r2_buckets_list 2026-09-01 | YES | HIGH |
+| CSYNC-04 CLOUD-SYNC.md committed 0039c3c (updated 9e1c7f3 with this sheet) | git ls-remote origin/master == HEAD | YES | HIGH |
+| CSYNC-05 D1 handoffs 28841 + wbs_state cloud-sync 6/6 | D1 SELECT | YES | HIGH |
+| CSYNC-06 job-market-watch Workflow deployed + instance ran (6 steps, success) | Workflows API instance status + D1 self-record 28842 | YES | HIGH |
