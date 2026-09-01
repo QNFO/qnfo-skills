@@ -1,10 +1,14 @@
 ---
 name: kaizen
-version: "2.119"
+version: "2.120"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
 
 
+> **v2.120 UPDATE (2026-09-01, kaizen — CMD SKILLS UPDATE: D1-SCHEMA-PREFIX-HYPHEN-1 + OPS.005 radar closeout + stale-restore recovery; mirrors system-prompt v3.95):**
+> (1) [HARD] D1-SCHEMA-PREFIX-HYPHEN-1 (VERIFIED 2026-09-01): the Cloudflare D1 HTTP /query API SQL parser rejects hyphenated schema prefixes — "qnfo-audit.handoffs" throws SQLITE_ERROR "near '-': syntax error at offset 16" while unqualified "handoffs" works. Use unqualified table names in D1 queries. Canonical: 2026-09-01 conference-radar closeout (handoffs id 28838 + wbs_state QNFO.OPS.005 writes).
+> (2) [OPS] OPS.005 radar cycle closed 2026-09-01: 19 events in window (TQC 2026 appended post-audit), Obsidian note D:/Obsidian/notes/v1/2026/09/01/_conference-radar-2026-09-01.md (verified), handoffs 28838, wbs_state phase 5/5; deferred: radar worker migration + CMD SKILLS UPDATE dedicated sessions.
+> (3) [SOFT] KAIZEN-WORKTREE-GATE-1 (proposal): prompt-store-verify SKILL-ANCHOR-PARITY checks internal consistency only — it cannot detect working-tree reverts vs HEAD (2026-09-01 incident: kaizen 2.119→2.118 clobber deleted RUNCODE-HEARTBEAT-1/CHILD-FROZEN-VIEW-1; recovered via git checkout HEAD, EMAIL-COMPOSER-REVERT-1 pattern). Cycle verification should add a git diff HEAD --exit-code check per skill.
 > **v2.119 UPDATE (2026-09-01, kaizen — CMD SKILLS UPDATE: run_code heartbeat watchdog + child frozen-view fallback; mirrors system-prompt v3.4):**
 > (1) [HARD] RUNCODE-HEARTBEAT-1 (VERIFIED 2026-09-01 from app.asar primary evidence): Code Mode cells have a 3.5s liveness heartbeat watchdog (HEARTBEAT_TIMEOUT_MS=3500; killed via failAndCleanup when Date.now()-lastHeartbeatAt > 3500). Effective budget = min(3.5s heartbeat-silence, timeout_ms), NOT the documented 5-min. Trigger: utility-host event loop blocked >3.5s by synchronous work (heavy foreground exec/grep, large-result serialization, busy-wait). Sandbox lacks setTimeout/setInterval/process/require/Buffer/fetch. Mitigation: keep cells short, background exec + process poll, no multi-subtool loops in one cell, bounded outputs. Canonical: 4x heartbeat timeouts 2026-09-01 (incl. single tape_search).
 > (2) [HARD] CHILD-FROZEN-VIEW-1 (VERIFIED): delegated child sessions hit a frozen View ceiling - every Code Mode subtool refused with ToolCallError 'outside the frozen View ceiling' (synchronous allowlist check, codeModeUtilityHost.js ~L474). Stop retrying in the child; parent executes directly with read access. Extends REDTEAM-CHILD-FAIL-1.

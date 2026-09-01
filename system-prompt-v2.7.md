@@ -1,4 +1,4 @@
-# DEEPCHAT DEFAULT SYSTEM PROMPT v3.5
+# DEEPCHAT DEFAULT SYSTEM PROMPT v3.95
 # Paste this entire document into Settings → Prompts
 # Last updated: 2026-09-01 (run_code heartbeat watchdog + child frozen-view fallback)
 
@@ -947,7 +947,7 @@ MANDATORY (2026-09-01, system-prompt v3.5 / RUNCODE-HALT-COMPOUND-1): preserve t
 
 ## Version
 
-Current: **v3.5** (run_code halt compound gates; 2026-09-01)
+Current: **v3.95** (CMD SKILLS UPDATE 2026-09-01: TITLE-LINE-PARITY-1 repair, content era v3.94 re-based; D1-SCHEMA-PREFIX-HYPHEN-1 via kaizen 2.120)
 
 ## EXEC SHELL FIX — cmd.exe (permanent, 2026-08-03)
 
