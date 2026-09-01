@@ -425,7 +425,7 @@ The agent loads this document, identifies the paper and audience, executes the p
 
 The outreach cadence is wired into two scheduled tasks — it runs **autonomously**, not just on-demand.
 
-**Task 1: `qnfo-email-inbox-check` (every 3 hours, id `3851f539`)**
+**Task 1: `qnfo-email-inbox-check` — MIGRATED TO CLOUD 2026-09-01 (OPS.003): local DeepChat cronjob 3851f539 DELETED; the cadence now runs as Cloudflare Worker `qnfo-email-orchestrator` v0.3.1 (cron 0 */3 * * * UTC, no local Windows required). See qnfo-email-orchestrator/ in QNFO/qnfo-workers (MANIFEST.md, RECOVERY.md, GET /doc endpoint).**
 After the standard inbox check, this task handles the full outreach cadence:
 - **Every run**: Detects outreach replies (email subjects matching QNFO paper titles), checks follow-up readiness (>14 days no response)
 - **Monday** (first run after 08:00 UTC): Scans arXiv for researchers whose recent work connects to QNFO papers published in the last 90 days; presents 3-5 outreach candidates

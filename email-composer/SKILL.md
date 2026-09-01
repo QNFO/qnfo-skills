@@ -1745,3 +1745,20 @@ Initial outreach emails are sent fully autonomously with no user review, and onl
 - Confidence: high
 - Scope: outreach and email pipelines only
 - Source: qnfo-kaizen v0.2.0 meta loop (intent int-meta-outreach-review-2). Additive-only; no version bump. Git push: worker-side (GITHUB_TOKEN) or local skill_sync bridge.
+
+
+---
+
+## CLOUD MIGRATION (2026-09-01, OPS.003 - LOCAL TASK 3851f539 DELETED)
+
+The email+outreach cadence no longer depends on local Windows DeepChat being open.
+- Local DeepChat cronjob 3851f539 (qnfo-email-inbox-check) is DELETED. Superseded by:
+- Cloud Worker qnfo-email-orchestrator v0.3.1 - cron 0 */3 * * * UTC, URL https://qnfo-email-orchestrator.q08.workers.dev
+  - inbox check + AI triage (/run/check), full cadence (/run/cadence): reply detection/classification (taxonomy), follow-up readiness, Mon arXiv scan -> candidates queue, Wed response check, Fri weekly report + self-audit
+  - receipt emailed to alerts@qnfo.org (D1 sink, never personal inbox)
+  - AUTH: /run/* requires x-api-key (or Bearer) matching EMAIL_API_KEY; /health /doc /audit open
+  - self-documented: GET /doc; self-audit: GET /audit (also in Friday report)
+- Version control / recovery: source in QNFO/qnfo-workers repo qnfo-email-orchestrator/ (worker.js, wrangler.toml, MANIFEST.md, RECOVERY.md, scripts/redeploy-orchestrator.py). Commit abdf937.
+- D1 qnfo-outreach (d5077252...) tracks outreach_campaigns, cadence_runs, outreach_candidates (email_verified=0 - never auto-sent; verification required before any send).
+- Safety unchanged: NO-FOLLOW-UP-DEFAULT-1 (0 follow-ups to silent recipients), never fabricate addresses, never send to unverified addresses, DIGEST-TO-PERSONAL-1 (receipts to alerts@ only).
+- DRY_RUN=false (live autonomous cron). The worker queues candidates but never sends external outreach itself - sends remain agent-executed with verified addresses.

@@ -760,3 +760,16 @@ Patel: permanently closed (3 contacts: 61/66/69 — no follow-up ever). ONE foll
 **Tuesday check (09:05Z):** No new inbound beyond above; no replies to 08-31 wave (380-383) or 09-01 wave yet (0-2 days); follow-up eligibility NONE (NO-FOLLOW-UP-DEFAULT-1 cancels silent-recipient follow-ups permanently). Cadence day Tuesday = inbox + reply tracking only, no sends.
 **Noise:** 385 casino-leads spam, 384 DMARC spam — archived.
 
+
+
+## 2026-09-01 - OPS.003 CLOUD MIGRATION: local task 3851f539 DELETED, cadence moved to qnfo-email-orchestrator v0.3.1
+
+- Local DeepChat cronjob 3851f539 (qnfo-email-inbox-check, every 3h) DELETED - superseded by Cloudflare Worker qnfo-email-orchestrator v0.3.1.
+- Worker: cron 0 */3 * * * UTC; bindings AI + AUDIT_DB + DRY_RUN=false + EMAIL(svc) + EMAIL_API_KEY(secret) + OUTREACH_DB; version 2181fc9d, deployment 49ba4ebd (100%).
+- Verified live: reply detect (Ghosh 395 -> positive, dedup), receipt to alerts@ (id 400 v0.3, e4131e70 v0.3.1), cadence_runs 1-3, outreach_campaigns 5-8.
+- Auth gate added (F1): /run/* requires x-api-key or Bearer EMAIL_API_KEY (401 unauth). Thread dedup (F2), classify ordering (F3), https arXiv + paper_id dedup (F4), DRY_RUN=false live cron (F5).
+- Self-doc: GET /doc; self-audit: GET /audit + Friday weekly block.
+- Version control: QNFO/qnfo-workers commit abdf937 (qnfo-email-orchestrator/ with MANIFEST.md, RECOVERY.md, redeploy script).
+- D1 qnfo-outreach: outreach_campaigns + cadence_runs + outreach_candidates (parallel effort tables outreach_sends/sent_log preserved).
+- RED-TEAM: direct adversarial audit (subagent spawns user-denied) - F1..F6 findings all addressed in v0.3.1.
+- Cadence parity note: worker queues candidates (email_verified=0) but does NOT send external outreach itself; verified-address sends remain agent-executed (worker is detection/reporting layer).
