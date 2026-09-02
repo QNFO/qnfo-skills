@@ -1,13 +1,13 @@
 ---
 name: research
-version: "2.147"
+version: "2.148"
 description: "QNFO/QWAV research pipeline: literature search, due diligence, computation, verification, publication to Zenodo, R2 mirror, Pages deploy, outreach, post-publication adversarial analysis. The research agent core skill."
 ---
 
 
-> **v2.147 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117):**
+> **v2.148 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117):**
 
-### v2.147 — JPCUB research program (2026-08-31)
+### v2.148 — JPCUB research program (2026-08-31)
 
 **JPCUB-BENCHMARK-PROGRAM-1** — active research program: joules-per-compute benchmark (github.com/rwnq8/joules-per-compute-benchmark). Open questions in flight (2026-08-31): Landauer principle as energy floor for cryogenic controllers; Margolus-Levitin bound as lower energy per operation (DOI 10.5281/zenodo.21255013); surface-code energy floor for 1000 logical qubits; 2026 benchmark revision normalizing energy per logical qubit not physical gate; wall-clock-latency vs energy tradeoff. Prior art: 10.1038/s41586-021-03393-4 (IBM Eagle 127-qubit cryo power). Any JPCUB analysis must follow COMPUTATIONAL-VERIFICATION-1 (derive, verify in code, deposit artifacts).
 
@@ -62,7 +62,7 @@ description: "QNFO/QWAV research pipeline: literature search, due diligence, com
 > (1) [HARD] **CROSSWALK-TRANSLATION-1 (user directive 2026-08-24: "CROSS-DOMAIN INSIGHTS AND INTERDISCIPLINARY/CROSS-DISCIPLINARY TERMINOLOGY AND CROSSWALKS/TRANSLATIONS ARE CRITICAL FOR BREAKTHROUGH DISCOVERIES: NO SILOS, NO JARGON!")** — Phase 1 due diligence MUST include an adjacent-domain scan (>=2 adjacent WBS domains, DUE-DILIGENCE-DEPTH-1) looking for correspondences; Phase 5 publications MUST (a) name cross-domain connections in title/abstract where they exist (title-visible bridges, TERMINOLOGY-SILO-LESSONS-1), (b) include an explicit crosswalk/translation of key domain terms into adjacent-domain equivalents where a correspondence exists, and (c) be readable by an adjacent-domain expert — unexplained in-group jargon/shorthand is a HARD finding (extends PUBLICATION-PROSE-GATE-1 + PAPERS-NO-NAVEL-GAZING-1). Any vocabulary/taxonomy corpus used triggers the partitionality instrument (scripts/terminology_silos.py, QNFO.CGS.002) with bridge share reported; the semantic mapping layer (bilingual-dictionary analogue) is first-class infrastructure, not an afterthought. Canonical: 10.5281/zenodo.22075544 (the instrument + infrastructure response); "Valuation Without ℝ" (10.5281/zenodo.21803677) as the title-visible crosswalk exemplar.
 > Cross-reference: system-prompt v3.72, kaizen v2.94, TERMINOLOGY-SILO-LESSONS-1, PUBLICATION-PROSE-GATE-1, session this.
 
-# RESEARCH — v2.147
+# RESEARCH — v2.148
 > **v2.136 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: Terminology Silos post-publication audit gates — REFERENCE-TITLE-FIDELITY-1 + METADATA-RELATIONS-ASSERT-1 + DEPOSIT-LAYOUT-VERIFY-1 + POST-PUBLISH-FRONTMATTER-ASSERT-1 + HYPOTHESIS-CARD-EXECUTION-PARITY-1 + INTERNAL-COUNTS-SWEEP-1; mirrors system-prompt v3.70 + kaizen v2.92):**
 > Red-team: 3-slot dispatch on 10.5281/zenodo.22075544 (Dependency completed: 1 HARD/3 SOFT; Accuracy + Completeness child sessions FAILED — REDTEAM-CHILD-FAIL-1 — direct parent audit authoritative: deposited scripts re-run, outputs byte-match evidence JSONs, seed validation 9/9, rendering gates PASS, all cited DOIs published, frontmatter self-DOI clean). HARD: 4 (record-level). SOFT: 6.
 > New Phase 5/6/8 permanent gates (RECURRENCE-ZERO-1):
@@ -9708,7 +9708,7 @@ cronjob retries. Script: `research/scripts/swh-archive.py`.
 
 ## Version
 
-Current: **v2.147** (JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117; preserves v2.146) (CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; canonical RES.032 v0.1->v0.2; preserves v2.145 FRAMEWORK-DOGFOOD-1) (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
+Current: **v2.148** (JPCUB research program reference (joules-per-compute benchmark; 2026 benchmark revision); mirrors system-prompt v3.2 + kaizen v2.117; preserves v2.146) (CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; canonical RES.032 v0.1->v0.2; preserves v2.145 FRAMEWORK-DOGFOOD-1) (FRAMEWORK-DOGFOOD-1 + REDTEAM-CHILD-CROSS-CHECK-1; canonical DPRF QNFO.RES.032 red-team 2026-08-29; preserves v2.144 UIA-REPOINT-V04) (UIA-REPOINT-V04 — UIA re-pointed to concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (SPECTRAL-ESTIMATOR-CONSTRUCTION-1 — six estimator-construction checks with canonical fixes; + DATASET-SOURCE-FALLBACK-1 — static-mirror fallback with HTTP-probe evidence; + QUESTION-AUTONOMY-1 — resolve research-direction/disposition decisions autonomously; canonical QNFO.UMP.014 P3-exec 8/8 PASS commit 39381f6; preserves v2.142 DATASET-ACQUISITION-1; preserves v2.141 DNS-FLAP-IP-PIN-1 + ZENODO-DELETE-404-ALREADY-GONE-1 + R2 is_truncated pagination; preserves v2.140 REFERENCE-RENDER-FROM-BIB-1 + SLUG-FILE-NAMING-1 + PDF-SUPERSCRIPT-ASCII-1 + ZENODO-DEPOSIT-NOHUP-RETRY-1 + PUBLISH-LOCK-RECHECK-1; mirrors system-prompt v3.88 + kaizen v2.108 + cloudflare v3.64; 2026-08-28)
 
 
 ## DATASET-ACQUISITION-1 (HARD GATE — 2026-08-28, user directive)
@@ -9717,3 +9717,4 @@ Current: **v2.147** (JPCUB research program reference (joules-per-compute benchm
 
 Phase 1 (due diligence) + Phase 5 (analysis/verification): for every paper under analysis, check for the ORIGINAL dataset — (a) the paper's Zenodo record file list (deposited scripts/data/verification artifacts per PUBLICATION-SOURCE-COMPLETENESS-1), (b) the GitHub repo named in related_identifiers (isSupplementTo), (c) the data-availability statement. Acquire into artifacts/external-datasets/ with provenance (URL/DOI/license/download-date/sha256 — DUE-DILIGENCE-DEPTH-1 §5 evidence discipline), RUN it through the analysis pipeline, and recompute derived quantities from the raw data (BP-10: citation is not verification). No dataset = documented absence, then proceed. License discipline: CC BY/CC0 reuse with attribution; NC/ND document constraints without redistribution; proprietary cite-only. Never fabricate a dataset. Dataset-derived findings are first-class evidence (KG edge + citation).
 
+## v2.148 (2026-09-02, research: mirror PDF-FRONT-MATTER-1 page-1 title/author/ORCID/date gate (canonical defect 10.5281/zenodo.22238755 v0.5) + RESEARCH-PIPELINE-CLOUD-1 (time+event triggers; errata subprocess live; version re-scan partial) + WORKER-SEND-GUARD-1; mirrors system-prompt v4.01 + kaizen v2.125)
