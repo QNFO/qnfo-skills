@@ -1,6 +1,6 @@
 ---
 name: cloudflare
-version: '3.72'
+version: '3.73'
 description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment,
   wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control,
   Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure
@@ -52,10 +52,13 @@ description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment
 
 ---
 name: cloudflare
-version: "3.72"
+version: "3.73"
 ---
 
-# CLOUDFLARE — v3.72
+# CLOUDFLARE — v3.73
+
+> **v3.73 UPDATE (2026-09-02, cloudflare - mirror WEBSITE-SYNC-COLUMNS-1 + P7-SCORECARD-LIVE-1 + EXPERIMENT-PROGRAM-1 (v4.05/kaizen v2.128): qnfo-gateway = dynamic D1 renderer of living-paper doi+body_md; publish must write those columns + verify live; honest traffic = CF GraphQL exact-path adaptive/1dGroups (never worker_invocations); P7 scorecard live in qnfo-cloud-ops v1.9.0 weekly 30 5 * * 1.**
+
 
 > **v3.72 UPDATE (2026-09-02, cloudflare - model-parameter source-truth mirror rows: MODEL-PARAM-SOURCE-TRUTH-1 + MODEL-PARAM-STORE-ALIGN-1 + PROBE-BEFORE-WRITE-1; mirrors system-prompt v4.02 + kaizen v2.126; preserves v3.71):** model context/maxOutput values must be sourced from the endpoint the model actually calls (live probe / worker MODELS/MAX_OUT / WA catalog), never copied from a sibling clamp; canonical 2026-09-02 deepseek direct max 384000 vs router MAX_OUT 8192. Verify DB model_configs + provider_models + app-settings agree after any Control Center save/restart.
 
@@ -2275,7 +2278,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.72** (model-parameter source-truth mirror rows - MODEL-PARAM-SOURCE-TRUTH-1 + MODEL-PARAM-STORE-ALIGN-1 + PROBE-BEFORE-WRITE-1; mirrors system-prompt v4.02 + kaizen v2.126; preserves v3.71) (freshness-sync worker/D1 mirror rows - INTENT-EXACT-DEDUPE-1 + INTENT-DEDUPE-COLUMNS-GUARD-1 + WRANGLER-PIPE-EXIT-MASK-1 + MIRROR-DRIFT-REPO-AHEAD-1; mirrors system-prompt v3.98 + kaizen v2.123; preserves v3.70) (INTENT_TOKEN rotation + qnfo-ai model roster + ensemble endpoint state; mirrors system-prompt v3.2 + kaizen v2.117; preserves v3.69) (Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1; Cost Control § verified; canonical RES.032 v0.2; preserves v3.68) (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
+Current: **3.73* (model-parameter source-truth mirror rows - MODEL-PARAM-SOURCE-TRUTH-1 + MODEL-PARAM-STORE-ALIGN-1 + PROBE-BEFORE-WRITE-1; mirrors system-prompt v4.02 + kaizen v2.126; preserves v3.71) (freshness-sync worker/D1 mirror rows - INTENT-EXACT-DEDUPE-1 + INTENT-DEDUPE-COLUMNS-GUARD-1 + WRANGLER-PIPE-EXIT-MASK-1 + MIRROR-DRIFT-REPO-AHEAD-1; mirrors system-prompt v3.98 + kaizen v2.123; preserves v3.70) (INTENT_TOKEN rotation + qnfo-ai model roster + ensemble endpoint state; mirrors system-prompt v3.2 + kaizen v2.117; preserves v3.69) (Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1; Cost Control § verified; canonical RES.032 v0.2; preserves v3.68) (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
 
 ---
 
