@@ -1,6 +1,6 @@
 ---
 name: social-media-management
-version: 1.10.0
+version: 1.11.0
 description: Programmatic social media follow management for Bluesky and Mastodon
   with a curated QNFO account registry covering 96 QNFO-aligned accounts (52 Bluesky
   / 7 Mastodon / 27 X / 10 LinkedIn) across four platforms. Use when the user wants
@@ -11,6 +11,9 @@ description: Programmatic social media follow management for Bluesky and Mastodo
   registry, taxonomy-driven discovery (discover_accounts.py), and browser-automation
   path for LinkedIn profile updates.
 ---
+> **v1.11.0 UPDATE (2026-09-02, kaizen - cross-platform go-live + queue-fill playbook):**
+> BUFFER-CROSS-PLATFORM-LIVE-1: BUFFER_TOKEN present in env (not just tokens dir); live channels discovered 2026-09-02 = mastodon 6a660e1b4b2d03035f435349, linkedin 6a170337c687a22dd430685f, twitter 685cd2c2acfb098c697a8786. Successful 3-channel post (42 Theses v3.0, 277 chars, D7 format) via buffer-post.py. Channel IDs change on reconnect - run buffer-post.py --list-channels before every batch.
+> QNFO-SOCIAL-ENGINE-LIVE-1: the qnfo-social Bluesky worker's stalled-queue failure mode: drafts stuck with notes "checker output unparseable" are the CHECKER's parse failure, not factual flags - vet then approve. Queue is fed from D1 social_threads (qnfo-audit); keep >=1 queued row so the 14:30 UTC cron never idles. 13 queued + 1 live broadcast on 2026-09-02.
 > **v1.10.0 UPDATE (2026-08-28, kaizen — qnfo-social cloud posting pipeline):**
 > qnfo-social Worker replaces local bluesky_post.py for Bluesky posting. Pipeline: /compose (deepseek-v4-flash via Workers AI drafts a 5-post thread from title+abstract -> status='draft'), /approve (draft->queued), cron "30 14 * * *" posts the oldest queued thread, /broadcast (409 guard), /queue (sanitized). D1 social_threads (status queued/posting/posted/failed/draft + retry_count + error). Secrets BSKY_HANDLE/BSKY_APP_PASS/SOCIAL_TOKEN. Draft-only compose preserves accuracy. DEEPSEEK-WORKERS-AI-CHAT-MODEL-1: deepseek-v4-flash is a CHAT model - use messages format + read choices[0].message.content, never prompt format / .response. workers.dev: 1010 (Bot Fight Mode, browser UA) + 1042 (subdomain propagation).
 
