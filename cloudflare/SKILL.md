@@ -1,11 +1,23 @@
 ---
 name: cloudflare
-version: '3.70'
+version: '3.71'
 description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment,
   wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control,
   Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure
   audits.
 ---
+
+> **v3.71 UPDATE (2026-09-02, kaizen — CMD SKILLS UPDATE: freshness-sync worker/D1 mirror rows - INTENT-EXACT-DEDUPE-1 + INTENT-DEDUPE-COLUMNS-GUARD-1 + WRANGLER-PIPE-EXIT-MASK-1 + MIRROR-DRIFT-REPO-AHEAD-1; mirrors system-prompt v3.98 + kaizen v2.123; preserves v3.70):**
+
+### v3.71 — freshness-sync worker/D1 mirror rows (2026-09-02)
+
+**INTENT-EXACT-DEDUPE-1** — qnfo-intent-orchestrator v1.2.0 handleIntent exact-match desire idempotency for ALL intent types (calendar/email templates embed occurrence-specific start ISO / sender+ts): an identical desire returns {duplicate: true, dup_of: <prior id>} with NO insert. Deployed 2026-09-02 via wrangler deploy; /health version 1.2.0 (curl; web_fetch 404s through its SSRF proxy).
+
+**INTENT-DEDUPE-COLUMNS-GUARD-1** — ensureSchema ALTER TABLE ADD COLUMN dup_of/noise can fail silently and leave research dedupe broken invisibly; after schema init verify the columns exist via PRAGMA. Canonical 2026-09-02: both columns missing in qnfo-audit D1 35e2e573-92f3-46ac-83c6-22f6429fc5e5.
+
+**WRANGLER-PIPE-EXIT-MASK-1** — never pipe 'wrangler deploy 2>&1 | tail': the pipeline exit code masks a build failure as 0. Capture the raw exit code without the pipe, or background + poll the process. Canonical 2026-09-02: a const-reassignment build error surfaced as exit 0 through the tail pipe.
+
+**MIRROR-DRIFT-REPO-AHEAD-1** — after committing a change to an operational script in its canonical repo, sync the local mirror the cron/runner actually executes and verify sha. Canonical 2026-09-02: calendar-sync.py repo v1.1 committed while the operational mirror stayed v1.0.
 
 > **v3.70 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: INTENT_TOKEN rotation + qnfo-ai model roster + ensemble endpoint state; mirrors system-prompt v3.2 + kaizen v2.117):**
 
@@ -43,7 +55,7 @@ name: cloudflare
 version: "3.70"
 ---
 
-# CLOUDFLARE — v3.70
+# CLOUDFLARE — v3.71
 
 > **v3.64 UPDATE (2026-08-28, kaizen — Cloudflare Workers AI router gates (qnfo-ai v4.7.1→v5.2.3 audit + remediation); mirrors system-prompt v3.88 + kaizen v2.108):**
 > 1. [HARD] **WORKER-AI-MULTIMODAL-FLATTEN-1** — Workers AI text-generation models reject OpenAI multimodal `content: [{type:"text",...}]` arrays with 400 "required properties at '/' are 'prompt'" / "Type mismatch ... 'string' not in 'array'". Flatten array content to plain strings before calling Workers AI (DeepSeek accepts both). Canonical: qnfo-ai v4.7.1.
@@ -2261,7 +2273,7 @@ Isolated resources: Vectorize index `personal-life` (768d cosine), D1 `personal-
 3. **PERSONAL-QNFO-SEPARATION-1 (HARD, user mandate 2026-08-04 + 2026-08-28):** the Personal Digital Twin and QNFO Research are SEPARATE at every layer. (a) personal-api answers from personal-life data ONLY — never calls the QNFO records oracle, never injects QNFO research records; its infra context reaches Rowan's OWN Cloudflare account via CF_TOKEN directly (v1.4.7+). (b) qnfo-ai serves research/infra records ONLY — scope=personal is blocked (400) on /v1/records and /v1/context; its RAG uses scope=research. (c) qnfo-infra MUST NOT bind PL_VZ (personal-life vector index) and MUST NOT query env.PERSONAL for events/activity content (PERSONAL D1 remains only for aggregate /records fleet counts). Chatbox two-provider flow: research questions → QNFO Router; personal questions → Personal Twin.
 
 
-Current: **v3.70** (INTENT_TOKEN rotation + qnfo-ai model roster + ensemble endpoint state; mirrors system-prompt v3.2 + kaizen v2.117; preserves v3.69) (Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1; Cost Control § verified; canonical RES.032 v0.2; preserves v3.68) (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
+Current: **v3.71** (freshness-sync worker/D1 mirror rows - INTENT-EXACT-DEDUPE-1 + INTENT-DEDUPE-COLUMNS-GUARD-1 + WRANGLER-PIPE-EXIT-MASK-1 + MIRROR-DRIFT-REPO-AHEAD-1; mirrors system-prompt v3.98 + kaizen v2.123; preserves v3.70) (INTENT_TOKEN rotation + qnfo-ai model roster + ensemble endpoint state; mirrors system-prompt v3.2 + kaizen v2.117; preserves v3.69) (Zenodo newversion deposit gates — NEWVERSION-DRAFT-FILE-KEY-1 + ZENODO-BUCKET-PUT-CANONICAL-1 + ZENODO-NEWVERSION-STRAY-PURGE-1 + ZENODO-CONCEPTRECID-COERCE-1; Cost Control § verified; canonical RES.032 v0.2; preserves v3.68) (mirror-pointer refresh — Cost Control § verified; preserves v3.67) (MODEL-KEY-DB-ROOT-SOURCE-1 + D1-QUERY-BEARER-FALLBACK-1; weekly-review closeout gates; preserves v3.66 GRAPH-SYNC-BULK-ONLY-1 + REGISTRY-LAG-PARITY-1; mirrors system-prompt v3.91 + kaizen v2.111; 2026-08-28) (GRAPH-SYNC-BULK-ONLY-1 codified at the F-6 /sync contract + REGISTRY-LAG-PARITY-1; weekly-review triage gates; fixes v3.62 footer drift; preserves v3.65 QNFO-ROUTER-DEFAULT-PROMPT-1 + WORKER-API-DEPLOY-REVERT-1; mirrors system-prompt v3.90 + kaizen v2.110; 2026-08-28) (DEEPSEEK-WORKERS-AI-CHAT-MODEL-1 + WORKERS-DEV-REACHABILITY-1; preserves v3.61 CLOUDFLARE-CRON-DOW-7-1 + WORKER-CLOUD-MIGRATION-COMPLETENESS-1; mirrors system-prompt v3.82 + kaizen v2.103; 2026-08-28)
 
 ---
 
