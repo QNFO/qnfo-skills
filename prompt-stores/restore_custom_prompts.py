@@ -29,7 +29,7 @@ CANON_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "customPro
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 ROAMING_CP_FILE = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
-EXPECTED_IDS = ['1788197658524-RX0DE2xA', '1788197658524-RVSnJFyP', '1788197658524-2Qgtf6l6', '1788197658524-FwEKzK59', '1788197658524-2R2NP0B9', '1788197658524-CzhqBs5V', '1788197658524-hQdwK4UR', '1788197658524-Icw2DWNP', '1788197658524-3KUDUZ2Z', '1788197658524-NmxnpZvx', '1788197658524-TWLRZ2gs', '1788197658524-fVj3nerc']
+EXPECTED_IDS = ['1788197658524-RX0DE2xA', '1788197658524-RVSnJFyP', '1788197658524-2Qgtf6l6', '1788197658524-FwEKzK59', '1788197658524-2R2NP0B9', '1788197658524-CzhqBs5V', '1788197658524-hQdwK4UR',  '1788197658524-3KUDUZ2Z', '1788197658524-NmxnpZvx', '1788197658524-TWLRZ2gs', '1788197658524-fVj3nerc']
 SRC_ENUM = {"local", "imported", "builtin"}
 
 
@@ -186,7 +186,7 @@ def cmd_restore():
         log(f"Roaming DB FAILED: {e}")
 
     # 3+4. JSON stores (full-file rewrite, LF)
-    for path, label in ((ROAMING_JSON, "Roaming app-settings.json")):
+    for path, label in [(ROAMING_JSON, "Roaming app-settings.json")]:
         try:
             d = json.load(open(path, encoding="utf-8"))
             d["customPrompts"] = canon
