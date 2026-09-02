@@ -134,7 +134,7 @@ description: Programmatic social media follow management for Bluesky and Mastodo
 > 55 QNFO-aligned accounts across 4 platforms (25 Bluesky / 3 Mastodon / 20 X / 7 LinkedIn).
 > X/Twitter: API follow removed from Basic/Pro — registry + manual only.
 > LinkedIn: connections via browser-automation with authenticated Chrome profile.
-# SOCIAL MEDIA MANAGEMENT — v1.10.0
+# SOCIAL MEDIA MANAGEMENT — v1.11.0
 
 UNIFIED cross-platform social media hub: follow management (Bluesky/Mastodon),
 curated QNFO account registry (97 accounts), Buffer MCP cross-platform posting, and
@@ -610,4 +610,4 @@ corrections f94805ee, session gtblUizh8IJisfcn-08HI.
 
 ## Version
 
-Current: **v1.10.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP REMOVED 2026-08-17, QNFO account registry, Become-a-Node strategy; 2026-08-18)
+Current: **v1.11.0** (social-media-management — UNIFIED cross-platform social hub: Bluesky/Mastodon/X/LinkedIn, Zenodo publish broadcast D7, linkedin-mcp DELETED, Buffer MCP REMOVED 2026-08-17, QNFO account registry, Become-a-Node strategy; 2026-08-18)
