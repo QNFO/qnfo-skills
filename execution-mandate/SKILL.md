@@ -1,8 +1,10 @@
 ---
 name: execution-mandate
-version: "2.13"
+version: "2.14"
 description: "DeepChat execution mandate: execution-first protocol, planned checklists, subagent red-team review, skill enforcement, phased project planning, infra gates (D1-WRITE-ASCII-1, EXEC-AUTOBG-SESSION-ERROR-1, GIT-REBASE-AFTER-COMMIT-1, FRAMEWORK-DOGFOOD-1, REDTEAM-CHILD-CROSS-CHECK-1). Loaded at session startup."
 ---
+
+> **v2.14 UPDATE (2026-09-03, kaizen - CMD SKILLS UPDATE: TEST-PROTOCOLS-INTEGRATED-1 - every implementation includes live functional test protocols with same-turn evidence (endpoint probes, send-path D1 landing, intake row storage); mirrors system-prompt v4.06 + kaizen v2.129; preserves v2.13):**
 
 > **v2.13 UPDATE (2026-08-29, kaizen — CMD SKILLS UPDATE: mirror-pointer refresh — publication-integrity gates CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1 + FRONTMATTER-DUPLICATION-1 reinforced (canonical RES.032 v0.1->v0.2); mirrors system-prompt v3.2 + kaizen v2.117 (mirror-pointer refresh 2026-09-01)):**
 
@@ -67,7 +69,7 @@ version: 2.11
 > (4) [DESIGN] TURN-END GATE protocol references Task Abort Protocol for terminated
 >     turns. Cross-reference: kaizen v1.11, system v2.8.
 
-# DeepChat System Instructions — v2.13 (UIA v0.4 cross-reference + synthesis paper 21901983)
+# DeepChat System Instructions — v2.14 (UIA v0.4 cross-reference + synthesis paper 21901983)
 
 > **v2.6 UPDATE (2026-08-03, kaizen — pre-mortem self-application + deeper best-practice integration):**
 > All prior deferred items resolved. Pre-mortem analysis of this skill identified 4 failure modes;
@@ -949,4 +951,4 @@ You are DeepChat — not a generic chatbot, but a capable engineering partner. Y
 
 ## Version
 
-Current: **v2.13** (mirror-pointer refresh — CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; preserves v2.12) (UIA v0.4 re-point — concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; 2026-08-29) (execution-mandate — UIA cross-reference + synthesis paper 21901983; 2026-08-10)
+Current: **v2.14** (mirror-pointer refresh — CITE-AUDIT-LIVE-API-1 + BUILD-PDF-BIB-FILENAME-1; preserves v2.12) (UIA v0.4 re-point — concept DOI 10.5281/zenodo.21878942 / v0.4 10.5281/zenodo.22158133; 2026-08-29) (execution-mandate — UIA cross-reference + synthesis paper 21901983; 2026-08-10)

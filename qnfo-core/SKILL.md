@@ -1,8 +1,10 @@
 ---
 name: qnfo-core
-version: "1.42"
+version: "1.43"
 description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
+
+> **v1.43 UPDATE (2026-09-03, kaizen - CMD SKILLS UPDATE: outreach engine + engagement instrumentation live - OUTREACH-ENGINE-LIVE-1 (kill switch = qnfo-outreach D1 pipeline_state.external_sends_enabled; no-repeat bridge; RFC comment intake) + ENGAGEMENT-INFRA-LIVE-1 (social_engagements, DataCite-events citation source for Zenodo DOIs, citation_stats, EXP-2026-002/003/004); mirrors system-prompt v4.06 + kaizen v2.129; preserves v1.42):**
 
 > **v1.40 UPDATE (2026-08-31, kaizen — CMD SKILLS UPDATE: edge idea-intake pipeline LIVE + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117):**
 
@@ -40,7 +42,7 @@ version: "1.37"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.42
+# QNFO-CORE — v1.43
 
 > **v1.42 UPDATE (2026-09-02, qnfo-core - mirror WEBSITE-SYNC-COLUMNS-1 + P7-SCORECARD-LIVE-1 + EXPERIMENT-PROGRAM-1 (v4.05/kaizen v2.128): living-paper doi column is the website-display DOI and body_md is the rendered full text - both must be updated on every newversion publish (registry + living-paper + website agree); Experiment registry tables experiments + paper_path_stats in qnfo-audit.**
 
@@ -6020,7 +6022,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.42** (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.43** (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 
 
