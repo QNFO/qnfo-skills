@@ -52,7 +52,7 @@ description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment
 
 ---
 name: cloudflare
-version: "3.70"
+version: "3.71"
 ---
 
 # CLOUDFLARE — v3.71
