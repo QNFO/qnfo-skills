@@ -34,7 +34,7 @@ kif_tags: [PERSONAL]
 > (1) [HARD] **Source home documented** — personal workers' canonical git = **rwnq8/personal-life**
 >     (private, personal account per mandate 2026-08-04); commits be6b021 + 5276cd7 (indexer/ + search/).
 > (2) [HARD] **Versions + auth + routing** — personal-life-indexer **v2.5-index-auth** (00753a12; /index
->     requires X-Index-Token plx-idx-v1-k7n9q2t5m3p8; 401 otherwise), personal-life-search **v1.1-gateway-routed**
+>     requires X-Index-Token plx-idx-v2-76eef33ca85bb91084979556c9583931; 401 otherwise), personal-life-search **v1.1-gateway-routed**
 >     (24528dcb); ALL env.AI.run calls route through AI Gateway default → $90/30d spend limit binds.
 > (3) [HARD] **Cost hardening** — gateway spend limit $90/30d (rule 6f5c29f8) covers the personal layer;
 >     budget policy <$100 target / $200 HARD CAP (user 2026-08-12); COST-AUDIT-MISS-AI-1 neuron check.
@@ -126,7 +126,7 @@ wrangler.toml. WORKER-THIN-CLIENT-1: commit + push BEFORE wrangler deploy.
 
 | Worker | Version (deploy) | Auth | AI routing |
 |:-------|:-----------------|:-----|:-----------|
-| personal-life-indexer | v2.5-index-auth (00753a12) | `/index` requires `X-Index-Token` (or Bearer) = `plx-idx-v1-k7n9q2t5m3p8` (env.INDEX_TOKEN) — 401 otherwise; `/health` + `/files` public | env.AI.run → gateway `default` (spend limit binds) |
+| personal-life-indexer | v2.5-index-auth (00753a12) | `/index` requires `X-Index-Token` (or Bearer) = `plx-idx-v2-76eef33ca85bb91084979556c9583931` (env.INDEX_TOKEN) — 401 otherwise; `/health` + `/files` public | env.AI.run → gateway `default` (spend limit binds) |
 | personal-life-search | v1.1-gateway-routed (24528dcb) | public read-only | env.AI.run → gateway `default` |
 
 **Cost hardening (2026-08-12):** every AI call routes through AI Gateway `default` so the **$90/30d sliding
@@ -158,7 +158,7 @@ reference"), execute this canonical pipeline (verified 2026-08-16, 7 Digital-Nom
    (ISO-8601 UTC), source: chrome-tab-<group>, tab_group. Body = `# <title>` + `Source: <url>` + text.
 5. **Upload:** `rclone copy <tempdir> primary-r2:d-drive/chrome-tabs/YYYY-MM-DD/` then `rclone lsl` verify.
 6. **Index:** `GET https://personal-life-indexer.q08.workers.dev/index?prefix=chrome-tabs/YYYY-MM-DD/`
-   with `X-Index-Token: plx-idx-v1-k7n9q2t5m3p8` (browser-like UA). Expect `{"scanned":N,"indexed":N,"errors":0}`.
+   with `X-Index-Token: plx-idx-v2-76eef33ca85bb91084979556c9583931` (browser-like UA). Expect `{"scanned":N,"indexed":N,"errors":0}`.
 7. **Verify:** `/files?prefix=chrome-tabs/...` (D1 registry rows) + `/search?q=<topic>` on
    personal-life-search (Vectorize hits; response uses `files[].path` — NOT `results`/`hits` keys).
 8. **Close tabs:** re-walk TabItemControls, find each tab's child ButtonControl named 'Close tab',
@@ -334,7 +334,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 | **PROFILE-README-FABRICATE-1 (cross-ref):** badge/tool claims without resume attestation | HARD GATE. Grep the actual resume/portfolio for every tool badge before adding it. |
 
 | **CLOUDFLARE-WAF-1010-1: Cloudflare WAF (Bot Fight Mode / Browser Integrity Check) blocks non-browser HTTP clients from Workers endpoints (2026-08-06)** | The personal-life-search endpoint (personal-life-search.q08.workers.dev) returns Cloudflare error 1010 (browser_signature_banned) for all non-browser user agents (Python urllib, curl, requests). This makes the personal-knowledge skill's HTTP-based Obsidian access BROKEN for automated access. **Fix: use direct filesystem access** — `exec` with `cwd: D:\\Obsidian\\notes\\v1\\2026\\08` + `read` with absolute paths (canonical pattern per kaizen v1.60). The personal-life-search Worker has Bot Fight Mode enabled; the HTTP endpoint is only accessible from browser-origin requests. (REFINED 2026-08-12: /health + /search returned 200 to a Mozilla/5.0 UA — browser-like UA probes work; direct filesystem remains canonical.) |
-| **PERSONAL-INDEX-AUTH-1 (2026-08-12):** triggering personal-life-indexer `/index` without auth | `/index` returns 401 without `X-Index-Token` (or Bearer) = `plx-idx-v1-k7n9q2t5m3p8` (env.INDEX_TOKEN, wrangler.toml [vars]). Registry dedup + the $90/30d gateway spend limit bound worst-case burn. `/health` + `/files` stay public read-only. |
+| **PERSONAL-INDEX-AUTH-1 (2026-08-12):** triggering personal-life-indexer `/index` without auth | `/index` returns 401 without `X-Index-Token` (or Bearer) = `plx-idx-v2-76eef33ca85bb91084979556c9583931` (env.INDEX_TOKEN, wrangler.toml [vars]). Registry dedup + the $90/30d gateway spend limit bound worst-case burn. `/health` + `/files` stay public read-only. |
 ## Related
 - cloudflare v3.38 §Vectorize Indexing Gotchas (indexer anti-patterns)
 - knowledge skill (QNFO memory/KG — different layer, never merged)
