@@ -43,3 +43,10 @@
 
 --- 2026-09-01 v3.5 (RUNCODE-HALT-COMPOUND-1) ---
 system-prompt v3.5: run_code halt compound gates (provider_error halt RUNCODE-HALT-1, sandbox globals RUNCODE-SANDBOX-GLOBALS-1, string-typed subtool outputs RUNCODE-SUBTOOL-STRING-1, exec bg-poll pattern RUNCODE-EXEC-BG-1, 1MiB output cap RUNCODE-OUTPUT-CAP-1, heartbeat RUNCODE-HEARTBEAT-1, ToolCallError RUNCODE-TOOLCALL-1, py-UA-1010 PYTHON-UA-1010-1). 7 stores byte-identical; prompt-store-verify.py exit 0; git 033568e on QNFO/qnfo-skills + rwnq8/qnfo-skills. sha256 c9020373a1838849
+
+## v4.12 (2026-09-04) - OPS-GATEWAY-DEFAULT-1 + kaizen ops-digest
+- DeepChat main agent canonical default -> QNFO-OPS/deepseek-v4-flash (Cloudflare qnfo-ops gateway relay; supersedes deepseek/deepseek-v4-flash).
+- qnfo-ops v1.8.0: RELAY-MODEL-1 pure pass-through (no OPS prompt injection, SSE streaming relay), OPS-DAILY-CAP-1 env cap (5000), KAIZEN-CHAT-FAIL-1 auto agent_issues tickets.
+- qnfo-kaizen v0.3.0-p1: OPS-KAIZEN-DIGEST-1 Ops AI Gateway 7d section; canonical wrangler repo created.
+- model_guard.py v2 + sync_system_prompt.py MODEL_DICT updated to the new canonical.
+- Benchmark: relay ~3.3s vs direct ~3.1s (~6% audit overhead), identical model behavior.
