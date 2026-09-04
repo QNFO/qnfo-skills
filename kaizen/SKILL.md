@@ -1,8 +1,11 @@
 ---
 name: kaizen
-version: "2.132"
+version: "2.133"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
+> **v2.133 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: publish-sync remediation gates from the post-publication adversarial audit + remediation - FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 + EXEC-STDOUT-12K-CAP-1 + READ-TOOL-PREFIX-ALL-1 + FTS5-DIGIT-TOKEN-PROBE-1 + SLUG-80-CHAR-CAP-1 + KG-NODE-ID-CONVENTIONS-1 + TASK-DOD-REGISTER-SHAPE-1; mirrors system-prompt v4.10; preserves v2.132):**
+> FRONTMATTER-SYNC-PARTIAL-1: the publish flow half-updates body_md frontmatter (version/date bumped, doi/title left at the PREVIOUS record) - 7/7 recent publishes (decoherence 22278842, landauer 22279728, surface-code 22278600, latency 22281567, revising 22280745, jpcub 22117282, locale 21991270) while row doi/zenodo_doi were correct; remediation = exact-string replace of 'doi: "..."' + 'title: "..."' frontmatter lines + post-publish parity probe. D1-BODY-VERSION-LAG-1: row columns current while body_md is the OLD body (locale v0.5 shipped with v0.4 body, 22,602 vs 23,351 bytes); recovery source = Zenodo deposited md (PUBLICATION SOURCE COMPLETENESS recovery path). ZENODO-DEPOSITED-MD-STALE-1: the deposited md itself can be stale (verified 22290226 + 22283879); md generator must finalize frontmatter pre-deposit; immutable records => newversion or documented acceptance (REDTEAM-2026-09-04-03). R2-OBJECT-KEY-NO-BUCKET-PREFIX-1: R2 API object path excludes bucket name (10007 on existing keys); calibrate probes on known-good siblings. EXEC-STDOUT-12K-CAP-1: exec stdout truncates ~12K (23K download -> 12,113); chunk or use D1 API + execute. READ-TOOL-PREFIX-ALL-1: read tool prepends path header to ALL files - never read-tool output for exact-content transfers. FTS5-DIGIT-TOKEN-PROBE-1: probe FTS with word tokens. SLUG-80-CHAR-CAP-1: silent 80-char slug cap (REDTEAM-2026-09-04-04). KG-NODE-ID-CONVENTIONS-1: three node-id conventions; link kg_node_id at publish, node properties on current record. TASK-DOD-REGISTER-SHAPE-1: id INTEGER auto + source_table/source_row_id NOT NULL.
+
 > **v2.132 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: GTD-REGISTER-LIVE-1 + LOCKSTEP-DISPOSITION-1 + USER-FREE-RESOLUTION-1 + VIEW-REFINE-DROP-RECREATE-1 + RUNCODE-HEARTBEAT-PACK-SPLIT-1; mirrors system-prompt v4.09; preserves v2.131):**
 > GTD-REGISTER-LIVE-1: qnfo-audit.task_dod_register is the single accountable open-work ledger (owner RACI + gtd_context + falsifiable DoD + evidence + due); views v_waiting_on_human / v_fleet_open_work / v_open_tasks_no_dod / v_intents_waiting_human; DoD tripwire. LOCKSTEP-DISPOSITION-1: register closure requires native-queue row closure same-cycle (FAIL canonical: EV/GitHub intents stayed pending after register done/cancelled). USER-FREE-RESOLUTION-1: owner=user rows resolve autonomously (execute / dated scheduled-row / cancel-with-rationale); external identity-bound surfaces cancelled-with-monitor. VIEW-REFINE-DROP-RECREATE-1: IF NOT EXISTS keeps stale definitions - drop+create+recount. RUNCODE-HEARTBEAT-PACK-SPLIT-1: split verification packs (6-query D1 pack tripped 3.5s watchdog).
 
@@ -221,7 +224,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.132
+# KAIZEN — v2.133
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15777,7 +15780,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.132** (2026-09-04 REDTEAM-SKILLS-AUDIT-CLEAN-2 + AUDIT-ANCHOR-SNAPSHOT-1 mirror rows; system-prompt v4.08 dual-write; preserves v2.130)
+Current: **v2.133** (2026-09-04 publish-sync remediation gates — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 + EXEC-STDOUT-12K-CAP-1 + READ-TOOL-PREFIX-ALL-1 + FTS5-DIGIT-TOKEN-PROBE-1 + SLUG-80-CHAR-CAP-1 + KG-NODE-ID-CONVENTIONS-1 + TASK-DOD-REGISTER-SHAPE-1; system-prompt v4.10 dual-write; preserves v2.132)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
@@ -15793,3 +15796,7 @@ Dual-write v4.05 -> v4.06: TEST-PROTOCOLS-INTEGRATED-1 + OUTREACH-ENGINE-LIVE-1 
 ## CMD SKILLS UPDATE cycle log (2026-09-04, v2.131)
 Red-team skills audit: kaizen v2.130, research v2.149, cloudflare v3.74, qnfo-core v1.43, execution-mandate v2.14 PASS (prompt-store-verify exit 0; scheduler-guard exit 0; model_guard clean + task 30-min cadence verified; live==repo hashes for 10 core skills; qnfo-skills repo clean at 5b9ade8). HARD: 1 (RESTORE-CP-FILE-GAP-1 - restore_custom_prompts.py omitted Roaming custom_prompts.json; v2.1 patched + proven). SOFT: 1 (AUDIT-ANCHOR-SNAPSHOT-1 - v4.07 audit record lists pre-bump kaizen 2.129 anchor; codified snapshot convention). DESIGN: 0.
 Dual-write v4.07 -> v4.08: REDTEAM-SKILLS-AUDIT-CLEAN-2 + RESTORE-CP-FILE-GAP-1 (restore script v2.1) + AUDIT-ANCHOR-SNAPSHOT-1; 11/11 CMD templates + cmd-red-team cadence parity; canonical sha 51c2778b; prompt-store-verify exit 0.
+
+## CMD SKILLS UPDATE cycle log (2026-09-04, v2.133)
+Red-team skills audit (PRE-BUMP, audited the v4.09 state): kaizen v2.132, research v2.149, cloudflare v3.74, qnfo-core v1.43, execution-mandate v2.14 PASS - prompt-store-verify exit 0; scheduler-guard exit 0; model_guard state=clean; 17 versioned skills anchor-parity; qnfo-skills repo clean at 888262f. HARD: 0. SOFT: 0. DESIGN: 0.
+Dual-write v4.09 -> v4.10: FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 + EXEC-STDOUT-12K-CAP-1 + READ-TOOL-PREFIX-ALL-1 + FTS5-DIGIT-TOKEN-PROBE-1 + SLUG-80-CHAR-CAP-1 + KG-NODE-ID-CONVENTIONS-1 + TASK-DOD-REGISTER-SHAPE-1 (canonical: post-publication adversarial audit + remediation 2026-09-04); 11/11 CMD templates updated (cmd-skills-update + cmd-red-team tails); prompt-store-verify exit 0.
