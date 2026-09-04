@@ -15789,4 +15789,4 @@ Dual-write v4.05 -> v4.06: TEST-PROTOCOLS-INTEGRATED-1 + OUTREACH-ENGINE-LIVE-1 
 
 ## CMD SKILLS UPDATE cycle log (2026-09-04, v2.131)
 Red-team skills audit: kaizen v2.130, research v2.149, cloudflare v3.74, qnfo-core v1.43, execution-mandate v2.14 PASS (prompt-store-verify exit 0; scheduler-guard exit 0; model_guard clean + task 30-min cadence verified; live==repo hashes for 10 core skills; qnfo-skills repo clean at 5b9ade8). HARD: 1 (RESTORE-CP-FILE-GAP-1 - restore_custom_prompts.py omitted Roaming custom_prompts.json; v2.1 patched + proven). SOFT: 1 (AUDIT-ANCHOR-SNAPSHOT-1 - v4.07 audit record lists pre-bump kaizen 2.129 anchor; codified snapshot convention). DESIGN: 0.
-Dual-write v4.07 -> v4.08: REDTEAM-SKILLS-AUDIT-CLEAN-2 + RESTORE-CP-FILE-GAP-1 (restore script v2.1) + AUDIT-ANCHOR-SNAPSHOT-1; 11/11 CMD templates + cmd-red-team cadence parity; canonical sha fea4d26a; prompt-store-verify exit 0.
+Dual-write v4.07 -> v4.08: REDTEAM-SKILLS-AUDIT-CLEAN-2 + RESTORE-CP-FILE-GAP-1 (restore script v2.1) + AUDIT-ANCHOR-SNAPSHOT-1; 11/11 CMD templates + cmd-red-team cadence parity; canonical sha 51c2778b; prompt-store-verify exit 0.
