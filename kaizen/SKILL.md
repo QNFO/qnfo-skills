@@ -15783,7 +15783,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.133** (2026-09-04 publish-sync remediation gates — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 + EXEC-STDOUT-12K-CAP-1 + READ-TOOL-PREFIX-ALL-1 + FTS5-DIGIT-TOKEN-PROBE-1 + SLUG-80-CHAR-CAP-1 + KG-NODE-ID-CONVENTIONS-1 + TASK-DOD-REGISTER-SHAPE-1; system-prompt v4.10 dual-write; preserves v2.132)
+Current: **v2.134** (2026-09-04 Lamport structured-proof gate — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
