@@ -1,8 +1,11 @@
 ---
 name: kaizen
-version: "2.131"
+version: "2.132"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
+> **v2.132 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: GTD-REGISTER-LIVE-1 + LOCKSTEP-DISPOSITION-1 + USER-FREE-RESOLUTION-1 + VIEW-REFINE-DROP-RECREATE-1 + RUNCODE-HEARTBEAT-PACK-SPLIT-1; mirrors system-prompt v4.09; preserves v2.131):**
+> GTD-REGISTER-LIVE-1: qnfo-audit.task_dod_register is the single accountable open-work ledger (owner RACI + gtd_context + falsifiable DoD + evidence + due); views v_waiting_on_human / v_fleet_open_work / v_open_tasks_no_dod / v_intents_waiting_human; DoD tripwire. LOCKSTEP-DISPOSITION-1: register closure requires native-queue row closure same-cycle (FAIL canonical: EV/GitHub intents stayed pending after register done/cancelled). USER-FREE-RESOLUTION-1: owner=user rows resolve autonomously (execute / dated scheduled-row / cancel-with-rationale); external identity-bound surfaces cancelled-with-monitor. VIEW-REFINE-DROP-RECREATE-1: IF NOT EXISTS keeps stale definitions - drop+create+recount. RUNCODE-HEARTBEAT-PACK-SPLIT-1: split verification packs (6-query D1 pack tripped 3.5s watchdog).
+
 > **v2.131 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: red-team skills audit mirror rows + restore-completeness fix - REDTEAM-SKILLS-AUDIT-CLEAN-2 + RESTORE-CP-FILE-GAP-1 + AUDIT-ANCHOR-SNAPSHOT-1; mirrors system-prompt v4.08; preserves v2.130):**
 > (1) [HARD] RESTORE-CP-FILE-GAP-1 (2026-09-04 mechanism fix): restore_custom_prompts.py restore() omitted ROAMING_CP_FILE (Roaming/DeepChat/custom_prompts.json) - docstring claimed all 4 live stores but restore only wrote the Roaming DB + Roaming app-settings.json + the script canonical backup, so every restore left the standalone CP file stale and prompt-store-verify exited 1 until a manual sync (psv-first failure = the guard doing its job). v2.1 adds the ROAMING_CP_FILE full-list rewrite; proof = re-run restore + prompt-store-verify exit 0. Rule: a restore tool that claims N stores must write N stores.
 > (2) [GATE] REDTEAM-SKILLS-AUDIT-CLEAN-2 (2026-09-04 audit PASS at the v4.07 state): 5-store system-prompt parity sha 306741bbc693d2888843f5aba68a148d039f61f8a6e68c6a6782580fb0372a87 / 121815 bytes at the v4.07 pre-bump state with header==footer==title v4.07; 11/11 customPrompts schema-valid and byte-equal across repo canonical + script canon + Roaming custom_prompts.json + agent.db app_settings + Roaming app-settings.json; SKILL-ANCHOR parity (kaizen 2.130 / research 2.149 / cloudflare 3.74 / qnfo-core 1.43 / execution-mandate 2.14) with live==repo hashes for 10 core skills; MCP-AUTOAPPROVE file intact 9/9; prompt-store-verify.py exit 0; scheduler-guard.py exit 0 (5 canonical rows, 0 disabled residue); model_guard.py exit 0 state=clean and the QNFO-ModelKey-Guard Windows task verified at every-30-min repeat (last run 2026-09-04 03:55 result 0); qnfo-skills repo clean at 5b9ade8. HARD: 1 (restore gap). SOFT: 1. DESIGN: 0.
@@ -218,7 +221,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.131
+# KAIZEN — v2.132
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15774,7 +15777,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.131** (2026-09-04 REDTEAM-SKILLS-AUDIT-CLEAN-2 + AUDIT-ANCHOR-SNAPSHOT-1 mirror rows; system-prompt v4.08 dual-write; preserves v2.130)
+Current: **v2.132** (2026-09-04 REDTEAM-SKILLS-AUDIT-CLEAN-2 + AUDIT-ANCHOR-SNAPSHOT-1 mirror rows; system-prompt v4.08 dual-write; preserves v2.130)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
