@@ -1,8 +1,12 @@
 ---
 name: kaizen
-version: "2.138"
+version: "2.140"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
+> **v2.140 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: 100%-cloud + fully-autonomous-user-free mandate mirror - CLOUD-AUTONOMY-100-1 (every recurring/scheduled function runs in the Cloudflare worker layer: 67-worker fleet / 8 D1 / 10 Vectorize / 18 R2 / 2 KV / AI Gateway $90-30d spend guard; DeepChat local scheduler = canonical 5 device-bound rows only, scheduler-guard.py exit 0 every cycle; USER-FREE-RESOLUTION-1 standing: owner=user register rows resolved autonomously, v_waiting_on_human=0 verified 2026-09-05; self-audit/self-correct guard suite + kaizen digest + paper-reviser loop on cloud cron, zero human gate); mirrors system-prompt v4.18; preserves v2.139):**
+
+> **v2.139 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: adversarial-reasoning error-mitigation mandate mirror - ADVERSARIAL-REASONING-1 (canonical standard QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md; FOUR mandatory behaviors in every agent surface: DISAGREE-WITH-EVIDENCE + SEEK-DISCONFIRMATION + EXPOSE-FAILURE-MODES + LABEL-UNCERTAINTY; canonical block lives in all 11 CMD templates + all skills + worker system prompts, enforced by scripts/adversarial-guard.py); mirrors system-prompt v4.17; preserves v2.138):**
+
 > **v2.138 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: autonomous publication-revision autoloop mandate mirror - PAPER-REVISER-LOOP-1 (qnfo-paper-reviser v1.0.0 LIVE, cloud cron 37 */4 * * *, adversarial Workers-AI audit -> surgical verbatim low-severity edits -> qnfo-audit version_queue drafted + paper_revision_log ledger; high findings NEVER auto-applied, flagged human) + REVISION-ALL-PUBLICATIONS-1 (user standing directive 2026-09-05: EVERY research publication adversarially revised at least once -> at least 2 Zenodo versions; new/recent publications auto-enter the loop; v1-only backlog = 329 published Zenodo records as of 2026-09-05, drains BATCH=3 per 4h fire; settled = Zenodo version count >=2, never the living-paper version column alone) + REVISER-PUBLISH-DRAIN-1 (qnfo-research-exec */10 drains version_queue -> publishV2 newversion + PDF/HTML regen + D1/KG/R2 repoint per WEBSITE-SYNC-COLUMNS-1); mirrors system-prompt v4.16; preserves v2.137 (v2.135-v2.137 mirror rows for system-prompt v4.12-v4.15 stay carried by the system-prompt chain)):**
 > **v2.134 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: LAMPORT-STRUCTURED-1 (user directive: ALL INSTRUCTIONS, ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE); mirrors system-prompt v4.11; preserves v2.133):**
 > LAMPORT-STRUCTURED-1: hierarchical numbered steps (1, 1.1, 1.1.1); every step carries WHAT + WHY (justification/reference) + SCOPE (assumptions, discharge); two connectors only (PROOF by sub-steps vs BY reference). CODE: function = lemma with PRECONDITION/POSTCONDITION/INVARIANT contract comment; hierarchical decomposition (top-level theorem -> helper lemmas); non-obvious statements cite their justification. Extends the vibefeld adversarial-proof integration (2026-09-04). No new skills (NO-MORE-SKILLS-1).
@@ -228,7 +232,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.138
+# KAIZEN — v2.140
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15784,7 +15788,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.138** (2026-09-05 autonomous publication-revision autoloop mandate — PAPER-REVISER-LOOP-1 + REVISION-ALL-PUBLICATIONS-1 + REVISER-PUBLISH-DRAIN-1; system-prompt v4.16 dual-write; preserves v2.137) — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
+Current: **v2.140** (2026-09-05 autonomous publication-revision autoloop mandate — PAPER-REVISER-LOOP-1 + REVISION-ALL-PUBLICATIONS-1 + REVISER-PUBLISH-DRAIN-1; system-prompt v4.16 dual-write; preserves v2.137) — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
