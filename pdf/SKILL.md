@@ -295,3 +295,7 @@ with open("encrypted.pdf", "wb") as output:
 - For JavaScript libraries (pdf-lib), see reference.md
 - If you need to fill out a PDF form, follow the instructions in forms.md
 - For troubleshooting guides, see reference.md
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

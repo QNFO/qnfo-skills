@@ -15804,3 +15804,7 @@ Dual-write v4.07 -> v4.08: REDTEAM-SKILLS-AUDIT-CLEAN-2 + RESTORE-CP-FILE-GAP-1 
 ## CMD SKILLS UPDATE cycle log (2026-09-04, v2.133)
 Red-team skills audit (PRE-BUMP, audited the v4.09 state): kaizen v2.132, research v2.149, cloudflare v3.74, qnfo-core v1.43, execution-mandate v2.14 PASS - prompt-store-verify exit 0; scheduler-guard exit 0; model_guard state=clean; 17 versioned skills anchor-parity; qnfo-skills repo clean at 888262f. HARD: 0. SOFT: 0. DESIGN: 0.
 Dual-write v4.09 -> v4.10: FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 + EXEC-STDOUT-12K-CAP-1 + READ-TOOL-PREFIX-ALL-1 + FTS5-DIGIT-TOKEN-PROBE-1 + SLUG-80-CHAR-CAP-1 + KG-NODE-ID-CONVENTIONS-1 + TASK-DOD-REGISTER-SHAPE-1 (canonical: post-publication adversarial audit + remediation 2026-09-04); 11/11 CMD templates updated (cmd-skills-update + cmd-red-team tails); prompt-store-verify exit 0.
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

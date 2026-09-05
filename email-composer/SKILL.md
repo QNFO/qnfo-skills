@@ -1762,3 +1762,7 @@ The email+outreach cadence no longer depends on local Windows DeepChat being ope
 - D1 qnfo-outreach (d5077252...) tracks outreach_campaigns, cadence_runs, outreach_candidates (email_verified=0 - never auto-sent; verification required before any send).
 - Safety unchanged: NO-FOLLOW-UP-DEFAULT-1 (0 follow-ups to silent recipients), never fabricate addresses, never send to unverified addresses, DIGEST-TO-PERSONAL-1 (receipts to alerts@ only).
 - DRY_RUN=false (live autonomous cron). The worker queues candidates but never sends external outreach itself - sends remain agent-executed with verified addresses.
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

@@ -6026,8 +6026,6 @@ Settings navigation (open-only):
 
 Current: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
 
-
-
-
-
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

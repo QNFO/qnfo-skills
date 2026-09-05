@@ -757,3 +757,7 @@ After ANY push:
 **API-FAILURE PROTOCOL (HARD):** When any API call returns 403/401/404, run the API-Failure Self-Diagnosis Protocol (windows-command-patterns S-1.0.6): STOP -> VERIFY your HTTP method/headers -> COMPARE with curl -> THEN consider infrastructure. The bug is ALWAYS your code until proven otherwise (kaizen BLAME-EXTERNAL-1).
 
 Current: **v2.22** (git-github — Script Canonical Layers: qnfo-ops/scripts/ bootstrapped, ops-clone force_rmtree pattern, REPO-DEFAULT-BRANCH-1; verified 2026-08-05)
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

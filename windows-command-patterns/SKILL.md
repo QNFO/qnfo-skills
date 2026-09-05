@@ -1623,3 +1623,7 @@ Observed on this host (cmd.exe via shim). See also the system prompt's EXEC SHEL
 3. findstr MULTI-WORD QUOTED PATTERNS SPLIT ("FINDSTR: Cannot open Data"). Fix: single unquoted token, or grep in Python.
 4. PHANTOM "Session ... is not running" ERRORS while the command ACTUALLY ran. Check process list/log before retrying or re-running destructive commands.
 5. QUOTED URLS get workspace-prefixed (curl exit 6). Fix: unquoted URLs, or Python urllib with a JSON body file.
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md

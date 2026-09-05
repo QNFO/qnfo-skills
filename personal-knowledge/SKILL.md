@@ -343,3 +343,7 @@ gh api repos/{owner}/{repo}/transfer -X POST -f new_owner={target} -H "Accept: a
 ## Version
 
 Current: **v1.6** (personal-knowledge — CHROME-TABS-SAVE-1 pipeline + 7-store parity note; 2026-08-16) (personal-knowledge — (personal-knowledge — personal workers source home rwnq8/personal-life + cost hardening: gateway routing, $90/30d spend limit, X-Index-Token auth; 2026-08-12) (personal-knowledge — canonical deploy script + Share-to-Profile fix; 2026-08-05)
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md
