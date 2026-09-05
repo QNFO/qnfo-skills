@@ -1,8 +1,9 @@
 ---
 name: kaizen
-version: "2.134"
+version: "2.138"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
+> **v2.138 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: autonomous publication-revision autoloop mandate mirror - PAPER-REVISER-LOOP-1 (qnfo-paper-reviser v1.0.0 LIVE, cloud cron 37 */4 * * *, adversarial Workers-AI audit -> surgical verbatim low-severity edits -> qnfo-audit version_queue drafted + paper_revision_log ledger; high findings NEVER auto-applied, flagged human) + REVISION-ALL-PUBLICATIONS-1 (user standing directive 2026-09-05: EVERY research publication adversarially revised at least once -> at least 2 Zenodo versions; new/recent publications auto-enter the loop; v1-only backlog = 329 published Zenodo records as of 2026-09-05, drains BATCH=3 per 4h fire; settled = Zenodo version count >=2, never the living-paper version column alone) + REVISER-PUBLISH-DRAIN-1 (qnfo-research-exec */10 drains version_queue -> publishV2 newversion + PDF/HTML regen + D1/KG/R2 repoint per WEBSITE-SYNC-COLUMNS-1); mirrors system-prompt v4.16; preserves v2.137 (v2.135-v2.137 mirror rows for system-prompt v4.12-v4.15 stay carried by the system-prompt chain)):**
 > **v2.134 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: LAMPORT-STRUCTURED-1 (user directive: ALL INSTRUCTIONS, ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE); mirrors system-prompt v4.11; preserves v2.133):**
 > LAMPORT-STRUCTURED-1: hierarchical numbered steps (1, 1.1, 1.1.1); every step carries WHAT + WHY (justification/reference) + SCOPE (assumptions, discharge); two connectors only (PROOF by sub-steps vs BY reference). CODE: function = lemma with PRECONDITION/POSTCONDITION/INVARIANT contract comment; hierarchical decomposition (top-level theorem -> helper lemmas); non-obvious statements cite their justification. Extends the vibefeld adversarial-proof integration (2026-09-04). No new skills (NO-MORE-SKILLS-1).
 
@@ -227,7 +228,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.134
+# KAIZEN — v2.138
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15783,7 +15784,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.134** (2026-09-04 Lamport structured-proof gate — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
+Current: **v2.138** (2026-09-05 autonomous publication-revision autoloop mandate — PAPER-REVISER-LOOP-1 + REVISION-ALL-PUBLICATIONS-1 + REVISER-PUBLISH-DRAIN-1; system-prompt v4.16 dual-write; preserves v2.137) — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
