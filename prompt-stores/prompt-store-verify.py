@@ -14,7 +14,7 @@ Exit codes: 0 healthy | 1 violations found | 2 store unreadable
 
 Scheduled guard: Daily Ops cronjob (216e1d12) check #6 runs this daily; notify-on-failure.
 """
-import json, sqlite3, sys, os
+import json, sqlite3, sys, os, subprocess
 
 DEFAULT_PATHS = {
     "repo": r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json",
@@ -182,6 +182,17 @@ def main():
     rc = max(rc, 1 if check_system_prompt_parity() else 0)
     rc = max(rc, 1 if check_skill_anchor_parity() else 0)
     rc = max(rc, 0 if check_mcp_autoapprove_parity() else 1)
+
+    # ADVERSARIAL-REASONING-1 sweep (2026-09-05): fold the adversarial-reasoning guard into
+    # this parity gate so adversarial content (skills/templates/system-prompt/worker prompts)
+    # is swept every ops cycle (runs via Daily Ops cronjob 216e1d12 check #6 + after each
+    # dual-write). Gracefully skips when the guard is not co-located.
+    _ag = os.path.join(os.path.dirname(os.path.abspath(__file__)), "adversarial-guard.py")
+    if os.path.isfile(_ag):
+        _agr = subprocess.run([sys.executable, _ag], capture_output=True, text=True)
+        if _agr.stdout:
+            print(_agr.stdout.strip()[-1500:])
+        rc = max(rc, 1 if _agr.returncode != 0 else 0)
 
     if rc == 0:
         print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity)")
