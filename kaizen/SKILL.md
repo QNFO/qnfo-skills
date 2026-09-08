@@ -1,8 +1,10 @@
 ---
 name: kaizen
-version: "2.140"
+version: "2.141"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
+> **v2.141 UPDATE (2026-09-08, kaizen - CMD SKILLS UPDATE: systemwide-integration mirror - RESEARCH-SCAN-FUEL-1 (qnfo-cloud-ops jobResearchScan feeds up to 5 daily arXiv scan hits into idea_proposals as auto-scan candidates, h32 ip_hash dedupe, maxActive=1 cap; deployed commit d8f7043 version 1bcd9b68) + GTD-RECONCILE-JOB-1 (jobGtdReconcile weekly cron 30 3 * * 1 digests v_fleet_open_work/v_waiting_on_human/v_open_tasks_no_dod to cloud_ops_events; register row 38 implemented) + KAIZEN-DISPOSITION-GAP-1 (4 candidates from 09-02 sat proposed through 09-08 - weekly report never dispositioned; disposition with evidence same-cycle) + IDEA-INTAKE-MULTI-SOURCE-1 (idea_proposals.created_at is ISO TEXT - epoch-division queries misread it; intakes = edge form + auto-miner chat titles + auto-scan) + FLEET-PROBE-COVERAGE-1 (only ~17 of ~75 workers probed; zero-probe families jnl-zenodo/jnl-reviser/code-agent/containers/proof/idea-factory/ipatent/email; rollout = KV health-registry extension); mirrors system-prompt v4.19; preserves v2.140):**
+
 > **v2.140 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: 100%-cloud + fully-autonomous-user-free mandate mirror - CLOUD-AUTONOMY-100-1 (every recurring/scheduled function runs in the Cloudflare worker layer: 67-worker fleet / 8 D1 / 10 Vectorize / 18 R2 / 2 KV / AI Gateway $90-30d spend guard; DeepChat local scheduler = canonical 5 device-bound rows only, scheduler-guard.py exit 0 every cycle; USER-FREE-RESOLUTION-1 standing: owner=user register rows resolved autonomously, v_waiting_on_human=0 verified 2026-09-05; self-audit/self-correct guard suite + kaizen digest + paper-reviser loop on cloud cron, zero human gate); mirrors system-prompt v4.18; preserves v2.139):**
 
 > **v2.139 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: adversarial-reasoning error-mitigation mandate mirror - ADVERSARIAL-REASONING-1 (canonical standard QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md; FOUR mandatory behaviors in every agent surface: DISAGREE-WITH-EVIDENCE + SEEK-DISCONFIRMATION + EXPOSE-FAILURE-MODES + LABEL-UNCERTAINTY; canonical block lives in all 11 CMD templates + all skills + worker system prompts, enforced by scripts/adversarial-guard.py); mirrors system-prompt v4.17; preserves v2.138):**
@@ -232,7 +234,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.140
+# KAIZEN — v2.141
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15788,7 +15790,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.140** (2026-09-05 autonomous publication-revision autoloop mandate — PAPER-REVISER-LOOP-1 + REVISION-ALL-PUBLICATIONS-1 + REVISER-PUBLISH-DRAIN-1; system-prompt v4.16 dual-write; preserves v2.137) — LAMPORT-STRUCTURED-1: ALL INSTRUCTIONS + ALL CODE MUST BE LAMPORT STRUCTURED PROOF-LIKE; system-prompt v4.11 dual-write; preserves v2.133)
+Current: **v2.141** (2026-09-08 systemwide-integration mirror — RESEARCH-SCAN-FUEL-1 + GTD-RECONCILE-JOB-1 + KAIZEN-DISPOSITION-GAP-1 + IDEA-INTAKE-MULTI-SOURCE-1 + FLEET-PROBE-COVERAGE-1; mirrors system-prompt v4.19; preserves v2.140)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
