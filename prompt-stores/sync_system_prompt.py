@@ -1,91 +1,140 @@
-"""sync_system_prompt.py — v3.93.1 remediation (2026-08-29): 8-store dual-write + shape fix.
+# -*- coding: utf-8 -*-
+"""sync_system_prompt.py — v4.0: system-prompt sync to all stores with CORRECT shapes + config-guard wrap.
 
-AGENT-PROMPT-PARITY-1 (2026-08-29, audit remediation): the deepchat agent row
-(agents.deepchat.config_json.systemPrompt) was frozen at v3.74 since 2026-08-25
-while the 7 canonical stores moved (v3.74 -> v3.93). This script now ALSO writes
-the agents table (8th store). SHAPE FIX: app_db.app_settings.systemPrompts MUST
-be the LIST shape ([{id,name,content}]) the app schema expects — the v3.93 cycle
-wrote a bare string, which breaks list readers (prompts.find is not a function).
-Stub DB column is 'value' (not 'value_json') — handle both.
+FIXED 2026-08-31 (crash vector): v3.93 wrote systemPrompts as a bare JSON string and
+defaultModel/preferredModel as bare strings into agent.db app_settings — wrong shapes that crash
+the app on the next route invoke ('prompts.find is not a function' / model-picker errors).
+v4.0 writes:
+  - DB systemPrompts      -> JSON ARRAY [ {id:'default', name:'DeepChat', content, isDefault:true, createdAt, updatedAt} ]
+  - DB defaultModel/preferredModel -> JSON OBJECT {providerId, modelId}
 
 Reads canonical .deepchat/system-prompt-v2.7.md and writes:
-  - Roaming app-settings.json default_system_prompt
+  - Roaming app-settings.json default_system_prompt  (string, as the app expects)
   - .deepchat/app-settings.json default_system_prompt
-  - Roaming app_db/agent.db app_settings.systemPrompts (LIST shape)
-  - .deepchat/agent.db app_settings.systemPrompts (if table exists; value col)
-  - Roaming app_db/agent.db agents.deepchat.config_json.systemPrompt (8th store)
-Model keys (MODEL-KEY-DB-ROOT-SOURCE-1): DB rows defaultModel/preferredModel -> "deepseek/deepseek-v4-flash"
-BEFORE JSON, then JSON dicts {'providerId':'deepseek','modelId':'deepseek-v4-flash'} for both keys.
-Readback prints lengths + values for verification.
+  - Roaming app_db/agent.db app_settings.systemPrompts + defaultModel/preferredModel
+  - .deepchat/agent.db app_settings (if table exists; column-aware value_json/value)
+
+SAFETY:
+  - DELTA GUARD: if canonical length differs from live default_system_prompt by >25% (or 5KB),
+    ABORT unless --force. Prevents a stale canonical file from clobbering a newer live prompt.
+  - Wraps all writes with config-guard --snapshot (before) and --validate (after).
 """
-import json, sqlite3, datetime
+import datetime
+import json
+import os
+import sqlite3
+import subprocess
+import sys
 
 CANON = r"C:\Users\LENOVO\.deepchat\system-prompt-v2.7.md"
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
-FLASH = "deepseek/deepseek-v4-flash"
-MODEL_DICT = {"providerId": "deepseek", "modelId": "deepseek-v4-flash"}
+GUARD = r"C:\Users\LENOVO\.deepchat\skills\config-guard\scripts\config-guard.py"
+FLASH = "deepseek/deepseek-v4-flash"  # RELAY-MODEL-1: flash relay remains available for explicit relay selection
+MODEL_DICT = {"providerId": "QNFO-OPS", "modelId": "ops-exec"}  # OPS-EXEC-DEFAULT-1 RE-ENABLED (2026-09-06): TEMP-ROLLBACK-2 retired
 
-with open(CANON, "r", encoding="utf-8") as f:
-    content = f.read()
-print("canonical chars:", len(content))
 
-# 1. JSON files
-for p in (ROAMING_JSON,):
-    d = json.load(open(p, encoding="utf-8"))
-    d["default_system_prompt"] = content
-    d["defaultModel"] = MODEL_DICT
-    d["preferredModel"] = MODEL_DICT
-    with open(p, "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False, indent=2)
-    print("json written:", p, "promptlen", len(d["default_system_prompt"]))
+def guard(*args):
+    try:
+        r = subprocess.run([sys.executable, GUARD, *args], capture_output=True, text=True, timeout=60)
+        print("  [guard]", " ".join(args), "->", r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.returncode)
+    except Exception as e:
+        print("  [guard] unavailable:", e)
 
-# 2. Databases (DB-first per MODEL-KEY-DB-ROOT-SOURCE-1)
-for dbp in (ROAMING_DB,):
-    c = sqlite3.connect(dbp, timeout=60)
-    c.execute("PRAGMA busy_timeout=15000")
-    tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")]
-    if "app_settings" not in tables:
-        print("skip (no app_settings):", dbp)
-        c.close()
-        continue
-    cols = [r[1] for r in c.execute("PRAGMA table_info(app_settings)").fetchall()]
-    vc = "value_json" if "value_json" in cols else "value"
-    # SHAPE FIX: main DB systemPrompts row = LIST [{id,name,content}]
-    if dbp == ROAMING_DB:
-        c.execute("UPDATE app_settings SET value_json=? WHERE key=?",
-                  (json.dumps([{"id": "default", "name": "DeepChat", "content": content}], ensure_ascii=False), "systemPrompts"))
-    else:
-        c.execute("UPDATE app_settings SET %s=? WHERE key=?" % vc,
-                  (json.dumps(content), "systemPrompts"))
-    c.execute("UPDATE app_settings SET %s=? WHERE key=?" % vc, (json.dumps(FLASH), "defaultModel"))
-    c.execute("UPDATE app_settings SET %s=? WHERE key=?" % vc, (json.dumps(FLASH), "preferredModel"))
-    c.commit()
+
+def main():
+    force = "--force" in sys.argv
+
+    with open(CANON, encoding="utf-8") as f:
+        content = f.read()
+    print("canonical chars:", len(content))
+
+    # Delta guard vs live
+    try:
+        live = json.load(open(ROAMING_JSON, encoding="utf-8")).get("default_system_prompt", "")
+    except Exception:
+        live = ""
+    if not force and live and abs(len(content) - len(live)) > max(int(0.25 * len(live)), 5000):
+        print("ABORT: canonical len", len(content), "vs live len", len(live),
+              "differs >25% — refusing to clobber the live prompt. Use --force to override.")
+        return 2
+
+    guard("--snapshot", "--tag", "sync-system-prompt")
+
+    # 1. JSON stores (default_system_prompt is a plain string there; model keys are dicts)
+    for p in (ROAMING_JSON,):
+        d = json.load(open(p, encoding="utf-8"))
+        d["default_system_prompt"] = content
+        d["defaultModel"] = MODEL_DICT
+        d["preferredModel"] = MODEL_DICT
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(d, f, ensure_ascii=False, indent=2)
+        print("json written:", p, "promptlen", len(d["default_system_prompt"]))
+
+    # 2. DB stores — CORRECT SHAPES (array for systemPrompts, dict for model keys)
+    now = int(datetime.datetime.now().timestamp() * 1000)
+    sys_prompts = [{"id": "default", "name": "DeepChat", "content": content,
+                    "isDefault": True, "createdAt": now, "updatedAt": now}]
+    for dbp in (ROAMING_DB,):
+        if not os.path.exists(dbp):
+            print("skip (missing):", dbp)
+            continue
+        c = sqlite3.connect(dbp)
+        try:
+            tables = [r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")]
+            if "app_settings" not in tables:
+                print("skip (no app_settings):", dbp)
+                c.close()
+                continue
+            cols = [r[1] for r in c.execute("PRAGMA table_info(app_settings)")]
+            vcol = "value_json" if "value_json" in cols else ("value" if "value" in cols else None)
+            if not vcol:
+                print("skip (no value column):", dbp, cols)
+                c.close()
+                continue
+            c.execute("UPDATE app_settings SET " + vcol + "=? WHERE key=?", (json.dumps(sys_prompts), "systemPrompts"))
+            c.execute("UPDATE app_settings SET " + vcol + "=? WHERE key=?", (json.dumps(MODEL_DICT), "defaultModel"))
+            c.execute("UPDATE app_settings SET " + vcol + "=? WHERE key=?", (json.dumps(MODEL_DICT), "preferredModel"))
+            # v4.12 (2026-09-04): also sync the deepchat agent row (systemPrompt + model presets)
+            # - prompt-store-verify.py checks agents.config_json.systemPrompt against the canonical.
+            if "agents" in tables:
+                try:
+                    ag = c.execute("SELECT config_json FROM agents WHERE id='deepchat'").fetchone()
+                    if ag:
+                        ad = json.loads(ag[0])
+                        sp = content[:-1] if content.endswith("\n") else content
+                        ad["systemPrompt"] = sp
+                        ad["defaultModelPreset"] = MODEL_DICT
+                        ad["assistantModel"] = MODEL_DICT
+                        c.execute("UPDATE agents SET config_json=?, updated_at=? WHERE id='deepchat'",
+                                  (json.dumps(ad, ensure_ascii=False), now))
+                        print("agents row synced (deepchat)")
+                except Exception as e2:
+                    print("agents sync skipped:", e2)
+            c.commit()
+            print("db written:", dbp, "(systemPrompts array, model dicts)")
+        except Exception as e:
+            print("db error:", dbp, e)
+        finally:
+            c.close()
+
+    # 3. Readback verification
+    print("=== READBACK ===")
+    d = json.load(open(ROAMING_JSON, encoding="utf-8"))
+    print("roaming promptlen:", len(d.get("default_system_prompt", "")))
+    print("roaming defaultModel:", d.get("defaultModel"), "preferredModel:", d.get("preferredModel"))
+    c = sqlite3.connect(ROAMING_DB)
+    for key in ("systemPrompts", "defaultModel", "preferredModel"):
+        row = c.execute("SELECT value_json FROM app_settings WHERE key=?", (key,)).fetchone()
+        if row:
+            v = json.loads(row[0])
+            print("db", key, "->", type(v).__name__, (len(v) if isinstance(v, list) else v))
     c.close()
-    print("db written:", dbp)
 
-# 3. AGENTS TABLE — 8th store (AGENT-PROMPT-PARITY-1)
-c = sqlite3.connect(ROAMING_DB, timeout=60)
-c.execute("PRAGMA busy_timeout=15000")
-cfg = json.loads(c.execute("SELECT config_json FROM agents WHERE id='deepchat'").fetchone()[0])
-cfg["systemPrompt"] = content
-c.execute("UPDATE agents SET config_json=?, updated_at=? WHERE id='deepchat'",
-          (json.dumps(cfg, ensure_ascii=False), int(datetime.datetime.now().timestamp()*1000)))
-c.commit()
-c.close()
-print("agents.deepchat.config_json.systemPrompt written")
+    guard("--validate")
+    print("SYNC COMPLETE")
+    return 0
 
-# 4. Readback
-print("=== READBACK ===")
-d = json.load(open(ROAMING_JSON, encoding="utf-8"))
-print("roaming promptlen:", len(d.get("default_system_prompt", "")))
-print("roaming defaultModel:", d.get("defaultModel"), "preferredModel:", d.get("preferredModel"))
-c = sqlite3.connect(ROAMING_DB, timeout=60)
-for r in c.execute("SELECT key, length(value_json) FROM app_settings WHERE key IN ('systemPrompts','defaultModel','preferredModel')"):
-    print("db row:", r)
-v = c.execute("SELECT value_json FROM app_settings WHERE key='systemPrompts'").fetchone()[0]
-j = json.loads(v)
-print("app_db systemPrompts shape:", type(j).__name__, "| content len:", len(j[0]['content']) if isinstance(j, list) else len(j))
-cfg2 = json.loads(c.execute("SELECT config_json FROM agents WHERE id='deepchat'").fetchone()[0])
-print("agents row systemPrompt len:", len(cfg2.get('systemPrompt', '')), "header:", cfg2.get('systemPrompt','')[:50].replace(chr(10),' '))
-c.close()
+
+if __name__ == "__main__":
+    sys.exit(main())
