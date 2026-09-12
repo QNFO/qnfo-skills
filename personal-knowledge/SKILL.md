@@ -4,6 +4,17 @@ version: "1.6"
 description: "Rowan's personal-life knowledge: personal events radar, GTD register integration, personal data stores. Use for personal-life questions, events, and personal knowledge retrieval."
 ---
 
+
+## FLEET CONSOLIDATION RECONCILIATION (2026-09-12)
+
+The Quniverse fleet consolidated 2026-09-11/12 (FLEET-GHOST-RETIREMENT-1): **41 workers were retired** and their functions absorbed into hub workers. Any reference below to a retired worker name is HISTORICAL / non-functional - the worker script is deleted and its endpoint returns HTTP 1042. Use the live hubs instead.
+
+**Retired workers (non-functional):** events-radar, job-market-watch, personal-events-radar, personal-life-indexer, personal-life-maintain, personal-life-search, qnfo-arxiv-radar, qnfo-auditor, qnfo-blank-audit, qnfo-citation-watch, qnfo-errata-orchestrator, qnfo-errata-publish, qnfo-errata-respond, qnfo-errata-watch, qnfo-idea-factory, qnfo-idea-miner, qnfo-idea-triage, qnfo-pipeline-ops, qnfo-research-radar, qnfo-skills-discovery, qnfo-thread-ingest, qnfo-fleet-calibrator, qnfo-error-selfheal, qnfo-analytics, qnfo-code-agent, jnl-watch, qnfo-containers-pilot, qnfo-code-orchestrator, qnfo-container-executor, jnl-referee, jnl-zenodo, jnl-reviser, qnfo-fleet-advisor, qnfo-fleet-deploy, qnfo-register-guard, fleet-executor, fleet-scheduler, qnfo-scorecard, personal-companion, paper-hub, research-hub.
+
+**Live hub set:** audit-hub, companion-hub, errata-hub, idea-hub, jnl-pipeline, radar-hub, fleet-exec, qnfo-fleet-control, qnfo-observability, qnfo-skill-sync.
+
+**Current fleet contract:** every worker carries a contract-standard strict-semver VERSION reachable via GET /health (HUB-VERSIONING-1); service_registry is the census authority and fleet drift_total (ghost/unregistered/unversioned) must be 0; qnfo-ops (v2.13.0+) exposes DELETE /registry/:service plus a registryRefresh() auto-prune (SERVICE-REGISTRY-NO-RETIRE-1).
+
 > **v1.6 UPDATE (2026-08-16, kaizen — CMD SKILLS UPDATE: CHROME-TABS-SAVE-1 pipeline + 7-store parity note; mirrors system-prompt v3.34):**
 > Red-team: direct parent-agent red-team skills audit (session this — user chrome-tabs personal-layer save LD5Fww4-kxgRT96sXjah5).
 > HARD: 1. SOFT: 0. DESIGN: 0. Changes:

@@ -1,4 +1,5 @@
 # CLOUD-SYNC — 100% Cloud Delivery & Settings Sync
+> **UPDATE 2026-09-12 (fleet consolidation):** personal-life-* and the other retired workers (FLEET-GHOST-RETIREMENT-1) are gone; the personal plane now runs through personal-api. The sync map below is HISTORICAL for the 2026-09-01 state. Settings-parity stores were reconciled to system-prompt v4.22 (7-store dual-write, prompt-store-verify PASS).
 
 Directive (2026-09-01, user): all local/deepchat/GitHub skills + settings must SYNC with Cloudflare "100% cloud" infrastructure (workers/execution). Local state = ephemeral mirror; Cloudflare = canonical (Worker Secrets canonical for all tokens/keys). Execution must NOT assume local Windows DeepChat is open.
 

@@ -7,6 +7,17 @@ description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment
   audits.
 ---
 
+
+## FLEET CONSOLIDATION RECONCILIATION (2026-09-12)
+
+The Quniverse fleet consolidated 2026-09-11/12 (FLEET-GHOST-RETIREMENT-1): **41 workers were retired** and their functions absorbed into hub workers. Any reference below to a retired worker name is HISTORICAL / non-functional - the worker script is deleted and its endpoint returns HTTP 1042. Use the live hubs instead.
+
+**Retired workers (non-functional):** events-radar, job-market-watch, personal-events-radar, personal-life-indexer, personal-life-maintain, personal-life-search, qnfo-arxiv-radar, qnfo-auditor, qnfo-blank-audit, qnfo-citation-watch, qnfo-errata-orchestrator, qnfo-errata-publish, qnfo-errata-respond, qnfo-errata-watch, qnfo-idea-factory, qnfo-idea-miner, qnfo-idea-triage, qnfo-pipeline-ops, qnfo-research-radar, qnfo-skills-discovery, qnfo-thread-ingest, qnfo-fleet-calibrator, qnfo-error-selfheal, qnfo-analytics, qnfo-code-agent, jnl-watch, qnfo-containers-pilot, qnfo-code-orchestrator, qnfo-container-executor, jnl-referee, jnl-zenodo, jnl-reviser, qnfo-fleet-advisor, qnfo-fleet-deploy, qnfo-register-guard, fleet-executor, fleet-scheduler, qnfo-scorecard, personal-companion, paper-hub, research-hub.
+
+**Live hub set:** audit-hub, companion-hub, errata-hub, idea-hub, jnl-pipeline, radar-hub, fleet-exec, qnfo-fleet-control, qnfo-observability, qnfo-skill-sync.
+
+**Current fleet contract:** every worker carries a contract-standard strict-semver VERSION reachable via GET /health (HUB-VERSIONING-1); service_registry is the census authority and fleet drift_total (ghost/unregistered/unversioned) must be 0; qnfo-ops (v2.13.0+) exposes DELETE /registry/:service plus a registryRefresh() auto-prune (SERVICE-REGISTRY-NO-RETIRE-1).
+
 > **v3.76 UPDATE (2026-09-05, kaizen - CMD SKILLS UPDATE: PAPER-REVISER-LOOP-1 fleet mirror - qnfo-paper-reviser v1.0.0 (canonical QNFO/qnfo-workers/qnfo-paper-reviser): cloud cron 37 */4 * * *, HTTP route qnfo-paper-reviser.qnfo.org (public /health; token-gated /run/scan?mode=dry|live + /run/status), bindings AI (llama-3.3-70b-fp8-fast) + PAPERS_DB living-paper + WATCH_DB qnfo-audit + REVISER_TOKEN secret; adversarial audit -> version_queue drafted -> qnfo-research-exec */10 publishV2 drain; verify /health each ops cycle; mirrors system-prompt v4.16 + kaizen v2.138; preserves v3.75):**
 > **v3.75 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: R2 + exec + read-tool transfer gates - R2-OBJECT-KEY-NO-BUCKET-PREFIX-1 (R2 GET/PUT object path excludes the bucket name; including it = 10007 on existing keys; calibrate probes on known-good siblings) + EXEC-STDOUT-12K-CAP-1 (exec stdout truncates ~12K; chunk or use D1 API + execute) + READ-TOOL-PREFIX-ALL-1 (read tool prepends path header to ALL files - never read-tool output for exact-content transfers into D1/R2) + TASK-DOD-REGISTER-SHAPE-1 (task_dod_register: id INTEGER auto, source_table/source_row_id NOT NULL); mirrors system-prompt v4.10 + kaizen v2.133; preserves v3.74):**
 
