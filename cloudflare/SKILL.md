@@ -1,6 +1,6 @@
 ---
 name: cloudflare
-version: '3.76'
+version: '3.77'
 description: Cloudflare Workers, Pages, D1, R2, KV, Queues, AI, DNS - deployment,
   wrangler patterns, MCP fleet management (fleet OAuth, token refresh), cost control,
   Cloudflare doc leverage. Use for any Cloudflare resource work, deploys, or infrastructure
@@ -25,6 +25,10 @@ The Quniverse fleet consolidated 2026-09-11/12 (FLEET-GHOST-RETIREMENT-1): **41 
 > qnfo-outreach v0.1.0 (cron 0 11 * * 1-5, ACTIVATION_AT 2026-09-15, bindings OUTREACH_D1/QNFO_AUDIT/LIVING_PAPER/SEND_EMAIL + OUTREACH_TOKEN); qnfo-cloud-ops v1.11.0 (OUTREACH d1 binding + jobVisibility outreach section; jobEngagement 15 5 * * 1); deploy = API PUT multipart application/javascript+module (10021 if plain javascript); concurrent deploy = last-wins (reconcile deployed bundle).
 
 > **v3.71 UPDATE (2026-09-02, kaizen — CMD SKILLS UPDATE: freshness-sync worker/D1 mirror rows - INTENT-EXACT-DEDUPE-1 + INTENT-DEDUPE-COLUMNS-GUARD-1 + WRANGLER-PIPE-EXIT-MASK-1 + MIRROR-DRIFT-REPO-AHEAD-1; mirrors system-prompt v3.98 + kaizen v2.123; preserves v3.70):**
+
+### v3.77 - Workers inventory regenerated to the live 54-worker fleet (2026-09-12)
+
+Replaced the stale 2026-08-12 baseline (13 qnfo-* + 2 personal-life = 15 total, incl. the now-retired qnfo-skills-discovery) with the live workers_list truth: **54 live workers**, service_registry **40 live / 7 drifted / 7 merged**. Added the full registry-live inventory table (worker | version | role) and the 14 live-but-unregistered workers. Census authority is qnfo-audit.service_registry; HUB-VERSIONING-1 + SERVICE-REGISTRY-NO-RETIRE-1 apply.
 
 ### v3.71 — freshness-sync worker/D1 mirror rows (2026-09-02)
 
@@ -1888,11 +1892,53 @@ see `qnfo-audit/audits/2026/07/SYSTEMWIDE-AUDIT-2026-07-25.md`. Any future count
 an audit-trail row is drift.)
 
 ### Workers
-Baseline: 13 qnfo-* workers (updated 2026-08-12 — live `workers_list` returned 15 total:
-13 qnfo-* + 2 personal-life isolated: `personal-life-search`/`personal-life-indexer`). qnfo-* additions since
-2026-08-10: `qnfo-agent-ws` + `qnfo-skills-discovery` (2026-08-11); treat any future qnfo-* count ≠ 13 as drift
-(15 total incl. personal-life pair is NORMAL).
-**Fleet:** `qnfo-gateway` (unified API+graph+legal+papers, 17 routes), `qnfo-gateway-production` (staging/prod variant, created 2026-07-31), `qnfo-paper-indexer` (auto-indexes paper full-text into Vectorize; v2.0-dedup-aware — sha256 content-hash skip + X-Index-Token auth, NO cron, on-demand webhook/batch only; source QNFO/qnfo-workers; 2026-08-01, v2.0 2026-08-10), `qnfo-archive`, `qnfo-lifecycle` (v1.1 — 7 cron handlers with real logic, `/status` fixed), `qnfo-ai`, `qnfo-ipatent`, `qnfo-agent-ws` (Agents SDK WebSocket/stateful agent Worker, created 2026-08-11T23:07; agents SDK pattern per §Agents SDK), `qnfo-skills-discovery` (RFC 0.2.0 Agent Skills index Worker — serves /.well-known/agent-skills/index.json from R2 qnfo-skills; source QNFO/qnfo-workers skills-discovery/ commit e626f6d, deploy 7c701b53; see §Agent Skills Discovery Implementation), `qnfo-memory-mcp` (v2.0.1 — REAL 8-tool MCP server: search_papers, search_papers_enriched, resolve_paper_id, search_memories, remember_fact, recall_facts, query_graph, get_paper_context; D1 LIVING_PAPER + GRAPH_DB + Vectorize PAPER_VZ + AI bindings; source QNFO/qnfo-workers; 2026-08-10), `qnfo-qwav`, `qnfo-email` (routing/send API), `qnfo-skill-sync` (kaizen engine: chat-log ingest → D1 chat_logs; AI issue extraction → D1 agent_issues; kaizen report → GitHub + R2 snapshot; cron 0 3 * * *; X-Sync-Token auth), `qnfo-agent-orchestrator` (remote agent executor: DO-per-task agent loop, Workers AI function calling; tools search_papers/get_paper_context/query_graph; X-Sync-Token auth)
+Baseline: **54 live workers** (regenerated 2026-09-12 from the live workers_list API). The census authority is qnfo-audit.service_registry (2026-09-12: **40 live / 7 drifted / 7 merged** = 54 rows). Every worker MUST carry a contract-standard strict-semver VERSION reachable via GET /health (HUB-VERSIONING-1); a count that diverges from the live API is drift (REGISTRY-RECONCILE-1); retired workers are removed by qnfo-ops DELETE /registry/:service + registryRefresh() auto-prune (SERVICE-REGISTRY-NO-RETIRE-1).
+
+**Fleet inventory (registry-live, 2026-09-12) - Worker | Version | Role:**
+
+| Worker | Version | Role |
+|---|---|---|
+| qnfo-ops | 2.12.0 | ops endpoint + service registry + queue/query (SOLE server-side executor) |
+| qnfo-gateway | 3.5.3-quarantine-filter | unified API + graph + legal + papers |
+| qnfo-ai | 5.24.0-telemetry-completeness | QNFO Router: auto-routing, ensembles, RAG, web |
+| personal-api | 3.2.2-maxout200k | personal twin: RAG + web over personal KB, calendar sync |
+| qnfo-infra | 1.2.3 | infra records API: papers count, KG, intents, analytics |
+| qnfo-memory-mcp | 2.0.3 | MCP server: papers / memories / graph / facts (8 tools) |
+| qnfo-tools-mcp | 1.1.2 | MCP server (SSE + streamable HTTP): QNFO machine tool surface |
+| qnfo-intent-orchestrator | 1.3.4 | classify/route/queue desires (notes, tasks, events, emails) |
+| qnfo-agent-orchestrator | 1.0.0 | durable-object agent task orchestration |
+| qnfo-agent-ws | 1.3.9 | agent websocket workspace (durable QnfoAgent) |
+| qnfo-lifecycle | 1.6.1-memory-maintain-fixed | scheduled lifecycle crons |
+| qnfo-cloud-ops | 1.14.1-gtd-guard | scheduled visibility: weekly digest + P7 scorecard + outreach legacy-drain |
+| qnfo-kaizen | 0.3.2-glm53 | CMD SKILLS UPDATE engine + weekly watchtower |
+| qnfo-social | 0.5.2-checker-heal | Bluesky amplifier (1 thread/day) + Buffer cross-post |
+| qnfo-email-orchestrator | 0.3.4-glm53 | email orchestration |
+| qnfo-outreach | 0.1.0 | outreach engine (ACTIVATION_AT 2026-09-15; kill switch) |
+| qnfo-ipatent | 3.4.2 | IPatent app: submissions + analytics |
+| qnfo-qwav | 2.1.0 | legacy QWAV research API (qwav-platform MCP backend) |
+| qnfo-proof | 0.1.0 | adversarial proof verification ledger (Lamport-style trees) |
+| qnfo-observability | 1.1.0 | fleet telemetry: trace ingest + system integration assessment |
+| qnfo-fleet-control | 0.4.11 | merged fleet control: advisor audits + calibration baselines + deploy |
+| qnfo-fleet-dashboard | 1.1.0 | fleet probes every 15m to fleet_probe_log |
+| qnfo-events | 1.1.0 | issue/event ingest to issue_ledger/issue_events |
+| qnfo-impact | 0.1.0 | citation impact to citation_stats/impact_scores |
+| qnfo-ai-calibration | 1.1.4 | model calibration probes to ai_calibration_results |
+| qnfo-chat-canary | 1.0.2 | chat path canary probes to chat_canary/alerts |
+| qnfo-ai-search | 1.0.2 | AI web search |
+| qnfo-signal-loop | 1.1.0 | signal loop |
+| ai-health-prober | 2.3.1 | AI health probe |
+| audit-hub | 1.0.0 | merged: auditor + blank-audit |
+| companion-hub | 1.0.0 | merged: personal companion |
+| errata-hub | 1.0.0 | merged: errata orchestrator/watch/respond/publish |
+| idea-hub | 1.0.0 | merged: idea factory/miner/triage + thread-ingest |
+| jnl-pipeline | 1.0.0 | merged: jnl watch/referee/reviser/zenodo |
+| radar-hub | 1.0.0 | merged: events-radar + arxiv-radar + research-radar |
+| fleet-exec | 1.0.0 | merged: dynamic task engine + per-minute cron scheduler |
+| calendar-api | 0.3.0 | calendar API (CAL_DB): event CRUD |
+| osf-integrity-check | 2.0.0 | OSF registration integrity check to osf_check_log |
+| personal-companion | 1.0.0 | companion (personal plane) |
+
+**Live but not registry-live (14 - verify/register as needed):** obsidian-writer, qnfo-archive, qnfo-backlog-exec, qnfo-ddocs-indexer, qnfo-email, qnfo-paper-explainer, qnfo-paper-indexer, qnfo-paper-reviser, qnfo-pdf, qnfo-research-exec, qnfo-research-supervisor, qnfo-skill-sync, qnfo-twin-maintain, research-daily-brief.
 
 > **QA/UX TEST BATTERY (HARD GATE, 2026-08-05 user mandate):** Before ANY Pages
 > deployment (q*.pages.dev / custom domains / GitHub Actions deploys), run
