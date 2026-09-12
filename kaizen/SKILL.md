@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: "2.145"
+version: "2.146"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
 
@@ -15803,7 +15803,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.145** (2026-09-10 100%-server-side-execution + ops-settings-immutability + AF-1 autonomous-fleet-architecture mirror — SERVER-SIDE-EXEC-100-1 + OPS-SETTINGS-IMMUTABLE-1 + FLEET-AUTONOMY-AF1-1; mirrors system-prompt v4.21; preserves v2.141)
+Current: **v2.146** (2026-09-12 qnfo.org landing + email-capture mirror — QNFO-SUBSCRIBE-LIVE-1 + SUM-EMPTY-NULL-1 + DEPLOYED-BUT-UNCOMMITTED-DRIFT-1 + WORKTREE-GRAFT-PUSH-1 + SELF-DELIVERY-END-TO-END-OVERCLAIM-1; mirrors system-prompt v4.25; preserves v2.145)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
@@ -15831,3 +15831,7 @@ Do NOT flatter, defer, or agree with the user, a source, or the corpus merely be
 ## CMD SKILLS UPDATE cycle log (2026-09-12, v2.145)
 Red-team skills audit (PRE-BUMP, audited the v4.23 state): prompt-store-verify exit 0; scheduler-guard exit 0; model_guard state=clean (auto-fixed one preferredModel->v4-pro drift, MODEL-KEY-FILE-DRIFT-1 recurrence); adversarial-guard exit 0. HARD: 1 (KAIZEN-ANCHOR-SKEW-1 - prompt v4.22/v4.23 cited kaizen 2.143/2.144 while on-disk kaizen was 2.142; this bump reconciles). SOFT: 1 (FLEET-CONTROL-NO-REPO-MIRROR-1 - drift scanner hub had no canonical repo). DESIGN: 0.
 Cycle work: DRIFT-SELFHEAL-WIRING-1 (qnfo-fleet-control scan() -> self_heal_actions with status + verified_at; self_heal_actions 3 -> 21 rows proven) + GW-FAIL-DEDUP-2 (qnfo-ai-calibration 1.1.5 gw-fail open-only dedup) + FLEET-CONTROL-NO-REPO-MIRROR-1 (new canonical mirror + commit 56b1ee7).
+
+## CMD SKILLS UPDATE cycle log (2026-09-12, v2.146)
+Red-team skills audit (audited the v4.25 state): prompt-store-verify exit 0 (6-store system-prompt parity + 11 templates + all adversarial surfaces PASS); dr_validate_schema SCHEMA OK (14 tables/columns); model_guard state=clean (all four keys QNFO-OPS/ops-exec); scheduler-guard PASS; adversarial-guard PASS. HARD: 1 (KAIZEN-ANCHOR-SKEW-1 recurrence — prompt v4.25 cited kaizen 2.146 while on-disk was 2.145; this bump reconciles; NOTE the repo footer was ALSO stale vs live — the canonical had never been re-pulled). SOFT: 0. DESIGN: 1 (weekly digest send path not yet executed end-to-end).
+Cycle work: qnfo.org soft q08-palette landing (dynamic "Latest papers" from living-paper D1) + email capture (qnfo-subscribers v1.1.1 double opt-in; gateway 3.6.1-subscribers /api/confirm proxy) + SUM-EMPTY-NULL-1 /health COALESCE fix + DEPLOYED-BUT-UNCOMMITTED-DRIFT-1 repo-parity commit (origin/main 06237fd via WORKTREE-GRAFT-PUSH-1).
