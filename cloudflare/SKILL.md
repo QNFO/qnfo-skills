@@ -1896,9 +1896,11 @@ Baseline: **54 live workers** (regenerated 2026-09-12 from the live workers_list
 
 **Fleet inventory (registry-live, 2026-09-12) - Worker | Version | Role:**
 
+> Versions are a point-in-time snapshot (2026-09-12); the live census is qnfo-audit.service_registry. Force a re-sync with POST https://qnfo-ops.q08.workers.dev/registry/refresh (Bearer OPS_ROUTER_AUTH_KEY); the registryRefresh() upserts qnfo-ops with its deployed VERSION first.
+
 | Worker | Version | Role |
 |---|---|---|
-| qnfo-ops | 2.12.0 | ops endpoint + service registry + queue/query (SOLE server-side executor) |
+| qnfo-ops | 2.13.1 | ops endpoint + service registry + queue/query (SOLE server-side executor) |
 | qnfo-gateway | 3.5.3-quarantine-filter | unified API + graph + legal + papers |
 | qnfo-ai | 5.24.0-telemetry-completeness | QNFO Router: auto-routing, ensembles, RAG, web |
 | personal-api | 3.2.2-maxout200k | personal twin: RAG + web over personal KB, calendar sync |
