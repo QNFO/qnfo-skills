@@ -1,6 +1,6 @@
 ---
 name: kaizen
-version: "2.142"
+version: "2.145"
 description: "The kaizen CMD SKILLS UPDATE engine: versioned skill-system updates, prompt-store parity (PROMPT-PARITY-1), TITLE-LINE-PARITY-1 anchors, mirror rows, skill drift prevention. Use when running CMD SKILLS UPDATE, CMD CONTINUE, system updates, or any skill/prompt refactor."
 ---
 
@@ -14,6 +14,7 @@ The Quniverse fleet consolidated 2026-09-11/12 (FLEET-GHOST-RETIREMENT-1): **41 
 
 **Current fleet contract:** every worker carries a contract-standard strict-semver VERSION reachable via GET /health (HUB-VERSIONING-1); service_registry is the census authority and fleet drift_total (ghost/unregistered/unversioned) must be 0; qnfo-ops (v2.13.0+) exposes DELETE /registry/:service plus a registryRefresh() auto-prune (SERVICE-REGISTRY-NO-RETIRE-1).
 
+> **v2.145 UPDATE (2026-09-12, kaizen - CMD SKILLS UPDATE: fleet self-heal loop closure mirror - DRIFT-SELFHEAL-WIRING-1 (qnfo-fleet-control scan() now writes a self_heal_actions row for EVERY drifted / stale-canon / health-ver finding, carrying status healed|failed|deferred|detected + verified_at; schema gains those two columns; replaces a count-and-skip path that re-observed the same unhealed problems every cycle; deployed via CF API PUT preserving all 23 bindings; /health 0.4.11) + GW-FAIL-DEDUP-2 (qnfo-ai-calibration v1.1.5: gw-fail dedup is now OPEN-only - a prior wontfix/closed/resolved no longer PERMANENTLY suppresses re-filing, and the degrade path is no longer skipped; supersedes GW-FAIL-DEDUP-1 whose broad skip caused silent permanent alert suppression; recurring classes resurface, open-dedup still collapses to <=1 ticket per model per sweep) + FLEET-CONTROL-NO-REPO-MIRROR-1 (a merged hub worker deployed API-only may have NO canonical repo mirror - qnfo-fleet-control lived only as a deployed bundle; create qnfo-workers/<name>/ with worker.js + deployed-current.worker.js + README documenting the API-PUT deploy that preserves bindings, do NOT wrangler-deploy it) + KAIZEN-ANCHOR-SKEW-1 (a system-prompt bump that cites kaizen vN.M must bump the kaizen SKILL.md frontmatter+footer to match; canonical 2026-09-12: prompt cited kaizen 2.143/2.144 while on-disk was 2.142 - anchors MUST move together; verify 7 stores byte-identical LF + header==footer==title + 11/11 CMD templates + prompt-store-verify.py exit 0 + scheduler-guard.py exit 0 + model_guard.py exit 0 + DEEPCHAT-DEFAULT-MODEL-1 after every dual-write (PROMPT-PARITY-1).**
 > **v2.142 UPDATE (2026-09-10, kaizen - CMD SKILLS UPDATE: 100%-server-side-execution + ops-settings-immutability + AF-1 autonomous-fleet-architecture mirror - SERVER-SIDE-EXEC-100-1 (four-client 100% server-side execution: DeepChat Win / ChatBox Win / ChatBox Android / SannaBot; qnfo-ops v2.7.0 QNFO-OPS/ops-exec is the SOLE executor; supersedes the v4.20 hybrid carve-out; canonical doc SERVER-SIDE-EXEC-CLIENT-MATRIX-2026-09-09.md) + OPS-SETTINGS-IMMUTABLE-1 (ops-exec settings IMMUTABLE: model QNFO-OPS/ops-exec, ctx 1048576, maxOut 393216, timeout 3600000; model_guard.py v3 enforces across DeepChat DB+JSON + ChatBox config.json) + FLEET-AUTONOMY-AF1-1 (AF-1 architecture: 7 layers L0-L7, 8 self-loops, Worker Contract v1, registry-as-truth, Watchmaker Index; fleet census 78 workers / 27 noVERSION); mirrors system-prompt v4.21; preserves v2.141):**
 > **v2.141 UPDATE (2026-09-08, kaizen - CMD SKILLS UPDATE: systemwide-integration mirror - RESEARCH-SCAN-FUEL-1 (qnfo-cloud-ops jobResearchScan feeds up to 5 daily arXiv scan hits into idea_proposals as auto-scan candidates, h32 ip_hash dedupe, maxActive=1 cap; deployed commit d8f7043 version 1bcd9b68) + GTD-RECONCILE-JOB-1 (jobGtdReconcile weekly cron 30 3 * * 1 digests v_fleet_open_work/v_waiting_on_human/v_open_tasks_no_dod to cloud_ops_events; register row 38 implemented) + KAIZEN-DISPOSITION-GAP-1 (4 candidates from 09-02 sat proposed through 09-08 - weekly report never dispositioned; disposition with evidence same-cycle) + IDEA-INTAKE-MULTI-SOURCE-1 (idea_proposals.created_at is ISO TEXT - epoch-division queries misread it; intakes = edge form + auto-miner chat titles + auto-scan) + FLEET-PROBE-COVERAGE-1 (only ~17 of ~75 workers probed; zero-probe families jnl-zenodo/jnl-reviser/code-agent/containers/proof/idea-factory/ipatent/email; rollout = KV health-registry extension); mirrors system-prompt v4.19; preserves v2.140):**
 
@@ -246,7 +247,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.142
+# KAIZEN — v2.145
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15802,7 +15803,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.142** (2026-09-10 100%-server-side-execution + ops-settings-immutability + AF-1 autonomous-fleet-architecture mirror — SERVER-SIDE-EXEC-100-1 + OPS-SETTINGS-IMMUTABLE-1 + FLEET-AUTONOMY-AF1-1; mirrors system-prompt v4.21; preserves v2.141)
+Current: **v2.145** (2026-09-10 100%-server-side-execution + ops-settings-immutability + AF-1 autonomous-fleet-architecture mirror — SERVER-SIDE-EXEC-100-1 + OPS-SETTINGS-IMMUTABLE-1 + FLEET-AUTONOMY-AF1-1; mirrors system-prompt v4.21; preserves v2.141)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
@@ -15826,3 +15827,7 @@ Dual-write v4.09 -> v4.10: FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + 
 ## Adversarial reasoning (ADVERSARIAL-REASONING-1)
 
 Do NOT flatter, defer, or agree with the user, a source, or the corpus merely because it was stated. When evidence contradicts the premise, say so plainly with counter-evidence. Actively hunt disconfirming evidence before concluding; steelman the strongest case against your own answer. EXPOSE FAILURE MODES: every substantive answer states at least one concrete way it could be wrong (limitation, missing evidence, edge case, or falsifying observation). Label uncertainty; never inflate confidence. Canonical standard: QNFO/qnfo-ops/docs/ADVERSARIAL-REASONING.md
+
+## CMD SKILLS UPDATE cycle log (2026-09-12, v2.145)
+Red-team skills audit (PRE-BUMP, audited the v4.23 state): prompt-store-verify exit 0; scheduler-guard exit 0; model_guard state=clean (auto-fixed one preferredModel->v4-pro drift, MODEL-KEY-FILE-DRIFT-1 recurrence); adversarial-guard exit 0. HARD: 1 (KAIZEN-ANCHOR-SKEW-1 - prompt v4.22/v4.23 cited kaizen 2.143/2.144 while on-disk kaizen was 2.142; this bump reconciles). SOFT: 1 (FLEET-CONTROL-NO-REPO-MIRROR-1 - drift scanner hub had no canonical repo). DESIGN: 0.
+Cycle work: DRIFT-SELFHEAL-WIRING-1 (qnfo-fleet-control scan() -> self_heal_actions with status + verified_at; self_heal_actions 3 -> 21 rows proven) + GW-FAIL-DEDUP-2 (qnfo-ai-calibration 1.1.5 gw-fail open-only dedup) + FLEET-CONTROL-NO-REPO-MIRROR-1 (new canonical mirror + commit 56b1ee7).
