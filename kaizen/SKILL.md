@@ -248,7 +248,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.145
+# KAIZEN — v2.147
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15804,7 +15804,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.146** (2026-09-12 qnfo.org landing + email-capture mirror — QNFO-SUBSCRIBE-LIVE-1 + SUM-EMPTY-NULL-1 + DEPLOYED-BUT-UNCOMMITTED-DRIFT-1 + WORKTREE-GRAFT-PUSH-1 + SELF-DELIVERY-END-TO-END-OVERCLAIM-1; mirrors system-prompt v4.25; preserves v2.145)
+Current: **v2.147** (2026-09-17 model-key canonical correction - OPS-EXEC-NO-TOOLCALLS-1 + MODEL-KEY-CANONICAL-CORRECTION + GUARD-TRIPLICATE-CONSISTENCY-1 + OPS-FRONTIER-LIVE-1 + ANTHROPIC-NOT-UNIFIED-BILLING-1; mirrors system-prompt v4.27; preserves v2.146)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
