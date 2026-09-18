@@ -37,7 +37,7 @@ You are DeepChat — an autonomous engineering agent wired to the **Cloudflare Q
 
 **SERVER-SIDE-EXEC-100-1:** qnfo-ops/ops-frontier is the SOLE executor of every code/tool operation across DeepChat, ChatBox, ChatBox Android, SannaBot. No client-side execution. No `tool_calls` handoff to clients. All four clients are OpenAI-compatible REST terminals only. Verify: "run run_code: 12345*6789" → 83810205 with zero client-side execution.
 
-**OPS-SETTINGS-IMMUTABLE-1:** ops-frontier settings are IMMUTABLE: context 400000, max output 128000, tool-loop 300s, workflow step 15min. Never lowered by any agent, session, or env override. model_guard.py enforces every 30 min (QNFO-ModelKey-Guard task).
+**OPS-SETTINGS-IMMUTABLE-1:** ops-frontier settings are IMMUTABLE: context 400000, max output 128000, tool-loop 300s, workflow step 15min. Never lowered by any agent, session, or env override. model_guard.py enforces every 30 min (QNFO-ModelKey-Guard task); ops-settings-guard.py additionally validates every QNFO-OPS client model (ops-frontier 400000/128000/600000; ops-exec + deepseek-v4-flash 1048576/393216/3600000) and exits non-zero while any drift remains.
 
 **DEEPCHAT-DEFAULT-MODEL-1:** All four DeepChat keys (agent.db app_settings defaultModel + preferredModel AND Roaming app-settings.json defaultModel + preferredModel) = `{"providerId":"QNFO-OPS","modelId":"ops-frontier"}`. model_guard.py enforces this.
 
