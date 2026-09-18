@@ -31,7 +31,7 @@ ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 ROAMING_DB = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db"
 GUARD = r"C:\Users\LENOVO\.deepchat\skills\config-guard\scripts\config-guard.py"
 FLASH = "deepseek/deepseek-v4-flash"  # RELAY-MODEL-1: flash relay remains available for explicit relay selection
-MODEL_DICT = {"providerId": "QNFO-OPS", "modelId": "ops-exec"}  # OPS-EXEC-DEFAULT-1 RE-ENABLED (2026-09-06): TEMP-ROLLBACK-2 retired
+MODEL_DICT = {"providerId": "QNFO-OPS", "modelId": "ops-frontier"}  # GUARD-TRIPLICATE-CONSISTENCY-1 (2026-09-18): canonical default = ops-frontier (aligns model_guard.py DESIRED_KEY + ops-settings-guard.py DESIRED_KEYS)
 
 
 def guard(*args):
