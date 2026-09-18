@@ -251,7 +251,7 @@ version: "2.112"
 > Red-team: direct parent-agent skills audit; user directive folded verbatim into research + system prompt + CMD templates. HARD: 1 (new gate). SOFT: 0.
 > Cross-reference: system-prompt v3.72, research v2.137, cloudflare v3.59 (unchanged), session this.
 
-# KAIZEN — v2.148
+# KAIZEN — v2.149
 > **v2.93 UPDATE (2026-08-24, kaizen — CMD SKILLS UPDATE: interactive conference-notetaking workflow mirror — INTERACTIVE-NOTETAKING-1 (CWI Summer School on QA & QEC, Amsterdam 24-28 Aug 2026; extends QPL 2026 pattern): short replies during live events, proactive QNFO/QWAV-research questions + concept clarity, daily Obsidian transcription to D:\Obsidian\notes\v1\YYYY\MM\DD\, end-of-event synthesis with open questions + next steps satisfying SO-WHAT-GATE-1; reusable for every future conference; mirrors system-prompt v3.71 + research v2.136 + cloudflare v3.59 unchanged):**
 > Red-team: 1-slot reviewer dispatch (queued — REDTEAM-QUEUE-STALL-1 fallback; direct parent-agent audit authoritative). HARD: 1 (new gate). SOFT: 1 (MODEL-KEY-FILE-DRIFT-1 #15 — E5 preferredModel re-drifted to deepseek-v4-pro, reset both JSON model keys to flash).
 > Cross-reference: system-prompt v3.71, research v2.136, cloudflare v3.59 (unchanged), session this.
@@ -15807,7 +15807,7 @@ Dual-write v3.10 -> v3.11: added DEEPCHAT-ORCHESTRATION-1 (subagent approval = p
 
 ## Version
 
-Current: **v2.148** (2026-09-18 red-team skills audit + stale-ledger correction: OPS-SETTINGS-GUARD-DEFAULT-MODEL-GAP-1 + LEAN-PROMPT-ANCHOR-LOSS-1 + RETIRED-LIST-STALE-1 - OPS-EXEC-NO-TOOLCALLS-1 + MODEL-KEY-CANONICAL-CORRECTION + GUARD-TRIPLICATE-CONSISTENCY-1 + OPS-FRONTIER-LIVE-1 + ANTHROPIC-NOT-UNIFIED-BILLING-1; mirrors system-prompt v4.27; preserves v2.146)
+Current: **v2.149** (2026-09-18 red-team skills audit: PROVIDER-MODELS-SWEEP-1 (picker reads provider_models not model_configs — 5th model-key location) + FILING-NOT-FIXING-1 (detection is not remediation — self-heal must ACT not log); mirrors system-prompt v4.29; preserves v2.148)
 
 ## v2.125 (2026-09-02, kaizen: mirror rows PDF-FRONT-MATTER-1, RESEARCH-PIPELINE-CLOUD-1, WORKER-SEND-GUARD-1, WEBFETCH-TEXT-1; canonical pipeline-audit-2026-09-02; mirrors system-prompt v4.01 + research v2.148)
 
