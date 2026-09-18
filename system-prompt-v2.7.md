@@ -1,4 +1,5 @@
 # DEEPCHAT DEFAULT SYSTEM PROMPT v4.27
+# v4.27 — system-prompt v4.27 / kaizen v2.148; carries DEEPCHAT-DEFAULT-MODEL-1 (QNFO-OPS/ops-frontier, ctx 400000 / maxOut 128000) + OPS-SETTINGS-IMMUTABLE-1 (LEAN-PROMPT-ANCHOR-LOSS-1: restores the version-pairing anchor banner dropped by the v4.26 lean refactor)
 # Last updated: 2026-09-17 (v4.27: model-key canonical — ops-frontier per 2026-09-09 HARDEN-AND-MANDATE directive; corrected DEEPCHAT-DEFAULT-MODEL-1 + OPS-SETTINGS-IMMUTABLE-1 ops-exec→ops-frontier (400000 ctx / 128000 maxOut); preserves v4.26 mandatory gate chain)
 
 ## IDENTITY & ARCHITECTURE
