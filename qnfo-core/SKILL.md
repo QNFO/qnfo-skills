@@ -1,8 +1,20 @@
 ---
 name: qnfo-core
-version: "1.45"
+version: "1.46"
 description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
+
+> **v1.46 UPDATE (2026-09-19, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 RESOLVED (tool exists + runs) + Outlook write-back bridge + decline/delete signal channel + worker name correction; mirrors system-prompt v4.37 + kaizen v2.154; preserves v1.45):**
+
+### v1.46 — Outlook write-back bridge + decline channel + name correction (2026-09-19)
+
+**CALENDAR-SYNC-TOOL-GAP-1 — RESOLVED.** `email-composer/scripts/calendar-sync.py` EXISTS and RUNS (`python calendar-sync.py list` → live Outlook events via `win32com` COM). The earlier "tool pending authoring; agents MUST NOT claim events were created" status is STALE. Mechanism is **local Outlook COM** (NOT Microsoft Graph) — no cloud Graph credentials exist, so the write-back is inherently LOCAL.
+
+**OUTLOOK-EMAIL-EVENTS-BRIDGE-1** — `email-composer/scripts/qnfo-email-events-bridge.py` bridges QNFO email-sourced events (`calendar WHERE source='email'`) into the local Outlook calendar via `calendar-sync.py add` (idempotent; UTC→local; native reminder 1440 min). Verified 2026-09-19 (created + idempotent "skip (exists)"). Runs LOCALLY; recommend the existing GTD sync slot.
+
+**EMAIL-EVENT-DECLINE-1** — the learning loop CLOSES: the calendar-intake worker v1.1.0 adds `cxl()` (cancel by title/uid), a subject-cancel detector on ingest, and title-matching `/feedback`. A `Re: Reminder: <title>` reply containing cancel/decline wording marks the event `cancelled` and increments `event_prefs.decline_count`. Verified 2026-09-19 (direct `/feedback` → calendar row cancelled + decline_count=1).
+
+**WORKER-NAME-CORRECTION-1** — the calendar-intake worker was initially misnamed `qnfo-events`, colliding with the retired canonical **issue-ledger** worker of that name (tables `issue_ledger`/`issue_events`). Renamed to **`qnfo-calendar-intake`**; the `qnfo-events` repo dir was restored to its issue-ledger canonical; `qnfo-email` `EVENTS` service binding → `qnfo-calendar-intake`. Mirrors: `qnfo-calendar-intake` → qnfo-workers/qnfo-calendar-intake; `qnfo-events` (issue-ledger v1.1.0) untouched.
 
 > **v1.45 UPDATE (2026-09-19, kaizen — CMD SKILLS UPDATE: email→calendar/reminders intake LIVE; CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154; preserves v1.44):**
 
@@ -6037,7 +6049,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.45** (email→event→calendar intake LIVE — EMAIL-EVENT-CALENDAR-LIVE-1 + CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154) — previous: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.46** (CALENDAR-SYNC-TOOL-GAP-1 RESOLVED — calendar-sync.py exists+runs; OUTLOOK-EMAIL-EVENTS-BRIDGE-1; EMAIL-EVENT-DECLINE-1; WORKER-NAME-CORRECTION-1 → qnfo-calendar-intake) — previous: **v1.45** (email→event→calendar intake LIVE — EMAIL-EVENT-CALENDAR-LIVE-1 + CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154) — previous: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 ## Adversarial reasoning (ADVERSARIAL-REASONING-1)
 
