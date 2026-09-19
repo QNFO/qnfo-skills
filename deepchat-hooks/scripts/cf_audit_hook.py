@@ -38,7 +38,7 @@ HOOK_SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(HOOK_SKILL_DIR, "logs")
 
 LIFECYCLE_BASE = "https://qnfo-lifecycle.q08.workers.dev"
-GATEWAY_HEALTH = "https://qnfo-gateway.q08.workers.dev/health"
+GATEWAY_HEALTH = "https://qnfo.org/health"
 ARCHIVE_HEALTH = "https://qnfo-archive.q08.workers.dev/health"
 
 HTTP_TIMEOUT = 4  # seconds per request (app kills hooks at 30s; budget < 25s)
