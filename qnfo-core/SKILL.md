@@ -1,8 +1,16 @@
 ---
 name: qnfo-core
-version: "1.46"
+version: "1.47"
 description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
+
+> **v1.47 UPDATE (2026-09-19, kaizen — OUTLOOK-EMAIL-EVENTS-BRIDGE-SCHEDULED-1 (Windows task QNFO_Email_Events_Bridge, every 15 min, Last Result 0) + OUTLOOK-EMAIL-EVENTS-TODO-1 (bridge creates Outlook To-Do tasks for action-titled events) + REGISTRY-RECONCILE-2 (qnfo-calendar-intake registered, stale qnfo-events ghost removed, drift_total 0); mirrors system-prompt v4.37 + kaizen v2.154; preserves v1.46):**
+
+### v1.47 — Bridge scheduling + To-Do + registry (2026-09-19)
+
+- **OUTLOOK-EMAIL-EVENTS-BRIDGE-SCHEDULED-1** — the cloud→Outlook bridge runs every 15 min via Windows Scheduled Task **`QNFO_Email_Events_Bridge`** (`.deepchat/secrets/run-email-events-bridge.cmd`, `CAL_ACCOUNT=rwnquni@outlook.com`); verified Last Result 0. NOT a DeepChat local cron — `scheduler-guard.py` requires 0 enabled local rows.
+- **OUTLOOK-EMAIL-EVENTS-TODO-1** — the bridge also calls `calendar-sync.py add-task` for action-titled events (deadline/submit/apply/register/renew/confirm/book/pay/reply/prepare/sign/…); verified created To-Do.
+- **REGISTRY-RECONCILE-2** — `qnfo-calendar-intake` v1.1.0 registered in `service_registry` (state live); stale `qnfo-events` ghost row removed; drift_total == 0 (51 registry rows = 51 live scripts).
 
 > **v1.46 UPDATE (2026-09-19, kaizen — CMD SKILLS UPDATE: CALENDAR-SYNC-TOOL-GAP-1 RESOLVED (tool exists + runs) + Outlook write-back bridge + decline/delete signal channel + worker name correction; mirrors system-prompt v4.37 + kaizen v2.154; preserves v1.45):**
 
@@ -6049,7 +6057,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.46** (CALENDAR-SYNC-TOOL-GAP-1 RESOLVED — calendar-sync.py exists+runs; OUTLOOK-EMAIL-EVENTS-BRIDGE-1; EMAIL-EVENT-DECLINE-1; WORKER-NAME-CORRECTION-1 → qnfo-calendar-intake) — previous: **v1.45** (email→event→calendar intake LIVE — EMAIL-EVENT-CALENDAR-LIVE-1 + CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154) — previous: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.47** (OUTLOOK-EMAIL-EVENTS-BRIDGE-SCHEDULED-1 + OUTLOOK-EMAIL-EVENTS-TODO-1 + REGISTRY-RECONCILE-2 — drift_total 0) — previous: **v1.46** (CALENDAR-SYNC-TOOL-GAP-1 RESOLVED — calendar-sync.py exists+runs; OUTLOOK-EMAIL-EVENTS-BRIDGE-1; EMAIL-EVENT-DECLINE-1; WORKER-NAME-CORRECTION-1 → qnfo-calendar-intake) — previous: **v1.45** (email→event→calendar intake LIVE — EMAIL-EVENT-CALENDAR-LIVE-1 + CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154) — previous: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 ## Adversarial reasoning (ADVERSARIAL-REASONING-1)
 
