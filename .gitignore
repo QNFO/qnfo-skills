@@ -5,6 +5,3 @@ __pycache__/
 
 # prompt-store backups are local-only
 prompt-stores/*.bak*
-
-# prompt-store backups are local-only
-prompt-stores/*.bak*
