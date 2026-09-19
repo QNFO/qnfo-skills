@@ -1,8 +1,21 @@
 ---
 name: qnfo-core
-version: "1.44"
+version: "1.45"
 description: "QNFO core operations: QNFO Router endpoint + client parity, model-key DB root-source, D1 query bearer fallback, portfolio/tribe maps, calendar/event/to-do mandate, cross-QNFO tool discipline. Core QNFO infrastructure knowledge."
 ---
+
+> **v1.45 UPDATE (2026-09-19, kaizen — CMD SKILLS UPDATE: email→calendar/reminders intake LIVE; CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154; preserves v1.44):**
+
+### v1.45 — Email→event→calendar intake pipeline (2026-09-19)
+
+**EMAIL-EVENT-CALENDAR-LIVE-1** — a downstream intake path now exists for date-bearing mail. Forward any event/appointment/confirmation email to **qnfo@qnfo.org**; it is auto-parsed and written to the QNFO calendar.
+
+- **qnfo-events v1.0.0** (NEW worker) — binds D1 (qnfo-audit), AI, SEND_EMAIL, service→calendar-api. `POST /ingest {messageId,from,to,subject,raw,body}` (auth: `INGEST_TOKEN`); `POST /feedback` (decline/cancel learning); `GET /run-reminders`; `GET /inbox|/reminders|/prefs`. Parses `.ics` VEVENT (TZID-aware → UTC) or falls back to AI extraction; writes to calendar-api with `source=email`; schedules reminders at −1440 and −60 min. Tables (qnfo-audit): `event_inbox`, `event_reminders`, `event_feedback`, `event_prefs`.
+- **calendar-api v0.3.1** — `ALLOWED_SOURCES` now includes `email`; `authorized()` also accepts `CAL_EMAIL_TOKEN`; ICS still published to R2.
+- **qnfo-email** — `email()` forwards event-like mail (subject / `.ics` match) via the `EVENTS` service binding, preserving the original MIME as `raw`.
+- Reminders email to **rwnquni@outlook.com**; subscribe the calendar ICS feed for calendar-side alerts.
+
+**CALENDAR-SYNC-TOOL-GAP-1 — status update (2026-09-19)** — PARTIALLY CLOSED for INBOUND events: the qnfo-email→qnfo-events→calendar-api path creates calendar rows + reminders, end-to-end verified (canonical 2026-09-19: forwarded "Dentist checkup" → calendar id 96, source=email, dtstart 2030-10-15T12:00:00Z [14:00 Europe/Berlin], 2 reminders). DIRECT Outlook/Microsoft To-Do write-back (the original calendar-sync.py mandate) remains OUTSTANDING — this writes the QNFO calendar + ICS, not the Outlook account directly.
 
 > **v1.44 UPDATE (2026-09-04, kaizen - CMD SKILLS UPDATE: publish-sync + KG registry mirror rows - FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 (node properties on the current record; QNFO.JPC.003 + jpcub concept node + locale node all lagged current DOIs until 2026-09-04) + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43):**
 
@@ -6024,7 +6037,7 @@ Settings navigation (open-only):
 
 
 
-Current: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
+Current: **v1.45** (email→event→calendar intake LIVE — EMAIL-EVENT-CALENDAR-LIVE-1 + CALENDAR-SYNC-TOOL-GAP-1 partial closure; mirrors system-prompt v4.37 + kaizen v2.154) — previous: **v1.44** (publish-sync + KG registry mirror rows — FRONTMATTER-SYNC-PARTIAL-1 + D1-BODY-VERSION-LAG-1 + ZENODO-DEPOSITED-MD-STALE-1 + KG-NODE-ID-CONVENTIONS-1 + SLUG-80-CHAR-CAP-1; mirrors system-prompt v4.10 + kaizen v2.133; preserves v1.43) (edge idea-intake pipeline LIVE (ensemble + auto-express + intent harvest) + model roster + INTENT_TOKEN rotation; mirrors system-prompt v3.2 + kaizen v2.117; preserves v1.39) (mirror-pointer refresh — build-pipeline + Zenodo newversion gates; preserves v1.38) (UIA-REPOINT-V04 — UIA v0.4/concept DOI re-point; mirrors system-prompt v3.92 + kaizen v2.112; 2026-08-29) (QNFO Router endpoint anti-generic + client parity; mirrors system-prompt v3.89 + kaizen v2.109 + cloudflare v3.65; 2026-08-28)
 
 ## Adversarial reasoning (ADVERSARIAL-REASONING-1)
 
