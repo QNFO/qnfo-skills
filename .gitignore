@@ -2,3 +2,6 @@
 # caches — never commit
 __pycache__/
 .lastActivity
+
+# prompt-store backups are local-only
+prompt-stores/*.bak*
