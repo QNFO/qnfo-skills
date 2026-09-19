@@ -77,7 +77,7 @@ version: "1.37"
 description: Core QNFO agent identity with Research Integrity Mandate, Due Diligence Protocol, and autonomous skill discovery. Load at session start.
 ---
 
-# QNFO-CORE — v1.44
+# QNFO-CORE — v1.47
 
 > **v1.42 UPDATE (2026-09-02, qnfo-core - mirror WEBSITE-SYNC-COLUMNS-1 + P7-SCORECARD-LIVE-1 + EXPERIMENT-PROGRAM-1 (v4.05/kaizen v2.128): living-paper doi column is the website-display DOI and body_md is the rendered full text - both must be updated on every newversion publish (registry + living-paper + website agree); Experiment registry tables experiments + paper_path_stats in qnfo-audit.**
 
