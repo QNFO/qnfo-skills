@@ -7,7 +7,7 @@ Usage:
   python write-to-obsidian.py --slug "conference-radar" --section "Conference Radar" --text "raw text"
 
 Each --slug produces a DESCRIPTIVE, recognizable filename:
-  D:/Obsidian/notes/v1/YYYY/MM/DD/_<slug>-YYYY-MM-DD.md
+  O:/notes/v1/YYYY/MM/DD/_<slug>-YYYY-MM-DD.md
 Examples:
   _daily-briefing-2026-08-05.md
   _job-market-watch-2026-08-05.md
@@ -32,7 +32,7 @@ def note_filename(slug):
 
 def obsidian_dir(now=None):
     now = now or datetime.datetime.now()
-    return rf'D:\Obsidian\notes\v1\{now.year:04d}\{now.month:02d}\{now.day:02d}'
+    return rf'O:\notes\v1\{now.year:04d}\{now.month:02d}\{now.day:02d}'
 
 def find_or_create_note(slug):
     """Find existing note for this slug in today's dir, or create one. Returns (path, is_new)."""
