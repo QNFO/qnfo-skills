@@ -200,6 +200,43 @@ def cmd_restore():
             ok_all = False
             log(f"{label} FAILED: {e}")
 
+    # 5. skills mirror -- write it too, else it drifts (restore bug fixed 2026-09-19)
+    try:
+        if os.path.exists(REPO_CANON):
+            import shutil as _sh
+            _sh.copyfile(REPO_CANON, SKILLS_COPY)
+            ok = _json_list(SKILLS_COPY) == canon
+            ok_all &= ok
+            log("skills_copy: " + ("OK" if ok else "MISMATCH"))
+        else:
+            log("skills_copy: SKIPPED (no repo canonical)")
+    except Exception as e:
+        ok_all = False
+        log("skills_copy FAILED: " + str(e))
+
+    # 6. Roaming custom_prompts.json (bare list) -- write it too, else it drifts
+    try:
+        with open(ROAMING_CP_FILE, "w", encoding="utf-8", newline="") as f:
+            json.dump(canon, f, ensure_ascii=False, indent=2)
+            f.write(chr(10))
+        ok = _json_list(ROAMING_CP_FILE) == canon
+        ok_all &= ok
+        log("roaming_cp_file: " + ("OK" if ok else "MISMATCH"))
+    except Exception as e:
+        ok_all = False
+        log("roaming_cp_file FAILED: " + str(e))
+
+    # 7. legacy .deepchat/scripts canonical (PSV 'script' store path) -- keep in sync
+    try:
+        LEGACY = os.path.join(os.path.expanduser("~"), ".deepchat", "scripts", "customPrompts-canonical.json")
+        if os.path.isdir(os.path.dirname(LEGACY)):
+            with open(LEGACY, "w", encoding="utf-8", newline="") as f:
+                json.dump(canon, f, ensure_ascii=False, indent=2)
+                f.write(chr(10))
+            log("legacy_canon: OK")
+    except Exception as e:
+        ok_all = False
+        log("legacy_canon FAILED: " + str(e))
     log(f"=== RESTORE {'COMPLETE (all stores OK)' if ok_all else 'PARTIAL/FAILED'} ===")
     log("NOTE: restart DeepChat for the UI prompt list to reload (RUNTIME-CACHE-CONTRACT-1)")
     return 0 if ok_all else 2
