@@ -21,6 +21,10 @@ DEFAULT_PATHS = {
     "script": r"C:\Users\LENOVO\.deepchat\scripts\customPrompts-canonical.json",
     "roaming_cp_file": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json",
     "roaming_db": r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
+    # orphan canonical mirrors (2026-09-19): were stale/unmonitored cruft (3/11 update_plan);
+    # now synced + swept for drift so they can never silently diverge again.
+    "repo_skills_canon": r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts-canonical.json",
+    "deepchat_skills_canon": r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts-canonical.json",
 }
 SRC_ENUM = {"local", "imported", "builtin"}
 EXPECTED_IDS = ["1788197658524-RX0DE2xA", "1788197658524-RVSnJFyP", "1788197658524-2Qgtf6l6", "1788197658524-FwEKzK59", "1788197658524-2R2NP0B9", "1788197658524-CzhqBs5V", "1788197658524-hQdwK4UR",  "1788197658524-3KUDUZ2Z", "1788197658524-NmxnpZvx", "1788197658524-TWLRZ2gs", "1788197658524-fVj3nerc"]
@@ -182,6 +186,7 @@ def main():
     rc = max(rc, 1 if check_system_prompt_parity() else 0)
     rc = max(rc, 1 if check_skill_anchor_parity() else 0)
     rc = max(rc, 0 if check_mcp_autoapprove_parity() else 1)
+    rc = max(rc, 0 if check_gate_manifest() else 1)
 
     # ADVERSARIAL-REASONING-1 sweep (2026-09-05): fold the adversarial-reasoning guard into
     # this parity gate so adversarial content (skills/templates/system-prompt/worker prompts)
@@ -195,7 +200,7 @@ def main():
         rc = max(rc, 1 if _agr.returncode != 0 else 0)
 
     if rc == 0:
-        print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity)")
+        print("PROMPT-STORE-VERIFY: PASS (schema + parity + system-prompt parity + gate manifest)")
     return rc
 
 
@@ -210,12 +215,13 @@ SYSPROMPT_STORES = {
     "roaming_json":   r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json",
     "app_db_list":    r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
     "repo_copy_md":    r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\system-prompt-v2.7.md",
+    "skills_live_md":  r"C:\Users\LENOVO\.deepchat\skills\system-prompt-v2.7.md",
     "agents_row":     r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app_db\agent.db",
 }
 
 def read_system_prompt(name, path):
     try:
-        if name in ("canonical_md", "repo_copy_md"):
+        if name in ("canonical_md", "repo_copy_md", "skills_live_md"):
             return open(path, encoding="utf-8").read(), None
         if name == "roaming_json":
             return json.load(open(path, encoding="utf-8")).get("default_system_prompt"), None
@@ -270,6 +276,21 @@ def check_system_prompt_parity():
     _md = vals.get("canonical_md") or ""
     if len(_md) > 310000:
         print("[PROMPT-SIZE] canonical base %d chars > 310000 ceiling" % len(_md))
+        errs += 1
+    # TITLE-LINE-PARITY-1 for the system prompt itself (2026-09-26 guard-gap fix):
+    # store-byte-identity does NOT catch a title/banner bump that leaves the footer stale.
+    # Canonical: title/banner were bumped to v4.43 while the footer stayed v4.40 and the
+    # guard still reported PASS. H1 title version MUST equal the last "Current:" footer version.
+    _h1v = None
+    for _l in _md.splitlines():
+        if _l.startswith('# DEEPCHAT DEFAULT SYSTEM PROMPT'):
+            _m = _re.search(r'v(\d+\.\d+)', _l)
+            _h1v = _m.group(1) if _m else None
+            break
+    _cur = _re.findall(r'Current:\s*\*\*v(\d+\.\d+)\*\*', _md)
+    _cv = _cur[-1] if _cur else None
+    if _h1v and _cv and _h1v != _cv:
+        print("[PROMPT-TITLE-FOOTER-DRIFT] title v%s != footer v%s (TITLE-LINE-PARITY-1)" % (_h1v, _cv))
         errs += 1
     if errs == 0:
         print("SYSTEM-PROMPT-PARITY: PASS (%d stores identical)" % len(vals))
@@ -374,6 +395,36 @@ def check_mcp_autoapprove_parity():
     except Exception as e:
         print("[MCP-AUTOAPPROVE-PARITY] check skipped: %s" % e)
         return True
+
+
+def check_gate_manifest():
+    """Gate-manifest validation (CODEPARSE row 170): validate QNFO/qnfo-schemas gate
+    manifests (bootstrap 17 + full 208) with the registry's own validator so the
+    code-parsable MANDATORY gate chain is swept every ops cycle. Single source of truth
+    is validate.py in the qnfo-schemas checkout; gracefully skips when not co-located."""
+    _cands = [
+        os.environ.get("QNFO_SCHEMAS_DIR", ""),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Dev", "qnfo-schemas"),
+        r"C:\Users\LENOVO\Dev\qnfo-schemas",
+    ]
+    _base = next((c for c in _cands if c and os.path.isfile(os.path.join(c, "validate.py"))), None)
+    if not _base:
+        print("[GATE-MANIFEST] check skipped: qnfo-schemas checkout not found (set QNFO_SCHEMAS_DIR)")
+        return True
+    _mf = ["gates/bootstrap-manifest.json", "gates/full-manifest.json"]
+    _missing = [m for m in _mf if not os.path.isfile(os.path.join(_base, m))]
+    if _missing:
+        print("[GATE-MANIFEST] FAIL missing manifest(s): %s" % ", ".join(_missing))
+        return False
+    _r = subprocess.run([sys.executable, os.path.join(_base, "validate.py")]
+                        + [os.path.join(_base, m) for m in _mf], capture_output=True, text=True, cwd=_base)
+    if _r.stdout:
+        print(_r.stdout.strip()[-1800:])
+    if _r.returncode != 0:
+        print("[GATE-MANIFEST] FAIL (validator exit %d)" % _r.returncode)
+        return False
+    print("[GATE-MANIFEST] PASS (bootstrap + full gate manifest schema-validated)")
+    return True
 
 
 if __name__ == "__main__":
