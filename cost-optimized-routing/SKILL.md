@@ -9,8 +9,10 @@ description: Fleet-wide cost-optimized model routing stack (L0-L7, COST-ROUTING-
 # Cost-Optimized Routing Stack (COST-ROUTING-STACK-1)
 
 Permanent reference: `qnfo-workers/docs/COST-OPTIMIZED-MODEL-CALLS.md` (v2, IMPLEMENTED 2026-09-26).
-Live: qnfo-ops v2.37.x (L0/L1/L2/L3/L7 + metrics), qnfo-ai v5.29.0 (semantic cache + metrics),
-AI Gateway `default` + `ops` (cache_ttl 86400, invalidate_on_update, monthly-200).
+Live: qnfo-ops v2.37.2 (L0/L1/L2/L3/L7 + metrics), qnfo-ai v5.29.1 (semantic cache + metrics),
+AI Gateway `default` (cache_ttl 86400, invalidate_on_update, monthly-200).
+Audit note (CMD RED TEAM 2026-09-26): v5.29.0 shipped an undefined helper + zero metrics — FAIL,
+remediated in v5.29.1/v2.37.2; see the SYMBOL-CLOSURE gate below.
 D1 qnfo-audit: `routing_capability`, `routing_policy`, `model_ladder_*`, `cost_router_metrics`.
 
 ## The stack (cheapest lever first)
@@ -51,9 +53,12 @@ block for the right tool. Update `routing_capability` with the result BEFORE dep
 1. L2 gate intact (free-first only for chat class; agent loops consult the capability matrix).
 2. Ladder cheapest-capable-first (no T3 default; escalations logged, never silent).
 3. Metrics written in every completion path; `/cost-router/stats` green.
-4. Caches invalidate (gateway invalidate_on_update, KV TTL, semantic thresholds ≥0.93 ops / ≥0.95 ai).
-5. Registry drift zero; R2 `qnfo-canonical/<worker>.js` refreshed after deploy.
-6. `routing_policy` D1 rows stay truthful.
+4. Caches invalidate (gateway invalidate_on_update, KV TTL + VERSION in the key + prompt verified on hit,
+   semantic thresholds ≥0.93 ops / ≥0.95 ai — note Vectorize indexing lag ~seconds before a fresh entry is queryable).
+5. SYMBOL-CLOSURE: before deploy, every helper the changed code calls must be DEFINED in the same file
+   (`node --check`/dry-run do NOT catch an undefined reference — it only throws at runtime).
+6. Registry drift zero; R2 `qnfo-canonical/<worker>.js` refreshed after deploy.
+7. `routing_policy` D1 rows stay truthful.
 
 ## Anti-patterns
 
