@@ -25,6 +25,7 @@ import sqlite3, json, os, sys, datetime, time
 
 REPO_CANON = r"C:\Users\LENOVO\Documents\GitHub\qnfo-skills\prompt-stores\customPrompts.json"
 SKILLS_COPY = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts.json"  # the local skills mirror — gate-checked, not canonical
+SKILLS_CANON = r"C:\Users\LENOVO\.deepchat\skills\prompt-stores\customPrompts-canonical.json"  # PSV 'deepchat_skills_canon' store
 CANON_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "customPrompts-canonical.json")
 ROAMING_JSON = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\app-settings.json"
 ROAMING_CP_FILE = r"C:\Users\LENOVO\AppData\Roaming\DeepChat\custom_prompts.json"
@@ -214,6 +215,23 @@ def cmd_restore():
         ok_all = False
         log("skills_copy FAILED: " + str(e))
 
+    # 5b. deepchat_skills_canon (PSV store) -- restore omitted it (RESTORE-CP-FILE-GAP-1
+    # recurrence 2026-09-26): PSV checks .deepchat/skills/prompt-stores/customPrompts-canonical.json
+    # as a drift-swept store but restore only wrote the sibling customPrompts.json, so every
+    # template refresh left this store stale and PSV exited 1. Write it too.
+    try:
+        if os.path.exists(REPO_CANON):
+            import shutil as _sh2
+            _sh2.copyfile(REPO_CANON, SKILLS_CANON)
+            ok = _json_list(SKILLS_CANON) == canon
+            ok_all &= ok
+            log("deepchat_skills_canon: " + ("OK" if ok else "MISMATCH"))
+        else:
+            log("deepchat_skills_canon: SKIPPED (no repo canonical)")
+    except Exception as e:
+        ok_all = False
+        log("deepchat_skills_canon FAILED: " + str(e))
+
     # 6. Roaming custom_prompts.json (bare list) -- write it too, else it drifts
     try:
         with open(ROAMING_CP_FILE, "w", encoding="utf-8", newline="") as f:
@@ -251,6 +269,7 @@ def cmd_verify():
     stores = {
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
+        "deepchat_skills_canon": lambda: _json_list(SKILLS_CANON) if os.path.exists(SKILLS_CANON) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
@@ -285,6 +304,7 @@ def cmd_inventory():
     stores = {
         "repo": lambda: _json_list(REPO_CANON) if os.path.exists(REPO_CANON) else None,
         "skills_copy": lambda: _json_list(SKILLS_COPY) if os.path.exists(SKILLS_COPY) else None,
+        "deepchat_skills_canon": lambda: _json_list(SKILLS_CANON) if os.path.exists(SKILLS_CANON) else None,
         "script": lambda: _json_list(CANON_FILE) if os.path.exists(CANON_FILE) else None,
         "roaming_cp_file": lambda: _json_list(ROAMING_CP_FILE),
         "roaming_db": lambda: _db_list(ROAMING_DB),
