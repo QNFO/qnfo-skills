@@ -35,3 +35,14 @@ transitional stub. Drift-zero census: 31 live workers == 31 registry rows.
 prompt-store-verify (6-store parity, 17 anchors, 11/11 templates, MCP 9/9) +
 scheduler-guard (0 enabled rows) + model_guard (state=clean, AI-GATEWAY/openai/gpt-4.1).
 Repo: qnfo-skills 4fb3e23 pushed master.
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+- DISAGREE-WITH-EVIDENCE: if a later cycle's evidence contradicts these lessons, state the
+  disagreement and the counter-evidence plainly rather than restating them from memory.
+- SEEK-DISCONFIRMATION: the strongest case against each lesson is that it generalises from a
+  single cycle; re-test the mechanism before applying it fleet-wide.
+- EXPOSE-FAILURE-MODES: each lesson is a symptom that may have a root cause one layer deeper
+  (an unguarded writer rather than the duplicated text); name the deeper cause before closing.
+- LABEL-UNCERTAINTY: confidence is tied to the probes cited above; anything not probed in this
+  session is a hypothesis, never a fact.

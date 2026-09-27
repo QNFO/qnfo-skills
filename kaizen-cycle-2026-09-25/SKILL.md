@@ -106,3 +106,14 @@ and re-syncs after app restarts. A restart is required to apply.
 2. K2's registry census is from `skill_list` at one instant; a concurrent session could register skills.
 3. K4's "up to ~7 GB/day" is extrapolated from a single-day two-orphan sample.
 4. K3 rests on three paths only; other QNFO paths could still be linked.
+
+## Adversarial reasoning (ADVERSARIAL-REASONING-1)
+
+- DISAGREE-WITH-EVIDENCE: if a later cycle's evidence contradicts these lessons, state the
+  disagreement and the counter-evidence plainly rather than restating them from memory.
+- SEEK-DISCONFIRMATION: the strongest case against each lesson is that it generalises from a
+  single cycle; re-test the mechanism before applying it fleet-wide.
+- EXPOSE-FAILURE-MODES: each lesson is a symptom that may have a root cause one layer deeper
+  (an unguarded writer rather than the duplicated text); name the deeper cause before closing.
+- LABEL-UNCERTAINTY: confidence is tied to the probes cited above; anything not probed in this
+  session is a hypothesis, never a fact.
