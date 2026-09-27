@@ -58,3 +58,43 @@ touched today (a concurrent session may be using it). Lesson: any repo census th
   future default-key sub-system (ChatBox, another client) is not covered.
 - LABEL-UNCERTAINTY: the "concurrent session" attribution rests on commit authorship, branch
   dates and file mtimes, not on a session registry; confidence 0.85.
+
+## Cycle 2026-09-27b — agent self-audit + remediation (failure modes)
+
+### 6. INJECTED TEMPLATE PROSE CAN BE STALE AGAINST A CLEAN STORE (RC-2)
+The CMD UPDATE (HOLISTIC) template delivered to the session named `AI-GATEWAY/openai/gpt-4.1`
+as the DeepChat default in its standing invariants (b)/(c) -- the *superseded* value. The live
+store (`customPrompts-canonical.json`, `customPrompts.json`) held 26x `QNFO-OPS/ops` and
+0x `gpt-4.1`. Lesson: an injected template's prose is not authority; read the live store (the
+system prompt is the canonical gate registry). Acting on the prose would have re-introduced the
+exact defect the guards had just removed.
+
+### 7. AUTHORITATIVE DRIFT IS THE SCANNER, NOT A /health SWEEP (C2)
+A brute-force sweep of all 36 workers' `/health` returned 32 errors; only 3 endpoints
+(idea-hub, qnfo-ai, qnfo-ops) are public, the other 33 return HTTP403. The correct drift signal
+is `qnfo-audit.fleet_drift_report` (qnfo-fleet-control's authenticated scanner + cf-api-list
+transport): SCAN reported drifted=0 staleCanon=0 healthVer=0. Lesson: a failed probe is not a
+finding (AUTHED-PROBE-HEADER-1); use the authoritative authenticated source.
+
+### 8. CLOSE REQUIRES issue_triage.close_evidence (RC-4)
+`agent_issues` carries trigger `issue_close_evidence_required`: a transition to
+closed/resolved/wontfix ABORTS unless an `issue_triage` row for that issue has non-empty
+`close_evidence`. `issue_triage` also requires NOT NULL `rc`, `owner`, `sla_due_at`. Lesson: the
+fleet enforces RE-FALSIFICATION as a DB invariant -- write the evidence row first.
+
+### 9. STICKY-DEGRADED ai_model_health FLAGS (RC-6)
+`deepseek/deepseek-v4-flash` and `bge-base-en-v1.5` sat at status=degraded with
+consecutive_failures=0 and gateway_failures=0, both stamped in one 11:30:4xZ batch and never
+re-probed for 10h (cadence 30m). Cleared to ok after an independent embedding re-probe
+(papers_search -> 14 scored vectors). Lesson: a health flag with zero backing failures and a
+stale timestamp is orphaned state; the calibration must clear-on-healthy or flags rot.
+
+## Adversarial reasoning -- cycle 2026-09-27b
+- DISAGREE-WITH-EVIDENCE: lesson 9's "orphan" reading is wrong if the flag encodes a non-counter
+  signal (route-level outage with no recorded failures); confidence 0.7.
+- SEEK-DISCONFIRMATION: lesson 7 generalises from one sweep; confirm the 33/36 403 rate is
+  structural (auth-gated) and not a transient WAF state before treating /health as useless.
+- EXPOSE-FAILURE-MODES: the direct D1 writes (service_registry.models, ai_model_health) bypass
+  each worker's own API; a downstream cron could revert them -- re-probe to confirm.
+- LABEL-UNCERTAINTY: "drain is converging" rests on 24h/7d agent_issues counts; one measurement,
+  may reverse.
