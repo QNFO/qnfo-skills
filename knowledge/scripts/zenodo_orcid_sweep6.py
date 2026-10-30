@@ -24,12 +24,15 @@ Usage:
   python zenodo_orcid_sweep6.py             # audit + fix
 """
 import json
+import os
 import sys
 import time
 import urllib.request
 import urllib.error
 
-TOKEN = "BkLOVH2EDBccmqRMEYz0KRjmx9gqnEGKdxSz4RAkwCLgr0yvJUZMJoqjw72g"
+TOKEN = os.environ.get("ZENODO_TOKEN", "")
+if not TOKEN:
+    sys.exit("ZENODO_TOKEN is not set")
 ORCID = "0009-0002-4317-5604"
 PERSON = {"name": "Quni-Gudzinas, Rowan Brad", "affiliation": "QNFO", "orcid": ORCID}
 AUTH = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json",
