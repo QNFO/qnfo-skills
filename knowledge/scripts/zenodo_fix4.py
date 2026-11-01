@@ -15,11 +15,14 @@ Key robustness fixes vs v3:
 - python -u + flush=True for live progress; summary written to result file.
 """
 import json
+import os
 import sys
 import time
 import urllib.request
 
-TOKEN = "BkLOVH2EDBccmqRMEYz0KRjmx9gqnEGKdxSz4RAkwCLgr0yvJUZMJoqjw72g"
+TOKEN = os.environ.get("ZENODO_TOKEN", "")
+if not TOKEN:
+    sys.exit("ZENODO_TOKEN is not set")
 ORCID = "0009-0002-4317-5604"
 RESULT_FILE = r"C:\Users\LENOVO\AppData\Local\Temp\deepchat_work\fix4_result.txt"
 
