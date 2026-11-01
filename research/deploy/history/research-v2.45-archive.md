@@ -2149,7 +2149,7 @@ $env:ZENODO_TOKEN             # PowerShell — correct, pass through directly
 
 **NEVER do this:**
 ```python
-TOKEN = 'BkLOVH2EDBccmqRMEYz0vJrmbph0Bb9wDqy19RHyxMpJE0eZKZMJoqjw72g' # WRONG — hand-copied from truncated output
+TOKEN = '<REDACTED>' # WRONG — hand-copied from truncated output
 ```
 
 If a token must be inspected for debugging, print ONLY its length
